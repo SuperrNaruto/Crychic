@@ -6,6 +6,7 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
+	"time"
 
 	"github.com/SuperrNauto/Crychic/internal/app"
 	"github.com/SuperrNauto/Crychic/internal/config"
@@ -20,7 +21,7 @@ func main() {
 	}
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 	defer stop()
-	if err := app.Run(ctx, cfg, log); err != nil {
+	if err := app.Run(ctx, cfg, app.Deps{Log: log, Now: time.Now}); err != nil {
 		log.Error("crychic stopped", "err", err)
 		os.Exit(1)
 	}

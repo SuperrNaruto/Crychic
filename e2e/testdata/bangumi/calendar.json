@@ -1,0 +1,196 @@
+[
+  {
+    "weekday": {
+      "en": "Mon",
+      "cn": "星期一",
+      "ja": "月耀日",
+      "id": 1
+    },
+    "items": [
+      {
+        "id": 390200,
+        "url": "http://bgm.tv/subject/390200",
+        "type": 2,
+        "name": "列女战纪：女娲石记",
+        "name_cn": "列女战纪：女娲石记",
+        "summary": "",
+        "air_date": "2026-10-05",
+        "air_weekday": 1,
+        "rating": {
+          "score": 0
+        },
+        "images": {
+          "large": "http://lain.bgm.tv/pic/cover/l/1c/b4/390200_1IA55.jpg"
+        }
+      },
+      {
+        "id": 418229,
+        "url": "http://bgm.tv/subject/418229",
+        "type": 2,
+        "name": "魔法少女育成計画 restart",
+        "name_cn": "魔法少女育成计划 restart",
+        "summary": "",
+        "air_date": "2026-10-05",
+        "air_weekday": 1,
+        "rating": {
+          "score": 8.1
+        },
+        "images": {
+          "large": "http://lain.bgm.tv/pic/cover/l/52/fe/418229_gcFij.jpg"
+        }
+      },
+      {
+        "id": 511936,
+        "url": "http://bgm.tv/subject/511936",
+        "type": 2,
+        "name": "ロメリア戦記",
+        "name_cn": "罗梅莉亚战记",
+        "summary": "",
+        "air_date": "2026-10-05",
+        "air_weekday": 1,
+        "rating": {
+          "score": 6.3
+        },
+        "images": {
+          "large": "http://lain.bgm.tv/pic/cover/l/dc/f7/511936_XDkXO.jpg"
+        }
+      },
+      {
+        "id": 614640,
+        "url": "http://bgm.tv/subject/614640",
+        "type": 2,
+        "name": "PSYREN -サイレン-",
+        "name_cn": "PSYREN -决战游戏-",
+        "summary": "",
+        "air_date": "2026-10-05",
+        "air_weekday": 1,
+        "rating": {
+          "score": 0
+        },
+        "images": {
+          "large": "http://lain.bgm.tv/pic/cover/l/1b/1e/614640_ESMLl.jpg"
+        }
+      },
+      {
+        "id": 624923,
+        "url": "http://bgm.tv/subject/624923",
+        "type": 2,
+        "name": "どうも、好きな人に惚れ薬を依頼された魔女です。",
+        "name_cn": "你好，我是受心上人所托来做恋爱药的魔女。",
+        "summary": "",
+        "air_date": "2026-10-05",
+        "air_weekday": 1,
+        "rating": {
+          "score": 6.6
+        },
+        "images": {
+          "large": "http://lain.bgm.tv/pic/cover/l/73/99/624923_4u99L.jpg"
+        }
+      }
+    ]
+  },
+  {
+    "weekday": {
+      "en": "Tue",
+      "cn": "星期二",
+      "ja": "火耀日",
+      "id": 2
+    },
+    "items": [
+      {
+        "id": 505550,
+        "url": "http://bgm.tv/subject/505550",
+        "type": 2,
+        "name": "Dark Machine The Animation",
+        "name_cn": "",
+        "summary": "",
+        "air_date": "2026-10-13",
+        "air_weekday": 2,
+        "rating": {
+          "score": 7.8
+        },
+        "images": {
+          "large": "http://lain.bgm.tv/pic/cover/l/84/86/505550_OLQmz.jpg"
+        }
+      },
+      {
+        "id": 513878,
+        "url": "http://bgm.tv/subject/513878",
+        "type": 2,
+        "name": "Cyberpunk: Edgerunners 2",
+        "name_cn": "赛博朋克：边缘行者 2",
+        "summary": "",
+        "air_date": "2026-10-20",
+        "air_weekday": 2,
+        "rating": {
+          "score": 7.2
+        },
+        "images": {
+          "large": "http://lain.bgm.tv/pic/cover/l/db/94/513878_54i56.jpg"
+        }
+      }
+    ]
+  },
+  {
+    "weekday": {
+      "en": "Wed",
+      "cn": "星期三",
+      "ja": "水耀日",
+      "id": 3
+    },
+    "items": []
+  },
+  {
+    "weekday": {
+      "en": "Thu",
+      "cn": "星期四",
+      "ja": "木耀日",
+      "id": 4
+    },
+    "items": []
+  },
+  {
+    "weekday": {
+      "en": "Fri",
+      "cn": "星期五",
+      "ja": "金耀日",
+      "id": 5
+    },
+    "items": []
+  },
+  {
+    "weekday": {
+      "en": "Sat",
+      "cn": "星期六",
+      "ja": "土耀日",
+      "id": 6
+    },
+    "items": []
+  },
+  {
+    "weekday": {
+      "en": "Sun",
+      "cn": "星期日",
+      "ja": "日耀日",
+      "id": 7
+    },
+    "items": [
+      {
+        "id": 536270,
+        "url": "http://bgm.tv/subject/536270",
+        "type": 2,
+        "name": "目覚めたら最強装備と宇宙船持ちだったので 、一戸建て目指して傭兵として自由に生きたい",
+        "name_cn": "一觉醒来就有了最强装备跟太空船 决定以自家独栋建筑为目标当佣兵自由过活",
+        "summary": "",
+        "air_date": "2026-10-04",
+        "air_weekday": 7,
+        "rating": {
+          "score": 5.9
+        },
+        "images": {
+          "large": "http://lain.bgm.tv/pic/cover/l/3e/fc/536270_51P45.jpg"
+        }
+      }
+    ]
+  }
+]

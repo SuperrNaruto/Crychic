@@ -37,28 +37,31 @@ const (
 
 // Options configures an Engine.
 type Options struct {
-	Backend Backend
-	Watcher Watcher
-	Log     *slog.Logger
-	Now     func() time.Time
+	Backend  Backend
+	Calendar Calendar
+	Watcher  Watcher
+	Log      *slog.Logger
+	Now      func() time.Time
 }
 
 // Engine runs request conversations against a Backend.
 type Engine struct {
-	backend Backend
-	watcher Watcher
-	log     *slog.Logger
-	now     func() time.Time
-	store   *store
+	backend  Backend
+	calendar Calendar
+	watcher  Watcher
+	log      *slog.Logger
+	now      func() time.Time
+	store    *store
 }
 
 func New(opts Options) *Engine {
 	return &Engine{
-		backend: opts.Backend,
-		watcher: opts.Watcher,
-		log:     opts.Log,
-		now:     opts.Now,
-		store:   newStore(opts.Now, SessionTTL),
+		backend:  opts.Backend,
+		calendar: opts.Calendar,
+		watcher:  opts.Watcher,
+		log:      opts.Log,
+		now:      opts.Now,
+		store:    newStore(opts.Now, SessionTTL),
 	}
 }
 
@@ -156,7 +159,8 @@ func (e *Engine) cancel(ctx context.Context, sess session) Reply {
 		e.store.take(sess.id)
 		return Reply{Text: Sentence(msgCancelled)}
 	}
-	back := session{id: sess.id, owner: sess.owner, home: sess.home, chart: sess.chart, page: sess.page, picks: sess.picks, noted: sess.noted}
+	back := sess
+	back.results, back.picked, back.seasons, back.library, back.target, back.chosen = nil, card{}, nil, Library{}, nil, nil
 	return withNote(msgCancelled, e.chartPage(ctx, back, sess.page))
 }
 

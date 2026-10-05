@@ -15,7 +15,6 @@ var chartPaths = map[flow.Chart]string{
 	flow.HotMovies:  "/api/v1/recommend/douban_movie_hot",
 	flow.HotShows:   "/api/v1/recommend/douban_tv_hot",
 	flow.InTheaters: "/api/v1/recommend/douban_showing",
-	flow.NewAnime:   "/api/v1/recommend/bangumi_calendar",
 }
 
 // Discover reads a recommendation list; its entries are shaped like search

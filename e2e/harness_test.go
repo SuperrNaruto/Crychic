@@ -7,6 +7,7 @@ import (
 	"context"
 	"fmt"
 	"log/slog"
+	"net/http/httptest"
 	"strconv"
 	"strings"
 	"testing"
@@ -31,6 +32,11 @@ const (
 	progressInterval = "100ms"
 )
 
+// epoch is when every scenario starts, a Monday noon in China, so the
+// calendar opens on the same weekday whenever tests run; the clock then
+// runs at real speed, which the notifier's timing needs.
+var epoch = time.Date(2026, time.October, 5, 12, 0, 0, 0, time.FixedZone("UTC+8", 8*60*60))
+
 type scenario struct {
 	routes  map[string]route
 	apiKey  string
@@ -47,7 +53,9 @@ type harness struct {
 	tr     *transcript
 	tg     *fakeTelegram
 	mp     *fakeMoviePilot
+	bgm    *httptest.Server
 	cfg    config.Config
+	began  time.Time // real time at epoch; restarts keep the clock going
 	stop   func()
 	nextCB int
 }
@@ -61,6 +69,7 @@ func start(t *testing.T, sc scenario) *harness {
 	mp.add(sc.history...)
 	mp.lagging, mp.scanned, mp.searches = sc.lagging, len(sc.history), sc.searches
 	tg := newFakeTelegram(tr)
+	bgm := newFakeBangumi(t, tr)
 	if sc.apiKey == "" {
 		sc.apiKey = mpAPIKey
 	}
@@ -72,6 +81,7 @@ func start(t *testing.T, sc scenario) *harness {
 		"CRYCHIC_MOVIEPILOT_API_KEY":     sc.apiKey,
 		"CRYCHIC_TELEGRAM_TOKEN":         tgToken,
 		"CRYCHIC_TELEGRAM_API_URL":       tg.URL,
+		"CRYCHIC_BANGUMI_API_URL":        bgm.URL,
 		"CRYCHIC_TELEGRAM_ALLOWED_USERS": fmt.Sprintf("%d, %d", alice, bob),
 		"CRYCHIC_DATA_DIR":               t.TempDir(),
 		"CRYCHIC_NOTIFY_INTERVAL":        notifyInterval,
@@ -82,7 +92,7 @@ func start(t *testing.T, sc scenario) *harness {
 	if err != nil {
 		t.Fatal(err)
 	}
-	h := &harness{t: t, tr: tr, tg: tg, mp: mp, cfg: cfg}
+	h := &harness{t: t, tr: tr, tg: tg, mp: mp, bgm: bgm, cfg: cfg, began: time.Now()}
 	registered := tg.expect(commandsKey)
 	h.launch()
 	h.wait(registered, "registering the command menu")
@@ -91,6 +101,7 @@ func start(t *testing.T, sc scenario) *harness {
 		h.stop()
 		tg.Close()
 		mp.Close()
+		bgm.Close()
 	})
 	return h
 }
@@ -99,7 +110,8 @@ func (h *harness) launch() {
 	ctx, cancel := context.WithCancel(context.Background())
 	stopped := make(chan error, 1)
 	log := slog.New(slog.NewTextHandler(testWriter{h.t}, nil))
-	go func() { stopped <- app.Run(ctx, h.cfg, log) }()
+	now := func() time.Time { return epoch.Add(time.Since(h.began)) }
+	go func() { stopped <- app.Run(ctx, h.cfg, app.Deps{Log: log, Now: now}) }()
 	h.stop = func() {
 		cancel()
 		if err := <-stopped; err != nil {

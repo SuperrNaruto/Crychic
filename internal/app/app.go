@@ -10,6 +10,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/SuperrNauto/Crychic/internal/bangumi"
 	"github.com/SuperrNauto/Crychic/internal/config"
 	"github.com/SuperrNauto/Crychic/internal/flow"
 	"github.com/SuperrNauto/Crychic/internal/moviepilot"
@@ -18,14 +19,22 @@ import (
 )
 
 const (
-	// backendTimeout bounds every MoviePilot call; searches hit TMDB upstream.
+	// backendTimeout bounds every MoviePilot and Bangumi call; searches hit
+	// TMDB upstream.
 	backendTimeout = 30 * time.Second
 	// stateFile holds requests awaiting arrival, inside the data dir.
 	stateFile = "requests.json"
 )
 
+// Deps are what the app takes from its host besides configuration.
+type Deps struct {
+	Log *slog.Logger
+	Now func() time.Time
+}
+
 // Run serves the Telegram bot and arrival notices until ctx is cancelled.
-func Run(ctx context.Context, cfg config.Config, log *slog.Logger) error {
+func Run(ctx context.Context, cfg config.Config, deps Deps) error {
+	log, now := deps.Log, deps.Now
 	backend := moviepilot.New(cfg.MoviePilotURL, cfg.MoviePilotAPIKey, &http.Client{Timeout: backendTimeout})
 	tg, err := telegram.New(telegram.Config{
 		Token:        cfg.TelegramToken,
@@ -45,13 +54,14 @@ func Run(ctx context.Context, cfg config.Config, log *slog.Logger) error {
 		Interval:    cfg.NotifyInterval,
 		Quiet:       cfg.NotifyQuiet,
 		LibraryWait: cfg.LibraryWait,
-		Now:         time.Now,
+		Now:         now,
 		Log:         log,
 	})
 	if err != nil {
 		return err
 	}
-	engine := flow.New(flow.Options{Backend: backend, Watcher: notifier, Log: log, Now: time.Now})
+	calendar := bangumi.New(cfg.BangumiAPIURL, &http.Client{Timeout: backendTimeout})
+	engine := flow.New(flow.Options{Backend: backend, Calendar: calendar, Watcher: notifier, Log: log, Now: now})
 	var wg sync.WaitGroup
 	wg.Go(func() { notifier.Run(ctx) })
 	tg.Run(ctx, engine)

@@ -8,7 +8,6 @@ const (
 	abyssDetails  = "GET /api/v1/media/301489"
 	trendingPath  = "GET /api/v1/recommend/tmdb_trending"
 	doubanTVPath  = "GET /api/v1/recommend/douban_tv_hot"
-	animePath     = "GET /api/v1/recommend/bangumi_calendar"
 	nuwaDetails   = "GET /api/v1/media/390200"
 	psyrenDetails = "GET /api/v1/media/614640"
 )
@@ -57,15 +56,15 @@ func TestDoubanPicksAreMatchedByTitle(t *testing.T) {
 	h.tr.verify(t)
 }
 
-// The anime calendar groups picks by air date and links each to its TMDB
-// page with a collapsed synopsis, found by its title or else its original
+// The anime calendar opens on today's weekday, read from Bangumi itself,
+// and switches to any other; it groups a day's picks by first air date and
+// links each to its TMDB page with a collapsed synopsis, found by its title or else its original
 // title; a show TMDB lacks, or has no synopsis for, gets Bangumi's. A
 // synopsis MoviePilot failed to fetch is fetched again when the page
 // shows again.
-func TestAnimeCalendarShowsAirDatesAndSynopses(t *testing.T) {
+func TestAnimeCalendarShowsEachWeekday(t *testing.T) {
 	h := start(t, scenario{
 		routes: map[string]route{
-			animePath:     ok("chart_anime.json"),
 			searchPath:    ok("empty.json"),
 			nuwaDetails:   ok("detail_unrecognized.json"),
 			psyrenDetails: ok("detail_calendar_psyren.json"),
@@ -83,6 +82,7 @@ func TestAnimeCalendarShowsAirDatesAndSynopses(t *testing.T) {
 	h.say(alice, alice, "/start")
 	h.tap(alice, 1, "🔥 发现")
 	h.tap(alice, 1, "🎌 新番放送")
+	h.shows(1, "星期一（今天）")
 	h.shows(1, "2026-10-05 首播")
 	h.shows(1, "themoviedb.org/tv/297903")
 	h.mp.setRoute(nuwaDetails, ok("detail_calendar_nuwa.json"))
@@ -90,5 +90,10 @@ func TestAnimeCalendarShowsAirDatesAndSynopses(t *testing.T) {
 	h.tap(alice, 1, "取消")
 	h.shows(1, "补天的时代已经过去")
 	h.shows(1, "bgm.tv/subject/390200")
+	h.tap(alice, 1, "二")
+	h.shows(1, "星期二 · 第 1/1 页")
+	h.shows(1, "2026-10-13 首播")
+	h.tap(alice, 1, "三")
+	h.shows(1, "这天没有新番放送")
 	h.tr.verify(t)
 }

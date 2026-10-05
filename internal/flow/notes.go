@@ -69,8 +69,8 @@ func (e *Engine) lookup(ctx context.Context, term string) []Media {
 }
 
 // tmdbTwin is the one TMDB result that is m under either of its titles,
-// the same year and kind, keeping the calendar's air date and its own
-// rating, if any; m itself when there is none or more than one. The TMDB
+// the same year and kind, keeping the calendar's air date, weekday and its
+// own rating, if any; m itself when there is none or more than one. The TMDB
 // title is kept too, so a later pick searches by it and matches by id.
 func tmdbTwin(m Media, results []Media) (Media, bool) {
 	var twin *Media
@@ -87,7 +87,7 @@ func tmdbTwin(m Media, results []Media) (Media, bool) {
 		return m, false
 	}
 	t := *twin
-	t.Released = m.Released
+	t.Released, t.Weekday = m.Released, m.Weekday
 	if m.Rating > 0 {
 		t.Rating = m.Rating
 	}

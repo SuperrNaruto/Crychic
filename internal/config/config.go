@@ -11,6 +11,7 @@ import (
 
 const (
 	defaultTelegramAPI    = "https://api.telegram.org"
+	defaultBangumiAPI     = "https://api.bgm.tv"
 	defaultDataDir        = "data"
 	defaultNotifyInterval = time.Minute
 	minimumNotifyInterval = 100 * time.Millisecond
@@ -42,6 +43,7 @@ type Config struct {
 	TelegramToken    string
 	TelegramAPIURL   string
 	TelegramAllowed  []int64
+	BangumiAPIURL    string
 	DataDir          string
 	NotifyInterval   time.Duration
 	NotifyQuiet      time.Duration
@@ -60,6 +62,10 @@ func Load(getenv func(string) string) (Config, error) {
 	}
 	if cfg.TelegramAPIURL == "" {
 		cfg.TelegramAPIURL = defaultTelegramAPI
+	}
+	cfg.BangumiAPIURL = getenv("CRYCHIC_BANGUMI_API_URL")
+	if cfg.BangumiAPIURL == "" {
+		cfg.BangumiAPIURL = defaultBangumiAPI
 	}
 	cfg.DataDir = getenv("CRYCHIC_DATA_DIR")
 	if cfg.DataDir == "" {

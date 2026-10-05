@@ -19,6 +19,7 @@ type session struct {
 	chosen  []int   // seasons ticked in the multi-season picker
 	chart   int     // index into charts being browsed
 	page    int     // page of the chart last shown
+	day     int     // calendar weekday shown, 1 Monday … 7 Sunday; 0 otherwise
 	picks   []Media // the chart's picks
 	noted   []bool  // picks already given a link and synopsis
 	subs    []Subscription

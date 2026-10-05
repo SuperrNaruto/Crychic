@@ -37,6 +37,7 @@ type Media struct {
 	Link          string // the media's page on its metadata site
 	Overview      string
 	Released      string // first release or air date, YYYY-MM-DD, when known
+	Weekday       int    // calendar picks: 1 Monday … 7 Sunday it airs on
 }
 
 // Chart is a list of picks to discover media from.
@@ -172,6 +173,11 @@ type Backend interface {
 	FindSubscription(ctx context.Context, target Target) (int, error)
 	// Subscribe creates a subscription and returns its id.
 	Subscribe(ctx context.Context, target Target) (int, error)
+}
+
+// Calendar lists the shows airing this season, each with its weekday.
+type Calendar interface {
+	Calendar(ctx context.Context) ([]Media, error)
 }
 
 // Request is a subscription someone asked for, to be told when it arrives.

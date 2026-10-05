@@ -20,10 +20,11 @@ cmd/crychic/         # main: config.Load(os.Getenv) → app.Run
 internal/app/        # the only wiring point; shared by main and e2e
 internal/flow/       # platform-agnostic conversation: search → pick (library check) → season → confirm → subscribe
 internal/moviepilot/ # minimal MoviePilot client, implements flow.Backend
+internal/bangumi/    # Bangumi's public calendar (no key), implements flow.Calendar
 internal/telegram/   # renders flow.Reply as messages + inline keyboards; whitelist check; delivers notices
 internal/notify/     # remembers requests (data dir JSON), polls MoviePilot transfer history, notifies requesters
 internal/config/     # env vars → config.Config
-e2e/                 # behavior tests: real app vs fake Telegram Bot API + fake MoviePilot
+e2e/                 # behavior tests: real app vs fake Telegram Bot API + fake MoviePilot + fake Bangumi
 ```
 
 Arrivals: `notify.Notifier` polls `GET /api/v1/history/transfer` → `arrive` records matches as pending (media + season + episode range) → `flush` announces once settled → `telegram.Bot.Notify` posts in the requesting chat, mentioning the requester in groups.
@@ -36,6 +37,7 @@ Data flow: Telegram update → `telegram.adapter` → `flow.Engine.Start/Choose`
 - `internal/flow/engine.go` - conversation steps; `internal/flow/text.go` - all user-facing copy (result lines, media card)
 - `internal/flow/tasks.go` - `/tasks`: list downloads and transfer jobs, follow one live (`Reply.Follow`); `internal/telegram/follow.go` re-asks the flow every `CRYCHIC_PROGRESS_INTERVAL` and edits only on change
 - `internal/flow/home.go` - `/start` home menu (`features`), typed title search; an empty task list opened from it returns to the menu; `internal/flow/charts.go` - `/hot` charts, paging, pick → subscribable result; 取消 on a pick returns to its chart page
+- `internal/flow/charts.go` calendar: 新番放送 opens on today's weekday (China time, `calendarZone`), one weekday per view with a 一…日 button row, picks sorted by first air date within the day
 - `internal/flow/notes.go` - `/hot` calendar pages: each pick looked up on TMDB (title, then original title) for link + identity, synopsis from TMDB else Bangumi details; all three lookups of every pick on a page run at once (one round trip); a pick found with a synopsis is done for the session, one without is looked up again whenever its page shows (MoviePilot answers an upstream failure with an empty `MediaInfo`, HTTP 200). Other charts show the synopsis the chart carries (Douban's is a region / genre / director / cast line), collapsed
 - `internal/flow/latest.go` - `/new`: newest media server items linked to their web page
 - `internal/flow/subs.go` - `/subs`: every subscription, cancel only those the user requested (`Watcher.Requested`), then `Watcher.Forget`
@@ -53,6 +55,7 @@ Data flow: Telegram update → `telegram.adapter` → `flow.Engine.Start/Choose`
 - `CRYCHIC_MOVIEPILOT_URL`, `CRYCHIC_MOVIEPILOT_API_KEY` (MoviePilot `API_TOKEN`), `CRYCHIC_TELEGRAM_TOKEN` - required
 - `CRYCHIC_TELEGRAM_ALLOWED_USERS` - required, comma-separated user IDs; empty refuses to start
 - `CRYCHIC_TELEGRAM_API_URL` - optional, defaults to `https://api.telegram.org`
+- `CRYCHIC_BANGUMI_API_URL` - optional, defaults to `https://api.bgm.tv`; the 新番放送 calendar is read from it
 - `CRYCHIC_DATA_DIR` - optional, defaults to `data`; holds `requests.json` (pending requests, last seen transfer)
 - `CRYCHIC_NOTIFY_INTERVAL` - optional, defaults to `1m`, minimum `100ms`; how often transfer history is polled
 - `CRYCHIC_NOTIFY_LIBRARY_WAIT` - optional, defaults to `30m`, `0s` disables; how long a settled notice waits for the media server to show the arrival
@@ -76,6 +79,7 @@ Data flow: Telegram update → `telegram.adapter` → `flow.Engine.Start/Choose`
 - The fake MoviePilot answers the library and downloader checks as an idle server (`idleServer`); scenarios override `libraryShowPath`/`libraryMoviePath`/`downloadsPath`
 - Recordings of `/api/v1/download/` carry tracker URLs with passkeys, the site name, the release name and the owner's username: keep only the fields Crychic reads
 - Fakes must behave like the real services (long-poll `getUpdates`, `X-API-KEY` check, real error shapes); extend them, don't shortcut them
+- `e2e/testdata/bangumi/calendar.json` is a trimmed recording of `api.bgm.tv/calendar` (all seven weekday groups, a few shows, only fields Crychic reads). Scenarios start on `epoch`, Monday 2026-10-05 noon China time, and the clock runs at real speed from there (`app.Deps.Now`), so "today" is stable
 - `e2e/testdata/moviepilot/*.json` are trimmed recordings from a live v3.1.0 instance (`curl -H "X-API-KEY: $KEY" "$MP/api/v1/media/search?title=沙丘&type=media&count=10"`), except `subscribe_rejected.json`, `server_error.json`, `library_movie_held.json` (the live library holds no movie yet), `detail_unrecognized.json` (live shape of a details lookup MoviePilot failed to recognize, trimmed), `subscriptions.json`, `subscribe_deleted.json` (no live subscription may be created to record them; `subscriptions.json` copies the shape of recorded subscription history); `latest.json` is a live recording with the owner's Emby domain replaced by `emby.example.com`; `subscribe_created.json` came from a one-off live subscription that must not be repeated (see above); never commit real keys or tokens
 
 ## Gotchas
@@ -103,7 +107,7 @@ Data flow: Telegram update → `telegram.adapter` → `flow.Engine.Start/Choose`
 - `GET /api/v1/download/` lists unfinished torrents; `media` (source, id, `season` "S01", `episode` "E10-E12") comes from MoviePilot's download history and is null for torrents added by hand; `progress` is a percentage, `state` is `downloading` or `paused`, `left_time` is Chinese text like `1时5分3秒` (empty while stalled). The card shows the chosen target's downloads, cosmetic like details
 - `/tasks` follows a task by re-reading `GET /api/v1/download/` (by torrent hash) or `GET /api/v1/transfer/queue` (by media + season; tasks are `waiting`/`running`/`completed`/`failed`, episode in `meta.begin_episode`). Byte progress of a transfer is only an SSE stream behind a browser cookie (`/system/progress/filetransfer`), so transfers show per-file states. A view stops when its task leaves the list, when its owner presses 停止刷新, or after `flow.FollowFor` (10 min); any button press on a followed message cancels its follower first. Every task view has 返回任务列表, which re-reads both lists in the same session (a finished view keeps its session for that). Both lists are polled, so the fake keeps them out of transcripts and `reports` swaps their fixture
 - `GET /api/v1/subscribe/` lists all subscriptions for the superuser key (`state` N/R/P/S, `lack_episode`, `total_episode`); `DELETE /api/v1/subscribe/{id}` answers 404 for one already gone, which `Unsubscribe` treats as done. Deleting only reduces downloads, so it is the one live write the bot offers besides subscribing
-- Chart picks (`/api/v1/recommend/*`) are search-shaped but Douban/Bangumi ones carry Douban/Bangumi ids, while transfer history only carries TMDB ids; a pick is therefore searched by title and only taken directly when the identity or a unique title+year+kind matches, else the user picks. Douban season titles like 「流人 第六季」 often find nothing right. MoviePilot's Bangumi calendar loses the weekday grouping, so it is shown as a premiere-date list. Fake routes are keyed by path, so a scenario needing two searches swaps `searchPath` with `h.mp.setRoute`, or answers per title with `scenario.searches`. Reads the bot makes at once (calendar lookups) arrive in any order, so the transcript sorts each run of consecutive reads of one route (`transcript.settle`; media searches and details count as one route, searches first)
+- Chart picks (`/api/v1/recommend/*`) are search-shaped but Douban/Bangumi ones carry Douban/Bangumi ids, while transfer history only carries TMDB ids; a pick is therefore searched by title and only taken directly when the identity or a unique title+year+kind matches, else the user picks. Douban season titles like 「流人 第六季」 often find nothing right. MoviePilot's Bangumi calendar (`/api/v1/recommend/bangumi_calendar`) loses the weekday grouping and serves 30 items a page (Monday to Wednesday), so the bot reads `api.bgm.tv/calendar` itself (summaries there are always empty; synopses still come from TMDB, else Bangumi details through MoviePilot). A TMDB twin keeps its pick's `Weekday` and air date. Fake routes are keyed by path, so a scenario needing two searches swaps `searchPath` with `h.mp.setRoute`, or answers per title with `scenario.searches`. Reads the bot makes at once (calendar lookups) arrive in any order, so the transcript sorts each run of consecutive reads of one route (`transcript.settle`; media searches and details count as one route, searches first)
 - Held episodes never appear in transfer history, so a `Request` carries `Held` and the watch counts them as delivered; MoviePilot's subscriptions themselves only download missing episodes
 - When MoviePilot behavior is unclear, read its source (`app/api/endpoints/{media,subscribe}.py`) instead of guessing
 

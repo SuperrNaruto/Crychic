@@ -28,7 +28,7 @@
 /hot
 ```
 
-浏览 TMDB 流行趋势、豆瓣热门电影/剧集、正在热映和新番放送表。选中一部会自动找到对应的 TMDB 条目进入订阅流程；豆瓣/Bangumi 条目对不上时让你在搜索结果里挑。
+浏览 TMDB 流行趋势、豆瓣热门电影/剧集、正在热映和新番放送表（按周几分页，默认今天）。选中一部会自动找到对应的 TMDB 条目进入订阅流程；豆瓣/Bangumi 条目对不上时让你在搜索结果里挑。
 
 ```
 /subs
@@ -53,6 +53,7 @@
 | `CRYCHIC_TELEGRAM_TOKEN` | 是 | BotFather 发放的 Bot Token |
 | `CRYCHIC_TELEGRAM_ALLOWED_USERS` | 是 | 允许使用的 Telegram 用户 ID，逗号分隔。陌生人使用时机器人会回复其 ID |
 | `CRYCHIC_TELEGRAM_API_URL` | 否 | 自建 Bot API 服务器地址，默认 `https://api.telegram.org` |
+| `CRYCHIC_BANGUMI_API_URL` | 否 | Bangumi API 地址，默认 `https://api.bgm.tv`；新番放送按周几读取它的每日放送 |
 | `CRYCHIC_DATA_DIR` | 否 | 数据目录，默认 `data`，保存等待入库通知的请求 |
 | `CRYCHIC_NOTIFY_INTERVAL` | 否 | 检查入库的间隔，默认 `1m` |
 | `CRYCHIC_NOTIFY_LIBRARY_WAIT` | 否 | 入库通知最多等媒体服务器多久，默认 `30m`；`0s` 表示整理完立即通知 |
