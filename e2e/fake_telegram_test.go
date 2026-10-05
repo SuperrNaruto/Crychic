@@ -24,9 +24,11 @@ type button struct {
 }
 
 type message struct {
-	chat int64
-	text string
-	rows [][]button
+	chat  int64
+	text  string
+	rows  [][]button
+	photo *photo
+	mode  string
 }
 
 // fakeTelegram is a Bot API server: it hands queued updates to getUpdates,
@@ -101,7 +103,13 @@ func (f *fakeTelegram) serve(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	_ = r.ParseMultipartForm(maxMultipart)
+	if r.MultipartForm != nil {
+		defer r.MultipartForm.RemoveAll()
+	}
 	if f.wait(r, method) {
+		return
+	}
+	if f.serveMessage(w, r, method) {
 		return
 	}
 	switch method {
@@ -109,24 +117,40 @@ func (f *fakeTelegram) serve(w http.ResponseWriter, r *http.Request) {
 		reply(w, map[string]any{"id": botUserID, "is_bot": true, "first_name": "Crychic", "username": "crychic_bot"}, nil)
 	case "getUpdates":
 		f.getUpdates(w, r)
-	case "sendMessage", "editMessageText":
-		reply(w, f.store(r, method), nil)
 	case "answerCallbackQuery":
 		f.answer(w, r)
 	case "setMyCommands":
-		scope := r.FormValue("scope")
-		if scope == "" {
-			scope = defaultScope
-		}
-		f.mu.Lock()
-		f.commands[scope] = r.FormValue("commands")
-		f.mu.Unlock()
-		if scope == defaultScope {
-			f.finish(commandsKey)
-		}
+		f.setCommands(r)
 		reply(w, true, nil)
 	default:
 		reply(w, nil, fmt.Errorf("method %s not supported by fake", method))
+	}
+}
+
+func (f *fakeTelegram) serveMessage(w http.ResponseWriter, r *http.Request, method string) bool {
+	switch method {
+	case "sendMessage", "editMessageText", "sendPhoto", "editMessageMedia":
+		result, err := f.store(r, method)
+		reply(w, result, err)
+	case "deleteMessage":
+		err := f.deleteMessage(r)
+		reply(w, err == nil, err)
+	default:
+		return false
+	}
+	return true
+}
+
+func (f *fakeTelegram) setCommands(r *http.Request) {
+	scope := r.FormValue("scope")
+	if scope == "" {
+		scope = defaultScope
+	}
+	f.mu.Lock()
+	f.commands[scope] = r.FormValue("commands")
+	f.mu.Unlock()
+	if scope == defaultScope {
+		f.finish(commandsKey)
 	}
 }
 
@@ -184,27 +208,42 @@ func (f *fakeTelegram) getUpdates(w http.ResponseWriter, r *http.Request) {
 }
 
 // store records a sent or edited message and returns it as Telegram would.
-func (f *fakeTelegram) store(r *http.Request, method string) map[string]any {
-	chat, _ := strconv.ParseInt(r.FormValue("chat_id"), 10, 64)
-	var markup struct {
-		InlineKeyboard [][]button `json:"inline_keyboard"`
-	}
-	if raw := r.FormValue("reply_markup"); raw != "" {
-		_ = json.Unmarshal([]byte(raw), &markup)
+func (f *fakeTelegram) store(r *http.Request, method string) (map[string]any, error) {
+	m, err := f.readMessage(r, method)
+	if err != nil {
+		return nil, err
 	}
 	id, _ := strconv.Atoi(r.FormValue("message_id"))
 	f.mu.Lock()
-	if method == "sendMessage" {
+	if strings.HasPrefix(method, "send") {
 		f.lastMsg++
 		id = f.lastMsg
 	}
-	f.messages[id] = message{chat: chat, text: r.FormValue("text"), rows: markup.InlineKeyboard}
+	f.messages[id] = m
 	f.mu.Unlock()
 
-	head := fmt.Sprintf("<< %s chat=%d message=%d", method, chat, id)
-	if mode := r.FormValue("parse_mode"); mode != "" {
-		head += " parse_mode=" + mode
+	head := fmt.Sprintf("<< %s chat=%d message=%d", method, m.chat, id)
+	if m.mode != "" {
+		head += " parse_mode=" + m.mode
 	}
+	if m.photo != nil {
+		head += m.photo.description()
+	}
+	head += previewDescription(r)
+	doneKey := fmt.Sprintf("edit:%d", id)
+	if strings.HasPrefix(method, "send") {
+		doneKey = fmt.Sprintf("send:%d", m.chat)
+	}
+	body := []string{m.text}
+	if len(m.rows) > 0 {
+		body = append(body, buttonLines(m.rows))
+	}
+	f.tr.add(head, body...)
+	f.finish(doneKey)
+	return m.wire(id), nil
+}
+
+func previewDescription(r *http.Request) string {
 	var preview struct {
 		URL   string `json:"url"`
 		Large bool   `json:"prefer_large_media"`
@@ -212,22 +251,9 @@ func (f *fakeTelegram) store(r *http.Request, method string) map[string]any {
 	}
 	_ = json.Unmarshal([]byte(r.FormValue("link_preview_options")), &preview)
 	if preview.URL != "" {
-		head += fmt.Sprintf(" poster=%s large=%t above=%t", preview.URL, preview.Large, preview.Above)
+		return fmt.Sprintf(" poster=%s large=%t above=%t", preview.URL, preview.Large, preview.Above)
 	}
-	doneKey := fmt.Sprintf("edit:%d", id)
-	if method == "sendMessage" {
-		doneKey = fmt.Sprintf("send:%d", chat)
-	}
-	body := []string{r.FormValue("text")}
-	if len(markup.InlineKeyboard) > 0 {
-		body = append(body, buttonLines(markup.InlineKeyboard))
-	}
-	f.tr.add(head, body...)
-	f.finish(doneKey)
-	return map[string]any{
-		"message_id": id, "date": messageDate, "text": r.FormValue("text"),
-		"chat": map[string]any{"id": chat, "type": chatType(chat)},
-	}
+	return ""
 }
 
 func (f *fakeTelegram) answer(w http.ResponseWriter, r *http.Request) {
@@ -275,8 +301,8 @@ func (f *fakeTelegram) finish(key string) {
 func reply(w http.ResponseWriter, result any, err error) {
 	w.Header().Set("Content-Type", "application/json")
 	if err != nil {
-		w.WriteHeader(http.StatusNotFound)
-		_ = json.NewEncoder(w).Encode(map[string]any{"ok": false, "error_code": http.StatusNotFound, "description": err.Error()})
+		w.WriteHeader(http.StatusBadRequest)
+		_ = json.NewEncoder(w).Encode(map[string]any{"ok": false, "error_code": http.StatusBadRequest, "description": "Bad Request: " + err.Error()})
 		return
 	}
 	_ = json.NewEncoder(w).Encode(map[string]any{"ok": true, "result": result})

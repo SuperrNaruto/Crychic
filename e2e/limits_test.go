@@ -83,7 +83,7 @@ func TestSlowMetadataDoesNotAddEveryDelay(t *testing.T) {
 func TestTelegramSendHasDeadline(t *testing.T) {
 	const cancellationBudget = 15 * time.Second
 	h := start(t, scenario{})
-	stalled := h.tg.stallNext("sendMessage")
+	stalled := h.tg.stallNext("sendPhoto")
 	h.chatter(alice, alice, "/start")
 	select {
 	case <-stalled:

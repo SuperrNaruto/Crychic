@@ -1,20 +1,21 @@
 >> user 1001 in chat 1001: /start
-<< sendMessage chat=1001 message=1 parse_mode=HTML
+<< sendPhoto chat=1001 message=1 parse_mode=HTML photo=home.jpg 1280x720 sha256=044ae094690453fdfcc5a20f29e8ff7a06c6474e8287e02309152b59b90cd814 caption_above=false
    <b>🎬 Crychic</b>
    搜索并订阅电影和剧集，入库后通知你。
    [搜索订阅 | 1:h:0] [发现 | 1:h:1]
    [订阅 | 1:h:2] [最新入库 | 1:h:3]
    [任务进度 | 1:h:4]
 >> user 1001 taps 1:h:1 on message 1
-<< editMessageText chat=1001 message=1 parse_mode=HTML
+<< sendMessage chat=1001 message=2 parse_mode=HTML
    <b>🔥 发现</b>
    选择一个榜单：
    [TMDB 流行趋势 | 1:d:0] [豆瓣热门电影 | 1:d:1]
    [豆瓣热门剧集 | 1:d:2] [正在热映 | 1:d:3]
    [新番放送 | 1:d:4]
    [首页 | 1:o:0]
+<< deleteMessage chat=1001 message=1
 << answerCallbackQuery
->> user 1001 taps 1:d:4 on message 1
+>> user 1001 taps 1:d:4 on message 2
 -> Bangumi GET /calendar
 -> MoviePilot GET /api/v1/media/search?count=10&title=PSYREN -サイレン-&type=media
 -> MoviePilot GET /api/v1/media/search?count=10&title=PSYREN -决战游戏-&type=media
@@ -30,7 +31,7 @@
 -> Bangumi GET /v0/subjects/511936
 -> Bangumi GET /v0/subjects/614640
 -> Bangumi GET /v0/subjects/624923
-<< editMessageText chat=1001 message=1 parse_mode=HTML
+<< editMessageText chat=1001 message=2 parse_mode=HTML
    <b>🎌 新番放送 · 星期一（今天） · 第 1/1 页</b>
 
    <b>2026-10-05 首播</b>
@@ -56,11 +57,11 @@
    [·一· | 1:w:1] [二 | 1:w:2] [三 | 1:w:3] [四 | 1:w:4] [五 | 1:w:5] [六 | 1:w:6] [日 | 1:w:7]
    [返回榜单 | 1:b:0] [首页 | 1:o:0]
 << answerCallbackQuery
->> user 1001 taps 1:i:1 on message 1
+>> user 1001 taps 1:i:1 on message 2
 -> MoviePilot GET /api/v1/media/search?count=10&title=魔法少女育成计划 restart&type=media
 -> MoviePilot GET /api/v1/media/337277?media_source=themoviedb&type_name=电视剧
 -> MoviePilot GET /api/v1/media/seasons?media_id=337277&media_source=themoviedb
-<< editMessageText chat=1001 message=1 parse_mode=HTML poster=https://image.tmdb.org/t/p/w500/yFRVyWWmNMJ72CqxRc2dZqW9TAE.jpg large=true above=true
+<< editMessageText chat=1001 message=2 parse_mode=HTML poster=https://image.tmdb.org/t/p/w500/yFRVyWWmNMJ72CqxRc2dZqW9TAE.jpg large=true above=true
    📺 <a href="https://www.themoviedb.org/tv/337277"><b>魔法少女育成计划 restart</b></a> (2026) · 电视剧
    <i>魔法少女育成計画 restart</i>
    <blockquote expandable>获得「魔法王国」所赐之魔力、每日勤奋奔走于助人的魔法少女们——她们收到了来自神秘寄信人所寄出，名为『魔法少女育成计划』的游戏邀请函。受到隐藏着死亡风险、毫无逻辑可言的游戏所囚禁的十六位魔法少女，在幕后黑手策划的诡计玩弄下，开始为了存活下来而绞尽脑汁苦思对策……</blockquote>
@@ -73,10 +74,10 @@
    [相似推荐 | 1:r:0]
    [返回 | 1:bk:0] [取消 | 1:x:0]
 << answerCallbackQuery
->> user 1001 taps 1:bk:0 on message 1
+>> user 1001 taps 1:bk:0 on message 2
 -> MoviePilot GET /api/v1/media/search?count=10&title=列女战纪：女娲石记&type=media
 -> Bangumi GET /v0/subjects/390200
-<< editMessageText chat=1001 message=1 parse_mode=HTML
+<< editMessageText chat=1001 message=2 parse_mode=HTML
    <b>🎌 新番放送 · 星期一（今天） · 第 1/1 页</b>
 
    <b>2026-10-05 首播</b>
@@ -104,13 +105,13 @@
    [·一· | 1:w:1] [二 | 1:w:2] [三 | 1:w:3] [四 | 1:w:4] [五 | 1:w:5] [六 | 1:w:6] [日 | 1:w:7]
    [返回榜单 | 1:b:0] [首页 | 1:o:0]
 << answerCallbackQuery
->> user 1001 taps 1:w:2 on message 1
+>> user 1001 taps 1:w:2 on message 2
 -> MoviePilot GET /api/v1/media/search?count=10&title=Cyberpunk: Edgerunners 2&type=media
 -> MoviePilot GET /api/v1/media/search?count=10&title=Dark Machine The Animation&type=media
 -> MoviePilot GET /api/v1/media/search?count=10&title=赛博朋克：边缘行者 2&type=media
 -> Bangumi GET /v0/subjects/505550
 -> Bangumi GET /v0/subjects/513878
-<< editMessageText chat=1001 message=1 parse_mode=HTML
+<< editMessageText chat=1001 message=2 parse_mode=HTML
    <b>🎌 新番放送 · 星期二 · 第 1/1 页</b>
 
    <b>2026-10-13 首播</b>
@@ -132,8 +133,8 @@
    [一 | 1:w:1] [·二· | 1:w:2] [三 | 1:w:3] [四 | 1:w:4] [五 | 1:w:5] [六 | 1:w:6] [日 | 1:w:7]
    [返回榜单 | 1:b:0] [首页 | 1:o:0]
 << answerCallbackQuery
->> user 1001 taps 1:w:3 on message 1
-<< editMessageText chat=1001 message=1 parse_mode=HTML
+>> user 1001 taps 1:w:3 on message 2
+<< editMessageText chat=1001 message=2 parse_mode=HTML
    <b>🎌 新番放送 · 星期三 · 第 1/1 页</b>
    这天没有新番放送。
    [一 | 1:w:1] [二 | 1:w:2] [·三· | 1:w:3] [四 | 1:w:4] [五 | 1:w:5] [六 | 1:w:6] [日 | 1:w:7]

@@ -1,18 +1,35 @@
 >> user 1001 in chat 1001: /start
-<< sendMessage chat=1001 message=1 parse_mode=HTML
+<< sendPhoto chat=1001 message=1 parse_mode=HTML photo=home.jpg 1280x720 sha256=044ae094690453fdfcc5a20f29e8ff7a06c6474e8287e02309152b59b90cd814 caption_above=false
    <b>🎬 Crychic</b>
    搜索并订阅电影和剧集，入库后通知你。
    [搜索订阅 | 1:h:0] [发现 | 1:h:1]
    [订阅 | 1:h:2] [最新入库 | 1:h:3]
    [任务进度 | 1:h:4]
+>> user 1002 taps 1:h:0 on message 1
+<< answerCallbackQuery notice="这不是你发起的请求。"
 >> user 1001 taps 1:h:0 on message 1
-<< editMessageText chat=1001 message=1 parse_mode=HTML
+<< sendMessage chat=1001 message=2 parse_mode=HTML
    请直接回复要搜索的片名：
    [首页 | 1:o:0]
+<< deleteMessage chat=1001 message=1
+<< answerCallbackQuery
+>> user 1001 taps 1:o:0 on message 2
+<< editMessageMedia chat=1001 message=2 parse_mode=HTML photo=home.jpg 1280x720 sha256=044ae094690453fdfcc5a20f29e8ff7a06c6474e8287e02309152b59b90cd814 caption_above=false
+   <b>🎬 Crychic</b>
+   搜索并订阅电影和剧集，入库后通知你。
+   [搜索订阅 | 1:h:0] [发现 | 1:h:1]
+   [订阅 | 1:h:2] [最新入库 | 1:h:3]
+   [任务进度 | 1:h:4]
+<< answerCallbackQuery
+>> user 1001 taps 1:h:0 on message 2
+<< sendMessage chat=1001 message=3 parse_mode=HTML
+   请直接回复要搜索的片名：
+   [首页 | 1:o:0]
+<< deleteMessage chat=1001 message=2
 << answerCallbackQuery
 >> user 1001 in chat 1001: 沙丘
 -> MoviePilot GET /api/v1/media/search?count=10&title=沙丘&type=media
-<< editMessageText chat=1001 message=1 parse_mode=HTML
+<< editMessageText chat=1001 message=3 parse_mode=HTML
    <b>🔍「沙丘」的搜索结果</b>
    1. <b>沙丘</b>
    <i>Dune · 2021 · 电影 · ⭐ 7.8</i>
@@ -33,3 +50,22 @@
    [1 | 1:m:0] [2 | 1:m:1] [3 | 1:m:2] [4 | 1:m:3]
    [5 | 1:m:4] [6 | 1:m:5] [7 | 1:m:6] [8 | 1:m:7]
    [返回 | 1:bk:0] [取消 | 1:x:0]
+>> user 1001 taps 1:bk:0 on message 3
+<< editMessageText chat=1001 message=3 parse_mode=HTML
+   请直接回复要搜索的片名：
+   [首页 | 1:o:0]
+<< answerCallbackQuery
+>> user 1001 taps 1:o:0 on message 3
+<< editMessageMedia chat=1001 message=3 parse_mode=HTML photo=home.jpg 1280x720 sha256=044ae094690453fdfcc5a20f29e8ff7a06c6474e8287e02309152b59b90cd814 caption_above=false
+   <b>🎬 Crychic</b>
+   搜索并订阅电影和剧集，入库后通知你。
+   [搜索订阅 | 1:h:0] [发现 | 1:h:1]
+   [订阅 | 1:h:2] [最新入库 | 1:h:3]
+   [任务进度 | 1:h:4]
+<< answerCallbackQuery
+>> Crychic restarts
+>> user 1001 taps 1:h:0 on message 3
+<< sendMessage chat=1001 message=4 parse_mode=HTML
+   ⌛ 这个菜单已失效，请重新 /start。
+<< deleteMessage chat=1001 message=3
+<< answerCallbackQuery

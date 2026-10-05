@@ -2,7 +2,7 @@
 << sendMessage chat=1001 message=1 parse_mode=HTML
    当前没有下载中或整理中的任务。
 >> user 1001 in chat 1001: /start
-<< sendMessage chat=1001 message=2 parse_mode=HTML
+<< sendPhoto chat=1001 message=2 parse_mode=HTML photo=home.jpg 1280x720 sha256=044ae094690453fdfcc5a20f29e8ff7a06c6474e8287e02309152b59b90cd814 caption_above=false
    <b>🎬 Crychic</b>
    搜索并订阅电影和剧集，入库后通知你。
    [搜索订阅 | 1:h:0] [发现 | 1:h:1]

@@ -270,11 +270,8 @@ func (h *harness) pressData(user int64, msgID int, data string) <-chan struct{} 
 	h.tr.add(fmt.Sprintf(">> user %d taps %s on message %d", user, data, msgID))
 	return h.tg.push(map[string]any{"callback_query": map[string]any{
 		"id": id, "data": data, "chat_instance": "ci",
-		"from": map[string]any{"id": user, "is_bot": false, "first_name": strconv.FormatInt(user, 10)},
-		"message": map[string]any{
-			"message_id": msgID, "date": messageDate, "text": msg.text,
-			"chat": map[string]any{"id": msg.chat, "type": chatType(msg.chat)},
-		},
+		"from":    map[string]any{"id": user, "is_bot": false, "first_name": strconv.FormatInt(user, 10)},
+		"message": msg.wire(msgID),
 	}}, "callback:"+id)
 }
 

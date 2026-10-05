@@ -240,6 +240,7 @@ type Button struct {
 type Reply struct {
 	Text    Text
 	Image   string
+	Banner  bool // show the built-in brand banner above the home menu
 	Buttons [][]Button
 	Notice  string
 	Input   string

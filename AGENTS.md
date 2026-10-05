@@ -47,6 +47,7 @@ Data flow: Telegram update → `telegram.adapter` → `flow.Engine.Start/Choose`
 - `internal/flow/episodes.go` - start-episode choices for seasons and typed answers (`Engine.Answer`)
 - `internal/flow/rich.go` - `flow.Text`: formatting by meaning (bold, italic, code, link, collapsible quote)
 - `internal/telegram/html.go` - renders `flow.Text` to Telegram HTML, escaping everything
+- `internal/telegram/home.go` - embeds `assets/home.jpg`, sends `/start` as a photo with the home text as its caption and the existing keyboard; returning home uses `editMessageMedia`, leaving it sends a text reply before deleting the photo and moves pending input / refresh to the new message
 - `internal/flow/store.go` - in-memory sessions (10 min TTL)
 - `internal/flow/pages.go` - bounded pages for subscriptions, tasks and latest items; page buttons keep item indices stable
 - `internal/telegram/lanes.go` - serializes each message's state transition and edit, including background refreshes
@@ -94,7 +95,7 @@ Data flow: Telegram update → `telegram.adapter` → `flow.Engine.Start/Choose`
 - Media `type` is a Chinese enum: `电影`, `电视剧`; results without `media_source`/`media_id` are dropped
 - Every JSON endpoint answers `{success, message, data}`, even where the route's `response_model` says `List[...]` (wrapped by `app/api/response.py`); `moviepilot.Client.do` unwraps it, and `success: false` on HTTP 200 becomes a `UserError` with `message`
 - `GET /api/v1/subscribe/media/{id}` returns `data` with `id: null` when nothing is subscribed, not a 404
-- Posters render as a large link preview above the text (`telegram.preview`): text messages can't carry photos and can't be edited into photo messages; a reply without `Image` explicitly disables the preview so an old poster doesn't linger
+- Media posters render as a large link preview above the text (`telegram.preview`); a reply without `Image` explicitly disables the preview so an old poster doesn't linger. The home menu alone sets `Reply.Banner` and uploads the bundled JPEG as a photo with its text below; photo messages cannot become text via `editMessageText`, so leaving home replaces the message. Photos are recognized from callback metadata even after a restart; `Reply.Notice` keeps the photo untouched
 - Poster URLs from MoviePilot are TMDB `original` size (MBs); `moviepilot` rewrites them to `w500`
 - `GET /api/v1/media/{id}` details are cosmetic: on failure the card falls back to search metadata and the flow continues; its `directors` field mixes in producers and episode directors, so it isn't shown
 - Subscriptions take `start_episode` (per season): MoviePilot skips earlier episodes. "只追新集" uses details' `next_episode_to_air` and only shows when it is in the chosen season and > 1; button data `ok:<n>` carries the start, validated against the season's episode count before the session is taken

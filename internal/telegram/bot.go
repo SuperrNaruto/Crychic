@@ -217,14 +217,8 @@ func (a *adapter) onMessage(ctx context.Context, b *bot.Bot, msg *models.Message
 	if a.allowed[msg.From.ID] {
 		reply = run(ctx, actorOf(*msg.From, msg.Chat.ID), arg)
 	}
-	_, err := b.SendMessage(ctx, &bot.SendMessageParams{
-		ChatID:             msg.Chat.ID,
-		Text:               renderHTML(reply.Text),
-		ParseMode:          models.ParseModeHTML,
-		LinkPreviewOptions: preview(reply.Image),
-		ReplyMarkup:        keyboard(reply.Buttons),
-	})
-	a.logFailure("sendMessage", err)
+	_, err := a.send(ctx, msg.Chat.ID, reply)
+	a.logFailure("send reply", err)
 }
 
 // command answers one slash command with its argument.
@@ -261,12 +255,7 @@ func (a *adapter) onCallback(ctx context.Context, b *bot.Bot, cq *models.Callbac
 		reply = a.flow.Choose(ctx, actor, cq.Data)
 	}
 	if reply.Notice == "" && cq.Message.Message != nil {
-		t := editTarget{chat: cq.Message.Message.Chat.ID, user: cq.From.ID, message: cq.Message.Message.ID}
-		a.unfollow(t.key())
-		a.edit(ctx, t, reply)
-		if reply.Follow != "" {
-			a.follow(follower{target: t, actor: actor, data: reply.Follow, shown: renderHTML(reply.Text)})
-		}
+		a.showCallback(ctx, cq, reply)
 	}
 	_, err := b.AnswerCallbackQuery(ctx, &bot.AnswerCallbackQueryParams{
 		CallbackQueryID: cq.ID,
@@ -323,28 +312,26 @@ func (a *adapter) onText(ctx context.Context, b *bot.Bot, msg *models.Message) {
 type editTarget struct {
 	chat, user int64
 	message    int
+	photo      bool
 }
 
 // edit renders reply into the conversation message and records whether it
 // now waits for a typed answer.
-func (a *adapter) edit(ctx context.Context, t editTarget, reply flow.Reply) {
+func (a *adapter) edit(ctx context.Context, t editTarget, reply flow.Reply) (editTarget, bool) {
+	shown, err := a.display(ctx, t, reply)
+	if err != nil {
+		a.logFailure("edit reply", err)
+		return t, false
+	}
 	key := inputKey{chat: t.chat, user: t.user}
 	a.mu.Lock()
 	if reply.Input != "" {
-		a.pending[key] = pendingInput{message: t.message, input: reply.Input}
+		a.pending[key] = pendingInput{message: shown.message, input: reply.Input}
 	} else if a.pending[key].message == t.message {
 		delete(a.pending, key)
 	}
 	a.mu.Unlock()
-	_, err := a.api.EditMessageText(ctx, &bot.EditMessageTextParams{
-		ChatID:             t.chat,
-		MessageID:          t.message,
-		Text:               renderHTML(reply.Text),
-		ParseMode:          models.ParseModeHTML,
-		LinkPreviewOptions: preview(reply.Image),
-		ReplyMarkup:        keyboard(reply.Buttons),
-	})
-	a.logFailure("editMessageText", err)
+	return shown, true
 }
 
 func (a *adapter) logFailure(method string, err error) {
@@ -353,9 +340,9 @@ func (a *adapter) logFailure(method string, err error) {
 	}
 }
 
-// preview shows the poster as a large link preview above the text; text
-// messages cannot carry photos, and editing can't turn them into photo
-// messages. Without an image any earlier preview is switched off.
+// preview shows the poster as a large link preview above the text, keeping
+// long lists and media cards editable as text. Without an image any earlier
+// preview is switched off. Only the home banner uses a real photo message.
 func preview(image string) *models.LinkPreviewOptions {
 	on := true
 	if image == "" {
