@@ -30,8 +30,9 @@ Data flow: Telegram update → `telegram.adapter` → `flow.Engine.Start/Choose`
 
 - `internal/flow/model.go` - `Backend`, `Reply`, `UserError`: the contract every platform and backend uses
 - `internal/flow/engine.go` - conversation steps; `internal/flow/text.go` - all user-facing copy (result lines, media card)
+- `internal/flow/episodes.go` - start-episode choices for seasons and typed answers (`Engine.Answer`)
 - `internal/flow/store.go` - in-memory sessions (10 min TTL)
-- `e2e/harness_test.go` - `start`, `say`, `tap`, `tapData`, `shows`
+- `e2e/harness_test.go` - `start`, `say`, `answer`, `chatter`, `tap`, `tapData`, `shows`
 - `e2e/testdata/transcripts/*.txt` - golden transcripts, one per scenario
 
 ## Environment
@@ -64,6 +65,8 @@ Data flow: Telegram update → `telegram.adapter` → `flow.Engine.Start/Choose`
 - Posters render as a large link preview above the text (`telegram.preview`): text messages can't carry photos and can't be edited into photo messages; a reply without `Image` explicitly disables the preview so an old poster doesn't linger
 - Poster URLs from MoviePilot are TMDB `original` size (MBs); `moviepilot` rewrites them to `w500`
 - `GET /api/v1/media/{id}` details are cosmetic: on failure the card falls back to search metadata and the flow continues; its `directors` field mixes in producers and episode directors, so it isn't shown
+- Subscriptions take `start_episode` (per season): MoviePilot skips earlier episodes. "只追新集" uses details' `next_episode_to_air` and only shows when it is in the chosen season and > 1; button data `ok:<n>` carries the start, validated against the season's episode count before the session is taken
+- Typed answers: a `Reply` with `Input` makes the Telegram adapter remember (chat, user) → message in `adapter.pending`; private chats take any plain text from that user, groups only a reply quoting the message
 - Button data is `<session>:<action>:<arg>` and must stay ≤ 64 bytes (Telegram limit)
 - Confirm and cancel use `store.take`, so a double tap acts once; keep that for any step that ends a conversation
 - A `Reply` with `Notice` must not edit the message (another group member tapping your buttons)

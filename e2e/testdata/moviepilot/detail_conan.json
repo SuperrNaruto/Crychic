@@ -1,0 +1,79 @@
+{
+  "success": true,
+  "message": "",
+  "data": {
+    "media_source": "themoviedb",
+    "media_id": "30983",
+    "type": "电视剧",
+    "title": "名侦探柯南",
+    "original_title": "名探偵コナン",
+    "year": "1996",
+    "vote_average": 8.0,
+    "poster_path": "https://image.tmdb.org/t/p/original/7qBrY88hNwMrMb75PkBZjhFolbL.jpg",
+    "runtime": null,
+    "number_of_seasons": 1,
+    "number_of_episodes": 1216,
+    "status": "Returning Series",
+    "overview": "高中生侦探工藤新一与毛利兰在游乐园游玩时发现两个行动诡异的黑衣男子，便跟踪他们，不料被灌下一种叫「APTX4869」的神秘毒药，然而因为药物副作用，新一的身体竟回到孩童状态。为不使周围的人受到牵连，他化名为「江户川柯南」，寄住在毛利兰家中，用阿笠博士发明的手表型麻醉枪让毛利小五郎睡着，接着用蝴蝶结变声器模仿他的声音来进行推理，解决了许多案件，并一直寻找着黑衣组织的人的下落，希望有朝一日将其绳之以法，并变回原来的样子。",
+    "genres": [
+      {
+        "id": 16,
+        "name": "动画"
+      },
+      {
+        "id": 80,
+        "name": "犯罪"
+      },
+      {
+        "id": 9648,
+        "name": "悬疑"
+      },
+      {
+        "id": 35,
+        "name": "喜剧"
+      }
+    ],
+    "actors": [
+      {
+        "id": 68470,
+        "name": "高山南",
+        "character": "Conan Edogawa (voice)"
+      },
+      {
+        "id": 68472,
+        "name": "山口胜平",
+        "character": "Shinichi Kudo (voice)"
+      },
+      {
+        "id": 87582,
+        "name": "山崎和佳奈",
+        "character": "Ran Mouri (voice)"
+      },
+      {
+        "id": 90133,
+        "name": "冈村明美",
+        "character": "Ran Mouri (voice)"
+      },
+      {
+        "id": 54690,
+        "name": "神谷明",
+        "character": "Kogoro Mouri (voice)"
+      }
+    ],
+    "next_episode_to_air": {
+      "id": 7797289,
+      "air_date": "2026-10-10",
+      "episode_number": 1216,
+      "episode_type": "standard",
+      "name": "第 1216 集",
+      "overview": "",
+      "production_code": "",
+      "runtime": 25,
+      "season_number": 1,
+      "show_id": 30983,
+      "still_path": "/f6zB5K4fxK6ZU5YNzeTyHBiU4Lj.jpg",
+      "vote_average": 0.0,
+      "vote_count": 0
+    }
+  }
+}

@@ -44,6 +44,13 @@ type Details struct {
 	Seasons  int // TV only
 	Episodes int // TV only
 	Cast     []string
+	Next     Episode // next episode to air; zero when unknown or ended
+}
+
+// Episode locates one episode of a show.
+type Episode struct {
+	Season int
+	Number int
 }
 
 // Season is one subscribable season of a TV show.
@@ -53,10 +60,13 @@ type Season struct {
 	EpisodeCount int
 }
 
-// Target is what gets subscribed: a movie, or one season of a show.
+// Target is what gets subscribed: a movie, or one season of a show,
+// optionally skipping the episodes before StartEpisode (0 means from the
+// season's beginning).
 type Target struct {
-	Media  Media
-	Season *int
+	Media        Media
+	Season       *int
+	StartEpisode int
 }
 
 // Backend is the media server the bot subscribes through.
@@ -81,12 +91,15 @@ type Button struct {
 
 // Reply is what the platform shows after an action. Image is a poster URL
 // to show with the text. A Reply with Notice set leaves the conversation
-// message untouched and only flashes the notice.
+// message untouched and only flashes the notice. A Reply with Input set asks
+// the user to type an answer, which the platform hands to Engine.Answer
+// together with Input.
 type Reply struct {
 	Text    string
 	Image   string
 	Buttons [][]Button
 	Notice  string
+	Input   string
 }
 
 // UserError carries a message that is safe and useful to show the user.

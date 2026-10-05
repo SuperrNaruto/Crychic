@@ -87,13 +87,18 @@ func titleYear(m Media) string {
 	return fmt.Sprintf("%s (%s)", m.Title, m.Year)
 }
 
-// targetName is how a subscription is referred to, e.g. 《沙丘》第 2 季.
+// targetName is how a subscription is referred to, e.g. 《沙丘》,
+// 《绝命毒师》第 2 季 or 《名侦探柯南》第 1 季（从第 500 集开始）.
 func targetName(t Target) string {
 	name := fmt.Sprintf("《%s》", t.Media.Title)
 	if t.Season == nil {
 		return name
 	}
-	return fmt.Sprintf("%s第 %d 季", name, *t.Season)
+	name = fmt.Sprintf("%s第 %d 季", name, *t.Season)
+	if t.StartEpisode > 0 {
+		name += fmt.Sprintf("（从第 %d 集开始）", t.StartEpisode)
+	}
+	return name
 }
 
 func seasonLabel(s Season) string {

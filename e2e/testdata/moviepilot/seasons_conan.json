@@ -1,0 +1,22 @@
+{
+  "success": true,
+  "message": "",
+  "data": [
+    {
+      "id": null,
+      "air_date": "2000-01-01",
+      "episode_count": 35,
+      "name": "特别篇",
+      "season_number": 0,
+      "vote_average": 0.0
+    },
+    {
+      "id": null,
+      "air_date": "1996-01-08",
+      "episode_count": 1216,
+      "name": "第 1 季",
+      "season_number": 1,
+      "vote_average": 7.7
+    }
+  ]
+}

@@ -14,8 +14,65 @@ const (
 	duneDetails   = "GET /api/v1/media/438631"
 	breakDetails  = "GET /api/v1/media/1396"
 
-	duneMovie = "1. 沙丘 (2021)"
+	conanLookup  = "GET /api/v1/subscribe/media/30983"
+	conanDetails = "GET /api/v1/media/30983"
+
+	duneMovie  = "1. 沙丘 (2021)"
+	conanShow  = "1. 名侦探柯南 (1996)"
+	conanFirst = "第 1 季 · 1216 集"
 )
+
+// conanRoutes serve an ongoing show with one 1216-episode season whose next
+// episode (1216) has not aired yet.
+func conanRoutes() map[string]route {
+	return map[string]route{
+		searchPath:    ok("search_conan.json"),
+		conanDetails:  ok("detail_conan.json"),
+		seasonsPath:   ok("seasons_conan.json"),
+		conanLookup:   ok("subscription_none.json"),
+		subscribePath: ok("subscribe_created.json"),
+	}
+}
+
+// Someone who has watched an ongoing show only wants new episodes.
+func TestFollowOnlyNewEpisodes(t *testing.T) {
+	h := start(t, scenario{routes: conanRoutes()})
+	h.say(alice, alice, "/request 名侦探柯南")
+	h.tap(alice, 1, conanShow)
+	h.tap(alice, 1, conanFirst)
+	h.tap(alice, 1, "只追新集（第 1216 集起）")
+	h.shows(1, "已订阅《名侦探柯南》第 1 季（从第 1216 集开始）")
+	h.tr.verify(t)
+}
+
+// A typed start episode is range-checked against the season, then confirmed.
+func TestStartFromTypedEpisode(t *testing.T) {
+	h := start(t, scenario{routes: conanRoutes()})
+	h.say(alice, alice, "/request 名侦探柯南")
+	h.tap(alice, 1, conanShow)
+	h.tap(alice, 1, conanFirst)
+	h.tap(alice, 1, "指定起始集…")
+	h.answer(alice, 1, "1300", false)
+	h.shows(1, "「1300」不是有效的集数")
+	h.answer(alice, 1, "500", false)
+	h.tap(alice, 1, "确认订阅")
+	h.shows(1, "已订阅《名侦探柯南》第 1 季（从第 500 集开始）")
+	h.tr.verify(t)
+}
+
+// In a group only a reply to the conversation message counts as the answer.
+func TestGroupChatterIsNotAnAnswer(t *testing.T) {
+	h := start(t, scenario{routes: conanRoutes()})
+	h.say(alice, group, "/request 名侦探柯南")
+	h.tap(alice, 1, conanShow)
+	h.tap(alice, 1, conanFirst)
+	h.tap(alice, 1, "指定起始集…")
+	h.chatter(alice, group, "500")
+	h.chatter(bob, group, "600")
+	h.answer(alice, 1, "700", true)
+	h.shows(1, "确认订阅《名侦探柯南》第 1 季（从第 700 集开始）")
+	h.tr.verify(t)
+}
 
 func TestSubscribeMovie(t *testing.T) {
 	h := start(t, scenario{routes: map[string]route{
@@ -42,7 +99,7 @@ func TestSubscribeOneSeasonOfShow(t *testing.T) {
 	h.say(alice, alice, "/request 绝命毒师")
 	h.tap(alice, 1, "1. 绝命毒师 (2008)")
 	h.tap(alice, 1, "第 2 季 · 13 集")
-	h.tap(alice, 1, "确认订阅")
+	h.tap(alice, 1, "从第 1 集开始")
 	h.shows(1, "已订阅《绝命毒师》第 2 季")
 	h.tr.verify(t)
 }

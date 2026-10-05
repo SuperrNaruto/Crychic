@@ -118,6 +118,10 @@ func (c *Client) Details(ctx context.Context, media flow.Media) (flow.Details, e
 		Seasons  int     `json:"number_of_seasons"`
 		Episodes int     `json:"number_of_episodes"`
 		Actors   []named `json:"actors"`
+		Next     struct {
+			Season  int `json:"season_number"`
+			Episode int `json:"episode_number"`
+		} `json:"next_episode_to_air"`
 	}
 	path := "/api/v1/media/" + url.PathEscape(media.ID)
 	if err := c.do(ctx, call{method: http.MethodGet, path: path, query: q}, &raw); err != nil {
@@ -126,6 +130,7 @@ func (c *Client) Details(ctx context.Context, media flow.Media) (flow.Details, e
 	return flow.Details{
 		Genres: names(raw.Genres), Runtime: raw.Runtime,
 		Seasons: raw.Seasons, Episodes: raw.Episodes, Cast: names(raw.Actors),
+		Next: flow.Episode{Season: raw.Next.Season, Number: raw.Next.Episode},
 	}, nil
 }
 
@@ -179,12 +184,15 @@ type subscribeBody struct {
 	MediaSource string `json:"media_source"`
 	MediaID     string `json:"media_id"`
 	Season      *int   `json:"season,omitempty"`
+	// StartEpisode makes MoviePilot skip the season's earlier episodes.
+	StartEpisode int `json:"start_episode,omitempty"`
 }
 
 func (c *Client) Subscribe(ctx context.Context, t flow.Target) error {
 	body := subscribeBody{
 		Name: t.Media.Title, Year: t.Media.Year, Type: kindType(t.Media.Kind),
 		MediaSource: t.Media.Source, MediaID: t.Media.ID, Season: t.Season,
+		StartEpisode: t.StartEpisode,
 	}
 	var created struct {
 		ID *int `json:"id"`

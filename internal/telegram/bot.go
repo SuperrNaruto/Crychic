@@ -8,6 +8,7 @@ import (
 	"log/slog"
 	"net/http"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/go-telegram/bot"
@@ -31,6 +32,7 @@ const (
 type Flow interface {
 	Start(ctx context.Context, actor flow.Actor, term string) flow.Reply
 	Choose(ctx context.Context, actor flow.Actor, data string) flow.Reply
+	Answer(ctx context.Context, actor flow.Actor, input, text string) flow.Reply
 }
 
 // Config configures the Telegram bot.
@@ -46,6 +48,18 @@ type adapter struct {
 	flow    Flow
 	allowed map[int64]bool
 	log     *slog.Logger
+
+	mu      sync.Mutex
+	pending map[inputKey]pendingInput
+}
+
+// inputKey identifies whose typed answer a conversation message waits for.
+type inputKey struct{ chat, user int64 }
+
+// pendingInput is a conversation message waiting for a typed answer.
+type pendingInput struct {
+	message int
+	input   string
 }
 
 // Run long-polls Telegram until ctx is cancelled.
@@ -54,7 +68,7 @@ func Run(ctx context.Context, cfg Config, f Flow) error {
 	for _, id := range cfg.AllowedUsers {
 		allowed[id] = true
 	}
-	a := &adapter{flow: f, allowed: allowed, log: cfg.Log}
+	a := &adapter{flow: f, allowed: allowed, log: cfg.Log, pending: map[inputKey]pendingInput{}}
 	b, err := bot.New(cfg.Token,
 		bot.WithServerURL(cfg.APIURL),
 		bot.WithHTTPClient(pollTimeout, cfg.HTTPClient),
@@ -79,8 +93,12 @@ func (a *adapter) handle(ctx context.Context, b *bot.Bot, upd *models.Update) {
 }
 
 func (a *adapter) onMessage(ctx context.Context, b *bot.Bot, msg *models.Message) {
+	if msg.From == nil {
+		return
+	}
 	cmd, arg, ok := parseCommand(msg.Text)
-	if !ok || msg.From == nil {
+	if !ok {
+		a.onText(ctx, b, msg)
 		return
 	}
 	var reply flow.Reply
@@ -111,20 +129,65 @@ func (a *adapter) onCallback(ctx context.Context, b *bot.Bot, cq *models.Callbac
 		reply = a.flow.Choose(ctx, flow.Actor{UserID: cq.From.ID}, cq.Data)
 	}
 	if reply.Notice == "" && cq.Message.Message != nil {
-		_, err := b.EditMessageText(ctx, &bot.EditMessageTextParams{
-			ChatID:             cq.Message.Message.Chat.ID,
-			MessageID:          cq.Message.Message.ID,
-			Text:               reply.Text,
-			LinkPreviewOptions: preview(reply.Image),
-			ReplyMarkup:        keyboard(reply.Buttons),
-		})
-		a.logFailure("editMessageText", err)
+		a.edit(ctx, b, editTarget{chat: cq.Message.Message.Chat.ID, user: cq.From.ID, message: cq.Message.Message.ID}, reply)
 	}
 	_, err := b.AnswerCallbackQuery(ctx, &bot.AnswerCallbackQueryParams{
 		CallbackQueryID: cq.ID,
 		Text:            reply.Notice,
 	})
 	a.logFailure("answerCallbackQuery", err)
+}
+
+// onText routes a plain message to the conversation waiting for its
+// author's answer. In groups only a reply to that message counts, so
+// ordinary chatter is never taken as an answer.
+func (a *adapter) onText(ctx context.Context, b *bot.Bot, msg *models.Message) {
+	key := inputKey{chat: msg.Chat.ID, user: msg.From.ID}
+	a.mu.Lock()
+	p, ok := a.pending[key]
+	a.mu.Unlock()
+	if !ok || !a.allowed[msg.From.ID] {
+		return
+	}
+	isReply := msg.ReplyToMessage != nil && msg.ReplyToMessage.ID == p.message
+	if msg.Chat.Type != models.ChatTypePrivate && !isReply {
+		return
+	}
+	reply := a.flow.Answer(ctx, flow.Actor{UserID: msg.From.ID}, p.input, msg.Text)
+	if reply.Notice != "" {
+		// Pending inputs are keyed by user and hold the bot's own token, so
+		// the flow never refuses one; keep the card rather than clobber it.
+		a.log.Warn("typed answer refused", "notice", reply.Notice)
+		return
+	}
+	a.edit(ctx, b, editTarget{chat: key.chat, user: key.user, message: p.message}, reply)
+}
+
+// editTarget is a conversation message and the user driving it.
+type editTarget struct {
+	chat, user int64
+	message    int
+}
+
+// edit renders reply into the conversation message and records whether it
+// now waits for a typed answer.
+func (a *adapter) edit(ctx context.Context, b *bot.Bot, t editTarget, reply flow.Reply) {
+	key := inputKey{chat: t.chat, user: t.user}
+	a.mu.Lock()
+	if reply.Input != "" {
+		a.pending[key] = pendingInput{message: t.message, input: reply.Input}
+	} else if a.pending[key].message == t.message {
+		delete(a.pending, key)
+	}
+	a.mu.Unlock()
+	_, err := b.EditMessageText(ctx, &bot.EditMessageTextParams{
+		ChatID:             t.chat,
+		MessageID:          t.message,
+		Text:               reply.Text,
+		LinkPreviewOptions: preview(reply.Image),
+		ReplyMarkup:        keyboard(reply.Buttons),
+	})
+	a.logFailure("editMessageText", err)
 }
 
 func (a *adapter) logFailure(method string, err error) {

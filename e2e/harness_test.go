@@ -76,12 +76,43 @@ func start(t *testing.T, sc scenario) *harness {
 func (h *harness) say(user, chat int64, text string) {
 	h.t.Helper()
 	h.tr.add(fmt.Sprintf(">> user %d in chat %d: %s", user, chat, text))
-	done := h.tg.push(map[string]any{"message": map[string]any{
+	h.wait(h.tg.push(textUpdate(user, chat, text, 0), fmt.Sprintf("send:%d", chat)), text)
+}
+
+// answer types text into message msgID's chat (quoting msgID when quote is
+// set) and waits for the bot to update that message.
+func (h *harness) answer(user int64, msgID int, text string, quote bool) {
+	h.t.Helper()
+	chat := mustMessage(h, msgID).chat
+	replyTo, how := 0, ""
+	if quote {
+		replyTo, how = msgID, fmt.Sprintf(" quoting message %d", msgID)
+	}
+	h.tr.add(fmt.Sprintf(">> user %d in chat %d%s: %s", user, chat, how, text))
+	h.wait(h.tg.push(textUpdate(user, chat, text, replyTo), fmt.Sprintf("edit:%d", msgID)), text)
+}
+
+// chatter sends a message the bot must ignore. Nothing waits for it; a
+// stray bot reaction shows up in the transcript.
+func (h *harness) chatter(user, chat int64, text string) {
+	h.t.Helper()
+	h.tr.add(fmt.Sprintf(">> user %d in chat %d: %s", user, chat, text))
+	h.tg.push(textUpdate(user, chat, text, 0), "")
+}
+
+func textUpdate(user, chat int64, text string, replyTo int) map[string]any {
+	msg := map[string]any{
 		"message_id": 0, "date": messageDate, "text": text,
 		"from": map[string]any{"id": user, "is_bot": false, "first_name": strconv.FormatInt(user, 10)},
 		"chat": map[string]any{"id": chat, "type": chatType(chat)},
-	}}, fmt.Sprintf("send:%d", chat))
-	h.wait(done, text)
+	}
+	if replyTo > 0 {
+		msg["reply_to_message"] = map[string]any{
+			"message_id": replyTo, "date": messageDate,
+			"chat": map[string]any{"id": chat, "type": chatType(chat)},
+		}
+	}
+	return map[string]any{"message": msg}
 }
 
 // tap presses the button labelled label on message msgID, failing the test

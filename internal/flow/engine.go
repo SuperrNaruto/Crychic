@@ -19,7 +19,8 @@ const (
 
 	actionMedia   = "m"
 	actionSeason  = "s"
-	actionConfirm = "ok"
+	actionConfirm = "ok" // arg: start episode, 0 = from the beginning
+	actionAskFrom = "e"
 	actionCancel  = "x"
 )
 
@@ -104,7 +105,9 @@ func (e *Engine) Choose(ctx context.Context, actor Actor, raw string) Reply {
 	case actionSeason:
 		return e.pickSeason(ctx, sess, arg)
 	case actionConfirm:
-		return e.confirm(ctx, id)
+		return e.confirm(ctx, sess, arg)
+	case actionAskFrom:
+		return askStart(sess, "")
 	case actionCancel:
 		e.store.take(id)
 		return Reply{Text: msgCancelled}
@@ -172,24 +175,38 @@ func (e *Engine) offerConfirm(ctx context.Context, sess session, target Target) 
 	}
 	sess.target = &target
 	e.store.put(sess)
-	confirm := Button{Label: "确认订阅", Data: data(sess.id, actionConfirm, 0)}
+	if target.Season != nil {
+		return startChoices(sess, *target.Season)
+	}
+	return confirmCard(sess, target)
+}
+
+// confirmCard asks for the final go-ahead on a fully specified target.
+func confirmCard(sess session, target Target) Reply {
+	confirm := Button{Label: "确认订阅", Data: data(sess.id, actionConfirm, target.StartEpisode)}
 	question := fmt.Sprintf("确认订阅%s？", targetName(target))
 	return sess.picked.reply(question, [][]Button{{confirm, cancelButton(sess.id)}})
 }
 
-func (e *Engine) confirm(ctx context.Context, id uint64) Reply {
-	sess, ok := e.store.take(id)
-	if !ok {
-		return Reply{Text: msgExpired}
-	}
+// confirm subscribes from episode from (0 for movies or the season start).
+// The session is taken only after validation, so a forged or stale start
+// cannot consume it.
+func (e *Engine) confirm(ctx context.Context, sess session, from int) Reply {
 	if sess.target == nil {
 		return Reply{Text: msgExpired}
 	}
-	if err := e.backend.Subscribe(ctx, *sess.target); err != nil {
+	if !sess.validStart(from) {
+		return Reply{Notice: msgInvalidChoice}
+	}
+	if _, ok := e.store.take(sess.id); !ok {
+		return Reply{Text: msgExpired}
+	}
+	target := *sess.target
+	target.StartEpisode = from
+	if err := e.backend.Subscribe(ctx, target); err != nil {
 		return e.failure("subscribe", err)
 	}
-	done := fmt.Sprintf("已订阅%s，MoviePilot 会自动搜索下载。", targetName(*sess.target))
-	return sess.picked.reply(done, nil)
+	return sess.picked.reply(fmt.Sprintf("已订阅%s，MoviePilot 会自动搜索下载。", targetName(target)), nil)
 }
 
 func (e *Engine) failure(step string, err error) Reply {

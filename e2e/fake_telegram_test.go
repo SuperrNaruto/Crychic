@@ -56,12 +56,15 @@ func newFakeTelegram(tr *transcript) *fakeTelegram {
 }
 
 // push queues an update and returns a channel closed when the bot finishes
-// handling it, identified by the completing call's key.
+// handling it, identified by the completing call's key; an empty key means
+// the bot is expected to stay silent.
 func (f *fakeTelegram) push(upd map[string]any, doneKey string) <-chan struct{} {
 	f.mu.Lock()
 	defer f.mu.Unlock()
 	done := make(chan struct{})
-	f.waiters[doneKey] = done
+	if doneKey != "" {
+		f.waiters[doneKey] = done
+	}
 	upd["update_id"] = len(f.updates) + 1
 	f.updates = append(f.updates, upd)
 	close(f.arrived)
@@ -154,7 +157,7 @@ func (f *fakeTelegram) store(r *http.Request, method string) map[string]any {
 	if preview.URL != "" {
 		head += fmt.Sprintf(" poster=%s large=%t above=%t", preview.URL, preview.Large, preview.Above)
 	}
-	doneKey := ""
+	doneKey := fmt.Sprintf("edit:%d", id)
 	if method == "sendMessage" {
 		doneKey = fmt.Sprintf("send:%d", chat)
 	}
