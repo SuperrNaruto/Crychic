@@ -10,6 +10,7 @@ Go chat bot that searches media and creates subscriptions in MoviePilot (v3 API)
 | `go vet ./... && gofmt -l .` | Lint; both must print nothing |
 | `go test -race ./...` | Run all tests (they live only in `e2e/`) |
 | `go test ./e2e/ -run TestSubscribeMovie` | Run one scenario |
+| `docker build -t crychic .` | Build the image (distroless, uid 65532, data at `/data`); `compose.example.yaml` shows a deployment |
 | `go test ./e2e/ -update` | Regenerate golden transcripts after an intended behavior change |
 
 ## Architecture

@@ -42,6 +42,16 @@
 go build -o crychic ./cmd/crychic && ./crychic
 ```
 
+## 部署（Docker）
+
+```sh
+cp compose.example.yaml compose.yaml   # 填入 API Key、Bot Token、白名单
+mkdir -p data && sudo chown 65532:65532 data
+docker compose up -d --build
+```
+
+镜像基于 `distroless/static`（约 15 MB），以 uid 65532 运行，数据目录挂载到 `/data`。示例使用 host 网络，以便访问同机的 MoviePilot（`127.0.0.1:3001`）。
+
 ## 架构
 
 ```

@@ -1,0 +1,17 @@
+# Copy to compose.yaml and fill in. Host networking lets Crychic reach a
+# MoviePilot that also runs on this host at 127.0.0.1.
+services:
+  crychic:
+    image: crychic
+    build: .
+    container_name: crychic
+    restart: unless-stopped
+    network_mode: host
+    user: "65532:65532"
+    volumes:
+      - ./data:/data
+    environment:
+      CRYCHIC_MOVIEPILOT_URL: http://127.0.0.1:3001
+      CRYCHIC_MOVIEPILOT_API_KEY: ${CRYCHIC_MOVIEPILOT_API_KEY}
+      CRYCHIC_TELEGRAM_TOKEN: ${CRYCHIC_TELEGRAM_TOKEN}
+      CRYCHIC_TELEGRAM_ALLOWED_USERS: "123456789"
