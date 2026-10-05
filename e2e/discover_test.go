@@ -59,14 +59,17 @@ func TestDoubanPicksAreMatchedByTitle(t *testing.T) {
 
 // The anime calendar groups picks by air date and links each to its TMDB
 // page with a collapsed synopsis, found by its title or else its original
-// title; a show TMDB lacks, or has no synopsis for, gets Bangumi's.
+// title; a show TMDB lacks, or has no synopsis for, gets Bangumi's. A
+// synopsis MoviePilot failed to fetch is fetched again when the page
+// shows again.
 func TestAnimeCalendarShowsAirDatesAndSynopses(t *testing.T) {
 	h := start(t, scenario{
 		routes: map[string]route{
 			animePath:     ok("chart_anime.json"),
 			searchPath:    ok("empty.json"),
-			nuwaDetails:   ok("detail_calendar_nuwa.json"),
+			nuwaDetails:   ok("detail_unrecognized.json"),
 			psyrenDetails: ok("detail_calendar_psyren.json"),
+			seasonsPath:   ok("seasons_mygo.json"),
 		},
 		searches: map[string]string{
 			"列女战纪：女娲石记":            "search_calendar_nuwa.json",
@@ -82,6 +85,10 @@ func TestAnimeCalendarShowsAirDatesAndSynopses(t *testing.T) {
 	h.tap(alice, 1, "🎌 新番放送")
 	h.shows(1, "2026-10-05 首播")
 	h.shows(1, "themoviedb.org/tv/297903")
+	h.mp.setRoute(nuwaDetails, ok("detail_calendar_nuwa.json"))
+	h.tap(alice, 1, "2")
+	h.tap(alice, 1, "取消")
+	h.shows(1, "补天的时代已经过去")
 	h.shows(1, "bgm.tv/subject/390200")
 	h.tr.verify(t)
 }

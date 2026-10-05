@@ -12,20 +12,24 @@ const tmdbSource = "themoviedb"
 // TMDB has the same show, and a synopsis from TMDB, else from their own
 // source. Calendar picks carry Bangumi ids and no synopsis, while transfer
 // history only carries TMDB ids. It is cosmetic: a failed lookup leaves the
-// pick as it was. Every lookup of a page runs at once, so a page costs one
-// round trip, not one per pick or per kind of lookup.
+// pick as it was. MoviePilot answers an upstream failure with an empty
+// result, so a pick still without synopsis is looked up again the next
+// time its page shows. Every lookup of a page runs at once, so a page
+// costs one round trip, not one per pick or per kind of lookup.
 func (e *Engine) annotate(ctx context.Context, sess *session, first, end int) {
 	if len(sess.noted) != len(sess.picks) {
 		sess.picks, sess.noted = slices.Clone(sess.picks), make([]bool, len(sess.picks))
 	}
-	picks := sess.picks
+	picks, noted := sess.picks, sess.noted
 	var wg sync.WaitGroup
 	for i := first; i < end; i++ {
-		if sess.noted[i] {
+		if noted[i] {
 			continue
 		}
-		sess.noted[i] = true
-		wg.Go(func() { picks[i] = e.note(ctx, picks[i]) })
+		wg.Go(func() {
+			picks[i] = e.note(ctx, picks[i])
+			noted[i] = picks[i].Overview != ""
+		})
 	}
 	wg.Wait()
 }
