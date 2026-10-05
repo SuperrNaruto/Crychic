@@ -2,4 +2,3 @@
 -> MoviePilot GET /api/v1/media/search?count=10&title=不存在的电影&type=media
 << sendMessage chat=1001 message=1 parse_mode=HTML
    🔍 没有找到「不存在的电影」相关的影视。
-   ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀

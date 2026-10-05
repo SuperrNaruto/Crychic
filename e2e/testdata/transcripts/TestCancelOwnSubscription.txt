@@ -10,7 +10,6 @@
    <i>No Half Measures: Creating the Final Season of Breaking Bad · 2013 · 电影 · ⭐ 8.5</i>
    4. <b>The Road to El Camino: Behind the Scenes of El Camino: A Breaking Bad Movie</b>
    <i>2019 · 电影 · ⭐ 6.9</i>
-   ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
    [1 | 1:m:0] [2 | 1:m:1] [3 | 1:m:2] [4 | 1:m:3]
    [取消 | 1:x:0]
 >> user 1001 taps 1:m:0 on message 1
@@ -72,7 +71,6 @@
    <i>订阅中 · 缺 1/13 集</i>
    3. <b>《沙丘》</b>
    <i>待处理</i>
-   ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
    [取消 1 | 2:v:0]
    [首页 | 2:o:0]
 >> user 1001 taps 2:v:0 on message 2
@@ -90,7 +88,6 @@
    <i>订阅中 · 缺 1/13 集</i>
    3. <b>《沙丘》</b>
    <i>待处理</i>
-   ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
    [取消 1 | 2:v:0]
    [首页 | 2:o:0]
 << answerCallbackQuery
@@ -103,7 +100,6 @@
 -> MoviePilot DELETE /api/v1/subscribe/1
 << editMessageText chat=1001 message=2 parse_mode=HTML
    ✅ 已取消订阅《绝命毒师》第 2 季。
-   ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
    [返回订阅列表 | 2:j:0] [首页 | 2:o:0]
 << answerCallbackQuery
 >> user 1001 taps 2:j:0 on message 2
@@ -116,7 +112,6 @@
    <i>订阅中 · 缺 1/13 集</i>
    3. <b>《沙丘》</b>
    <i>待处理</i>
-   ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
    [首页 | 2:o:0]
 << answerCallbackQuery
 >> MoviePilot transfers 绝命毒师 (themoviedb/1396) S02E01-E13
@@ -130,5 +125,4 @@
    <i>订阅中 · 缺 1/13 集</i>
    3. <b>《沙丘》</b>
    <i>待处理</i>
-   ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
    [首页 | 3:o:0]

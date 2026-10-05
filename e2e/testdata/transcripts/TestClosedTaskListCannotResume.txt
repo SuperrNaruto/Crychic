@@ -7,16 +7,13 @@
    <b>📦 整理</b>
    2. <b>《颂乐人偶》第 1 季</b>
    <i>已整理 0/2 个文件</i>
-   ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
    [1 | 1:k:0] [2 | 1:k:1]
    [关闭 | 1:c:0]
 >> user 1001 taps 1:c:0 on message 1
 << editMessageText chat=1001 message=1 parse_mode=HTML
    已关闭。
-   ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 << answerCallbackQuery
 >> user 1001 taps 1:k:0 on message 1
 << editMessageText chat=1001 message=1 parse_mode=HTML
    ⌛ 这个任务列表已失效，请重新 /tasks。
-   ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 << answerCallbackQuery

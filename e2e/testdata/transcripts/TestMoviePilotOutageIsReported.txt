@@ -2,4 +2,3 @@
 -> MoviePilot GET /api/v1/media/search?count=10&title=沙丘&type=media
 << sendMessage chat=1001 message=1 parse_mode=HTML
    ⚠️ MoviePilot 暂时不可用，请稍后再试。
-   ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀

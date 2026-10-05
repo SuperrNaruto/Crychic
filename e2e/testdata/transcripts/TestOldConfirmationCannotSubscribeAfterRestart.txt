@@ -18,7 +18,6 @@
    <i>Frank Herbert&#39;s Dune · 2000 · 电视剧 · ⭐ 6.8</i>
    8. <b>沙丘虫暴</b>
    <i>2021 · 电影 · ⭐ 6.7</i>
-   ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
    [1 | 1:m:0] [2 | 1:m:1] [3 | 1:m:2] [4 | 1:m:3]
    [5 | 1:m:4] [6 | 1:m:5] [7 | 1:m:6] [8 | 1:m:7]
    [取消 | 1:x:0]
@@ -47,7 +46,6 @@
    <i>Diggers · 2007 · 电影 · ⭐ 6.0</i>
    3. <b>挖掘者</b>
    <i>Digger · 1993 · 电影 · ⭐ 6.5</i>
-   ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
    [1 | 2:m:0] [2 | 2:m:1] [3 | 2:m:2]
    [取消 | 2:x:0]
 >> user 1001 taps 2:m:0 on message 2
@@ -67,7 +65,6 @@
 >> user 1001 taps 1:ok:0 on message 1
 << editMessageText chat=1001 message=1 parse_mode=HTML
    ⌛ 这个请求已失效，请重新 /request。
-   ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 << answerCallbackQuery
 >> user 1001 taps 2:ok:0 on message 2
 -> MoviePilot POST /api/v1/subscribe/
