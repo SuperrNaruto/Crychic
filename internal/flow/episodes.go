@@ -61,11 +61,12 @@ func (e *Engine) Answer(ctx context.Context, actor Actor, typed Typed) Reply {
 	if !ok || (p.action != actionAskFrom && p.action != actionAskTitle) {
 		return Reply{Notice: msgInvalidChoice}
 	}
-	sess, ok := e.store.get(id)
+	sess, unlock, ok := e.lockSession(ctx, actor, id)
+	defer unlock()
 	if !ok {
 		return expired(p.action)
 	}
-	if sess.owner.UserID != actor.UserID {
+	if sess.owner.UserID != actor.UserID || sess.owner.Address != actor.Address {
 		return Reply{Notice: msgNotYours}
 	}
 	text := strings.TrimSpace(typed.Text)

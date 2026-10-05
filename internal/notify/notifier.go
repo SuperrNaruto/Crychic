@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log/slog"
+	"reflect"
 	"slices"
 	"sync"
 	"time"
@@ -16,7 +17,9 @@ const (
 	// covering files still being transferred after downloads finished.
 	orphanGrace = 72 * time.Hour
 	// activityEvery spaces out the per-subscription liveness checks.
-	activityEvery = time.Hour
+	activityEvery      = time.Hour
+	libraryConcurrency = 4
+	libraryTimeout     = 5 * time.Second
 )
 
 // Options configures a Notifier.
@@ -137,18 +140,48 @@ func (n *Notifier) poll(ctx context.Context) error {
 // show their arrivals yet and they have waited less than LibraryWait.
 func (n *Notifier) unseen(ctx context.Context, ready []watch, now time.Time) map[int]bool {
 	held := map[int]bool{}
-	for _, w := range ready {
-		waited := now.Sub(*w.ArrivedAt) - n.opts.Quiet
-		if waited < n.opts.LibraryWait && !n.visible(ctx, w) {
-			held[w.SubscriptionID] = true
-		}
+	if n.opts.LibraryWait <= 0 {
+		return held
 	}
+	var mu sync.Mutex
+	var wg sync.WaitGroup
+	slots := make(chan struct{}, libraryConcurrency)
+	for _, w := range ready {
+		if n.waited(w, now) >= n.opts.LibraryWait {
+			continue
+		}
+		select {
+		case slots <- struct{}{}:
+		case <-ctx.Done():
+			wg.Wait()
+			return held
+		}
+		wg.Go(func() {
+			defer func() { <-slots }()
+			if !n.visible(ctx, w) {
+				mu.Lock()
+				held[w.SubscriptionID] = true
+				mu.Unlock()
+			}
+		})
+	}
+	wg.Wait()
 	return held
+}
+
+func (n *Notifier) waited(w watch, now time.Time) time.Duration {
+	waited := now.Sub(*w.ArrivedAt)
+	if !w.complete() {
+		waited -= n.opts.Quiet
+	}
+	return waited
 }
 
 // visible asks the media server whether w's pending arrivals show; when it
 // cannot tell, the notice is not held up.
 func (n *Notifier) visible(ctx context.Context, w watch) bool {
+	ctx, cancel := context.WithTimeout(ctx, libraryTimeout)
+	defer cancel()
 	lib, err := n.opts.Feed.Library(ctx, w.media())
 	if err != nil {
 		n.opts.Log.Warn("library check failed", "subscription", w.SubscriptionID, "err", err)
@@ -230,6 +263,9 @@ func (n *Notifier) update(transition func(state) state) error {
 	n.mu.Lock()
 	defer n.mu.Unlock()
 	next := transition(n.st)
+	if reflect.DeepEqual(n.st, next) {
+		return nil
+	}
 	if err := saveState(n.opts.Path, next); err != nil {
 		return fmt.Errorf("remember requests: %w", err)
 	}

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"regexp"
 	"strconv"
 	"strings"
 	"sync"
@@ -18,22 +19,40 @@ var update = flag.Bool("update", false, "rewrite golden transcripts")
 // scenario's transcript is committed under testdata/transcripts and is the
 // reviewable, repeatable artifact of the run.
 type transcript struct {
-	mu    sync.Mutex
-	lines []string
+	mu       sync.Mutex
+	lines    []string
+	sessions map[string]string
 }
 
 func (tr *transcript) add(head string, body ...string) {
 	tr.mu.Lock()
 	defer tr.mu.Unlock()
-	tr.lines = append(tr.lines, head)
+	tr.lines = append(tr.lines, tr.normalize(head))
 	if len(body) == 0 {
 		tr.settle()
 	}
 	for _, b := range body {
 		for _, line := range strings.Split(b, "\n") {
-			tr.lines = append(tr.lines, "   "+line)
+			tr.lines = append(tr.lines, strings.TrimRight("   "+tr.normalize(line), " \t"))
 		}
 	}
+}
+
+var callbackToken = regexp.MustCompile(`\b[0-9]+:[a-z]+:-?[0-9]+\b`)
+
+// Session identities are random in production. Normalize only the transcript,
+// never the updates sent to the app, preserving identity across restarts.
+func (tr *transcript) normalize(text string) string {
+	if tr.sessions == nil {
+		tr.sessions = map[string]string{}
+	}
+	return callbackToken.ReplaceAllStringFunc(text, func(token string) string {
+		id, action, _ := strings.Cut(token, ":")
+		if tr.sessions[id] == "" {
+			tr.sessions[id] = strconv.Itoa(len(tr.sessions) + 1)
+		}
+		return tr.sessions[id] + ":" + action
+	})
 }
 
 // settle sorts the last line into the run of reads of the same route

@@ -1,0 +1,8 @@
+>> user 1001 in chat 1001: /start
+>> user 1001 in chat 1001: /start
+<< sendMessage chat=1001 message=1 parse_mode=HTML
+   <b>🎬 Crychic</b>
+   搜索并订阅电影和剧集，入库后通知你。
+   [🔍 搜索订阅 | 1:h:0] [🔥 发现 | 1:h:1]
+   [📚 订阅 | 1:h:2] [🆕 最新入库 | 1:h:3]
+   [📋 任务进度 | 1:h:4]

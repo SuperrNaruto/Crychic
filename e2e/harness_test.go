@@ -37,11 +37,12 @@ const (
 var epoch = time.Date(2026, time.October, 5, 12, 0, 0, 0, time.FixedZone("UTC+8", 8*60*60))
 
 type scenario struct {
-	routes  map[string]route
-	apiKey  string
-	history []transfer // transfers that predate the bot
-	quiet   string     // CRYCHIC_NOTIFY_QUIET, notifyQuiet if empty
-	lagging bool       // the media server shows new transfers only on catchUp
+	routes      map[string]route
+	apiKey      string
+	history     []transfer // transfers that predate the bot
+	quiet       string     // CRYCHIC_NOTIFY_QUIET, notifyQuiet if empty
+	libraryWait string     // empty uses the production default
+	lagging     bool       // the media server shows new transfers only on catchUp
 	// searches answers a search for one title with its own fixture; other
 	// titles get the searchPath route.
 	searches map[string]string
@@ -85,6 +86,7 @@ func start(t *testing.T, sc scenario) *harness {
 		"CRYCHIC_DATA_DIR":               t.TempDir(),
 		"CRYCHIC_NOTIFY_INTERVAL":        notifyInterval,
 		"CRYCHIC_NOTIFY_QUIET":           sc.quiet,
+		"CRYCHIC_NOTIFY_LIBRARY_WAIT":    sc.libraryWait,
 		"CRYCHIC_PROGRESS_INTERVAL":      progressInterval,
 	}
 	cfg, err := config.Load(func(k string) string { return env[k] })
@@ -248,11 +250,25 @@ func (h *harness) tap(user int64, msgID int, label string) {
 // tapData presses a button by its raw data, e.g. one no longer on screen.
 func (h *harness) tapData(user int64, msgID int, data string) {
 	h.t.Helper()
+	h.wait(h.pressData(user, msgID, data), data)
+}
+
+// press queues a currently visible button without waiting, for overlapping actions.
+func (h *harness) press(user int64, msgID int, label string) <-chan struct{} {
+	h.t.Helper()
+	data, ok := findButton(mustMessage(h, msgID).rows, label)
+	if !ok {
+		h.t.Fatalf("message %d has no button %q", msgID, label)
+	}
+	return h.pressData(user, msgID, data)
+}
+
+func (h *harness) pressData(user int64, msgID int, data string) <-chan struct{} {
 	msg, _ := h.tg.message(msgID)
 	h.nextCB++
 	id := strconv.Itoa(h.nextCB)
 	h.tr.add(fmt.Sprintf(">> user %d taps %s on message %d", user, data, msgID))
-	done := h.tg.push(map[string]any{"callback_query": map[string]any{
+	return h.tg.push(map[string]any{"callback_query": map[string]any{
 		"id": id, "data": data, "chat_instance": "ci",
 		"from": map[string]any{"id": user, "is_bot": false, "first_name": strconv.FormatInt(user, 10)},
 		"message": map[string]any{
@@ -260,7 +276,6 @@ func (h *harness) tapData(user int64, msgID int, data string) {
 			"chat": map[string]any{"id": msg.chat, "type": chatType(msg.chat)},
 		},
 	}}, "callback:"+id)
-	h.wait(done, data)
 }
 
 // shows asserts message msgID's current text contains want.

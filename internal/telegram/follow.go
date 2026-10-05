@@ -61,19 +61,31 @@ func (a *adapter) refresh(ctx context.Context, f *follower) {
 			return
 		case <-ticker.C:
 		}
-		reply := a.flow.Choose(ctx, f.actor, f.data)
-		if ctx.Err() != nil || reply.Notice != "" {
+		if !a.refreshOnce(ctx, f) {
 			return
 		}
-		if html := renderHTML(reply.Text); html != f.shown {
-			a.edit(ctx, f.target, reply)
-			f.shown = html
-		}
-		if reply.Follow == "" {
-			return
-		}
-		f.data = reply.Follow
 	}
+}
+
+func (a *adapter) refreshOnce(ctx context.Context, f *follower) bool {
+	unlock, ok := a.lockMessage(ctx, f.target.key())
+	if !ok {
+		return false
+	}
+	defer unlock()
+	if ctx.Err() != nil {
+		return false
+	}
+	reply := a.flow.Choose(ctx, f.actor, f.data)
+	if ctx.Err() != nil || reply.Notice != "" {
+		return false
+	}
+	if html := renderHTML(reply.Text); html != f.shown {
+		a.edit(ctx, f.target, reply)
+		f.shown = html
+	}
+	f.data = reply.Follow
+	return reply.Follow != ""
 }
 
 // forget drops f from the followers unless a newer one replaced it.

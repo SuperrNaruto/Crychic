@@ -1,6 +1,10 @@
 package e2e
 
-import "testing"
+import (
+	"strings"
+	"testing"
+	"time"
+)
 
 const (
 	diggerDetails = "GET /api/v1/media/1248832"
@@ -28,6 +32,47 @@ func TestTrendingPickGoesStraightToSubscribe(t *testing.T) {
 	h.shows(1, "已取消。")
 	h.shows(1, "TMDB 流行趋势 · 第 1/2 页")
 	h.tr.verify(t)
+}
+
+// Two taps while a synopsis retries must not share writable session slices
+// or let the earlier result overwrite a later navigation choice.
+func TestCalendarRetryOverlappingNavigation(t *testing.T) {
+	h := start(t, scenario{routes: map[string]route{searchPath: ok("empty.json")}})
+	h.bgm.setDown(nuwaID, true)
+	h.say(alice, alice, "/hot")
+	h.tap(alice, 1, "🎌 新番放送")
+	const slowLookup = 100 * time.Millisecond
+	entered := h.bgm.delay(nuwaID, slowLookup)
+	first := h.press(alice, 1, "·一·")
+	h.wait(entered, "the first synopsis retry")
+	h.waitLookup("title=列女战纪：女娲石记")
+	second := h.press(alice, 1, "·一·")
+	h.wait(first, "the first calendar tap")
+	h.wait(second, "the second calendar tap")
+	h.tap(alice, 1, "二")
+	h.shows(1, "星期二")
+	h.tr.verify(t)
+}
+
+// Observe both reads before the overlapping tap, rather than imposing an
+// arbitrary order between that tap and an independent backend lookup.
+func (h *harness) waitLookup(want string) {
+	h.t.Helper()
+	const checkEvery = time.Millisecond
+	const initialAndRetry = 2
+	deadline := time.After(actionTimeout)
+	tick := time.NewTicker(checkEvery)
+	defer tick.Stop()
+	for {
+		if strings.Count(h.tr.String(), want) >= initialAndRetry {
+			return
+		}
+		select {
+		case <-tick.C:
+		case <-deadline:
+			h.t.Fatal("calendar retry search did not arrive")
+		}
+	}
 }
 
 // Douban picks carry Douban ids, so they are matched by title: a sure

@@ -44,6 +44,8 @@ type fakeTelegram struct {
 	lastMsg   int
 	waiters   map[string]chan struct{}
 	commands  map[string]string // setMyCommands menus by scope, as sent
+	stall     string
+	stalled   chan struct{}
 }
 
 func newFakeTelegram(tr *transcript) *fakeTelegram {
@@ -99,6 +101,9 @@ func (f *fakeTelegram) serve(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	_ = r.ParseMultipartForm(maxMultipart)
+	if f.wait(r, method) {
+		return
+	}
 	switch method {
 	case "getMe":
 		reply(w, map[string]any{"id": botUserID, "is_bot": true, "first_name": "Crychic", "username": "crychic_bot"}, nil)
@@ -123,6 +128,30 @@ func (f *fakeTelegram) serve(w http.ResponseWriter, r *http.Request) {
 	default:
 		reply(w, nil, fmt.Errorf("method %s not supported by fake", method))
 	}
+}
+
+// stallNext keeps one API request open until its client cancels it.
+func (f *fakeTelegram) stallNext(method string) <-chan struct{} {
+	f.mu.Lock()
+	defer f.mu.Unlock()
+	f.stall, f.stalled = method, make(chan struct{})
+	return f.stalled
+}
+
+func (f *fakeTelegram) wait(r *http.Request, method string) bool {
+	f.mu.Lock()
+	stalled := f.stalled
+	match := f.stall == method
+	if match {
+		f.stall = ""
+	}
+	f.mu.Unlock()
+	if !match {
+		return false
+	}
+	<-r.Context().Done()
+	close(stalled)
+	return true
 }
 
 // getUpdates long-polls like Telegram: it returns unconfirmed updates, or

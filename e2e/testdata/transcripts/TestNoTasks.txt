@@ -5,26 +5,26 @@
 << sendMessage chat=1001 message=2 parse_mode=HTML
    <b>🎬 Crychic</b>
    搜索并订阅电影和剧集，入库后通知你。
-   [🔍 搜索订阅 | 2:h:0] [🔥 发现 | 2:h:1]
-   [📚 订阅 | 2:h:2] [🆕 最新入库 | 2:h:3]
-   [📋 任务进度 | 2:h:4]
->> user 1001 taps 2:h:4 on message 2
+   [🔍 搜索订阅 | 1:h:0] [🔥 发现 | 1:h:1]
+   [📚 订阅 | 1:h:2] [🆕 最新入库 | 1:h:3]
+   [📋 任务进度 | 1:h:4]
+>> user 1001 taps 1:h:4 on message 2
 << editMessageText chat=1001 message=2 parse_mode=HTML
    当前没有下载中或整理中的任务。
-   
+
    <b>🎬 Crychic</b>
    搜索并订阅电影和剧集，入库后通知你。
-   [🔍 搜索订阅 | 2:h:0] [🔥 发现 | 2:h:1]
-   [📚 订阅 | 2:h:2] [🆕 最新入库 | 2:h:3]
-   [📋 任务进度 | 2:h:4]
+   [🔍 搜索订阅 | 1:h:0] [🔥 发现 | 1:h:1]
+   [📚 订阅 | 1:h:2] [🆕 最新入库 | 1:h:3]
+   [📋 任务进度 | 1:h:4]
 << answerCallbackQuery
->> user 1001 taps 2:h:4 on message 2
+>> user 1001 taps 1:h:4 on message 2
 << editMessageText chat=1001 message=2 parse_mode=HTML
    当前没有下载中或整理中的任务。
-   
+
    <b>🎬 Crychic</b>
    搜索并订阅电影和剧集，入库后通知你。
-   [🔍 搜索订阅 | 2:h:0] [🔥 发现 | 2:h:1]
-   [📚 订阅 | 2:h:2] [🆕 最新入库 | 2:h:3]
-   [📋 任务进度 | 2:h:4]
+   [🔍 搜索订阅 | 1:h:0] [🔥 发现 | 1:h:1]
+   [📚 订阅 | 1:h:2] [🆕 最新入库 | 1:h:3]
+   [📋 任务进度 | 1:h:4]
 << answerCallbackQuery

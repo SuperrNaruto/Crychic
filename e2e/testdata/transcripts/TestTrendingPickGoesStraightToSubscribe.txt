@@ -12,7 +12,7 @@
 -> MoviePilot GET /api/v1/recommend/tmdb_trending
 << editMessageText chat=1001 message=1 parse_mode=HTML
    <b>🔥 TMDB 流行趋势 · 第 1/2 页</b>
-   
+
    1. <a href="https://www.themoviedb.org/movie/1248832"><b>挖掘者</b></a> (2026) · 电影 · ⭐ 7.5
    <blockquote expandable>世界上最有权势的男子极力证明自己其实是人类的救世主，结果等来了他酝酿的灾难要摧毁万物。</blockquote>
    2. <a href="https://www.themoviedb.org/tv/95350"><b>绿灯军团</b></a> (2026) · 电视剧 · ⭐ 8.4
@@ -44,16 +44,16 @@
    喜剧 / 剧情 · 129 分钟
    主演：汤姆·克鲁斯、里兹·阿迈德、约翰·古德曼
    <blockquote expandable>世界上最有权势的男子极力证明自己其实是人类的救世主，结果等来了他酝酿的灾难要摧毁万物。</blockquote>
-   
+
    <b>确认订阅《挖掘者》？</b>
    [确认订阅 | 1:ok:0] [取消 | 1:x:0]
 << answerCallbackQuery
 >> user 1001 taps 1:x:0 on message 1
 << editMessageText chat=1001 message=1 parse_mode=HTML
    已取消。
-   
+
    <b>🔥 TMDB 流行趋势 · 第 1/2 页</b>
-   
+
    1. <a href="https://www.themoviedb.org/movie/1248832"><b>挖掘者</b></a> (2026) · 电影 · ⭐ 7.5
    <blockquote expandable>世界上最有权势的男子极力证明自己其实是人类的救世主，结果等来了他酝酿的灾难要摧毁万物。</blockquote>
    2. <a href="https://www.themoviedb.org/tv/95350"><b>绿灯军团</b></a> (2026) · 电视剧 · ⭐ 8.4

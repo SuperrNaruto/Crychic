@@ -27,12 +27,13 @@ func (e *Engine) latest(ctx context.Context, sess session) Reply {
 	if len(items) == 0 {
 		return Reply{Text: Sentence(msgNoLatest), Buttons: buttons}
 	}
-	text := Lines(Line(Strong(msgLatestTitle)))
+	view := listView{heading: Line(Strong(msgLatestTitle)), footer: buttons[0]}
 	for i, it := range items {
-		title := Linked(Strong(fmt.Sprintf("《%s》", it.Title)), it.Link)
-		text = append(text, Line(Plain(fmt.Sprintf("%d. ", i+1)), title, Plain(" "+joinNonEmpty(" · ", yearOf(it.Year), it.Kind))))
+		title := Linked(Strong(fmt.Sprintf("《%s》", truncate(it.Title, listTitleRunes))), it.Link)
+		text := Lines(Line(Plain(fmt.Sprintf("%d. ", i+1)), title, Plain(" "+joinNonEmpty(" · ", yearOf(it.Year), it.Kind))))
+		view.entries = append(view.entries, listEntry{text: text})
 	}
-	return Reply{Text: text, Buttons: buttons}
+	return e.listPages(sess, view)
 }
 
 func yearOf(y string) string {

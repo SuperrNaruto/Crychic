@@ -2,6 +2,7 @@ package flow
 
 import (
 	"context"
+	"sync"
 	"time"
 )
 
@@ -42,12 +43,7 @@ func (e *Engine) Tasks(ctx context.Context, actor Actor) Reply {
 
 // listTasks shows the current tasks in sess, which stops following any.
 func (e *Engine) listTasks(ctx context.Context, sess session) Reply {
-	downloads, err := e.backend.Downloads(ctx)
-	if err != nil {
-		e.store.take(sess.id)
-		return e.failure("downloads", err)
-	}
-	jobs, err := e.backend.Transfers(ctx)
+	downloads, jobs, err := e.taskLists(ctx)
 	if err != nil {
 		e.store.take(sess.id)
 		return e.failure("transfers", err)
@@ -67,7 +63,21 @@ func (e *Engine) listTasks(ctx context.Context, sess session) Reply {
 		sess.tasks = append(sess.tasks, taskRef{id: j.ID})
 	}
 	e.store.put(sess)
-	return taskList(sess.id, downloads, jobs)
+	return e.listPages(sess, taskList(sess.id, downloads, jobs))
+}
+
+func (e *Engine) taskLists(ctx context.Context) ([]Download, []TransferJob, error) {
+	var downloads []Download
+	var jobs []TransferJob
+	var downloadErr, jobErr error
+	var wg sync.WaitGroup
+	wg.Go(func() { downloads, downloadErr = e.backend.Downloads(ctx) })
+	wg.Go(func() { jobs, jobErr = e.backend.Transfers(ctx) })
+	wg.Wait()
+	if downloadErr != nil {
+		return nil, nil, downloadErr
+	}
+	return downloads, jobs, jobErr
 }
 
 // chooseTask applies the task actions; ok is false for any other action.

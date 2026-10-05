@@ -10,7 +10,8 @@ const (
 	msgDownloadGone  = "下载任务已结束（下载完成或被移除）。"
 	msgTransferGone  = "整理任务已结束，入库情况见入库通知或 MoviePilot 的整理历史。"
 	// idleSpeed is how MoviePilot words a stalled download's speed.
-	idleSpeed = "0.0B"
+	idleSpeed        = "0.0B"
+	maxTransferLines = 100
 )
 
 var msgFollowExpired = fmt.Sprintf("已自动刷新 %d 分钟，暂停刷新。", int(FollowFor.Minutes()))
@@ -24,32 +25,31 @@ var fileStateText = map[FileState]string{
 }
 
 // taskList numbers downloads, then transfer jobs, matching session tasks.
-func taskList(id uint64, downloads []Download, jobs []TransferJob) Reply {
-	text := Lines(Line(Strong("📋 进行中的任务")))
-	var rows [][]Button
+func taskList(id uint64, downloads []Download, jobs []TransferJob) listView {
+	view := listView{heading: Line(Strong("📋 进行中的任务")), footer: []Button{{Label: "关闭", Data: data(id, actionClose, 0)}}}
+	section := "⬇️ 下载"
 	add := func(title string, season *int, line string) {
-		n := len(rows) + 1
-		text = append(text, Line(Plain(fmt.Sprintf("%d. %s · %s", n, taskName(title, season), line))))
+		n := len(view.entries) + 1
+		title = truncate(title, listTitleRunes)
+		text := Lines(Line(Plain(fmt.Sprintf("%d. %s · %s", n, taskName(title, season), truncate(line, listTitleRunes)))))
+		if section != "" {
+			text = append(Lines(Line(Strong(section))), text...)
+			section = ""
+		}
 		label := fmt.Sprintf("%d. %s", n, title)
 		if season != nil {
 			label += fmt.Sprintf(" 第 %d 季", *season)
 		}
-		rows = append(rows, []Button{{Label: label, Data: data(id, actionTask, n-1)}})
-	}
-	if len(downloads) > 0 {
-		text = append(text, Line(Strong("⬇️ 下载")))
+		view.entries = append(view.entries, listEntry{text: text, buttons: []Button{{Label: label, Data: data(id, actionTask, n-1)}}})
 	}
 	for _, d := range downloads {
 		add(d.Title, d.Season, joinNonEmpty(" · ", EpisodeRanges(d.Episodes), progress(d)))
 	}
-	if len(jobs) > 0 {
-		text = append(text, Line(Strong("📦 整理")))
-	}
+	section = "📦 整理"
 	for _, j := range jobs {
 		add(j.Title, j.Season, filesDone(j))
 	}
-	rows = append(rows, []Button{{Label: "关闭", Data: data(id, actionClose, 0)}})
-	return Reply{Text: text, Buttons: rows}
+	return view
 }
 
 // downloadView is one download, e.g. "进度 37% · ↓ 3.1MB/s · 剩余 5分12秒".
@@ -74,12 +74,15 @@ func downloadView(d Download) Reply {
 // transferView is one transfer job with a line per file.
 func transferView(j TransferJob) Reply {
 	text := Lines(Line(Strong("📦 "+taskName(j.Title, j.Season))), Line(Plain(filesDone(j))))
-	for i, f := range j.Files {
+	for i, f := range j.Files[:min(len(j.Files), maxTransferLines)] {
 		name := fmt.Sprintf("文件 %d", i+1)
 		if f.Episode > 0 {
 			name = fmt.Sprintf("E%02d", f.Episode)
 		}
 		text = append(text, Line(Plain(fmt.Sprintf(fileStateText[f.State], name))))
+	}
+	if remaining := len(j.Files) - maxTransferLines; remaining > 0 {
+		text = append(text, Line(Emphasis(fmt.Sprintf("另有 %d 个文件，全部状态请在 MoviePilot 中查看。", remaining))))
 	}
 	return Reply{Text: text, Image: j.Image}
 }

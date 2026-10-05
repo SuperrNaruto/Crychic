@@ -21,7 +21,8 @@ import (
 const (
 	// backendTimeout bounds every MoviePilot and Bangumi call; searches hit
 	// TMDB upstream.
-	backendTimeout = 30 * time.Second
+	backendTimeout  = 30 * time.Second
+	telegramTimeout = 70 * time.Second // longer than Telegram's one-minute long poll
 	// stateFile holds requests awaiting arrival, inside the data dir.
 	stateFile = "requests.json"
 )
@@ -41,7 +42,7 @@ func Run(ctx context.Context, cfg config.Config, deps Deps) error {
 		APIURL:       cfg.TelegramAPIURL,
 		AllowedUsers: cfg.TelegramAllowed,
 		FollowEvery:  cfg.FollowEvery,
-		HTTPClient:   &http.Client{},
+		HTTPClient:   &http.Client{Timeout: telegramTimeout},
 		Log:          log,
 	})
 	if err != nil {

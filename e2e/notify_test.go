@@ -136,3 +136,18 @@ func TestNoticeWaitsForTheMediaServer(t *testing.T) {
 	h.shows(2, "在 Emby 中观看")
 	h.tr.verify(t)
 }
+
+// A completed movie does not enter the quiet period; disabling library
+// waiting must announce it even when the media server has not scanned it.
+func TestDisabledLibraryWaitAnnouncesImmediately(t *testing.T) {
+	h := start(t, scenario{lagging: true, quiet: "2s", libraryWait: "0s", routes: map[string]route{
+		searchPath: ok("search_dune.json"), duneDetails: ok("detail_dune.json"),
+		duneLookup: ok("subscription_none.json"), subscribePath: ok("subscribe_created.json"),
+	}})
+	h.say(alice, alice, "/request 沙丘")
+	h.tap(alice, 1, duneMovie)
+	h.tap(alice, 1, "确认订阅")
+	h.transfers(duneFile())
+	h.shows(2, "已入库")
+	h.tr.verify(t)
+}

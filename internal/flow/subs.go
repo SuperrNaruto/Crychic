@@ -7,7 +7,7 @@ import (
 )
 
 const (
-	actionSubs        = "w" // lists subscriptions
+	actionSubs        = "j" // lists subscriptions
 	actionAskCancel   = "v" // arg: index into session subs; asks to confirm
 	actionUnsubscribe = "z" // arg: index into session subs; cancels it
 
@@ -58,18 +58,18 @@ func (e *Engine) listSubs(ctx context.Context, sess session) Reply {
 	if len(subs) == 0 {
 		return Reply{Text: Sentence(msgNoSubs), Buttons: [][]Button{{homeButton(sess.id)}}}
 	}
-	text := Lines(Line(Strong(fmt.Sprintf("%s（%d）", msgSubsTitle, len(subs)))))
-	var rows [][]Button
+	view := listView{heading: Line(Strong(fmt.Sprintf("%s（%d）", msgSubsTitle, len(subs)))), footer: []Button{homeButton(sess.id)}}
 	for i, s := range subs {
+		s.Title = truncate(s.Title, listTitleRunes)
 		mine := slices.Contains(sess.mine, s.ID)
-		text = append(text, subLine(i+1, s, mine))
+		entry := listEntry{text: Lines(subLine(i+1, s, mine))}
 		if mine {
 			label := fmt.Sprintf("取消 %d. %s", i+1, subName(s))
-			rows = append(rows, []Button{{Label: label, Data: data(sess.id, actionAskCancel, i)}})
+			entry.buttons = []Button{{Label: label, Data: data(sess.id, actionAskCancel, i)}}
 		}
+		view.entries = append(view.entries, entry)
 	}
-	rows = append(rows, []Button{homeButton(sess.id)})
-	return Reply{Text: text, Buttons: rows}
+	return e.listPages(sess, view)
 }
 
 // subLine is e.g. "1. 《绝命毒师》第 2 季 · 订阅中 · 缺 3/13 集 · 你请求的".

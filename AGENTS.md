@@ -46,6 +46,8 @@ Data flow: Telegram update → `telegram.adapter` → `flow.Engine.Start/Choose`
 - `internal/flow/rich.go` - `flow.Text`: formatting by meaning (bold, italic, code, link, collapsible quote)
 - `internal/telegram/html.go` - renders `flow.Text` to Telegram HTML, escaping everything
 - `internal/flow/store.go` - in-memory sessions (10 min TTL)
+- `internal/flow/pages.go` - bounded pages for subscriptions, tasks and latest items; page buttons keep item indices stable
+- `internal/telegram/lanes.go` - serializes each message's state transition and edit, including background refreshes
 - `internal/notify/state.go` - pure state transitions (`withRequest`, `arrive`, `flush`, `withActivity`) and atomic persistence
 - `e2e/harness_test.go` - `start`, `say`, `answer`, `answerQuoting`, `chatter`, `tap`, `tapData`, `shows`, `arrives`, `transfers`, `reports`, `restart`
 - `e2e/testdata/transcripts/*.txt` - golden transcripts, one per scenario
@@ -102,6 +104,11 @@ Data flow: Telegram update → `telegram.adapter` → `flow.Engine.Start/Choose`
 - Button data is `<session>:<action>:<arg>` and must stay ≤ 64 bytes (Telegram limit). A stale button only has its action to go on, so `/tasks` buttons use their own actions (`k f u l c`) and `flow.expired` points them back to `/tasks`, everything else to `/request`
 - The fake numbers subscriptions created from `subscribe_created.json` 1, 2, 3, ... like MoviePilot; two watches sharing an id would merge
 - Confirm and cancel use `store.take`, so a double tap acts once; keep that for any step that ends a conversation
+- Session IDs are random across restarts; never replace them with a counter that resets on startup. `Choose`/`Answer` validate both user and chat and serialize steps per session. Calendar annotations clone both mutable slices before writing. E2E transcripts normalize opaque session IDs only when recording, never in updates sent to the app
+- Callback action strings are unique across every flow handler. Subscription return is `j`, calendar weekday is `w`, and generic list paging is `p`
+- Telegram non-poll requests have a 10-second deadline including response-body reads; `getUpdates` uses the HTTP client's 70-second timeout. Metadata card enrichment uses a 5-second cosmetic budget; independent read-only calls overlap, subscription writes do not
+- List pages budget text and item buttons together (up to 20 entries and 3000 content runes). Large transfer views show at most 100 file lines, retaining the full aggregate count and explicitly naming omitted files
+- `LibraryWait=0` bypasses media-server checks. Movies and complete seasons start that wait immediately; incomplete seasons start after quiet. Unchanged notifier state is not rewritten; necessary writes remain serialized under the state lock
 - A `Reply` with `Notice` must not edit the message (another group member tapping your buttons)
 - Library checks go through MoviePilot to its media server and are cosmetic like details (failure = nothing held). Shows use `POST /api/v1/mediaserver/exists_remote` (`{"3":[1,2,...]}`, `{}` when absent; needs `title`+`year`, ids alone answer `{}`). Movies use `POST /api/v1/mediaserver/notexists` (`[]` = held), because `exists_remote` answers `{}` for movies either way. `GET /api/v1/mediaserver/exists` reads MoviePilot's own sync table, which is empty unless library sync runs, so it isn't used
 - `GET /api/v1/download/` lists unfinished torrents; `media` (source, id, `season` "S01", `episode` "E10-E12") comes from MoviePilot's download history and is null for torrents added by hand; `progress` is a percentage, `state` is `downloading` or `paused`, `left_time` is Chinese text like `1时5分3秒` (empty while stalled). The card shows the chosen target's downloads, cosmetic like details

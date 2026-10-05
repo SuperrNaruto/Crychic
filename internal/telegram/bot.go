@@ -88,6 +88,7 @@ type adapter struct {
 	mu        sync.Mutex
 	pending   map[inputKey]pendingInput
 	followers map[messageKey]*follower
+	lanes     map[messageKey]*messageLane
 }
 
 // inputKey identifies whose typed answer a conversation message waits for.
@@ -115,11 +116,11 @@ func New(cfg Config) (*Bot, error) {
 	}
 	a := &adapter{
 		allowed: allowed, log: cfg.Log, followEvery: cfg.FollowEvery,
-		pending: map[inputKey]pendingInput{}, followers: map[messageKey]*follower{},
+		pending: map[inputKey]pendingInput{}, followers: map[messageKey]*follower{}, lanes: map[messageKey]*messageLane{},
 	}
 	api, err := bot.New(cfg.Token,
 		bot.WithServerURL(cfg.APIURL),
-		bot.WithHTTPClient(pollTimeout, cfg.HTTPClient),
+		bot.WithHTTPClient(pollTimeout, deadlineClient{http: cfg.HTTPClient}),
 		bot.WithDefaultHandler(a.handle),
 		bot.WithErrorsHandler(func(err error) { cfg.Log.Error("telegram", "err", err) }),
 	)
@@ -248,9 +249,15 @@ func (a *adapter) commands() map[string]command {
 // onCallback answers the query last, so the client's spinner covers the
 // backend round trip and the answer can carry a notice.
 func (a *adapter) onCallback(ctx context.Context, b *bot.Bot, cq *models.CallbackQuery) {
+	unlock, ok := a.lockMessage(ctx, callbackKey(cq))
+	if !ok {
+		return
+	}
+	defer unlock()
 	reply := flow.Reply{Notice: "你没有使用权限。"}
 	actor := actorOf(cq.From, callbackChat(cq))
 	if a.allowed[cq.From.ID] {
+		a.stopOwnedFollower(callbackKey(cq), actor.UserID)
 		reply = a.flow.Choose(ctx, actor, cq.Data)
 	}
 	if reply.Notice == "" && cq.Message.Message != nil {
@@ -285,6 +292,17 @@ func (a *adapter) onText(ctx context.Context, b *bot.Bot, msg *models.Message) {
 	p, ok := a.pending[key]
 	a.mu.Unlock()
 	if !ok || !a.allowed[msg.From.ID] {
+		return
+	}
+	unlock, locked := a.lockMessage(ctx, messageKey{chat: key.chat, message: p.message})
+	if !locked {
+		return
+	}
+	defer unlock()
+	a.mu.Lock()
+	current := a.pending[key]
+	a.mu.Unlock()
+	if current != p {
 		return
 	}
 	isReply := msg.ReplyToMessage != nil && msg.ReplyToMessage.ID == p.message

@@ -17,8 +17,9 @@ const tmdbSource = "themoviedb"
 // time its page shows. Every lookup of a page runs at once, so a page
 // costs one round trip, not one per pick or per kind of lookup.
 func (e *Engine) annotate(ctx context.Context, sess *session, first, end int) {
+	sess.picks, sess.noted = slices.Clone(sess.picks), slices.Clone(sess.noted)
 	if len(sess.noted) != len(sess.picks) {
-		sess.picks, sess.noted = slices.Clone(sess.picks), make([]bool, len(sess.picks))
+		sess.noted = make([]bool, len(sess.picks))
 	}
 	picks, noted := sess.picks, sess.noted
 	var wg sync.WaitGroup

@@ -120,12 +120,16 @@ func (e *Engine) Choose(ctx context.Context, actor Actor, raw string) Reply {
 	if !ok {
 		return Reply{Notice: msgInvalidChoice}
 	}
-	sess, ok := e.store.get(id)
+	sess, unlock, ok := e.lockSession(ctx, actor, id)
+	defer unlock()
 	if !ok {
 		return expired(p.action)
 	}
-	if sess.owner.UserID != actor.UserID {
+	if sess.owner.UserID != actor.UserID || sess.owner.Address != actor.Address {
 		return Reply{Notice: msgNotYours}
+	}
+	if p.action == actionPage {
+		return e.page(sess, p.arg)
 	}
 	for _, choose := range []chooser{e.chooseHome, e.chooseRequest, e.chooseSeasons, e.chooseTask, e.chooseChart, e.chooseSubs} {
 		if reply, ok := choose(ctx, sess, p); ok {
@@ -175,8 +179,7 @@ func (e *Engine) pickMedia(ctx context.Context, sess session, index int) Reply {
 		return Reply{Notice: msgInvalidChoice}
 	}
 	media := sess.results[index]
-	sess.picked = card{Media: media, Details: e.details(ctx, media)}
-	sess.library = e.library(ctx, media)
+	e.enrich(ctx, &sess, media)
 	if media.Kind == Movie && sess.library.Movie {
 		return e.held(sess, Target{Media: media})
 	}
@@ -268,8 +271,7 @@ func (e *Engine) pickSeason(ctx context.Context, sess session, number int) Reply
 // offerConfirm ends early when the target is already subscribed, otherwise
 // asks for confirmation.
 func (e *Engine) offerConfirm(ctx context.Context, sess session, target Target) Reply {
-	sess.picked.Downloads = e.downloads(ctx, target)
-	existing, err := e.backend.FindSubscription(ctx, target)
+	existing, err := e.confirmationInfo(ctx, &sess, target)
 	if err != nil {
 		e.store.take(sess.id)
 		return e.failure("subscription lookup", err)

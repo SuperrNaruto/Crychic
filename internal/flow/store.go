@@ -1,9 +1,13 @@
 package flow
 
 import (
+	"crypto/rand"
+	"encoding/binary"
 	"sync"
 	"time"
 )
+
+const sessionIDBytes = 8
 
 // session is one in-flight request conversation. It is treated as a value:
 // every step stores a modified copy, never mutating a stored one.
@@ -26,7 +30,9 @@ type session struct {
 	mine    []int // ids of subs the owner asked for
 	tasks   []taskRef
 	follow  following
+	pages   []Reply
 	expires time.Time
+	gate    chan struct{} // serializes steps for this session, not unrelated users
 }
 
 // store keeps sessions in memory, keyed by the id embedded in button data,
@@ -35,7 +41,6 @@ type store struct {
 	mu       sync.Mutex
 	now      func() time.Time
 	ttl      time.Duration
-	lastID   uint64
 	sessions map[uint64]session
 }
 
@@ -53,8 +58,13 @@ func (s *store) create(owner Actor, results []Media) session {
 			delete(s.sessions, id)
 		}
 	}
-	s.lastID++
-	sess := session{id: s.lastID, owner: owner, results: results, expires: now.Add(s.ttl)}
+	var id uint64
+	for id == 0 || s.sessions[id].id != 0 {
+		var random [sessionIDBytes]byte
+		_, _ = rand.Read(random[:])
+		id = binary.LittleEndian.Uint64(random[:])
+	}
+	sess := session{id: id, owner: owner, results: results, expires: now.Add(s.ttl), gate: make(chan struct{}, 1)}
 	s.sessions[sess.id] = sess
 	return sess
 }
@@ -69,10 +79,12 @@ func (s *store) get(id uint64) (session, bool) {
 func (s *store) put(sess session) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
-	if _, ok := s.live(sess.id); !ok {
+	current, ok := s.live(sess.id)
+	if !ok {
 		return
 	}
 	sess.expires = s.now().Add(s.ttl)
+	sess.gate = current.gate
 	s.sessions[sess.id] = sess
 }
 

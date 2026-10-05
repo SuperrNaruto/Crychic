@@ -15,6 +15,7 @@ import (
 	"strings"
 	"sync"
 	"testing"
+	"time"
 )
 
 const (
@@ -59,6 +60,7 @@ var polledPaths = map[string]bool{
 type route struct {
 	status  int
 	fixture string
+	delay   time.Duration
 }
 
 func ok(fixture string) route { return route{status: http.StatusOK, fixture: fixture} }
@@ -146,6 +148,9 @@ func (f *fakeMoviePilot) markRead(newest int) {
 }
 
 func (f *fakeMoviePilot) serve(w http.ResponseWriter, r *http.Request) {
+	if !f.wait(r) {
+		return
+	}
 	isTransfers := r.Method == http.MethodGet && r.URL.Path == transferPath
 	if isTransfers {
 		f.markPolled()
@@ -165,6 +170,21 @@ func (f *fakeMoviePilot) serve(w http.ResponseWriter, r *http.Request) {
 	case f.servesLibrary(w, r):
 	default:
 		f.serveRoute(w, r)
+	}
+}
+
+func (f *fakeMoviePilot) wait(r *http.Request) bool {
+	f.mu.Lock()
+	d := f.routes[r.Method+" "+r.URL.Path].delay
+	f.mu.Unlock()
+	if d == 0 {
+		return true
+	}
+	select {
+	case <-time.After(d):
+		return true
+	case <-r.Context().Done():
+		return false
 	}
 }
 

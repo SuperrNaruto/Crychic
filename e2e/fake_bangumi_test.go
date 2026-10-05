@@ -8,6 +8,7 @@ import (
 	"strings"
 	"sync"
 	"testing"
+	"time"
 )
 
 const (
@@ -24,14 +25,16 @@ const (
 // can be made unavailable, as when Bangumi is overloaded.
 type fakeBangumi struct {
 	*httptest.Server
-	t    *testing.T
-	tr   *transcript
-	mu   sync.Mutex
-	down map[string]bool
+	t       *testing.T
+	tr      *transcript
+	mu      sync.Mutex
+	down    map[string]bool
+	delays  map[string]time.Duration
+	entered chan struct{}
 }
 
 func newFakeBangumi(t *testing.T, tr *transcript) *fakeBangumi {
-	f := &fakeBangumi{t: t, tr: tr, down: map[string]bool{}}
+	f := &fakeBangumi{t: t, tr: tr, down: map[string]bool{}, delays: map[string]time.Duration{}}
 	f.Server = httptest.NewServer(http.HandlerFunc(f.serve))
 	return f
 }
@@ -39,6 +42,9 @@ func newFakeBangumi(t *testing.T, tr *transcript) *fakeBangumi {
 func (f *fakeBangumi) serve(w http.ResponseWriter, r *http.Request) {
 	f.tr.add("-> Bangumi " + r.Method + " " + r.URL.Path)
 	id, isSubject := strings.CutPrefix(r.URL.Path, subjectsPath)
+	if !f.wait(r, id) {
+		return
+	}
 	switch {
 	case r.Method == http.MethodGet && r.URL.Path == "/calendar":
 		f.write(w, http.StatusOK, calendarFixture)
@@ -48,6 +54,33 @@ func (f *fakeBangumi) serve(w http.ResponseWriter, r *http.Request) {
 		f.write(w, http.StatusOK, "subject_"+id+".json")
 	default:
 		f.write(w, http.StatusNotFound, notFoundFixture)
+	}
+}
+
+func (f *fakeBangumi) delay(id string, d time.Duration) <-chan struct{} {
+	f.mu.Lock()
+	defer f.mu.Unlock()
+	f.delays[id] = d
+	f.entered = make(chan struct{})
+	return f.entered
+}
+
+func (f *fakeBangumi) wait(r *http.Request, id string) bool {
+	f.mu.Lock()
+	d := f.delays[id]
+	if d > 0 && f.entered != nil {
+		close(f.entered)
+		f.entered = nil
+	}
+	f.mu.Unlock()
+	if d == 0 {
+		return true
+	}
+	select {
+	case <-time.After(d):
+		return true
+	case <-r.Context().Done():
+		return false
 	}
 }
 

@@ -1,0 +1,79 @@
+package flow
+
+import "fmt"
+
+const (
+	actionPage     = "p"
+	listPageItems  = 20
+	listPageRunes  = 3000 // room for headings and navigation within Telegram's limit
+	listTitleRunes = 100
+)
+
+type listEntry struct {
+	text    Text
+	buttons []Button
+}
+
+type listView struct {
+	heading Block
+	entries []listEntry
+	footer  []Button
+}
+
+// listPages keeps text and its action buttons on the same bounded page.
+func (e *Engine) listPages(sess session, view listView) Reply {
+	pages := []Reply{{Text: Lines(view.heading)}}
+	used, items := 0, 0
+	for _, entry := range view.entries {
+		size := textSize(entry.text)
+		if items > 0 && (items >= listPageItems || used+size > listPageRunes) {
+			pages = append(pages, Reply{Text: Lines(view.heading)})
+			used, items = 0, 0
+		}
+		p := &pages[len(pages)-1]
+		p.Text = append(p.Text, entry.text...)
+		if len(entry.buttons) > 0 {
+			p.Buttons = append(p.Buttons, entry.buttons)
+		}
+		used, items = used+size, items+1
+	}
+	for i := range pages {
+		if len(pages) > 1 {
+			pages[i].Text = append(pages[i].Text, Line(Emphasis(fmt.Sprintf("第 %d/%d 页", i+1, len(pages)))))
+			pages[i].Buttons = append(pages[i].Buttons, listPager(sess.id, i, len(pages)))
+		}
+		pages[i].Buttons = append(pages[i].Buttons, view.footer)
+	}
+	sess.pages = pages
+	e.store.put(sess)
+	return pages[0]
+}
+
+func textSize(text Text) int {
+	n := len(text)
+	for _, block := range text {
+		for _, span := range block.Spans {
+			n += len([]rune(span.Text))
+		}
+	}
+	return n
+}
+
+func listPager(id uint64, page, count int) []Button {
+	var row []Button
+	if page > 0 {
+		row = append(row, Button{Label: "‹ 上一页", Data: data(id, actionPage, page-1)})
+	}
+	if page+1 < count {
+		row = append(row, Button{Label: "下一页 ›", Data: data(id, actionPage, page+1)})
+	}
+	return row
+}
+
+func (e *Engine) page(sess session, index int) Reply {
+	if index < 0 || index >= len(sess.pages) {
+		return Reply{Notice: msgInvalidChoice}
+	}
+	e.store.put(sess)
+	return sess.pages[index]
+}

@@ -1,0 +1,1 @@
+>> unchanged server polled twice; durable state file retained

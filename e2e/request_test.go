@@ -300,10 +300,36 @@ func TestCancelOwnSubscription(t *testing.T) {
 	h.tap(alice, 1, "从第 1 集开始")
 	h.say(alice, alice, "/subs")
 	h.tap(alice, 2, cancelBreaking)
+	h.tap(alice, 2, "返回")
+	h.shows(2, "订阅列表")
+	h.tap(alice, 2, cancelBreaking)
 	h.tap(alice, 2, "确认取消")
 	h.shows(2, "已取消订阅《绝命毒师》第 2 季")
+	h.tap(alice, 2, "返回订阅列表")
+	h.shows(2, "订阅列表")
 	h.transfers(breakingBad.file("S02", "E01-E13"))
 	h.say(bob, bob, "/subs")
+	h.tr.verify(t)
+}
+
+// A confirmation on a pre-restart card cannot consume a new conversation,
+// even when its owner is also the new conversation's owner.
+func TestOldConfirmationCannotSubscribeAfterRestart(t *testing.T) {
+	h := start(t, scenario{routes: map[string]route{
+		searchPath: ok("search_dune.json"), duneDetails: ok("detail_dune.json"),
+		duneLookup: ok("subscription_none.json"), subscribePath: ok("subscribe_created.json"),
+		diggerDetails: ok("detail_digger.json"), diggerLookup: ok("subscription_none.json"),
+	}})
+	h.say(alice, alice, "/request 沙丘")
+	h.tap(alice, 1, duneMovie)
+	h.restart()
+	h.mp.setRoute(searchPath, ok("search_digger.json"))
+	h.say(alice, alice, "/request 挖掘者")
+	h.tap(alice, 2, "1. 挖掘者 (2026)")
+	h.tap(alice, 1, "确认订阅")
+	h.shows(1, "已失效")
+	h.tap(alice, 2, "确认订阅")
+	h.shows(2, "已订阅《挖掘者》")
 	h.tr.verify(t)
 }
 
