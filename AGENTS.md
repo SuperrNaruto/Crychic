@@ -19,10 +19,13 @@ cmd/crychic/         # main: config.Load(os.Getenv) → app.Run
 internal/app/        # the only wiring point; shared by main and e2e
 internal/flow/       # platform-agnostic conversation: search → pick → season → confirm → subscribe
 internal/moviepilot/ # minimal MoviePilot client, implements flow.Backend
-internal/telegram/   # renders flow.Reply as messages + inline keyboards; whitelist check
+internal/telegram/   # renders flow.Reply as messages + inline keyboards; whitelist check; delivers notices
+internal/notify/     # remembers requests (data dir JSON), polls MoviePilot transfer history, notifies requesters
 internal/config/     # env vars → config.Config
 e2e/                 # behavior tests: real app vs fake Telegram Bot API + fake MoviePilot
 ```
+
+Arrivals: `notify.Notifier` polls `GET /api/v1/history/transfer` → matches watches (media + season + episode range) → `telegram.Bot.Notify` posts in the requesting chat, mentioning the requester in groups.
 
 Data flow: Telegram update → `telegram.adapter` → `flow.Engine.Start/Choose` → `flow.Backend` (MoviePilot) → `flow.Reply` → `sendMessage` (command) or `editMessageText` (button) → `answerCallbackQuery` last.
 
@@ -34,7 +37,8 @@ Data flow: Telegram update → `telegram.adapter` → `flow.Engine.Start/Choose`
 - `internal/flow/rich.go` - `flow.Text`: formatting by meaning (bold, italic, code, link, collapsible quote)
 - `internal/telegram/html.go` - renders `flow.Text` to Telegram HTML, escaping everything
 - `internal/flow/store.go` - in-memory sessions (10 min TTL)
-- `e2e/harness_test.go` - `start`, `say`, `answer`, `chatter`, `tap`, `tapData`, `shows`
+- `internal/notify/state.go` - pure state transitions (`withRequest`, `arrive`, `withActivity`) and atomic persistence
+- `e2e/harness_test.go` - `start`, `say`, `answer`, `chatter`, `tap`, `tapData`, `shows`, `arrives`, `restart`
 - `e2e/testdata/transcripts/*.txt` - golden transcripts, one per scenario
 
 ## Environment
@@ -42,6 +46,8 @@ Data flow: Telegram update → `telegram.adapter` → `flow.Engine.Start/Choose`
 - `CRYCHIC_MOVIEPILOT_URL`, `CRYCHIC_MOVIEPILOT_API_KEY` (MoviePilot `API_TOKEN`), `CRYCHIC_TELEGRAM_TOKEN` - required
 - `CRYCHIC_TELEGRAM_ALLOWED_USERS` - required, comma-separated user IDs; empty refuses to start
 - `CRYCHIC_TELEGRAM_API_URL` - optional, defaults to `https://api.telegram.org`
+- `CRYCHIC_DATA_DIR` - optional, defaults to `data`; holds `requests.json` (pending requests, last seen transfer)
+- `CRYCHIC_NOTIFY_INTERVAL` - optional, defaults to `1m`, minimum `100ms`; how often transfer history is polled
 
 ## Code Style
 
@@ -71,6 +77,9 @@ Data flow: Telegram update → `telegram.adapter` → `flow.Engine.Start/Choose`
 - `GET /api/v1/media/{id}` details are cosmetic: on failure the card falls back to search metadata and the flow continues; its `directors` field mixes in producers and episode directors, so it isn't shown
 - Subscriptions take `start_episode` (per season): MoviePilot skips earlier episodes. "只追新集" uses details' `next_episode_to_air` and only shows when it is in the chosen season and > 1; button data `ok:<n>` carries the start, validated against the season's episode count before the session is taken
 - Typed answers: a `Reply` with `Input` makes the Telegram adapter remember (chat, user) → message in `adapter.pending`; private chats take any plain text from that user, groups only a reply quoting the message
+- MoviePilot has no outgoing webhook, so arrivals come from polling transfer history (one record per file, newest first, `seasons` "S03", `episodes` "E01" or "E01-E03"). The first poll only records the latest id (baseline), so history from before Crychic is never announced
+- MoviePilot closes a subscription when downloads finish, before files are transferred: a closed subscription must not end a watch. Watches end when every wanted episode arrived (movies: first arrival) or after `orphanGrace` (72h) with the subscription gone
+- Notifier state is saved before notices are sent: a crash may drop a notice, never repeat one. Polling calls are kept out of e2e transcripts; the notices they cause are recorded
 - Button data is `<session>:<action>:<arg>` and must stay ≤ 64 bytes (Telegram limit)
 - Confirm and cancel use `store.take`, so a double tap acts once; keep that for any step that ends a conversation
 - A `Reply` with `Notice` must not edit the message (another group member tapping your buttons)

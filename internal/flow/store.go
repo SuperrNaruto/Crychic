@@ -9,7 +9,7 @@ import (
 // every step stores a modified copy, never mutating a stored one.
 type session struct {
 	id      uint64
-	owner   int64
+	owner   Actor
 	results []Media
 	picked  card
 	seasons []Season
@@ -32,7 +32,7 @@ func newStore(now func() time.Time, ttl time.Duration) *store {
 }
 
 // create opens a session and sweeps expired ones.
-func (s *store) create(owner int64, results []Media) session {
+func (s *store) create(owner Actor, results []Media) session {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 	now := s.now()

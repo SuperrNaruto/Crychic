@@ -52,7 +52,7 @@ func (e *Engine) Answer(_ context.Context, actor Actor, input, text string) Repl
 	if !ok {
 		return Reply{Text: Sentence(msgExpired)}
 	}
-	if sess.owner != actor.UserID {
+	if sess.owner.UserID != actor.UserID {
 		return Reply{Notice: msgNotYours}
 	}
 	text = strings.TrimSpace(text)

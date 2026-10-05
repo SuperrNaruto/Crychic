@@ -1,6 +1,6 @@
->> user 1001 in chat 1001: /request 绝命毒师
+>> user 1001 in chat -500: /request 绝命毒师
 -> MoviePilot GET /api/v1/media/search?count=10&title=绝命毒师&type=media
-<< sendMessage chat=1001 message=1 parse_mode=HTML
+<< sendMessage chat=-500 message=1 parse_mode=HTML
    <b>🔍「绝命毒师」的搜索结果</b>
    1. <b>绝命毒师</b> (2008) · 电视剧 · ⭐ 9.0 · <i>Breaking Bad</i>
    2. <b>续命之徒：绝命毒师电影</b> (2019) · 电影 · ⭐ 7.1 · <i>El Camino: A Breaking Bad Movie</i>
@@ -14,7 +14,7 @@
 >> user 1001 taps 1:m:0 on message 1
 -> MoviePilot GET /api/v1/media/1396?media_source=themoviedb&type_name=电视剧
 -> MoviePilot GET /api/v1/media/seasons?media_id=1396&media_source=themoviedb
-<< editMessageText chat=1001 message=1 parse_mode=HTML poster=https://image.tmdb.org/t/p/w500/rqliuvX7NdknSHu5qaSDfESplQi.jpg large=true above=true
+<< editMessageText chat=-500 message=1 parse_mode=HTML poster=https://image.tmdb.org/t/p/w500/rqliuvX7NdknSHu5qaSDfESplQi.jpg large=true above=true
    📺 <a href="https://www.themoviedb.org/tv/1396"><b>绝命毒师</b></a> (2008) · 电视剧 · ⭐ 9.0
    <i>Breaking Bad</i>
    剧情 / 犯罪 · 共 5 季 62 集
@@ -32,7 +32,7 @@
 << answerCallbackQuery
 >> user 1001 taps 1:s:2 on message 1
 -> MoviePilot GET /api/v1/subscribe/media/1396?media_source=themoviedb&mtype=电视剧&season=2&title=绝命毒师&year=2008
-<< editMessageText chat=1001 message=1 parse_mode=HTML poster=https://image.tmdb.org/t/p/w500/rqliuvX7NdknSHu5qaSDfESplQi.jpg large=true above=true
+<< editMessageText chat=-500 message=1 parse_mode=HTML poster=https://image.tmdb.org/t/p/w500/rqliuvX7NdknSHu5qaSDfESplQi.jpg large=true above=true
    📺 <a href="https://www.themoviedb.org/tv/1396"><b>绝命毒师</b></a> (2008) · 电视剧 · ⭐ 9.0
    <i>Breaking Bad</i>
    剧情 / 犯罪 · 共 5 季 62 集
@@ -47,7 +47,7 @@
 >> user 1001 taps 1:ok:0 on message 1
 -> MoviePilot POST /api/v1/subscribe/
    {"name":"绝命毒师","year":"2008","type":"电视剧","media_source":"themoviedb","media_id":"1396","season":2}
-<< editMessageText chat=1001 message=1 parse_mode=HTML poster=https://image.tmdb.org/t/p/w500/rqliuvX7NdknSHu5qaSDfESplQi.jpg large=true above=true
+<< editMessageText chat=-500 message=1 parse_mode=HTML poster=https://image.tmdb.org/t/p/w500/rqliuvX7NdknSHu5qaSDfESplQi.jpg large=true above=true
    📺 <a href="https://www.themoviedb.org/tv/1396"><b>绝命毒师</b></a> (2008) · 电视剧 · ⭐ 9.0
    <i>Breaking Bad</i>
    剧情 / 犯罪 · 共 5 季 62 集
@@ -56,3 +56,9 @@
    
    ✅ 已订阅《绝命毒师》第 2 季，入库后会通知你。
 << answerCallbackQuery
+>> MoviePilot transfers 绝命毒师 (themoviedb/1396) S02E01
+>> MoviePilot transfers 绝命毒师 (themoviedb/1396) S01E05
+>> MoviePilot transfers 绝命毒师 (themoviedb/1396) S02E02-E03
+>> MoviePilot transfers 绝命毒师 (themoviedb/1396) S02E05
+<< sendMessage chat=-500 message=2 parse_mode=HTML poster=https://image.tmdb.org/t/p/w500/rqliuvX7NdknSHu5qaSDfESplQi.jpg large=true above=true
+   <a href="tg://user?id=1001">1001</a> 📥 你请求的<b>《绝命毒师》第 2 季</b> E01–E03、E05 已入库。

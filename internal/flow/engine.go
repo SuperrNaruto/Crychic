@@ -36,6 +36,7 @@ const (
 // Options configures an Engine.
 type Options struct {
 	Backend Backend
+	Watcher Watcher
 	Log     *slog.Logger
 	Now     func() time.Time
 }
@@ -43,6 +44,7 @@ type Options struct {
 // Engine runs request conversations against a Backend.
 type Engine struct {
 	backend Backend
+	watcher Watcher
 	log     *slog.Logger
 	store   *store
 }
@@ -50,6 +52,7 @@ type Engine struct {
 func New(opts Options) *Engine {
 	return &Engine{
 		backend: opts.Backend,
+		watcher: opts.Watcher,
 		log:     opts.Log,
 		store:   newStore(opts.Now, SessionTTL),
 	}
@@ -71,7 +74,7 @@ func (e *Engine) Start(ctx context.Context, actor Actor, term string) Reply {
 	if len(results) > MaxResults {
 		results = results[:MaxResults]
 	}
-	sess := e.store.create(actor.UserID, results)
+	sess := e.store.create(actor, results)
 	text := make(Text, 0, len(results)+1)
 	text = append(text, Line(Strong(fmt.Sprintf("🔍「%s」的搜索结果", term))))
 	rows := make([][]Button, 0, len(results)+1)
@@ -94,7 +97,7 @@ func (e *Engine) Choose(ctx context.Context, actor Actor, raw string) Reply {
 	if !ok {
 		return Reply{Text: Sentence(msgExpired)}
 	}
-	if sess.owner != actor.UserID {
+	if sess.owner.UserID != actor.UserID {
 		return Reply{Notice: msgNotYours}
 	}
 	switch action {
@@ -162,14 +165,15 @@ func (e *Engine) pickSeason(ctx context.Context, sess session, number int) Reply
 // offerConfirm ends early when the target is already subscribed, otherwise
 // asks for confirmation.
 func (e *Engine) offerConfirm(ctx context.Context, sess session, target Target) Reply {
-	subscribed, err := e.backend.IsSubscribed(ctx, target)
+	existing, err := e.backend.FindSubscription(ctx, target)
 	if err != nil {
 		e.store.take(sess.id)
 		return e.failure("subscription lookup", err)
 	}
-	if subscribed {
+	if existing != 0 {
 		e.store.take(sess.id)
-		return sess.picked.reply(Line(Plain(fmt.Sprintf("ℹ️ %s已在订阅中，无需重复请求。", targetName(target)))), nil)
+		status := fmt.Sprintf("ℹ️ %s已在订阅中%s", targetName(target), e.watch(ctx, sess, existing, target))
+		return sess.picked.reply(Line(Plain(status)), nil)
 	}
 	sess.target = &target
 	e.store.put(sess)
@@ -201,11 +205,27 @@ func (e *Engine) confirm(ctx context.Context, sess session, from int) Reply {
 	}
 	target := *sess.target
 	target.StartEpisode = from
-	if err := e.backend.Subscribe(ctx, target); err != nil {
+	id, err := e.backend.Subscribe(ctx, target)
+	if err != nil {
 		return e.failure("subscribe", err)
 	}
-	done := fmt.Sprintf("✅ 已订阅%s，MoviePilot 会自动搜索下载。", targetName(target))
+	done := fmt.Sprintf("✅ 已订阅%s%s", targetName(target), e.watch(ctx, sess, id, target))
 	return sess.picked.reply(Line(Plain(done)), nil)
+}
+
+// watch registers the session owner for an arrival notice and returns the
+// sentence ending that tells them whether they will get one.
+func (e *Engine) watch(ctx context.Context, sess session, id int, target Target) string {
+	req := Request{SubscriptionID: id, Target: target, Requester: sess.owner}
+	if target.Season != nil {
+		req.SeasonEpisodes = sess.episodeCount(*target.Season)
+	}
+	err := e.watcher.Watch(ctx, req)
+	if err != nil {
+		e.log.Error("cannot remember request for notification", "subscription", id, "err", err)
+		return "，MoviePilot 会自动搜索下载。"
+	}
+	return "，入库后会通知你。"
 }
 
 func (e *Engine) failure(step string, err error) Reply {

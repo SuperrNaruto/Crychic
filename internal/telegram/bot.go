@@ -66,25 +66,69 @@ type pendingInput struct {
 	input   string
 }
 
-// Run long-polls Telegram until ctx is cancelled.
-func Run(ctx context.Context, cfg Config, f Flow) error {
+// Bot is the Telegram front end: it drives a Flow and delivers notices.
+type Bot struct {
+	adapter *adapter
+	api     *bot.Bot
+	log     *slog.Logger
+}
+
+// New connects to Telegram (validating the token) without receiving
+// updates yet, so notices can be wired before the bot goes live.
+func New(cfg Config) (*Bot, error) {
 	allowed := make(map[int64]bool, len(cfg.AllowedUsers))
 	for _, id := range cfg.AllowedUsers {
 		allowed[id] = true
 	}
-	a := &adapter{flow: f, allowed: allowed, log: cfg.Log, pending: map[inputKey]pendingInput{}}
-	b, err := bot.New(cfg.Token,
+	a := &adapter{allowed: allowed, log: cfg.Log, pending: map[inputKey]pendingInput{}}
+	api, err := bot.New(cfg.Token,
 		bot.WithServerURL(cfg.APIURL),
 		bot.WithHTTPClient(pollTimeout, cfg.HTTPClient),
 		bot.WithDefaultHandler(a.handle),
 		bot.WithErrorsHandler(func(err error) { cfg.Log.Error("telegram", "err", err) }),
 	)
 	if err != nil {
-		return fmt.Errorf("telegram: %w", err)
+		return nil, fmt.Errorf("telegram: %w", err)
 	}
-	cfg.Log.Info("telegram bot started")
-	b.Start(ctx)
-	return nil
+	return &Bot{adapter: a, api: api, log: cfg.Log}, nil
+}
+
+// Run long-polls Telegram, handing conversations to f, until ctx is
+// cancelled. Handlers only run once polling starts, after f is set.
+func (b *Bot) Run(ctx context.Context, f Flow) {
+	b.adapter.flow = f
+	b.log.Info("telegram bot started")
+	b.api.Start(ctx)
+}
+
+// Notify sends a notice to where the requester asked; in a group it
+// mentions them so the notice reaches the right person.
+func (b *Bot) Notify(ctx context.Context, to flow.Actor, text flow.Text, image string) error {
+	chat, err := strconv.ParseInt(to.Address, 10, 64)
+	if err != nil {
+		return fmt.Errorf("telegram address %q: %w", to.Address, err)
+	}
+	if chat != to.UserID && len(text) > 0 {
+		mention := flow.Linked(flow.Plain(to.Name), "tg://user?id="+strconv.FormatInt(to.UserID, 10))
+		first := flow.Line(append([]flow.Span{mention, flow.Plain(" ")}, text[0].Spans...)...)
+		text = append(flow.Lines(first), text[1:]...)
+	}
+	_, err = b.api.SendMessage(ctx, &bot.SendMessageParams{
+		ChatID:             chat,
+		Text:               renderHTML(text),
+		ParseMode:          models.ParseModeHTML,
+		LinkPreviewOptions: preview(image),
+	})
+	return err
+}
+
+// actorOf identifies user acting in chat.
+func actorOf(u models.User, chat int64) flow.Actor {
+	name := strings.TrimSpace(u.FirstName + " " + u.LastName)
+	if name == "" {
+		name = u.Username
+	}
+	return flow.Actor{UserID: u.ID, Name: name, Address: strconv.FormatInt(chat, 10)}
 }
 
 func (a *adapter) handle(ctx context.Context, b *bot.Bot, upd *models.Update) {
@@ -115,7 +159,7 @@ func (a *adapter) onMessage(ctx context.Context, b *bot.Bot, msg *models.Message
 			flow.Mono(strconv.FormatInt(msg.From.ID, 10)),
 		))}
 	case cmd == cmdRequest:
-		reply = a.flow.Start(ctx, flow.Actor{UserID: msg.From.ID}, arg)
+		reply = a.flow.Start(ctx, actorOf(*msg.From, msg.Chat.ID), arg)
 	default:
 		reply = flow.Reply{Text: help}
 	}
@@ -134,7 +178,7 @@ func (a *adapter) onMessage(ctx context.Context, b *bot.Bot, msg *models.Message
 func (a *adapter) onCallback(ctx context.Context, b *bot.Bot, cq *models.CallbackQuery) {
 	reply := flow.Reply{Notice: "你没有使用权限。"}
 	if a.allowed[cq.From.ID] {
-		reply = a.flow.Choose(ctx, flow.Actor{UserID: cq.From.ID}, cq.Data)
+		reply = a.flow.Choose(ctx, actorOf(cq.From, callbackChat(cq)), cq.Data)
 	}
 	if reply.Notice == "" && cq.Message.Message != nil {
 		a.edit(ctx, b, editTarget{chat: cq.Message.Message.Chat.ID, user: cq.From.ID, message: cq.Message.Message.ID}, reply)
@@ -144,6 +188,14 @@ func (a *adapter) onCallback(ctx context.Context, b *bot.Bot, cq *models.Callbac
 		Text:            reply.Notice,
 	})
 	a.logFailure("answerCallbackQuery", err)
+}
+
+// callbackChat is the chat a button was pressed in.
+func callbackChat(cq *models.CallbackQuery) int64 {
+	if cq.Message.Message != nil {
+		return cq.Message.Message.Chat.ID
+	}
+	return cq.From.ID
 }
 
 // onText routes a plain message to the conversation waiting for its
@@ -161,7 +213,7 @@ func (a *adapter) onText(ctx context.Context, b *bot.Bot, msg *models.Message) {
 	if msg.Chat.Type != models.ChatTypePrivate && !isReply {
 		return
 	}
-	reply := a.flow.Answer(ctx, flow.Actor{UserID: msg.From.ID}, p.input, msg.Text)
+	reply := a.flow.Answer(ctx, actorOf(*msg.From, msg.Chat.ID), p.input, msg.Text)
 	if reply.Notice != "" {
 		// Pending inputs are keyed by user and hold the bot's own token, so
 		// the flow never refuses one; keep the card rather than clobber it.

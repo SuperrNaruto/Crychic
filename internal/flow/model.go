@@ -75,13 +75,31 @@ type Backend interface {
 	Search(ctx context.Context, term string) ([]Media, error)
 	Details(ctx context.Context, media Media) (Details, error)
 	Seasons(ctx context.Context, media Media) ([]Season, error)
-	IsSubscribed(ctx context.Context, target Target) (bool, error)
-	Subscribe(ctx context.Context, target Target) error
+	// FindSubscription returns the id of an existing subscription, 0 if none.
+	FindSubscription(ctx context.Context, target Target) (int, error)
+	// Subscribe creates a subscription and returns its id.
+	Subscribe(ctx context.Context, target Target) (int, error)
+}
+
+// Request is a subscription someone asked for, to be told when it arrives.
+type Request struct {
+	SubscriptionID int
+	Target         Target
+	SeasonEpisodes int // episodes in the requested season, 0 if unknown or a movie
+	Requester      Actor
+}
+
+// Watcher remembers requests so requesters hear about arrivals.
+type Watcher interface {
+	Watch(ctx context.Context, req Request) error
 }
 
 // Actor is the chat user driving a conversation, in platform terms.
+// Address is where the platform can reach them later (opaque to flow).
 type Actor struct {
-	UserID int64
+	UserID  int64
+	Name    string
+	Address string
 }
 
 // Button is one choice offered to the user; Data comes back to Choose.

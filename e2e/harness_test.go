@@ -23,25 +23,33 @@ const (
 	group    int64 = -500
 
 	actionTimeout = 5 * time.Second
+	// notifyInterval keeps arrival polling fast enough for tests.
+	notifyInterval = "100ms"
 )
 
 type scenario struct {
-	routes map[string]route
-	apiKey string
+	routes  map[string]route
+	apiKey  string
+	history []transfer // transfers that predate the bot
 }
 
 type harness struct {
 	t      *testing.T
 	tr     *transcript
 	tg     *fakeTelegram
+	mp     *fakeMoviePilot
+	cfg    config.Config
+	stop   func()
 	nextCB int
 }
 
-// start boots the app with env-style configuration, as a deployment would.
+// start boots the app with env-style configuration, as a deployment would,
+// and returns once the arrival notifier has read its baseline.
 func start(t *testing.T, sc scenario) *harness {
 	t.Helper()
 	tr := &transcript{}
 	mp := newFakeMoviePilot(t, tr, sc.routes)
+	mp.add(sc.history...)
 	tg := newFakeTelegram(tr)
 	if sc.apiKey == "" {
 		sc.apiKey = mpAPIKey
@@ -52,24 +60,55 @@ func start(t *testing.T, sc scenario) *harness {
 		"CRYCHIC_TELEGRAM_TOKEN":         tgToken,
 		"CRYCHIC_TELEGRAM_API_URL":       tg.URL,
 		"CRYCHIC_TELEGRAM_ALLOWED_USERS": fmt.Sprintf("%d, %d", alice, bob),
+		"CRYCHIC_DATA_DIR":               t.TempDir(),
+		"CRYCHIC_NOTIFY_INTERVAL":        notifyInterval,
 	}
 	cfg, err := config.Load(func(k string) string { return env[k] })
 	if err != nil {
 		t.Fatal(err)
 	}
-	ctx, cancel := context.WithCancel(context.Background())
-	stopped := make(chan error, 1)
-	log := slog.New(slog.NewTextHandler(testWriter{t}, nil))
-	go func() { stopped <- app.Run(ctx, cfg, log) }()
+	h := &harness{t: t, tr: tr, tg: tg, mp: mp, cfg: cfg}
+	h.launch()
+	h.wait(mp.polled, "the notifier's first poll")
 	t.Cleanup(func() {
-		cancel()
-		if err := <-stopped; err != nil {
-			t.Errorf("app.Run: %v", err)
-		}
+		h.stop()
 		tg.Close()
 		mp.Close()
 	})
-	return &harness{t: t, tr: tr, tg: tg}
+	return h
+}
+
+func (h *harness) launch() {
+	ctx, cancel := context.WithCancel(context.Background())
+	stopped := make(chan error, 1)
+	log := slog.New(slog.NewTextHandler(testWriter{h.t}, nil))
+	go func() { stopped <- app.Run(ctx, h.cfg, log) }()
+	h.stop = func() {
+		cancel()
+		if err := <-stopped; err != nil {
+			h.t.Errorf("app.Run: %v", err)
+		}
+	}
+}
+
+// restart stops the app and starts it again on the same data directory.
+func (h *harness) restart() {
+	h.t.Helper()
+	h.tr.add(">> Crychic restarts")
+	h.stop()
+	h.launch()
+}
+
+// arrives adds records to MoviePilot's transfer history and waits for the
+// bot to post a notice in chat.
+func (h *harness) arrives(chat int64, records ...transfer) {
+	h.t.Helper()
+	for _, r := range records {
+		h.tr.add(strings.TrimSpace(fmt.Sprintf(">> MoviePilot transfers %s (%s/%s) %s%s", r.Title, r.MediaSource, r.MediaID, r.Seasons, r.Episodes)))
+	}
+	done := h.tg.expect(fmt.Sprintf("send:%d", chat))
+	h.mp.add(records...)
+	h.wait(done, "an arrival notice")
 }
 
 // say sends a text message from user in chat and waits for the bot's reply.

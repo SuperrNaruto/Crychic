@@ -155,9 +155,9 @@ func (c *Client) Seasons(ctx context.Context, media flow.Media) ([]flow.Season, 
 	return seasons, nil
 }
 
-// IsSubscribed asks MoviePilot for an existing subscription; it answers with
-// an empty subscription (null id) when there is none.
-func (c *Client) IsSubscribed(ctx context.Context, t flow.Target) (bool, error) {
+// FindSubscription asks MoviePilot for an existing subscription; it answers
+// with an empty subscription (null id) when there is none.
+func (c *Client) FindSubscription(ctx context.Context, t flow.Target) (int, error) {
 	q := url.Values{
 		"media_source": {t.Media.Source},
 		"title":        {t.Media.Title},
@@ -174,9 +174,29 @@ func (c *Client) IsSubscribed(ctx context.Context, t flow.Target) (bool, error) 
 	}
 	path := "/api/v1/subscribe/media/" + url.PathEscape(t.Media.ID)
 	if err := c.do(ctx, call{method: http.MethodGet, path: path, query: q}, &sub); err != nil {
+		return 0, err
+	}
+	return deref(sub.ID), nil
+}
+
+// SubscriptionActive reports whether subscription id still exists; MoviePilot
+// answers an unknown id with an empty subscription.
+func (c *Client) SubscriptionActive(ctx context.Context, id int) (bool, error) {
+	var sub struct {
+		ID *int `json:"id"`
+	}
+	path := "/api/v1/subscribe/" + strconv.Itoa(id)
+	if err := c.do(ctx, call{method: http.MethodGet, path: path}, &sub); err != nil {
 		return false, err
 	}
 	return sub.ID != nil, nil
+}
+
+func deref(p *int) int {
+	if p == nil {
+		return 0
+	}
+	return *p
 }
 
 type subscribeBody struct {
@@ -190,7 +210,7 @@ type subscribeBody struct {
 	StartEpisode int `json:"start_episode,omitempty"`
 }
 
-func (c *Client) Subscribe(ctx context.Context, t flow.Target) error {
+func (c *Client) Subscribe(ctx context.Context, t flow.Target) (int, error) {
 	body := subscribeBody{
 		Name: t.Media.Title, Year: t.Media.Year, Type: kindType(t.Media.Kind),
 		MediaSource: t.Media.Source, MediaID: t.Media.ID, Season: t.Season,
@@ -199,7 +219,10 @@ func (c *Client) Subscribe(ctx context.Context, t flow.Target) error {
 	var created struct {
 		ID *int `json:"id"`
 	}
-	return c.do(ctx, call{method: http.MethodPost, path: "/api/v1/subscribe/", body: body}, &created)
+	if err := c.do(ctx, call{method: http.MethodPost, path: "/api/v1/subscribe/", body: body}, &created); err != nil {
+		return 0, err
+	}
+	return deref(created.ID), nil
 }
 
 func kindType(k flow.Kind) string {

@@ -1,0 +1,93 @@
+package e2e
+
+import "testing"
+
+const (
+	dunePoster    = "https://image.tmdb.org/t/p/w500/6hsJknqlPceFxExOe87z5VGgNG9.jpg"
+	breakingImage = "https://image.tmdb.org/t/p/w500/rqliuvX7NdknSHu5qaSDfESplQi.jpg"
+	conanImage    = "https://image.tmdb.org/t/p/w500/7qBrY88hNwMrMb75PkBZjhFolbL.jpg"
+)
+
+func duneFile() transfer {
+	return transfer{Title: "沙丘", Type: "电影", MediaSource: "themoviedb", MediaID: "438631", Image: dunePoster}
+}
+
+func episodeFile(title, id, season, episode, image string) transfer {
+	return transfer{Title: title, Type: "电视剧", MediaSource: "themoviedb", MediaID: id, Seasons: season, Episodes: episode, Image: image}
+}
+
+// The requester hears once their movie is in the library; transfers that
+// predate the bot are never announced.
+func TestRequesterHearsWhenMovieArrives(t *testing.T) {
+	h := start(t, scenario{
+		history: []transfer{duneFile()},
+		routes: map[string]route{
+			searchPath:    ok("search_dune.json"),
+			duneDetails:   ok("detail_dune.json"),
+			duneLookup:    ok("subscription_none.json"),
+			subscribePath: ok("subscribe_created.json"),
+		},
+	})
+	h.say(alice, alice, "/request 沙丘")
+	h.tap(alice, 1, duneMovie)
+	h.tap(alice, 1, "确认订阅")
+	h.shows(1, "入库后会通知你")
+	h.arrives(alice, duneFile())
+	h.shows(2, "已入库")
+	h.tr.verify(t)
+}
+
+// In a group the notice mentions the requester, a batch of episodes becomes
+// one notice, and other seasons are not announced.
+func TestGroupHearsArrivedEpisodesTogether(t *testing.T) {
+	h := start(t, scenario{routes: map[string]route{
+		searchPath:    ok("search_breaking_bad.json"),
+		breakDetails:  ok("detail_breaking_bad.json"),
+		seasonsPath:   ok("seasons_breaking_bad.json"),
+		breakingQuery: ok("subscription_none.json"),
+		subscribePath: ok("subscribe_created.json"),
+	}})
+	h.say(alice, group, "/request 绝命毒师")
+	h.tap(alice, 1, "1. 绝命毒师 (2008)")
+	h.tap(alice, 1, "第 2 季 · 13 集")
+	h.tap(alice, 1, "从第 1 集开始")
+	h.arrives(group,
+		episodeFile("绝命毒师", "1396", "S02", "E01", breakingImage),
+		episodeFile("绝命毒师", "1396", "S01", "E05", breakingImage),
+		episodeFile("绝命毒师", "1396", "S02", "E02-E03", breakingImage),
+		episodeFile("绝命毒师", "1396", "S02", "E05", breakingImage),
+	)
+	h.shows(2, "E01–E03、E05 已入库")
+	h.tr.verify(t)
+}
+
+// Asking for something already subscribed still earns a notice.
+func TestAlreadySubscribedRequesterIsNotified(t *testing.T) {
+	h := start(t, scenario{routes: map[string]route{
+		searchPath:  ok("search_dune.json"),
+		duneDetails: ok("detail_dune.json"),
+		duneLookup:  ok("subscription_existing.json"),
+	}})
+	h.say(alice, alice, "/request 沙丘")
+	h.tap(alice, 1, duneMovie)
+	h.shows(1, "已在订阅中，入库后会通知你")
+	h.arrives(alice, duneFile())
+	h.tr.verify(t)
+}
+
+// Requests outlive restarts; episodes before the chosen start are ignored,
+// and the requester is told when everything they asked for has arrived.
+func TestRequestsSurviveRestart(t *testing.T) {
+	h := start(t, scenario{routes: conanRoutes()})
+	h.say(alice, alice, "/request 名侦探柯南")
+	h.tap(alice, 1, conanShow)
+	h.tap(alice, 1, conanFirst)
+	h.tap(alice, 1, "只追新集（第 1216 集起）")
+	h.restart()
+	h.arrives(alice,
+		episodeFile("名侦探柯南", "30983", "S01", "E1215", conanImage),
+		episodeFile("名侦探柯南", "30983", "S01", "E1216", conanImage),
+	)
+	h.shows(2, "全部入库")
+	h.tr.verify(t)
+}

@@ -36,12 +36,13 @@ type fakeTelegram struct {
 	*httptest.Server
 	tr *transcript
 
-	mu       sync.Mutex
-	updates  []map[string]any
-	arrived  chan struct{}
-	messages map[int]message
-	lastMsg  int
-	waiters  map[string]chan struct{}
+	mu        sync.Mutex
+	updates   []map[string]any
+	confirmed int
+	arrived   chan struct{}
+	messages  map[int]message
+	lastMsg   int
+	waiters   map[string]chan struct{}
 }
 
 func newFakeTelegram(tr *transcript) *fakeTelegram {
@@ -69,6 +70,16 @@ func (f *fakeTelegram) push(upd map[string]any, doneKey string) <-chan struct{} 
 	f.updates = append(f.updates, upd)
 	close(f.arrived)
 	f.arrived = make(chan struct{})
+	return done
+}
+
+// expect returns a channel closed when the call identified by key arrives,
+// for bot output that no update triggers (notices).
+func (f *fakeTelegram) expect(key string) <-chan struct{} {
+	f.mu.Lock()
+	defer f.mu.Unlock()
+	done := make(chan struct{})
+	f.waiters[key] = done
 	return done
 }
 
@@ -100,18 +111,18 @@ func (f *fakeTelegram) serve(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// getUpdates long-polls like Telegram: it returns pending updates at or
-// after offset, or waits for one until the poll timeout or disconnect.
+// getUpdates long-polls like Telegram: it returns unconfirmed updates, or
+// waits for one until the poll timeout or disconnect.
 func (f *fakeTelegram) getUpdates(w http.ResponseWriter, r *http.Request) {
 	offset, _ := strconv.Atoi(r.FormValue("offset"))
 	timeout, _ := strconv.Atoi(r.FormValue("timeout"))
 	deadline := time.After(time.Duration(timeout) * time.Second)
 	for {
 		f.mu.Lock()
-		var pending []map[string]any
-		if offset >= 1 && offset <= len(f.updates) {
-			pending = f.updates[offset-1:]
-		}
+		// Like Telegram, an offset confirms every earlier update for good,
+		// so a restarted bot never sees them again.
+		f.confirmed = max(f.confirmed, offset-1)
+		pending := f.updates[min(f.confirmed, len(f.updates)):]
 		arrived := f.arrived
 		f.mu.Unlock()
 		if len(pending) > 0 {
