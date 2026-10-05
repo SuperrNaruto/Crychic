@@ -156,7 +156,7 @@ func (b *Bot) Notify(ctx context.Context, n flow.Notice) error {
 	}
 	_, err = b.api.SendMessage(ctx, &bot.SendMessageParams{
 		ChatID:             chat,
-		Text:               renderHTML(text),
+		Text:               messageHTML(text, n.Image),
 		ParseMode:          models.ParseModeHTML,
 		LinkPreviewOptions: preview(n.Image),
 	})
@@ -219,7 +219,7 @@ func (a *adapter) onMessage(ctx context.Context, b *bot.Bot, msg *models.Message
 	}
 	_, err := b.SendMessage(ctx, &bot.SendMessageParams{
 		ChatID:             msg.Chat.ID,
-		Text:               renderHTML(reply.Text),
+		Text:               messageHTML(reply.Text, reply.Image),
 		ParseMode:          models.ParseModeHTML,
 		LinkPreviewOptions: preview(reply.Image),
 		ReplyMarkup:        keyboard(reply.Buttons),
@@ -339,7 +339,7 @@ func (a *adapter) edit(ctx context.Context, t editTarget, reply flow.Reply) {
 	_, err := a.api.EditMessageText(ctx, &bot.EditMessageTextParams{
 		ChatID:             t.chat,
 		MessageID:          t.message,
-		Text:               renderHTML(reply.Text),
+		Text:               messageHTML(reply.Text, reply.Image),
 		ParseMode:          models.ParseModeHTML,
 		LinkPreviewOptions: preview(reply.Image),
 		ReplyMarkup:        keyboard(reply.Buttons),
