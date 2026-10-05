@@ -2,19 +2,24 @@ package e2e
 
 import "testing"
 
-const (
-	dunePoster    = "https://image.tmdb.org/t/p/w500/6hsJknqlPceFxExOe87z5VGgNG9.jpg"
-	breakingImage = "https://image.tmdb.org/t/p/w500/rqliuvX7NdknSHu5qaSDfESplQi.jpg"
-	conanImage    = "https://image.tmdb.org/t/p/w500/7qBrY88hNwMrMb75PkBZjhFolbL.jpg"
-	mygoImage     = "https://image.tmdb.org/t/p/w500/dDknWHLYaQB76QSViNdzXOC5v64.jpg"
+const dunePoster = "https://image.tmdb.org/t/p/w500/6hsJknqlPceFxExOe87z5VGgNG9.jpg"
+
+// show is a TV show as MoviePilot's transfer history names it.
+type show struct{ title, id, image string }
+
+var (
+	breakingBad = show{"绝命毒师", "1396", "https://image.tmdb.org/t/p/w500/rqliuvX7NdknSHu5qaSDfESplQi.jpg"}
+	conan       = show{"名侦探柯南", "30983", "https://image.tmdb.org/t/p/w500/7qBrY88hNwMrMb75PkBZjhFolbL.jpg"}
+	mygo        = show{"迷途之子!!!!!", "224207", "https://image.tmdb.org/t/p/w500/dDknWHLYaQB76QSViNdzXOC5v64.jpg"}
 )
 
 func duneFile() transfer {
 	return transfer{Title: "沙丘", Type: "电影", MediaSource: "themoviedb", MediaID: "438631", Image: dunePoster}
 }
 
-func episodeFile(title, id, season, episode, image string) transfer {
-	return transfer{Title: title, Type: "电视剧", MediaSource: "themoviedb", MediaID: id, Seasons: season, Episodes: episode, Image: image}
+// file is a transfer record of episodes, e.g. file("S02", "E01-E03").
+func (s show) file(season, episodes string) transfer {
+	return transfer{Title: s.title, Type: "电视剧", MediaSource: "themoviedb", MediaID: s.id, Seasons: season, Episodes: episodes, Image: s.image}
 }
 
 // The requester hears once their movie is in the library; transfers that
@@ -53,10 +58,10 @@ func TestGroupHearsArrivedEpisodesTogether(t *testing.T) {
 	h.tap(alice, 1, "第 2 季 · 13 集")
 	h.tap(alice, 1, "从第 1 集开始")
 	h.arrives(group,
-		episodeFile("绝命毒师", "1396", "S02", "E01", breakingImage),
-		episodeFile("绝命毒师", "1396", "S01", "E05", breakingImage),
-		episodeFile("绝命毒师", "1396", "S02", "E02-E03", breakingImage),
-		episodeFile("绝命毒师", "1396", "S02", "E05", breakingImage),
+		breakingBad.file("S02", "E01"),
+		breakingBad.file("S01", "E05"),
+		breakingBad.file("S02", "E02-E03"),
+		breakingBad.file("S02", "E05"),
 	)
 	h.shows(2, "E01–E03、E05 已入库")
 	h.tr.verify(t)
@@ -76,9 +81,9 @@ func TestEpisodesArrivingApartShareOneNotice(t *testing.T) {
 	h.tap(alice, 1, "1. 绝命毒师 (2008)")
 	h.tap(alice, 1, "第 2 季 · 13 集")
 	h.tap(alice, 1, "从第 1 集开始")
-	h.transfers(episodeFile("绝命毒师", "1396", "S02", "E01", breakingImage))
+	h.transfers(breakingBad.file("S02", "E01"))
 	h.restart()
-	h.arrives(alice, episodeFile("绝命毒师", "1396", "S02", "E02", breakingImage))
+	h.arrives(alice, breakingBad.file("S02", "E02"))
 	h.shows(2, "E01–E02 已入库")
 	h.tr.verify(t)
 }
@@ -107,8 +112,8 @@ func TestRequestsSurviveRestart(t *testing.T) {
 	h.tap(alice, 1, "只追新集（第 1216 集起）")
 	h.restart()
 	h.arrives(alice,
-		episodeFile("名侦探柯南", "30983", "S01", "E1215", conanImage),
-		episodeFile("名侦探柯南", "30983", "S01", "E1216", conanImage),
+		conan.file("S01", "E1215"),
+		conan.file("S01", "E1216"),
 	)
 	h.shows(2, "全部入库")
 	h.tr.verify(t)

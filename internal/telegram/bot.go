@@ -22,6 +22,9 @@ const (
 	// pollTimeout is the getUpdates long-poll window.
 	pollTimeout = time.Minute
 
+	// decimal is the base Telegram ids are written in.
+	decimal = 10
+
 	cmdRequest = "request"
 	cmdTasks   = "tasks"
 	cmdStart   = "start"
@@ -38,7 +41,7 @@ var help = flow.Lines(
 type Flow interface {
 	Start(ctx context.Context, actor flow.Actor, term string) flow.Reply
 	Choose(ctx context.Context, actor flow.Actor, data string) flow.Reply
-	Answer(ctx context.Context, actor flow.Actor, input, text string) flow.Reply
+	Answer(ctx context.Context, actor flow.Actor, typed flow.Typed) flow.Reply
 	Tasks(ctx context.Context, actor flow.Actor) flow.Reply
 }
 
@@ -58,6 +61,7 @@ type adapter struct {
 	log         *slog.Logger
 	followEvery time.Duration
 	runCtx      context.Context
+	api         *bot.Bot // set once connected, before any update arrives
 
 	mu        sync.Mutex
 	pending   map[inputKey]pendingInput
@@ -100,6 +104,7 @@ func New(cfg Config) (*Bot, error) {
 	if err != nil {
 		return nil, fmt.Errorf("telegram: %w", err)
 	}
+	a.api = api
 	return &Bot{adapter: a, api: api, log: cfg.Log}, nil
 }
 
@@ -114,13 +119,14 @@ func (b *Bot) Run(ctx context.Context, f Flow) {
 
 // Notify sends a notice to where the requester asked; in a group it
 // mentions them so the notice reaches the right person.
-func (b *Bot) Notify(ctx context.Context, to flow.Actor, text flow.Text, image string) error {
+func (b *Bot) Notify(ctx context.Context, n flow.Notice) error {
+	to, text := n.To, n.Text
 	chat, err := strconv.ParseInt(to.Address, 10, 64)
 	if err != nil {
 		return fmt.Errorf("telegram address %q: %w", to.Address, err)
 	}
 	if chat != to.UserID && len(text) > 0 {
-		mention := flow.Linked(flow.Plain(to.Name), "tg://user?id="+strconv.FormatInt(to.UserID, 10))
+		mention := flow.Linked(flow.Plain(to.Name), "tg://user?id="+strconv.FormatInt(to.UserID, decimal))
 		first := flow.Line(append([]flow.Span{mention, flow.Plain(" ")}, text[0].Spans...)...)
 		text = append(flow.Lines(first), text[1:]...)
 	}
@@ -128,7 +134,7 @@ func (b *Bot) Notify(ctx context.Context, to flow.Actor, text flow.Text, image s
 		ChatID:             chat,
 		Text:               renderHTML(text),
 		ParseMode:          models.ParseModeHTML,
-		LinkPreviewOptions: preview(image),
+		LinkPreviewOptions: preview(n.Image),
 	})
 	return err
 }
@@ -139,7 +145,7 @@ func actorOf(u models.User, chat int64) flow.Actor {
 	if name == "" {
 		name = u.Username
 	}
-	return flow.Actor{UserID: u.ID, Name: name, Address: strconv.FormatInt(chat, 10)}
+	return flow.Actor{UserID: u.ID, Name: name, Address: strconv.FormatInt(chat, decimal)}
 }
 
 func (a *adapter) handle(ctx context.Context, b *bot.Bot, upd *models.Update) {
@@ -167,7 +173,7 @@ func (a *adapter) onMessage(ctx context.Context, b *bot.Bot, msg *models.Message
 	case !a.allowed[msg.From.ID]:
 		reply = flow.Reply{Text: flow.Lines(flow.Line(
 			flow.Plain("🚫 你没有使用权限。你的 Telegram ID："),
-			flow.Mono(strconv.FormatInt(msg.From.ID, 10)),
+			flow.Mono(strconv.FormatInt(msg.From.ID, decimal)),
 		))}
 	case cmd == cmdRequest:
 		reply = a.flow.Start(ctx, actorOf(*msg.From, msg.Chat.ID), arg)
@@ -197,9 +203,9 @@ func (a *adapter) onCallback(ctx context.Context, b *bot.Bot, cq *models.Callbac
 	if reply.Notice == "" && cq.Message.Message != nil {
 		t := editTarget{chat: cq.Message.Message.Chat.ID, user: cq.From.ID, message: cq.Message.Message.ID}
 		a.unfollow(t.key())
-		a.edit(ctx, b, t, reply)
+		a.edit(ctx, t, reply)
 		if reply.Follow != "" {
-			a.follow(b, follower{target: t, actor: actor, data: reply.Follow, shown: renderHTML(reply.Text)})
+			a.follow(follower{target: t, actor: actor, data: reply.Follow, shown: renderHTML(reply.Text)})
 		}
 	}
 	_, err := b.AnswerCallbackQuery(ctx, &bot.AnswerCallbackQueryParams{
@@ -232,14 +238,14 @@ func (a *adapter) onText(ctx context.Context, b *bot.Bot, msg *models.Message) {
 	if msg.Chat.Type != models.ChatTypePrivate && !isReply {
 		return
 	}
-	reply := a.flow.Answer(ctx, actorOf(*msg.From, msg.Chat.ID), p.input, msg.Text)
+	reply := a.flow.Answer(ctx, actorOf(*msg.From, msg.Chat.ID), flow.Typed{Input: p.input, Text: msg.Text})
 	if reply.Notice != "" {
 		// Pending inputs are keyed by user and hold the bot's own token, so
 		// the flow never refuses one; keep the card rather than clobber it.
 		a.log.Warn("typed answer refused", "notice", reply.Notice)
 		return
 	}
-	a.edit(ctx, b, editTarget{chat: key.chat, user: key.user, message: p.message}, reply)
+	a.edit(ctx, editTarget{chat: key.chat, user: key.user, message: p.message}, reply)
 }
 
 // editTarget is a conversation message and the user driving it.
@@ -250,7 +256,7 @@ type editTarget struct {
 
 // edit renders reply into the conversation message and records whether it
 // now waits for a typed answer.
-func (a *adapter) edit(ctx context.Context, b *bot.Bot, t editTarget, reply flow.Reply) {
+func (a *adapter) edit(ctx context.Context, t editTarget, reply flow.Reply) {
 	key := inputKey{chat: t.chat, user: t.user}
 	a.mu.Lock()
 	if reply.Input != "" {
@@ -259,7 +265,7 @@ func (a *adapter) edit(ctx context.Context, b *bot.Bot, t editTarget, reply flow
 		delete(a.pending, key)
 	}
 	a.mu.Unlock()
-	_, err := b.EditMessageText(ctx, &bot.EditMessageTextParams{
+	_, err := a.api.EditMessageText(ctx, &bot.EditMessageTextParams{
 		ChatID:             t.chat,
 		MessageID:          t.message,
 		Text:               renderHTML(reply.Text),

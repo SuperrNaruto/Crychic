@@ -166,10 +166,10 @@ func (w watch) wants(ep int) bool {
 }
 
 // withActivity records which subscriptions MoviePilot no longer has and
-// drops watches that have been orphaned for longer than grace. MoviePilot
+// drops watches that have been orphaned for longer than orphanGrace. MoviePilot
 // closes a subscription when downloads finish, before files are transferred,
 // so a closed subscription alone must not end a watch.
-func withActivity(st state, active map[int]bool, now time.Time, grace time.Duration) state {
+func withActivity(st state, active map[int]bool, now time.Time) state {
 	next := state{Baseline: st.Baseline, LastTransfer: st.LastTransfer}
 	for _, w := range st.Watches {
 		isActive, checked := active[w.SubscriptionID]
@@ -179,7 +179,7 @@ func withActivity(st state, active map[int]bool, now time.Time, grace time.Durat
 			w.InactiveSince = nil
 		case w.InactiveSince == nil:
 			w.InactiveSince = &now
-		case now.Sub(*w.InactiveSince) > grace:
+		case now.Sub(*w.InactiveSince) > orphanGrace:
 			continue
 		}
 		next.Watches = append(next.Watches, w)

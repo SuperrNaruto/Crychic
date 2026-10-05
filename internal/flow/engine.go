@@ -91,39 +91,52 @@ func (e *Engine) Start(ctx context.Context, actor Actor, term string) Reply {
 	return Reply{Text: text, Buttons: rows}
 }
 
+// press is a button press: an action and its argument.
+type press struct {
+	action string
+	arg    int
+}
+
+// chooser applies the presses it knows; ok is false for any other.
+type chooser func(ctx context.Context, sess session, p press) (reply Reply, ok bool)
+
 // Choose applies a button press.
 func (e *Engine) Choose(ctx context.Context, actor Actor, raw string) Reply {
-	id, action, arg, ok := parseData(raw)
+	id, p, ok := parseData(raw)
 	if !ok {
 		return Reply{Notice: msgInvalidChoice}
 	}
 	sess, ok := e.store.get(id)
 	if !ok {
-		return expired(action)
+		return expired(p.action)
 	}
 	if sess.owner.UserID != actor.UserID {
 		return Reply{Notice: msgNotYours}
 	}
-	if reply, ok := e.chooseTask(ctx, sess, action, arg); ok {
-		return reply
-	}
-	if reply, ok := e.chooseSeasons(ctx, sess, action, arg); ok {
-		return reply
-	}
-	switch action {
-	case actionMedia:
-		return e.pickMedia(ctx, sess, arg)
-	case actionSeason:
-		return e.pickSeason(ctx, sess, arg)
-	case actionConfirm:
-		return e.confirm(ctx, sess, arg)
-	case actionAskFrom:
-		return askStart(sess, "")
-	case actionCancel:
-		e.store.take(id)
-		return Reply{Text: Sentence(msgCancelled)}
+	for _, choose := range []chooser{e.chooseRequest, e.chooseSeasons, e.chooseTask} {
+		if reply, ok := choose(ctx, sess, p); ok {
+			return reply
+		}
 	}
 	return Reply{Notice: msgInvalidChoice}
+}
+
+// chooseRequest applies the steps of a /request conversation.
+func (e *Engine) chooseRequest(ctx context.Context, sess session, p press) (Reply, bool) {
+	switch p.action {
+	case actionMedia:
+		return e.pickMedia(ctx, sess, p.arg), true
+	case actionSeason:
+		return e.pickSeason(ctx, sess, p.arg), true
+	case actionConfirm:
+		return e.confirm(ctx, sess, p.arg), true
+	case actionAskFrom:
+		return askStart(sess, ""), true
+	case actionCancel:
+		e.store.take(sess.id)
+		return Reply{Text: Sentence(msgCancelled)}, true
+	}
+	return Reply{}, false
 }
 
 func (e *Engine) pickMedia(ctx context.Context, sess session, index int) Reply {
@@ -232,7 +245,7 @@ func (e *Engine) offerConfirm(ctx context.Context, sess session, target Target) 
 	}
 	if existing != 0 {
 		e.store.take(sess.id)
-		status := fmt.Sprintf("ℹ️ %s已在订阅中%s", targetName(target), e.watch(ctx, sess, existing, target))
+		status := fmt.Sprintf("ℹ️ %s已在订阅中%s", targetName(target), e.watch(ctx, sess, subscription{id: existing, target: target}))
 		return sess.picked.reply(Line(Plain(status)), nil)
 	}
 	sess.target = &target
@@ -269,28 +282,34 @@ func (e *Engine) confirm(ctx context.Context, sess session, from int) Reply {
 	if err != nil {
 		return e.failure("subscribe", err)
 	}
-	done := fmt.Sprintf("✅ 已订阅%s%s", targetName(target), e.watch(ctx, sess, id, target))
+	done := fmt.Sprintf("✅ 已订阅%s%s", targetName(target), e.watch(ctx, sess, subscription{id: id, target: target}))
 	return sess.picked.reply(Line(Plain(done)), nil)
+}
+
+// subscription is a MoviePilot subscription and what it was made for.
+type subscription struct {
+	id     int
+	target Target
 }
 
 // watch registers the session owner for an arrival notice and returns the
 // sentence ending that tells them whether they will get one.
-func (e *Engine) watch(ctx context.Context, sess session, id int, target Target) string {
-	if !e.remember(ctx, sess, id, target) {
+func (e *Engine) watch(ctx context.Context, sess session, sub subscription) string {
+	if !e.remember(ctx, sess, sub) {
 		return "，" + msgNoNotice
 	}
 	return "，" + msgWillNotify
 }
 
-// remember registers the session owner for an arrival notice of target.
-func (e *Engine) remember(ctx context.Context, sess session, id int, target Target) bool {
-	req := Request{SubscriptionID: id, Target: target, Requester: sess.owner}
-	if target.Season != nil {
-		req.SeasonEpisodes = sess.episodeCount(*target.Season)
-		req.Held = sess.library.Episodes[*target.Season]
+// remember registers the session owner for an arrival notice of sub.
+func (e *Engine) remember(ctx context.Context, sess session, sub subscription) bool {
+	req := Request{SubscriptionID: sub.id, Target: sub.target, Requester: sess.owner}
+	if season := sub.target.Season; season != nil {
+		req.SeasonEpisodes = sess.episodeCount(*season)
+		req.Held = sess.library.Episodes[*season]
 	}
 	if err := e.watcher.Watch(ctx, req); err != nil {
-		e.log.Error("cannot remember request for notification", "subscription", id, "err", err)
+		e.log.Error("cannot remember request for notification", "subscription", sub.id, "err", err)
 		return false
 	}
 	return true
@@ -308,14 +327,14 @@ func data(id uint64, action string, arg int) string {
 	return fmt.Sprintf("%d:%s:%d", id, action, arg)
 }
 
-func parseData(raw string) (id uint64, action string, arg int, ok bool) {
+func parseData(raw string) (id uint64, p press, ok bool) {
 	parts := strings.Split(raw, ":")
 	if len(parts) != 3 {
-		return 0, "", 0, false
+		return 0, press{}, false
 	}
 	id, errID := strconv.ParseUint(parts[0], 10, 64)
 	arg, errArg := strconv.Atoi(parts[2])
-	return id, parts[1], arg, errID == nil && errArg == nil
+	return id, press{action: parts[1], arg: arg}, errID == nil && errArg == nil
 }
 
 func cancelButton(id uint64) Button {

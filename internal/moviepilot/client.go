@@ -253,7 +253,7 @@ func (c *Client) do(ctx context.Context, cl call, out any) error {
 	if resp.StatusCode == http.StatusUnauthorized || resp.StatusCode == http.StatusForbidden {
 		return errAuth
 	}
-	if resp.StatusCode/100 != 2 {
+	if resp.StatusCode < http.StatusOK || resp.StatusCode >= http.StatusMultipleChoices {
 		snippet, _ := io.ReadAll(io.LimitReader(resp.Body, maxErrorBody))
 		return fmt.Errorf("moviepilot %s %s: status %d: %s", cl.method, cl.path, resp.StatusCode, snippet)
 	}

@@ -49,10 +49,16 @@ func askStart(sess session, problem string) Reply {
 	return reply
 }
 
+// Typed is text a user typed in answer to a Reply with Input.
+type Typed struct {
+	Input string // the Reply's Input
+	Text  string
+}
+
 // Answer takes the text a user typed in response to a Reply with Input.
-func (e *Engine) Answer(_ context.Context, actor Actor, input, text string) Reply {
-	id, action, _, ok := parseData(input)
-	if !ok || action != actionAskFrom {
+func (e *Engine) Answer(_ context.Context, actor Actor, typed Typed) Reply {
+	id, p, ok := parseData(typed.Input)
+	if !ok || p.action != actionAskFrom {
 		return Reply{Notice: msgInvalidChoice}
 	}
 	sess, ok := e.store.get(id)
@@ -62,7 +68,7 @@ func (e *Engine) Answer(_ context.Context, actor Actor, input, text string) Repl
 	if sess.owner.UserID != actor.UserID {
 		return Reply{Notice: msgNotYours}
 	}
-	text = strings.TrimSpace(text)
+	text := strings.TrimSpace(typed.Text)
 	from, err := strconv.Atoi(text)
 	if err != nil || from < 1 || !sess.validStart(from) {
 		return askStart(sess, fmt.Sprintf("⚠️「%s」不是有效的集数。", text))

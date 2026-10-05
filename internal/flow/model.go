@@ -153,6 +153,14 @@ type Actor struct {
 	Address string
 }
 
+// Notice is a message sent to someone outside any conversation, e.g. an
+// arrival; Image is a poster URL to show with it.
+type Notice struct {
+	To    Actor
+	Text  Text
+	Image string
+}
+
 // Button is one choice offered to the user; Data comes back to Choose.
 type Button struct {
 	Label string

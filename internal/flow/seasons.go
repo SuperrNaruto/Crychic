@@ -17,15 +17,15 @@ const (
 )
 
 // chooseSeasons applies the multi-season actions; ok is false for others.
-func (e *Engine) chooseSeasons(ctx context.Context, sess session, action string, arg int) (Reply, bool) {
-	switch action {
+func (e *Engine) chooseSeasons(ctx context.Context, sess session, p press) (Reply, bool) {
+	switch p.action {
 	case actionMulti:
 		return e.tickBox(sess), true
 	case actionTick:
-		if !slices.Contains(sess.selectable(), arg) {
+		if !slices.Contains(sess.selectable(), p.arg) {
 			return Reply{Notice: msgInvalidChoice}, true
 		}
-		sess.chosen = toggled(sess.chosen, arg)
+		sess.chosen = toggled(sess.chosen, p.arg)
 		return e.tickBox(sess), true
 	case actionSubscribed:
 		if len(sess.chosen) == 0 {
@@ -110,7 +110,7 @@ func (e *Engine) subscribeSeason(ctx context.Context, sess session, season int) 
 		out.err = err
 		return out
 	}
-	out.notified = e.remember(ctx, sess, id, target)
+	out.notified = e.remember(ctx, sess, subscription{id: id, target: target})
 	return out
 }
 

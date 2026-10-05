@@ -53,7 +53,7 @@ func TestPartlyHeldSeasonCompletesWithLibrary(t *testing.T) {
 	h.tap(alice, 1, "第 1 季 · 13 集 · 已有 1 集")
 	h.shows(1, "媒体库已有 E13")
 	h.tap(alice, 1, "从第 1 集开始")
-	h.arrives(alice, episodeFile("迷途之子!!!!!", "224207", "S01", "E01-E12", mygoImage))
+	h.arrives(alice, mygo.file("S01", "E01-E12"))
 	h.shows(2, "本季请求的剧集已全部入库")
 	h.tr.verify(t)
 }

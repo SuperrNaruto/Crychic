@@ -68,20 +68,20 @@ func (e *Engine) listTasks(ctx context.Context, sess session) Reply {
 }
 
 // chooseTask applies the task actions; ok is false for any other action.
-func (e *Engine) chooseTask(ctx context.Context, sess session, action string, arg int) (Reply, bool) {
-	switch action {
+func (e *Engine) chooseTask(ctx context.Context, sess session, p press) (Reply, bool) {
+	switch p.action {
 	case actionTask:
 		sess.follow = following{on: true, until: e.now().Add(FollowFor)}
-		return e.refresh(ctx, sess, arg), true
+		return e.refresh(ctx, sess, p.arg), true
 	case actionFollow:
 		if !sess.follow.on {
 			return Reply{Notice: msgNotFollowing}, true
 		}
-		return e.refresh(ctx, sess, arg), true
+		return e.refresh(ctx, sess, p.arg), true
 	case actionUnfollow:
 		sess.follow.on = false
 		e.store.put(sess)
-		return pausedView(sess, arg, msgUnfollowed), true
+		return pausedView(sess, p.arg, msgUnfollowed), true
 	case actionList:
 		return e.listTasks(ctx, sess), true
 	case actionClose:

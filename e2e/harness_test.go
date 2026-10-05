@@ -147,20 +147,31 @@ func (h *harness) reports(msgID int, key, fixture string) {
 func (h *harness) say(user, chat int64, text string) {
 	h.t.Helper()
 	h.tr.add(fmt.Sprintf(">> user %d in chat %d: %s", user, chat, text))
-	h.wait(h.tg.push(textUpdate(user, chat, text, 0), fmt.Sprintf("send:%d", chat)), text)
+	h.wait(h.tg.push(chatMessage{user: user, chat: chat, text: text}.update(), fmt.Sprintf("send:%d", chat)), text)
 }
 
-// answer types text into message msgID's chat (quoting msgID when quote is
-// set) and waits for the bot to update that message.
-func (h *harness) answer(user int64, msgID int, text string, quote bool) {
+// answer types text into message msgID's chat and waits for the bot to
+// update that message.
+func (h *harness) answer(user int64, msgID int, text string) {
 	h.t.Helper()
-	chat := mustMessage(h, msgID).chat
-	replyTo, how := 0, ""
-	if quote {
-		replyTo, how = msgID, fmt.Sprintf(" quoting message %d", msgID)
+	h.typeInto(chatMessage{user: user, chat: mustMessage(h, msgID).chat, text: text}, msgID)
+}
+
+// answerQuoting is answer as a reply quoting message msgID, which is how
+// group members answer.
+func (h *harness) answerQuoting(user int64, msgID int, text string) {
+	h.t.Helper()
+	h.typeInto(chatMessage{user: user, chat: mustMessage(h, msgID).chat, text: text, replyTo: msgID}, msgID)
+}
+
+func (h *harness) typeInto(m chatMessage, msgID int) {
+	h.t.Helper()
+	how := ""
+	if m.replyTo > 0 {
+		how = fmt.Sprintf(" quoting message %d", m.replyTo)
 	}
-	h.tr.add(fmt.Sprintf(">> user %d in chat %d%s: %s", user, chat, how, text))
-	h.wait(h.tg.push(textUpdate(user, chat, text, replyTo), fmt.Sprintf("edit:%d", msgID)), text)
+	h.tr.add(fmt.Sprintf(">> user %d in chat %d%s: %s", m.user, m.chat, how, m.text))
+	h.wait(h.tg.push(m.update(), fmt.Sprintf("edit:%d", msgID)), m.text)
 }
 
 // chatter sends a message the bot must ignore. Nothing waits for it; a
@@ -168,19 +179,27 @@ func (h *harness) answer(user int64, msgID int, text string, quote bool) {
 func (h *harness) chatter(user, chat int64, text string) {
 	h.t.Helper()
 	h.tr.add(fmt.Sprintf(">> user %d in chat %d: %s", user, chat, text))
-	h.tg.push(textUpdate(user, chat, text, 0), "")
+	h.tg.push(chatMessage{user: user, chat: chat, text: text}.update(), "")
 }
 
-func textUpdate(user, chat int64, text string, replyTo int) map[string]any {
+// chatMessage is a text message a user sends, optionally replying to one
+// of the bot's messages.
+type chatMessage struct {
+	user, chat int64
+	text       string
+	replyTo    int
+}
+
+func (m chatMessage) update() map[string]any {
 	msg := map[string]any{
-		"message_id": 0, "date": messageDate, "text": text,
-		"from": map[string]any{"id": user, "is_bot": false, "first_name": strconv.FormatInt(user, 10)},
-		"chat": map[string]any{"id": chat, "type": chatType(chat)},
+		"message_id": 0, "date": messageDate, "text": m.text,
+		"from": map[string]any{"id": m.user, "is_bot": false, "first_name": strconv.FormatInt(m.user, 10)},
+		"chat": map[string]any{"id": m.chat, "type": chatType(m.chat)},
 	}
-	if replyTo > 0 {
+	if m.replyTo > 0 {
 		msg["reply_to_message"] = map[string]any{
-			"message_id": replyTo, "date": messageDate,
-			"chat": map[string]any{"id": chat, "type": chatType(chat)},
+			"message_id": m.replyTo, "date": messageDate,
+			"chat": map[string]any{"id": m.chat, "type": chatType(m.chat)},
 		}
 	}
 	return map[string]any{"message": msg}

@@ -4,8 +4,6 @@ import (
 	"context"
 	"time"
 
-	"github.com/go-telegram/bot"
-
 	"github.com/SuperrNauto/Crychic/internal/flow"
 )
 
@@ -27,7 +25,7 @@ type follower struct {
 }
 
 // follow starts refreshing f's message, replacing any earlier follower of it.
-func (a *adapter) follow(b *bot.Bot, f follower) {
+func (a *adapter) follow(f follower) {
 	ctx, cancel := context.WithCancel(a.runCtx)
 	f.cancel = cancel
 	key := f.target.key()
@@ -37,7 +35,7 @@ func (a *adapter) follow(b *bot.Bot, f follower) {
 	}
 	a.followers[key] = &f
 	a.mu.Unlock()
-	go a.refresh(ctx, b, &f)
+	go a.refresh(ctx, &f)
 }
 
 // unfollow stops refreshing a message, e.g. because its owner pressed a
@@ -53,7 +51,7 @@ func (a *adapter) unfollow(key messageKey) {
 
 // refresh asks the flow for the reply's next state every followEvery until
 // the flow ends it or the follower is cancelled.
-func (a *adapter) refresh(ctx context.Context, b *bot.Bot, f *follower) {
+func (a *adapter) refresh(ctx context.Context, f *follower) {
 	defer a.forget(f)
 	ticker := time.NewTicker(a.followEvery)
 	defer ticker.Stop()
@@ -68,7 +66,7 @@ func (a *adapter) refresh(ctx context.Context, b *bot.Bot, f *follower) {
 			return
 		}
 		if html := renderHTML(reply.Text); html != f.shown {
-			a.edit(ctx, b, f.target, reply)
+			a.edit(ctx, f.target, reply)
 			f.shown = html
 		}
 		if reply.Follow == "" {

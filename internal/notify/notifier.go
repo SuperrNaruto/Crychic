@@ -116,14 +116,14 @@ func (n *Notifier) checkActivity(ctx context.Context) error {
 		active[w.SubscriptionID] = ok
 	}
 	n.lastActivity = now
-	return n.update(func(st state) state { return withActivity(st, active, now, orphanGrace) })
+	return n.update(func(st state) state { return withActivity(st, active, now) })
 }
 
 func (n *Notifier) send(ctx context.Context, deliveries []delivery) {
 	for _, d := range deliveries {
 		text := arrivalText(d)
 		for _, to := range d.watch.Requesters {
-			if err := n.opts.Sender.Notify(ctx, to, text, d.image); err != nil {
+			if err := n.opts.Sender.Notify(ctx, flow.Notice{To: to, Text: text, Image: d.image}); err != nil {
 				n.opts.Log.Error("arrival notice not delivered", "user", to.UserID, "err", err)
 			}
 		}

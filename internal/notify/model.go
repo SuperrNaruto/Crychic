@@ -31,5 +31,5 @@ type Feed interface {
 
 // Sender delivers a notice to a requester on their platform.
 type Sender interface {
-	Notify(ctx context.Context, to flow.Actor, text flow.Text, image string) error
+	Notify(ctx context.Context, n flow.Notice) error
 }
