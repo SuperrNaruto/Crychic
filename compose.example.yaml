@@ -1,5 +1,6 @@
 # Copy to compose.yaml and fill in. Host networking lets Crychic reach a
-# MoviePilot that also runs on this host at 127.0.0.1.
+# MoviePilot that also runs on this host at 127.0.0.1. The container runs as
+# uid 65532, so give it the data dir first: mkdir -p data && chown 65532:65532 data
 services:
   crychic:
     image: crychic
