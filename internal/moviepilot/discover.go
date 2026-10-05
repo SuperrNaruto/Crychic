@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	"strings"
 
 	"github.com/SuperrNauto/Crychic/internal/flow"
 )
@@ -31,6 +32,9 @@ func (c *Client) Discover(ctx context.Context, chart flow.Chart) ([]flow.Media, 
 	medias := make([]flow.Media, 0, len(infos))
 	for _, info := range infos {
 		if m, ok := info.toMedia(); ok {
+			// Douban's overview is "2026 / 中国大陆 / 剧情 / director / cast";
+			// the year is shown already.
+			m.Overview = strings.TrimPrefix(m.Overview, m.Year+" / ")
 			medias = append(medias, m)
 		}
 	}

@@ -20,12 +20,18 @@
 -> MoviePilot GET /api/v1/recommend/bangumi_calendar
 -> MoviePilot GET /api/v1/media/search?count=10&title=PSYREN -サイレン-&type=media
 -> MoviePilot GET /api/v1/media/search?count=10&title=PSYREN -决战游戏-&type=media
+-> MoviePilot GET /api/v1/media/search?count=10&title=どうも、好きな人に惚れ薬を依頼された魔女です。&type=media
+-> MoviePilot GET /api/v1/media/search?count=10&title=ロメリア戦記&type=media
 -> MoviePilot GET /api/v1/media/search?count=10&title=你好，我是受心上人所托来做恋爱药的魔女。&type=media
 -> MoviePilot GET /api/v1/media/search?count=10&title=列女战纪：女娲石记&type=media
 -> MoviePilot GET /api/v1/media/search?count=10&title=罗梅莉亚战记&type=media
+-> MoviePilot GET /api/v1/media/search?count=10&title=魔法少女育成計画 restart&type=media
 -> MoviePilot GET /api/v1/media/search?count=10&title=魔法少女育成计划 restart&type=media
 -> MoviePilot GET /api/v1/media/390200?media_source=bangumi&type_name=电视剧
+-> MoviePilot GET /api/v1/media/418229?media_source=bangumi&type_name=电视剧
+-> MoviePilot GET /api/v1/media/511936?media_source=bangumi&type_name=电视剧
 -> MoviePilot GET /api/v1/media/614640?media_source=bangumi&type_name=电视剧
+-> MoviePilot GET /api/v1/media/624923?media_source=bangumi&type_name=电视剧
 << editMessageText chat=1001 message=1 parse_mode=HTML
    <b>🎌 新番放送 · 第 1/1 页</b>
    

@@ -37,11 +37,12 @@ func (tr *transcript) add(head string, body ...string) {
 
 // settle sorts the last line into the run of reads of the same route
 // before it: the bot makes such reads at once (a chart page's lookups), so
-// they arrive in any order.
+// they arrive in any order. Media searches and details count as one route,
+// since a calendar page looks up both at once.
 func (tr *transcript) settle() {
 	for i := len(tr.lines) - 1; i > 0; i-- {
 		prev, last := tr.lines[i-1], tr.lines[i]
-		if readRoute(prev) == "" || readRoute(prev) != readRoute(last) || prev <= last {
+		if readRoute(prev) == "" || readRoute(prev) != readRoute(last) || readOrder(prev) <= readOrder(last) {
 			return
 		}
 		tr.lines[i-1], tr.lines[i] = last, prev
@@ -50,12 +51,24 @@ func (tr *transcript) settle() {
 
 // readRoute is a MoviePilot read's path without its query and trailing id,
 // or "" for any other line.
+// readOrder sorts media searches before details, as a pick made one at a
+// time reads them.
+func readOrder(line string) string {
+	return strings.Replace(line, mediaRoute+"search", mediaRoute+" search", 1)
+}
+
+// mediaRoute is where media searches and details are read.
+const mediaRoute = "/api/v1/media/"
+
 func readRoute(line string) string {
 	path, found := strings.CutPrefix(line, "-> MoviePilot GET ")
 	if !found {
 		return ""
 	}
 	path, _, _ = strings.Cut(path, "?")
+	if path == mediaRoute+"search" {
+		return mediaRoute
+	}
 	return strings.TrimRight(path, "0123456789")
 }
 

@@ -90,8 +90,9 @@ func (i mediaInfo) toMedia() (flow.Media, bool) {
 	}, true
 }
 
-// unixLines drops the carriage returns Bangumi synopses carry.
-func unixLines(s string) string { return strings.ReplaceAll(s, "\r\n", "\n") }
+// unixLines drops the carriage returns Bangumi synopses carry and the
+// indent (often full-width spaces) some synopses start with.
+func unixLines(s string) string { return strings.TrimSpace(strings.ReplaceAll(s, "\r\n", "\n")) }
 
 // named is a TMDB credit or genre; MoviePilot sends credits either as
 // objects or as bare names.

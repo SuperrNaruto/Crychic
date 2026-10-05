@@ -114,9 +114,10 @@ func (e *Engine) chartPage(ctx context.Context, sess session, page int) Reply {
 	return Reply{Text: text, Buttons: rows}
 }
 
-// pickLines lists picks numbered from first+1. Calendars group them under
-// their air date, which stands in for the year; the kind is only named
-// when the page mixes movies and shows.
+// pickLines lists picks numbered from first+1, each with its synopsis
+// collapsed (Douban's is a year / region / genre / cast line). Calendars
+// group them under their air date, which stands in for the year; the kind
+// is only named when the page mixes movies and shows.
 func pickLines(first int, picks []Media, aired bool) Text {
 	mixed := mixedKinds(picks)
 	var text Text
@@ -129,7 +130,7 @@ func pickLines(first int, picks []Media, aired bool) Text {
 			text = append(text, Line())
 		}
 		text = append(text, pickLine(first+i+1, m, pickLook{year: !aired, kind: mixed}))
-		if aired && m.Overview != "" {
+		if m.Overview != "" {
 			text = append(text, Quote(truncate(m.Overview, chartOverviewRunes)))
 		}
 	}
