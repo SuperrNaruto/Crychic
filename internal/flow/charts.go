@@ -13,6 +13,8 @@ const (
 
 	// chartPageSize is how many picks one page shows as buttons.
 	chartPageSize = 8
+	// gridColumns is how many number buttons share a row.
+	gridColumns = 4
 
 	msgCharts      = "🔥 发现"
 	msgPickChart   = "选择一个榜单："
@@ -81,7 +83,8 @@ func (e *Engine) openChart(ctx context.Context, sess session, index int) Reply {
 	return e.chartPage(sess, 0)
 }
 
-// chartPage shows page of the current chart's picks as numbered buttons.
+// chartPage shows page of the current chart's picks, numbered, with a grid
+// of number buttons to pick one.
 func (e *Engine) chartPage(sess session, page int) Reply {
 	pages := max((len(sess.picks)+chartPageSize-1)/chartPageSize, 1)
 	if page < 0 || page >= pages {
@@ -89,17 +92,14 @@ func (e *Engine) chartPage(sess session, page int) Reply {
 	}
 	e.store.put(sess)
 	c := charts[sess.chart]
-	text := Lines(Line(Strong(fmt.Sprintf("%s · 第 %d/%d 页", c.label, page+1, pages))))
-	var rows [][]Button
 	first := page * chartPageSize
-	for i := first; i < min(first+chartPageSize, len(sess.picks)); i++ {
-		m := sess.picks[i]
-		text = append(text, pickLine(i+1, m, c.aired))
-		rows = append(rows, []Button{{Label: fmt.Sprintf("%d. %s", i+1, titleYear(m)), Data: data(sess.id, actionChartPick, i)}})
-	}
+	shown := sess.picks[first:min(first+chartPageSize, len(sess.picks))]
+	text := Lines(Line(Strong(fmt.Sprintf("%s · 第 %d/%d 页", c.label, page+1, pages))))
+	text = append(text, pickLines(first, shown, c.aired)...)
 	if len(sess.picks) == 0 {
 		text = append(text, Line(Plain("这个榜单暂时是空的。")))
 	}
+	rows := numberGrid(sess.id, first, len(shown))
 	if nav := pager(sess.id, page, pages); len(nav) > 0 {
 		rows = append(rows, nav)
 	}
@@ -107,13 +107,71 @@ func (e *Engine) chartPage(sess session, page int) Reply {
 	return Reply{Text: text, Buttons: rows}
 }
 
-// pickLine is a result line, with the first air date for calendars.
-func pickLine(n int, m Media, aired bool) Block {
-	line := resultLine(n, m)
-	if aired && m.Released != "" {
-		line.Spans = append(line.Spans, Plain(" · "+m.Released+" 首播"))
+// pickLines lists picks numbered from first+1. Calendars group them under
+// their air date, which stands in for the year; the kind is only named
+// when the page mixes movies and shows.
+func pickLines(first int, picks []Media, aired bool) Text {
+	mixed := mixedKinds(picks)
+	var text Text
+	day := ""
+	for i, m := range picks {
+		if aired && m.Released != day {
+			day = m.Released
+			text = append(text, Line(), Line(Emphasis(airDay(day))))
+		} else if i == 0 {
+			text = append(text, Line())
+		}
+		text = append(text, pickLine(first+i+1, m, pickLook{year: !aired, kind: mixed}))
 	}
-	return line
+	return text
+}
+
+// pickLook says which metadata a chart line repeats.
+type pickLook struct{ year, kind bool }
+
+// pickLine is a short chart line, e.g. "1. **沙丘** (2021) · ⭐ 7.8"; the
+// original title waits for the card.
+func pickLine(n int, m Media, look pickLook) Block {
+	spans := []Span{Plain(fmt.Sprintf("%d. ", n)), Strong(m.Title)}
+	if y := year(m); look.year && y != "" {
+		spans = append(spans, Plain(" "+y))
+	}
+	if look.kind {
+		spans = append(spans, Plain(" · "+m.Kind.String()))
+	}
+	if r := rating(m.Rating); r != "" {
+		spans = append(spans, Plain(" · "+r))
+	}
+	return Line(spans...)
+}
+
+func airDay(day string) string {
+	if day == "" {
+		return "首播日期未定"
+	}
+	return day + " 首播"
+}
+
+func mixedKinds(picks []Media) bool {
+	for _, m := range picks {
+		if m.Kind != picks[0].Kind {
+			return true
+		}
+	}
+	return false
+}
+
+// numberGrid is the pick buttons, numbered like the lines, gridColumns a row.
+func numberGrid(id uint64, first, count int) [][]Button {
+	var rows [][]Button
+	for i := first; i < first+count; i++ {
+		if (i-first)%gridColumns == 0 {
+			rows = append(rows, nil)
+		}
+		last := len(rows) - 1
+		rows[last] = append(rows[last], Button{Label: fmt.Sprint(i + 1), Data: data(id, actionChartPick, i)})
+	}
+	return rows
 }
 
 // pager is the previous/next row; a missing direction is left out.
