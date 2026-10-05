@@ -34,6 +34,7 @@ type Media struct {
 	Kind          Kind
 	Rating        float64
 	PosterURL     string
+	Link          string // the media's page on its metadata site
 	Overview      string
 }
 
@@ -95,7 +96,7 @@ type Button struct {
 // the user to type an answer, which the platform hands to Engine.Answer
 // together with Input.
 type Reply struct {
-	Text    string
+	Text    Text
 	Image   string
 	Buttons [][]Button
 	Notice  string

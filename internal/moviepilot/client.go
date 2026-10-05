@@ -52,6 +52,7 @@ type mediaInfo struct {
 	MediaID       string  `json:"media_id"`
 	VoteAverage   float64 `json:"vote_average"`
 	PosterPath    string  `json:"poster_path"`
+	DetailLink    string  `json:"detail_link"`
 	Overview      string  `json:"overview"`
 }
 
@@ -80,7 +81,8 @@ func (i mediaInfo) toMedia() (flow.Media, bool) {
 	return flow.Media{
 		Source: i.MediaSource, ID: i.MediaID, Title: i.Title, OriginalTitle: i.OriginalTitle,
 		Year: i.Year, Kind: kind, Rating: i.VoteAverage,
-		PosterURL: strings.Replace(i.PosterPath, tmdbOriginalSize, tmdbPosterSize, 1), Overview: i.Overview,
+		PosterURL: strings.Replace(i.PosterPath, tmdbOriginalSize, tmdbPosterSize, 1),
+		Link:      i.DetailLink, Overview: i.Overview,
 	}, true
 }
 

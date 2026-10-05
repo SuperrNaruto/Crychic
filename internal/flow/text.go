@@ -5,8 +5,12 @@ import (
 	"strings"
 )
 
-// maxCast bounds how many actors the card lists.
-const maxCast = 3
+const (
+	// maxCast bounds how many actors the card lists.
+	maxCast = 3
+	// maxOverviewRunes keeps the collapsed synopsis well inside chat limits.
+	maxOverviewRunes = 1000
+)
 
 // card is the picked media with everything known about it.
 type card struct {
@@ -14,43 +18,60 @@ type card struct {
 	Details Details
 }
 
-// reply shows the card with its poster above message and buttons.
-func (c card) reply(message string, buttons [][]Button) Reply {
-	return Reply{Text: c.text() + "\n\n" + message, Image: c.Media.PosterURL, Buttons: buttons}
+// reply shows the card, poster above, then message and buttons.
+func (c card) reply(message Block, buttons [][]Button) Reply {
+	text := append(c.text(), Line(), message)
+	return Reply{Text: text, Image: c.Media.PosterURL, Buttons: buttons}
 }
 
 // text renders e.g.
 //
-//	沙丘 (2021) · 电影 · ⭐ 7.8
-//	Dune
+//	🎬 **沙丘** (2021) · 电影 · ⭐ 7.8      title linked to its page
+//	_Dune_
 //	科幻 / 冒险 · 156 分钟
 //	主演：提莫西·查拉梅、丽贝卡·弗格森
-//	<overview>
-func (c card) text() string {
+//	> synopsis, collapsed
+func (c card) text() Text {
 	m, d := c.Media, c.Details
-	lines := []string{joinNonEmpty(" · ", titleYear(m), m.Kind.String(), rating(m.Rating))}
+	icon := "🎬 "
+	if m.Kind == TV {
+		icon = "📺 "
+	}
+	head := []Span{Plain(icon), Linked(Strong(m.Title), m.Link)}
+	head = append(head, Plain(" "+joinNonEmpty(" · ", year(m), m.Kind.String(), rating(m.Rating))))
+	text := Lines(Line(head...))
 	if m.OriginalTitle != "" && m.OriginalTitle != m.Title {
-		lines = append(lines, m.OriginalTitle)
+		text = append(text, Line(Emphasis(m.OriginalTitle)))
 	}
 	if facts := joinNonEmpty(" · ", strings.Join(d.Genres, " / "), length(d)); facts != "" {
-		lines = append(lines, facts)
+		text = append(text, Line(Plain(facts)))
 	}
 	if len(d.Cast) > 0 {
-		lines = append(lines, "主演："+strings.Join(d.Cast[:min(len(d.Cast), maxCast)], "、"))
+		text = append(text, Line(Plain("主演："+strings.Join(d.Cast[:min(len(d.Cast), maxCast)], "、"))))
 	}
 	if m.Overview != "" {
-		lines = append(lines, truncate(m.Overview, overviewRunes))
+		text = append(text, Quote(truncate(m.Overview, maxOverviewRunes)))
 	}
-	return strings.Join(lines, "\n")
+	return text
 }
 
-// resultLine is one numbered search result, e.g. "1. 沙丘 (2021) · 电影 · ⭐ 7.8 · Dune".
-func resultLine(n int, m Media) string {
-	original := ""
-	if m.OriginalTitle != m.Title {
-		original = m.OriginalTitle
+// resultLine is one numbered search result, e.g.
+// "1. **沙丘** (2021) · 电影 · ⭐ 7.8 · _Dune_".
+func resultLine(n int, m Media) Block {
+	spans := []Span{Plain(fmt.Sprintf("%d. ", n)), Strong(m.Title)}
+	spans = append(spans, Plain(" "+joinNonEmpty(" · ", year(m), m.Kind.String(), rating(m.Rating))))
+	if m.OriginalTitle != "" && m.OriginalTitle != m.Title {
+		spans = append(spans, Plain(" · "), Emphasis(m.OriginalTitle))
 	}
-	return fmt.Sprintf("%d. %s", n, joinNonEmpty(" · ", titleYear(m), m.Kind.String(), rating(m.Rating), original))
+	return Line(spans...)
+}
+
+// year is "(2021)", or empty when unknown.
+func year(m Media) string {
+	if m.Year == "" {
+		return ""
+	}
+	return "(" + m.Year + ")"
 }
 
 func length(d Details) string {

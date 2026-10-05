@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"log/slog"
 	"net/http"
+	"strconv"
 	"strings"
 	"sync"
 	"time"
@@ -24,9 +25,12 @@ const (
 	cmdRequest = "request"
 	cmdStart   = "start"
 	cmdHelp    = "help"
-
-	msgHelp = "发送 /request <片名> 搜索电影或剧集，并在 MoviePilot 中订阅。"
 )
+
+// help explains the single command.
+var help = flow.Lines(flow.Line(
+	flow.Plain("发送 "), flow.Mono("/request <片名>"), flow.Plain(" 搜索电影或剧集，并在 MoviePilot 中订阅。"),
+))
 
 // Flow is the conversation engine the bot drives.
 type Flow interface {
@@ -106,15 +110,19 @@ func (a *adapter) onMessage(ctx context.Context, b *bot.Bot, msg *models.Message
 	case cmd != cmdRequest && cmd != cmdStart && cmd != cmdHelp:
 		return
 	case !a.allowed[msg.From.ID]:
-		reply = flow.Reply{Text: fmt.Sprintf("你没有使用权限。你的 Telegram ID：%d", msg.From.ID)}
+		reply = flow.Reply{Text: flow.Lines(flow.Line(
+			flow.Plain("🚫 你没有使用权限。你的 Telegram ID："),
+			flow.Mono(strconv.FormatInt(msg.From.ID, 10)),
+		))}
 	case cmd == cmdRequest:
 		reply = a.flow.Start(ctx, flow.Actor{UserID: msg.From.ID}, arg)
 	default:
-		reply = flow.Reply{Text: msgHelp}
+		reply = flow.Reply{Text: help}
 	}
 	_, err := b.SendMessage(ctx, &bot.SendMessageParams{
 		ChatID:             msg.Chat.ID,
-		Text:               reply.Text,
+		Text:               renderHTML(reply.Text),
+		ParseMode:          models.ParseModeHTML,
 		LinkPreviewOptions: preview(reply.Image),
 		ReplyMarkup:        keyboard(reply.Buttons),
 	})
@@ -183,7 +191,8 @@ func (a *adapter) edit(ctx context.Context, b *bot.Bot, t editTarget, reply flow
 	_, err := b.EditMessageText(ctx, &bot.EditMessageTextParams{
 		ChatID:             t.chat,
 		MessageID:          t.message,
-		Text:               reply.Text,
+		Text:               renderHTML(reply.Text),
+		ParseMode:          models.ParseModeHTML,
 		LinkPreviewOptions: preview(reply.Image),
 		ReplyMarkup:        keyboard(reply.Buttons),
 	})

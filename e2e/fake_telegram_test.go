@@ -148,6 +148,9 @@ func (f *fakeTelegram) store(r *http.Request, method string) map[string]any {
 	f.mu.Unlock()
 
 	head := fmt.Sprintf("<< %s chat=%d message=%d", method, chat, id)
+	if mode := r.FormValue("parse_mode"); mode != "" {
+		head += " parse_mode=" + mode
+	}
 	var preview struct {
 		URL   string `json:"url"`
 		Large bool   `json:"prefer_large_media"`

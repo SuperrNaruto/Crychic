@@ -23,7 +23,8 @@ func startChoices(sess session, season int) Reply {
 	if count := sess.episodeCount(season); count > 0 {
 		total = fmt.Sprintf("（共 %d 集）", count)
 	}
-	return sess.picked.reply(fmt.Sprintf("确认订阅%s%s？", targetName(*sess.target), total), rows)
+	question := fmt.Sprintf("确认订阅%s%s？", targetName(*sess.target), total)
+	return sess.picked.reply(Line(Strong(question)), rows)
 }
 
 // askStart prompts for a typed start episode; problem explains why the
@@ -36,7 +37,7 @@ func askStart(sess session, problem string) Reply {
 	if count := sess.episodeCount(*sess.target.Season); count > 0 {
 		prompt += fmt.Sprintf("（1–%d）", count)
 	}
-	reply := sess.picked.reply(problem+prompt+"：", [][]Button{{cancelButton(sess.id)}})
+	reply := sess.picked.reply(Line(Plain(problem+prompt+"：")), [][]Button{{cancelButton(sess.id)}})
 	reply.Input = data(sess.id, actionAskFrom, 0)
 	return reply
 }
@@ -49,7 +50,7 @@ func (e *Engine) Answer(_ context.Context, actor Actor, input, text string) Repl
 	}
 	sess, ok := e.store.get(id)
 	if !ok {
-		return Reply{Text: msgExpired}
+		return Reply{Text: Sentence(msgExpired)}
 	}
 	if sess.owner != actor.UserID {
 		return Reply{Notice: msgNotYours}
@@ -57,7 +58,7 @@ func (e *Engine) Answer(_ context.Context, actor Actor, input, text string) Repl
 	text = strings.TrimSpace(text)
 	from, err := strconv.Atoi(text)
 	if err != nil || from < 1 || !sess.validStart(from) {
-		return askStart(sess, fmt.Sprintf("「%s」不是有效的集数。", text))
+		return askStart(sess, fmt.Sprintf("⚠️「%s」不是有效的集数。", text))
 	}
 	target := *sess.target
 	target.StartEpisode = from

@@ -14,8 +14,6 @@ const (
 	MaxResults = 8
 	// SessionTTL is how long an untouched conversation stays answerable.
 	SessionTTL = 10 * time.Minute
-	// overviewRunes bounds the synopsis shown on the confirm step.
-	overviewRunes = 160
 
 	actionMedia   = "m"
 	actionSeason  = "s"
@@ -26,9 +24,9 @@ const (
 
 const (
 	msgUsage         = "用法：/request <片名>"
-	msgExpired       = "这个请求已失效，请重新 /request。"
+	msgExpired       = "⌛ 这个请求已失效，请重新 /request。"
 	msgNotYours      = "这不是你发起的请求。"
-	msgBackendDown   = "MoviePilot 暂时不可用，请稍后再试。"
+	msgBackendDown   = "⚠️ MoviePilot 暂时不可用，请稍后再试。"
 	msgCancelled     = "已取消。"
 	msgNoSeasons     = "没有查到这部剧的季信息。"
 	msgPickSeason    = "选择要订阅的季："
@@ -61,29 +59,29 @@ func New(opts Options) *Engine {
 func (e *Engine) Start(ctx context.Context, actor Actor, term string) Reply {
 	term = strings.TrimSpace(term)
 	if term == "" {
-		return Reply{Text: msgUsage}
+		return Reply{Text: Sentence(msgUsage)}
 	}
 	results, err := e.backend.Search(ctx, term)
 	if err != nil {
 		return e.failure("search", err)
 	}
 	if len(results) == 0 {
-		return Reply{Text: fmt.Sprintf("没有找到「%s」相关的影视。", term)}
+		return Reply{Text: Sentence(fmt.Sprintf("🔍 没有找到「%s」相关的影视。", term))}
 	}
 	if len(results) > MaxResults {
 		results = results[:MaxResults]
 	}
 	sess := e.store.create(actor.UserID, results)
-	lines := make([]string, 0, len(results)+1)
-	lines = append(lines, fmt.Sprintf("「%s」的搜索结果：", term))
+	text := make(Text, 0, len(results)+1)
+	text = append(text, Line(Strong(fmt.Sprintf("🔍「%s」的搜索结果", term))))
 	rows := make([][]Button, 0, len(results)+1)
 	for i, m := range results {
-		lines = append(lines, resultLine(i+1, m))
+		text = append(text, resultLine(i+1, m))
 		label := fmt.Sprintf("%d. %s", i+1, titleYear(m))
 		rows = append(rows, []Button{{Label: label, Data: data(sess.id, actionMedia, i)}})
 	}
 	rows = append(rows, []Button{cancelButton(sess.id)})
-	return Reply{Text: strings.Join(lines, "\n"), Buttons: rows}
+	return Reply{Text: text, Buttons: rows}
 }
 
 // Choose applies a button press.
@@ -94,7 +92,7 @@ func (e *Engine) Choose(ctx context.Context, actor Actor, raw string) Reply {
 	}
 	sess, ok := e.store.get(id)
 	if !ok {
-		return Reply{Text: msgExpired}
+		return Reply{Text: Sentence(msgExpired)}
 	}
 	if sess.owner != actor.UserID {
 		return Reply{Notice: msgNotYours}
@@ -110,7 +108,7 @@ func (e *Engine) Choose(ctx context.Context, actor Actor, raw string) Reply {
 		return askStart(sess, "")
 	case actionCancel:
 		e.store.take(id)
-		return Reply{Text: msgCancelled}
+		return Reply{Text: Sentence(msgCancelled)}
 	}
 	return Reply{Notice: msgInvalidChoice}
 }
@@ -130,7 +128,7 @@ func (e *Engine) pickMedia(ctx context.Context, sess session, index int) Reply {
 	}
 	if len(seasons) == 0 {
 		e.store.take(sess.id)
-		return sess.picked.reply(msgNoSeasons, nil)
+		return sess.picked.reply(Line(Plain(msgNoSeasons)), nil)
 	}
 	sess.seasons = seasons
 	e.store.put(sess)
@@ -139,7 +137,7 @@ func (e *Engine) pickMedia(ctx context.Context, sess session, index int) Reply {
 		rows = append(rows, []Button{{Label: seasonLabel(s), Data: data(sess.id, actionSeason, s.Number)}})
 	}
 	rows = append(rows, []Button{cancelButton(sess.id)})
-	return sess.picked.reply(msgPickSeason, rows)
+	return sess.picked.reply(Line(Strong(msgPickSeason)), rows)
 }
 
 // details enriches the card; it is cosmetic, so a failure is logged and the
@@ -171,7 +169,7 @@ func (e *Engine) offerConfirm(ctx context.Context, sess session, target Target) 
 	}
 	if subscribed {
 		e.store.take(sess.id)
-		return sess.picked.reply(fmt.Sprintf("%s已在订阅中，无需重复请求。", targetName(target)), nil)
+		return sess.picked.reply(Line(Plain(fmt.Sprintf("ℹ️ %s已在订阅中，无需重复请求。", targetName(target)))), nil)
 	}
 	sess.target = &target
 	e.store.put(sess)
@@ -184,7 +182,7 @@ func (e *Engine) offerConfirm(ctx context.Context, sess session, target Target) 
 // confirmCard asks for the final go-ahead on a fully specified target.
 func confirmCard(sess session, target Target) Reply {
 	confirm := Button{Label: "确认订阅", Data: data(sess.id, actionConfirm, target.StartEpisode)}
-	question := fmt.Sprintf("确认订阅%s？", targetName(target))
+	question := Line(Strong(fmt.Sprintf("确认订阅%s？", targetName(target))))
 	return sess.picked.reply(question, [][]Button{{confirm, cancelButton(sess.id)}})
 }
 
@@ -193,28 +191,29 @@ func confirmCard(sess session, target Target) Reply {
 // cannot consume it.
 func (e *Engine) confirm(ctx context.Context, sess session, from int) Reply {
 	if sess.target == nil {
-		return Reply{Text: msgExpired}
+		return Reply{Text: Sentence(msgExpired)}
 	}
 	if !sess.validStart(from) {
 		return Reply{Notice: msgInvalidChoice}
 	}
 	if _, ok := e.store.take(sess.id); !ok {
-		return Reply{Text: msgExpired}
+		return Reply{Text: Sentence(msgExpired)}
 	}
 	target := *sess.target
 	target.StartEpisode = from
 	if err := e.backend.Subscribe(ctx, target); err != nil {
 		return e.failure("subscribe", err)
 	}
-	return sess.picked.reply(fmt.Sprintf("已订阅%s，MoviePilot 会自动搜索下载。", targetName(target)), nil)
+	done := fmt.Sprintf("✅ 已订阅%s，MoviePilot 会自动搜索下载。", targetName(target))
+	return sess.picked.reply(Line(Plain(done)), nil)
 }
 
 func (e *Engine) failure(step string, err error) Reply {
 	if msg, ok := UserMessage(err); ok {
-		return Reply{Text: msg}
+		return Reply{Text: Sentence("⚠️ " + msg)}
 	}
 	e.log.Error("backend call failed", "step", step, "err", err)
-	return Reply{Text: msgBackendDown}
+	return Reply{Text: Sentence(msgBackendDown)}
 }
 
 func data(id uint64, action string, arg int) string {

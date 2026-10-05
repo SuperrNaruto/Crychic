@@ -31,6 +31,8 @@ Data flow: Telegram update → `telegram.adapter` → `flow.Engine.Start/Choose`
 - `internal/flow/model.go` - `Backend`, `Reply`, `UserError`: the contract every platform and backend uses
 - `internal/flow/engine.go` - conversation steps; `internal/flow/text.go` - all user-facing copy (result lines, media card)
 - `internal/flow/episodes.go` - start-episode choices for seasons and typed answers (`Engine.Answer`)
+- `internal/flow/rich.go` - `flow.Text`: formatting by meaning (bold, italic, code, link, collapsible quote)
+- `internal/telegram/html.go` - renders `flow.Text` to Telegram HTML, escaping everything
 - `internal/flow/store.go` - in-memory sessions (10 min TTL)
 - `e2e/harness_test.go` - `start`, `say`, `answer`, `chatter`, `tap`, `tapData`, `shows`
 - `e2e/testdata/transcripts/*.txt` - golden transcripts, one per scenario
@@ -45,6 +47,7 @@ Data flow: Telegram update → `telegram.adapter` → `flow.Engine.Start/Choose`
 
 - `flow` must never import a platform package; a new platform is a sibling of `internal/telegram` that consumes `flow` through a small interface
 - Inject dependencies (`Backend`, `Now`, `*http.Client`, `*slog.Logger`); construct concrete types only in `internal/app`
+- User-facing copy is `flow.Text` built with `Strong`/`Emphasis`/`Mono`/`Linked`/`Quote`; never put platform markup in flow strings, adapters render and escape. Emoji sparingly: 🔍 search, 🎬/📺 card, ✅ done, ℹ️ already subscribed, ⚠️ errors, ⌛ expired, 🚫 refused
 - Errors safe to show users are `*flow.UserError`; others get logged and shown as the generic outage text
 - Hard limits: functions ≤ 50 lines, nesting ≤ 3, ≤ 3 positional params (use a struct, e.g. `moviepilot.call`), complexity ≤ 10, no magic numbers
 

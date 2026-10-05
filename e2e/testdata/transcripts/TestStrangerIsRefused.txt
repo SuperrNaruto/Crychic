@@ -1,3 +1,3 @@
 >> user 2002 in chat 2002: /request 沙丘
-<< sendMessage chat=2002 message=1
-   你没有使用权限。你的 Telegram ID：2002
+<< sendMessage chat=2002 message=1 parse_mode=HTML
+   🚫 你没有使用权限。你的 Telegram ID：<code>2002</code>
