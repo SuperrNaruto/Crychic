@@ -50,6 +50,7 @@
 
    <b>选择要订阅的季：</b>
    [第 1 季 · 16 集 | 1:s:1]
+   [相似推荐 | 1:r:0]
    [取消 | 1:x:0]
 << answerCallbackQuery
 >> user 1001 in chat 1001: /hot

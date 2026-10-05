@@ -31,6 +31,7 @@
 
    <b>确认订阅《沙丘》？</b>
    [确认订阅 | 1:ok:0] [取消 | 1:x:0]
+   [相似推荐 | 1:r:0] [同系列 | 1:n:0]
 << answerCallbackQuery
 >> user 1001 taps 1:ok:0 on message 1
 -> MoviePilot POST /api/v1/subscribe/

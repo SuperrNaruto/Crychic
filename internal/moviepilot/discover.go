@@ -3,7 +3,6 @@ package moviepilot
 import (
 	"context"
 	"fmt"
-	"net/http"
 	"strings"
 
 	"github.com/SuperrNauto/Crychic/internal/flow"
@@ -24,18 +23,14 @@ func (c *Client) Discover(ctx context.Context, chart flow.Chart) ([]flow.Media, 
 	if !ok {
 		return nil, fmt.Errorf("moviepilot: unknown chart %d", chart)
 	}
-	var infos []mediaInfo
-	if err := c.do(ctx, call{method: http.MethodGet, path: path}, &infos); err != nil {
+	medias, err := c.medias(ctx, path)
+	if err != nil {
 		return nil, err
 	}
-	medias := make([]flow.Media, 0, len(infos))
-	for _, info := range infos {
-		if m, ok := info.toMedia(); ok {
-			// Douban's overview is "2026 / 中国大陆 / 剧情 / director / cast";
-			// the year is shown already.
-			m.Overview = strings.TrimPrefix(m.Overview, m.Year+" / ")
-			medias = append(medias, m)
-		}
+	for i, m := range medias {
+		// Douban's overview is "2026 / 中国大陆 / 剧情 / director / cast";
+		// the year is shown already.
+		medias[i].Overview = strings.TrimPrefix(m.Overview, m.Year+" / ")
 	}
 	return medias, nil
 }

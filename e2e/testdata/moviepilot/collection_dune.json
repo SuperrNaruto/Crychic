@@ -1,0 +1,54 @@
+{
+ "success": true,
+ "message": "",
+ "data": [
+  {
+   "category": "",
+   "detail_link": "https://www.themoviedb.org/movie/438631",
+   "media_id": "438631",
+   "media_source": "themoviedb",
+   "original_title": "Dune",
+   "overview": "电影《沙丘》为观众呈现了一段神秘而感人至深的英雄之旅。天赋异禀的少年保罗·厄崔迪（提莫西·查拉梅 饰）被命运指引，为了保卫自己的家族和人民，决心前往浩瀚宇宙间最危险的星球，开启一场惊心动魄的冒险。与此同时，各路势力为了抢夺这颗星球上一种能够释放人类最大潜力的珍贵资源而纷纷加入战场。最终，唯有那些能够战胜内心恐惧的人才能生存下去。",
+   "poster_path": "https://image.tmdb.org/t/p/original/6hsJknqlPceFxExOe87z5VGgNG9.jpg",
+   "release_date": "2021-09-15",
+   "title": "沙丘",
+   "title_year": "沙丘 (2021)",
+   "tmdb_id": 438631,
+   "type": "电影",
+   "vote_average": 7.8,
+   "year": "2021"
+  },
+  {
+   "category": "",
+   "detail_link": "https://www.themoviedb.org/movie/693134",
+   "media_id": "693134",
+   "media_source": "themoviedb",
+   "original_title": "Dune: Part Two",
+   "overview": "《沙丘2》承接第一部剧情，讲述保罗·厄崔迪（提莫西·查拉梅 Timothée Chalamet 饰）被帕迪沙皇帝和哈克南人联手灭族后，在厄拉科斯星球遇到弗雷曼女战士契妮（赞达亚 Zendaya 饰）以及加入弗雷曼人后展开的传奇旅程。保罗与让他家破人亡的阴谋家们开战，同时面临着一生所爱与已知宇宙命运的两难选择。",
+   "poster_path": "https://image.tmdb.org/t/p/original/9uaCR4HEZqxUqgORq0uZqTNm43G.jpg",
+   "release_date": "2024-02-27",
+   "title": "沙丘2",
+   "title_year": "沙丘2 (2024)",
+   "tmdb_id": 693134,
+   "type": "电影",
+   "vote_average": 8.1,
+   "year": "2024"
+  },
+  {
+   "category": "",
+   "detail_link": "https://www.themoviedb.org/movie/1170608",
+   "media_id": "1170608",
+   "media_source": "themoviedb",
+   "original_title": "Dune: Part Three",
+   "overview": "保罗·厄崔迪成为宇宙皇帝后，虽拥有预知未来的能力，却无法阻止以他之名发动的圣战席卷星系。在权力、信仰与个人命运的夹缝中，他逐渐走向无法回头的抉择与代价。",
+   "poster_path": "https://image.tmdb.org/t/p/original/nRFhjS20RmhuLGEpQxewDyxlhmJ.jpg",
+   "release_date": "2026-12-15",
+   "title": "沙丘3",
+   "title_year": "沙丘3 (2026)",
+   "tmdb_id": 1170608,
+   "type": "电影",
+   "vote_average": 0.0,
+   "year": "2026"
+  }
+ ]
+}

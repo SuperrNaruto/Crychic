@@ -1,0 +1,44 @@
+>> user 1001 in chat 1001: /request 沙丘
+-> MoviePilot GET /api/v1/media/search?count=10&title=沙丘&type=media
+<< sendMessage chat=1001 message=1 parse_mode=HTML
+   <b>🔍「沙丘」的搜索结果</b>
+   1. <b>沙丘</b> (2021) · 电影 · ⭐ 7.8 · <i>Dune</i>
+   2. <b>沙丘：预言</b> (2024) · 电视剧 · ⭐ 7.2 · <i>Dune: Prophecy</i>
+   3. <b>沙丘</b> (1984) · 电影 · ⭐ 6.2 · <i>Dune</i>
+   4. <b>沙丘2</b> (2024) · 电影 · ⭐ 8.1 · <i>Dune: Part Two</i>
+   5. <b>沙丘3</b> (2026) · 电影 · <i>Dune: Part Three</i>
+   6. <b>沙丘之子</b> (2003) · 电视剧 · ⭐ 6.9 · <i>Frank Herbert&#39;s Children of Dune</i>
+   7. <b>沙丘魔堡2000</b> (2000) · 电视剧 · ⭐ 6.8 · <i>Frank Herbert&#39;s Dune</i>
+   8. <b>沙丘虫暴</b> (2021) · 电影 · ⭐ 6.7
+   [1. 沙丘 (2021) | 1:m:0]
+   [2. 沙丘：预言 (2024) | 1:m:1]
+   [3. 沙丘 (1984) | 1:m:2]
+   [4. 沙丘2 (2024) | 1:m:3]
+   [5. 沙丘3 (2026) | 1:m:4]
+   [6. 沙丘之子 (2003) | 1:m:5]
+   [7. 沙丘魔堡2000 (2000) | 1:m:6]
+   [8. 沙丘虫暴 (2021) | 1:m:7]
+   [取消 | 1:x:0]
+>> user 1001 taps 1:m:7 on message 1
+-> MoviePilot GET /api/v1/media/911972?media_source=themoviedb&type_name=电影
+-> MoviePilot GET /api/v1/subscribe/media/911972?media_source=themoviedb&mtype=电影&title=沙丘虫暴&year=2021
+<< editMessageText chat=1001 message=1 parse_mode=HTML poster=https://image.tmdb.org/t/p/w500/nQLdzYYB71sUugtSR7e7YdjF6Vx.jpg large=true above=true
+   🎬 <a href="https://www.themoviedb.org/movie/911972"><b>沙丘虫暴</b></a> (2021) · 电影 · ⭐ 6.7
+   <blockquote expandable>在不远的未来，人类大量排放废气制造垃圾，远远超出地球的承载能力，地球迎来无法逆转的沙化期。动植物变异产生地球新主人“沙虫”，它们屠城略地将人类逼到灭绝边缘，幸存者只能孤注一掷，寻找大漠深处仅存的避难所“绿洲”。一支由富商、科学家、保安队长、机械师一家以及混混组成的流亡小队乘着特制装甲车踏上寻找“绿洲”的冒险旅程，但嗜血虫族却尾随在后紧追不舍。为了生存，众人不仅要躲避暴走沙虫的追击，还要应对同伴间的背叛和选择，死伤惨烈，希望渺茫。等待人类的将会是怎样的命运？</blockquote>
+
+   <b>确认订阅《沙丘虫暴》？</b>
+   [确认订阅 | 1:ok:0] [取消 | 1:x:0]
+   [相似推荐 | 1:r:0] [同系列 | 1:n:0]
+<< answerCallbackQuery
+>> user 1001 taps 1:n:0 on message 1
+-> MoviePilot GET /api/v1/media/search?count=10&title=沙丘虫暴&type=collection
+<< answerCallbackQuery notice="没有找到这部电影所属的系列。"
+>> user 1001 taps 1:ok:0 on message 1
+-> MoviePilot POST /api/v1/subscribe/
+   {"name":"沙丘虫暴","year":"2021","type":"电影","media_source":"themoviedb","media_id":"911972"}
+<< editMessageText chat=1001 message=1 parse_mode=HTML poster=https://image.tmdb.org/t/p/w500/nQLdzYYB71sUugtSR7e7YdjF6Vx.jpg large=true above=true
+   🎬 <a href="https://www.themoviedb.org/movie/911972"><b>沙丘虫暴</b></a> (2021) · 电影 · ⭐ 6.7
+   <blockquote expandable>在不远的未来，人类大量排放废气制造垃圾，远远超出地球的承载能力，地球迎来无法逆转的沙化期。动植物变异产生地球新主人“沙虫”，它们屠城略地将人类逼到灭绝边缘，幸存者只能孤注一掷，寻找大漠深处仅存的避难所“绿洲”。一支由富商、科学家、保安队长、机械师一家以及混混组成的流亡小队乘着特制装甲车踏上寻找“绿洲”的冒险旅程，但嗜血虫族却尾随在后紧追不舍。为了生存，众人不仅要躲避暴走沙虫的追击，还要应对同伴间的背叛和选择，死伤惨烈，希望渺茫。等待人类的将会是怎样的命运？</blockquote>
+
+   ✅ 已订阅《沙丘虫暴》，入库后会通知你。
+<< answerCallbackQuery

@@ -165,6 +165,11 @@ type Backend interface {
 	// Discover lists a chart's picks; they may come from other metadata
 	// sources than search does.
 	Discover(ctx context.Context, chart Chart) ([]Media, error)
+	// Related lists media recommended to fans of media; empty when unknown.
+	Related(ctx context.Context, media Media) ([]Media, error)
+	// Series lists the movies of the series movie media belongs to, in
+	// release order; empty when it belongs to none.
+	Series(ctx context.Context, media Media) ([]Media, error)
 	Subscriptions(ctx context.Context) ([]Subscription, error)
 	// Latest lists the newest additions to the media servers.
 	Latest(ctx context.Context) ([]LibraryItem, error)

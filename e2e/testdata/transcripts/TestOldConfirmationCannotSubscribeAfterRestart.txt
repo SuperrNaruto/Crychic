@@ -31,6 +31,7 @@
 
    <b>确认订阅《沙丘》？</b>
    [确认订阅 | 1:ok:0] [取消 | 1:x:0]
+   [相似推荐 | 1:r:0] [同系列 | 1:n:0]
 << answerCallbackQuery
 >> Crychic restarts
 >> user 1001 in chat 1001: /request 挖掘者
@@ -56,6 +57,7 @@
 
    <b>确认订阅《挖掘者》？</b>
    [确认订阅 | 2:ok:0] [取消 | 2:x:0]
+   [相似推荐 | 2:r:0] [同系列 | 2:n:0]
 << answerCallbackQuery
 >> user 1001 taps 1:ok:0 on message 1
 << editMessageText chat=1001 message=1 parse_mode=HTML

@@ -90,11 +90,16 @@ func (e *Engine) search(ctx context.Context, sess session, term string) Reply {
 	return resultList(sess, term)
 }
 
-// resultList numbers sess's results as buttons.
+// resultList numbers sess's results, found searching term, as buttons.
 func resultList(sess session, term string) Reply {
+	return numberedResults(sess, Line(Strong(fmt.Sprintf("🔍「%s」的搜索结果", term))))
+}
+
+// numberedResults numbers sess's results under heading as buttons.
+func numberedResults(sess session, heading Block) Reply {
 	results := sess.results
 	text := make(Text, 0, len(results)+1)
-	text = append(text, Line(Strong(fmt.Sprintf("🔍「%s」的搜索结果", term))))
+	text = append(text, heading)
 	rows := make([][]Button, 0, len(results)+1)
 	for i, m := range results {
 		text = append(text, resultLine(i+1, m))
@@ -131,7 +136,7 @@ func (e *Engine) Choose(ctx context.Context, actor Actor, raw string) Reply {
 	if p.action == actionPage {
 		return e.page(sess, p.arg)
 	}
-	for _, choose := range []chooser{e.chooseHome, e.chooseRequest, e.chooseSeasons, e.chooseTask, e.chooseChart, e.chooseSubs} {
+	for _, choose := range []chooser{e.chooseHome, e.chooseRequest, e.chooseSeasons, e.chooseTask, e.chooseChart, e.chooseSubs, e.chooseRelated} {
 		if reply, ok := choose(ctx, sess, p); ok {
 			return reply
 		}
@@ -197,14 +202,14 @@ func (e *Engine) pickMedia(ctx context.Context, sess session, index int) Reply {
 	}
 	sess.seasons = seasons
 	e.store.put(sess)
-	rows := make([][]Button, 0, len(seasons)+2)
+	rows := make([][]Button, 0, len(seasons)+3)
 	for _, s := range seasons {
 		rows = append(rows, []Button{{Label: sess.seasonLabel(s), Data: data(sess.id, actionSeason, s.Number)}})
 	}
 	if len(sess.selectable()) > 1 {
 		rows = append(rows, []Button{{Label: "多选季…", Data: data(sess.id, actionMulti, 0)}})
 	}
-	rows = append(rows, []Button{cancelButton(sess.id)})
+	rows = append(rows, relatedRow(sess), []Button{cancelButton(sess.id)})
 	return sess.picked.reply(Line(Strong(msgPickSeason)), rows)
 }
 
@@ -244,14 +249,15 @@ func (e *Engine) downloads(ctx context.Context, target Target) []Download {
 	return out
 }
 
-// held ends the conversation: what was asked for is already watchable.
+// held ends the request: what was asked for is already watchable. The
+// session stays only to browse on from it.
 func (e *Engine) held(sess session, target Target) Reply {
-	e.store.take(sess.id)
+	e.store.put(sess)
 	what := "已在媒体库中"
 	if target.Season != nil {
 		what = "已全部在媒体库中"
 	}
-	return sess.picked.reply(Line(Plain(fmt.Sprintf("✅ %s%s，可以直接观看。", targetName(target), what))), nil)
+	return sess.picked.reply(Line(Plain(fmt.Sprintf("✅ %s%s，可以直接观看。", targetName(target), what))), [][]Button{relatedRow(sess)})
 }
 
 func (e *Engine) pickSeason(ctx context.Context, sess session, number int) Reply {
@@ -277,9 +283,9 @@ func (e *Engine) offerConfirm(ctx context.Context, sess session, target Target) 
 		return e.failure("subscription lookup", err)
 	}
 	if existing != 0 {
-		e.store.take(sess.id)
+		e.store.put(sess)
 		status := fmt.Sprintf("ℹ️ %s已在订阅中%s", targetName(target), e.watch(ctx, sess, subscription{id: existing, target: target}))
-		return sess.picked.reply(Line(Plain(status)), nil)
+		return sess.picked.reply(Line(Plain(status)), [][]Button{relatedRow(sess)})
 	}
 	sess.target = &target
 	e.store.put(sess)
@@ -293,7 +299,11 @@ func (e *Engine) offerConfirm(ctx context.Context, sess session, target Target) 
 func confirmCard(sess session, target Target) Reply {
 	confirm := Button{Label: "确认订阅", Data: data(sess.id, actionConfirm, target.StartEpisode)}
 	question := Line(Strong(fmt.Sprintf("确认订阅%s？", targetName(target))))
-	return sess.picked.reply(question, [][]Button{{confirm, cancelButton(sess.id)}})
+	rows := [][]Button{{confirm, cancelButton(sess.id)}}
+	if target.Season == nil {
+		rows = append(rows, relatedRow(sess))
+	}
+	return sess.picked.reply(question, rows)
 }
 
 // confirm subscribes from episode from (0 for movies or the season start).

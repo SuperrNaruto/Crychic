@@ -1,0 +1,55 @@
+{
+ "success": true,
+ "message": "",
+ "data": {
+  "media_source": "themoviedb",
+  "media_id": "693134",
+  "type": "电影",
+  "title": "沙丘2",
+  "original_title": "Dune: Part Two",
+  "year": "2024",
+  "vote_average": 8.1,
+  "poster_path": "https://image.tmdb.org/t/p/original/9uaCR4HEZqxUqgORq0uZqTNm43G.jpg",
+  "runtime": 166,
+  "number_of_seasons": null,
+  "number_of_episodes": null,
+  "overview": "《沙丘2》承接第一部剧情，讲述保罗·厄崔迪（提莫西·查拉梅 Timothée Chalamet 饰）被帕迪沙皇帝和哈克南人联手灭族后，在厄拉科斯星球遇到弗雷曼女战士契妮（赞达亚 Zendaya 饰）以及加入弗雷曼人后展开的传奇旅程。保罗与让他家破人亡的阴谋家们开战，同时面临着一生所爱与已知宇宙命运的两难选择。",
+  "genres": [
+   {
+    "id": 878,
+    "name": "科幻"
+   },
+   {
+    "id": 12,
+    "name": "冒险"
+   }
+  ],
+  "actors": [
+   {
+    "id": 1190668,
+    "name": "提莫西·查拉梅",
+    "character": "Paul Atreides"
+   },
+   {
+    "id": 505710,
+    "name": "赞达亚·科尔曼",
+    "character": "Chani"
+   },
+   {
+    "id": 933238,
+    "name": "丽贝卡·弗格森",
+    "character": "Jessica"
+   },
+   {
+    "id": 3810,
+    "name": "哈维尔·巴登",
+    "character": "Stilgar"
+   },
+   {
+    "id": 16851,
+    "name": "乔什·布洛林",
+    "character": "Gurney Halleck"
+   }
+  ]
+ }
+}

@@ -1,6 +1,7 @@
 package e2e
 
 import (
+	"cmp"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -223,6 +224,12 @@ func (f *fakeMoviePilot) record(r *http.Request) {
 	f.tr.add(head)
 }
 
+// collectionSearch is the route key of a search for collections named
+// title; searches share one path, so collections are told apart by name.
+func collectionSearch(title string) string {
+	return searchPath + "?type=collection&title=" + title
+}
+
 // setRoute changes what MoviePilot answers from now on, e.g. a download
 // making progress.
 func (f *fakeMoviePilot) setRoute(key string, rt route) {
@@ -233,10 +240,16 @@ func (f *fakeMoviePilot) setRoute(key string, rt route) {
 
 func (f *fakeMoviePilot) serveRoute(w http.ResponseWriter, r *http.Request) {
 	path, _ := url.PathUnescape(r.URL.EscapedPath())
+	key, title := r.Method+" "+path, r.URL.Query().Get("title")
 	f.mu.Lock()
-	rt, found := f.routes[r.Method+" "+path]
-	if fixture, ok := f.searches[r.URL.Query().Get("title")]; ok && r.Method+" "+path == searchPath {
+	rt, found := f.routes[key]
+	if fixture, ok := f.searches[title]; ok && key == searchPath {
 		rt, found = route{status: http.StatusOK, fixture: fixture}, true
+	}
+	if key == searchPath && r.URL.Query().Get("type") == "collection" {
+		// MoviePilot answers a name matching no collection with an empty list.
+		rt, found = f.routes[collectionSearch(title)], true
+		rt = cmp.Or(rt, ok("empty.json"))
 	}
 	f.mu.Unlock()
 	if !found {
