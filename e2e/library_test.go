@@ -57,3 +57,21 @@ func TestPartlyHeldSeasonCompletesWithLibrary(t *testing.T) {
 	h.shows(2, "本季请求的剧集已全部入库")
 	h.tr.verify(t)
 }
+
+// Someone asking for what is already coming sees how far the download got.
+func TestDownloadInProgressIsShown(t *testing.T) {
+	h := start(t, scenario{routes: map[string]route{
+		searchPath:      ok("search_mygo.json"),
+		mygoDetails:     ok("detail_mygo.json"),
+		seasonsPath:     ok("seasons_mygo.json"),
+		libraryShowPath: ok("library_mygo.json"),
+		mygoLookup:      ok("subscription_existing.json"),
+		downloadsPath:   ok("downloads_mygo.json"),
+	}})
+	h.say(alice, alice, "/request 迷途之子")
+	h.tap(alice, 1, "1. 迷途之子!!!!! (2023)")
+	h.tap(alice, 1, "第 1 季 · 13 集 · 已有 1 集")
+	h.shows(1, "⬇️ 正在下载 E10–E12 · 0%")
+	h.shows(1, "已在订阅中")
+	h.tr.verify(t)
+}

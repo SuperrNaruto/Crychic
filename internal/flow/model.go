@@ -76,12 +76,24 @@ type Library struct {
 	Episodes map[int][]int // season number → episodes in the library
 }
 
+// Download is an unfinished task in the backend's downloader.
+type Download struct {
+	Source   string
+	MediaID  string
+	Season   *int    // nil for movies or when unknown
+	Episodes []int   // empty when unknown
+	Progress float64 // percent
+	Paused   bool
+	Left     string // remaining time as the backend words it, "" when unknown
+}
+
 // Backend is the media server the bot subscribes through.
 type Backend interface {
 	Search(ctx context.Context, term string) ([]Media, error)
 	Details(ctx context.Context, media Media) (Details, error)
 	Seasons(ctx context.Context, media Media) ([]Season, error)
 	Library(ctx context.Context, media Media) (Library, error)
+	Downloads(ctx context.Context) ([]Download, error)
 	// FindSubscription returns the id of an existing subscription, 0 if none.
 	FindSubscription(ctx context.Context, target Target) (int, error)
 	// Subscribe creates a subscription and returns its id.

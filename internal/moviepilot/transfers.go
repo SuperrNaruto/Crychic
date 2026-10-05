@@ -75,22 +75,36 @@ func (c *Client) TransfersAfter(ctx context.Context, id int) ([]notify.Transfer,
 
 // toTransfer parses MoviePilot's "S03" / "E01-E03" labels.
 func (r transferRecord) toTransfer() notify.Transfer {
-	t := notify.Transfer{ID: r.ID, Source: r.MediaSource, MediaID: r.MediaID, Image: r.Image}
-	if m := seasonPattern.FindStringSubmatch(r.Seasons); m != nil {
-		season, _ := strconv.Atoi(m[1])
-		t.Season = &season
+	return notify.Transfer{
+		ID: r.ID, Source: r.MediaSource, MediaID: r.MediaID, Image: r.Image,
+		Season: parseSeason(r.Seasons), Episodes: parseEpisodes(r.Episodes),
 	}
-	m := episodePattern.FindStringSubmatch(r.Episodes)
+}
+
+// parseSeason reads "S03" as 3, nil when there is no season.
+func parseSeason(label string) *int {
+	m := seasonPattern.FindStringSubmatch(label)
 	if m == nil {
-		return t
+		return nil
+	}
+	season, _ := strconv.Atoi(m[1])
+	return &season
+}
+
+// parseEpisodes reads "E01" or "E01-E03" as episode numbers.
+func parseEpisodes(label string) []int {
+	m := episodePattern.FindStringSubmatch(label)
+	if m == nil {
+		return nil
 	}
 	first, _ := strconv.Atoi(m[1])
 	last := first
 	if m[2] != "" {
 		last, _ = strconv.Atoi(m[2])
 	}
+	var episodes []int
 	for ep := first; ep <= last; ep++ {
-		t.Episodes = append(t.Episodes, ep)
+		episodes = append(episodes, ep)
 	}
-	return t
+	return episodes
 }

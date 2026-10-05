@@ -168,6 +168,22 @@ func (e *Engine) library(ctx context.Context, media Media) Library {
 	return l
 }
 
+// downloads lists target's unfinished downloads; like library it only
+// informs, so a failure is logged and shows nothing.
+func (e *Engine) downloads(ctx context.Context, target Target) []Download {
+	all, err := e.backend.Downloads(ctx)
+	if err != nil {
+		e.log.Warn("downloads unavailable", "media", target.Media.ID, "err", err)
+	}
+	var out []Download
+	for _, d := range all {
+		if target.has(d) {
+			out = append(out, d)
+		}
+	}
+	return out
+}
+
 // held ends the conversation: what was asked for is already watchable.
 func (e *Engine) held(sess session, target Target) Reply {
 	e.store.take(sess.id)
@@ -195,6 +211,7 @@ func (e *Engine) pickSeason(ctx context.Context, sess session, number int) Reply
 // offerConfirm ends early when the target is already subscribed, otherwise
 // asks for confirmation.
 func (e *Engine) offerConfirm(ctx context.Context, sess session, target Target) Reply {
+	sess.picked.Downloads = e.downloads(ctx, target)
 	existing, err := e.backend.FindSubscription(ctx, target)
 	if err != nil {
 		e.store.take(sess.id)

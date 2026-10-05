@@ -24,13 +24,15 @@ const (
 
 	libraryShowPath  = "POST /api/v1/mediaserver/exists_remote"
 	libraryMoviePath = "POST /api/v1/mediaserver/notexists"
+	downloadsPath    = "GET /api/v1/download/"
 )
 
-// emptyLibrary answers the media server checks the way MoviePilot does for
-// titles the server doesn't hold; scenarios override them in their routes.
-var emptyLibrary = map[string]route{
+// idleServer answers the library and downloader checks the way MoviePilot
+// does with nothing held and nothing downloading; scenarios override them.
+var idleServer = map[string]route{
 	libraryShowPath:  ok("library_show_missing.json"),
 	libraryMoviePath: ok("library_movie_missing.json"),
+	downloadsPath:    ok("downloads_none.json"),
 }
 
 // route is a canned MoviePilot answer. Fixtures are trimmed recordings from a
@@ -82,7 +84,7 @@ type reader struct {
 }
 
 func newFakeMoviePilot(t *testing.T, tr *transcript, routes map[string]route) *fakeMoviePilot {
-	all := maps.Clone(emptyLibrary)
+	all := maps.Clone(idleServer)
 	maps.Copy(all, routes)
 	f := &fakeMoviePilot{t: t, tr: tr, routes: all, polled: make(chan struct{})}
 	f.Server = httptest.NewServer(http.HandlerFunc(f.serve))

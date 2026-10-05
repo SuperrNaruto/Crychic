@@ -14,8 +14,9 @@ const (
 
 // card is the picked media with everything known about it.
 type card struct {
-	Media   Media
-	Details Details
+	Media     Media
+	Details   Details
+	Downloads []Download // the chosen target's unfinished downloads
 }
 
 // reply shows the card, poster above, then message and buttons.
@@ -52,7 +53,35 @@ func (c card) text() Text {
 	if m.Overview != "" {
 		text = append(text, Quote(truncate(m.Overview, maxOverviewRunes)))
 	}
+	for _, dl := range c.Downloads {
+		text = append(text, downloadLine(dl))
+	}
 	return text
+}
+
+// downloadLine is e.g. "⬇️ 正在下载 E10–E12 · 37% · 剩余 1时5分3秒".
+func downloadLine(d Download) Block {
+	head := "⬇️ 正在下载"
+	if d.Paused {
+		head = "⏸️ 下载已暂停"
+	}
+	if len(d.Episodes) > 0 {
+		head += " " + EpisodeRanges(d.Episodes)
+	}
+	left := ""
+	if d.Left != "" {
+		left = "剩余 " + d.Left
+	}
+	return Line(Plain(joinNonEmpty(" · ", head, fmt.Sprintf("%.0f%%", d.Progress), left)))
+}
+
+// has reports whether download d is for this target: same media and, for a
+// season, the same season when the download names one.
+func (t Target) has(d Download) bool {
+	if d.Source != t.Media.Source || d.MediaID != t.Media.ID {
+		return false
+	}
+	return t.Season == nil || d.Season == nil || *d.Season == *t.Season
 }
 
 // resultLine is one numbered search result, e.g.

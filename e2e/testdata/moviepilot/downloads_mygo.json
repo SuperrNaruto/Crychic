@@ -1,0 +1,28 @@
+{
+  "success": true,
+  "message": "",
+  "data": [
+    {
+      "downloader": "qBittorrent",
+      "year": "2023",
+      "season_episode": "S01",
+      "size": 18739321222.0,
+      "progress": 0.0,
+      "state": "downloading",
+      "upspeed": "0.0B",
+      "dlspeed": "0.0B",
+      "left_time": "",
+      "media": {
+        "type": "电视剧",
+        "title": "迷途之子!!!!!",
+        "season": "S01",
+        "episode": "E10-E12",
+        "image": "https://image.tmdb.org/t/p/w500/dDknWHLYaQB76QSViNdzXOC5v64.jpg",
+        "poster": "https://image.tmdb.org/t/p/w500/dDknWHLYaQB76QSViNdzXOC5v64.jpg",
+        "backdrop": "https://image.tmdb.org/t/p/w500/vAyv2W5gXyB4K9lX9vMEqdlfZGS.jpg",
+        "media_source": "themoviedb",
+        "media_id": "224207"
+      }
+    }
+  ]
+}
