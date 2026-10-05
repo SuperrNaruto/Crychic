@@ -25,6 +25,7 @@ const (
 	libraryShowPath  = "POST /api/v1/mediaserver/exists_remote"
 	libraryMoviePath = "POST /api/v1/mediaserver/notexists"
 	downloadsPath    = "GET /api/v1/download/"
+	queuePath        = "GET /api/v1/transfer/queue"
 )
 
 // idleServer answers the library and downloader checks the way MoviePilot
@@ -33,12 +34,18 @@ var idleServer = map[string]route{
 	libraryShowPath:  ok("library_show_missing.json"),
 	libraryMoviePath: ok("library_movie_missing.json"),
 	downloadsPath:    ok("downloads_none.json"),
+	queuePath:        ok("queue_none.json"),
 }
 
+// polledPaths are read over and over by live task views; like the arrival
+// poll they stay out of the transcript, which records what users see.
+var polledPaths = map[string]bool{downloadsPath: true, queuePath: true}
+
 // route is a canned MoviePilot answer. Fixtures are trimmed recordings from a
-// live v3.1.0 instance, except subscribe_rejected.json, server_error.json and
-// library_movie_held.json, which follow the source because the live instance
-// can't produce them safely (or holds no movie yet).
+// live v3.1.0 instance, except subscribe_rejected.json, server_error.json,
+// library_movie_held.json and queue_none.json, which follow the source
+// because the live instance can't produce them safely (or holds no movie
+// yet), and *_later.json, which advance a recording to show progress.
 type route struct {
 	status  int
 	fixture string
@@ -126,10 +133,11 @@ func (f *fakeMoviePilot) markRead(newest int) {
 func (f *fakeMoviePilot) serve(w http.ResponseWriter, r *http.Request) {
 	isTransfers := r.Method == http.MethodGet && r.URL.Path == transferPath
 	polling := isTransfers || (r.Method == http.MethodGet && isSubscriptionByID(r.URL.Path))
+	quiet := polling || polledPaths[r.Method+" "+r.URL.Path]
 	if isTransfers {
 		f.markPolled()
 	}
-	if !polling {
+	if !quiet {
 		f.record(r)
 	}
 	if r.Header.Get("X-API-KEY") != mpAPIKey {
@@ -172,9 +180,19 @@ func (f *fakeMoviePilot) record(r *http.Request) {
 	f.tr.add(head)
 }
 
+// setRoute changes what MoviePilot answers from now on, e.g. a download
+// making progress.
+func (f *fakeMoviePilot) setRoute(key string, rt route) {
+	f.mu.Lock()
+	defer f.mu.Unlock()
+	f.routes[key] = rt
+}
+
 func (f *fakeMoviePilot) serveRoute(w http.ResponseWriter, r *http.Request) {
 	path, _ := url.PathUnescape(r.URL.EscapedPath())
+	f.mu.Lock()
 	rt, found := f.routes[r.Method+" "+path]
+	f.mu.Unlock()
 	if !found {
 		writeEnvelope(w, http.StatusNotFound, `{"success":false,"message":"Not Found","data":null}`)
 		return

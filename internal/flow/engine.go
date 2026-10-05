@@ -46,6 +46,7 @@ type Engine struct {
 	backend Backend
 	watcher Watcher
 	log     *slog.Logger
+	now     func() time.Time
 	store   *store
 }
 
@@ -54,6 +55,7 @@ func New(opts Options) *Engine {
 		backend: opts.Backend,
 		watcher: opts.Watcher,
 		log:     opts.Log,
+		now:     opts.Now,
 		store:   newStore(opts.Now, SessionTTL),
 	}
 }
@@ -99,6 +101,9 @@ func (e *Engine) Choose(ctx context.Context, actor Actor, raw string) Reply {
 	}
 	if sess.owner.UserID != actor.UserID {
 		return Reply{Notice: msgNotYours}
+	}
+	if reply, ok := e.chooseTask(ctx, sess, action, arg); ok {
+		return reply
 	}
 	switch action {
 	case actionMedia:

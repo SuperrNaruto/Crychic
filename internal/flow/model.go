@@ -78,13 +78,43 @@ type Library struct {
 
 // Download is an unfinished task in the backend's downloader.
 type Download struct {
+	ID       string // stable while the task exists
 	Source   string
 	MediaID  string
+	Title    string
+	Image    string
 	Season   *int    // nil for movies or when unknown
 	Episodes []int   // empty when unknown
 	Progress float64 // percent
 	Paused   bool
+	Speed    string // download speed as the backend words it
 	Left     string // remaining time as the backend words it, "" when unknown
+}
+
+// FileState is where one file of a transfer job stands.
+type FileState int
+
+const (
+	FileWaiting FileState = iota
+	FileRunning
+	FileDone
+	FileFailed
+)
+
+// TransferFile is one file being moved into the library.
+type TransferFile struct {
+	Episode int // 0 when not an episode
+	State   FileState
+}
+
+// TransferJob is a batch of files of one title (and season) the backend is
+// moving into the library.
+type TransferJob struct {
+	ID     string // stable while the job exists
+	Title  string
+	Image  string
+	Season *int
+	Files  []TransferFile
 }
 
 // Backend is the media server the bot subscribes through.
@@ -94,6 +124,7 @@ type Backend interface {
 	Seasons(ctx context.Context, media Media) ([]Season, error)
 	Library(ctx context.Context, media Media) (Library, error)
 	Downloads(ctx context.Context) ([]Download, error)
+	Transfers(ctx context.Context) ([]TransferJob, error)
 	// FindSubscription returns the id of an existing subscription, 0 if none.
 	FindSubscription(ctx context.Context, target Target) (int, error)
 	// Subscribe creates a subscription and returns its id.
@@ -133,12 +164,17 @@ type Button struct {
 // message untouched and only flashes the notice. A Reply with Input set asks
 // the user to type an answer, which the platform hands to Engine.Answer
 // together with Input.
+//
+// A Reply with Follow set is live: after a short wait the platform passes
+// Follow to Choose and shows the new Reply in its place (only if it changed),
+// until a Reply comes back without Follow or with a Notice.
 type Reply struct {
 	Text    Text
 	Image   string
 	Buttons [][]Button
 	Notice  string
 	Input   string
+	Follow  string
 }
 
 // UserError carries a message that is safe and useful to show the user.

@@ -11,16 +11,20 @@ import (
 const statePaused = "paused"
 
 type downloadTask struct {
+	Hash     string  `json:"hash"`
 	Progress float64 `json:"progress"` // percent
 	State    string  `json:"state"`    // downloading, paused
+	Speed    string  `json:"dlspeed"`  // e.g. "3.1MB"
 	LeftTime string  `json:"left_time"`
 	// Media is filled from MoviePilot's download history; tasks added to the
 	// downloader by hand have none.
 	Media *struct {
 		MediaSource string `json:"media_source"`
 		MediaID     string `json:"media_id"`
+		Title       string `json:"title"`
 		Season      label  `json:"season"`
 		Episode     label  `json:"episode"`
+		Image       string `json:"image"`
 	} `json:"media"`
 }
 
@@ -37,7 +41,7 @@ func (l *label) UnmarshalJSON(raw []byte) error {
 }
 
 // Downloads lists the downloader's unfinished tasks that MoviePilot knows
-// the media of.
+// the media of; torrents added by hand are left out.
 func (c *Client) Downloads(ctx context.Context) ([]flow.Download, error) {
 	var tasks []downloadTask
 	if err := c.do(ctx, call{method: http.MethodGet, path: "/api/v1/download/"}, &tasks); err != nil {
@@ -49,9 +53,10 @@ func (c *Client) Downloads(ctx context.Context) ([]flow.Download, error) {
 			continue
 		}
 		out = append(out, flow.Download{
-			Source: t.Media.MediaSource, MediaID: t.Media.MediaID,
+			ID: t.Hash, Source: t.Media.MediaSource, MediaID: t.Media.MediaID,
+			Title: t.Media.Title, Image: t.Media.Image,
 			Season: parseSeason(string(t.Media.Season)), Episodes: parseEpisodes(string(t.Media.Episode)),
-			Progress: t.Progress, Paused: t.State == statePaused, Left: t.LeftTime,
+			Progress: t.Progress, Paused: t.State == statePaused, Speed: t.Speed, Left: t.LeftTime,
 		})
 	}
 	return out, nil

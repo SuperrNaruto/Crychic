@@ -15,7 +15,13 @@ const (
 	defaultNotifyInterval = time.Minute
 	minimumNotifyInterval = 100 * time.Millisecond
 	defaultNotifyQuiet    = 3 * time.Minute
+	defaultFollowEvery    = 5 * time.Second
+	minimumFollowEvery    = 100 * time.Millisecond
 )
+
+// followEvery is how often a live task view refreshes; Telegram limits how
+// often one message may be edited, so seconds rather than milliseconds.
+var followEvery = durationVar{"CRYCHIC_PROGRESS_INTERVAL", defaultFollowEvery, minimumFollowEvery}
 
 // notifyInterval is how often arrivals are checked, e.g. "1m" or "30s".
 var notifyInterval = durationVar{"CRYCHIC_NOTIFY_INTERVAL", defaultNotifyInterval, minimumNotifyInterval}
@@ -34,6 +40,7 @@ type Config struct {
 	DataDir          string
 	NotifyInterval   time.Duration
 	NotifyQuiet      time.Duration
+	FollowEvery      time.Duration
 }
 
 // Load builds a Config from getenv (os.Getenv in production), reporting
@@ -58,6 +65,9 @@ func Load(getenv func(string) string) (Config, error) {
 		errs = append(errs, err)
 	}
 	if cfg.NotifyQuiet, err = notifyQuiet.parse(getenv); err != nil {
+		errs = append(errs, err)
+	}
+	if cfg.FollowEvery, err = followEvery.parse(getenv); err != nil {
 		errs = append(errs, err)
 	}
 	required := []struct{ name, value string }{

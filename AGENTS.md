@@ -33,12 +33,13 @@ Data flow: Telegram update → `telegram.adapter` → `flow.Engine.Start/Choose`
 
 - `internal/flow/model.go` - `Backend`, `Reply`, `UserError`: the contract every platform and backend uses
 - `internal/flow/engine.go` - conversation steps; `internal/flow/text.go` - all user-facing copy (result lines, media card)
+- `internal/flow/tasks.go` - `/tasks`: list downloads and transfer jobs, follow one live (`Reply.Follow`); `internal/telegram/follow.go` re-asks the flow every `CRYCHIC_PROGRESS_INTERVAL` and edits only on change
 - `internal/flow/episodes.go` - start-episode choices for seasons and typed answers (`Engine.Answer`)
 - `internal/flow/rich.go` - `flow.Text`: formatting by meaning (bold, italic, code, link, collapsible quote)
 - `internal/telegram/html.go` - renders `flow.Text` to Telegram HTML, escaping everything
 - `internal/flow/store.go` - in-memory sessions (10 min TTL)
 - `internal/notify/state.go` - pure state transitions (`withRequest`, `arrive`, `flush`, `withActivity`) and atomic persistence
-- `e2e/harness_test.go` - `start`, `say`, `answer`, `chatter`, `tap`, `tapData`, `shows`, `arrives`, `transfers`, `restart`
+- `e2e/harness_test.go` - `start`, `say`, `answer`, `chatter`, `tap`, `tapData`, `shows`, `arrives`, `transfers`, `reports`, `restart`
 - `e2e/testdata/transcripts/*.txt` - golden transcripts, one per scenario
 
 ## Environment
@@ -48,13 +49,14 @@ Data flow: Telegram update → `telegram.adapter` → `flow.Engine.Start/Choose`
 - `CRYCHIC_TELEGRAM_API_URL` - optional, defaults to `https://api.telegram.org`
 - `CRYCHIC_DATA_DIR` - optional, defaults to `data`; holds `requests.json` (pending requests, last seen transfer)
 - `CRYCHIC_NOTIFY_INTERVAL` - optional, defaults to `1m`, minimum `100ms`; how often transfer history is polled
+- `CRYCHIC_PROGRESS_INTERVAL` - optional, defaults to `5s`, minimum `100ms`; how often a followed `/tasks` view refreshes (Telegram throttles frequent edits)
 - `CRYCHIC_NOTIFY_QUIET` - optional, defaults to `3m`, `0s` disables; how long a show's arrivals settle before one notice covers them
 
 ## Code Style
 
 - `flow` must never import a platform package; a new platform is a sibling of `internal/telegram` that consumes `flow` through a small interface
 - Inject dependencies (`Backend`, `Now`, `*http.Client`, `*slog.Logger`); construct concrete types only in `internal/app`
-- User-facing copy is `flow.Text` built with `Strong`/`Emphasis`/`Mono`/`Linked`/`Quote`; never put platform markup in flow strings, adapters render and escape. Emoji sparingly: 🔍 search, 🎬/📺 card, ✅ done, ℹ️ already subscribed, ⬇️/⏸️ download progress, 📥 arrival, ⚠️ errors, ⌛ expired, 🚫 refused
+- User-facing copy is `flow.Text` built with `Strong`/`Emphasis`/`Mono`/`Linked`/`Quote`; never put platform markup in flow strings, adapters render and escape. Emoji sparingly: 🔍 search, 🎬/📺 card, ✅ done, ℹ️ already subscribed, ⬇️/⏸️ download progress, 📦 transfer job (⏳ ▶️ ✅ ⚠️ per file), 📋 task list, 📥 arrival, ⚠️ errors, ⌛ expired, 🚫 refused
 - Errors safe to show users are `*flow.UserError`; others get logged and shown as the generic outage text
 - Hard limits: functions ≤ 50 lines, nesting ≤ 3, ≤ 3 positional params (use a struct, e.g. `moviepilot.call`), complexity ≤ 10, no magic numbers
 
@@ -89,6 +91,7 @@ Data flow: Telegram update → `telegram.adapter` → `flow.Engine.Start/Choose`
 - A `Reply` with `Notice` must not edit the message (another group member tapping your buttons)
 - Library checks go through MoviePilot to its media server and are cosmetic like details (failure = nothing held). Shows use `POST /api/v1/mediaserver/exists_remote` (`{"3":[1,2,...]}`, `{}` when absent; needs `title`+`year`, ids alone answer `{}`). Movies use `POST /api/v1/mediaserver/notexists` (`[]` = held), because `exists_remote` answers `{}` for movies either way. `GET /api/v1/mediaserver/exists` reads MoviePilot's own sync table, which is empty unless library sync runs, so it isn't used
 - `GET /api/v1/download/` lists unfinished torrents; `media` (source, id, `season` "S01", `episode` "E10-E12") comes from MoviePilot's download history and is null for torrents added by hand; `progress` is a percentage, `state` is `downloading` or `paused`, `left_time` is Chinese text like `1时5分3秒` (empty while stalled). The card shows the chosen target's downloads, cosmetic like details
+- `/tasks` follows a task by re-reading `GET /api/v1/download/` (by torrent hash) or `GET /api/v1/transfer/queue` (by media + season; tasks are `waiting`/`running`/`completed`/`failed`, episode in `meta.begin_episode`). Byte progress of a transfer is only an SSE stream behind a browser cookie (`/system/progress/filetransfer`), so transfers show per-file states. A view stops when its task leaves the list, when its owner presses 停止刷新, or after `flow.FollowFor` (10 min); any button press on a followed message cancels its follower first. Both lists are polled, so the fake keeps them out of transcripts and `reports` swaps their fixture
 - Held episodes never appear in transfer history, so a `Request` carries `Held` and the watch counts them as delivered; MoviePilot's subscriptions themselves only download missing episodes
 - When MoviePilot behavior is unclear, read its source (`app/api/endpoints/{media,subscribe}.py`) instead of guessing
 

@@ -27,6 +27,8 @@ const (
 	notifyInterval = "100ms"
 	// notifyQuiet is the default settling time for a show's arrivals.
 	notifyQuiet = "300ms"
+	// progressInterval keeps live task views refreshing fast enough for tests.
+	progressInterval = "100ms"
 )
 
 type scenario struct {
@@ -69,6 +71,7 @@ func start(t *testing.T, sc scenario) *harness {
 		"CRYCHIC_DATA_DIR":               t.TempDir(),
 		"CRYCHIC_NOTIFY_INTERVAL":        notifyInterval,
 		"CRYCHIC_NOTIFY_QUIET":           sc.quiet,
+		"CRYCHIC_PROGRESS_INTERVAL":      progressInterval,
 	}
 	cfg, err := config.Load(func(k string) string { return env[k] })
 	if err != nil {
@@ -128,6 +131,16 @@ func (h *harness) logTransfers(records []transfer) {
 	for _, r := range records {
 		h.tr.add(strings.TrimSpace(fmt.Sprintf(">> MoviePilot transfers %s (%s/%s) %s%s", r.Title, r.MediaSource, r.MediaID, r.Seasons, r.Episodes)))
 	}
+}
+
+// reports makes MoviePilot answer key with fixture from now on and waits
+// for the live view in message msgID to show the change.
+func (h *harness) reports(msgID int, key, fixture string) {
+	h.t.Helper()
+	h.tr.add(fmt.Sprintf(">> MoviePilot now answers %s with %s", key, fixture))
+	done := h.tg.expect(fmt.Sprintf("edit:%d", msgID))
+	h.mp.setRoute(key, ok(fixture))
+	h.wait(done, "a live view refresh")
 }
 
 // say sends a text message from user in chat and waits for the bot's reply.

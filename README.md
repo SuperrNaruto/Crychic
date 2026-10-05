@@ -16,6 +16,12 @@
 
 订阅的内容入库后，机器人会在请求所在的聊天里通知请求人（群聊中会 @ 对方）。
 
+```
+/tasks
+```
+
+列出 MoviePilot 下载中和整理中的任务（只含 MoviePilot 添加的下载）。选中一个任务后，消息会自动刷新进度，直到任务结束、按「停止刷新」或刷新满 10 分钟（可「继续刷新」）。整理任务显示每个文件的状态，没有百分比。
+
 ## 配置
 
 全部通过环境变量：
@@ -29,6 +35,7 @@
 | `CRYCHIC_TELEGRAM_API_URL` | 否 | 自建 Bot API 服务器地址，默认 `https://api.telegram.org` |
 | `CRYCHIC_DATA_DIR` | 否 | 数据目录，默认 `data`，保存等待入库通知的请求 |
 | `CRYCHIC_NOTIFY_INTERVAL` | 否 | 检查入库的间隔，默认 `1m` |
+| `CRYCHIC_PROGRESS_INTERVAL` | 否 | `/tasks` 进度的刷新间隔，默认 `5s` |
 | `CRYCHIC_NOTIFY_QUIET` | 否 | 剧集入库的静默期，默认 `3m`：一段时间内没有新集入库后，把这段时间到的集合并成一条通知；`0s` 表示不合并 |
 
 ```sh

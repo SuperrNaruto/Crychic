@@ -1,0 +1,33 @@
+{
+  "success": true,
+  "message": "",
+  "data": [
+    {
+      "media": {
+        "media_source": "themoviedb",
+        "media_id": "274580",
+        "type": "电视剧",
+        "title": "颂乐人偶",
+        "year": "2025",
+        "poster_path": "https://image.tmdb.org/t/p/original/xixekXvcCSZS1jXhFrYUzpCrLL6.jpg"
+      },
+      "season": 1,
+      "tasks": [
+        {
+          "state": "completed",
+          "meta": {
+            "begin_season": 1,
+            "begin_episode": 13
+          }
+        },
+        {
+          "state": "running",
+          "meta": {
+            "begin_season": 1,
+            "begin_episode": 12
+          }
+        }
+      ]
+    }
+  ]
+}

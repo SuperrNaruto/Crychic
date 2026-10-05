@@ -31,6 +31,7 @@ func Run(ctx context.Context, cfg config.Config, log *slog.Logger) error {
 		Token:        cfg.TelegramToken,
 		APIURL:       cfg.TelegramAPIURL,
 		AllowedUsers: cfg.TelegramAllowed,
+		FollowEvery:  cfg.FollowEvery,
 		HTTPClient:   &http.Client{},
 		Log:          log,
 	})

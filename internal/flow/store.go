@@ -15,6 +15,8 @@ type session struct {
 	seasons []Season
 	library Library
 	target  *Target
+	tasks   []taskRef
+	follow  following
 	expires time.Time
 }
 

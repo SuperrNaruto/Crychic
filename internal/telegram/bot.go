@@ -23,20 +23,23 @@ const (
 	pollTimeout = time.Minute
 
 	cmdRequest = "request"
+	cmdTasks   = "tasks"
 	cmdStart   = "start"
 	cmdHelp    = "help"
 )
 
-// help explains the single command.
-var help = flow.Lines(flow.Line(
-	flow.Plain("发送 "), flow.Mono("/request <片名>"), flow.Plain(" 搜索电影或剧集，并在 MoviePilot 中订阅。"),
-))
+// help explains the commands.
+var help = flow.Lines(
+	flow.Line(flow.Plain("发送 "), flow.Mono("/request <片名>"), flow.Plain(" 搜索电影或剧集，并在 MoviePilot 中订阅。")),
+	flow.Line(flow.Plain("发送 "), flow.Mono("/tasks"), flow.Plain(" 查看下载中和整理中的任务，选一个实时查看进度。")),
+)
 
 // Flow is the conversation engine the bot drives.
 type Flow interface {
 	Start(ctx context.Context, actor flow.Actor, term string) flow.Reply
 	Choose(ctx context.Context, actor flow.Actor, data string) flow.Reply
 	Answer(ctx context.Context, actor flow.Actor, input, text string) flow.Reply
+	Tasks(ctx context.Context, actor flow.Actor) flow.Reply
 }
 
 // Config configures the Telegram bot.
@@ -44,17 +47,21 @@ type Config struct {
 	Token        string
 	APIURL       string
 	AllowedUsers []int64
+	FollowEvery  time.Duration // how often a live reply (flow.Reply.Follow) refreshes
 	HTTPClient   *http.Client
 	Log          *slog.Logger
 }
 
 type adapter struct {
-	flow    Flow
-	allowed map[int64]bool
-	log     *slog.Logger
+	flow        Flow
+	allowed     map[int64]bool
+	log         *slog.Logger
+	followEvery time.Duration
+	runCtx      context.Context
 
-	mu      sync.Mutex
-	pending map[inputKey]pendingInput
+	mu        sync.Mutex
+	pending   map[inputKey]pendingInput
+	followers map[messageKey]*follower
 }
 
 // inputKey identifies whose typed answer a conversation message waits for.
@@ -80,7 +87,10 @@ func New(cfg Config) (*Bot, error) {
 	for _, id := range cfg.AllowedUsers {
 		allowed[id] = true
 	}
-	a := &adapter{allowed: allowed, log: cfg.Log, pending: map[inputKey]pendingInput{}}
+	a := &adapter{
+		allowed: allowed, log: cfg.Log, followEvery: cfg.FollowEvery,
+		pending: map[inputKey]pendingInput{}, followers: map[messageKey]*follower{},
+	}
 	api, err := bot.New(cfg.Token,
 		bot.WithServerURL(cfg.APIURL),
 		bot.WithHTTPClient(pollTimeout, cfg.HTTPClient),
@@ -97,6 +107,7 @@ func New(cfg Config) (*Bot, error) {
 // cancelled. Handlers only run once polling starts, after f is set.
 func (b *Bot) Run(ctx context.Context, f Flow) {
 	b.adapter.flow = f
+	b.adapter.runCtx = ctx
 	b.log.Info("telegram bot started")
 	b.api.Start(ctx)
 }
@@ -151,7 +162,7 @@ func (a *adapter) onMessage(ctx context.Context, b *bot.Bot, msg *models.Message
 	}
 	var reply flow.Reply
 	switch {
-	case cmd != cmdRequest && cmd != cmdStart && cmd != cmdHelp:
+	case cmd != cmdRequest && cmd != cmdTasks && cmd != cmdStart && cmd != cmdHelp:
 		return
 	case !a.allowed[msg.From.ID]:
 		reply = flow.Reply{Text: flow.Lines(flow.Line(
@@ -160,6 +171,8 @@ func (a *adapter) onMessage(ctx context.Context, b *bot.Bot, msg *models.Message
 		))}
 	case cmd == cmdRequest:
 		reply = a.flow.Start(ctx, actorOf(*msg.From, msg.Chat.ID), arg)
+	case cmd == cmdTasks:
+		reply = a.flow.Tasks(ctx, actorOf(*msg.From, msg.Chat.ID))
 	default:
 		reply = flow.Reply{Text: help}
 	}
@@ -177,11 +190,17 @@ func (a *adapter) onMessage(ctx context.Context, b *bot.Bot, msg *models.Message
 // backend round trip and the answer can carry a notice.
 func (a *adapter) onCallback(ctx context.Context, b *bot.Bot, cq *models.CallbackQuery) {
 	reply := flow.Reply{Notice: "你没有使用权限。"}
+	actor := actorOf(cq.From, callbackChat(cq))
 	if a.allowed[cq.From.ID] {
-		reply = a.flow.Choose(ctx, actorOf(cq.From, callbackChat(cq)), cq.Data)
+		reply = a.flow.Choose(ctx, actor, cq.Data)
 	}
 	if reply.Notice == "" && cq.Message.Message != nil {
-		a.edit(ctx, b, editTarget{chat: cq.Message.Message.Chat.ID, user: cq.From.ID, message: cq.Message.Message.ID}, reply)
+		t := editTarget{chat: cq.Message.Message.Chat.ID, user: cq.From.ID, message: cq.Message.Message.ID}
+		a.unfollow(t.key())
+		a.edit(ctx, b, t, reply)
+		if reply.Follow != "" {
+			a.follow(b, follower{target: t, actor: actor, data: reply.Follow, shown: renderHTML(reply.Text)})
+		}
 	}
 	_, err := b.AnswerCallbackQuery(ctx, &bot.AnswerCallbackQueryParams{
 		CallbackQueryID: cq.ID,
