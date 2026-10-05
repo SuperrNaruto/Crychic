@@ -23,6 +23,7 @@ func (e *Engine) features() []feature {
 		{"🔍 搜索订阅", func(_ context.Context, sess session) Reply { return askTitle(sess) }},
 		{"🔥 发现", func(_ context.Context, sess session) Reply { return e.chartMenu(sess) }},
 		{"📚 订阅", e.listSubs},
+		{"🆕 最新入库", e.latest},
 		{"📋 任务进度", e.listTasks},
 	}
 }

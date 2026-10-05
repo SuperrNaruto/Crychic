@@ -36,6 +36,7 @@ type scenario struct {
 	apiKey  string
 	history []transfer // transfers that predate the bot
 	quiet   string     // CRYCHIC_NOTIFY_QUIET, notifyQuiet if empty
+	lagging bool       // the media server shows new transfers only on catchUp
 }
 
 type harness struct {
@@ -55,6 +56,7 @@ func start(t *testing.T, sc scenario) *harness {
 	tr := &transcript{}
 	mp := newFakeMoviePilot(t, tr, sc.routes)
 	mp.add(sc.history...)
+	mp.lagging, mp.scanned = sc.lagging, len(sc.history)
 	tg := newFakeTelegram(tr)
 	if sc.apiKey == "" {
 		sc.apiKey = mpAPIKey
@@ -143,6 +145,16 @@ func (h *harness) reports(msgID int, key, fixture string) {
 	done := h.tg.expect(fmt.Sprintf("edit:%d", msgID))
 	h.mp.setRoute(key, ok(fixture))
 	h.wait(done, "a live view refresh")
+}
+
+// catchUp lets a lagging media server scan the transfers and waits for the
+// notice that was held back for it.
+func (h *harness) catchUp(chat int64) {
+	h.t.Helper()
+	h.tr.add(">> the media server scans the new files")
+	done := h.tg.expect(fmt.Sprintf("send:%d", chat))
+	h.mp.catchUp()
+	h.wait(done, "a notice held for the media server")
 }
 
 // say sends a text message from user in chat and waits for the bot's reply.

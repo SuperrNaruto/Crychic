@@ -29,6 +29,7 @@ const (
 	cmdTasks   = "tasks"
 	cmdHot     = "hot"
 	cmdSubs    = "subs"
+	cmdNew     = "new"
 	cmdStart   = "start"
 	cmdHelp    = "help"
 )
@@ -39,6 +40,7 @@ var help = flow.Lines(
 	flow.Line(flow.Mono("/request <片名>"), flow.Plain(" 搜索电影或剧集，并在 MoviePilot 中订阅。")),
 	flow.Line(flow.Mono("/hot"), flow.Plain(" 浏览热门榜单和新番，一键订阅。")),
 	flow.Line(flow.Mono("/subs"), flow.Plain(" 查看所有订阅，取消你请求的订阅。")),
+	flow.Line(flow.Mono("/new"), flow.Plain(" 媒体库最新入库，点片名直接观看。")),
 	flow.Line(flow.Mono("/tasks"), flow.Plain(" 查看下载中和整理中的任务，选一个实时查看进度。")),
 )
 
@@ -48,6 +50,7 @@ var commands = []models.BotCommand{
 	{Command: cmdRequest, Description: "搜索电影或剧集并订阅"},
 	{Command: cmdHot, Description: "发现热门和新番"},
 	{Command: cmdSubs, Description: "查看和取消订阅"},
+	{Command: cmdNew, Description: "最新入库"},
 	{Command: cmdTasks, Description: "查看下载和整理进度"},
 	{Command: cmdHelp, Description: "使用说明"},
 }
@@ -61,6 +64,7 @@ type Flow interface {
 	Home(ctx context.Context, actor flow.Actor) flow.Reply
 	Charts(ctx context.Context, actor flow.Actor) flow.Reply
 	Subscriptions(ctx context.Context, actor flow.Actor) flow.Reply
+	Latest(ctx context.Context, actor flow.Actor) flow.Reply
 }
 
 // Config configures the Telegram bot.
@@ -223,6 +227,7 @@ func (a *adapter) commands() map[string]command {
 		cmdRequest: a.flow.Start,
 		cmdHot:     noArg(a.flow.Charts),
 		cmdSubs:    noArg(a.flow.Subscriptions),
+		cmdNew:     noArg(a.flow.Latest),
 		cmdTasks:   noArg(a.flow.Tasks),
 		cmdHelp:    func(context.Context, flow.Actor, string) flow.Reply { return flow.Reply{Text: help} },
 	}

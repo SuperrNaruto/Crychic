@@ -9,8 +9,6 @@
    [取消 | 1:x:0]
 >> user 1001 taps 1:m:0 on message 1
 -> MoviePilot GET /api/v1/media/79166?media_source=themoviedb&type_name=电视剧
--> MoviePilot POST /api/v1/mediaserver/exists_remote
-   {"type":"电视剧","title":"碧蓝之海","year":"2018","media_source":"themoviedb","media_id":"79166"}
 -> MoviePilot GET /api/v1/media/seasons?media_id=79166&media_source=themoviedb
 << editMessageText chat=1001 message=1 parse_mode=HTML poster=https://image.tmdb.org/t/p/w500/9OW05tBAeyMWeEVtvTnn6S8LH4z.jpg large=true above=true
    📺 <a href="https://www.themoviedb.org/tv/79166"><b>碧蓝之海</b></a> (2018) · 电视剧 · ⭐ 7.8

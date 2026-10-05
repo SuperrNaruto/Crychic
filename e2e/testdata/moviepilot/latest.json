@@ -1,0 +1,42 @@
+{
+  "success": true,
+  "message": "",
+  "data": [
+    {
+      "id": "118",
+      "item_id": "118",
+      "title": "颂乐人偶",
+      "subtitle": "2025",
+      "type": "电视剧",
+      "link": "https://emby.example.com/web/index.html#!/item?id=118&context=home",
+      "server_type": "emby"
+    },
+    {
+      "id": "115",
+      "item_id": "115",
+      "title": "迷途之子!!!!!",
+      "subtitle": "2023",
+      "type": "电视剧",
+      "link": "https://emby.example.com/web/index.html#!/item?id=115&context=home",
+      "server_type": "emby"
+    },
+    {
+      "id": "38",
+      "item_id": "38",
+      "title": "碧蓝之海",
+      "subtitle": "2018",
+      "type": "电视剧",
+      "link": "https://emby.example.com/web/index.html#!/item?id=38&context=home",
+      "server_type": "emby"
+    },
+    {
+      "id": "37",
+      "item_id": "37",
+      "title": "再见菈菈",
+      "subtitle": "2026",
+      "type": "电视剧",
+      "link": "https://emby.example.com/web/index.html#!/item?id=37&context=home",
+      "server_type": "emby"
+    }
+  ]
+}

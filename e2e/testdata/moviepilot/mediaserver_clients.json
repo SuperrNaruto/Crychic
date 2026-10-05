@@ -1,0 +1,10 @@
+{
+  "success": true,
+  "message": "",
+  "data": [
+    {
+      "name": "Emby",
+      "type": "emby"
+    }
+  ]
+}

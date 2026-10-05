@@ -34,8 +34,6 @@
 >> user 1001 taps 1:i:0 on message 1
 -> MoviePilot GET /api/v1/media/search?count=10&title=深渊无间&type=media
 -> MoviePilot GET /api/v1/media/301489?media_source=themoviedb&type_name=电视剧
--> MoviePilot POST /api/v1/mediaserver/exists_remote
-   {"type":"电视剧","title":"深渊无间","year":"2026","media_source":"themoviedb","media_id":"301489"}
 -> MoviePilot GET /api/v1/media/seasons?media_id=301489&media_source=themoviedb
 << editMessageText chat=1001 message=1 parse_mode=HTML poster=https://image.tmdb.org/t/p/w500/b9ngtGNgaHBbLihRrT0MsPRY0GW.jpg large=true above=true
    📺 <a href="https://www.themoviedb.org/tv/301489"><b>深渊无间</b></a> (2026) · 电视剧 · ⭐ 8.0

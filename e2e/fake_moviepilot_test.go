@@ -27,23 +27,29 @@ const (
 	libraryMoviePath = "POST /api/v1/mediaserver/notexists"
 	downloadsPath    = "GET /api/v1/download/"
 	queuePath        = "GET /api/v1/transfer/queue"
+	clientsPath      = "GET /api/v1/mediaserver/clients"
+	latestPath       = "GET /api/v1/mediaserver/latest"
 
 	createdFixture = "subscribe_created.json"
 	createdID      = `"id": 1`
 )
 
-// idleServer answers the library and downloader checks the way MoviePilot
-// does with nothing held and nothing downloading; scenarios override them.
+// idleServer answers the downloader checks the way MoviePilot does with
+// nothing downloading, and names its one media server; scenarios override
+// them. The library itself is served from the transfers (fake_library_test).
 var idleServer = map[string]route{
-	libraryShowPath:  ok("library_show_missing.json"),
-	libraryMoviePath: ok("library_movie_missing.json"),
-	downloadsPath:    ok("downloads_none.json"),
-	queuePath:        ok("queue_none.json"),
+	downloadsPath: ok("downloads_none.json"),
+	queuePath:     ok("queue_none.json"),
+	clientsPath:   ok("mediaserver_clients.json"),
 }
 
-// polledPaths are read over and over by live task views; like the arrival
-// poll they stay out of the transcript, which records what users see.
-var polledPaths = map[string]bool{downloadsPath: true, queuePath: true}
+// polledPaths are read over and over, by live task views and by the
+// notifier checking the media server; like the arrival poll they stay out
+// of the transcript, which records what users see.
+var polledPaths = map[string]bool{
+	downloadsPath: true, queuePath: true, clientsPath: true,
+	libraryShowPath: true, libraryMoviePath: true, latestPath: true,
+}
 
 // route is a canned MoviePilot answer. Fixtures are trimmed recordings from a
 // live v3.1.0 instance, except subscribe_rejected.json, server_error.json,
@@ -67,6 +73,7 @@ type transfer struct {
 	Seasons     string `json:"seasons"`
 	Episodes    string `json:"episodes"`
 	Image       string `json:"image"`
+	Year        string `json:"year"`
 	Status      bool   `json:"status"`
 }
 
@@ -84,7 +91,9 @@ type fakeMoviePilot struct {
 	transfers []transfer // newest first, like MoviePilot
 	polled    chan struct{}
 	readers   []reader
-	created   int // subscriptions created so far
+	created   int  // subscriptions created so far
+	lagging   bool // the media server has not scanned new transfers yet
+	scanned   int  // transfers the media server shows while lagging
 }
 
 // reader waits for the notifier to finish a poll that read the transfer
@@ -137,12 +146,10 @@ func (f *fakeMoviePilot) markRead(newest int) {
 
 func (f *fakeMoviePilot) serve(w http.ResponseWriter, r *http.Request) {
 	isTransfers := r.Method == http.MethodGet && r.URL.Path == transferPath
-	polling := isTransfers || (r.Method == http.MethodGet && isSubscriptionByID(r.URL.Path))
-	quiet := polling || polledPaths[r.Method+" "+r.URL.Path]
 	if isTransfers {
 		f.markPolled()
 	}
-	if !quiet {
+	if !isPolled(r) {
 		f.record(r)
 	}
 	if r.Header.Get("X-API-KEY") != mpAPIKey {
@@ -152,11 +159,21 @@ func (f *fakeMoviePilot) serve(w http.ResponseWriter, r *http.Request) {
 	switch {
 	case isTransfers:
 		f.serveTransfers(w, r)
-	case polling:
+	case r.Method == http.MethodGet && isSubscriptionByID(r.URL.Path):
 		f.serveSubscription(w, r)
+	case f.servesLibrary(w, r):
 	default:
 		f.serveRoute(w, r)
 	}
+}
+
+// isPolled reports whether r is one of the reads repeated in the
+// background, which the transcript leaves out.
+func isPolled(r *http.Request) bool {
+	if r.Method != http.MethodGet {
+		return polledPaths[r.Method+" "+r.URL.Path]
+	}
+	return r.URL.Path == transferPath || isSubscriptionByID(r.URL.Path) || polledPaths[r.Method+" "+r.URL.Path]
 }
 
 // markPolled signals the notifier's first look at the transfer history.

@@ -36,6 +36,7 @@ Data flow: Telegram update → `telegram.adapter` → `flow.Engine.Start/Choose`
 - `internal/flow/engine.go` - conversation steps; `internal/flow/text.go` - all user-facing copy (result lines, media card)
 - `internal/flow/tasks.go` - `/tasks`: list downloads and transfer jobs, follow one live (`Reply.Follow`); `internal/telegram/follow.go` re-asks the flow every `CRYCHIC_PROGRESS_INTERVAL` and edits only on change
 - `internal/flow/home.go` - `/start` home menu (`features`), typed title search; `internal/flow/charts.go` - `/hot` charts, paging, pick → subscribable result
+- `internal/flow/latest.go` - `/new`: newest media server items linked to their web page
 - `internal/flow/subs.go` - `/subs`: every subscription, cancel only those the user requested (`Watcher.Requested`), then `Watcher.Forget`
 - `internal/flow/seasons.go` - multi-season picker (「多选季…」): tick seasons, subscribe each from episode 1, report per season
 - `internal/flow/episodes.go` - start-episode choices for seasons and typed answers (`Engine.Answer`)
@@ -53,6 +54,7 @@ Data flow: Telegram update → `telegram.adapter` → `flow.Engine.Start/Choose`
 - `CRYCHIC_TELEGRAM_API_URL` - optional, defaults to `https://api.telegram.org`
 - `CRYCHIC_DATA_DIR` - optional, defaults to `data`; holds `requests.json` (pending requests, last seen transfer)
 - `CRYCHIC_NOTIFY_INTERVAL` - optional, defaults to `1m`, minimum `100ms`; how often transfer history is polled
+- `CRYCHIC_NOTIFY_LIBRARY_WAIT` - optional, defaults to `30m`, `0s` disables; how long a settled notice waits for the media server to show the arrival
 - `CRYCHIC_PROGRESS_INTERVAL` - optional, defaults to `5s`, minimum `100ms`; how often a followed `/tasks` view refreshes (Telegram throttles frequent edits)
 - `CRYCHIC_NOTIFY_QUIET` - optional, defaults to `3m`, `0s` disables; how long a show's arrivals settle before one notice covers them
 
@@ -73,7 +75,7 @@ Data flow: Telegram update → `telegram.adapter` → `flow.Engine.Start/Choose`
 - The fake MoviePilot answers the library and downloader checks as an idle server (`idleServer`); scenarios override `libraryShowPath`/`libraryMoviePath`/`downloadsPath`
 - Recordings of `/api/v1/download/` carry tracker URLs with passkeys, the site name, the release name and the owner's username: keep only the fields Crychic reads
 - Fakes must behave like the real services (long-poll `getUpdates`, `X-API-KEY` check, real error shapes); extend them, don't shortcut them
-- `e2e/testdata/moviepilot/*.json` are trimmed recordings from a live v3.1.0 instance (`curl -H "X-API-KEY: $KEY" "$MP/api/v1/media/search?title=沙丘&type=media&count=10"`), except `subscribe_rejected.json`, `server_error.json`, `library_movie_held.json` (the live library holds no movie yet), `subscriptions.json` and `subscribe_deleted.json` (no live subscription may be created to record them; `subscriptions.json` copies the shape of recorded subscription history), which follow the source; `subscribe_created.json` came from a one-off live subscription that must not be repeated (see above); never commit real keys or tokens
+- `e2e/testdata/moviepilot/*.json` are trimmed recordings from a live v3.1.0 instance (`curl -H "X-API-KEY: $KEY" "$MP/api/v1/media/search?title=沙丘&type=media&count=10"`), except `subscribe_rejected.json`, `server_error.json`, `library_movie_held.json` (the live library holds no movie yet), `subscriptions.json`, `subscribe_deleted.json` (no live subscription may be created to record them; `subscriptions.json` copies the shape of recorded subscription history); `latest.json` is a live recording with the owner's Emby domain replaced by `emby.example.com`; `subscribe_created.json` came from a one-off live subscription that must not be repeated (see above); never commit real keys or tokens
 
 ## Gotchas
 
@@ -90,6 +92,7 @@ Data flow: Telegram update → `telegram.adapter` → `flow.Engine.Start/Choose`
 - MoviePilot has no outgoing webhook, so arrivals come from polling transfer history (one record per file, newest first, `seasons` "S03", `episodes` "E01" or "E01-E03"). The first poll only records the latest id (baseline), so history from before Crychic is never announced
 - MoviePilot closes a subscription when downloads finish, before files are transferred: a closed subscription must not end a watch. Watches end when every wanted episode arrived (movies: first arrival) or after `orphanGrace` (72h) with the subscription gone
 - MoviePilot transfers episodes one by one as their downloads finish, often minutes apart. A show's arrivals stay pending (persisted) until nothing new came for `CRYCHIC_NOTIFY_QUIET`, then go out as one notice; a watch whose every wanted episode is in (and any movie) is announced at once. The e2e default is `300ms`; `transfers` waits until a whole poll handled the records, so a test can act between polls
+- A settled notice is held until the media server shows the arrival (`exists_remote`/`notexists`; rclone/alist dir caches can delay Emby by minutes), at most `CRYCHIC_NOTIFY_LIBRARY_WAIT`; the notice then links to the item from `GET /api/v1/mediaserver/latest` (matched by title + year; `link` is the server's public web URL, item `image` is an internal URL and is not used). The fake media server shows every transfer on top of the scenario's library fixture; `scenario.lagging` + `h.catchUp` model a server that has not scanned yet. Library and latest reads are polled, so they stay out of transcripts
 - Notifier state is saved before notices are sent: a crash may drop a notice, never repeat one. Polling calls are kept out of e2e transcripts; the notices they cause are recorded
 - Button data is `<session>:<action>:<arg>` and must stay ≤ 64 bytes (Telegram limit). A stale button only has its action to go on, so `/tasks` buttons use their own actions (`k f u l c`) and `flow.expired` points them back to `/tasks`, everything else to `/request`
 - The fake numbers subscriptions created from `subscribe_created.json` 1, 2, 3, ... like MoviePilot; two watches sharing an id would merge

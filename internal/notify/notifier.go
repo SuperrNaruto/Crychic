@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log/slog"
+	"slices"
 	"sync"
 	"time"
 
@@ -25,8 +26,11 @@ type Options struct {
 	Path     string // state file
 	Interval time.Duration
 	Quiet    time.Duration // how long a show's arrivals settle before a notice
-	Now      func() time.Time
-	Log      *slog.Logger
+	// LibraryWait is how long a settled notice waits for the media server
+	// to show what arrived; after that it goes out anyway.
+	LibraryWait time.Duration
+	Now         func() time.Time
+	Log         *slog.Logger
 }
 
 // Notifier remembers requests and announces arrivals to their requesters.
@@ -106,17 +110,83 @@ func (n *Notifier) poll(ctx context.Context) error {
 		return err
 	}
 	now := n.opts.Now()
+	var ready []watch
+	err = n.update(func(st state) state {
+		next := arrive(st, newerThan(transfers, st.LastTransfer), now)
+		ready = due(next, now, n.opts.Quiet)
+		return next
+	})
+	if err != nil {
+		return err
+	}
+	settle := settling{quiet: n.opts.Quiet, held: n.unseen(ctx, ready, now)}
 	var deliveries []delivery
 	err = n.update(func(st state) state {
-		next, out := flush(arrive(st, newerThan(transfers, st.LastTransfer), now), now, n.opts.Quiet)
+		next, out := flush(st, now, settle)
 		deliveries = out
 		return next
 	})
 	if err != nil {
 		return err
 	}
-	n.send(ctx, deliveries)
+	n.send(ctx, n.withLinks(ctx, deliveries))
 	return n.checkActivity(ctx)
+}
+
+// unseen picks the ready watches to hold back: the media server does not
+// show their arrivals yet and they have waited less than LibraryWait.
+func (n *Notifier) unseen(ctx context.Context, ready []watch, now time.Time) map[int]bool {
+	held := map[int]bool{}
+	for _, w := range ready {
+		waited := now.Sub(*w.ArrivedAt) - n.opts.Quiet
+		if waited < n.opts.LibraryWait && !n.visible(ctx, w) {
+			held[w.SubscriptionID] = true
+		}
+	}
+	return held
+}
+
+// visible asks the media server whether w's pending arrivals show; when it
+// cannot tell, the notice is not held up.
+func (n *Notifier) visible(ctx context.Context, w watch) bool {
+	lib, err := n.opts.Feed.Library(ctx, w.media())
+	if err != nil {
+		n.opts.Log.Warn("library check failed", "subscription", w.SubscriptionID, "err", err)
+		return true
+	}
+	if w.Season == nil {
+		return lib.Movie
+	}
+	have := lib.Episodes[*w.Season]
+	for _, ep := range w.Pending {
+		if !slices.Contains(have, ep) {
+			return false
+		}
+	}
+	return true
+}
+
+// withLinks finds where each delivery can be watched among the media
+// servers' newest items.
+func (n *Notifier) withLinks(ctx context.Context, deliveries []delivery) []delivery {
+	if len(deliveries) == 0 {
+		return nil
+	}
+	items, err := n.opts.Feed.Latest(ctx)
+	if err != nil {
+		n.opts.Log.Warn("latest items unavailable", "err", err)
+		return deliveries
+	}
+	out := slices.Clone(deliveries)
+	for i, d := range out {
+		for _, it := range items {
+			if it.Title == d.watch.Title && (d.watch.Year == "" || it.Year == d.watch.Year) {
+				out[i].watchAt = it
+				break
+			}
+		}
+	}
+	return out
 }
 
 // checkActivity asks MoviePilot, at most once per activityEvery, which

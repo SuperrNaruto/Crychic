@@ -15,9 +15,14 @@ const (
 	defaultNotifyInterval = time.Minute
 	minimumNotifyInterval = 100 * time.Millisecond
 	defaultNotifyQuiet    = 3 * time.Minute
+	defaultLibraryWait    = 30 * time.Minute
 	defaultFollowEvery    = 5 * time.Second
 	minimumFollowEvery    = 100 * time.Millisecond
 )
+
+// libraryWait is how long a notice waits for the media server to show
+// what arrived; "0s" sends as soon as the transfer is seen.
+var libraryWait = durationVar{"CRYCHIC_NOTIFY_LIBRARY_WAIT", defaultLibraryWait, 0}
 
 // followEvery is how often a live task view refreshes; Telegram limits how
 // often one message may be edited, so seconds rather than milliseconds.
@@ -40,6 +45,7 @@ type Config struct {
 	DataDir          string
 	NotifyInterval   time.Duration
 	NotifyQuiet      time.Duration
+	LibraryWait      time.Duration
 	FollowEvery      time.Duration
 }
 
@@ -65,6 +71,9 @@ func Load(getenv func(string) string) (Config, error) {
 		errs = append(errs, err)
 	}
 	if cfg.NotifyQuiet, err = notifyQuiet.parse(getenv); err != nil {
+		errs = append(errs, err)
+	}
+	if cfg.LibraryWait, err = libraryWait.parse(getenv); err != nil {
 		errs = append(errs, err)
 	}
 	if cfg.FollowEvery, err = followEvery.parse(getenv); err != nil {

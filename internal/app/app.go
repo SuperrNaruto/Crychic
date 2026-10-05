@@ -39,13 +39,14 @@ func Run(ctx context.Context, cfg config.Config, log *slog.Logger) error {
 		return err
 	}
 	notifier, err := notify.New(notify.Options{
-		Feed:     backend,
-		Sender:   tg,
-		Path:     filepath.Join(cfg.DataDir, stateFile),
-		Interval: cfg.NotifyInterval,
-		Quiet:    cfg.NotifyQuiet,
-		Now:      time.Now,
-		Log:      log,
+		Feed:        backend,
+		Sender:      tg,
+		Path:        filepath.Join(cfg.DataDir, stateFile),
+		Interval:    cfg.NotifyInterval,
+		Quiet:       cfg.NotifyQuiet,
+		LibraryWait: cfg.LibraryWait,
+		Now:         time.Now,
+		Log:         log,
 	})
 	if err != nil {
 		return err

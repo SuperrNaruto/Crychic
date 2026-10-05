@@ -27,6 +27,9 @@ type Feed interface {
 	// TransfersAfter lists successful transfers newer than id, oldest first.
 	TransfersAfter(ctx context.Context, id int) ([]Transfer, error)
 	SubscriptionActive(ctx context.Context, id int) (bool, error)
+	// Library and Latest ask the media server what it shows.
+	Library(ctx context.Context, media flow.Media) (flow.Library, error)
+	Latest(ctx context.Context) ([]flow.LibraryItem, error)
 }
 
 // Sender delivers a notice to a requester on their platform.

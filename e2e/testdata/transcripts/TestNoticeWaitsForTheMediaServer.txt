@@ -44,7 +44,8 @@
    
    ✅ 已订阅《沙丘》，入库后会通知你。
 << answerCallbackQuery
->> user 1001 taps 1:ok:0 on message 1
-<< editMessageText chat=1001 message=1 parse_mode=HTML
-   ⌛ 这个请求已失效，请重新 /request。
-<< answerCallbackQuery
+>> MoviePilot transfers 沙丘 (themoviedb/438631)
+>> the media server scans the new files
+<< sendMessage chat=1001 message=2 parse_mode=HTML poster=https://image.tmdb.org/t/p/w500/6hsJknqlPceFxExOe87z5VGgNG9.jpg large=true above=true
+   📥 你请求的<b>《沙丘》</b>已入库，可以观看了。
+   <a href="https://emby.example.com/web/index.html#!/item?id=438631">▶️ 在 Emby 中观看</a>

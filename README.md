@@ -16,7 +16,13 @@
 
 机器人会通过 MoviePilot 查询媒体服务器（Emby/Jellyfin/Plex）里已有的内容：已在库中的电影和整季不会重复订阅；季按钮会标出「已入库」或「已有 N 集」，部分入库的季在确认时列出已有的集（MoviePilot 订阅只下载缺少的集）。选定后还会显示下载器里对应任务的进度。
 
-订阅的内容入库后，机器人会在请求所在的聊天里通知请求人（群聊中会 @ 对方）。
+订阅的内容入库后，机器人会在请求所在的聊天里通知请求人（群聊中会 @ 对方）。通知会等到媒体服务器（Emby 等）能看到新文件再发（最多等 `CRYCHIC_NOTIFY_LIBRARY_WAIT`），并附上「▶️ 在 Emby 中观看」链接。
+
+```
+/new
+```
+
+媒体库最新入库的内容，点片名直接打开媒体服务器网页观看。
 
 ```
 /hot
@@ -49,6 +55,7 @@
 | `CRYCHIC_TELEGRAM_API_URL` | 否 | 自建 Bot API 服务器地址，默认 `https://api.telegram.org` |
 | `CRYCHIC_DATA_DIR` | 否 | 数据目录，默认 `data`，保存等待入库通知的请求 |
 | `CRYCHIC_NOTIFY_INTERVAL` | 否 | 检查入库的间隔，默认 `1m` |
+| `CRYCHIC_NOTIFY_LIBRARY_WAIT` | 否 | 入库通知最多等媒体服务器多久，默认 `30m`；`0s` 表示整理完立即通知 |
 | `CRYCHIC_PROGRESS_INTERVAL` | 否 | `/tasks` 进度的刷新间隔，默认 `5s` |
 | `CRYCHIC_NOTIFY_QUIET` | 否 | 剧集入库的静默期，默认 `3m`：一段时间内没有新集入库后，把这段时间到的集合并成一条通知；`0s` 表示不合并 |
 

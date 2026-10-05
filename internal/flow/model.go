@@ -129,6 +129,15 @@ type TransferJob struct {
 	Files  []TransferFile
 }
 
+// LibraryItem is a recent addition to a media server.
+type LibraryItem struct {
+	Title  string
+	Year   string
+	Kind   string // as the backend words it, e.g. 电视剧
+	Server string // the media server's name, e.g. Emby
+	Link   string // where to watch it, "" when unknown
+}
+
 // Subscription is one of the backend's subscriptions.
 type Subscription struct {
 	ID     int
@@ -154,6 +163,8 @@ type Backend interface {
 	// sources than search does.
 	Discover(ctx context.Context, chart Chart) ([]Media, error)
 	Subscriptions(ctx context.Context) ([]Subscription, error)
+	// Latest lists the newest additions to the media servers.
+	Latest(ctx context.Context) ([]LibraryItem, error)
 	// Unsubscribe deletes a subscription; deleting one already gone is fine.
 	Unsubscribe(ctx context.Context, id int) error
 	// FindSubscription returns the id of an existing subscription, 0 if none.

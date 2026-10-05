@@ -11,8 +11,6 @@
    [取消 | 1:x:0]
 >> user 1001 taps 1:m:0 on message 1
 -> MoviePilot GET /api/v1/media/224207?media_source=themoviedb&type_name=电视剧
--> MoviePilot POST /api/v1/mediaserver/exists_remote
-   {"type":"电视剧","title":"迷途之子!!!!!","year":"2023","media_source":"themoviedb","media_id":"224207"}
 -> MoviePilot GET /api/v1/media/seasons?media_id=224207&media_source=themoviedb
 << editMessageText chat=1001 message=1 parse_mode=HTML poster=https://image.tmdb.org/t/p/w500/dDknWHLYaQB76QSViNdzXOC5v64.jpg large=true above=true
    📺 <a href="https://www.themoviedb.org/tv/224207"><b>迷途之子!!!!!</b></a> (2023) · 电视剧 · ⭐ 8.0

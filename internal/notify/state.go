@@ -31,6 +31,7 @@ type watch struct {
 	Source         string       `json:"source"`
 	MediaID        string       `json:"media_id"`
 	Title          string       `json:"title"`
+	Year           string       `json:"year,omitempty"`
 	Season         *int         `json:"season,omitempty"`
 	Start          int          `json:"start,omitempty"`     // first wanted episode
 	Total          int          `json:"total,omitempty"`     // last wanted episode, 0 if unknown
@@ -48,6 +49,7 @@ type delivery struct {
 	episodes []int
 	complete bool
 	image    string
+	watchAt  flow.LibraryItem // where to watch it; Link is "" when unknown
 }
 
 // withRequest adds req to st, joining an existing watch of the same
@@ -68,7 +70,7 @@ func withRequest(st state, req flow.Request) state {
 	t := req.Target
 	w := watch{
 		SubscriptionID: req.SubscriptionID,
-		Source:         t.Media.Source, MediaID: t.Media.ID, Title: t.Media.Title,
+		Source:         t.Media.Source, MediaID: t.Media.ID, Title: t.Media.Title, Year: t.Media.Year,
 		Season: t.Season, Start: max(t.StartEpisode, 1), Total: req.SeasonEpisodes,
 		Requesters: []flow.Actor{req.Requester},
 	}
@@ -109,15 +111,33 @@ func (w watch) collect(transfers []Transfer, now time.Time) watch {
 	return w
 }
 
-// flush announces watches whose arrivals have settled: everything wanted
-// is in, or nothing new came for quiet, so episodes that arrive one by one
-// share a notice. A complete watch ends with its notice.
-func flush(st state, now time.Time, quiet time.Duration) (state, []delivery) {
+// settled reports whether w's pending arrivals are ready to announce:
+// everything wanted is in, or nothing new came for quiet, so episodes that
+// arrive one by one share a notice.
+func (w watch) settled(now time.Time, quiet time.Duration) bool {
+	return w.ArrivedAt != nil && (w.complete() || now.Sub(*w.ArrivedAt) >= quiet)
+}
+
+// due lists the watches whose arrivals have settled.
+func due(st state, now time.Time, quiet time.Duration) []watch {
+	var out []watch
+	for _, w := range st.Watches {
+		if w.settled(now, quiet) {
+			out = append(out, w)
+		}
+	}
+	return out
+}
+
+// flush announces the settled watches except those held back (by
+// subscription id) until the media server shows them. A complete watch ends
+// with its notice.
+func flush(st state, now time.Time, settle settling) (state, []delivery) {
 	next := state{Baseline: st.Baseline, LastTransfer: st.LastTransfer}
 	var out []delivery
 	for _, w := range st.Watches {
 		complete := w.complete()
-		if w.ArrivedAt == nil || (!complete && now.Sub(*w.ArrivedAt) < quiet) {
+		if !w.settled(now, settle.quiet) || settle.held[w.SubscriptionID] {
 			next.Watches = append(next.Watches, w)
 			continue
 		}
@@ -128,6 +148,21 @@ func flush(st state, now time.Time, quiet time.Duration) (state, []delivery) {
 		}
 	}
 	return next, out
+}
+
+// settling is how flush decides a watch is ready.
+type settling struct {
+	quiet time.Duration
+	held  map[int]bool // subscriptions the media server does not show yet
+}
+
+// media is the watched title as the media server checks know it.
+func (w watch) media() flow.Media {
+	m := flow.Media{Source: w.Source, ID: w.MediaID, Title: w.Title, Year: w.Year, Kind: flow.Movie}
+	if w.Season != nil {
+		m.Kind = flow.TV
+	}
+	return m
 }
 
 // complete reports whether everything requested has arrived: a movie with

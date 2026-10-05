@@ -299,3 +299,11 @@ func TestCancelOwnSubscription(t *testing.T) {
 	h.say(bob, bob, "/subs")
 	h.tr.verify(t)
 }
+
+// The newest library items link to where they can be watched.
+func TestLatestLinksToTheMediaServer(t *testing.T) {
+	h := start(t, scenario{routes: map[string]route{latestPath: ok("latest.json")}})
+	h.say(alice, alice, "/new")
+	h.shows(1, `<a href="https://emby.example.com/web/index.html#!/item?id=118&amp;context=home"><b>《颂乐人偶》</b></a>`)
+	h.tr.verify(t)
+}
