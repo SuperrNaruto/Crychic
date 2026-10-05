@@ -50,11 +50,12 @@ Data flow: Telegram update → `telegram.adapter` → `flow.Engine.Start/Choose`
 
 ## Testing
 
+- **Never write to a real MoviePilot**: no `POST /api/v1/subscribe/`, no live-bot runs that end in a subscription. A real subscription makes MoviePilot search and download from the owner's PT sites and can get the account banned. Live calls are limited to read-only metadata endpoints; write paths are verified through the fakes and MoviePilot's source
 - End-to-end only: no unit tests, no mocks of internal packages, no redundant or change-detection tests
 - Every scenario ends with `h.tr.verify(t)`; after `-update`, review the transcript diff line by line and commit it with the code
 - Press buttons with `tap(user, msgID, label)` so a button missing from screen fails; use `tapData` only for deliberately stale buttons
 - Fakes must behave like the real services (long-poll `getUpdates`, `X-API-KEY` check, real error shapes); extend them, don't shortcut them
-- `e2e/testdata/moviepilot/*.json` are trimmed recordings from a live v3.1.0 instance (`curl -H "X-API-KEY: $KEY" "$MP/api/v1/media/search?title=沙丘&type=media&count=10"`), except `subscribe_rejected.json` and `server_error.json`, which follow the source (failures are hard to trigger safely); never commit real keys or tokens
+- `e2e/testdata/moviepilot/*.json` are trimmed recordings from a live v3.1.0 instance (`curl -H "X-API-KEY: $KEY" "$MP/api/v1/media/search?title=沙丘&type=media&count=10"`), except `subscribe_rejected.json` and `server_error.json`, which follow the source; `subscribe_created.json` came from a one-off live subscription that must not be repeated (see above); never commit real keys or tokens
 
 ## Gotchas
 
