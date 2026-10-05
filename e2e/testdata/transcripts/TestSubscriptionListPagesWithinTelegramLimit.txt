@@ -25,7 +25,7 @@
    <i>第 1/8 页</i>
    ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
    [下一页 › | 1:p:1]
-   [🏠 首页 | 1:o:0]
+   [首页 | 1:o:0]
 >> user 1001 taps 1:p:1 on message 1
 << editMessageText chat=1001 message=1 parse_mode=HTML
    <b>📚 订阅列表（150）</b>
@@ -52,7 +52,7 @@
    <i>第 2/8 页</i>
    ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
    [‹ 上一页 | 1:p:0] [下一页 › | 1:p:2]
-   [🏠 首页 | 1:o:0]
+   [首页 | 1:o:0]
 << answerCallbackQuery
 >> user 1001 taps 1:p:2 on message 1
 << editMessageText chat=1001 message=1 parse_mode=HTML
@@ -80,7 +80,7 @@
    <i>第 3/8 页</i>
    ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
    [‹ 上一页 | 1:p:1] [下一页 › | 1:p:3]
-   [🏠 首页 | 1:o:0]
+   [首页 | 1:o:0]
 << answerCallbackQuery
 >> user 1001 taps 1:p:3 on message 1
 << editMessageText chat=1001 message=1 parse_mode=HTML
@@ -108,7 +108,7 @@
    <i>第 4/8 页</i>
    ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
    [‹ 上一页 | 1:p:2] [下一页 › | 1:p:4]
-   [🏠 首页 | 1:o:0]
+   [首页 | 1:o:0]
 << answerCallbackQuery
 >> user 1001 taps 1:p:4 on message 1
 << editMessageText chat=1001 message=1 parse_mode=HTML
@@ -136,7 +136,7 @@
    <i>第 5/8 页</i>
    ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
    [‹ 上一页 | 1:p:3] [下一页 › | 1:p:5]
-   [🏠 首页 | 1:o:0]
+   [首页 | 1:o:0]
 << answerCallbackQuery
 >> user 1001 taps 1:p:5 on message 1
 << editMessageText chat=1001 message=1 parse_mode=HTML
@@ -164,7 +164,7 @@
    <i>第 6/8 页</i>
    ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
    [‹ 上一页 | 1:p:4] [下一页 › | 1:p:6]
-   [🏠 首页 | 1:o:0]
+   [首页 | 1:o:0]
 << answerCallbackQuery
 >> user 1001 taps 1:p:6 on message 1
 << editMessageText chat=1001 message=1 parse_mode=HTML
@@ -192,7 +192,7 @@
    <i>第 7/8 页</i>
    ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
    [‹ 上一页 | 1:p:5] [下一页 › | 1:p:7]
-   [🏠 首页 | 1:o:0]
+   [首页 | 1:o:0]
 << answerCallbackQuery
 >> user 1001 taps 1:p:7 on message 1
 << editMessageText chat=1001 message=1 parse_mode=HTML
@@ -210,7 +210,7 @@
    <i>第 8/8 页</i>
    ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
    [‹ 上一页 | 1:p:6]
-   [🏠 首页 | 1:o:0]
+   [首页 | 1:o:0]
 << answerCallbackQuery
 >> user 1001 taps 1:p:6 on message 1
 << editMessageText chat=1001 message=1 parse_mode=HTML
@@ -238,5 +238,5 @@
    <i>第 7/8 页</i>
    ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
    [‹ 上一页 | 1:p:5] [下一页 › | 1:p:7]
-   [🏠 首页 | 1:o:0]
+   [首页 | 1:o:0]
 << answerCallbackQuery

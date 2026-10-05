@@ -40,6 +40,7 @@ Data flow: Telegram update → `telegram.adapter` → `flow.Engine.Start/Choose`
 - `internal/flow/charts.go` calendar: 新番放送 opens on today's weekday (China time, `calendarZone`), one weekday per view with a 一…日 button row, picks sorted by first air date within the day
 - `internal/flow/notes.go` - `/hot` calendar pages: each pick looked up on TMDB (title, then original title) for link + identity, synopsis from TMDB else Bangumi's own `/v0/subjects/{id}` (`flow.Calendar.Summary`, kept on `Media.CalendarID`); all three lookups of every pick on a page run at once (one round trip); a pick found with a synopsis is done for the session, one without is looked up again whenever its page shows (MoviePilot answers an upstream failure with an empty `MediaInfo`, HTTP 200, which is why synopses skip it). Other charts show the synopsis the chart carries (Douban's is a region / genre / director / cast line), collapsed
 - `internal/flow/related.go` - 相似推荐 / 同系列 on a media card (season picker, movie confirm, held, already subscribed): lists related media or the movie's series as results to pick from; nothing found or a failed lookup only flashes a notice and keeps the card
+- `internal/flow/nav.go` - 返回: every shown reply is kept with the session state behind it (`screen`); forward steps (`forward`: pick, season, 相似/系列, multi-season, start-episode prompt, chart pick, typed title) push the previous screen, same-level steps (paging, ticking, weekday, a typed episode) replace it, any other step clears the history; 返回 restores a screen exactly, with no backend call. `grid` lays out button rows
 - `internal/flow/latest.go` - `/new`: newest media server items linked to their web page
 - `internal/flow/subs.go` - `/subs`: every subscription, cancel only those the user requested (`Watcher.Requested`), then `Watcher.Forget`
 - `internal/flow/seasons.go` - multi-season picker (「多选季…」): tick seasons, subscribe each from episode 1, report per season
@@ -69,6 +70,7 @@ Data flow: Telegram update → `telegram.adapter` → `flow.Engine.Start/Choose`
 
 - `flow` must never import a platform package; a new platform is a sibling of `internal/telegram` that consumes `flow` through a small interface
 - Inject dependencies (`Backend`, `Now`, `*http.Client`, `*slog.Logger`); construct concrete types only in `internal/app`
+- Buttons only choose: no emoji, no titles or facts in labels. Picks are number buttons (`gridColumns` a row) or short names (第 N 季), with the details in the message text; menus share rows (`menuColumns`)
 - User-facing copy is `flow.Text` built with `Strong`/`Emphasis`/`Mono`/`Linked`/`Quote`; never put platform markup in flow strings, adapters render and escape. Emoji sparingly: 🔍 search, 🎬/📺 card, ✅ done, ℹ️ already subscribed, ⬇️/⏸️ download progress, 📦 transfer job (⏳ ▶️ ✅ ⚠️ per file), 📋 task list, 📥 arrival, ⚠️ errors, ⌛ expired, 🚫 refused
 - Errors safe to show users are `*flow.UserError`; others get logged and shown as the generic outage text
 - Hard limits: functions ≤ 50 lines, nesting ≤ 3, ≤ 3 positional params (use a struct, e.g. `moviepilot.call`), complexity ≤ 10, no magic numbers
@@ -107,7 +109,7 @@ Data flow: Telegram update → `telegram.adapter` → `flow.Engine.Start/Choose`
 - The fake numbers subscriptions created from `subscribe_created.json` 1, 2, 3, ... like MoviePilot; two watches sharing an id would merge
 - Confirm and cancel use `store.take`, so a double tap acts once; keep that for any step that ends a conversation
 - Session IDs are random across restarts; never replace them with a counter that resets on startup. `Choose`/`Answer` validate both user and chat and serialize steps per session. Calendar annotations clone both mutable slices before writing. E2E transcripts normalize opaque session IDs only when recording, never in updates sent to the app
-- Callback action strings are unique across every flow handler. Subscription return is `j`, calendar weekday is `w`, generic list paging is `p`, 相似推荐 is `r` and 同系列 is `n`
+- Callback action strings are unique across every flow handler. Subscription return is `j`, calendar weekday is `w`, generic list paging is `p`, 相似推荐 is `r`, 同系列 is `n` and 返回 is `bk`
 - Telegram non-poll requests have a 10-second deadline including response-body reads; `getUpdates` uses the HTTP client's 70-second timeout. Metadata card enrichment uses a 5-second cosmetic budget; independent read-only calls overlap, subscription writes do not
 - List pages budget text and item buttons together (up to 20 entries and 3000 content runes). Large transfer views show at most 100 file lines, retaining the full aggregate count and explicitly naming omitted files
 - `LibraryWait=0` bypasses media-server checks. Movies and complete seasons start that wait immediately; incomplete seasons start after quiet. Unchanged notifier state is not rewritten; necessary writes remain serialized under the state lock

@@ -18,9 +18,9 @@ const (
 	conanLookup  = "GET /api/v1/subscribe/media/30983"
 	conanDetails = "GET /api/v1/media/30983"
 
-	duneMovie  = "1. 沙丘 (2021)"
-	conanShow  = "1. 名侦探柯南 (1996)"
-	conanFirst = "第 1 季 · 1216 集"
+	duneMovie  = "1"
+	conanShow  = "1"
+	conanFirst = "第 1 季"
 )
 
 // conanRoutes serve an ongoing show with one 1216-episode season whose next
@@ -98,8 +98,8 @@ func TestSubscribeOneSeasonOfShow(t *testing.T) {
 		subscribePath: ok("subscribe_created.json"),
 	}})
 	h.say(alice, alice, "/request 绝命毒师")
-	h.tap(alice, 1, "1. 绝命毒师 (2008)")
-	h.tap(alice, 1, "第 2 季 · 13 集")
+	h.tap(alice, 1, "1")
+	h.tap(alice, 1, "第 2 季")
 	h.tap(alice, 1, "从第 1 集开始")
 	h.shows(1, "已订阅《绝命毒师》第 2 季")
 	h.tr.verify(t)
@@ -238,12 +238,12 @@ func TestSubscribeSeveralSeasons(t *testing.T) {
 		subscribePath: ok("subscribe_created.json"),
 	}})
 	h.say(alice, alice, "/request 绝命毒师")
-	h.tap(alice, 1, "1. 绝命毒师 (2008)")
+	h.tap(alice, 1, "1")
 	h.tap(alice, 1, "多选季…")
-	h.tap(alice, 1, "⬜ 第 1 季 · 7 集")
-	h.tap(alice, 1, "⬜ 第 2 季 · 13 集")
-	h.tap(alice, 1, "☑️ 第 1 季 · 7 集")
-	h.tap(alice, 1, "⬜ 第 3 季 · 13 集")
+	h.tap(alice, 1, "第 1 季")
+	h.tap(alice, 1, "第 2 季")
+	h.tap(alice, 1, "✓ 第 1 季")
+	h.tap(alice, 1, "第 3 季")
 	h.tap(alice, 1, "订阅所选 2 季")
 	h.shows(1, "✅ 第 2 季：已订阅")
 	h.shows(1, "✅ 第 3 季：已订阅")
@@ -269,7 +269,7 @@ func TestCommandMenuIsRegistered(t *testing.T) {
 func TestHomeSearchTakesATypedTitle(t *testing.T) {
 	h := start(t, scenario{routes: map[string]route{searchPath: ok("search_dune.json")}})
 	h.say(alice, alice, "/start")
-	h.tap(alice, 1, "🔍 搜索订阅")
+	h.tap(alice, 1, "搜索订阅")
 	h.answer(alice, 1, "沙丘")
 	h.shows(1, "「沙丘」的搜索结果")
 	h.tr.verify(t)
@@ -278,7 +278,7 @@ func TestHomeSearchTakesATypedTitle(t *testing.T) {
 const (
 	subsPath       = "GET /api/v1/subscribe/"
 	deleteFirst    = "DELETE /api/v1/subscribe/1"
-	cancelBreaking = "取消 1. 绝命毒师 第 2 季"
+	cancelBreaking = "取消 1"
 )
 
 // The subscription list offers to cancel only what the user asked for;
@@ -295,8 +295,8 @@ func TestCancelOwnSubscription(t *testing.T) {
 		deleteFirst:   ok("subscribe_deleted.json"),
 	}})
 	h.say(alice, alice, "/request 绝命毒师")
-	h.tap(alice, 1, "1. 绝命毒师 (2008)")
-	h.tap(alice, 1, "第 2 季 · 13 集")
+	h.tap(alice, 1, "1")
+	h.tap(alice, 1, "第 2 季")
 	h.tap(alice, 1, "从第 1 集开始")
 	h.say(alice, alice, "/subs")
 	h.tap(alice, 2, cancelBreaking)
@@ -325,7 +325,7 @@ func TestOldConfirmationCannotSubscribeAfterRestart(t *testing.T) {
 	h.restart()
 	h.mp.setRoute(searchPath, ok("search_digger.json"))
 	h.say(alice, alice, "/request 挖掘者")
-	h.tap(alice, 2, "1. 挖掘者 (2026)")
+	h.tap(alice, 2, "1")
 	h.tap(alice, 1, "确认订阅")
 	h.shows(1, "已失效")
 	h.tap(alice, 2, "确认订阅")
@@ -338,5 +338,33 @@ func TestLatestLinksToTheMediaServer(t *testing.T) {
 	h := start(t, scenario{routes: map[string]route{latestPath: ok("latest.json")}})
 	h.say(alice, alice, "/new")
 	h.shows(1, `<a href="https://emby.example.com/web/index.html#!/item?id=118&amp;context=home"><b>《颂乐人偶》</b></a>`)
+	h.tr.verify(t)
+}
+
+// 返回 retraces a request screen by screen, as each was, without asking
+// MoviePilot again; the first screen has nowhere to go back to, and a
+// request walked back into still subscribes.
+func TestBackRetracesTheRequest(t *testing.T) {
+	h := start(t, scenario{routes: map[string]route{
+		searchPath:    ok("search_breaking_bad.json"),
+		breakDetails:  ok("detail_breaking_bad.json"),
+		seasonsPath:   ok("seasons_breaking_bad.json"),
+		breakingQuery: ok("subscription_none.json"),
+		subscribePath: ok("subscribe_created.json"),
+	}})
+	h.say(alice, alice, "/request 绝命毒师")
+	h.tap(alice, 1, "1")
+	h.tap(alice, 1, "第 2 季")
+	h.tap(alice, 1, "指定起始集…")
+	h.tap(alice, 1, "返回")
+	h.shows(1, "确认订阅《绝命毒师》第 2 季")
+	h.tap(alice, 1, "返回")
+	h.shows(1, "选择要订阅的季")
+	h.tap(alice, 1, "返回")
+	h.shows(1, "「绝命毒师」的搜索结果")
+	h.tap(alice, 1, "1")
+	h.tap(alice, 1, "第 2 季")
+	h.tap(alice, 1, "从第 1 集开始")
+	h.shows(1, "已订阅《绝命毒师》第 2 季")
 	h.tr.verify(t)
 }

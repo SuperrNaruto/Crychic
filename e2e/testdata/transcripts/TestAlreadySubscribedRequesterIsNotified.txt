@@ -11,14 +11,8 @@
    7. <b>沙丘魔堡2000</b> (2000) · 电视剧 · ⭐ 6.8 · <i>Frank Herbert&#39;s Dune</i>
    8. <b>沙丘虫暴</b> (2021) · 电影 · ⭐ 6.7
    ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-   [1. 沙丘 (2021) | 1:m:0]
-   [2. 沙丘：预言 (2024) | 1:m:1]
-   [3. 沙丘 (1984) | 1:m:2]
-   [4. 沙丘2 (2024) | 1:m:3]
-   [5. 沙丘3 (2026) | 1:m:4]
-   [6. 沙丘之子 (2003) | 1:m:5]
-   [7. 沙丘魔堡2000 (2000) | 1:m:6]
-   [8. 沙丘虫暴 (2021) | 1:m:7]
+   [1 | 1:m:0] [2 | 1:m:1] [3 | 1:m:2] [4 | 1:m:3]
+   [5 | 1:m:4] [6 | 1:m:5] [7 | 1:m:6] [8 | 1:m:7]
    [取消 | 1:x:0]
 >> user 1001 taps 1:m:0 on message 1
 -> MoviePilot GET /api/v1/media/438631?media_source=themoviedb&type_name=电影
@@ -32,6 +26,7 @@
 
    ℹ️ 《沙丘》已在订阅中，入库后会通知你。
    [相似推荐 | 1:r:0] [同系列 | 1:n:0]
+   [返回 | 1:bk:0]
 << answerCallbackQuery
 >> MoviePilot transfers 沙丘 (themoviedb/438631)
 << sendMessage chat=1001 message=2 parse_mode=HTML poster=https://image.tmdb.org/t/p/w500/6hsJknqlPceFxExOe87z5VGgNG9.jpg large=true above=true

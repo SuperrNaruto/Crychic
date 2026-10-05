@@ -19,6 +19,8 @@ const (
 	chartPageSize = 8
 	// gridColumns is how many number buttons share a row.
 	gridColumns = 4
+	// menuColumns is how many menu entries share a row.
+	menuColumns = 2
 	// chartOverviewRunes keeps a full page of synopses inside one message.
 	chartOverviewRunes = 300
 
@@ -43,16 +45,17 @@ var weekdayNames = [daysInWeek]string{"一", "二", "三", "四", "五", "六", 
 // chart is one entry of the discover menu.
 type chart struct {
 	kind  Chart
+	icon  string // heads the chart's pages; buttons go without
 	label string
 	aired bool // a weekly calendar: by weekday, then first air date; links and synopses looked up
 }
 
 var charts = []chart{
-	{kind: Trending, label: "🔥 TMDB 流行趋势"},
-	{kind: HotMovies, label: "🎬 豆瓣热门电影"},
-	{kind: HotShows, label: "📺 豆瓣热门剧集"},
-	{kind: InTheaters, label: "🎟️ 正在热映"},
-	{kind: NewAnime, label: "🎌 新番放送", aired: true},
+	{kind: Trending, icon: "🔥", label: "TMDB 流行趋势"},
+	{kind: HotMovies, icon: "🎬", label: "豆瓣热门电影"},
+	{kind: HotShows, icon: "📺", label: "豆瓣热门剧集"},
+	{kind: InTheaters, icon: "🎟️", label: "正在热映"},
+	{kind: NewAnime, icon: "🎌", label: "新番放送", aired: true},
 }
 
 // chooseChart applies the discover actions; ok is false for others.
@@ -84,17 +87,18 @@ func (e *Engine) chooseChart(ctx context.Context, sess session, p press) (Reply,
 
 // Charts opens the discover menu.
 func (e *Engine) Charts(_ context.Context, actor Actor) Reply {
-	return e.chartMenu(e.store.create(actor, nil))
+	sess := e.store.create(actor, nil)
+	return e.shown(sess.id, e.chartMenu(sess))
 }
 
 // chartMenu lists the charts to discover from.
 func (e *Engine) chartMenu(sess session) Reply {
 	e.store.put(sess)
-	rows := make([][]Button, 0, len(charts)+1)
+	buttons := make([]Button, 0, len(charts))
 	for i, c := range charts {
-		rows = append(rows, []Button{{Label: c.label, Data: data(sess.id, actionChart, i)}})
+		buttons = append(buttons, Button{Label: c.label, Data: data(sess.id, actionChart, i)})
 	}
-	rows = append(rows, []Button{homeButton(sess.id)})
+	rows := append(grid(buttons, menuColumns), []Button{homeButton(sess.id)})
 	return Reply{Text: Lines(Line(Strong(msgCharts)), Line(Plain(msgPickChart))), Buttons: rows}
 }
 
@@ -177,7 +181,7 @@ func (e *Engine) chartPage(ctx context.Context, sess session, page int) Reply {
 	}
 	sess.page = page
 	e.store.put(sess)
-	text := Lines(Line(Strong(fmt.Sprintf("%s%s · 第 %d/%d 页", c.label, e.dayName(sess.day), page+1, pages))))
+	text := Lines(Line(Strong(fmt.Sprintf("%s %s%s · 第 %d/%d 页", c.icon, c.label, e.dayName(sess.day), page+1, pages))))
 	text = append(text, pickLines(at, sess.picks[at.first:at.end], c.aired)...)
 	if hi == lo {
 		text = append(text, Line(Plain(emptyNote(c))))
@@ -285,15 +289,11 @@ func mixedKinds(picks []Media) bool {
 
 // numberGrid is the pick buttons, numbered like the lines, gridColumns a row.
 func numberGrid(id uint64, at span) [][]Button {
-	var rows [][]Button
+	picks := make([]Button, 0, at.end-at.first)
 	for i := at.first; i < at.end; i++ {
-		if (i-at.first)%gridColumns == 0 {
-			rows = append(rows, nil)
-		}
-		last := len(rows) - 1
-		rows[last] = append(rows[last], Button{Label: fmt.Sprint(i - at.base + 1), Data: data(id, actionChartPick, i)})
+		picks = append(picks, Button{Label: fmt.Sprint(i - at.base + 1), Data: data(id, actionChartPick, i)})
 	}
-	return rows
+	return grid(picks, gridColumns)
 }
 
 // pager is the previous/next row; a missing direction is left out.

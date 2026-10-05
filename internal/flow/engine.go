@@ -20,6 +20,9 @@ const (
 	actionConfirm = "ok" // arg: start episode, 0 = from the beginning
 	actionAskFrom = "e"
 	actionCancel  = "x"
+
+	// seasonColumns is how many season buttons share a row.
+	seasonColumns = 3
 )
 
 const (
@@ -71,7 +74,8 @@ func (e *Engine) Start(ctx context.Context, actor Actor, term string) Reply {
 	if term == "" {
 		return Reply{Text: Sentence(msgUsage)}
 	}
-	return e.search(ctx, e.store.create(actor, nil), term)
+	sess := e.store.create(actor, nil)
+	return e.shown(sess.id, e.search(ctx, sess, term))
 }
 
 // search looks term up and offers the results in sess.
@@ -95,18 +99,18 @@ func resultList(sess session, term string) Reply {
 	return numberedResults(sess, Line(Strong(fmt.Sprintf("🔍「%s」的搜索结果", term))))
 }
 
-// numberedResults numbers sess's results under heading as buttons.
+// numberedResults lists sess's results under heading, numbered, with a
+// number button to pick each.
 func numberedResults(sess session, heading Block) Reply {
 	results := sess.results
 	text := make(Text, 0, len(results)+1)
 	text = append(text, heading)
-	rows := make([][]Button, 0, len(results)+1)
+	picks := make([]Button, 0, len(results))
 	for i, m := range results {
 		text = append(text, resultLine(i+1, m))
-		label := fmt.Sprintf("%d. %s", i+1, titleYear(m))
-		rows = append(rows, []Button{{Label: label, Data: data(sess.id, actionMedia, i)}})
+		picks = append(picks, Button{Label: fmt.Sprint(i + 1), Data: data(sess.id, actionMedia, i)})
 	}
-	rows = append(rows, []Button{cancelButton(sess.id)})
+	rows := append(grid(picks, gridColumns), []Button{cancelButton(sess.id)})
 	return Reply{Text: text, Buttons: rows}
 }
 
@@ -133,12 +137,15 @@ func (e *Engine) Choose(ctx context.Context, actor Actor, raw string) Reply {
 	if sess.owner.UserID != actor.UserID || sess.owner.Address != actor.Address {
 		return Reply{Notice: msgNotYours}
 	}
-	if p.action == actionPage {
+	switch p.action {
+	case actionPage:
 		return e.page(sess, p.arg)
+	case actionBack:
+		return e.back(sess)
 	}
 	for _, choose := range []chooser{e.chooseHome, e.chooseRequest, e.chooseSeasons, e.chooseTask, e.chooseChart, e.chooseSubs, e.chooseRelated} {
 		if reply, ok := choose(ctx, sess, p); ok {
-			return reply
+			return e.navigate(sess, p.action, reply)
 		}
 	}
 	return Reply{Notice: msgInvalidChoice}
@@ -202,15 +209,16 @@ func (e *Engine) pickMedia(ctx context.Context, sess session, index int) Reply {
 	}
 	sess.seasons = seasons
 	e.store.put(sess)
-	rows := make([][]Button, 0, len(seasons)+3)
+	picks := make([]Button, 0, len(seasons))
 	for _, s := range seasons {
-		rows = append(rows, []Button{{Label: sess.seasonLabel(s), Data: data(sess.id, actionSeason, s.Number)}})
+		picks = append(picks, Button{Label: seasonName(s.Number), Data: data(sess.id, actionSeason, s.Number)})
 	}
+	rows := grid(picks, seasonColumns)
 	if len(sess.selectable()) > 1 {
 		rows = append(rows, []Button{{Label: "多选季…", Data: data(sess.id, actionMulti, 0)}})
 	}
 	rows = append(rows, relatedRow(sess), []Button{cancelButton(sess.id)})
-	return sess.picked.reply(Line(Strong(msgPickSeason)), rows)
+	return sess.picked.replyLines(sess.seasonLines(msgPickSeason, seasons), rows)
 }
 
 // details enriches the card; it is cosmetic, so a failure is logged and the

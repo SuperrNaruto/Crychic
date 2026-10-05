@@ -180,7 +180,7 @@ func ended(last, final Reply) Reply {
 // pausedView is the last view with refreshing stopped and a way to resume.
 func pausedView(sess session, index int, why string) Reply {
 	view := withWarning(sess.follow.last, why)
-	view.Buttons = [][]Button{{{Label: "🔄 继续刷新", Data: data(sess.id, actionTask, index)}, backButton(sess.id)}}
+	view.Buttons = [][]Button{{{Label: "继续刷新", Data: data(sess.id, actionTask, index)}, backButton(sess.id)}}
 	return view
 }
 
@@ -200,7 +200,8 @@ func expired(action string) Reply {
 	switch action {
 	case actionTask, actionFollow, actionUnfollow, actionList, actionClose:
 		return Reply{Text: Sentence(msgTasksExpired)}
-	case actionMedia, actionSeason, actionConfirm, actionAskFrom, actionCancel, actionMulti, actionTick, actionSubscribed:
+	case actionMedia, actionSeason, actionConfirm, actionAskFrom, actionCancel, actionMulti, actionTick, actionSubscribed,
+		actionRelated, actionSeries, actionBack:
 		return Reply{Text: Sentence(msgExpired)}
 	}
 	return Reply{Text: Sentence(msgHomeExpired)}

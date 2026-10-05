@@ -54,8 +54,8 @@ func TestGroupHearsArrivedEpisodesTogether(t *testing.T) {
 		subscribePath: ok("subscribe_created.json"),
 	}})
 	h.say(alice, group, "/request 绝命毒师")
-	h.tap(alice, 1, "1. 绝命毒师 (2008)")
-	h.tap(alice, 1, "第 2 季 · 13 集")
+	h.tap(alice, 1, "1")
+	h.tap(alice, 1, "第 2 季")
 	h.tap(alice, 1, "从第 1 集开始")
 	h.arrives(group,
 		breakingBad.file("S02", "E01"),
@@ -78,8 +78,8 @@ func TestEpisodesArrivingApartShareOneNotice(t *testing.T) {
 		subscribePath: ok("subscribe_created.json"),
 	}})
 	h.say(alice, alice, "/request 绝命毒师")
-	h.tap(alice, 1, "1. 绝命毒师 (2008)")
-	h.tap(alice, 1, "第 2 季 · 13 集")
+	h.tap(alice, 1, "1")
+	h.tap(alice, 1, "第 2 季")
 	h.tap(alice, 1, "从第 1 集开始")
 	h.transfers(breakingBad.file("S02", "E01"))
 	h.restart()

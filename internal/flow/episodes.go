@@ -71,8 +71,13 @@ func (e *Engine) Answer(ctx context.Context, actor Actor, typed Typed) Reply {
 	}
 	text := strings.TrimSpace(typed.Text)
 	if p.action == actionAskTitle {
-		return e.search(ctx, sess, text)
+		return e.navigate(sess, p.action, e.search(ctx, sess, text))
 	}
+	return e.navigate(sess, answered, startFrom(sess, text))
+}
+
+// startFrom takes a typed start episode, asking again when it is invalid.
+func startFrom(sess session, text string) Reply {
 	from, err := strconv.Atoi(text)
 	if err != nil || from < 1 || !sess.validStart(from) {
 		return askStart(sess, fmt.Sprintf("⚠️「%s」不是有效的集数。", text))

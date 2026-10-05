@@ -31,8 +31,8 @@ func TestHeldSeasonIsNotSubscribedAgain(t *testing.T) {
 		libraryShowPath:  ok("library_grand_blue.json"),
 	}})
 	h.say(alice, alice, "/request 碧蓝之海")
-	h.tap(alice, 1, "1. 碧蓝之海 (2018)")
-	h.tap(alice, 1, "第 3 季 · 12 集 · 已入库")
+	h.tap(alice, 1, "1")
+	h.tap(alice, 1, "第 3 季")
 	h.shows(1, "《碧蓝之海》第 3 季已全部在媒体库中")
 	h.tr.verify(t)
 }
@@ -49,8 +49,8 @@ func TestPartlyHeldSeasonCompletesWithLibrary(t *testing.T) {
 		subscribePath:   ok("subscribe_created.json"),
 	}})
 	h.say(alice, alice, "/request 迷途之子")
-	h.tap(alice, 1, "1. 迷途之子!!!!! (2023)")
-	h.tap(alice, 1, "第 1 季 · 13 集 · 已有 1 集")
+	h.tap(alice, 1, "1")
+	h.tap(alice, 1, "第 1 季")
 	h.shows(1, "媒体库已有 E13")
 	h.tap(alice, 1, "从第 1 集开始")
 	h.arrives(alice, mygo.file("S01", "E01-E12"))
@@ -69,8 +69,8 @@ func TestDownloadInProgressIsShown(t *testing.T) {
 		downloadsPath:   ok("downloads_mygo.json"),
 	}})
 	h.say(alice, alice, "/request 迷途之子")
-	h.tap(alice, 1, "1. 迷途之子!!!!! (2023)")
-	h.tap(alice, 1, "第 1 季 · 13 集 · 已有 1 集")
+	h.tap(alice, 1, "1")
+	h.tap(alice, 1, "第 1 季")
 	h.shows(1, "⬇️ 正在下载 E10–E12 · 0%")
 	h.shows(1, "已在订阅中")
 	h.tr.verify(t)

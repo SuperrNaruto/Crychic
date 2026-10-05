@@ -31,6 +31,8 @@ type session struct {
 	tasks   []taskRef
 	follow  following
 	pages   []Reply
+	screen  screen   // what the conversation message shows now
+	history []screen // screens 返回 leads back to, latest last
 	expires time.Time
 	gate    chan struct{} // serializes steps for this session, not unrelated users
 }

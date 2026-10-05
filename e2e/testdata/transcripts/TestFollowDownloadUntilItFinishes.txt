@@ -6,8 +6,7 @@
    <b>📦 整理</b>
    2. 《颂乐人偶》第 1 季 · 已整理 0/2 个文件
    ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-   [1. 迷途之子!!!!! 第 1 季 | 1:k:0]
-   [2. 颂乐人偶 第 1 季 | 1:k:1]
+   [1 | 1:k:0] [2 | 1:k:1]
    [关闭 | 1:c:0]
 >> user 1001 taps 1:k:0 on message 1
 << editMessageText chat=1001 message=1 parse_mode=HTML poster=https://image.tmdb.org/t/p/w500/dDknWHLYaQB76QSViNdzXOC5v64.jpg large=true above=true
@@ -27,7 +26,7 @@
    <b>⬇️ 《迷途之子!!!!!》第 1 季 E10–E12</b>
    进度 43% · ↓ 3.1MB/s · 剩余 5分12秒
    <i>已停止自动刷新。</i>
-   [🔄 继续刷新 | 1:k:0] [返回任务列表 | 1:l:0]
+   [继续刷新 | 1:k:0] [返回任务列表 | 1:l:0]
 << answerCallbackQuery
 >> user 1001 taps 1:l:0 on message 1
 << editMessageText chat=1001 message=1 parse_mode=HTML
@@ -37,8 +36,7 @@
    <b>📦 整理</b>
    2. 《颂乐人偶》第 1 季 · 已整理 0/2 个文件
    ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-   [1. 迷途之子!!!!! 第 1 季 | 1:k:0]
-   [2. 颂乐人偶 第 1 季 | 1:k:1]
+   [1 | 1:k:0] [2 | 1:k:1]
    [关闭 | 1:c:0]
 << answerCallbackQuery
 >> user 1001 taps 1:k:0 on message 1

@@ -20,24 +20,25 @@ type listView struct {
 	footer  []Button
 }
 
-// listPages keeps text and its action buttons on the same bounded page.
+// listPages keeps text and its action buttons on the same bounded page,
+// the buttons gridColumns a row.
 func (e *Engine) listPages(sess session, view listView) Reply {
 	pages := []Reply{{Text: Lines(view.heading)}}
+	buttons := [][]Button{nil}
 	used, items := 0, 0
 	for _, entry := range view.entries {
 		size := textSize(entry.text)
 		if items > 0 && (items >= listPageItems || used+size > listPageRunes) {
-			pages = append(pages, Reply{Text: Lines(view.heading)})
+			pages, buttons = append(pages, Reply{Text: Lines(view.heading)}), append(buttons, nil)
 			used, items = 0, 0
 		}
-		p := &pages[len(pages)-1]
-		p.Text = append(p.Text, entry.text...)
-		if len(entry.buttons) > 0 {
-			p.Buttons = append(p.Buttons, entry.buttons)
-		}
+		last := len(pages) - 1
+		pages[last].Text = append(pages[last].Text, entry.text...)
+		buttons[last] = append(buttons[last], entry.buttons...)
 		used, items = used+size, items+1
 	}
 	for i := range pages {
+		pages[i].Buttons = grid(buttons[i], gridColumns)
 		if len(pages) > 1 {
 			pages[i].Text = append(pages[i].Text, Line(Emphasis(fmt.Sprintf("第 %d/%d 页", i+1, len(pages)))))
 			pages[i].Buttons = append(pages[i].Buttons, listPager(sess.id, i, len(pages)))

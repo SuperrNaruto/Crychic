@@ -36,11 +36,7 @@ func taskList(id uint64, downloads []Download, jobs []TransferJob) listView {
 			text = append(Lines(Line(Strong(section))), text...)
 			section = ""
 		}
-		label := fmt.Sprintf("%d. %s", n, title)
-		if season != nil {
-			label += fmt.Sprintf(" 第 %d 季", *season)
-		}
-		view.entries = append(view.entries, listEntry{text: text, buttons: []Button{{Label: label, Data: data(id, actionTask, n-1)}}})
+		view.entries = append(view.entries, listEntry{text: text, buttons: []Button{{Label: fmt.Sprint(n), Data: data(id, actionTask, n-1)}}})
 	}
 	for _, d := range downloads {
 		add(d.Title, d.Season, joinNonEmpty(" · ", EpisodeRanges(d.Episodes), progress(d)))

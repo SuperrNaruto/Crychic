@@ -64,7 +64,7 @@ func (e *Engine) listSubs(ctx context.Context, sess session) Reply {
 		mine := slices.Contains(sess.mine, s.ID)
 		entry := listEntry{text: Lines(subLine(i+1, s, mine))}
 		if mine {
-			label := fmt.Sprintf("取消 %d. %s", i+1, subName(s))
+			label := fmt.Sprintf("取消 %d", i+1)
 			entry.buttons = []Button{{Label: label, Data: data(sess.id, actionAskCancel, i)}}
 		}
 		view.entries = append(view.entries, entry)
@@ -87,14 +87,6 @@ func subLine(n int, s Subscription, mine bool) Block {
 	}
 	facts := joinNonEmpty(" · ", stateText[s.State], missing, who)
 	return Line(Plain(fmt.Sprintf("%d. ", n)), Strong(fmt.Sprintf("《%s》", s.Title)), Plain(seasonSuffix(s)+" · "+facts))
-}
-
-// subName is how a button names a subscription, e.g. 绝命毒师 第 2 季.
-func subName(s Subscription) string {
-	if s.Season == nil {
-		return s.Title
-	}
-	return s.Title + " " + seasonSuffix(s)
 }
 
 // seasonSuffix follows a 《title》, e.g. 第 2 季.

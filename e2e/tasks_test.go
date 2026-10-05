@@ -3,8 +3,8 @@ package e2e
 import "testing"
 
 const (
-	mygoTask    = "1. 迷途之子!!!!! 第 1 季"
-	mujicaTask  = "2. 颂乐人偶 第 1 季"
+	mygoTask    = "1"
+	mujicaTask  = "2"
 	stopRefresh = "停止刷新"
 )
 
@@ -56,9 +56,9 @@ func TestNoTasks(t *testing.T) {
 	h.say(alice, alice, "/tasks")
 	h.shows(1, "当前没有下载中或整理中的任务")
 	h.say(alice, alice, "/start")
-	h.tap(alice, 2, "📋 任务进度")
+	h.tap(alice, 2, "任务进度")
 	h.shows(2, "当前没有下载中或整理中的任务")
-	h.tap(alice, 2, "📋 任务进度")
+	h.tap(alice, 2, "任务进度")
 	h.shows(2, "当前没有下载中或整理中的任务")
 	h.tr.verify(t)
 }

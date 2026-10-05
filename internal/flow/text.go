@@ -135,13 +135,6 @@ func joinNonEmpty(sep string, parts ...string) string {
 	return strings.Join(kept, sep)
 }
 
-func titleYear(m Media) string {
-	if m.Year == "" {
-		return m.Title
-	}
-	return fmt.Sprintf("%s (%s)", m.Title, m.Year)
-}
-
 // targetName is how a subscription is referred to, e.g. 《沙丘》,
 // 《绝命毒师》第 2 季 or 《名侦探柯南》第 1 季（从第 500 集开始）.
 func targetName(t Target) string {
@@ -156,12 +149,31 @@ func targetName(t Target) string {
 	return name
 }
 
-// seasonLabel is a season button, e.g. "第 2 季 · 13 集 · 已有 5 集".
-func (sess session) seasonLabel(s Season) string {
-	label := fmt.Sprintf("第 %d 季", s.Number)
-	if s.Number == 0 {
-		label = "特别篇"
+// seasonName is "第 2 季", or 特别篇 for season 0.
+func seasonName(number int) string {
+	if number == 0 {
+		return "特别篇"
 	}
+	return fmt.Sprintf("第 %d 季", number)
+}
+
+// seasonLines asks question above a line per season.
+func (sess session) seasonLines(question string, seasons []Season) Text {
+	text := Lines(Line(Strong(question)))
+	for _, s := range seasons {
+		name, facts, _ := strings.Cut(sess.seasonLabel(s), " · ")
+		line := Line(Strong(name))
+		if facts != "" {
+			line = Line(Strong(name), Plain(" · "+facts))
+		}
+		text = append(text, line)
+	}
+	return text
+}
+
+// seasonLabel describes a season, e.g. "第 2 季 · 13 集 · 已有 5 集".
+func (sess session) seasonLabel(s Season) string {
+	label := seasonName(s.Number)
 	if s.EpisodeCount > 0 {
 		label = fmt.Sprintf("%s · %d 集", label, s.EpisodeCount)
 	}

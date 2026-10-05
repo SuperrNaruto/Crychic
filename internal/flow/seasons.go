@@ -58,20 +58,22 @@ func toggled(chosen []int, season int) []int {
 // tickBox shows the multi-season picker with the current ticks.
 func (e *Engine) tickBox(sess session) Reply {
 	e.store.put(sess)
-	var rows [][]Button
+	var seasons []Season
+	var ticks []Button
 	for _, s := range sess.seasons {
 		if !slices.Contains(sess.selectable(), s.Number) {
 			continue
 		}
-		box := "⬜ "
+		label := seasonName(s.Number)
 		if slices.Contains(sess.chosen, s.Number) {
-			box = "☑️ "
+			label = "✓ " + label
 		}
-		rows = append(rows, []Button{{Label: box + sess.seasonLabel(s), Data: data(sess.id, actionTick, s.Number)}})
+		seasons = append(seasons, s)
+		ticks = append(ticks, Button{Label: label, Data: data(sess.id, actionTick, s.Number)})
 	}
 	subscribe := Button{Label: fmt.Sprintf("订阅所选 %d 季", len(sess.chosen)), Data: data(sess.id, actionSubscribed, 0)}
-	rows = append(rows, []Button{subscribe, cancelButton(sess.id)})
-	return sess.picked.reply(Line(Strong(msgPickSeasons)), rows)
+	rows := append(grid(ticks, seasonColumns), []Button{subscribe, cancelButton(sess.id)})
+	return sess.picked.replyLines(sess.seasonLines(msgPickSeasons, seasons), rows)
 }
 
 // seasonOutcome is what happened to one season of a multi-season request.
