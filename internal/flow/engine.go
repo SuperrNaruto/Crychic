@@ -97,7 +97,7 @@ func (e *Engine) Choose(ctx context.Context, actor Actor, raw string) Reply {
 	}
 	sess, ok := e.store.get(id)
 	if !ok {
-		return Reply{Text: Sentence(msgExpired)}
+		return expired(action)
 	}
 	if sess.owner.UserID != actor.UserID {
 		return Reply{Notice: msgNotYours}

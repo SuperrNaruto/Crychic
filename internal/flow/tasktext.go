@@ -48,7 +48,7 @@ func taskList(id uint64, downloads []Download, jobs []TransferJob) Reply {
 	for _, j := range jobs {
 		add(j.Title, j.Season, filesDone(j))
 	}
-	rows = append(rows, []Button{cancelButton(id)})
+	rows = append(rows, []Button{{Label: "关闭", Data: data(id, actionClose, 0)}})
 	return Reply{Text: text, Buttons: rows}
 }
 

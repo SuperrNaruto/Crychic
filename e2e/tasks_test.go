@@ -55,3 +55,15 @@ func TestNoTasks(t *testing.T) {
 	h.shows(1, "当前没有下载中或整理中的任务")
 	h.tr.verify(t)
 }
+
+// Buttons of a closed task list point back to /tasks, not /request.
+func TestClosedTaskListCannotResume(t *testing.T) {
+	h := start(t, scenario{routes: taskRoutes()})
+	h.say(alice, alice, "/tasks")
+	pick, _ := findButton(mustMessage(h, 1).rows, mygoTask)
+	h.tap(alice, 1, "关闭")
+	h.shows(1, "已关闭")
+	h.tapData(alice, 1, pick)
+	h.shows(1, "这个任务列表已失效，请重新 /tasks")
+	h.tr.verify(t)
+}

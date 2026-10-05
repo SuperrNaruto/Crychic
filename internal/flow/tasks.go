@@ -14,6 +14,10 @@ const (
 	actionFollow   = "f" // arg: index; one refresh of a followed task
 	actionUnfollow = "u" // arg: index
 	actionList     = "l" // back to the task list
+	actionClose    = "c" // closes the task list
+
+	msgTasksExpired = "⌛ 这个任务列表已失效，请重新 /tasks。"
+	msgClosed       = "已关闭。"
 
 	msgNotFollowing = "已停止刷新。"
 )
@@ -80,6 +84,9 @@ func (e *Engine) chooseTask(ctx context.Context, sess session, action string, ar
 		return pausedView(sess, arg, msgUnfollowed), true
 	case actionList:
 		return e.listTasks(ctx, sess), true
+	case actionClose:
+		e.store.take(sess.id)
+		return Reply{Text: Sentence(msgClosed)}, true
 	}
 	return Reply{}, false
 }
@@ -172,4 +179,14 @@ func withWarning(view Reply, note string) Reply {
 
 func backButton(id uint64) Button {
 	return Button{Label: "返回任务列表", Data: data(id, actionList, 0)}
+}
+
+// expired tells the user how to start over: buttons of a task list lead
+// back to /tasks, all others to /request.
+func expired(action string) Reply {
+	switch action {
+	case actionTask, actionFollow, actionUnfollow, actionList, actionClose:
+		return Reply{Text: Sentence(msgTasksExpired)}
+	}
+	return Reply{Text: Sentence(msgExpired)}
 }
