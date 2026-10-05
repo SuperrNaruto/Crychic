@@ -3,12 +3,15 @@
 << sendMessage chat=1001 message=1
    「绝命毒师」的搜索结果：
    [电视剧 · 绝命毒师 (2008) | 1:m:0]
+   [电影 · 续命之徒：绝命毒师电影 (2019) | 1:m:1]
+   [电影 · 绝不折中：绝命毒师最终季制作记录 (2013) | 1:m:2]
+   [电影 · The Road to El Camino: Behind the Scenes of El Camino: A Breaking Bad Movie (2019) | 1:m:3]
    [取消 | 1:x:0]
 >> user 1001 taps 1:m:0 on message 1
 -> MoviePilot GET /api/v1/media/seasons?media_id=1396&media_source=themoviedb
 << editMessageText chat=1001 message=1
    绝命毒师 (2008) · 电视剧
-   高中化学老师沃尔特·怀特被诊断出肺癌晚期，为了给家人留下财产，他与以前的学生杰西合伙制毒。
+   高中化学教师沃尔特·怀特被诊断患有晚期癌症，为保障家人经济生活，他与学生杰西制毒贩毒，并逐渐坠落至万劫不复的深渊。
    
    选择要订阅的季：
    [特别篇 · 9 集 | 1:s:0]
@@ -23,7 +26,7 @@
 -> MoviePilot GET /api/v1/subscribe/media/1396?media_source=themoviedb&mtype=电视剧&season=2&title=绝命毒师&year=2008
 << editMessageText chat=1001 message=1
    绝命毒师 (2008) · 电视剧
-   高中化学老师沃尔特·怀特被诊断出肺癌晚期，为了给家人留下财产，他与以前的学生杰西合伙制毒。
+   高中化学教师沃尔特·怀特被诊断患有晚期癌症，为保障家人经济生活，他与学生杰西制毒贩毒，并逐渐坠落至万劫不复的深渊。
    
    确认订阅《绝命毒师》第 2 季？
    [确认订阅 | 1:ok:0] [取消 | 1:x:0]

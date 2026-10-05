@@ -1,5 +1,6 @@
 // Package moviepilot is a minimal MoviePilot (v3 API) client implementing
 // flow.Backend with the API key, which MoviePilot treats as its superuser.
+// Every JSON endpoint answers with a {success, message, data} envelope.
 package moviepilot
 
 import (
@@ -131,20 +132,10 @@ func (c *Client) Subscribe(ctx context.Context, t flow.Target) error {
 		Name: t.Media.Title, Year: t.Media.Year, Type: kindType(t.Media.Kind),
 		MediaSource: t.Media.Source, MediaID: t.Media.ID, Season: t.Season,
 	}
-	var resp struct {
-		Success bool   `json:"success"`
-		Message string `json:"message"`
+	var created struct {
+		ID *int `json:"id"`
 	}
-	if err := c.do(ctx, call{method: http.MethodPost, path: "/api/v1/subscribe/", body: body}, &resp); err != nil {
-		return err
-	}
-	if resp.Success {
-		return nil
-	}
-	if resp.Message == "" {
-		resp.Message = "MoviePilot 未能创建订阅。"
-	}
-	return &flow.UserError{Message: resp.Message}
+	return c.do(ctx, call{method: http.MethodPost, path: "/api/v1/subscribe/", body: body}, &created)
 }
 
 func kindType(k flow.Kind) string {
@@ -179,10 +170,29 @@ func (c *Client) do(ctx context.Context, cl call, out any) error {
 		snippet, _ := io.ReadAll(io.LimitReader(resp.Body, maxErrorBody))
 		return fmt.Errorf("moviepilot %s %s: status %d: %s", cl.method, cl.path, resp.StatusCode, snippet)
 	}
-	if err := json.NewDecoder(resp.Body).Decode(out); err != nil {
+	var env struct {
+		Success bool            `json:"success"`
+		Message string          `json:"message"`
+		Data    json.RawMessage `json:"data"`
+	}
+	if err := json.NewDecoder(resp.Body).Decode(&env); err != nil {
 		return fmt.Errorf("moviepilot %s %s: decode: %w", cl.method, cl.path, err)
 	}
+	if !env.Success {
+		return refusal(env.Message)
+	}
+	if err := json.Unmarshal(env.Data, out); err != nil {
+		return fmt.Errorf("moviepilot %s %s: decode data: %w", cl.method, cl.path, err)
+	}
 	return nil
+}
+
+// refusal turns an unsuccessful envelope (HTTP 200) into a user-facing error.
+func refusal(message string) error {
+	if message == "" {
+		message = "MoviePilot 拒绝了这次操作。"
+	}
+	return &flow.UserError{Message: message}
 }
 
 func (c *Client) newRequest(ctx context.Context, cl call) (*http.Request, error) {

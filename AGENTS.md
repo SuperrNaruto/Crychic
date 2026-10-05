@@ -53,14 +53,14 @@ Data flow: Telegram update → `telegram.adapter` → `flow.Engine.Start/Choose`
 - Every scenario ends with `h.tr.verify(t)`; after `-update`, review the transcript diff line by line and commit it with the code
 - Press buttons with `tap(user, msgID, label)` so a button missing from screen fails; use `tapData` only for deliberately stale buttons
 - Fakes must behave like the real services (long-poll `getUpdates`, `X-API-KEY` check, real error shapes); extend them, don't shortcut them
-- `e2e/testdata/moviepilot/*.json` are hand-written from v3.1.0 models, not yet recorded from a live instance; replace with real responses when one is available (`curl -H "X-API-KEY: $KEY" "$MP/api/v1/media/search?title=沙丘&type=media&count=10"`), never committing real keys or tokens
+- `e2e/testdata/moviepilot/*.json` are trimmed recordings from a live v3.1.0 instance (`curl -H "X-API-KEY: $KEY" "$MP/api/v1/media/search?title=沙丘&type=media&count=10"`), except `subscribe_*.json` and `server_error.json`, which follow the source because creating a subscription has side effects; never commit real keys or tokens
 
 ## Gotchas
 
 - The API key authenticates as MoviePilot's **superuser**; every subscription is owned by the admin, not the chat user
 - Media `type` is a Chinese enum: `电影`, `电视剧`; results without `media_source`/`media_id` are dropped
-- `GET /api/v1/subscribe/media/{id}` returns an object with `id: null` when nothing is subscribed, not a 404
-- `POST /api/v1/subscribe/` reports failure as HTTP 200 with `success: false`; relay its `message`
+- Every JSON endpoint answers `{success, message, data}`, even where the route's `response_model` says `List[...]` (wrapped by `app/api/response.py`); `moviepilot.Client.do` unwraps it, and `success: false` on HTTP 200 becomes a `UserError` with `message`
+- `GET /api/v1/subscribe/media/{id}` returns `data` with `id: null` when nothing is subscribed, not a 404
 - Button data is `<session>:<action>:<arg>` and must stay ≤ 64 bytes (Telegram limit)
 - Confirm and cancel use `store.take`, so a double tap acts once; keep that for any step that ends a conversation
 - A `Reply` with `Notice` must not edit the message (another group member tapping your buttons)
