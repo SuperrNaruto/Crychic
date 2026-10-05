@@ -13,6 +13,7 @@ const (
 	actionTask     = "k" // arg: index into session tasks; starts following
 	actionFollow   = "f" // arg: index; one refresh of a followed task
 	actionUnfollow = "u" // arg: index
+	actionList     = "l" // back to the task list
 
 	msgNotFollowing = "已停止刷新。"
 )
@@ -32,18 +33,26 @@ type following struct {
 
 // Tasks lists the backend's downloads and transfer jobs to pick one to follow.
 func (e *Engine) Tasks(ctx context.Context, actor Actor) Reply {
+	return e.listTasks(ctx, e.store.create(actor, nil))
+}
+
+// listTasks shows the current tasks in sess, which stops following any.
+func (e *Engine) listTasks(ctx context.Context, sess session) Reply {
 	downloads, err := e.backend.Downloads(ctx)
 	if err != nil {
+		e.store.take(sess.id)
 		return e.failure("downloads", err)
 	}
 	jobs, err := e.backend.Transfers(ctx)
 	if err != nil {
+		e.store.take(sess.id)
 		return e.failure("transfers", err)
 	}
 	if len(downloads)+len(jobs) == 0 {
+		e.store.take(sess.id)
 		return Reply{Text: Sentence(msgNoTasks)}
 	}
-	sess := e.store.create(actor, nil)
+	sess.tasks, sess.follow = nil, following{}
 	for _, d := range downloads {
 		sess.tasks = append(sess.tasks, taskRef{download: true, id: d.ID})
 	}
@@ -69,6 +78,8 @@ func (e *Engine) chooseTask(ctx context.Context, sess session, action string, ar
 		sess.follow.on = false
 		e.store.put(sess)
 		return pausedView(sess, arg, msgUnfollowed), true
+	case actionList:
+		return e.listTasks(ctx, sess), true
 	}
 	return Reply{}, false
 }
@@ -89,8 +100,11 @@ func (e *Engine) refresh(ctx context.Context, sess session, index int) Reply {
 		view = withWarning(sess.follow.last, msgRefreshFailed)
 	}
 	if gone {
-		e.store.take(sess.id)
-		return ended(sess.follow.last, view)
+		sess.follow.on = false
+		e.store.put(sess)
+		view = ended(sess.follow.last, view)
+		view.Buttons = [][]Button{{backButton(sess.id)}}
+		return view
 	}
 	if err == nil {
 		sess.follow.last = view
@@ -102,7 +116,7 @@ func (e *Engine) refresh(ctx context.Context, sess session, index int) Reply {
 	}
 	e.store.put(sess)
 	live := withWarning(view, msgFollowing)
-	live.Buttons = [][]Button{{{Label: "停止刷新", Data: data(sess.id, actionUnfollow, index)}}}
+	live.Buttons = [][]Button{{{Label: "停止刷新", Data: data(sess.id, actionUnfollow, index)}, backButton(sess.id)}}
 	live.Follow = data(sess.id, actionFollow, index)
 	return live
 }
@@ -146,7 +160,7 @@ func ended(last, final Reply) Reply {
 // pausedView is the last view with refreshing stopped and a way to resume.
 func pausedView(sess session, index int, why string) Reply {
 	view := withWarning(sess.follow.last, why)
-	view.Buttons = [][]Button{{{Label: "🔄 继续刷新", Data: data(sess.id, actionTask, index)}}}
+	view.Buttons = [][]Button{{{Label: "🔄 继续刷新", Data: data(sess.id, actionTask, index)}, backButton(sess.id)}}
 	return view
 }
 
@@ -154,4 +168,8 @@ func pausedView(sess session, index int, why string) Reply {
 func withWarning(view Reply, note string) Reply {
 	text := append(append(Text{}, view.Text...), Line(Emphasis(note)))
 	return Reply{Text: text, Image: view.Image}
+}
+
+func backButton(id uint64) Button {
+	return Button{Label: "返回任务列表", Data: data(id, actionList, 0)}
 }

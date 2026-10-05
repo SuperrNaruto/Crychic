@@ -13,29 +13,41 @@
    <b>⬇️ 《迷途之子!!!!!》第 1 季 E10–E12</b>
    进度 0%
    <i>自动刷新中…</i>
-   [停止刷新 | 1:u:0]
+   [停止刷新 | 1:u:0] [返回任务列表 | 1:l:0]
 << answerCallbackQuery
 >> MoviePilot now answers GET /api/v1/download/ with downloads_mygo_later.json
 << editMessageText chat=1001 message=1 parse_mode=HTML poster=https://image.tmdb.org/t/p/w500/dDknWHLYaQB76QSViNdzXOC5v64.jpg large=true above=true
    <b>⬇️ 《迷途之子!!!!!》第 1 季 E10–E12</b>
    进度 43% · ↓ 3.1MB/s · 剩余 5分12秒
    <i>自动刷新中…</i>
-   [停止刷新 | 1:u:0]
+   [停止刷新 | 1:u:0] [返回任务列表 | 1:l:0]
 >> user 1001 taps 1:u:0 on message 1
 << editMessageText chat=1001 message=1 parse_mode=HTML poster=https://image.tmdb.org/t/p/w500/dDknWHLYaQB76QSViNdzXOC5v64.jpg large=true above=true
    <b>⬇️ 《迷途之子!!!!!》第 1 季 E10–E12</b>
    进度 43% · ↓ 3.1MB/s · 剩余 5分12秒
    <i>已停止自动刷新。</i>
-   [🔄 继续刷新 | 1:k:0]
+   [🔄 继续刷新 | 1:k:0] [返回任务列表 | 1:l:0]
+<< answerCallbackQuery
+>> user 1001 taps 1:l:0 on message 1
+<< editMessageText chat=1001 message=1 parse_mode=HTML
+   <b>📋 进行中的任务</b>
+   <b>⬇️ 下载</b>
+   1. 《迷途之子!!!!!》第 1 季 · E10–E12 · 进度 43%
+   <b>📦 整理</b>
+   2. 《颂乐人偶》第 1 季 · 已整理 0/2 个文件
+   [1. 迷途之子!!!!! 第 1 季 | 1:k:0]
+   [2. 颂乐人偶 第 1 季 | 1:k:1]
+   [取消 | 1:x:0]
 << answerCallbackQuery
 >> user 1001 taps 1:k:0 on message 1
 << editMessageText chat=1001 message=1 parse_mode=HTML poster=https://image.tmdb.org/t/p/w500/dDknWHLYaQB76QSViNdzXOC5v64.jpg large=true above=true
    <b>⬇️ 《迷途之子!!!!!》第 1 季 E10–E12</b>
    进度 43% · ↓ 3.1MB/s · 剩余 5分12秒
    <i>自动刷新中…</i>
-   [停止刷新 | 1:u:0]
+   [停止刷新 | 1:u:0] [返回任务列表 | 1:l:0]
 << answerCallbackQuery
 >> MoviePilot now answers GET /api/v1/download/ with downloads_none.json
 << editMessageText chat=1001 message=1 parse_mode=HTML poster=https://image.tmdb.org/t/p/w500/dDknWHLYaQB76QSViNdzXOC5v64.jpg large=true above=true
    <b>⬇️ 《迷途之子!!!!!》第 1 季 E10–E12</b>
    下载任务已结束（下载完成或被移除）。
+   [返回任务列表 | 1:l:0]

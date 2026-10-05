@@ -16,7 +16,7 @@ func taskRoutes() map[string]route {
 }
 
 // A followed download keeps its message current until it leaves the
-// downloader; stopping and resuming refresh is up to its owner.
+// downloader; its owner can stop refreshing and go back to the list.
 func TestFollowDownloadUntilItFinishes(t *testing.T) {
 	h := start(t, scenario{routes: taskRoutes()})
 	h.say(alice, alice, "/tasks")
@@ -26,13 +26,15 @@ func TestFollowDownloadUntilItFinishes(t *testing.T) {
 	h.shows(1, "进度 43% · ↓ 3.1MB/s · 剩余 5分12秒")
 	h.tap(alice, 1, stopRefresh)
 	h.shows(1, "已停止自动刷新")
-	h.tap(alice, 1, "🔄 继续刷新")
+	h.tap(alice, 1, "返回任务列表")
+	h.tap(alice, 1, mygoTask)
 	h.reports(1, downloadsPath, "downloads_none.json")
 	h.shows(1, "下载任务已结束")
 	h.tr.verify(t)
 }
 
-// A followed transfer job shows each file's state until the queue empties.
+// A followed transfer job shows each file's state until the queue empties;
+// the finished view leads back to the remaining tasks.
 func TestFollowTransferUntilItFinishes(t *testing.T) {
 	h := start(t, scenario{routes: taskRoutes()})
 	h.say(alice, alice, "/tasks")
@@ -42,6 +44,8 @@ func TestFollowTransferUntilItFinishes(t *testing.T) {
 	h.shows(1, "已整理 1/2 个文件")
 	h.reports(1, queuePath, "queue_none.json")
 	h.shows(1, "整理任务已结束")
+	h.tap(alice, 1, "返回任务列表")
+	h.shows(1, "1. 《迷途之子!!!!!》第 1 季 · E10–E12 · 进度 0%")
 	h.tr.verify(t)
 }
 
