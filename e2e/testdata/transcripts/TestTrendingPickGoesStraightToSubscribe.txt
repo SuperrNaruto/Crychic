@@ -40,3 +40,22 @@
    <b>确认订阅《挖掘者》？</b>
    [确认订阅 | 1:ok:0] [取消 | 1:x:0]
 << answerCallbackQuery
+>> user 1001 taps 1:x:0 on message 1
+<< editMessageText chat=1001 message=1 parse_mode=HTML
+   已取消。
+   
+   <b>🔥 TMDB 流行趋势 · 第 1/2 页</b>
+   
+   1. <a href="https://www.themoviedb.org/movie/1248832"><b>挖掘者</b></a> (2026) · 电影 · ⭐ 7.5
+   2. <a href="https://www.themoviedb.org/tv/95350"><b>绿灯军团</b></a> (2026) · 电视剧 · ⭐ 8.4
+   3. <a href="https://www.themoviedb.org/movie/977942"><b>起义</b></a> (2026) · 电影 · ⭐ 7.9
+   4. <a href="https://www.themoviedb.org/movie/1377237"><b>护肝人</b></a> (2026) · 电影 · ⭐ 8.3
+   5. <a href="https://www.themoviedb.org/movie/1283515"><b>不存在的罪人</b></a> (2026) · 电影 · ⭐ 6.7
+   6. <a href="https://www.themoviedb.org/movie/1423191"><b>生化危机：爆发夜</b></a> (2026) · 电影 · ⭐ 7.3
+   7. <a href="https://www.themoviedb.org/tv/258165"><b>伊甸之东</b></a> (2026) · 电视剧 · ⭐ 7.9
+   8. <a href="https://www.themoviedb.org/movie/1204680"><b>歪心狼对阵ACME</b></a> (2026) · 电影 · ⭐ 7.5
+   [1 | 1:i:0] [2 | 1:i:1] [3 | 1:i:2] [4 | 1:i:3]
+   [5 | 1:i:4] [6 | 1:i:5] [7 | 1:i:6] [8 | 1:i:7]
+   [下一页 › | 1:g:1]
+   [返回榜单 | 1:b:0] [🏠 首页 | 1:o:0]
+<< answerCallbackQuery

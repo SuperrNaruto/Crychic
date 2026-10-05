@@ -49,10 +49,17 @@ func TestFollowTransferUntilItFinishes(t *testing.T) {
 	h.tr.verify(t)
 }
 
+// Without tasks /tasks just says so; opened from the home menu, it goes
+// back to the menu.
 func TestNoTasks(t *testing.T) {
 	h := start(t, scenario{})
 	h.say(alice, alice, "/tasks")
 	h.shows(1, "当前没有下载中或整理中的任务")
+	h.say(alice, alice, "/start")
+	h.tap(alice, 2, "📋 任务进度")
+	h.shows(2, "当前没有下载中或整理中的任务")
+	h.tap(alice, 2, "📋 任务进度")
+	h.shows(2, "当前没有下载中或整理中的任务")
 	h.tr.verify(t)
 }
 

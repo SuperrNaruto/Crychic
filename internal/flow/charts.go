@@ -98,6 +98,7 @@ func (e *Engine) chartPage(ctx context.Context, sess session, page int) Reply {
 	if c.aired {
 		e.annotate(ctx, &sess, first, end)
 	}
+	sess.page = page
 	e.store.put(sess)
 	shown := sess.picks[first:end]
 	text := Lines(Line(Strong(fmt.Sprintf("%s · 第 %d/%d 页", c.label, page+1, pages))))

@@ -35,7 +35,7 @@ Data flow: Telegram update → `telegram.adapter` → `flow.Engine.Start/Choose`
 - `internal/flow/model.go` - `Backend`, `Reply`, `UserError`: the contract every platform and backend uses
 - `internal/flow/engine.go` - conversation steps; `internal/flow/text.go` - all user-facing copy (result lines, media card)
 - `internal/flow/tasks.go` - `/tasks`: list downloads and transfer jobs, follow one live (`Reply.Follow`); `internal/telegram/follow.go` re-asks the flow every `CRYCHIC_PROGRESS_INTERVAL` and edits only on change
-- `internal/flow/home.go` - `/start` home menu (`features`), typed title search; `internal/flow/charts.go` - `/hot` charts, paging, pick → subscribable result
+- `internal/flow/home.go` - `/start` home menu (`features`), typed title search; an empty task list opened from it returns to the menu; `internal/flow/charts.go` - `/hot` charts, paging, pick → subscribable result; 取消 on a pick returns to its chart page
 - `internal/flow/notes.go` - `/hot` calendar pages: each pick looked up on TMDB (title, then original title) for link + identity, synopsis from TMDB else Bangumi details, in parallel passes, once per session
 - `internal/flow/latest.go` - `/new`: newest media server items linked to their web page
 - `internal/flow/subs.go` - `/subs`: every subscription, cancel only those the user requested (`Watcher.Requested`), then `Watcher.Forget`

@@ -10,6 +10,7 @@ import (
 type session struct {
 	id      uint64
 	owner   Actor
+	home    bool // opened from the home menu
 	results []Media
 	picked  card
 	seasons []Season
@@ -17,6 +18,7 @@ type session struct {
 	target  *Target
 	chosen  []int   // seasons ticked in the multi-season picker
 	chart   int     // index into charts being browsed
+	page    int     // page of the chart last shown
 	picks   []Media // the chart's picks
 	noted   []bool  // picks already given a link and synopsis
 	subs    []Subscription

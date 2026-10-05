@@ -95,3 +95,15 @@
    [3. 许鞍华数风流人物 第六季 (1992) | 2:m:2]
    [取消 | 2:x:0]
 << answerCallbackQuery
+>> user 1001 taps 2:x:0 on message 2
+<< editMessageText chat=1001 message=2 parse_mode=HTML
+   已取消。
+   
+   <b>📺 豆瓣热门剧集 · 第 2/2 页</b>
+   
+   9. <a href="https://movie.douban.com/subject/36810153"><b>花开锦绣</b></a> (2026) · ⭐ 7.2
+   10. <a href="https://movie.douban.com/subject/36689816"><b>流人 第六季</b></a> (2026) · ⭐ 9.2
+   [9 | 2:i:8] [10 | 2:i:9]
+   [‹ 上一页 | 2:g:0]
+   [返回榜单 | 2:b:0] [🏠 首页 | 2:o:0]
+<< answerCallbackQuery

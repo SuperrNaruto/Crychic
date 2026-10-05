@@ -34,6 +34,7 @@ func (e *Engine) Home(_ context.Context, actor Actor) Reply {
 }
 
 func (e *Engine) home(sess session) Reply {
+	sess.home = true
 	e.store.put(sess)
 	var rows [][]Button
 	for i, f := range e.features() {

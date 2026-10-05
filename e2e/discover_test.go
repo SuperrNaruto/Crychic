@@ -14,7 +14,7 @@ const (
 )
 
 // A trending TMDB pick is found again by search and goes straight to its
-// card, ready to subscribe.
+// card, ready to subscribe; cancelling it returns to the chart.
 func TestTrendingPickGoesStraightToSubscribe(t *testing.T) {
 	h := start(t, scenario{routes: map[string]route{
 		trendingPath:  ok("chart_trending.json"),
@@ -26,11 +26,15 @@ func TestTrendingPickGoesStraightToSubscribe(t *testing.T) {
 	h.tap(alice, 1, "🔥 TMDB 流行趋势")
 	h.tap(alice, 1, "1")
 	h.shows(1, "确认订阅《挖掘者》")
+	h.tap(alice, 1, "取消")
+	h.shows(1, "已取消。")
+	h.shows(1, "TMDB 流行趋势 · 第 1/2 页")
 	h.tr.verify(t)
 }
 
 // Douban picks carry Douban ids, so they are matched by title: a sure
-// match goes on to its seasons, an unsure one lets the user choose.
+// match goes on to its seasons, an unsure one lets the user choose, and
+// cancelling returns to the page the pick was on.
 func TestDoubanPicksAreMatchedByTitle(t *testing.T) {
 	h := start(t, scenario{routes: map[string]route{
 		doubanTVPath: ok("chart_douban_tv.json"),
@@ -48,6 +52,8 @@ func TestDoubanPicksAreMatchedByTitle(t *testing.T) {
 	h.mp.setRoute(searchPath, ok("search_slow_horses_s6.json"))
 	h.tap(alice, 2, "10")
 	h.shows(2, "没有对应的条目？")
+	h.tap(alice, 2, "取消")
+	h.shows(2, "豆瓣热门剧集 · 第 2/")
 	h.tr.verify(t)
 }
 

@@ -144,10 +144,26 @@ func (e *Engine) chooseRequest(ctx context.Context, sess session, p press) (Repl
 	case actionAskFrom:
 		return askStart(sess, ""), true
 	case actionCancel:
-		e.store.take(sess.id)
-		return Reply{Text: Sentence(msgCancelled)}, true
+		return e.cancel(ctx, sess), true
 	}
 	return Reply{}, false
+}
+
+// cancel drops the request in sess. One picked from a chart goes back to
+// the chart page it came from; any other ends the conversation.
+func (e *Engine) cancel(ctx context.Context, sess session) Reply {
+	if sess.picks == nil {
+		e.store.take(sess.id)
+		return Reply{Text: Sentence(msgCancelled)}
+	}
+	back := session{id: sess.id, owner: sess.owner, home: sess.home, chart: sess.chart, page: sess.page, picks: sess.picks, noted: sess.noted}
+	return withNote(msgCancelled, e.chartPage(ctx, back, sess.page))
+}
+
+// withNote puts a short note above a reply's text.
+func withNote(note string, r Reply) Reply {
+	r.Text = append(Lines(Line(Plain(note)), Line()), r.Text...)
+	return r
 }
 
 func (e *Engine) pickMedia(ctx context.Context, sess session, index int) Reply {
