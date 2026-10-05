@@ -11,7 +11,7 @@ type session struct {
 	id      uint64
 	owner   int64
 	results []Media
-	picked  Media
+	picked  card
 	seasons []Season
 	target  *Target
 	expires time.Time

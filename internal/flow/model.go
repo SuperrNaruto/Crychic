@@ -23,14 +23,27 @@ func (k Kind) String() string {
 	return "电影"
 }
 
-// Media identifies one search result by its backend identity.
+// Media identifies one search result by its backend identity, with the
+// metadata search already returns.
 type Media struct {
-	Source   string
-	ID       string
-	Title    string
-	Year     string
-	Kind     Kind
-	Overview string
+	Source        string
+	ID            string
+	Title         string
+	OriginalTitle string
+	Year          string
+	Kind          Kind
+	Rating        float64
+	PosterURL     string
+	Overview      string
+}
+
+// Details is metadata only fetched once a result is picked.
+type Details struct {
+	Genres   []string
+	Runtime  int // minutes, movies only
+	Seasons  int // TV only
+	Episodes int // TV only
+	Cast     []string
 }
 
 // Season is one subscribable season of a TV show.
@@ -49,6 +62,7 @@ type Target struct {
 // Backend is the media server the bot subscribes through.
 type Backend interface {
 	Search(ctx context.Context, term string) ([]Media, error)
+	Details(ctx context.Context, media Media) (Details, error)
 	Seasons(ctx context.Context, media Media) ([]Season, error)
 	IsSubscribed(ctx context.Context, target Target) (bool, error)
 	Subscribe(ctx context.Context, target Target) error
@@ -65,10 +79,12 @@ type Button struct {
 	Data  string
 }
 
-// Reply is what the platform shows after an action. A Reply with Notice set
-// leaves the conversation message untouched and only flashes the notice.
+// Reply is what the platform shows after an action. Image is a poster URL
+// to show with the text. A Reply with Notice set leaves the conversation
+// message untouched and only flashes the notice.
 type Reply struct {
 	Text    string
+	Image   string
 	Buttons [][]Button
 	Notice  string
 }

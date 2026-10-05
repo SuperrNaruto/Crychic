@@ -11,13 +11,16 @@ const (
 	subscribePath = "POST /api/v1/subscribe/"
 	duneLookup    = "GET /api/v1/subscribe/media/438631"
 	breakingQuery = "GET /api/v1/subscribe/media/1396"
+	duneDetails   = "GET /api/v1/media/438631"
+	breakDetails  = "GET /api/v1/media/1396"
 
-	duneMovie = "电影 · 沙丘 (2021)"
+	duneMovie = "1. 沙丘 (2021)"
 )
 
 func TestSubscribeMovie(t *testing.T) {
 	h := start(t, scenario{routes: map[string]route{
 		searchPath:    ok("search_dune.json"),
+		duneDetails:   ok("detail_dune.json"),
 		duneLookup:    ok("subscription_none.json"),
 		subscribePath: ok("subscribe_created.json"),
 	}})
@@ -31,22 +34,38 @@ func TestSubscribeMovie(t *testing.T) {
 func TestSubscribeOneSeasonOfShow(t *testing.T) {
 	h := start(t, scenario{routes: map[string]route{
 		searchPath:    ok("search_breaking_bad.json"),
+		breakDetails:  ok("detail_breaking_bad.json"),
 		seasonsPath:   ok("seasons_breaking_bad.json"),
 		breakingQuery: ok("subscription_none.json"),
 		subscribePath: ok("subscribe_created.json"),
 	}})
 	h.say(alice, alice, "/request 绝命毒师")
-	h.tap(alice, 1, "电视剧 · 绝命毒师 (2008)")
+	h.tap(alice, 1, "1. 绝命毒师 (2008)")
 	h.tap(alice, 1, "第 2 季 · 13 集")
 	h.tap(alice, 1, "确认订阅")
 	h.shows(1, "已订阅《绝命毒师》第 2 季")
 	h.tr.verify(t)
 }
 
+// Details are cosmetic: without them the card falls back to search metadata.
+func TestMissingDetailsDoNotBlockSubscribing(t *testing.T) {
+	h := start(t, scenario{routes: map[string]route{
+		searchPath:    ok("search_dune.json"),
+		duneLookup:    ok("subscription_none.json"),
+		subscribePath: ok("subscribe_created.json"),
+	}})
+	h.say(alice, alice, "/request 沙丘")
+	h.tap(alice, 1, duneMovie)
+	h.tap(alice, 1, "确认订阅")
+	h.shows(1, "已订阅《沙丘》")
+	h.tr.verify(t)
+}
+
 func TestAlreadySubscribedEndsEarly(t *testing.T) {
 	h := start(t, scenario{routes: map[string]route{
-		searchPath: ok("search_dune.json"),
-		duneLookup: ok("subscription_existing.json"),
+		searchPath:  ok("search_dune.json"),
+		duneDetails: ok("detail_dune.json"),
+		duneLookup:  ok("subscription_existing.json"),
 	}})
 	h.say(alice, alice, "/request 沙丘")
 	h.tap(alice, 1, duneMovie)
@@ -58,6 +77,7 @@ func TestAlreadySubscribedEndsEarly(t *testing.T) {
 func TestConfirmTwiceSubscribesOnce(t *testing.T) {
 	h := start(t, scenario{routes: map[string]route{
 		searchPath:    ok("search_dune.json"),
+		duneDetails:   ok("detail_dune.json"),
 		duneLookup:    ok("subscription_none.json"),
 		subscribePath: ok("subscribe_created.json"),
 	}})
@@ -91,8 +111,9 @@ func TestStrangerIsRefused(t *testing.T) {
 // In a group, another whitelisted member cannot hijack someone's request.
 func TestOnlyRequesterCanChoose(t *testing.T) {
 	h := start(t, scenario{routes: map[string]route{
-		searchPath: ok("search_dune.json"),
-		duneLookup: ok("subscription_none.json"),
+		searchPath:  ok("search_dune.json"),
+		duneDetails: ok("detail_dune.json"),
+		duneLookup:  ok("subscription_none.json"),
 	}})
 	h.say(alice, group, "/request@crychic_bot 沙丘")
 	h.tap(bob, 1, duneMovie)
@@ -119,6 +140,7 @@ func TestWrongAPIKeyIsExplained(t *testing.T) {
 func TestMoviePilotRefusalIsRelayed(t *testing.T) {
 	h := start(t, scenario{routes: map[string]route{
 		searchPath:    ok("search_dune.json"),
+		duneDetails:   ok("detail_dune.json"),
 		duneLookup:    ok("subscription_none.json"),
 		subscribePath: ok("subscribe_rejected.json"),
 	}})

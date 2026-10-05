@@ -23,6 +23,11 @@ const (
 
 	typeMovie = "电影"
 	typeTV    = "电视剧"
+
+	// MoviePilot hands out full-size TMDB images (often several MB); chat
+	// previews only need a poster-sized rendition.
+	tmdbOriginalSize = "/t/p/original/"
+	tmdbPosterSize   = "/t/p/w500/"
 )
 
 var errAuth = &flow.UserError{Message: "MoviePilot 拒绝了请求，请管理员检查 API Key。"}
@@ -39,12 +44,15 @@ func New(baseURL, apiKey string, httpClient *http.Client) *Client {
 }
 
 type mediaInfo struct {
-	Type        string `json:"type"`
-	Title       string `json:"title"`
-	Year        string `json:"year"`
-	MediaSource string `json:"media_source"`
-	MediaID     string `json:"media_id"`
-	Overview    string `json:"overview"`
+	Type          string  `json:"type"`
+	Title         string  `json:"title"`
+	OriginalTitle string  `json:"original_title"`
+	Year          string  `json:"year"`
+	MediaSource   string  `json:"media_source"`
+	MediaID       string  `json:"media_id"`
+	VoteAverage   float64 `json:"vote_average"`
+	PosterPath    string  `json:"poster_path"`
+	Overview      string  `json:"overview"`
 }
 
 func (c *Client) Search(ctx context.Context, term string) ([]flow.Media, error) {
@@ -70,9 +78,55 @@ func (i mediaInfo) toMedia() (flow.Media, bool) {
 		return flow.Media{}, false
 	}
 	return flow.Media{
-		Source: i.MediaSource, ID: i.MediaID, Title: i.Title,
-		Year: i.Year, Kind: kind, Overview: i.Overview,
+		Source: i.MediaSource, ID: i.MediaID, Title: i.Title, OriginalTitle: i.OriginalTitle,
+		Year: i.Year, Kind: kind, Rating: i.VoteAverage,
+		PosterURL: strings.Replace(i.PosterPath, tmdbOriginalSize, tmdbPosterSize, 1), Overview: i.Overview,
 	}, true
+}
+
+// named is a TMDB credit or genre; MoviePilot sends credits either as
+// objects or as bare names.
+type named struct{ Name string }
+
+func (n *named) UnmarshalJSON(raw []byte) error {
+	if len(raw) > 0 && raw[0] == '"' {
+		return json.Unmarshal(raw, &n.Name)
+	}
+	var obj struct {
+		Name string `json:"name"`
+	}
+	err := json.Unmarshal(raw, &obj)
+	n.Name = obj.Name
+	return err
+}
+
+func names(items []named) []string {
+	out := make([]string, 0, len(items))
+	for _, it := range items {
+		if it.Name != "" {
+			out = append(out, it.Name)
+		}
+	}
+	return out
+}
+
+func (c *Client) Details(ctx context.Context, media flow.Media) (flow.Details, error) {
+	q := url.Values{"media_source": {media.Source}, "type_name": {kindType(media.Kind)}}
+	var raw struct {
+		Genres   []named `json:"genres"`
+		Runtime  int     `json:"runtime"`
+		Seasons  int     `json:"number_of_seasons"`
+		Episodes int     `json:"number_of_episodes"`
+		Actors   []named `json:"actors"`
+	}
+	path := "/api/v1/media/" + url.PathEscape(media.ID)
+	if err := c.do(ctx, call{method: http.MethodGet, path: path, query: q}, &raw); err != nil {
+		return flow.Details{}, err
+	}
+	return flow.Details{
+		Genres: names(raw.Genres), Runtime: raw.Runtime,
+		Seasons: raw.Seasons, Episodes: raw.Episodes, Cast: names(raw.Actors),
+	}, nil
 }
 
 func (c *Client) Seasons(ctx context.Context, media flow.Media) ([]flow.Season, error) {

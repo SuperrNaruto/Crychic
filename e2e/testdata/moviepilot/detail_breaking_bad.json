@@ -1,0 +1,55 @@
+{
+  "success": true,
+  "message": "",
+  "data": {
+    "media_source": "themoviedb",
+    "media_id": "1396",
+    "type": "电视剧",
+    "title": "绝命毒师",
+    "original_title": "Breaking Bad",
+    "year": "2008",
+    "vote_average": 9.0,
+    "poster_path": "https://image.tmdb.org/t/p/original/rqliuvX7NdknSHu5qaSDfESplQi.jpg",
+    "runtime": null,
+    "number_of_seasons": 5,
+    "number_of_episodes": 62,
+    "overview": "高中化学教师沃尔特·怀特被诊断患有晚期癌症，为保障家人经济生活，他与学生杰西制毒贩毒，并逐渐坠落至万劫不复的深渊。",
+    "genres": [
+      {
+        "id": 18,
+        "name": "剧情"
+      },
+      {
+        "id": 80,
+        "name": "犯罪"
+      }
+    ],
+    "actors": [
+      {
+        "id": 17419,
+        "name": "布莱恩·克兰斯顿",
+        "character": "Walter White"
+      },
+      {
+        "id": 84497,
+        "name": "亚伦·保尔",
+        "character": "Jesse Pinkman"
+      },
+      {
+        "id": 134531,
+        "name": "安娜·冈",
+        "character": "Skyler White"
+      },
+      {
+        "id": 209674,
+        "name": "RJ·米特",
+        "character": "Walter White Jr."
+      },
+      {
+        "id": 14329,
+        "name": "迪恩·诺里斯",
+        "character": "Hank Schrader"
+      }
+    ]
+  }
+}

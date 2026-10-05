@@ -73,13 +73,16 @@ func (e *Engine) Start(ctx context.Context, actor Actor, term string) Reply {
 		results = results[:MaxResults]
 	}
 	sess := e.store.create(actor.UserID, results)
+	lines := make([]string, 0, len(results)+1)
+	lines = append(lines, fmt.Sprintf("「%s」的搜索结果：", term))
 	rows := make([][]Button, 0, len(results)+1)
 	for i, m := range results {
-		label := fmt.Sprintf("%s · %s", m.Kind, titleYear(m))
+		lines = append(lines, resultLine(i+1, m))
+		label := fmt.Sprintf("%d. %s", i+1, titleYear(m))
 		rows = append(rows, []Button{{Label: label, Data: data(sess.id, actionMedia, i)}})
 	}
 	rows = append(rows, []Button{cancelButton(sess.id)})
-	return Reply{Text: fmt.Sprintf("「%s」的搜索结果：", term), Buttons: rows}
+	return Reply{Text: strings.Join(lines, "\n"), Buttons: rows}
 }
 
 // Choose applies a button press.
@@ -113,20 +116,19 @@ func (e *Engine) pickMedia(ctx context.Context, sess session, index int) Reply {
 	if index < 0 || index >= len(sess.results) {
 		return Reply{Notice: msgInvalidChoice}
 	}
-	media := sess.results[index]
-	if media.Kind == Movie {
-		return e.offerConfirm(ctx, sess, Target{Media: media})
+	sess.picked = card{Media: sess.results[index], Details: e.details(ctx, sess.results[index])}
+	if sess.picked.Media.Kind == Movie {
+		return e.offerConfirm(ctx, sess, Target{Media: sess.picked.Media})
 	}
-	seasons, err := e.backend.Seasons(ctx, media)
+	seasons, err := e.backend.Seasons(ctx, sess.picked.Media)
 	if err != nil {
 		e.store.take(sess.id)
 		return e.failure("seasons", err)
 	}
 	if len(seasons) == 0 {
 		e.store.take(sess.id)
-		return Reply{Text: describe(media) + "\n\n" + msgNoSeasons}
+		return sess.picked.reply(msgNoSeasons, nil)
 	}
-	sess.picked = media
 	sess.seasons = seasons
 	e.store.put(sess)
 	rows := make([][]Button, 0, len(seasons)+1)
@@ -134,13 +136,23 @@ func (e *Engine) pickMedia(ctx context.Context, sess session, index int) Reply {
 		rows = append(rows, []Button{{Label: seasonLabel(s), Data: data(sess.id, actionSeason, s.Number)}})
 	}
 	rows = append(rows, []Button{cancelButton(sess.id)})
-	return Reply{Text: describe(media) + "\n\n" + msgPickSeason, Buttons: rows}
+	return sess.picked.reply(msgPickSeason, rows)
+}
+
+// details enriches the card; it is cosmetic, so a failure is logged and the
+// conversation goes on with the search metadata alone.
+func (e *Engine) details(ctx context.Context, media Media) Details {
+	d, err := e.backend.Details(ctx, media)
+	if err != nil {
+		e.log.Warn("media details unavailable", "media", media.ID, "err", err)
+	}
+	return d
 }
 
 func (e *Engine) pickSeason(ctx context.Context, sess session, number int) Reply {
 	for _, s := range sess.seasons {
 		if s.Number == number {
-			return e.offerConfirm(ctx, sess, Target{Media: sess.picked, Season: &number})
+			return e.offerConfirm(ctx, sess, Target{Media: sess.picked.Media, Season: &number})
 		}
 	}
 	return Reply{Notice: msgInvalidChoice}
@@ -156,13 +168,13 @@ func (e *Engine) offerConfirm(ctx context.Context, sess session, target Target) 
 	}
 	if subscribed {
 		e.store.take(sess.id)
-		return Reply{Text: fmt.Sprintf("%s已在订阅中，无需重复请求。", targetName(target))}
+		return sess.picked.reply(fmt.Sprintf("%s已在订阅中，无需重复请求。", targetName(target)), nil)
 	}
 	sess.target = &target
 	e.store.put(sess)
-	text := fmt.Sprintf("%s\n\n确认订阅%s？", describe(target.Media), targetName(target))
 	confirm := Button{Label: "确认订阅", Data: data(sess.id, actionConfirm, 0)}
-	return Reply{Text: text, Buttons: [][]Button{{confirm, cancelButton(sess.id)}}}
+	question := fmt.Sprintf("确认订阅%s？", targetName(target))
+	return sess.picked.reply(question, [][]Button{{confirm, cancelButton(sess.id)}})
 }
 
 func (e *Engine) confirm(ctx context.Context, id uint64) Reply {
@@ -176,7 +188,8 @@ func (e *Engine) confirm(ctx context.Context, id uint64) Reply {
 	if err := e.backend.Subscribe(ctx, *sess.target); err != nil {
 		return e.failure("subscribe", err)
 	}
-	return Reply{Text: fmt.Sprintf("已订阅%s，MoviePilot 会自动搜索下载。", targetName(*sess.target))}
+	done := fmt.Sprintf("已订阅%s，MoviePilot 会自动搜索下载。", targetName(*sess.target))
+	return sess.picked.reply(done, nil)
 }
 
 func (e *Engine) failure(step string, err error) Reply {

@@ -95,9 +95,10 @@ func (a *adapter) onMessage(ctx context.Context, b *bot.Bot, msg *models.Message
 		reply = flow.Reply{Text: msgHelp}
 	}
 	_, err := b.SendMessage(ctx, &bot.SendMessageParams{
-		ChatID:      msg.Chat.ID,
-		Text:        reply.Text,
-		ReplyMarkup: keyboard(reply.Buttons),
+		ChatID:             msg.Chat.ID,
+		Text:               reply.Text,
+		LinkPreviewOptions: preview(reply.Image),
+		ReplyMarkup:        keyboard(reply.Buttons),
 	})
 	a.logFailure("sendMessage", err)
 }
@@ -111,10 +112,11 @@ func (a *adapter) onCallback(ctx context.Context, b *bot.Bot, cq *models.Callbac
 	}
 	if reply.Notice == "" && cq.Message.Message != nil {
 		_, err := b.EditMessageText(ctx, &bot.EditMessageTextParams{
-			ChatID:      cq.Message.Message.Chat.ID,
-			MessageID:   cq.Message.Message.ID,
-			Text:        reply.Text,
-			ReplyMarkup: keyboard(reply.Buttons),
+			ChatID:             cq.Message.Message.Chat.ID,
+			MessageID:          cq.Message.Message.ID,
+			Text:               reply.Text,
+			LinkPreviewOptions: preview(reply.Image),
+			ReplyMarkup:        keyboard(reply.Buttons),
 		})
 		a.logFailure("editMessageText", err)
 	}
@@ -129,6 +131,17 @@ func (a *adapter) logFailure(method string, err error) {
 	if err != nil {
 		a.log.Error("telegram call failed", "method", method, "err", err)
 	}
+}
+
+// preview shows the poster as a large link preview above the text; text
+// messages cannot carry photos, and editing can't turn them into photo
+// messages. Without an image any earlier preview is switched off.
+func preview(image string) *models.LinkPreviewOptions {
+	on := true
+	if image == "" {
+		return &models.LinkPreviewOptions{IsDisabled: &on}
+	}
+	return &models.LinkPreviewOptions{URL: &image, PreferLargeMedia: &on, ShowAboveText: &on}
 }
 
 // keyboard returns nil for no buttons, which removes the keyboard on edit.

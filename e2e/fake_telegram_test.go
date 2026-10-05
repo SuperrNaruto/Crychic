@@ -145,6 +145,15 @@ func (f *fakeTelegram) store(r *http.Request, method string) map[string]any {
 	f.mu.Unlock()
 
 	head := fmt.Sprintf("<< %s chat=%d message=%d", method, chat, id)
+	var preview struct {
+		URL   string `json:"url"`
+		Large bool   `json:"prefer_large_media"`
+		Above bool   `json:"show_above_text"`
+	}
+	_ = json.Unmarshal([]byte(r.FormValue("link_preview_options")), &preview)
+	if preview.URL != "" {
+		head += fmt.Sprintf(" poster=%s large=%t above=%t", preview.URL, preview.Large, preview.Above)
+	}
 	doneKey := ""
 	if method == "sendMessage" {
 		doneKey = fmt.Sprintf("send:%d", chat)

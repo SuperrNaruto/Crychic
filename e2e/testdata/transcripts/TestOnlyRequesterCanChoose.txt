@@ -2,21 +2,33 @@
 -> MoviePilot GET /api/v1/media/search?count=10&title=沙丘&type=media
 << sendMessage chat=-500 message=1
    「沙丘」的搜索结果：
-   [电影 · 沙丘 (2021) | 1:m:0]
-   [电视剧 · 沙丘：预言 (2024) | 1:m:1]
-   [电影 · 沙丘 (1984) | 1:m:2]
-   [电影 · 沙丘2 (2024) | 1:m:3]
-   [电影 · 沙丘3 (2026) | 1:m:4]
-   [电视剧 · 沙丘之子 (2003) | 1:m:5]
-   [电视剧 · 沙丘魔堡2000 (2000) | 1:m:6]
-   [电影 · 沙丘虫暴 (2021) | 1:m:7]
+   1. 沙丘 (2021) · 电影 · ⭐ 7.8 · Dune
+   2. 沙丘：预言 (2024) · 电视剧 · ⭐ 7.2 · Dune: Prophecy
+   3. 沙丘 (1984) · 电影 · ⭐ 6.2 · Dune
+   4. 沙丘2 (2024) · 电影 · ⭐ 8.1 · Dune: Part Two
+   5. 沙丘3 (2026) · 电影 · Dune: Part Three
+   6. 沙丘之子 (2003) · 电视剧 · ⭐ 6.9 · Frank Herbert's Children of Dune
+   7. 沙丘魔堡2000 (2000) · 电视剧 · ⭐ 6.8 · Frank Herbert's Dune
+   8. 沙丘虫暴 (2021) · 电影 · ⭐ 6.7
+   [1. 沙丘 (2021) | 1:m:0]
+   [2. 沙丘：预言 (2024) | 1:m:1]
+   [3. 沙丘 (1984) | 1:m:2]
+   [4. 沙丘2 (2024) | 1:m:3]
+   [5. 沙丘3 (2026) | 1:m:4]
+   [6. 沙丘之子 (2003) | 1:m:5]
+   [7. 沙丘魔堡2000 (2000) | 1:m:6]
+   [8. 沙丘虫暴 (2021) | 1:m:7]
    [取消 | 1:x:0]
 >> user 1002 taps 1:m:0 on message 1
 << answerCallbackQuery notice="这不是你发起的请求。"
 >> user 1001 taps 1:m:0 on message 1
+-> MoviePilot GET /api/v1/media/438631?media_source=themoviedb&type_name=电影
 -> MoviePilot GET /api/v1/subscribe/media/438631?media_source=themoviedb&mtype=电影&title=沙丘&year=2021
-<< editMessageText chat=-500 message=1
-   沙丘 (2021) · 电影
+<< editMessageText chat=-500 message=1 poster=https://image.tmdb.org/t/p/w500/6hsJknqlPceFxExOe87z5VGgNG9.jpg large=true above=true
+   沙丘 (2021) · 电影 · ⭐ 7.8
+   Dune
+   科幻 / 冒险 · 156 分钟
+   主演：提莫西·查拉梅、丽贝卡·弗格森、奥斯卡·伊萨克
    电影《沙丘》为观众呈现了一段神秘而感人至深的英雄之旅。天赋异禀的少年保罗·厄崔迪（提莫西·查拉梅 饰）被命运指引，为了保卫自己的家族和人民，决心前往浩瀚宇宙间最危险的星球，开启一场惊心动魄的冒险。与此同时，各路势力为了抢夺这颗星球上一种能够释放人类最大潜力的珍贵资源而纷纷加入战场。最终，唯有那些能够战胜内心恐惧的人才能…
    
    确认订阅《沙丘》？

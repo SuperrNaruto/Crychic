@@ -29,7 +29,7 @@ Data flow: Telegram update → `telegram.adapter` → `flow.Engine.Start/Choose`
 ## Key Files
 
 - `internal/flow/model.go` - `Backend`, `Reply`, `UserError`: the contract every platform and backend uses
-- `internal/flow/engine.go` - conversation steps and all user-facing copy
+- `internal/flow/engine.go` - conversation steps; `internal/flow/text.go` - all user-facing copy (result lines, media card)
 - `internal/flow/store.go` - in-memory sessions (10 min TTL)
 - `e2e/harness_test.go` - `start`, `say`, `tap`, `tapData`, `shows`
 - `e2e/testdata/transcripts/*.txt` - golden transcripts, one per scenario
@@ -61,6 +61,9 @@ Data flow: Telegram update → `telegram.adapter` → `flow.Engine.Start/Choose`
 - Media `type` is a Chinese enum: `电影`, `电视剧`; results without `media_source`/`media_id` are dropped
 - Every JSON endpoint answers `{success, message, data}`, even where the route's `response_model` says `List[...]` (wrapped by `app/api/response.py`); `moviepilot.Client.do` unwraps it, and `success: false` on HTTP 200 becomes a `UserError` with `message`
 - `GET /api/v1/subscribe/media/{id}` returns `data` with `id: null` when nothing is subscribed, not a 404
+- Posters render as a large link preview above the text (`telegram.preview`): text messages can't carry photos and can't be edited into photo messages; a reply without `Image` explicitly disables the preview so an old poster doesn't linger
+- Poster URLs from MoviePilot are TMDB `original` size (MBs); `moviepilot` rewrites them to `w500`
+- `GET /api/v1/media/{id}` details are cosmetic: on failure the card falls back to search metadata and the flow continues; its `directors` field mixes in producers and episode directors, so it isn't shown
 - Button data is `<session>:<action>:<arg>` and must stay ≤ 64 bytes (Telegram limit)
 - Confirm and cancel use `store.take`, so a double tap acts once; keep that for any step that ends a conversation
 - A `Reply` with `Notice` must not edit the message (another group member tapping your buttons)

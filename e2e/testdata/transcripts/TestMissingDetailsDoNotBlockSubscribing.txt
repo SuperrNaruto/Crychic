@@ -25,9 +25,18 @@
 << editMessageText chat=1001 message=1 poster=https://image.tmdb.org/t/p/w500/6hsJknqlPceFxExOe87z5VGgNG9.jpg large=true above=true
    沙丘 (2021) · 电影 · ⭐ 7.8
    Dune
-   科幻 / 冒险 · 156 分钟
-   主演：提莫西·查拉梅、丽贝卡·弗格森、奥斯卡·伊萨克
    电影《沙丘》为观众呈现了一段神秘而感人至深的英雄之旅。天赋异禀的少年保罗·厄崔迪（提莫西·查拉梅 饰）被命运指引，为了保卫自己的家族和人民，决心前往浩瀚宇宙间最危险的星球，开启一场惊心动魄的冒险。与此同时，各路势力为了抢夺这颗星球上一种能够释放人类最大潜力的珍贵资源而纷纷加入战场。最终，唯有那些能够战胜内心恐惧的人才能…
    
-   《沙丘》已在订阅中，无需重复请求。
+   确认订阅《沙丘》？
+   [确认订阅 | 1:ok:0] [取消 | 1:x:0]
+<< answerCallbackQuery
+>> user 1001 taps 1:ok:0 on message 1
+-> MoviePilot POST /api/v1/subscribe/
+   {"name":"沙丘","year":"2021","type":"电影","media_source":"themoviedb","media_id":"438631"}
+<< editMessageText chat=1001 message=1 poster=https://image.tmdb.org/t/p/w500/6hsJknqlPceFxExOe87z5VGgNG9.jpg large=true above=true
+   沙丘 (2021) · 电影 · ⭐ 7.8
+   Dune
+   电影《沙丘》为观众呈现了一段神秘而感人至深的英雄之旅。天赋异禀的少年保罗·厄崔迪（提莫西·查拉梅 饰）被命运指引，为了保卫自己的家族和人民，决心前往浩瀚宇宙间最危险的星球，开启一场惊心动魄的冒险。与此同时，各路势力为了抢夺这颗星球上一种能够释放人类最大潜力的珍贵资源而纷纷加入战场。最终，唯有那些能够战胜内心恐惧的人才能…
+   
+   已订阅《沙丘》，MoviePilot 会自动搜索下载。
 << answerCallbackQuery
