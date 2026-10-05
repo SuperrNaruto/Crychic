@@ -37,6 +37,13 @@ var help = flow.Lines(
 	flow.Line(flow.Plain("发送 "), flow.Mono("/tasks"), flow.Plain(" 查看下载中和整理中的任务，选一个实时查看进度。")),
 )
 
+// commands is the menu Telegram shows when a user types "/".
+var commands = []models.BotCommand{
+	{Command: cmdRequest, Description: "搜索电影或剧集并订阅"},
+	{Command: cmdTasks, Description: "查看下载和整理进度"},
+	{Command: cmdHelp, Description: "使用说明"},
+}
+
 // Flow is the conversation engine the bot drives.
 type Flow interface {
 	Start(ctx context.Context, actor flow.Actor, term string) flow.Reply
@@ -113,6 +120,11 @@ func New(cfg Config) (*Bot, error) {
 func (b *Bot) Run(ctx context.Context, f Flow) {
 	b.adapter.flow = f
 	b.adapter.runCtx = ctx
+	// Registering on every start keeps the menu in step with the commands;
+	// a failure only costs the menu, so the bot runs on.
+	if _, err := b.api.SetMyCommands(ctx, &bot.SetMyCommandsParams{Commands: commands}); err != nil {
+		b.log.Warn("command menu not registered", "err", err)
+	}
 	b.log.Info("telegram bot started")
 	b.api.Start(ctx)
 }

@@ -78,7 +78,9 @@ func start(t *testing.T, sc scenario) *harness {
 		t.Fatal(err)
 	}
 	h := &harness{t: t, tr: tr, tg: tg, mp: mp, cfg: cfg}
+	registered := tg.expect(commandsKey)
 	h.launch()
+	h.wait(registered, "registering the command menu")
 	h.wait(mp.polled, "the notifier's first poll")
 	t.Cleanup(func() {
 		h.stop()

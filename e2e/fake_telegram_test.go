@@ -43,6 +43,7 @@ type fakeTelegram struct {
 	messages  map[int]message
 	lastMsg   int
 	waiters   map[string]chan struct{}
+	commands  string // the latest setMyCommands menu, as sent
 }
 
 func newFakeTelegram(tr *transcript) *fakeTelegram {
@@ -106,6 +107,12 @@ func (f *fakeTelegram) serve(w http.ResponseWriter, r *http.Request) {
 		reply(w, f.store(r, method), nil)
 	case "answerCallbackQuery":
 		f.answer(w, r)
+	case "setMyCommands":
+		f.mu.Lock()
+		f.commands = r.FormValue("commands")
+		f.mu.Unlock()
+		f.finish(commandsKey)
+		reply(w, true, nil)
 	default:
 		reply(w, nil, fmt.Errorf("method %s not supported by fake", method))
 	}
@@ -195,6 +202,24 @@ func (f *fakeTelegram) answer(w http.ResponseWriter, r *http.Request) {
 	f.tr.add(head)
 	f.finish("callback:" + r.FormValue("callback_query_id"))
 	reply(w, true, nil)
+}
+
+// commandsKey completes when the bot registers its command menu, which it
+// does on every start; it stays out of transcripts except where asserted.
+const commandsKey = "commands"
+
+// menu is the registered command menu, one "/command – description" a line.
+func (f *fakeTelegram) menu() []string {
+	f.mu.Lock()
+	raw := f.commands
+	f.mu.Unlock()
+	var cmds []struct{ Command, Description string }
+	_ = json.Unmarshal([]byte(raw), &cmds)
+	lines := make([]string, 0, len(cmds))
+	for _, c := range cmds {
+		lines = append(lines, "/"+c.Command+" – "+c.Description)
+	}
+	return lines
 }
 
 func (f *fakeTelegram) finish(key string) {

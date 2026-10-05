@@ -1,0 +1,4 @@
+<< setMyCommands
+   /request – 搜索电影或剧集并订阅
+   /tasks – 查看下载和整理进度
+   /help – 使用说明

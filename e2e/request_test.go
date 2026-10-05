@@ -250,3 +250,10 @@ func TestSubscribeSeveralSeasons(t *testing.T) {
 	h.shows(2, "第 3 季")
 	h.tr.verify(t)
 }
+
+// Typing "/" offers the bot's commands; the menu is registered on start.
+func TestCommandMenuIsRegistered(t *testing.T) {
+	h := start(t, scenario{})
+	h.tr.add("<< setMyCommands", h.tg.menu()...)
+	h.tr.verify(t)
+}
