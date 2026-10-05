@@ -13,6 +13,7 @@ type session struct {
 	results []Media
 	picked  card
 	seasons []Season
+	library Library
 	target  *Target
 	expires time.Time
 }

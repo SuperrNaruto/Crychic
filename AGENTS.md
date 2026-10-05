@@ -17,7 +17,7 @@ Go chat bot that searches media and creates subscriptions in MoviePilot (v3 API)
 ```
 cmd/crychic/         # main: config.Load(os.Getenv) → app.Run
 internal/app/        # the only wiring point; shared by main and e2e
-internal/flow/       # platform-agnostic conversation: search → pick → season → confirm → subscribe
+internal/flow/       # platform-agnostic conversation: search → pick (library check) → season → confirm → subscribe
 internal/moviepilot/ # minimal MoviePilot client, implements flow.Backend
 internal/telegram/   # renders flow.Reply as messages + inline keyboards; whitelist check; delivers notices
 internal/notify/     # remembers requests (data dir JSON), polls MoviePilot transfer history, notifies requesters
@@ -64,8 +64,9 @@ Data flow: Telegram update → `telegram.adapter` → `flow.Engine.Start/Choose`
 - End-to-end only: no unit tests, no mocks of internal packages, no redundant or change-detection tests
 - Every scenario ends with `h.tr.verify(t)`; after `-update`, review the transcript diff line by line and commit it with the code
 - Press buttons with `tap(user, msgID, label)` so a button missing from screen fails; use `tapData` only for deliberately stale buttons
+- The fake MoviePilot answers the library checks as an empty media server (`emptyLibrary`); scenarios override `libraryShowPath`/`libraryMoviePath`
 - Fakes must behave like the real services (long-poll `getUpdates`, `X-API-KEY` check, real error shapes); extend them, don't shortcut them
-- `e2e/testdata/moviepilot/*.json` are trimmed recordings from a live v3.1.0 instance (`curl -H "X-API-KEY: $KEY" "$MP/api/v1/media/search?title=沙丘&type=media&count=10"`), except `subscribe_rejected.json` and `server_error.json`, which follow the source; `subscribe_created.json` came from a one-off live subscription that must not be repeated (see above); never commit real keys or tokens
+- `e2e/testdata/moviepilot/*.json` are trimmed recordings from a live v3.1.0 instance (`curl -H "X-API-KEY: $KEY" "$MP/api/v1/media/search?title=沙丘&type=media&count=10"`), except `subscribe_rejected.json`, `server_error.json` and `library_movie_held.json` (the live library holds no movie yet), which follow the source; `subscribe_created.json` came from a one-off live subscription that must not be repeated (see above); never commit real keys or tokens
 
 ## Gotchas
 
@@ -85,6 +86,8 @@ Data flow: Telegram update → `telegram.adapter` → `flow.Engine.Start/Choose`
 - Button data is `<session>:<action>:<arg>` and must stay ≤ 64 bytes (Telegram limit)
 - Confirm and cancel use `store.take`, so a double tap acts once; keep that for any step that ends a conversation
 - A `Reply` with `Notice` must not edit the message (another group member tapping your buttons)
+- Library checks go through MoviePilot to its media server and are cosmetic like details (failure = nothing held). Shows use `POST /api/v1/mediaserver/exists_remote` (`{"3":[1,2,...]}`, `{}` when absent; needs `title`+`year`, ids alone answer `{}`). Movies use `POST /api/v1/mediaserver/notexists` (`[]` = held), because `exists_remote` answers `{}` for movies either way. `GET /api/v1/mediaserver/exists` reads MoviePilot's own sync table, which is empty unless library sync runs, so it isn't used
+- Held episodes never appear in transfer history, so a `Request` carries `Held` and the watch counts them as delivered; MoviePilot's subscriptions themselves only download missing episodes
 - When MoviePilot behavior is unclear, read its source (`app/api/endpoints/{media,subscribe}.py`) instead of guessing
 
 ## Workflow

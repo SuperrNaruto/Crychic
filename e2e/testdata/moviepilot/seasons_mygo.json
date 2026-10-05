@@ -1,0 +1,32 @@
+{
+  "success": true,
+  "message": "",
+  "data": [
+    {
+      "id": null,
+      "air_date": "2023-09-07",
+      "episode_count": 3,
+      "name": "特别篇",
+      "overview": "",
+      "poster_path": null,
+      "season_number": 0,
+      "vote_average": 0.0,
+      "order": null,
+      "locked": null,
+      "episodes": []
+    },
+    {
+      "id": null,
+      "air_date": "2023-06-29",
+      "episode_count": 13,
+      "name": "第 1 季",
+      "overview": "“你能，和我组一辈子乐队吗？”……高一的春末，羽丘女子学园的所有人都加入了乐队，晚入学的爱音为了尽快融入班级，急急忙忙地寻找着乐队成员。这时她得知，「羽丘的不可思议女孩」灯还没有加入乐队，于是爱音不由自主地向她打起了招呼，但是……这是遍体鳞伤又狼狈不堪的，我们的＜音乐呐喊＞。迷失方向也无所谓，在迷茫中前进吧！",
+      "poster_path": "/dDknWHLYaQB76QSViNdzXOC5v64.jpg",
+      "season_number": 1,
+      "vote_average": 8.2,
+      "order": null,
+      "locked": null,
+      "episodes": []
+    }
+  ]
+}

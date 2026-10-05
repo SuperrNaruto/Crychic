@@ -1,0 +1,54 @@
+{
+  "success": true,
+  "message": "",
+  "data": [
+    {
+      "media_source": "themoviedb",
+      "media_id": "224207",
+      "type": "电视剧",
+      "title": "迷途之子!!!!!",
+      "year": "2023",
+      "title_year": "迷途之子!!!!! (2023)",
+      "tmdb_id": 224207,
+      "original_title": "BanG Dream! It's MyGO!!!!!",
+      "release_date": "2023-06-29",
+      "poster_path": "https://image.tmdb.org/t/p/original/dDknWHLYaQB76QSViNdzXOC5v64.jpg",
+      "vote_average": 8.0,
+      "category": "",
+      "detail_link": "https://www.themoviedb.org/tv/224207",
+      "overview": "“你能，和我组一辈子乐队吗？”……高一的春末，羽丘女子学园的所有人都加入了乐队，晚入学的爱音为了尽快融入班级，急急忙忙地寻找着乐队成员。这时她得知，「羽丘的不可思议女孩」灯还没有加入乐队，于是爱音不由自主地向她打起了招呼，但是……这是遍体鳞伤又狼狈不堪的，我们的＜音乐呐喊＞。迷失方向也无所谓，在迷茫中前进吧！"
+    },
+    {
+      "media_source": "themoviedb",
+      "media_id": "1231799",
+      "type": "电影",
+      "title": "迷途之子!!!!! 前篇：春暖向阳，迷星之猫",
+      "year": "2024",
+      "title_year": "迷途之子!!!!! 前篇：春暖向阳，迷星之猫 (2024)",
+      "tmdb_id": 1231799,
+      "original_title": "BanG Dream! It's MyGO!!!!! 前編：春の陽だまり、迷い猫",
+      "release_date": "2024-09-27",
+      "poster_path": "https://image.tmdb.org/t/p/original/bMW0kwyK44LvDbQ3s0b3GCVOtLs.jpg",
+      "vote_average": 7.7,
+      "category": "",
+      "detail_link": "https://www.themoviedb.org/movie/1231799",
+      "overview": "本片以动画剧集《BanG Dream! It's MyGO!!!!!》第1到第7话为基础重新剪辑，并加入以要乐奈个人故事为主的新内容。"
+    },
+    {
+      "media_source": "themoviedb",
+      "media_id": "1233186",
+      "type": "电影",
+      "title": "迷途之子!!!!! 后篇：唱吧、成为我们羁绊的诗歌＆电影演唱会",
+      "year": "2024",
+      "title_year": "迷途之子!!!!! 后篇：唱吧、成为我们羁绊的诗歌＆电影演唱会 (2024)",
+      "tmdb_id": 1233186,
+      "original_title": "BanG Dream! It's MyGO!!!!! 後編：うたう、僕らになれるうた & FILM LIVE",
+      "release_date": "2024-11-08",
+      "poster_path": "https://image.tmdb.org/t/p/original/bleKkUg0l8X4AAxqxgkmYlLO7bN.jpg",
+      "vote_average": 7.0,
+      "category": "",
+      "detail_link": "https://www.themoviedb.org/movie/1233186",
+      "overview": "\"没有名字的乐队\"的首次演唱会取得了巨大的成功——然而，这场演唱会却成为了成员们逐渐分崩离析的契机。每个成员都有着不同的心思，那个没有名字的乐队将走向何方？这是一个描绘迷茫少女们内心挣扎与呐喊的故事。"
+    }
+  ]
+}

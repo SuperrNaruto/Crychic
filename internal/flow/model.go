@@ -70,11 +70,18 @@ type Target struct {
 	StartEpisode int
 }
 
+// Library is what the media server already holds of one title.
+type Library struct {
+	Movie    bool          // the movie is in the library
+	Episodes map[int][]int // season number → episodes in the library
+}
+
 // Backend is the media server the bot subscribes through.
 type Backend interface {
 	Search(ctx context.Context, term string) ([]Media, error)
 	Details(ctx context.Context, media Media) (Details, error)
 	Seasons(ctx context.Context, media Media) ([]Season, error)
+	Library(ctx context.Context, media Media) (Library, error)
 	// FindSubscription returns the id of an existing subscription, 0 if none.
 	FindSubscription(ctx context.Context, target Target) (int, error)
 	// Subscribe creates a subscription and returns its id.
@@ -85,7 +92,8 @@ type Backend interface {
 type Request struct {
 	SubscriptionID int
 	Target         Target
-	SeasonEpisodes int // episodes in the requested season, 0 if unknown or a movie
+	SeasonEpisodes int   // episodes in the requested season, 0 if unknown or a movie
+	Held           []int // episodes of the season already in the library
 	Requester      Actor
 }
 

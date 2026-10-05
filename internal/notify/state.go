@@ -66,12 +66,16 @@ func withRequest(st state, req flow.Request) state {
 		return next
 	}
 	t := req.Target
-	next.Watches = append(next.Watches, watch{
+	w := watch{
 		SubscriptionID: req.SubscriptionID,
 		Source:         t.Media.Source, MediaID: t.Media.ID, Title: t.Media.Title,
 		Season: t.Season, Start: max(t.StartEpisode, 1), Total: req.SeasonEpisodes,
 		Requesters: []flow.Actor{req.Requester},
-	})
+	}
+	// Episodes already in the library never pass through transfer history,
+	// yet count towards the season being complete.
+	w.Delivered = slices.Sorted(slices.Values(w.fresh(req.Held)))
+	next.Watches = append(next.Watches, w)
 	return next
 }
 

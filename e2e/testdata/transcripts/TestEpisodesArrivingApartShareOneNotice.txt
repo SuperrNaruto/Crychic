@@ -13,6 +13,8 @@
    [取消 | 1:x:0]
 >> user 1001 taps 1:m:0 on message 1
 -> MoviePilot GET /api/v1/media/1396?media_source=themoviedb&type_name=电视剧
+-> MoviePilot POST /api/v1/mediaserver/exists_remote
+   {"type":"电视剧","title":"绝命毒师","year":"2008","media_source":"themoviedb","media_id":"1396"}
 -> MoviePilot GET /api/v1/media/seasons?media_id=1396&media_source=themoviedb
 << editMessageText chat=1001 message=1 parse_mode=HTML poster=https://image.tmdb.org/t/p/w500/rqliuvX7NdknSHu5qaSDfESplQi.jpg large=true above=true
    📺 <a href="https://www.themoviedb.org/tv/1396"><b>绝命毒师</b></a> (2008) · 电视剧 · ⭐ 9.0

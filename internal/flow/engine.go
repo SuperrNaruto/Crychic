@@ -120,9 +120,14 @@ func (e *Engine) pickMedia(ctx context.Context, sess session, index int) Reply {
 	if index < 0 || index >= len(sess.results) {
 		return Reply{Notice: msgInvalidChoice}
 	}
-	sess.picked = card{Media: sess.results[index], Details: e.details(ctx, sess.results[index])}
-	if sess.picked.Media.Kind == Movie {
-		return e.offerConfirm(ctx, sess, Target{Media: sess.picked.Media})
+	media := sess.results[index]
+	sess.picked = card{Media: media, Details: e.details(ctx, media)}
+	sess.library = e.library(ctx, media)
+	if media.Kind == Movie && sess.library.Movie {
+		return e.held(sess, Target{Media: media})
+	}
+	if media.Kind == Movie {
+		return e.offerConfirm(ctx, sess, Target{Media: media})
 	}
 	seasons, err := e.backend.Seasons(ctx, sess.picked.Media)
 	if err != nil {
@@ -137,7 +142,7 @@ func (e *Engine) pickMedia(ctx context.Context, sess session, index int) Reply {
 	e.store.put(sess)
 	rows := make([][]Button, 0, len(seasons)+1)
 	for _, s := range seasons {
-		rows = append(rows, []Button{{Label: seasonLabel(s), Data: data(sess.id, actionSeason, s.Number)}})
+		rows = append(rows, []Button{{Label: sess.seasonLabel(s), Data: data(sess.id, actionSeason, s.Number)}})
 	}
 	rows = append(rows, []Button{cancelButton(sess.id)})
 	return sess.picked.reply(Line(Strong(msgPickSeason)), rows)
@@ -153,11 +158,36 @@ func (e *Engine) details(ctx context.Context, media Media) Details {
 	return d
 }
 
+// library tells what the media server already holds; like details it only
+// informs the conversation, so a failure is logged and treated as nothing held.
+func (e *Engine) library(ctx context.Context, media Media) Library {
+	l, err := e.backend.Library(ctx, media)
+	if err != nil {
+		e.log.Warn("library check unavailable", "media", media.ID, "err", err)
+	}
+	return l
+}
+
+// held ends the conversation: what was asked for is already watchable.
+func (e *Engine) held(sess session, target Target) Reply {
+	e.store.take(sess.id)
+	what := "已在媒体库中"
+	if target.Season != nil {
+		what = "已全部在媒体库中"
+	}
+	return sess.picked.reply(Line(Plain(fmt.Sprintf("✅ %s%s，可以直接观看。", targetName(target), what))), nil)
+}
+
 func (e *Engine) pickSeason(ctx context.Context, sess session, number int) Reply {
 	for _, s := range sess.seasons {
-		if s.Number == number {
-			return e.offerConfirm(ctx, sess, Target{Media: sess.picked.Media, Season: &number})
+		if s.Number != number {
+			continue
 		}
+		target := Target{Media: sess.picked.Media, Season: &number}
+		if sess.wholeSeasonHeld(s) {
+			return e.held(sess, target)
+		}
+		return e.offerConfirm(ctx, sess, target)
 	}
 	return Reply{Notice: msgInvalidChoice}
 }
@@ -219,6 +249,7 @@ func (e *Engine) watch(ctx context.Context, sess session, id int, target Target)
 	req := Request{SubscriptionID: id, Target: target, Requester: sess.owner}
 	if target.Season != nil {
 		req.SeasonEpisodes = sess.episodeCount(*target.Season)
+		req.Held = sess.library.Episodes[*target.Season]
 	}
 	err := e.watcher.Watch(ctx, req)
 	if err != nil {

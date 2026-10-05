@@ -1,0 +1,71 @@
+{
+  "success": true,
+  "message": "",
+  "data": {
+    "media_source": "themoviedb",
+    "type": "电视剧",
+    "title": "迷途之子!!!!!",
+    "year": "2023",
+    "media_id": "224207",
+    "original_title": "BanG Dream! It's MyGO!!!!!",
+    "poster_path": "https://image.tmdb.org/t/p/original/dDknWHLYaQB76QSViNdzXOC5v64.jpg",
+    "vote_average": 8.0,
+    "overview": "“你能，和我组一辈子乐队吗？”……高一的春末，羽丘女子学园的所有人都加入了乐队，晚入学的爱音为了尽快融入班级，急急忙忙地寻找着乐队成员。这时她得知，「羽丘的不可思议女孩」灯还没有加入乐队，于是爱音不由自主地向她打起了招呼，但是……这是遍体鳞伤又狼狈不堪的，我们的＜音乐呐喊＞。迷失方向也无所谓，在迷茫中前进吧！",
+    "actors": [
+      {
+        "id": 2956795,
+        "name": "羊宫妃那",
+        "character": "Tomori Takamatsu (voice)"
+      },
+      {
+        "id": 4005160,
+        "name": "立石凛",
+        "character": "Anon Chihaya (voice)"
+      },
+      {
+        "id": 3492222,
+        "name": "青木阳菜",
+        "character": "Rāna Kaname (voice)"
+      },
+      {
+        "id": 4005167,
+        "name": "小日向美香",
+        "character": "Soyo Nagasaki (voice)"
+      },
+      {
+        "id": 2409935,
+        "name": "林鼓子",
+        "character": "Taki Shiina (voice)"
+      }
+    ],
+    "genres": [
+      {
+        "id": 16,
+        "name": "动画"
+      },
+      {
+        "id": 18,
+        "name": "剧情"
+      }
+    ],
+    "number_of_episodes": 13,
+    "number_of_seasons": 1,
+    "status": "Ended",
+    "runtime": null,
+    "next_episode_to_air": {
+      "id": null,
+      "air_date": null,
+      "episode_number": null,
+      "episode_type": null,
+      "name": null,
+      "overview": null,
+      "production_code": null,
+      "runtime": null,
+      "season_number": null,
+      "show_id": null,
+      "still_path": null,
+      "vote_average": null,
+      "vote_count": null
+    }
+  }
+}

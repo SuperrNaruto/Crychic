@@ -21,6 +21,8 @@
    [取消 | 1:x:0]
 >> user 1001 taps 1:m:0 on message 1
 -> MoviePilot GET /api/v1/media/30983?media_source=themoviedb&type_name=电视剧
+-> MoviePilot POST /api/v1/mediaserver/exists_remote
+   {"type":"电视剧","title":"名侦探柯南","year":"1996","media_source":"themoviedb","media_id":"30983"}
 -> MoviePilot GET /api/v1/media/seasons?media_id=30983&media_source=themoviedb
 << editMessageText chat=-500 message=1 parse_mode=HTML poster=https://image.tmdb.org/t/p/w500/7qBrY88hNwMrMb75PkBZjhFolbL.jpg large=true above=true
    📺 <a href="https://www.themoviedb.org/tv/30983"><b>名侦探柯南</b></a> (1996) · 电视剧 · ⭐ 8.0

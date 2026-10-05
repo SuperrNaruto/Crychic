@@ -122,7 +122,8 @@ func targetName(t Target) string {
 	return name
 }
 
-func seasonLabel(s Season) string {
+// seasonLabel is a season button, e.g. "第 2 季 · 13 集 · 已有 5 集".
+func (sess session) seasonLabel(s Season) string {
 	label := fmt.Sprintf("第 %d 季", s.Number)
 	if s.Number == 0 {
 		label = "特别篇"
@@ -130,7 +131,32 @@ func seasonLabel(s Season) string {
 	if s.EpisodeCount > 0 {
 		label = fmt.Sprintf("%s · %d 集", label, s.EpisodeCount)
 	}
+	held := len(sess.library.Episodes[s.Number])
+	switch {
+	case sess.wholeSeasonHeld(s):
+		label += " · 已入库"
+	case held > 0:
+		label += fmt.Sprintf(" · 已有 %d 集", held)
+	}
 	return label
+}
+
+// EpisodeRanges renders sorted episode numbers compactly: E01–E03、E05.
+func EpisodeRanges(eps []int) string {
+	var parts []string
+	for i := 0; i < len(eps); {
+		j := i
+		for j+1 < len(eps) && eps[j+1] == eps[j]+1 {
+			j++
+		}
+		part := fmt.Sprintf("E%02d", eps[i])
+		if j > i {
+			part += fmt.Sprintf("–E%02d", eps[j])
+		}
+		parts = append(parts, part)
+		i = j + 1
+	}
+	return strings.Join(parts, "、")
 }
 
 func truncate(s string, limit int) string {

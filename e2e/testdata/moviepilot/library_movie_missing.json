@@ -1,0 +1,13 @@
+{
+  "success": true,
+  "message": "",
+  "data": [
+    {
+      "season": null,
+      "episodes": [],
+      "total_episode": 0,
+      "start_episode": 0,
+      "require_complete_coverage": false
+    }
+  ]
+}

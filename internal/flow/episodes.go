@@ -19,9 +19,16 @@ func startChoices(sess session, season int) Reply {
 		[]Button{{Label: "指定起始集…", Data: data(sess.id, actionAskFrom, 0)}},
 		[]Button{cancelButton(sess.id)},
 	)
-	total := ""
+	var facts []string
 	if count := sess.episodeCount(season); count > 0 {
-		total = fmt.Sprintf("（共 %d 集）", count)
+		facts = append(facts, fmt.Sprintf("共 %d 集", count))
+	}
+	if held := sess.library.Episodes[season]; len(held) > 0 {
+		facts = append(facts, "媒体库已有 "+EpisodeRanges(held))
+	}
+	total := ""
+	if len(facts) > 0 {
+		total = "（" + strings.Join(facts, "，") + "）"
 	}
 	question := fmt.Sprintf("确认订阅%s%s？", targetName(*sess.target), total)
 	return sess.picked.reply(Line(Strong(question)), rows)
@@ -76,6 +83,11 @@ func (sess session) validStart(from int) bool {
 	}
 	count := sess.episodeCount(*sess.target.Season)
 	return count == 0 || from <= count
+}
+
+// wholeSeasonHeld reports whether every episode of s is in the library.
+func (sess session) wholeSeasonHeld(s Season) bool {
+	return s.EpisodeCount > 0 && len(sess.library.Episodes[s.Number]) >= s.EpisodeCount
 }
 
 // episodeCount is the number of episodes in season, 0 when unknown.

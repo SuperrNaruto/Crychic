@@ -3,6 +3,7 @@ package e2e
 import (
 	"encoding/json"
 	"io"
+	"maps"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
@@ -20,11 +21,22 @@ const (
 
 	transferPath     = "/api/v1/history/transfer"
 	subscriptionPath = "/api/v1/subscribe/"
+
+	libraryShowPath  = "POST /api/v1/mediaserver/exists_remote"
+	libraryMoviePath = "POST /api/v1/mediaserver/notexists"
 )
 
+// emptyLibrary answers the media server checks the way MoviePilot does for
+// titles the server doesn't hold; scenarios override them in their routes.
+var emptyLibrary = map[string]route{
+	libraryShowPath:  ok("library_show_missing.json"),
+	libraryMoviePath: ok("library_movie_missing.json"),
+}
+
 // route is a canned MoviePilot answer. Fixtures are trimmed recordings from a
-// live v3.1.0 instance, except subscribe_rejected.json and server_error.json,
-// which follow the source because those failures are hard to trigger safely.
+// live v3.1.0 instance, except subscribe_rejected.json, server_error.json and
+// library_movie_held.json, which follow the source because the live instance
+// can't produce them safely (or holds no movie yet).
 type route struct {
 	status  int
 	fixture string
@@ -70,7 +82,9 @@ type reader struct {
 }
 
 func newFakeMoviePilot(t *testing.T, tr *transcript, routes map[string]route) *fakeMoviePilot {
-	f := &fakeMoviePilot{t: t, tr: tr, routes: routes, polled: make(chan struct{})}
+	all := maps.Clone(emptyLibrary)
+	maps.Copy(all, routes)
+	f := &fakeMoviePilot{t: t, tr: tr, routes: all, polled: make(chan struct{})}
 	f.Server = httptest.NewServer(http.HandlerFunc(f.serve))
 	return f
 }
