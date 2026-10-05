@@ -50,7 +50,7 @@ Data flow: Telegram update → `telegram.adapter` → `flow.Engine.Start/Choose`
 
 ## Testing
 
-- **Never write to a real MoviePilot**: no `POST /api/v1/subscribe/`, no live-bot runs that end in a subscription. A real subscription makes MoviePilot search and download from the owner's PT sites and can get the account banned. Live calls are limited to read-only metadata endpoints; write paths are verified through the fakes and MoviePilot's source
+- **Agents never write to a real MoviePilot**: no `POST /api/v1/subscribe/` and no bot runs that end in a subscription. A real subscription makes MoviePilot search and download from the owner's PT sites and can get the account banned. Agents' live calls are limited to read-only metadata endpoints; write paths are verified through the fakes and MoviePilot's source. The owner may test the live bot by hand
 - End-to-end only: no unit tests, no mocks of internal packages, no redundant or change-detection tests
 - Every scenario ends with `h.tr.verify(t)`; after `-update`, review the transcript diff line by line and commit it with the code
 - Press buttons with `tap(user, msgID, label)` so a button missing from screen fails; use `tapData` only for deliberately stale buttons
