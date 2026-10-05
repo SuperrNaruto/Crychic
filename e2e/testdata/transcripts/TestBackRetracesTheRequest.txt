@@ -2,10 +2,14 @@
 -> MoviePilot GET /api/v1/media/search?count=10&title=绝命毒师&type=media
 << sendMessage chat=1001 message=1 parse_mode=HTML
    <b>🔍「绝命毒师」的搜索结果</b>
-   1. <b>绝命毒师</b> (2008) · 电视剧 · ⭐ 9.0 · <i>Breaking Bad</i>
-   2. <b>续命之徒：绝命毒师电影</b> (2019) · 电影 · ⭐ 7.1 · <i>El Camino: A Breaking Bad Movie</i>
-   3. <b>绝不折中：绝命毒师最终季制作记录</b> (2013) · 电影 · ⭐ 8.5 · <i>No Half Measures: Creating the Final Season of Breaking Bad</i>
-   4. <b>The Road to El Camino: Behind the Scenes of El Camino: A Breaking Bad Movie</b> (2019) · 电影 · ⭐ 6.9
+   1. <b>绝命毒师</b>
+   <i>Breaking Bad · 2008 · 电视剧 · ⭐ 9.0</i>
+   2. <b>续命之徒：绝命毒师电影</b>
+   <i>El Camino: A Breaking Bad Movie · 2019 · 电影 · ⭐ 7.1</i>
+   3. <b>绝不折中：绝命毒师最终季制作记录</b>
+   <i>No Half Measures: Creating the Final Season of Breaking Bad · 2013 · 电影 · ⭐ 8.5</i>
+   4. <b>The Road to El Camino: Behind the Scenes of El Camino: A Breaking Bad Movie</b>
+   <i>2019 · 电影 · ⭐ 6.9</i>
    ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
    [1 | 1:m:0] [2 | 1:m:1] [3 | 1:m:2] [4 | 1:m:3]
    [取消 | 1:x:0]
@@ -94,10 +98,14 @@
 >> user 1001 taps 1:bk:0 on message 1
 << editMessageText chat=1001 message=1 parse_mode=HTML
    <b>🔍「绝命毒师」的搜索结果</b>
-   1. <b>绝命毒师</b> (2008) · 电视剧 · ⭐ 9.0 · <i>Breaking Bad</i>
-   2. <b>续命之徒：绝命毒师电影</b> (2019) · 电影 · ⭐ 7.1 · <i>El Camino: A Breaking Bad Movie</i>
-   3. <b>绝不折中：绝命毒师最终季制作记录</b> (2013) · 电影 · ⭐ 8.5 · <i>No Half Measures: Creating the Final Season of Breaking Bad</i>
-   4. <b>The Road to El Camino: Behind the Scenes of El Camino: A Breaking Bad Movie</b> (2019) · 电影 · ⭐ 6.9
+   1. <b>绝命毒师</b>
+   <i>Breaking Bad · 2008 · 电视剧 · ⭐ 9.0</i>
+   2. <b>续命之徒：绝命毒师电影</b>
+   <i>El Camino: A Breaking Bad Movie · 2019 · 电影 · ⭐ 7.1</i>
+   3. <b>绝不折中：绝命毒师最终季制作记录</b>
+   <i>No Half Measures: Creating the Final Season of Breaking Bad · 2013 · 电影 · ⭐ 8.5</i>
+   4. <b>The Road to El Camino: Behind the Scenes of El Camino: A Breaking Bad Movie</b>
+   <i>2019 · 电影 · ⭐ 6.9</i>
    ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
    [1 | 1:m:0] [2 | 1:m:1] [3 | 1:m:2] [4 | 1:m:3]
    [取消 | 1:x:0]

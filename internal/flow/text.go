@@ -89,15 +89,24 @@ func (t Target) has(d Download) bool {
 	return t.Season == nil || d.Season == nil || *d.Season == *t.Season
 }
 
-// resultLine is one numbered search result, e.g.
-// "1. **沙丘** (2021) · 电影 · ⭐ 7.8 · _Dune_".
-func resultLine(n int, m Media) Block {
-	spans := []Span{Plain(fmt.Sprintf("%d. ", n)), Strong(m.Title)}
-	spans = append(spans, Plain(" "+joinNonEmpty(" · ", year(m), m.Kind.String(), rating(m.Rating))))
-	if m.OriginalTitle != "" && m.OriginalTitle != m.Title {
-		spans = append(spans, Plain(" · "), Emphasis(m.OriginalTitle))
+// entry is a numbered list entry: its name, then the facts about it in
+// italics on a line of their own, so a fact never wraps under the numbers.
+func entry(n int, name Span, facts ...string) Text {
+	text := Lines(Line(Plain(fmt.Sprintf("%d. ", n)), name))
+	if f := joinNonEmpty(" · ", facts...); f != "" {
+		text = append(text, Line(Emphasis(f)))
 	}
-	return Line(spans...)
+	return text
+}
+
+// resultLines is one numbered search result: **沙丘** on its line, then
+// _Dune · 2021 · 电影 · ⭐ 7.8_ below.
+func resultLines(n int, m Media) Text {
+	original := ""
+	if m.OriginalTitle != m.Title {
+		original = m.OriginalTitle
+	}
+	return entry(n, Strong(m.Title), original, m.Year, m.Kind.String(), rating(m.Rating))
 }
 
 // year is "(2021)", or empty when unknown.

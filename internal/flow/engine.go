@@ -107,7 +107,7 @@ func numberedResults(sess session, heading Block) Reply {
 	text = append(text, heading)
 	picks := make([]Button, 0, len(results))
 	for i, m := range results {
-		text = append(text, resultLine(i+1, m))
+		text = append(text, resultLines(i+1, m)...)
 		picks = append(picks, Button{Label: fmt.Sprint(i + 1), Data: data(sess.id, actionMedia, i)})
 	}
 	rows := append(grid(picks, gridColumns), []Button{cancelButton(sess.id)})

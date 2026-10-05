@@ -71,6 +71,7 @@ Data flow: Telegram update → `telegram.adapter` → `flow.Engine.Start/Choose`
 - `flow` must never import a platform package; a new platform is a sibling of `internal/telegram` that consumes `flow` through a small interface
 - Inject dependencies (`Backend`, `Now`, `*http.Client`, `*slog.Logger`); construct concrete types only in `internal/app`
 - Buttons only choose: no emoji, no titles or facts in labels. Picks are number buttons (`gridColumns` a row) or short names (第 N 季), with the details in the message text; menus share rows (`menuColumns`)
+- Numbered list entries are `flow.entry`: number and bold name on one line, facts (original title, year, kind, rating, state, progress) in italics on the next, so nothing wraps under the numbers. Telegram HTML has no small text; italics are the secondary style. Calendar date headers are bold
 - User-facing copy is `flow.Text` built with `Strong`/`Emphasis`/`Mono`/`Linked`/`Quote`; never put platform markup in flow strings, adapters render and escape. Emoji sparingly: 🔍 search, 🎬/📺 card, ✅ done, ℹ️ already subscribed, ⬇️/⏸️ download progress, 📦 transfer job (⏳ ▶️ ✅ ⚠️ per file), 📋 task list, 📥 arrival, ⚠️ errors, ⌛ expired, 🚫 refused
 - Errors safe to show users are `*flow.UserError`; others get logged and shown as the generic outage text
 - Hard limits: functions ≤ 50 lines, nesting ≤ 3, ≤ 3 positional params (use a struct, e.g. `moviepilot.call`), complexity ≤ 10, no magic numbers

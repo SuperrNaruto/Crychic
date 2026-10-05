@@ -62,7 +62,7 @@ func (e *Engine) listSubs(ctx context.Context, sess session) Reply {
 	for i, s := range subs {
 		s.Title = truncate(s.Title, listTitleRunes)
 		mine := slices.Contains(sess.mine, s.ID)
-		entry := listEntry{text: Lines(subLine(i+1, s, mine))}
+		entry := listEntry{text: subEntry(i+1, s, mine)}
 		if mine {
 			label := fmt.Sprintf("取消 %d", i+1)
 			entry.buttons = []Button{{Label: label, Data: data(sess.id, actionAskCancel, i)}}
@@ -72,8 +72,8 @@ func (e *Engine) listSubs(ctx context.Context, sess session) Reply {
 	return e.listPages(sess, view)
 }
 
-// subLine is e.g. "1. 《绝命毒师》第 2 季 · 订阅中 · 缺 3/13 集 · 你请求的".
-func subLine(n int, s Subscription, mine bool) Block {
+// subEntry is e.g. "1. **《绝命毒师》第 2 季**" over "_订阅中 · 缺 3/13 集 · 你请求的_".
+func subEntry(n int, s Subscription, mine bool) Text {
 	missing := ""
 	if s.Kind == TV && s.Lack > 0 {
 		missing = fmt.Sprintf("缺 %d 集", s.Lack)
@@ -85,8 +85,8 @@ func subLine(n int, s Subscription, mine bool) Block {
 	if mine {
 		who = "你请求的"
 	}
-	facts := joinNonEmpty(" · ", stateText[s.State], missing, who)
-	return Line(Plain(fmt.Sprintf("%d. ", n)), Strong(fmt.Sprintf("《%s》", s.Title)), Plain(seasonSuffix(s)+" · "+facts))
+	name := fmt.Sprintf("《%s》%s", s.Title, seasonSuffix(s))
+	return entry(n, Strong(name), stateText[s.State], missing, who)
 }
 
 // seasonSuffix follows a 《title》, e.g. 第 2 季.

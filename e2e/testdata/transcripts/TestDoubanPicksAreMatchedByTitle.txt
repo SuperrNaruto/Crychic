@@ -12,21 +12,29 @@
 << editMessageText chat=1001 message=1 parse_mode=HTML
    <b>📺 豆瓣热门剧集 · 第 1/2 页</b>
 
-   1. <a href="https://movie.douban.com/subject/36576514"><b>深渊无间</b></a> (2026) · ⭐ 7.3
+   1. <a href="https://movie.douban.com/subject/36576514"><b>深渊无间</b></a>
+   <i>2026 · ⭐ 7.3</i>
    <blockquote expandable>中国大陆 / 剧情 悬疑 犯罪 / 刘海波 / 任嘉伦 秦俊杰</blockquote>
-   2. <a href="https://movie.douban.com/subject/36449295"><b>兰香如故</b></a> (2026) · ⭐ 7.5
+   2. <a href="https://movie.douban.com/subject/36449295"><b>兰香如故</b></a>
+   <i>2026 · ⭐ 7.5</i>
    <blockquote expandable>中国大陆 / 剧情 爱情 古装 / 黄颖湘 陈丹 / 谭松韵 刘学义</blockquote>
-   3. <a href="https://movie.douban.com/subject/36660844"><b>早春晴朗</b></a> (2026) · ⭐ 6.7
+   3. <a href="https://movie.douban.com/subject/36660844"><b>早春晴朗</b></a>
+   <i>2026 · ⭐ 6.7</i>
    <blockquote expandable>中国大陆 / 剧情 爱情 / 蒋继正 / 井柏然 孙千</blockquote>
-   4. <a href="https://movie.douban.com/subject/37501131"><b>现在不是出轨的问题</b></a> (2026) · ⭐ 8.7
+   4. <a href="https://movie.douban.com/subject/37501131"><b>现在不是出轨的问题</b></a>
+   <i>2026 · ⭐ 8.7</i>
    <blockquote expandable>韩国 / 剧情 喜剧 惊悚 犯罪 / 李昌熙 / 金惠秀 金志勋</blockquote>
-   5. <a href="https://movie.douban.com/subject/36314809"><b>交锋</b></a> (2026) · ⭐ 7.3
+   5. <a href="https://movie.douban.com/subject/36314809"><b>交锋</b></a>
+   <i>2026 · ⭐ 7.3</i>
    <blockquote expandable>中国大陆 / 剧情 / 姚晓峰 / 王凯 周依然</blockquote>
-   6. <a href="https://movie.douban.com/subject/35644140"><b>一瓯春</b></a> (2026) · ⭐ 5.4
+   6. <a href="https://movie.douban.com/subject/35644140"><b>一瓯春</b></a>
+   <i>2026 · ⭐ 5.4</i>
    <blockquote expandable>中国大陆 / 爱情 古装 / 潘安子 / 许凯 周也</blockquote>
-   7. <a href="https://movie.douban.com/subject/37264799"><b>冬城猎凶</b></a> (2026) · ⭐ 7.1
+   7. <a href="https://movie.douban.com/subject/37264799"><b>冬城猎凶</b></a>
+   <i>2026 · ⭐ 7.1</i>
    <blockquote expandable>中国大陆 / 剧情 犯罪 / 翁子光 徐忱 / 王阳 万茜</blockquote>
-   8. <a href="https://movie.douban.com/subject/38462800"><b>直到T恤干透</b></a> (2026) · ⭐ 7.4
+   8. <a href="https://movie.douban.com/subject/38462800"><b>直到T恤干透</b></a>
+   <i>2026 · ⭐ 7.4</i>
    <blockquote expandable>日本 / 剧情 爱情 悬疑 / 土井裕泰 / 苍井优 中岛步</blockquote>
    ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
    [1 | 1:i:0] [2 | 1:i:1] [3 | 1:i:2] [4 | 1:i:3]
@@ -68,21 +76,29 @@
 << editMessageText chat=1001 message=2 parse_mode=HTML
    <b>📺 豆瓣热门剧集 · 第 1/2 页</b>
 
-   1. <a href="https://movie.douban.com/subject/36576514"><b>深渊无间</b></a> (2026) · ⭐ 7.3
+   1. <a href="https://movie.douban.com/subject/36576514"><b>深渊无间</b></a>
+   <i>2026 · ⭐ 7.3</i>
    <blockquote expandable>中国大陆 / 剧情 悬疑 犯罪 / 刘海波 / 任嘉伦 秦俊杰</blockquote>
-   2. <a href="https://movie.douban.com/subject/36449295"><b>兰香如故</b></a> (2026) · ⭐ 7.5
+   2. <a href="https://movie.douban.com/subject/36449295"><b>兰香如故</b></a>
+   <i>2026 · ⭐ 7.5</i>
    <blockquote expandable>中国大陆 / 剧情 爱情 古装 / 黄颖湘 陈丹 / 谭松韵 刘学义</blockquote>
-   3. <a href="https://movie.douban.com/subject/36660844"><b>早春晴朗</b></a> (2026) · ⭐ 6.7
+   3. <a href="https://movie.douban.com/subject/36660844"><b>早春晴朗</b></a>
+   <i>2026 · ⭐ 6.7</i>
    <blockquote expandable>中国大陆 / 剧情 爱情 / 蒋继正 / 井柏然 孙千</blockquote>
-   4. <a href="https://movie.douban.com/subject/37501131"><b>现在不是出轨的问题</b></a> (2026) · ⭐ 8.7
+   4. <a href="https://movie.douban.com/subject/37501131"><b>现在不是出轨的问题</b></a>
+   <i>2026 · ⭐ 8.7</i>
    <blockquote expandable>韩国 / 剧情 喜剧 惊悚 犯罪 / 李昌熙 / 金惠秀 金志勋</blockquote>
-   5. <a href="https://movie.douban.com/subject/36314809"><b>交锋</b></a> (2026) · ⭐ 7.3
+   5. <a href="https://movie.douban.com/subject/36314809"><b>交锋</b></a>
+   <i>2026 · ⭐ 7.3</i>
    <blockquote expandable>中国大陆 / 剧情 / 姚晓峰 / 王凯 周依然</blockquote>
-   6. <a href="https://movie.douban.com/subject/35644140"><b>一瓯春</b></a> (2026) · ⭐ 5.4
+   6. <a href="https://movie.douban.com/subject/35644140"><b>一瓯春</b></a>
+   <i>2026 · ⭐ 5.4</i>
    <blockquote expandable>中国大陆 / 爱情 古装 / 潘安子 / 许凯 周也</blockquote>
-   7. <a href="https://movie.douban.com/subject/37264799"><b>冬城猎凶</b></a> (2026) · ⭐ 7.1
+   7. <a href="https://movie.douban.com/subject/37264799"><b>冬城猎凶</b></a>
+   <i>2026 · ⭐ 7.1</i>
    <blockquote expandable>中国大陆 / 剧情 犯罪 / 翁子光 徐忱 / 王阳 万茜</blockquote>
-   8. <a href="https://movie.douban.com/subject/38462800"><b>直到T恤干透</b></a> (2026) · ⭐ 7.4
+   8. <a href="https://movie.douban.com/subject/38462800"><b>直到T恤干透</b></a>
+   <i>2026 · ⭐ 7.4</i>
    <blockquote expandable>日本 / 剧情 爱情 悬疑 / 土井裕泰 / 苍井优 中岛步</blockquote>
    ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
    [1 | 2:i:0] [2 | 2:i:1] [3 | 2:i:2] [4 | 2:i:3]
@@ -94,9 +110,11 @@
 << editMessageText chat=1001 message=2 parse_mode=HTML
    <b>📺 豆瓣热门剧集 · 第 2/2 页</b>
 
-   9. <a href="https://movie.douban.com/subject/36810153"><b>花开锦绣</b></a> (2026) · ⭐ 7.2
+   9. <a href="https://movie.douban.com/subject/36810153"><b>花开锦绣</b></a>
+   <i>2026 · ⭐ 7.2</i>
    <blockquote expandable>中国大陆 / 剧情 古装 / 邓科 / 丁禹兮 邓恩熙</blockquote>
-   10. <a href="https://movie.douban.com/subject/36689816"><b>流人 第六季</b></a> (2026) · ⭐ 9.2
+   10. <a href="https://movie.douban.com/subject/36689816"><b>流人 第六季</b></a>
+   <i>2026 · ⭐ 9.2</i>
    <blockquote expandable>英国 美国 / 剧情 惊悚 / 亚当·兰道 / 加里·奥德曼 克里斯汀·斯科特·托马斯</blockquote>
    ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
    [9 | 2:i:8] [10 | 2:i:9]
@@ -107,9 +125,12 @@
 -> MoviePilot GET /api/v1/media/search?count=10&title=流人 第六季&type=media
 << editMessageText chat=1001 message=2 parse_mode=HTML
    <b>🔍「流人 第六季」的搜索结果</b>
-   1. <b>千古风流人物 第六季</b> (2021) · 电视剧 · <i>千古风流人物</i>
-   2. <b>数风流人物 第六季</b> (2022) · 电视剧 · <i>数风流人物</i>
-   3. <b>许鞍华数风流人物 第六季</b> (1992) · 电视剧 · <i>許鞍華數風流人物</i>
+   1. <b>千古风流人物 第六季</b>
+   <i>千古风流人物 · 2021 · 电视剧</i>
+   2. <b>数风流人物 第六季</b>
+   <i>数风流人物 · 2022 · 电视剧</i>
+   3. <b>许鞍华数风流人物 第六季</b>
+   <i>許鞍華數風流人物 · 1992 · 电视剧</i>
    <i>没有对应的条目？可以用 /request 换个名字搜。</i>
    ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
    [1 | 2:m:0] [2 | 2:m:1] [3 | 2:m:2]
@@ -121,9 +142,11 @@
 
    <b>📺 豆瓣热门剧集 · 第 2/2 页</b>
 
-   9. <a href="https://movie.douban.com/subject/36810153"><b>花开锦绣</b></a> (2026) · ⭐ 7.2
+   9. <a href="https://movie.douban.com/subject/36810153"><b>花开锦绣</b></a>
+   <i>2026 · ⭐ 7.2</i>
    <blockquote expandable>中国大陆 / 剧情 古装 / 邓科 / 丁禹兮 邓恩熙</blockquote>
-   10. <a href="https://movie.douban.com/subject/36689816"><b>流人 第六季</b></a> (2026) · ⭐ 9.2
+   10. <a href="https://movie.douban.com/subject/36689816"><b>流人 第六季</b></a>
+   <i>2026 · ⭐ 9.2</i>
    <blockquote expandable>英国 美国 / 剧情 惊悚 / 亚当·兰道 / 加里·奥德曼 克里斯汀·斯科特·托马斯</blockquote>
    ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
    [9 | 2:i:8] [10 | 2:i:9]

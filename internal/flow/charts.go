@@ -239,11 +239,11 @@ func pickLines(at span, picks []Media, aired bool) Text {
 	for i, m := range picks {
 		if aired && m.Released != day {
 			day = m.Released
-			text = append(text, Line(), Line(Emphasis(airDay(day))))
+			text = append(text, Line(), Line(Strong(airDay(day))))
 		} else if i == 0 {
 			text = append(text, Line())
 		}
-		text = append(text, pickLine(at.first-at.base+i+1, m, pickLook{year: !aired, kind: mixed}))
+		text = append(text, pickEntry(at.first-at.base+i+1, m, pickLook{year: !aired, kind: mixed})...)
 		if m.Overview != "" {
 			text = append(text, Quote(truncate(m.Overview, chartOverviewRunes)))
 		}
@@ -254,21 +254,18 @@ func pickLines(at span, picks []Media, aired bool) Text {
 // pickLook says which metadata a chart line repeats.
 type pickLook struct{ year, kind bool }
 
-// pickLine is a short chart line, e.g. "1. **沙丘** (2021) · ⭐ 7.8", the
-// title linked to the media's page when known; the original title waits
-// for the card.
-func pickLine(n int, m Media, look pickLook) Block {
-	spans := []Span{Plain(fmt.Sprintf("%d. ", n)), Linked(Strong(m.Title), m.Link)}
-	if y := year(m); look.year && y != "" {
-		spans = append(spans, Plain(" "+y))
+// pickEntry is a short chart entry, e.g. "1. **沙丘**" over "_2021 · ⭐ 7.8_",
+// the title linked to the media's page when known; the original title
+// waits for the card.
+func pickEntry(n int, m Media, look pickLook) Text {
+	var y, kind string
+	if look.year {
+		y = m.Year
 	}
 	if look.kind {
-		spans = append(spans, Plain(" · "+m.Kind.String()))
+		kind = m.Kind.String()
 	}
-	if r := rating(m.Rating); r != "" {
-		spans = append(spans, Plain(" · "+r))
-	}
-	return Line(spans...)
+	return entry(n, Linked(Strong(m.Title), m.Link), y, kind, rating(m.Rating))
 }
 
 func airDay(day string) string {

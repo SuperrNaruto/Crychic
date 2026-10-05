@@ -45,7 +45,7 @@ func TestFollowTransferUntilItFinishes(t *testing.T) {
 	h.reports(1, queuePath, "queue_none.json")
 	h.shows(1, "整理任务已结束")
 	h.tap(alice, 1, "返回任务列表")
-	h.shows(1, "1. 《迷途之子!!!!!》第 1 季 · E10–E12 · 进度 0%")
+	h.shows(1, "<i>E10–E12 · 进度 0%</i>")
 	h.tr.verify(t)
 }
 

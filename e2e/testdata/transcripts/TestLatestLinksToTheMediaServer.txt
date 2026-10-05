@@ -1,9 +1,13 @@
 >> user 1001 in chat 1001: /new
 << sendMessage chat=1001 message=1 parse_mode=HTML
    <b>🆕 最新入库</b>
-   1. <a href="https://emby.example.com/web/index.html#!/item?id=118&amp;context=home"><b>《颂乐人偶》</b></a> (2025) · 电视剧
-   2. <a href="https://emby.example.com/web/index.html#!/item?id=115&amp;context=home"><b>《迷途之子!!!!!》</b></a> (2023) · 电视剧
-   3. <a href="https://emby.example.com/web/index.html#!/item?id=38&amp;context=home"><b>《碧蓝之海》</b></a> (2018) · 电视剧
-   4. <a href="https://emby.example.com/web/index.html#!/item?id=37&amp;context=home"><b>《再见菈菈》</b></a> (2026) · 电视剧
+   1. <a href="https://emby.example.com/web/index.html#!/item?id=118&amp;context=home"><b>《颂乐人偶》</b></a>
+   <i>2025 · 电视剧</i>
+   2. <a href="https://emby.example.com/web/index.html#!/item?id=115&amp;context=home"><b>《迷途之子!!!!!》</b></a>
+   <i>2023 · 电视剧</i>
+   3. <a href="https://emby.example.com/web/index.html#!/item?id=38&amp;context=home"><b>《碧蓝之海》</b></a>
+   <i>2018 · 电视剧</i>
+   4. <a href="https://emby.example.com/web/index.html#!/item?id=37&amp;context=home"><b>《再见菈菈》</b></a>
+   <i>2026 · 电视剧</i>
    ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
    [首页 | 1:o:0]

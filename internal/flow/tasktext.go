@@ -31,7 +31,7 @@ func taskList(id uint64, downloads []Download, jobs []TransferJob) listView {
 	add := func(title string, season *int, line string) {
 		n := len(view.entries) + 1
 		title = truncate(title, listTitleRunes)
-		text := Lines(Line(Plain(fmt.Sprintf("%d. %s · %s", n, taskName(title, season), truncate(line, listTitleRunes)))))
+		text := entry(n, Strong(taskName(title, season)), truncate(line, listTitleRunes))
 		if section != "" {
 			text = append(Lines(Line(Strong(section))), text...)
 			section = ""
