@@ -8,8 +8,7 @@ const (
 	abyssDetails  = "GET /api/v1/media/301489"
 	trendingPath  = "GET /api/v1/recommend/tmdb_trending"
 	doubanTVPath  = "GET /api/v1/recommend/douban_tv_hot"
-	nuwaDetails   = "GET /api/v1/media/390200"
-	psyrenDetails = "GET /api/v1/media/614640"
+	nuwaID        = "390200"
 )
 
 // A trending TMDB pick is found again by search and goes straight to its
@@ -59,16 +58,14 @@ func TestDoubanPicksAreMatchedByTitle(t *testing.T) {
 // The anime calendar opens on today's weekday, read from Bangumi itself,
 // and switches to any other; it groups a day's picks by first air date and
 // links each to its TMDB page with a collapsed synopsis, found by its title or else its original
-// title; a show TMDB lacks, or has no synopsis for, gets Bangumi's. A
-// synopsis MoviePilot failed to fetch is fetched again when the page
-// shows again.
+// title; a show TMDB lacks, or has no synopsis for, gets Bangumi's, read
+// from Bangumi itself. A synopsis Bangumi failed to give is fetched again
+// when the page shows again.
 func TestAnimeCalendarShowsEachWeekday(t *testing.T) {
 	h := start(t, scenario{
 		routes: map[string]route{
-			searchPath:    ok("empty.json"),
-			nuwaDetails:   ok("detail_unrecognized.json"),
-			psyrenDetails: ok("detail_calendar_psyren.json"),
-			seasonsPath:   ok("seasons_mygo.json"),
+			searchPath:  ok("empty.json"),
+			seasonsPath: ok("seasons_mygo.json"),
 		},
 		searches: map[string]string{
 			"列女战纪：女娲石记":            "search_calendar_nuwa.json",
@@ -79,13 +76,14 @@ func TestAnimeCalendarShowsEachWeekday(t *testing.T) {
 			"你好，我是受心上人所托来做恋爱药的魔女。": "search_calendar_majo.json",
 		},
 	})
+	h.bgm.setDown(nuwaID, true)
 	h.say(alice, alice, "/start")
 	h.tap(alice, 1, "🔥 发现")
 	h.tap(alice, 1, "🎌 新番放送")
 	h.shows(1, "星期一（今天）")
 	h.shows(1, "2026-10-05 首播")
 	h.shows(1, "themoviedb.org/tv/297903")
-	h.mp.setRoute(nuwaDetails, ok("detail_calendar_nuwa.json"))
+	h.bgm.setDown(nuwaID, false)
 	h.tap(alice, 1, "2")
 	h.tap(alice, 1, "取消")
 	h.shows(1, "补天的时代已经过去")

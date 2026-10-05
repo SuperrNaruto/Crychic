@@ -1,15 +1,19 @@
-// Package bangumi reads Bangumi's airing calendar. MoviePilot serves the
-// same calendar flattened, without the weekday each show airs on, so the
-// bot asks Bangumi itself; everything else still goes through MoviePilot.
+// Package bangumi reads Bangumi's public API: the airing calendar and
+// synopses. MoviePilot serves the calendar flattened, without the weekday
+// each show airs on, and answers a failed Bangumi lookup with an empty
+// result, so the bot asks Bangumi itself; everything else still goes
+// through MoviePilot.
 package bangumi
 
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"net/http"
 	"strconv"
 	"strings"
+	"unicode"
 
 	"github.com/SuperrNauto/Crychic/internal/flow"
 )
@@ -23,6 +27,9 @@ const (
 	// yearDigits is the year prefix of an air date such as 2026-10-05.
 	yearDigits = 4
 )
+
+// errGone is a subject Bangumi does not have (any more).
+var errGone = errors.New("bangumi: no such subject")
 
 // Client reads Bangumi's public API; it needs no key.
 type Client struct {
@@ -58,22 +65,9 @@ type item struct {
 // Calendar lists this season's airing shows, Monday's first, each with the
 // weekday it airs on.
 func (c *Client) Calendar(ctx context.Context) ([]flow.Media, error) {
-	req, err := http.NewRequestWithContext(ctx, http.MethodGet, c.baseURL+"/calendar", nil)
-	if err != nil {
-		return nil, err
-	}
-	req.Header.Set("User-Agent", userAgent)
-	resp, err := c.http.Do(req)
-	if err != nil {
-		return nil, fmt.Errorf("bangumi calendar: %w", err)
-	}
-	defer resp.Body.Close()
-	if resp.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("bangumi calendar: status %d", resp.StatusCode)
-	}
 	var days []day
-	if err := json.NewDecoder(resp.Body).Decode(&days); err != nil {
-		return nil, fmt.Errorf("bangumi calendar: %w", err)
+	if err := c.get(ctx, "/calendar", &days); err != nil {
+		return nil, err
 	}
 	var picks []flow.Media
 	for _, d := range days {
@@ -84,9 +78,43 @@ func (c *Client) Calendar(ctx context.Context) ([]flow.Media, error) {
 	return picks, nil
 }
 
+// Summary is the synopsis of subject id; "" when it has none or is gone.
+func (c *Client) Summary(ctx context.Context, id string) (string, error) {
+	var subject item
+	err := c.get(ctx, "/v0/subjects/"+id, &subject)
+	if errors.Is(err, errGone) {
+		return "", nil
+	}
+	return synopsis(subject.Summary), err
+}
+
+func (c *Client) get(ctx context.Context, path string, out any) error {
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, c.baseURL+path, nil)
+	if err != nil {
+		return err
+	}
+	req.Header.Set("User-Agent", userAgent)
+	resp, err := c.http.Do(req)
+	if err != nil {
+		return fmt.Errorf("bangumi GET %s: %w", path, err)
+	}
+	defer resp.Body.Close()
+	if resp.StatusCode == http.StatusNotFound {
+		return errGone
+	}
+	if resp.StatusCode != http.StatusOK {
+		return fmt.Errorf("bangumi GET %s: status %d", path, resp.StatusCode)
+	}
+	if err := json.NewDecoder(resp.Body).Decode(out); err != nil {
+		return fmt.Errorf("bangumi GET %s: %w", path, err)
+	}
+	return nil
+}
+
 // toMedia names the show the way MoviePilot's Bangumi projection does
 // (Chinese title, else the original), so search matches work alike.
 func (it item) toMedia(weekday int) flow.Media {
+	id := strconv.Itoa(it.ID)
 	title := it.NameCN
 	if title == "" {
 		title = it.Name
@@ -96,10 +124,25 @@ func (it item) toMedia(weekday int) flow.Media {
 		year = it.AirDate[:yearDigits]
 	}
 	return flow.Media{
-		Source: source, ID: strconv.Itoa(it.ID), Title: title, OriginalTitle: it.Name,
+		Source: source, ID: id, Title: title, OriginalTitle: it.Name,
 		Year: year, Kind: flow.TV, Rating: it.Rating.Score, PosterURL: it.Images.Large,
-		Link:     "https://bgm.tv/subject/" + strconv.Itoa(it.ID),
-		Overview: strings.TrimSpace(strings.ReplaceAll(it.Summary, "\r\n", "\n")),
-		Released: it.AirDate, Weekday: weekday,
+		Link: "https://bgm.tv/subject/" + id, Overview: synopsis(it.Summary),
+		Released: it.AirDate, Weekday: weekday, CalendarID: id,
 	}
+}
+
+// synopsis drops the carriage returns, indent and runs of blank lines
+// Bangumi summaries carry.
+func synopsis(s string) string {
+	var lines []string
+	blank := false
+	for line := range strings.Lines(strings.ReplaceAll(s, "\r\n", "\n")) {
+		line = strings.TrimRightFunc(line, unicode.IsSpace)
+		if line == "" && blank {
+			continue
+		}
+		blank = line == ""
+		lines = append(lines, line)
+	}
+	return strings.TrimSpace(strings.Join(lines, "\n"))
 }

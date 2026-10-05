@@ -7,7 +7,6 @@ import (
 	"context"
 	"fmt"
 	"log/slog"
-	"net/http/httptest"
 	"strconv"
 	"strings"
 	"testing"
@@ -53,7 +52,7 @@ type harness struct {
 	tr     *transcript
 	tg     *fakeTelegram
 	mp     *fakeMoviePilot
-	bgm    *httptest.Server
+	bgm    *fakeBangumi
 	cfg    config.Config
 	began  time.Time // real time at epoch; restarts keep the clock going
 	stop   func()

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strconv"
 	"strings"
 	"sync"
 	"testing"
@@ -37,8 +38,7 @@ func (tr *transcript) add(head string, body ...string) {
 
 // settle sorts the last line into the run of reads of the same route
 // before it: the bot makes such reads at once (a chart page's lookups), so
-// they arrive in any order. Media searches and details count as one route,
-// since a calendar page looks up both at once.
+// they arrive in any order.
 func (tr *transcript) settle() {
 	for i := len(tr.lines) - 1; i > 0; i-- {
 		prev, last := tr.lines[i-1], tr.lines[i]
@@ -49,27 +49,39 @@ func (tr *transcript) settle() {
 	}
 }
 
-// readRoute is a MoviePilot read's path without its query and trailing id,
-// or "" for any other line.
-// readOrder sorts media searches before details, as a pick made one at a
-// time reads them.
-func readOrder(line string) string {
-	return strings.Replace(line, mediaRoute+"search", mediaRoute+" search", 1)
-}
+const (
+	// mediaRoute is where MoviePilot media searches and details are read.
+	mediaRoute = "/api/v1/media/"
+	// lookups is the route of the reads a calendar page makes at once:
+	// MoviePilot media searches and details, and Bangumi subjects.
+	lookups = "lookups"
+)
 
-// mediaRoute is where media searches and details are read.
-const mediaRoute = "/api/v1/media/"
-
+// readRoute is a read's service and path without its query and trailing
+// id, or "" for any other line.
 func readRoute(line string) string {
-	path, found := strings.CutPrefix(line, "-> MoviePilot GET ")
-	if !found {
+	read, found := strings.CutPrefix(line, "-> ")
+	service, path, _ := strings.Cut(read, " GET ")
+	if !found || path == "" {
 		return ""
 	}
 	path, _, _ = strings.Cut(path, "?")
-	if path == mediaRoute+"search" {
-		return mediaRoute
+	route := strings.TrimRight(path, "0123456789")
+	if route == mediaRoute || path == mediaRoute+"search" || route == subjectsPath {
+		return lookups
 	}
-	return strings.TrimRight(path, "0123456789")
+	return service + " " + route
+}
+
+// readOrder sorts lookups as a pick made one at a time reads them: media
+// searches, then Bangumi subjects, then media details.
+func readOrder(line string) string {
+	for rank, marker := range []string{mediaRoute + "search", subjectsPath, mediaRoute} {
+		if strings.Contains(line, marker) {
+			return strconv.Itoa(rank) + line
+		}
+	}
+	return line
 }
 
 func (tr *transcript) String() string {

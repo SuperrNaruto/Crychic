@@ -9,10 +9,10 @@ import (
 const tmdbSource = "themoviedb"
 
 // annotate gives the picks in [first, end) a TMDB identity and link where
-// TMDB has the same show, and a synopsis from TMDB, else from their own
-// source. Calendar picks carry Bangumi ids and no synopsis, while transfer
+// TMDB has the same show, and a synopsis from TMDB, else from the calendar
+// itself. Calendar picks carry Bangumi ids and no synopsis, while transfer
 // history only carries TMDB ids. It is cosmetic: a failed lookup leaves the
-// pick as it was. MoviePilot answers an upstream failure with an empty
+// pick as it was, and MoviePilot answers an upstream failure with an empty
 // result, so a pick still without synopsis is looked up again the next
 // time its page shows. Every lookup of a page runs at once, so a page
 // costs one round trip, not one per pick or per kind of lookup.
@@ -35,18 +35,18 @@ func (e *Engine) annotate(ctx context.Context, sess *session, first, end int) {
 }
 
 // note looks pick up on TMDB by its title and its original title, and in
-// its own source for a synopsis, all at once; the TMDB twin found by title
+// the calendar for a synopsis, all at once; the TMDB twin found by title
 // wins over the one found by original title.
 func (e *Engine) note(ctx context.Context, pick Media) Media {
 	var byTitle, byOriginal []Media
-	var own Details
+	var own string
 	var wg sync.WaitGroup
 	wg.Go(func() { byTitle = e.lookup(ctx, pick.Title) })
 	if original := pick.OriginalTitle; original != "" && original != pick.Title {
 		wg.Go(func() { byOriginal = e.lookup(ctx, original) })
 	}
 	if pick.Overview == "" {
-		wg.Go(func() { own = e.details(ctx, pick) })
+		wg.Go(func() { own = e.summary(ctx, pick) })
 	}
 	wg.Wait()
 	m, ok := tmdbTwin(pick, byTitle)
@@ -54,9 +54,19 @@ func (e *Engine) note(ctx context.Context, pick Media) Media {
 		m, _ = tmdbTwin(pick, byOriginal)
 	}
 	if m.Overview == "" {
-		m.Overview = own.Overview
+		m.Overview = own
 	}
 	return m
+}
+
+// summary is pick's synopsis from the calendar itself; a failure is
+// logged and leaves it without one, to be looked up again.
+func (e *Engine) summary(ctx context.Context, pick Media) string {
+	s, err := e.calendar.Summary(ctx, pick.CalendarID)
+	if err != nil {
+		e.log.Warn("calendar synopsis unavailable", "pick", pick.CalendarID, "err", err)
+	}
+	return s
 }
 
 // lookup searches term; a failure is logged and finds nothing.
@@ -69,8 +79,8 @@ func (e *Engine) lookup(ctx context.Context, term string) []Media {
 }
 
 // tmdbTwin is the one TMDB result that is m under either of its titles,
-// the same year and kind, keeping the calendar's air date, weekday and its
-// own rating, if any; m itself when there is none or more than one. The TMDB
+// the same year and kind, keeping the calendar's air date, weekday, id and
+// its own rating, if any; m itself when there is none or more than one. The TMDB
 // title is kept too, so a later pick searches by it and matches by id.
 func tmdbTwin(m Media, results []Media) (Media, bool) {
 	var twin *Media
@@ -87,7 +97,7 @@ func tmdbTwin(m Media, results []Media) (Media, bool) {
 		return m, false
 	}
 	t := *twin
-	t.Released, t.Weekday = m.Released, m.Weekday
+	t.Released, t.Weekday, t.CalendarID = m.Released, m.Weekday, m.CalendarID
 	if m.Rating > 0 {
 		t.Rating = m.Rating
 	}

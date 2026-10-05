@@ -27,11 +27,11 @@
 -> MoviePilot GET /api/v1/media/search?count=10&title=罗梅莉亚战记&type=media
 -> MoviePilot GET /api/v1/media/search?count=10&title=魔法少女育成計画 restart&type=media
 -> MoviePilot GET /api/v1/media/search?count=10&title=魔法少女育成计划 restart&type=media
--> MoviePilot GET /api/v1/media/390200?media_source=bangumi&type_name=电视剧
--> MoviePilot GET /api/v1/media/418229?media_source=bangumi&type_name=电视剧
--> MoviePilot GET /api/v1/media/511936?media_source=bangumi&type_name=电视剧
--> MoviePilot GET /api/v1/media/614640?media_source=bangumi&type_name=电视剧
--> MoviePilot GET /api/v1/media/624923?media_source=bangumi&type_name=电视剧
+-> Bangumi GET /v0/subjects/390200
+-> Bangumi GET /v0/subjects/418229
+-> Bangumi GET /v0/subjects/511936
+-> Bangumi GET /v0/subjects/614640
+-> Bangumi GET /v0/subjects/624923
 << editMessageText chat=1001 message=1 parse_mode=HTML
    <b>🎌 新番放送 · 星期一（今天） · 第 1/1 页</b>
    
@@ -72,7 +72,7 @@
 << answerCallbackQuery
 >> user 1001 taps 1:x:0 on message 1
 -> MoviePilot GET /api/v1/media/search?count=10&title=列女战纪：女娲石记&type=media
--> MoviePilot GET /api/v1/media/390200?media_source=bangumi&type_name=电视剧
+-> Bangumi GET /v0/subjects/390200
 << editMessageText chat=1001 message=1 parse_mode=HTML
    已取消。
    
@@ -104,16 +104,24 @@
 -> MoviePilot GET /api/v1/media/search?count=10&title=Cyberpunk: Edgerunners 2&type=media
 -> MoviePilot GET /api/v1/media/search?count=10&title=Dark Machine The Animation&type=media
 -> MoviePilot GET /api/v1/media/search?count=10&title=赛博朋克：边缘行者 2&type=media
--> MoviePilot GET /api/v1/media/505550?media_source=bangumi&type_name=电视剧
--> MoviePilot GET /api/v1/media/513878?media_source=bangumi&type_name=电视剧
+-> Bangumi GET /v0/subjects/505550
+-> Bangumi GET /v0/subjects/513878
 << editMessageText chat=1001 message=1 parse_mode=HTML
    <b>🎌 新番放送 · 星期二 · 第 1/1 页</b>
    
    <i>2026-10-13 首播</i>
    1. <a href="https://bgm.tv/subject/505550"><b>Dark Machine The Animation</b></a> · ⭐ 7.8
+   <blockquote expandable>世界的に圧倒的な人気を誇るeスポーツ「ダークマシン」は人々を熱狂させ、日本の経済体系までも変革していた。
+   日本で唯一、「ダークマシン」経済特区に指定されている街・ゴールデンバレー。その頂点に君臨するのが、「ダークマシン」最強プレイヤーの称号『千鬼』を襲名している7代目『千鬼』のアジマだった。
+   アジマは「ダークマシン」によってゴールデンバレーを実質的支配する存在となっていた。主人公のカイリは、亡き祖父の遺言「千鬼を探せ」を胸にゴールデンバレーを訪れたところ、偶然アジマ配下の「阿流堕美瑠」に追われる少女「ルドラ」と出会う。
+   ルドラに巻き込まれる形で「ダークマシン」プレイヤーとなったカイリは、度重な…</blockquote>
    
    <i>2026-10-20 首播</i>
    2. <a href="https://bgm.tv/subject/513878"><b>赛博朋克：边缘行者 2</b></a> · ⭐ 7.2
+   <blockquote expandable>《赛博朋克：边缘行者2》把你带回夜之城。在那里，人与人的命运纠缠到了极致。昔日的赛博朋克传奇人物微克如今风光不再，不得不脱离义体活着，在这个对他熟视无睹的世界里寻找人生的意义。与此同时，手段狠辣的流浪者D踏上了复仇之路，也让他触及到了永远不该被外人发现的公司秘密。在这部总共十集的独立动画中，你将了解到一个关于家庭、执念、传承的故事——以及在你的镜头记录下，身边的人又会呈现出一个个怎样的故事。
+   
+   [简介原文]
+   『サイバーパンク: エッジランナーズ２』で、再びナイトシティへ。すべてを手に入れるか、すべてを失うか――半端を嫌う街で、新たな物語が始まる。かつて名を馳せた伝説的サイバーパンク、ウィーク。…</blockquote>
    [1 | 1:i:5] [2 | 1:i:6]
    [一 | 1:w:1] [·二· | 1:w:2] [三 | 1:w:3] [四 | 1:w:4] [五 | 1:w:5] [六 | 1:w:6] [日 | 1:w:7]
    [返回榜单 | 1:b:0] [🏠 首页 | 1:o:0]
