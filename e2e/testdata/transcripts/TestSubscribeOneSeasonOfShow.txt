@@ -1,0 +1,36 @@
+>> user 1001 in chat 1001: /request 绝命毒师
+-> MoviePilot GET /api/v1/media/search?count=10&title=绝命毒师&type=media
+<< sendMessage chat=1001 message=1
+   「绝命毒师」的搜索结果：
+   [电视剧 · 绝命毒师 (2008) | 1:m:0]
+   [取消 | 1:x:0]
+>> user 1001 taps 1:m:0 on message 1
+-> MoviePilot GET /api/v1/media/seasons?media_id=1396&media_source=themoviedb
+<< editMessageText chat=1001 message=1
+   绝命毒师 (2008) · 电视剧
+   高中化学老师沃尔特·怀特被诊断出肺癌晚期，为了给家人留下财产，他与以前的学生杰西合伙制毒。
+   
+   选择要订阅的季：
+   [特别篇 · 9 集 | 1:s:0]
+   [第 1 季 · 7 集 | 1:s:1]
+   [第 2 季 · 13 集 | 1:s:2]
+   [第 3 季 · 13 集 | 1:s:3]
+   [第 4 季 · 13 集 | 1:s:4]
+   [第 5 季 · 16 集 | 1:s:5]
+   [取消 | 1:x:0]
+<< answerCallbackQuery
+>> user 1001 taps 1:s:2 on message 1
+-> MoviePilot GET /api/v1/subscribe/media/1396?media_source=themoviedb&mtype=电视剧&season=2&title=绝命毒师&year=2008
+<< editMessageText chat=1001 message=1
+   绝命毒师 (2008) · 电视剧
+   高中化学老师沃尔特·怀特被诊断出肺癌晚期，为了给家人留下财产，他与以前的学生杰西合伙制毒。
+   
+   确认订阅《绝命毒师》第 2 季？
+   [确认订阅 | 1:ok:0] [取消 | 1:x:0]
+<< answerCallbackQuery
+>> user 1001 taps 1:ok:0 on message 1
+-> MoviePilot POST /api/v1/subscribe/
+   {"name":"绝命毒师","year":"2008","type":"电视剧","media_source":"themoviedb","media_id":"1396","season":2}
+<< editMessageText chat=1001 message=1
+   已订阅《绝命毒师》第 2 季，MoviePilot 会自动搜索下载。
+<< answerCallbackQuery

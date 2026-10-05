@@ -1,0 +1,23 @@
+>> user 1001 in chat 1001: /request 沙丘
+-> MoviePilot GET /api/v1/media/search?count=10&title=沙丘&type=media
+<< sendMessage chat=1001 message=1
+   「沙丘」的搜索结果：
+   [电影 · 沙丘 (2021) | 1:m:0]
+   [电视剧 · 沙丘：预言 (2024) | 1:m:1]
+   [电影 · 沙丘 (1984) | 1:m:2]
+   [取消 | 1:x:0]
+>> user 1001 taps 1:m:0 on message 1
+-> MoviePilot GET /api/v1/subscribe/media/438631?media_source=themoviedb&mtype=电影&title=沙丘&year=2021
+<< editMessageText chat=1001 message=1
+   沙丘 (2021) · 电影
+   保罗·厄崔迪是一个天赋异禀的年轻人，他必须前往宇宙中最危险的星球，以确保家族和人民的未来。
+   
+   确认订阅《沙丘》？
+   [确认订阅 | 1:ok:0] [取消 | 1:x:0]
+<< answerCallbackQuery
+>> user 1001 taps 1:ok:0 on message 1
+-> MoviePilot POST /api/v1/subscribe/
+   {"name":"沙丘","year":"2021","type":"电影","media_source":"themoviedb","media_id":"438631"}
+<< editMessageText chat=1001 message=1
+   未识别到媒体信息
+<< answerCallbackQuery

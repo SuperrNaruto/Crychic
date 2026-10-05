@@ -1,0 +1,27 @@
+package main
+
+import (
+	"context"
+	"log/slog"
+	"os"
+	"os/signal"
+	"syscall"
+
+	"github.com/SuperrNauto/Crychic/internal/app"
+	"github.com/SuperrNauto/Crychic/internal/config"
+)
+
+func main() {
+	log := slog.New(slog.NewTextHandler(os.Stderr, nil))
+	cfg, err := config.Load(os.Getenv)
+	if err != nil {
+		log.Error("invalid configuration", "err", err)
+		os.Exit(1)
+	}
+	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
+	defer stop()
+	if err := app.Run(ctx, cfg, log); err != nil {
+		log.Error("crychic stopped", "err", err)
+		os.Exit(1)
+	}
+}
