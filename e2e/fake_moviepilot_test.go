@@ -58,6 +58,15 @@ type fakeMoviePilot struct {
 	mu        sync.Mutex
 	transfers []transfer // newest first, like MoviePilot
 	polled    chan struct{}
+	readers   []reader
+}
+
+// reader waits for the notifier to finish a poll that read the transfer
+// history up to id.
+type reader struct {
+	id   int
+	seen bool
+	done chan struct{}
 }
 
 func newFakeMoviePilot(t *testing.T, tr *transcript, routes map[string]route) *fakeMoviePilot {
@@ -66,8 +75,9 @@ func newFakeMoviePilot(t *testing.T, tr *transcript, routes map[string]route) *f
 	return f
 }
 
-// add appends records to the transfer history.
-func (f *fakeMoviePilot) add(records ...transfer) {
+// add appends records to the transfer history; the returned channel closes
+// once a poll that read them has finished.
+func (f *fakeMoviePilot) add(records ...transfer) <-chan struct{} {
 	f.mu.Lock()
 	defer f.mu.Unlock()
 	for _, r := range records {
@@ -75,6 +85,26 @@ func (f *fakeMoviePilot) add(records ...transfer) {
 		r.Status = true
 		f.transfers = append([]transfer{r}, f.transfers...)
 	}
+	rd := reader{id: len(f.transfers), done: make(chan struct{})}
+	f.readers = append(f.readers, rd)
+	return rd.done
+}
+
+// markRead is called on every history read with the newest id served; f.mu
+// held. Polls run one after another and a poll's handful of records fits on
+// one page, so the read after the one that saw a reader's records means
+// that poll, including its notices, is done.
+func (f *fakeMoviePilot) markRead(newest int) {
+	waiting := f.readers[:0]
+	for _, rd := range f.readers {
+		if rd.seen {
+			close(rd.done)
+			continue
+		}
+		rd.seen = rd.id <= newest
+		waiting = append(waiting, rd)
+	}
+	f.readers = waiting
 }
 
 func (f *fakeMoviePilot) serve(w http.ResponseWriter, r *http.Request) {
@@ -148,6 +178,11 @@ func (f *fakeMoviePilot) serveTransfers(w http.ResponseWriter, r *http.Request) 
 	from := min(max(page-1, 0)*count, len(f.transfers))
 	list := slices.Clone(f.transfers[from:min(from+count, len(f.transfers))])
 	total := len(f.transfers)
+	newest := 0
+	if len(list) > 0 {
+		newest = list[0].ID
+	}
+	f.markRead(newest)
 	f.mu.Unlock()
 	data, _ := json.Marshal(map[string]any{"list": list, "total": total})
 	writeEnvelope(w, http.StatusOK, `{"success":true,"message":"","data":`+string(data)+`}`)

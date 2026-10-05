@@ -25,7 +25,7 @@ internal/config/     # env vars → config.Config
 e2e/                 # behavior tests: real app vs fake Telegram Bot API + fake MoviePilot
 ```
 
-Arrivals: `notify.Notifier` polls `GET /api/v1/history/transfer` → matches watches (media + season + episode range) → `telegram.Bot.Notify` posts in the requesting chat, mentioning the requester in groups.
+Arrivals: `notify.Notifier` polls `GET /api/v1/history/transfer` → `arrive` records matches as pending (media + season + episode range) → `flush` announces once settled → `telegram.Bot.Notify` posts in the requesting chat, mentioning the requester in groups.
 
 Data flow: Telegram update → `telegram.adapter` → `flow.Engine.Start/Choose` → `flow.Backend` (MoviePilot) → `flow.Reply` → `sendMessage` (command) or `editMessageText` (button) → `answerCallbackQuery` last.
 
@@ -37,8 +37,8 @@ Data flow: Telegram update → `telegram.adapter` → `flow.Engine.Start/Choose`
 - `internal/flow/rich.go` - `flow.Text`: formatting by meaning (bold, italic, code, link, collapsible quote)
 - `internal/telegram/html.go` - renders `flow.Text` to Telegram HTML, escaping everything
 - `internal/flow/store.go` - in-memory sessions (10 min TTL)
-- `internal/notify/state.go` - pure state transitions (`withRequest`, `arrive`, `withActivity`) and atomic persistence
-- `e2e/harness_test.go` - `start`, `say`, `answer`, `chatter`, `tap`, `tapData`, `shows`, `arrives`, `restart`
+- `internal/notify/state.go` - pure state transitions (`withRequest`, `arrive`, `flush`, `withActivity`) and atomic persistence
+- `e2e/harness_test.go` - `start`, `say`, `answer`, `chatter`, `tap`, `tapData`, `shows`, `arrives`, `transfers`, `restart`
 - `e2e/testdata/transcripts/*.txt` - golden transcripts, one per scenario
 
 ## Environment
@@ -48,6 +48,7 @@ Data flow: Telegram update → `telegram.adapter` → `flow.Engine.Start/Choose`
 - `CRYCHIC_TELEGRAM_API_URL` - optional, defaults to `https://api.telegram.org`
 - `CRYCHIC_DATA_DIR` - optional, defaults to `data`; holds `requests.json` (pending requests, last seen transfer)
 - `CRYCHIC_NOTIFY_INTERVAL` - optional, defaults to `1m`, minimum `100ms`; how often transfer history is polled
+- `CRYCHIC_NOTIFY_QUIET` - optional, defaults to `3m`, `0s` disables; how long a show's arrivals settle before one notice covers them
 
 ## Code Style
 
@@ -79,6 +80,7 @@ Data flow: Telegram update → `telegram.adapter` → `flow.Engine.Start/Choose`
 - Typed answers: a `Reply` with `Input` makes the Telegram adapter remember (chat, user) → message in `adapter.pending`; private chats take any plain text from that user, groups only a reply quoting the message
 - MoviePilot has no outgoing webhook, so arrivals come from polling transfer history (one record per file, newest first, `seasons` "S03", `episodes` "E01" or "E01-E03"). The first poll only records the latest id (baseline), so history from before Crychic is never announced
 - MoviePilot closes a subscription when downloads finish, before files are transferred: a closed subscription must not end a watch. Watches end when every wanted episode arrived (movies: first arrival) or after `orphanGrace` (72h) with the subscription gone
+- MoviePilot transfers episodes one by one as their downloads finish, often minutes apart. A show's arrivals stay pending (persisted) until nothing new came for `CRYCHIC_NOTIFY_QUIET`, then go out as one notice; a watch whose every wanted episode is in (and any movie) is announced at once. The e2e default is `300ms`; `transfers` waits until a whole poll handled the records, so a test can act between polls
 - Notifier state is saved before notices are sent: a crash may drop a notice, never repeat one. Polling calls are kept out of e2e transcripts; the notices they cause are recorded
 - Button data is `<session>:<action>:<arg>` and must stay ≤ 64 bytes (Telegram limit)
 - Confirm and cancel use `store.take`, so a double tap acts once; keep that for any step that ends a conversation

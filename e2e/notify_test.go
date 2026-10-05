@@ -61,6 +61,27 @@ func TestGroupHearsArrivedEpisodesTogether(t *testing.T) {
 	h.tr.verify(t)
 }
 
+// Episodes that arrive one poll apart share a notice once they settle, and
+// arrivals not yet announced survive a restart.
+func TestEpisodesArrivingApartShareOneNotice(t *testing.T) {
+	h := start(t, scenario{quiet: "2s", routes: map[string]route{
+		searchPath:    ok("search_breaking_bad.json"),
+		breakDetails:  ok("detail_breaking_bad.json"),
+		seasonsPath:   ok("seasons_breaking_bad.json"),
+		breakingQuery: ok("subscription_none.json"),
+		subscribePath: ok("subscribe_created.json"),
+	}})
+	h.say(alice, alice, "/request 绝命毒师")
+	h.tap(alice, 1, "1. 绝命毒师 (2008)")
+	h.tap(alice, 1, "第 2 季 · 13 集")
+	h.tap(alice, 1, "从第 1 集开始")
+	h.transfers(episodeFile("绝命毒师", "1396", "S02", "E01", breakingImage))
+	h.restart()
+	h.arrives(alice, episodeFile("绝命毒师", "1396", "S02", "E02", breakingImage))
+	h.shows(2, "E01–E02 已入库")
+	h.tr.verify(t)
+}
+
 // Asking for something already subscribed still earns a notice.
 func TestAlreadySubscribedRequesterIsNotified(t *testing.T) {
 	h := start(t, scenario{routes: map[string]route{

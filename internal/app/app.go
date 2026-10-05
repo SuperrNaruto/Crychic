@@ -42,6 +42,7 @@ func Run(ctx context.Context, cfg config.Config, log *slog.Logger) error {
 		Sender:   tg,
 		Path:     filepath.Join(cfg.DataDir, stateFile),
 		Interval: cfg.NotifyInterval,
+		Quiet:    cfg.NotifyQuiet,
 		Now:      time.Now,
 		Log:      log,
 	})

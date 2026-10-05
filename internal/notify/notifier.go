@@ -24,6 +24,7 @@ type Options struct {
 	Sender   Sender
 	Path     string // state file
 	Interval time.Duration
+	Quiet    time.Duration // how long a show's arrivals settle before a notice
 	Now      func() time.Time
 	Log      *slog.Logger
 }
@@ -85,9 +86,10 @@ func (n *Notifier) poll(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
+	now := n.opts.Now()
 	var deliveries []delivery
 	err = n.update(func(st state) state {
-		next, out := arrive(st, newerThan(transfers, st.LastTransfer))
+		next, out := flush(arrive(st, newerThan(transfers, st.LastTransfer), now), now, n.opts.Quiet)
 		deliveries = out
 		return next
 	})

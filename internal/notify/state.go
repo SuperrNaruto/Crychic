@@ -32,9 +32,12 @@ type watch struct {
 	MediaID        string       `json:"media_id"`
 	Title          string       `json:"title"`
 	Season         *int         `json:"season,omitempty"`
-	Start          int          `json:"start,omitempty"` // first wanted episode
-	Total          int          `json:"total,omitempty"` // last wanted episode, 0 if unknown
-	Delivered      []int        `json:"delivered,omitempty"`
+	Start          int          `json:"start,omitempty"`     // first wanted episode
+	Total          int          `json:"total,omitempty"`     // last wanted episode, 0 if unknown
+	Delivered      []int        `json:"delivered,omitempty"` // episodes arrived so far
+	Pending        []int        `json:"pending,omitempty"`   // arrived, not yet announced
+	Image          string       `json:"image,omitempty"`     // poster of the latest pending arrival
+	ArrivedAt      *time.Time   `json:"arrived_at,omitempty"`
 	InactiveSince  *time.Time   `json:"inactive_since,omitempty"`
 	Requesters     []flow.Actor `json:"requesters"`
 }
@@ -72,48 +75,64 @@ func withRequest(st state, req flow.Request) state {
 	return next
 }
 
-// arrive matches transfers against the watches. A movie watch ends with its
-// first arrival; a season watch ends once every wanted episode has arrived.
-func arrive(st state, transfers []Transfer) (state, []delivery) {
+// arrive records transfers against the watches without announcing them;
+// flush decides when to speak.
+func arrive(st state, transfers []Transfer, now time.Time) state {
 	next := state{Baseline: st.Baseline, LastTransfer: st.LastTransfer}
 	for _, t := range transfers {
 		next.LastTransfer = max(next.LastTransfer, t.ID)
 	}
+	for _, w := range st.Watches {
+		next.Watches = append(next.Watches, w.collect(transfers, now))
+	}
+	return next
+}
+
+// collect adds this watch's new arrivals among transfers to its pending ones.
+func (w watch) collect(transfers []Transfer, now time.Time) watch {
+	for _, t := range transfers {
+		if !w.matches(t) {
+			continue
+		}
+		fresh := w.fresh(t.Episodes)
+		if w.Season != nil && len(fresh) == 0 {
+			continue
+		}
+		w.Delivered = slices.Sorted(slices.Values(append(slices.Clone(w.Delivered), fresh...)))
+		w.Pending = slices.Sorted(slices.Values(append(slices.Clone(w.Pending), fresh...)))
+		w.Image, w.ArrivedAt = t.Image, &now
+	}
+	return w
+}
+
+// flush announces watches whose arrivals have settled: everything wanted
+// is in, or nothing new came for quiet, so episodes that arrive one by one
+// share a notice. A complete watch ends with its notice.
+func flush(st state, now time.Time, quiet time.Duration) (state, []delivery) {
+	next := state{Baseline: st.Baseline, LastTransfer: st.LastTransfer}
 	var out []delivery
 	for _, w := range st.Watches {
-		d, matched := w.collect(transfers)
-		if matched {
-			out = append(out, d)
+		complete := w.complete()
+		if w.ArrivedAt == nil || (!complete && now.Sub(*w.ArrivedAt) < quiet) {
+			next.Watches = append(next.Watches, w)
+			continue
 		}
-		if !matched || !d.complete {
-			next.Watches = append(next.Watches, d.watch)
+		out = append(out, delivery{watch: w, episodes: w.Pending, complete: complete, image: w.Image})
+		if !complete {
+			w.Pending, w.Image, w.ArrivedAt = nil, "", nil
+			next.Watches = append(next.Watches, w)
 		}
 	}
 	return next, out
 }
 
-// collect gathers this watch's new arrivals among transfers.
-func (w watch) collect(transfers []Transfer) (delivery, bool) {
-	d := delivery{watch: w}
-	for _, t := range transfers {
-		if !w.matches(t) {
-			continue
-		}
-		if w.Season == nil {
-			return delivery{watch: w, complete: true, image: t.Image}, true
-		}
-		if fresh := w.fresh(t.Episodes, d.episodes); len(fresh) > 0 {
-			d.episodes = append(d.episodes, fresh...)
-			d.image = t.Image
-		}
+// complete reports whether everything requested has arrived: a movie with
+// its first file, a season once every wanted episode is in.
+func (w watch) complete() bool {
+	if w.Season == nil {
+		return w.ArrivedAt != nil
 	}
-	if len(d.episodes) == 0 {
-		return d, false
-	}
-	slices.Sort(d.episodes)
-	d.watch.Delivered = slices.Sorted(slices.Values(append(slices.Clone(w.Delivered), d.episodes...)))
-	d.complete = d.watch.Total > 0 && len(d.watch.Delivered) >= d.watch.Total-d.watch.Start+1
-	return d, true
+	return w.Total > 0 && len(w.Delivered) >= w.Total-w.Start+1
 }
 
 // matches reports whether t is this watch's media (and season, for shows).
@@ -127,11 +146,11 @@ func (w watch) matches(t Transfer) bool {
 	return t.Season != nil && *t.Season == *w.Season
 }
 
-// fresh filters episodes to wanted ones not yet delivered or pending.
-func (w watch) fresh(episodes, pending []int) []int {
+// fresh filters episodes to wanted ones that have not arrived before.
+func (w watch) fresh(episodes []int) []int {
 	var out []int
 	for _, ep := range episodes {
-		if w.wants(ep) && !slices.Contains(w.Delivered, ep) && !slices.Contains(pending, ep) && !slices.Contains(out, ep) {
+		if w.wants(ep) && !slices.Contains(w.Delivered, ep) && !slices.Contains(out, ep) {
 			out = append(out, ep)
 		}
 	}

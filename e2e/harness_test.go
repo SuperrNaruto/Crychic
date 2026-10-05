@@ -25,12 +25,15 @@ const (
 	actionTimeout = 5 * time.Second
 	// notifyInterval keeps arrival polling fast enough for tests.
 	notifyInterval = "100ms"
+	// notifyQuiet is the default settling time for a show's arrivals.
+	notifyQuiet = "300ms"
 )
 
 type scenario struct {
 	routes  map[string]route
 	apiKey  string
 	history []transfer // transfers that predate the bot
+	quiet   string     // CRYCHIC_NOTIFY_QUIET, notifyQuiet if empty
 }
 
 type harness struct {
@@ -54,6 +57,9 @@ func start(t *testing.T, sc scenario) *harness {
 	if sc.apiKey == "" {
 		sc.apiKey = mpAPIKey
 	}
+	if sc.quiet == "" {
+		sc.quiet = notifyQuiet
+	}
 	env := map[string]string{
 		"CRYCHIC_MOVIEPILOT_URL":         mp.URL,
 		"CRYCHIC_MOVIEPILOT_API_KEY":     sc.apiKey,
@@ -62,6 +68,7 @@ func start(t *testing.T, sc scenario) *harness {
 		"CRYCHIC_TELEGRAM_ALLOWED_USERS": fmt.Sprintf("%d, %d", alice, bob),
 		"CRYCHIC_DATA_DIR":               t.TempDir(),
 		"CRYCHIC_NOTIFY_INTERVAL":        notifyInterval,
+		"CRYCHIC_NOTIFY_QUIET":           sc.quiet,
 	}
 	cfg, err := config.Load(func(k string) string { return env[k] })
 	if err != nil {
@@ -103,12 +110,24 @@ func (h *harness) restart() {
 // bot to post a notice in chat.
 func (h *harness) arrives(chat int64, records ...transfer) {
 	h.t.Helper()
-	for _, r := range records {
-		h.tr.add(strings.TrimSpace(fmt.Sprintf(">> MoviePilot transfers %s (%s/%s) %s%s", r.Title, r.MediaSource, r.MediaID, r.Seasons, r.Episodes)))
-	}
+	h.logTransfers(records)
 	done := h.tg.expect(fmt.Sprintf("send:%d", chat))
 	h.mp.add(records...)
 	h.wait(done, "an arrival notice")
+}
+
+// transfers adds records to MoviePilot's transfer history and waits until
+// the notifier has read them, without expecting a notice.
+func (h *harness) transfers(records ...transfer) {
+	h.t.Helper()
+	h.logTransfers(records)
+	h.wait(h.mp.add(records...), "the notifier reading new transfers")
+}
+
+func (h *harness) logTransfers(records []transfer) {
+	for _, r := range records {
+		h.tr.add(strings.TrimSpace(fmt.Sprintf(">> MoviePilot transfers %s (%s/%s) %s%s", r.Title, r.MediaSource, r.MediaID, r.Seasons, r.Episodes)))
+	}
 }
 
 // say sends a text message from user in chat and waits for the bot's reply.

@@ -14,7 +14,15 @@ const (
 	defaultDataDir        = "data"
 	defaultNotifyInterval = time.Minute
 	minimumNotifyInterval = 100 * time.Millisecond
+	defaultNotifyQuiet    = 3 * time.Minute
 )
+
+// notifyInterval is how often arrivals are checked, e.g. "1m" or "30s".
+var notifyInterval = durationVar{"CRYCHIC_NOTIFY_INTERVAL", defaultNotifyInterval, minimumNotifyInterval}
+
+// notifyQuiet is how long a show's arrivals settle before one notice
+// covers them all; "0s" announces every poll's arrivals right away.
+var notifyQuiet = durationVar{"CRYCHIC_NOTIFY_QUIET", defaultNotifyQuiet, 0}
 
 // Config is the full runtime configuration.
 type Config struct {
@@ -25,6 +33,7 @@ type Config struct {
 	TelegramAllowed  []int64
 	DataDir          string
 	NotifyInterval   time.Duration
+	NotifyQuiet      time.Duration
 }
 
 // Load builds a Config from getenv (os.Getenv in production), reporting
@@ -44,11 +53,13 @@ func Load(getenv func(string) string) (Config, error) {
 		cfg.DataDir = defaultDataDir
 	}
 	var errs []error
-	interval, err := parseInterval(getenv("CRYCHIC_NOTIFY_INTERVAL"))
-	if err != nil {
+	var err error
+	if cfg.NotifyInterval, err = notifyInterval.parse(getenv); err != nil {
 		errs = append(errs, err)
 	}
-	cfg.NotifyInterval = interval
+	if cfg.NotifyQuiet, err = notifyQuiet.parse(getenv); err != nil {
+		errs = append(errs, err)
+	}
 	required := []struct{ name, value string }{
 		{"CRYCHIC_MOVIEPILOT_URL", cfg.MoviePilotURL},
 		{"CRYCHIC_MOVIEPILOT_API_KEY", cfg.MoviePilotAPIKey},
@@ -67,14 +78,21 @@ func Load(getenv func(string) string) (Config, error) {
 	return cfg, errors.Join(errs...)
 }
 
-// parseInterval reads how often arrivals are checked, e.g. "1m" or "30s".
-func parseInterval(raw string) (time.Duration, error) {
+// durationVar is a duration setting with a default and a lower bound.
+type durationVar struct {
+	name    string
+	def     time.Duration
+	minimum time.Duration
+}
+
+func (v durationVar) parse(getenv func(string) string) (time.Duration, error) {
+	raw := getenv(v.name)
 	if raw == "" {
-		return defaultNotifyInterval, nil
+		return v.def, nil
 	}
 	d, err := time.ParseDuration(raw)
-	if err != nil || d < minimumNotifyInterval {
-		return 0, fmt.Errorf("CRYCHIC_NOTIFY_INTERVAL: want a duration of at least %s, got %q", minimumNotifyInterval, raw)
+	if err != nil || d < v.minimum {
+		return 0, fmt.Errorf("%s: want a duration of at least %s, got %q", v.name, v.minimum, raw)
 	}
 	return d, nil
 }

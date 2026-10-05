@@ -27,6 +27,7 @@
 | `CRYCHIC_TELEGRAM_API_URL` | 否 | 自建 Bot API 服务器地址，默认 `https://api.telegram.org` |
 | `CRYCHIC_DATA_DIR` | 否 | 数据目录，默认 `data`，保存等待入库通知的请求 |
 | `CRYCHIC_NOTIFY_INTERVAL` | 否 | 检查入库的间隔，默认 `1m` |
+| `CRYCHIC_NOTIFY_QUIET` | 否 | 剧集入库的静默期，默认 `3m`：一段时间内没有新集入库后，把这段时间到的集合并成一条通知；`0s` 表示不合并 |
 
 ```sh
 go build -o crychic ./cmd/crychic && ./crychic
