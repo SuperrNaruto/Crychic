@@ -1,6 +1,6 @@
 >> user 2002 in chat 2002: /request 沙丘
-<< sendMessage chat=2002 message=1 parse_mode=HTML
-   🚫 你没有使用权限。你的 Telegram ID：<code>2002</code>
+<< sendRichMessage chat=2002 message=1
+   <p>🚫 你没有使用权限。你的 Telegram ID：<code>2002</code></p>
 >> user 2002 in chat 2002: /start
-<< sendMessage chat=2002 message=2 parse_mode=HTML
-   🚫 你没有使用权限。你的 Telegram ID：<code>2002</code>
+<< sendRichMessage chat=2002 message=2
+   <p>🚫 你没有使用权限。你的 Telegram ID：<code>2002</code></p>

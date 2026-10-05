@@ -186,7 +186,7 @@ func pausedView(sess session, index int, why string) Reply {
 
 // withWarning appends a note to a view without touching the original.
 func withWarning(view Reply, note string) Reply {
-	text := append(append(Text{}, view.Text...), Line(Emphasis(note)))
+	text := append(append(Text{}, view.Text...), Remark(note))
 	return Reply{Text: text, Image: view.Image}
 }
 

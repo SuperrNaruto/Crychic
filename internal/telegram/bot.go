@@ -154,12 +154,7 @@ func (b *Bot) Notify(ctx context.Context, n flow.Notice) error {
 		first := flow.Line(append([]flow.Span{mention, flow.Plain(" ")}, text[0].Spans...)...)
 		text = append(flow.Lines(first), text[1:]...)
 	}
-	_, err = b.api.SendMessage(ctx, &bot.SendMessageParams{
-		ChatID:             chat,
-		Text:               renderHTML(text),
-		ParseMode:          models.ParseModeHTML,
-		LinkPreviewOptions: preview(n.Image),
-	})
+	_, err = b.adapter.send(ctx, chat, flow.Reply{Text: text, Image: n.Image})
 	return err
 }
 
@@ -338,17 +333,6 @@ func (a *adapter) logFailure(method string, err error) {
 	if err != nil {
 		a.log.Error("telegram call failed", "method", method, "err", err)
 	}
-}
-
-// preview shows the poster as a large link preview above the text, keeping
-// long lists and media cards editable as text. Without an image any earlier
-// preview is switched off. Only the home banner uses a real photo message.
-func preview(image string) *models.LinkPreviewOptions {
-	on := true
-	if image == "" {
-		return &models.LinkPreviewOptions{IsDisabled: &on}
-	}
-	return &models.LinkPreviewOptions{URL: &image, PreferLargeMedia: &on, ShowAboveText: &on}
 }
 
 // keyboard returns nil for no buttons, which removes the keyboard on edit.

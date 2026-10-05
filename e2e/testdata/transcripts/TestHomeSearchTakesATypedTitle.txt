@@ -1,71 +1,73 @@
 >> user 1001 in chat 1001: /start
-<< sendPhoto chat=1001 message=1 parse_mode=HTML photo=home.jpg 1280x720 sha256=044ae094690453fdfcc5a20f29e8ff7a06c6474e8287e02309152b59b90cd814 caption_above=false
-   <b>🎬 Crychic</b>
-   搜索并订阅电影和剧集，入库后通知你。
+<< sendRichMessage chat=1001 message=1 photo=home.jpg 1280x720 sha256=044ae094690453fdfcc5a20f29e8ff7a06c6474e8287e02309152b59b90cd814
+   <img src="tg://photo?id=home"/>
+   <h3>🎬 Crychic</h3>
+   <p>搜索并订阅电影和剧集，入库后通知你。</p>
    [搜索订阅 | 1:h:0] [发现 | 1:h:1]
    [订阅 | 1:h:2] [最新入库 | 1:h:3]
    [任务进度 | 1:h:4]
 >> user 1002 taps 1:h:0 on message 1
 << answerCallbackQuery notice="这不是你发起的请求。"
 >> user 1001 taps 1:h:0 on message 1
-<< sendMessage chat=1001 message=2 parse_mode=HTML
-   请直接回复要搜索的片名：
+<< editMessageText chat=1001 message=1
+   <p>请直接回复要搜索的片名：</p>
    [首页 | 1:o:0]
-<< deleteMessage chat=1001 message=1
 << answerCallbackQuery
->> user 1001 taps 1:o:0 on message 2
-<< editMessageMedia chat=1001 message=2 parse_mode=HTML photo=home.jpg 1280x720 sha256=044ae094690453fdfcc5a20f29e8ff7a06c6474e8287e02309152b59b90cd814 caption_above=false
-   <b>🎬 Crychic</b>
-   搜索并订阅电影和剧集，入库后通知你。
+>> user 1001 taps 1:o:0 on message 1
+<< editMessageText chat=1001 message=1 photo=home.jpg 1280x720 sha256=044ae094690453fdfcc5a20f29e8ff7a06c6474e8287e02309152b59b90cd814
+   <img src="tg://photo?id=home"/>
+   <h3>🎬 Crychic</h3>
+   <p>搜索并订阅电影和剧集，入库后通知你。</p>
    [搜索订阅 | 1:h:0] [发现 | 1:h:1]
    [订阅 | 1:h:2] [最新入库 | 1:h:3]
    [任务进度 | 1:h:4]
 << answerCallbackQuery
->> user 1001 taps 1:h:0 on message 2
-<< sendMessage chat=1001 message=3 parse_mode=HTML
-   请直接回复要搜索的片名：
+>> user 1001 taps 1:h:0 on message 1
+<< editMessageText chat=1001 message=1
+   <p>请直接回复要搜索的片名：</p>
    [首页 | 1:o:0]
-<< deleteMessage chat=1001 message=2
 << answerCallbackQuery
 >> user 1001 in chat 1001: 沙丘
 -> MoviePilot GET /api/v1/media/search?count=10&title=沙丘&type=media
-<< editMessageText chat=1001 message=3 parse_mode=HTML
-   <b>🔍「沙丘」的搜索结果</b>
-   1. <b>沙丘</b>
-   <i>Dune · 2021 · 电影 · ⭐ 7.8</i>
-   2. <b>沙丘：预言</b>
-   <i>Dune: Prophecy · 2024 · 电视剧 · ⭐ 7.2</i>
-   3. <b>沙丘</b>
-   <i>Dune · 1984 · 电影 · ⭐ 6.2</i>
-   4. <b>沙丘2</b>
-   <i>Dune: Part Two · 2024 · 电影 · ⭐ 8.1</i>
-   5. <b>沙丘3</b>
-   <i>Dune: Part Three · 2026 · 电影</i>
-   6. <b>沙丘之子</b>
-   <i>Frank Herbert&#39;s Children of Dune · 2003 · 电视剧 · ⭐ 6.9</i>
-   7. <b>沙丘魔堡2000</b>
-   <i>Frank Herbert&#39;s Dune · 2000 · 电视剧 · ⭐ 6.8</i>
-   8. <b>沙丘虫暴</b>
-   <i>2021 · 电影 · ⭐ 6.7</i>
+<< editMessageText chat=1001 message=1
+   <h3>🔍「沙丘」的搜索结果</h3>
+   <ol start="1">
+   <li value="1"><b>沙丘</b><br>
+   <i>Dune · 2021 · 电影 · ⭐ 7.8</i></li>
+   <li value="2"><b>沙丘：预言</b><br>
+   <i>Dune: Prophecy · 2024 · 电视剧 · ⭐ 7.2</i></li>
+   <li value="3"><b>沙丘</b><br>
+   <i>Dune · 1984 · 电影 · ⭐ 6.2</i></li>
+   <li value="4"><b>沙丘2</b><br>
+   <i>Dune: Part Two · 2024 · 电影 · ⭐ 8.1</i></li>
+   <li value="5"><b>沙丘3</b><br>
+   <i>Dune: Part Three · 2026 · 电影</i></li>
+   <li value="6"><b>沙丘之子</b><br>
+   <i>Frank Herbert&#39;s Children of Dune · 2003 · 电视剧 · ⭐ 6.9</i></li>
+   <li value="7"><b>沙丘魔堡2000</b><br>
+   <i>Frank Herbert&#39;s Dune · 2000 · 电视剧 · ⭐ 6.8</i></li>
+   <li value="8"><b>沙丘虫暴</b><br>
+   <i>2021 · 电影 · ⭐ 6.7</i></li>
+   </ol>
    [1 | 1:m:0] [2 | 1:m:1] [3 | 1:m:2] [4 | 1:m:3]
    [5 | 1:m:4] [6 | 1:m:5] [7 | 1:m:6] [8 | 1:m:7]
    [返回 | 1:bk:0] [取消 | 1:x:0]
->> user 1001 taps 1:bk:0 on message 3
-<< editMessageText chat=1001 message=3 parse_mode=HTML
-   请直接回复要搜索的片名：
+>> user 1001 taps 1:bk:0 on message 1
+<< editMessageText chat=1001 message=1
+   <p>请直接回复要搜索的片名：</p>
    [首页 | 1:o:0]
 << answerCallbackQuery
->> user 1001 taps 1:o:0 on message 3
-<< editMessageMedia chat=1001 message=3 parse_mode=HTML photo=home.jpg 1280x720 sha256=044ae094690453fdfcc5a20f29e8ff7a06c6474e8287e02309152b59b90cd814 caption_above=false
-   <b>🎬 Crychic</b>
-   搜索并订阅电影和剧集，入库后通知你。
+>> user 1001 taps 1:o:0 on message 1
+<< editMessageText chat=1001 message=1 photo=home.jpg 1280x720 sha256=044ae094690453fdfcc5a20f29e8ff7a06c6474e8287e02309152b59b90cd814
+   <img src="tg://photo?id=home"/>
+   <h3>🎬 Crychic</h3>
+   <p>搜索并订阅电影和剧集，入库后通知你。</p>
    [搜索订阅 | 1:h:0] [发现 | 1:h:1]
    [订阅 | 1:h:2] [最新入库 | 1:h:3]
    [任务进度 | 1:h:4]
 << answerCallbackQuery
 >> Crychic restarts
->> user 1001 taps 1:h:0 on message 3
-<< sendMessage chat=1001 message=4 parse_mode=HTML
-   ⌛ 这个菜单已失效，请重新 /start。
-<< deleteMessage chat=1001 message=3
+>> user 1001 taps 1:h:0 on message 1
+<< editMessageText chat=1001 message=1
+   <p>⌛ 这个菜单已失效，请重新 /start。</p>
 << answerCallbackQuery

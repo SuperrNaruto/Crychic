@@ -1,34 +1,38 @@
 >> user 1001 in chat 1001: /request 绝命毒师
 -> MoviePilot GET /api/v1/media/search?count=10&title=绝命毒师&type=media
-<< sendMessage chat=1001 message=1 parse_mode=HTML
-   <b>🔍「绝命毒师」的搜索结果</b>
-   1. <b>绝命毒师</b>
-   <i>Breaking Bad · 2008 · 电视剧 · ⭐ 9.0</i>
-   2. <b>续命之徒：绝命毒师电影</b>
-   <i>El Camino: A Breaking Bad Movie · 2019 · 电影 · ⭐ 7.1</i>
-   3. <b>绝不折中：绝命毒师最终季制作记录</b>
-   <i>No Half Measures: Creating the Final Season of Breaking Bad · 2013 · 电影 · ⭐ 8.5</i>
-   4. <b>The Road to El Camino: Behind the Scenes of El Camino: A Breaking Bad Movie</b>
-   <i>2019 · 电影 · ⭐ 6.9</i>
+<< sendRichMessage chat=1001 message=1
+   <h3>🔍「绝命毒师」的搜索结果</h3>
+   <ol start="1">
+   <li value="1"><b>绝命毒师</b><br>
+   <i>Breaking Bad · 2008 · 电视剧 · ⭐ 9.0</i></li>
+   <li value="2"><b>续命之徒：绝命毒师电影</b><br>
+   <i>El Camino: A Breaking Bad Movie · 2019 · 电影 · ⭐ 7.1</i></li>
+   <li value="3"><b>绝不折中：绝命毒师最终季制作记录</b><br>
+   <i>No Half Measures: Creating the Final Season of Breaking Bad · 2013 · 电影 · ⭐ 8.5</i></li>
+   <li value="4"><b>The Road to El Camino: Behind the Scenes of El Camino: A Breaking Bad Movie</b><br>
+   <i>2019 · 电影 · ⭐ 6.9</i></li>
+   </ol>
    [1 | 1:m:0] [2 | 1:m:1] [3 | 1:m:2] [4 | 1:m:3]
    [取消 | 1:x:0]
 >> user 1001 taps 1:m:0 on message 1
 -> MoviePilot GET /api/v1/media/1396?media_source=themoviedb&type_name=电视剧
 -> MoviePilot GET /api/v1/media/seasons?media_id=1396&media_source=themoviedb
-<< editMessageText chat=1001 message=1 parse_mode=HTML poster=https://image.tmdb.org/t/p/w500/rqliuvX7NdknSHu5qaSDfESplQi.jpg large=true above=true
-   📺 <a href="https://www.themoviedb.org/tv/1396"><b>绝命毒师</b></a> (2008) · 电视剧 · ⭐ 9.0
-   <i>Breaking Bad</i>
-   剧情 / 犯罪 · 共 5 季 62 集
-   主演：布莱恩·克兰斯顿、亚伦·保尔、安娜·冈
+<< editMessageText chat=1001 message=1
+   <img src="https://image.tmdb.org/t/p/w500/rqliuvX7NdknSHu5qaSDfESplQi.jpg"/>
+   <h3>📺 <a href="https://www.themoviedb.org/tv/1396">绝命毒师</a></h3>
+   <p><i>Breaking Bad</i><br>
+   2008 · 电视剧 · ⭐ 9.0<br>
+   剧情 / 犯罪 · 共 5 季 62 集<br>
+   主演：布莱恩·克兰斯顿、亚伦·保尔、安娜·冈</p>
    <blockquote expandable>高中化学教师沃尔特·怀特被诊断患有晚期癌症，为保障家人经济生活，他与学生杰西制毒贩毒，并逐渐坠落至万劫不复的深渊。</blockquote>
-
-   <b>选择要订阅的季：</b>
-   <b>特别篇</b> · 9 集
-   <b>第 1 季</b> · 7 集
-   <b>第 2 季</b> · 13 集
-   <b>第 3 季</b> · 13 集
-   <b>第 4 季</b> · 13 集
-   <b>第 5 季</b> · 16 集
+   <hr/>
+   <p><b>选择要订阅的季：</b><br>
+   <b>特别篇</b> · 9 集<br>
+   <b>第 1 季</b> · 7 集<br>
+   <b>第 2 季</b> · 13 集<br>
+   <b>第 3 季</b> · 13 集<br>
+   <b>第 4 季</b> · 13 集<br>
+   <b>第 5 季</b> · 16 集</p>
    [特别篇 | 1:s:0] [第 1 季 | 1:s:1] [第 2 季 | 1:s:2]
    [第 3 季 | 1:s:3] [第 4 季 | 1:s:4] [第 5 季 | 1:s:5]
    [多选季… | 1:a:0]
@@ -37,14 +41,16 @@
 << answerCallbackQuery
 >> user 1001 taps 1:s:2 on message 1
 -> MoviePilot GET /api/v1/subscribe/media/1396?media_source=themoviedb&mtype=电视剧&season=2&title=绝命毒师&year=2008
-<< editMessageText chat=1001 message=1 parse_mode=HTML poster=https://image.tmdb.org/t/p/w500/rqliuvX7NdknSHu5qaSDfESplQi.jpg large=true above=true
-   📺 <a href="https://www.themoviedb.org/tv/1396"><b>绝命毒师</b></a> (2008) · 电视剧 · ⭐ 9.0
-   <i>Breaking Bad</i>
-   剧情 / 犯罪 · 共 5 季 62 集
-   主演：布莱恩·克兰斯顿、亚伦·保尔、安娜·冈
+<< editMessageText chat=1001 message=1
+   <img src="https://image.tmdb.org/t/p/w500/rqliuvX7NdknSHu5qaSDfESplQi.jpg"/>
+   <h3>📺 <a href="https://www.themoviedb.org/tv/1396">绝命毒师</a></h3>
+   <p><i>Breaking Bad</i><br>
+   2008 · 电视剧 · ⭐ 9.0<br>
+   剧情 / 犯罪 · 共 5 季 62 集<br>
+   主演：布莱恩·克兰斯顿、亚伦·保尔、安娜·冈</p>
    <blockquote expandable>高中化学教师沃尔特·怀特被诊断患有晚期癌症，为保障家人经济生活，他与学生杰西制毒贩毒，并逐渐坠落至万劫不复的深渊。</blockquote>
-
-   <b>确认订阅《绝命毒师》第 2 季（共 13 集）？</b>
+   <hr/>
+   <p><b>确认订阅《绝命毒师》第 2 季（共 13 集）？</b></p>
    [从第 1 集开始 | 1:ok:0]
    [指定起始集… | 1:e:0]
    [返回 | 1:bk:0] [取消 | 1:x:0]
@@ -52,18 +58,21 @@
 >> user 1001 taps 1:ok:0 on message 1
 -> MoviePilot POST /api/v1/subscribe/
    {"name":"绝命毒师","year":"2008","type":"电视剧","media_source":"themoviedb","media_id":"1396","season":2}
-<< editMessageText chat=1001 message=1 parse_mode=HTML poster=https://image.tmdb.org/t/p/w500/rqliuvX7NdknSHu5qaSDfESplQi.jpg large=true above=true
-   📺 <a href="https://www.themoviedb.org/tv/1396"><b>绝命毒师</b></a> (2008) · 电视剧 · ⭐ 9.0
-   <i>Breaking Bad</i>
-   剧情 / 犯罪 · 共 5 季 62 集
-   主演：布莱恩·克兰斯顿、亚伦·保尔、安娜·冈
+<< editMessageText chat=1001 message=1
+   <img src="https://image.tmdb.org/t/p/w500/rqliuvX7NdknSHu5qaSDfESplQi.jpg"/>
+   <h3>📺 <a href="https://www.themoviedb.org/tv/1396">绝命毒师</a></h3>
+   <p><i>Breaking Bad</i><br>
+   2008 · 电视剧 · ⭐ 9.0<br>
+   剧情 / 犯罪 · 共 5 季 62 集<br>
+   主演：布莱恩·克兰斯顿、亚伦·保尔、安娜·冈</p>
    <blockquote expandable>高中化学教师沃尔特·怀特被诊断患有晚期癌症，为保障家人经济生活，他与学生杰西制毒贩毒，并逐渐坠落至万劫不复的深渊。</blockquote>
-
-   ✅ 已订阅《绝命毒师》第 2 季，入库后会通知你。
+   <hr/>
+   <p>✅ 已订阅《绝命毒师》第 2 季，入库后会通知你。</p>
 << answerCallbackQuery
 >> MoviePilot transfers 绝命毒师 (themoviedb/1396) S02E01
 >> Crychic restarts
 >> MoviePilot transfers 绝命毒师 (themoviedb/1396) S02E02
-<< sendMessage chat=1001 message=2 parse_mode=HTML poster=https://image.tmdb.org/t/p/w500/rqliuvX7NdknSHu5qaSDfESplQi.jpg large=true above=true
-   📥 你请求的<b>《绝命毒师》第 2 季</b> E01–E02 已入库。
-   <a href="https://emby.example.com/web/index.html#!/item?id=1396">▶️ 在 Emby 中观看</a>
+<< sendRichMessage chat=1001 message=2
+   <img src="https://image.tmdb.org/t/p/w500/rqliuvX7NdknSHu5qaSDfESplQi.jpg"/>
+   <p>📥 你请求的<b>《绝命毒师》第 2 季</b> E01–E02 已入库。<br>
+   <a href="https://emby.example.com/web/index.html#!/item?id=1396">▶️ 在 Emby 中观看</a></p>

@@ -23,12 +23,14 @@ type button struct {
 	CallbackData string `json:"callback_data"`
 }
 
+// message is a message on screen: a rich message (text is its HTML,
+// media its uploaded photos) or a photo with a caption.
 type message struct {
 	chat  int64
 	text  string
 	rows  [][]button
+	media []photo
 	photo *photo
-	mode  string
 }
 
 // fakeTelegram is a Bot API server: it hands queued updates to getUpdates,
@@ -48,6 +50,7 @@ type fakeTelegram struct {
 	commands  map[string]string // setMyCommands menus by scope, as sent
 	stall     string
 	stalled   chan struct{}
+	badImage  string // an image URL Telegram fails to fetch
 }
 
 func newFakeTelegram(tr *transcript) *fakeTelegram {
@@ -129,7 +132,7 @@ func (f *fakeTelegram) serve(w http.ResponseWriter, r *http.Request) {
 
 func (f *fakeTelegram) serveMessage(w http.ResponseWriter, r *http.Request, method string) bool {
 	switch method {
-	case "sendMessage", "editMessageText", "sendPhoto", "editMessageMedia":
+	case "sendRichMessage", "editMessageText":
 		result, err := f.store(r, method)
 		reply(w, result, err)
 	case "deleteMessage":
@@ -152,6 +155,14 @@ func (f *fakeTelegram) setCommands(r *http.Request) {
 	if scope == defaultScope {
 		f.finish(commandsKey)
 	}
+}
+
+// refuseImage makes media blocks with url fail, as when Telegram cannot
+// download a poster.
+func (f *fakeTelegram) refuseImage(url string) {
+	f.mu.Lock()
+	defer f.mu.Unlock()
+	f.badImage = url
 }
 
 // stallNext keeps one API request open until its client cancels it.
@@ -223,37 +234,20 @@ func (f *fakeTelegram) store(r *http.Request, method string) (map[string]any, er
 	f.mu.Unlock()
 
 	head := fmt.Sprintf("<< %s chat=%d message=%d", method, m.chat, id)
-	if m.mode != "" {
-		head += " parse_mode=" + m.mode
+	for _, p := range m.media {
+		head += p.description()
 	}
-	if m.photo != nil {
-		head += m.photo.description()
-	}
-	head += previewDescription(r)
 	doneKey := fmt.Sprintf("edit:%d", id)
 	if strings.HasPrefix(method, "send") {
 		doneKey = fmt.Sprintf("send:%d", m.chat)
 	}
-	body := []string{m.text}
+	body := richLines(m.text)
 	if len(m.rows) > 0 {
 		body = append(body, buttonLines(m.rows))
 	}
 	f.tr.add(head, body...)
 	f.finish(doneKey)
 	return m.wire(id), nil
-}
-
-func previewDescription(r *http.Request) string {
-	var preview struct {
-		URL   string `json:"url"`
-		Large bool   `json:"prefer_large_media"`
-		Above bool   `json:"show_above_text"`
-	}
-	_ = json.Unmarshal([]byte(r.FormValue("link_preview_options")), &preview)
-	if preview.URL != "" {
-		return fmt.Sprintf(" poster=%s large=%t above=%t", preview.URL, preview.Large, preview.Above)
-	}
-	return ""
 }
 
 func (f *fakeTelegram) answer(w http.ResponseWriter, r *http.Request) {

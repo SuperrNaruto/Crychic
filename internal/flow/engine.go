@@ -96,7 +96,7 @@ func (e *Engine) search(ctx context.Context, sess session, term string) Reply {
 
 // resultList numbers sess's results, found searching term, as buttons.
 func resultList(sess session, term string) Reply {
-	return numberedResults(sess, Line(Strong(fmt.Sprintf("🔍「%s」的搜索结果", term))))
+	return numberedResults(sess, Heading(Plain(fmt.Sprintf("🔍「%s」的搜索结果", term))))
 }
 
 // numberedResults lists sess's results under heading, numbered, with a
@@ -107,7 +107,7 @@ func numberedResults(sess session, heading Block) Reply {
 	text = append(text, heading)
 	picks := make([]Button, 0, len(results))
 	for i, m := range results {
-		text = append(text, resultLines(i+1, m)...)
+		text = append(text, resultEntry(i+1, m))
 		picks = append(picks, Button{Label: fmt.Sprint(i + 1), Data: data(sess.id, actionMedia, i)})
 	}
 	rows := append(grid(picks, gridColumns), []Button{cancelButton(sess.id)})

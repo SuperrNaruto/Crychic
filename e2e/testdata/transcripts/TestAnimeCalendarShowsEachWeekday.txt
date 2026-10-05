@@ -1,21 +1,21 @@
 >> user 1001 in chat 1001: /start
-<< sendPhoto chat=1001 message=1 parse_mode=HTML photo=home.jpg 1280x720 sha256=044ae094690453fdfcc5a20f29e8ff7a06c6474e8287e02309152b59b90cd814 caption_above=false
-   <b>🎬 Crychic</b>
-   搜索并订阅电影和剧集，入库后通知你。
+<< sendRichMessage chat=1001 message=1 photo=home.jpg 1280x720 sha256=044ae094690453fdfcc5a20f29e8ff7a06c6474e8287e02309152b59b90cd814
+   <img src="tg://photo?id=home"/>
+   <h3>🎬 Crychic</h3>
+   <p>搜索并订阅电影和剧集，入库后通知你。</p>
    [搜索订阅 | 1:h:0] [发现 | 1:h:1]
    [订阅 | 1:h:2] [最新入库 | 1:h:3]
    [任务进度 | 1:h:4]
 >> user 1001 taps 1:h:1 on message 1
-<< sendMessage chat=1001 message=2 parse_mode=HTML
-   <b>🔥 发现</b>
-   选择一个榜单：
+<< editMessageText chat=1001 message=1
+   <h3>🔥 发现</h3>
+   <p>选择一个榜单：</p>
    [TMDB 流行趋势 | 1:d:0] [豆瓣热门电影 | 1:d:1]
    [豆瓣热门剧集 | 1:d:2] [正在热映 | 1:d:3]
    [新番放送 | 1:d:4]
    [首页 | 1:o:0]
-<< deleteMessage chat=1001 message=1
 << answerCallbackQuery
->> user 1001 taps 1:d:4 on message 2
+>> user 1001 taps 1:d:4 on message 1
 -> Bangumi GET /calendar
 -> MoviePilot GET /api/v1/media/search?count=10&title=PSYREN -サイレン-&type=media
 -> MoviePilot GET /api/v1/media/search?count=10&title=PSYREN -决战游戏-&type=media
@@ -31,112 +31,132 @@
 -> Bangumi GET /v0/subjects/511936
 -> Bangumi GET /v0/subjects/614640
 -> Bangumi GET /v0/subjects/624923
-<< editMessageText chat=1001 message=2 parse_mode=HTML
-   <b>🎌 新番放送 · 星期一（今天） · 第 1/1 页</b>
-
-   <b>2026-10-05 首播</b>
-   1. <a href="https://bgm.tv/subject/390200"><b>列女战纪：女娲石记</b></a>
-   2. <a href="https://www.themoviedb.org/tv/337277"><b>魔法少女育成计划 restart</b></a>
-   <i>⭐ 8.1</i>
+<< editMessageText chat=1001 message=1
+   <h3>🎌 新番放送 · 星期一（今天） · 第 1/1 页</h3>
+   <h4>2026-10-05 首播</h4>
+   <ol start="1">
+   <li value="1"><a href="https://bgm.tv/subject/390200"><b>列女战纪：女娲石记</b></a></li>
+   <li value="2"><a href="https://www.themoviedb.org/tv/337277"><b>魔法少女育成计划 restart</b></a><br>
+   <i>⭐ 8.1</i></li>
+   </ol>
    <blockquote expandable>获得「魔法王国」所赐之魔力、每日勤奋奔走于助人的魔法少女们——她们收到了来自神秘寄信人所寄出，名为『魔法少女育成计划』的游戏邀请函。受到隐藏着死亡风险、毫无逻辑可言的游戏所囚禁的十六位魔法少女，在幕后黑手策划的诡计玩弄下，开始为了存活下来而绞尽脑汁苦思对策……</blockquote>
-   3. <a href="https://www.themoviedb.org/tv/305313"><b>罗梅莉亚战记</b></a>
-   <i>⭐ 6.3</i>
+   <ol start="3">
+   <li value="3"><a href="https://www.themoviedb.org/tv/305313"><b>罗梅莉亚战记</b></a><br>
+   <i>⭐ 6.3</i></li>
+   </ol>
    <blockquote expandable>“罗梅，不，罗梅莉亚伯爵千金。我和你已经没法再继续下去了，我要解除跟你的婚约，一回国便分手吧。”当亨利王子夙愿以偿打倒了魔王塞尔吉斯，喜悦未平的时候，他突然这么跟我说道。但王子他们不知道。我拥有名为“恩宠”的奇迹之力……这是在打倒魔王后被王子当场宣布退婚的女主角罗梅莉亚，开启了“战后”重建新世界的传奇故事。</blockquote>
-   4. <a href="https://www.themoviedb.org/tv/297903"><b>PSYREN -サイレン-</b></a>
-   <blockquote expandable>高校一年生・夜科アゲハは、ある日、公衆電話に放置されていた
-   “赤いテレホンカード”を拾う。数日後、同じテレホンカードを持っていた
-   幼馴染みの同級生・雨宮桜子が姿を消す。
-   アゲハは彼女を捜すため、全国規模で起こっている連続“神隠し”失踪事件
-   の黒幕と噂される「秘密結社サイレン」へとアクセスする。
+   <ol start="4">
+   <li value="4"><a href="https://www.themoviedb.org/tv/297903"><b>PSYREN -サイレン-</b></a></li>
+   </ol>
+   <blockquote expandable>高校一年生・夜科アゲハは、ある日、公衆電話に放置されていた<br>
+   “赤いテレホンカード”を拾う。数日後、同じテレホンカードを持っていた<br>
+   幼馴染みの同級生・雨宮桜子が姿を消す。<br>
+   アゲハは彼女を捜すため、全国規模で起こっている連続“神隠し”失踪事件<br>
+   の黒幕と噂される「秘密結社サイレン」へとアクセスする。<br>
    そして、命を懸けたゲームが始まってしまった─</blockquote>
-   5. <a href="https://www.themoviedb.org/tv/313068"><b>你好，我是受心上人所托来做恋爱药的魔女。</b></a>
-   <i>⭐ 6.6</i>
+   <ol start="5">
+   <li value="5"><a href="https://www.themoviedb.org/tv/313068"><b>你好，我是受心上人所托来做恋爱药的魔女。</b></a><br>
+   <i>⭐ 6.6</i></li>
+   </ol>
    <blockquote expandable>“希望你能帮我制作迷情药” 隐居在湖畔的魔女萝赛，从她暗恋的骑士哈利玖口中听到了这句话。 他心里挂念着别人，而非自己——面对这一现实，萝赛失恋了。 即便如此，她依然无法拒绝他的委托。 心想哪怕只在迷情药完成前的这段时间里能和他待在一起也好，萝赛将这份苦涩的爱恋深藏心底，度过着每一天。 哪怕明知这是一场无望的单恋，这份心意也无法抹去。 这是一位笨拙的家里蹲魔女×一位爱照顾人又一本正经的骑士。 以迷情药为契机交织而成的，令人揪心的恋爱物语。</blockquote>
    [1 | 1:i:0] [2 | 1:i:1] [3 | 1:i:2] [4 | 1:i:3]
    [5 | 1:i:4]
    [·一· | 1:w:1] [二 | 1:w:2] [三 | 1:w:3] [四 | 1:w:4] [五 | 1:w:5] [六 | 1:w:6] [日 | 1:w:7]
    [返回榜单 | 1:b:0] [首页 | 1:o:0]
 << answerCallbackQuery
->> user 1001 taps 1:i:1 on message 2
+>> user 1001 taps 1:i:1 on message 1
 -> MoviePilot GET /api/v1/media/search?count=10&title=魔法少女育成计划 restart&type=media
 -> MoviePilot GET /api/v1/media/337277?media_source=themoviedb&type_name=电视剧
 -> MoviePilot GET /api/v1/media/seasons?media_id=337277&media_source=themoviedb
-<< editMessageText chat=1001 message=2 parse_mode=HTML poster=https://image.tmdb.org/t/p/w500/yFRVyWWmNMJ72CqxRc2dZqW9TAE.jpg large=true above=true
-   📺 <a href="https://www.themoviedb.org/tv/337277"><b>魔法少女育成计划 restart</b></a> (2026) · 电视剧
-   <i>魔法少女育成計画 restart</i>
+<< editMessageText chat=1001 message=1
+   <img src="https://image.tmdb.org/t/p/w500/yFRVyWWmNMJ72CqxRc2dZqW9TAE.jpg"/>
+   <h3>📺 <a href="https://www.themoviedb.org/tv/337277">魔法少女育成计划 restart</a></h3>
+   <p><i>魔法少女育成計画 restart</i><br>
+   2026 · 电视剧</p>
    <blockquote expandable>获得「魔法王国」所赐之魔力、每日勤奋奔走于助人的魔法少女们——她们收到了来自神秘寄信人所寄出，名为『魔法少女育成计划』的游戏邀请函。受到隐藏着死亡风险、毫无逻辑可言的游戏所囚禁的十六位魔法少女，在幕后黑手策划的诡计玩弄下，开始为了存活下来而绞尽脑汁苦思对策……</blockquote>
-
-   <b>选择要订阅的季：</b>
-   <b>特别篇</b> · 3 集
-   <b>第 1 季</b> · 13 集
+   <hr/>
+   <p><b>选择要订阅的季：</b><br>
+   <b>特别篇</b> · 3 集<br>
+   <b>第 1 季</b> · 13 集</p>
    [特别篇 | 1:s:0] [第 1 季 | 1:s:1]
    [多选季… | 1:a:0]
    [相似推荐 | 1:r:0]
    [返回 | 1:bk:0] [取消 | 1:x:0]
 << answerCallbackQuery
->> user 1001 taps 1:bk:0 on message 2
+>> user 1001 taps 1:bk:0 on message 1
 -> MoviePilot GET /api/v1/media/search?count=10&title=列女战纪：女娲石记&type=media
 -> Bangumi GET /v0/subjects/390200
-<< editMessageText chat=1001 message=2 parse_mode=HTML
-   <b>🎌 新番放送 · 星期一（今天） · 第 1/1 页</b>
-
-   <b>2026-10-05 首播</b>
-   1. <a href="https://bgm.tv/subject/390200"><b>列女战纪：女娲石记</b></a>
-   <blockquote expandable>补天的时代已经过去，天上的女娲石纷纷落至凡间，化为人形，闯荡四方。她们体内蕴藏着强大的灵力，被各界觊觎——灵岩便是其中一颗。她打算贿赂神仙，寻求天庭的庇护，后来结识了仙子素衣——她身为神仙，而另有所图。二人一拍即合，憧憬未来，却卷入了部分女娲石与神仙的纠纷，素衣不幸遇难。
+<< editMessageText chat=1001 message=1
+   <h3>🎌 新番放送 · 星期一（今天） · 第 1/1 页</h3>
+   <h4>2026-10-05 首播</h4>
+   <ol start="1">
+   <li value="1"><a href="https://bgm.tv/subject/390200"><b>列女战纪：女娲石记</b></a></li>
+   </ol>
+   <blockquote expandable>补天的时代已经过去，天上的女娲石纷纷落至凡间，化为人形，闯荡四方。她们体内蕴藏着强大的灵力，被各界觊觎——灵岩便是其中一颗。她打算贿赂神仙，寻求天庭的庇护，后来结识了仙子素衣——她身为神仙，而另有所图。二人一拍即合，憧憬未来，却卷入了部分女娲石与神仙的纠纷，素衣不幸遇难。<br>
    为了复活好友，灵岩与一位狡猾的女娲石合作了……</blockquote>
-   2. <a href="https://www.themoviedb.org/tv/337277"><b>魔法少女育成计划 restart</b></a>
-   <i>⭐ 8.1</i>
+   <ol start="2">
+   <li value="2"><a href="https://www.themoviedb.org/tv/337277"><b>魔法少女育成计划 restart</b></a><br>
+   <i>⭐ 8.1</i></li>
+   </ol>
    <blockquote expandable>获得「魔法王国」所赐之魔力、每日勤奋奔走于助人的魔法少女们——她们收到了来自神秘寄信人所寄出，名为『魔法少女育成计划』的游戏邀请函。受到隐藏着死亡风险、毫无逻辑可言的游戏所囚禁的十六位魔法少女，在幕后黑手策划的诡计玩弄下，开始为了存活下来而绞尽脑汁苦思对策……</blockquote>
-   3. <a href="https://www.themoviedb.org/tv/305313"><b>罗梅莉亚战记</b></a>
-   <i>⭐ 6.3</i>
+   <ol start="3">
+   <li value="3"><a href="https://www.themoviedb.org/tv/305313"><b>罗梅莉亚战记</b></a><br>
+   <i>⭐ 6.3</i></li>
+   </ol>
    <blockquote expandable>“罗梅，不，罗梅莉亚伯爵千金。我和你已经没法再继续下去了，我要解除跟你的婚约，一回国便分手吧。”当亨利王子夙愿以偿打倒了魔王塞尔吉斯，喜悦未平的时候，他突然这么跟我说道。但王子他们不知道。我拥有名为“恩宠”的奇迹之力……这是在打倒魔王后被王子当场宣布退婚的女主角罗梅莉亚，开启了“战后”重建新世界的传奇故事。</blockquote>
-   4. <a href="https://www.themoviedb.org/tv/297903"><b>PSYREN -サイレン-</b></a>
-   <blockquote expandable>高校一年生・夜科アゲハは、ある日、公衆電話に放置されていた
-   “赤いテレホンカード”を拾う。数日後、同じテレホンカードを持っていた
-   幼馴染みの同級生・雨宮桜子が姿を消す。
-   アゲハは彼女を捜すため、全国規模で起こっている連続“神隠し”失踪事件
-   の黒幕と噂される「秘密結社サイレン」へとアクセスする。
+   <ol start="4">
+   <li value="4"><a href="https://www.themoviedb.org/tv/297903"><b>PSYREN -サイレン-</b></a></li>
+   </ol>
+   <blockquote expandable>高校一年生・夜科アゲハは、ある日、公衆電話に放置されていた<br>
+   “赤いテレホンカード”を拾う。数日後、同じテレホンカードを持っていた<br>
+   幼馴染みの同級生・雨宮桜子が姿を消す。<br>
+   アゲハは彼女を捜すため、全国規模で起こっている連続“神隠し”失踪事件<br>
+   の黒幕と噂される「秘密結社サイレン」へとアクセスする。<br>
    そして、命を懸けたゲームが始まってしまった─</blockquote>
-   5. <a href="https://www.themoviedb.org/tv/313068"><b>你好，我是受心上人所托来做恋爱药的魔女。</b></a>
-   <i>⭐ 6.6</i>
+   <ol start="5">
+   <li value="5"><a href="https://www.themoviedb.org/tv/313068"><b>你好，我是受心上人所托来做恋爱药的魔女。</b></a><br>
+   <i>⭐ 6.6</i></li>
+   </ol>
    <blockquote expandable>“希望你能帮我制作迷情药” 隐居在湖畔的魔女萝赛，从她暗恋的骑士哈利玖口中听到了这句话。 他心里挂念着别人，而非自己——面对这一现实，萝赛失恋了。 即便如此，她依然无法拒绝他的委托。 心想哪怕只在迷情药完成前的这段时间里能和他待在一起也好，萝赛将这份苦涩的爱恋深藏心底，度过着每一天。 哪怕明知这是一场无望的单恋，这份心意也无法抹去。 这是一位笨拙的家里蹲魔女×一位爱照顾人又一本正经的骑士。 以迷情药为契机交织而成的，令人揪心的恋爱物语。</blockquote>
    [1 | 1:i:0] [2 | 1:i:1] [3 | 1:i:2] [4 | 1:i:3]
    [5 | 1:i:4]
    [·一· | 1:w:1] [二 | 1:w:2] [三 | 1:w:3] [四 | 1:w:4] [五 | 1:w:5] [六 | 1:w:6] [日 | 1:w:7]
    [返回榜单 | 1:b:0] [首页 | 1:o:0]
 << answerCallbackQuery
->> user 1001 taps 1:w:2 on message 2
+>> user 1001 taps 1:w:2 on message 1
 -> MoviePilot GET /api/v1/media/search?count=10&title=Cyberpunk: Edgerunners 2&type=media
 -> MoviePilot GET /api/v1/media/search?count=10&title=Dark Machine The Animation&type=media
 -> MoviePilot GET /api/v1/media/search?count=10&title=赛博朋克：边缘行者 2&type=media
 -> Bangumi GET /v0/subjects/505550
 -> Bangumi GET /v0/subjects/513878
-<< editMessageText chat=1001 message=2 parse_mode=HTML
-   <b>🎌 新番放送 · 星期二 · 第 1/1 页</b>
-
-   <b>2026-10-13 首播</b>
-   1. <a href="https://bgm.tv/subject/505550"><b>Dark Machine The Animation</b></a>
-   <i>⭐ 7.8</i>
-   <blockquote expandable>世界的に圧倒的な人気を誇るeスポーツ「ダークマシン」は人々を熱狂させ、日本の経済体系までも変革していた。
-   日本で唯一、「ダークマシン」経済特区に指定されている街・ゴールデンバレー。その頂点に君臨するのが、「ダークマシン」最強プレイヤーの称号『千鬼』を襲名している7代目『千鬼』のアジマだった。
-   アジマは「ダークマシン」によってゴールデンバレーを実質的支配する存在となっていた。主人公のカイリは、亡き祖父の遺言「千鬼を探せ」を胸にゴールデンバレーを訪れたところ、偶然アジマ配下の「阿流堕美瑠」に追われる少女「ルドラ」と出会う。
+<< editMessageText chat=1001 message=1
+   <h3>🎌 新番放送 · 星期二 · 第 1/1 页</h3>
+   <h4>2026-10-13 首播</h4>
+   <ol start="1">
+   <li value="1"><a href="https://bgm.tv/subject/505550"><b>Dark Machine The Animation</b></a><br>
+   <i>⭐ 7.8</i></li>
+   </ol>
+   <blockquote expandable>世界的に圧倒的な人気を誇るeスポーツ「ダークマシン」は人々を熱狂させ、日本の経済体系までも変革していた。<br>
+   日本で唯一、「ダークマシン」経済特区に指定されている街・ゴールデンバレー。その頂点に君臨するのが、「ダークマシン」最強プレイヤーの称号『千鬼』を襲名している7代目『千鬼』のアジマだった。<br>
+   アジマは「ダークマシン」によってゴールデンバレーを実質的支配する存在となっていた。主人公のカイリは、亡き祖父の遺言「千鬼を探せ」を胸にゴールデンバレーを訪れたところ、偶然アジマ配下の「阿流堕美瑠」に追われる少女「ルドラ」と出会う。<br>
    ルドラに巻き込まれる形で「ダークマシン」プレイヤーとなったカイリは、度重な…</blockquote>
-
-   <b>2026-10-20 首播</b>
-   2. <a href="https://bgm.tv/subject/513878"><b>赛博朋克：边缘行者 2</b></a>
-   <i>⭐ 7.2</i>
-   <blockquote expandable>《赛博朋克：边缘行者2》把你带回夜之城。在那里，人与人的命运纠缠到了极致。昔日的赛博朋克传奇人物微克如今风光不再，不得不脱离义体活着，在这个对他熟视无睹的世界里寻找人生的意义。与此同时，手段狠辣的流浪者D踏上了复仇之路，也让他触及到了永远不该被外人发现的公司秘密。在这部总共十集的独立动画中，你将了解到一个关于家庭、执念、传承的故事——以及在你的镜头记录下，身边的人又会呈现出一个个怎样的故事。
-
-   [简介原文]
+   <h4>2026-10-20 首播</h4>
+   <ol start="2">
+   <li value="2"><a href="https://bgm.tv/subject/513878"><b>赛博朋克：边缘行者 2</b></a><br>
+   <i>⭐ 7.2</i></li>
+   </ol>
+   <blockquote expandable>《赛博朋克：边缘行者2》把你带回夜之城。在那里，人与人的命运纠缠到了极致。昔日的赛博朋克传奇人物微克如今风光不再，不得不脱离义体活着，在这个对他熟视无睹的世界里寻找人生的意义。与此同时，手段狠辣的流浪者D踏上了复仇之路，也让他触及到了永远不该被外人发现的公司秘密。在这部总共十集的独立动画中，你将了解到一个关于家庭、执念、传承的故事——以及在你的镜头记录下，身边的人又会呈现出一个个怎样的故事。<br>
+   <br>
+   [简介原文]<br>
    『サイバーパンク: エッジランナーズ２』で、再びナイトシティへ。すべてを手に入れるか、すべてを失うか――半端を嫌う街で、新たな物語が始まる。かつて名を馳せた伝説的サイバーパンク、ウィーク。…</blockquote>
    [1 | 1:i:5] [2 | 1:i:6]
    [一 | 1:w:1] [·二· | 1:w:2] [三 | 1:w:3] [四 | 1:w:4] [五 | 1:w:5] [六 | 1:w:6] [日 | 1:w:7]
    [返回榜单 | 1:b:0] [首页 | 1:o:0]
 << answerCallbackQuery
->> user 1001 taps 1:w:3 on message 2
-<< editMessageText chat=1001 message=2 parse_mode=HTML
-   <b>🎌 新番放送 · 星期三 · 第 1/1 页</b>
-   这天没有新番放送。
+>> user 1001 taps 1:w:3 on message 1
+<< editMessageText chat=1001 message=1
+   <h3>🎌 新番放送 · 星期三 · 第 1/1 页</h3>
+   <p>这天没有新番放送。</p>
    [一 | 1:w:1] [二 | 1:w:2] [·三· | 1:w:3] [四 | 1:w:4] [五 | 1:w:5] [六 | 1:w:6] [日 | 1:w:7]
    [返回榜单 | 1:b:0] [首页 | 1:o:0]
 << answerCallbackQuery

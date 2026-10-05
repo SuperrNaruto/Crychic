@@ -61,11 +61,11 @@ func (e *Engine) listSubs(ctx context.Context, sess session) Reply {
 	if len(subs) == 0 {
 		return Reply{Text: Sentence(msgNoSubs), Buttons: [][]Button{{homeButton(sess.id)}}}
 	}
-	view := listView{heading: Line(Strong(fmt.Sprintf("%s（%d）", msgSubsTitle, len(subs)))), footer: []Button{homeButton(sess.id)}}
+	view := listView{heading: Heading(Plain(fmt.Sprintf("%s（%d）", msgSubsTitle, len(subs)))), footer: []Button{homeButton(sess.id)}}
 	for i, s := range subs {
 		s.Title = truncate(s.Title, listTitleRunes)
 		mine := slices.Contains(sess.mine, s.ID)
-		entry := listEntry{text: subEntry(i+1, s, mine)}
+		entry := listEntry{text: Lines(subEntry(i+1, s, mine))}
 		if mine {
 			label := fmt.Sprintf("取消 %d", i+1)
 			entry.buttons = []Button{{Label: label, Data: data(sess.id, actionAskCancel, i)}}
@@ -76,7 +76,7 @@ func (e *Engine) listSubs(ctx context.Context, sess session) Reply {
 }
 
 // subEntry is e.g. "1. **《绝命毒师》第 2 季**" over "_订阅中 · 缺 3/13 集 · 你请求的_".
-func subEntry(n int, s Subscription, mine bool) Text {
+func subEntry(n int, s Subscription, mine bool) Block {
 	missing := ""
 	if s.Kind == TV && s.Lack > 0 {
 		missing = fmt.Sprintf("缺 %d 集", s.Lack)
@@ -105,7 +105,7 @@ func askCancel(sess session, index int) Reply {
 	s := sess.subs[index]
 	question := fmt.Sprintf("确认取消订阅《%s》%s？MoviePilot 将不再为它搜索下载。", s.Title, seasonSuffix(s))
 	return Reply{
-		Text:  Lines(Line(Strong(question))),
+		Text:  Lines(Heading(Plain(question))),
 		Image: s.Poster,
 		Buttons: [][]Button{{
 			{Label: "确认取消", Data: data(sess.id, actionUnsubscribe, index)},

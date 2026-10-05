@@ -42,7 +42,7 @@ func (e *Engine) home(sess session) Reply {
 	}
 	rows := grid(buttons, menuColumns)
 	text := Lines(
-		Line(Strong("🎬 Crychic")),
+		Heading(Plain("🎬 Crychic")),
 		Line(Plain("搜索并订阅电影和剧集，入库后通知你。")),
 	)
 	return Reply{Text: text, Banner: true, Buttons: rows}

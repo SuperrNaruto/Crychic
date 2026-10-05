@@ -99,7 +99,7 @@ func (e *Engine) chartMenu(sess session) Reply {
 		buttons = append(buttons, Button{Label: c.label, Data: data(sess.id, actionChart, i)})
 	}
 	rows := append(grid(buttons, menuColumns), []Button{homeButton(sess.id)})
-	return Reply{Text: Lines(Line(Strong(msgCharts)), Line(Plain(msgPickChart))), Buttons: rows}
+	return Reply{Text: Lines(Heading(Plain(msgCharts)), Line(Plain(msgPickChart))), Buttons: rows}
 }
 
 // openChart reads chart index afresh; a calendar opens on today.
@@ -181,7 +181,7 @@ func (e *Engine) chartPage(ctx context.Context, sess session, page int) Reply {
 	}
 	sess.page = page
 	e.store.put(sess)
-	text := Lines(Line(Strong(fmt.Sprintf("%s %s%s · 第 %d/%d 页", c.icon, c.label, e.dayName(sess.day), page+1, pages))))
+	text := Lines(Heading(Plain(fmt.Sprintf("%s %s%s · 第 %d/%d 页", c.icon, c.label, e.dayName(sess.day), page+1, pages))))
 	text = append(text, pickLines(at, sess.picks[at.first:at.end], c.aired)...)
 	if hi == lo {
 		text = append(text, Line(Plain(emptyNote(c))))
@@ -239,11 +239,9 @@ func pickLines(at span, picks []Media, aired bool) Text {
 	for i, m := range picks {
 		if aired && m.Released != day {
 			day = m.Released
-			text = append(text, Line(), Line(Strong(airDay(day))))
-		} else if i == 0 {
-			text = append(text, Line())
+			text = append(text, Group(airDay(day)))
 		}
-		text = append(text, pickEntry(at.first-at.base+i+1, m, pickLook{year: !aired, kind: mixed})...)
+		text = append(text, pickEntry(at.first-at.base+i+1, m, pickLook{year: !aired, kind: mixed}))
 		if m.Overview != "" {
 			text = append(text, Quote(truncate(m.Overview, chartOverviewRunes)))
 		}
@@ -257,7 +255,7 @@ type pickLook struct{ year, kind bool }
 // pickEntry is a short chart entry, e.g. "1. **沙丘**" over "_2021 · ⭐ 7.8_",
 // the title linked to the media's page when known; the original title
 // waits for the card.
-func pickEntry(n int, m Media, look pickLook) Text {
+func pickEntry(n int, m Media, look pickLook) Block {
 	var y, kind string
 	if look.year {
 		y = m.Year
@@ -328,7 +326,7 @@ func (e *Engine) pickFromChart(ctx context.Context, sess session, pick Media) Re
 	}
 	e.store.put(sess)
 	reply := resultList(sess, pick.Title)
-	reply.Text = append(reply.Text, Line(Emphasis(msgNoExactPick)))
+	reply.Text = append(reply.Text, Remark(msgNoExactPick))
 	return reply
 }
 

@@ -29,7 +29,7 @@ func TestSubscriptionListPagesWithinTelegramLimit(t *testing.T) {
 		}
 		h.tap(alice, 1, "下一页 ›")
 	}
-	h.shows(1, "150.")
+	h.shows(1, `<li value="150">`)
 	h.tap(alice, 1, "‹ 上一页")
 	h.tr.verify(t)
 }
@@ -83,7 +83,7 @@ func TestSlowMetadataDoesNotAddEveryDelay(t *testing.T) {
 func TestTelegramSendHasDeadline(t *testing.T) {
 	const cancellationBudget = 15 * time.Second
 	h := start(t, scenario{})
-	stalled := h.tg.stallNext("sendPhoto")
+	stalled := h.tg.stallNext("sendRichMessage")
 	h.chatter(alice, alice, "/start")
 	select {
 	case <-stalled:

@@ -29,7 +29,7 @@ e2e/                 # behavior tests: real app vs fake Telegram Bot API + fake 
 
 Arrivals: `notify.Notifier` polls `GET /api/v1/history/transfer` → `arrive` records matches as pending (media + season + episode range) → `flush` announces once settled → `telegram.Bot.Notify` posts in the requesting chat, mentioning the requester in groups.
 
-Data flow: Telegram update → `telegram.adapter` → `flow.Engine.Start/Choose` → `flow.Backend` (MoviePilot) → `flow.Reply` → `sendMessage` (command) or `editMessageText` (button) → `answerCallbackQuery` last.
+Data flow: Telegram update → `telegram.adapter` → `flow.Engine.Start/Choose` → `flow.Backend` (MoviePilot) → `flow.Reply` → `sendRichMessage` (command) or `editMessageText` with `rich_message` (button) → `answerCallbackQuery` last.
 
 ## Key Files
 
@@ -45,9 +45,9 @@ Data flow: Telegram update → `telegram.adapter` → `flow.Engine.Start/Choose`
 - `internal/flow/subs.go` - `/subs`: every subscription, cancel only those the user requested (`Watcher.Requested`), then `Watcher.Forget`
 - `internal/flow/seasons.go` - multi-season picker (「多选季…」): tick seasons, subscribe each from episode 1, report per season
 - `internal/flow/episodes.go` - start-episode choices for seasons and typed answers (`Engine.Answer`)
-- `internal/flow/rich.go` - `flow.Text`: formatting by meaning (bold, italic, code, link, collapsible quote)
-- `internal/telegram/html.go` - renders `flow.Text` to Telegram HTML, escaping everything
-- `internal/telegram/home.go` - embeds `assets/home.jpg`, sends `/start` as a photo with the home text as its caption and the existing keyboard; returning home uses `editMessageMedia`, leaving it sends a text reply before deleting the photo and moves pending input / refresh to the new message
+- `internal/flow/rich.go` - `flow.Text`: blocks by meaning (`Heading`, `Line` paragraphs, numbered `entry` items, `Group` section heads, `Quote`, `Remark` notes, `Divider`) of spans (bold, italic, code, link)
+- `internal/telegram/rich.go` - renders `flow.Text` as a Telegram rich message (Bot API 10.1 rich HTML: `h3`/`h4`, `p` with `br`, `ol`/`li value`, `blockquote expandable`, `footer`, `hr`, `img`), escaping everything
+- `internal/telegram/home.go` - sends and edits every reply as a rich message; `/start` uploads the embedded `assets/home.jpg` as the message's media (`tg://photo?id=home`), so home and the features it opens share one message. A home photo sent by an earlier version is replaced by a new message, then deleted
 - `internal/flow/store.go` - in-memory sessions (10 min TTL)
 - `internal/flow/pages.go` - bounded pages for subscriptions, tasks and latest items; page buttons keep item indices stable
 - `internal/telegram/lanes.go` - serializes each message's state transition and edit, including background refreshes
@@ -72,7 +72,7 @@ Data flow: Telegram update → `telegram.adapter` → `flow.Engine.Start/Choose`
 - `flow` must never import a platform package; a new platform is a sibling of `internal/telegram` that consumes `flow` through a small interface
 - Inject dependencies (`Backend`, `Now`, `*http.Client`, `*slog.Logger`); construct concrete types only in `internal/app`
 - Buttons only choose: no emoji, no titles or facts in labels. Picks are number buttons (`gridColumns` a row) or short names (第 N 季), with the details in the message text; menus share rows (`menuColumns`)
-- Numbered list entries are `flow.entry`: number and bold name on one line, facts (original title, year, kind, rating, state, progress) in italics on the next, so nothing wraps under the numbers. Telegram HTML has no small text; italics are the secondary style. Calendar date headers are bold
+- Numbered list entries are `flow.entry` (an `Item` block): bold name, then facts (original title, year, kind, rating, state, progress) in italics below it, rendered as `<li value="n">` so numbers match the buttons on every page. Each message opens with a `Heading`; list sections and calendar dates are `Group`s, page numbers and refresh state are `Remark`s (footer), and a media card is separated from its question by a `Divider`
 - User-facing copy is `flow.Text` built with `Strong`/`Emphasis`/`Mono`/`Linked`/`Quote`; never put platform markup in flow strings, adapters render and escape. Emoji sparingly: 🔍 search, 🎬/📺 card, ✅ done, ℹ️ already subscribed, ⬇️/⏸️ download progress, 📦 transfer job (⏳ ▶️ ✅ ⚠️ per file), 📋 task list, 📥 arrival, ⚠️ errors, ⌛ expired, 🚫 refused
 - Errors safe to show users are `*flow.UserError`; others get logged and shown as the generic outage text
 - Hard limits: functions ≤ 50 lines, nesting ≤ 3, ≤ 3 positional params (use a struct, e.g. `moviepilot.call`), complexity ≤ 10, no magic numbers
@@ -86,6 +86,7 @@ Data flow: Telegram update → `telegram.adapter` → `flow.Engine.Start/Choose`
 - The fake MoviePilot answers the library and downloader checks as an idle server (`idleServer`); scenarios override `libraryShowPath`/`libraryMoviePath`/`downloadsPath`
 - Recordings of `/api/v1/download/` carry tracker URLs with passkeys, the site name, the release name and the owner's username: keep only the fields Crychic reads
 - Fakes must behave like the real services (long-poll `getUpdates`, `X-API-KEY` check, real error shapes); extend them, don't shortcut them
+- The fake Telegram accepts only `sendRichMessage` and rich `editMessageText`, refuses rich HTML with undocumented tags or unbalanced markup, and records each message's HTML a block or `<br>` per transcript line. `h.tg.refuseImage(url)` fails media blocks with that URL; `h.tg.seedPhoto` leaves a pre-rich-message photo menu in a chat
 - `e2e/testdata/bangumi/calendar.json` is a trimmed recording of `api.bgm.tv/calendar` (all seven weekday groups, a few shows, only fields Crychic reads); `subject_<id>.json` record `/v0/subjects/<id>` the same way and `not_found.json` is Bangumi's live 404. `h.bgm.setDown(id, true)` makes a subject answer 503. Scenarios start on `epoch`, Monday 2026-10-05 noon China time, and the clock runs at real speed from there (`app.Deps.Now`), so "today" is stable
 - `e2e/testdata/moviepilot/*.json` are trimmed recordings from a live v3.1.0 instance (`curl -H "X-API-KEY: $KEY" "$MP/api/v1/media/search?title=沙丘&type=media&count=10"`), except `subscribe_rejected.json`, `server_error.json`, `library_movie_held.json` (the live library holds no movie yet), `subscriptions.json`, `subscribe_deleted.json` (no live subscription may be created to record them; `subscriptions.json` copies the shape of recorded subscription history); `latest.json` is a live recording with the owner's Emby domain replaced by `emby.example.com`; `subscribe_created.json` came from a one-off live subscription that must not be repeated (see above); never commit real keys or tokens
 
@@ -95,7 +96,7 @@ Data flow: Telegram update → `telegram.adapter` → `flow.Engine.Start/Choose`
 - Media `type` is a Chinese enum: `电影`, `电视剧`; results without `media_source`/`media_id` are dropped
 - Every JSON endpoint answers `{success, message, data}`, even where the route's `response_model` says `List[...]` (wrapped by `app/api/response.py`); `moviepilot.Client.do` unwraps it, and `success: false` on HTTP 200 becomes a `UserError` with `message`
 - `GET /api/v1/subscribe/media/{id}` returns `data` with `id: null` when nothing is subscribed, not a 404
-- Media posters render as a large link preview above the text (`telegram.preview`); a reply without `Image` explicitly disables the preview so an old poster doesn't linger. The home menu alone sets `Reply.Banner` and uploads the bundled JPEG as a photo with its text below; photo messages cannot become text via `editMessageText`, so leaving home replaces the message. Photos are recognized from callback metadata even after a restart; `Reply.Notice` keeps the photo untouched
+- Every message is a rich message (`sendRichMessage`; edits pass `rich_message`, and the library's empty `text` field is accepted). Media posters are an `<img>` block on top; Telegram fetches them itself, and if it fails the reply is retried without the poster (not for "message is not modified"). Rich HTML collapses newlines, so the renderer turns them into `<br>`. The home menu alone sets `Reply.Banner` and uploads the bundled JPEG as rich message media. Photo messages (home menus from before rich messages) cannot become rich text, so a press on one sends a new message and deletes the photo; photos are recognized from callback metadata; `Reply.Notice` keeps them untouched
 - Poster URLs from MoviePilot are TMDB `original` size (MBs); `moviepilot` rewrites them to `w500`
 - `GET /api/v1/media/{id}` details are cosmetic: on failure the card falls back to search metadata and the flow continues; its `directors` field mixes in producers and episode directors, so it isn't shown
 - Subscriptions take `start_episode` (per season): MoviePilot skips earlier episodes. "只追新集" uses details' `next_episode_to_air` and only shows when it is in the chosen season and > 1; button data `ok:<n>` carries the start, validated against the season's episode count before the session is taken

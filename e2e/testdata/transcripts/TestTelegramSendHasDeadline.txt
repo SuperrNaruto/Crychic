@@ -1,8 +1,9 @@
 >> user 1001 in chat 1001: /start
 >> user 1001 in chat 1001: /start
-<< sendPhoto chat=1001 message=1 parse_mode=HTML photo=home.jpg 1280x720 sha256=044ae094690453fdfcc5a20f29e8ff7a06c6474e8287e02309152b59b90cd814 caption_above=false
-   <b>🎬 Crychic</b>
-   搜索并订阅电影和剧集，入库后通知你。
+<< sendRichMessage chat=1001 message=1 photo=home.jpg 1280x720 sha256=044ae094690453fdfcc5a20f29e8ff7a06c6474e8287e02309152b59b90cd814
+   <img src="tg://photo?id=home"/>
+   <h3>🎬 Crychic</h3>
+   <p>搜索并订阅电影和剧集，入库后通知你。</p>
    [搜索订阅 | 1:h:0] [发现 | 1:h:1]
    [订阅 | 1:h:2] [最新入库 | 1:h:3]
    [任务进度 | 1:h:4]

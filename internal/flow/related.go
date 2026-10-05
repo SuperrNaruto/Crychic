@@ -61,7 +61,7 @@ func (e *Engine) browse(ctx context.Context, sess session, series bool) Reply {
 	sess.results = found[:min(len(found), limit)]
 	sess.seasons, sess.library, sess.target, sess.chosen = nil, Library{}, nil, nil
 	e.store.put(sess)
-	return numberedResults(sess, Line(Strong(heading)))
+	return numberedResults(sess, Heading(Plain(heading)))
 }
 
 // notice is failure for a step that keeps the conversation as it was.

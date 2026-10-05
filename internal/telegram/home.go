@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	_ "embed"
+	"strings"
 
 	"github.com/go-telegram/bot"
 	"github.com/go-telegram/bot/models"
@@ -11,25 +12,53 @@ import (
 	"github.com/SuperrNauto/Crychic/internal/flow"
 )
 
-const homeFilename = "home.jpg"
+const (
+	homeFilename = "home.jpg"
+	homeMediaID  = "home"
+	// notModified is Telegram's answer to an edit that changes nothing.
+	notModified = "message is not modified"
+)
 
 //go:embed assets/home.jpg
 var homePhoto []byte
 
-// send uploads the bundled home banner, or sends an ordinary text reply.
-// A fresh reader per request keeps concurrent chats independent.
-func (a *adapter) send(ctx context.Context, chat int64, reply flow.Reply) (*models.Message, error) {
-	if reply.Banner {
-		return a.api.SendPhoto(ctx, &bot.SendPhotoParams{
-			ChatID:  chat,
-			Photo:   &models.InputFileUpload{Filename: homeFilename, Data: bytes.NewReader(homePhoto)},
-			Caption: renderHTML(reply.Text), ParseMode: models.ParseModeHTML,
-			ReplyMarkup: keyboard(reply.Buttons),
-		})
+// content is a reply as rich message content: the home menu carries the
+// bundled banner as uploaded media, other replies their poster URL. A fresh
+// reader per request keeps concurrent chats independent.
+func content(reply flow.Reply) *models.InputRichMessage {
+	if !reply.Banner {
+		return richMessage(reply.Text, reply.Image)
 	}
-	return a.api.SendMessage(ctx, &bot.SendMessageParams{
-		ChatID: chat, Text: renderHTML(reply.Text), ParseMode: models.ParseModeHTML,
-		LinkPreviewOptions: preview(reply.Image), ReplyMarkup: keyboard(reply.Buttons),
+	rich := richMessage(reply.Text, "tg://photo?id="+homeMediaID)
+	rich.Media = []models.InputRichMessageMedia{{ID: homeMediaID, Media: &models.InputMediaPhoto{
+		Media: "attach://" + homeFilename, MediaAttachment: bytes.NewReader(homePhoto),
+	}}}
+	return rich
+}
+
+// withoutPoster is reply minus a poster Telegram failed to fetch, so the
+// message still goes out; edits that change nothing are not retried.
+func withoutPoster(reply flow.Reply, err error) (flow.Reply, bool) {
+	if err == nil || reply.Image == "" || strings.Contains(err.Error(), notModified) {
+		return reply, false
+	}
+	reply.Image = ""
+	return reply, true
+}
+
+// send sends reply as a new rich message.
+func (a *adapter) send(ctx context.Context, chat int64, reply flow.Reply) (*models.Message, error) {
+	msg, err := sendRich(ctx, a.api, chat, reply)
+	if bare, retry := withoutPoster(reply, err); retry {
+		a.log.Warn("poster rejected, sending without it", "image", reply.Image, "err", err)
+		msg, err = sendRich(ctx, a.api, chat, bare)
+	}
+	return msg, err
+}
+
+func sendRich(ctx context.Context, api *bot.Bot, chat int64, reply flow.Reply) (*models.Message, error) {
+	return api.SendRichMessage(ctx, &bot.SendRichMessageParams{
+		ChatID: chat, RichMessage: *content(reply), ReplyMarkup: keyboard(reply.Buttons),
 	})
 }
 
@@ -43,37 +72,35 @@ func (a *adapter) showCallback(ctx context.Context, cq *models.CallbackQuery, re
 	if ok && reply.Follow != "" {
 		a.follow(follower{
 			target: shown, actor: actorOf(cq.From, msg.Chat.ID),
-			data: reply.Follow, shown: renderHTML(reply.Text),
+			data: reply.Follow, shown: renderRich(reply.Text, reply.Image),
 		})
 	}
 }
 
+// display edits the conversation message in place.
 func (a *adapter) display(ctx context.Context, t editTarget, reply flow.Reply) (editTarget, error) {
-	if reply.Banner {
-		_, err := a.api.EditMessageMedia(ctx, &bot.EditMessageMediaParams{
-			ChatID: t.chat, MessageID: t.message,
-			Media: &models.InputMediaPhoto{
-				Media: "attach://" + homeFilename, MediaAttachment: bytes.NewReader(homePhoto),
-				Caption: renderHTML(reply.Text), ParseMode: models.ParseModeHTML,
-			},
-			ReplyMarkup: keyboard(reply.Buttons),
-		})
-		t.photo = true
-		return t, err
-	}
 	if t.photo {
 		return a.replacePhoto(ctx, t, reply)
 	}
-	_, err := a.api.EditMessageText(ctx, &bot.EditMessageTextParams{
-		ChatID: t.chat, MessageID: t.message,
-		Text: renderHTML(reply.Text), ParseMode: models.ParseModeHTML,
-		LinkPreviewOptions: preview(reply.Image), ReplyMarkup: keyboard(reply.Buttons),
-	})
+	err := a.editRich(ctx, t, reply)
+	if bare, retry := withoutPoster(reply, err); retry {
+		a.log.Warn("poster rejected, editing without it", "image", reply.Image, "err", err)
+		err = a.editRich(ctx, t, bare)
+	}
 	return t, err
 }
 
-// Telegram cannot edit a photo into text. Send the destination first so a
-// failed send never removes the menu, then remove the superseded home photo.
+func (a *adapter) editRich(ctx context.Context, t editTarget, reply flow.Reply) error {
+	_, err := a.api.EditMessageText(ctx, &bot.EditMessageTextParams{
+		ChatID: t.chat, MessageID: t.message,
+		RichMessage: content(reply), ReplyMarkup: keyboard(reply.Buttons),
+	})
+	return err
+}
+
+// A home menu sent as a photo before rich messages cannot become one.
+// Send the destination first so a failed send never removes the menu, then
+// remove the superseded photo.
 func (a *adapter) replacePhoto(ctx context.Context, t editTarget, reply flow.Reply) (editTarget, error) {
 	msg, err := a.send(ctx, t.chat, reply)
 	if err != nil {

@@ -19,21 +19,22 @@ type card struct {
 	Downloads []Download // the chosen target's unfinished downloads
 }
 
-// reply shows the card, poster above, then message and buttons.
+// reply shows the card, poster above, then a divider, message and buttons.
 func (c card) reply(message Block, buttons [][]Button) Reply {
 	return c.replyLines(Lines(message), buttons)
 }
 
 // replyLines is reply with a message of several lines.
 func (c card) replyLines(message Text, buttons [][]Button) Reply {
-	text := append(append(c.text(), Line()), message...)
+	text := append(append(c.text(), Divider()), message...)
 	return Reply{Text: text, Image: c.Media.PosterURL, Buttons: buttons}
 }
 
 // text renders e.g.
 //
-//	🎬 **沙丘** (2021) · 电影 · ⭐ 7.8      title linked to its page
+//	# 🎬 沙丘                       heading, title linked to its page
 //	_Dune_
+//	2021 · 电影 · ⭐ 7.8
 //	科幻 / 冒险 · 156 分钟
 //	主演：提莫西·查拉梅、丽贝卡·弗格森
 //	> synopsis, collapsed
@@ -43,11 +44,12 @@ func (c card) text() Text {
 	if m.Kind == TV {
 		icon = "📺 "
 	}
-	head := []Span{Plain(icon), Linked(Strong(m.Title), m.Link)}
-	head = append(head, Plain(" "+joinNonEmpty(" · ", year(m), m.Kind.String(), rating(m.Rating))))
-	text := Lines(Line(head...))
+	text := Lines(Heading(Plain(icon), Linked(Plain(m.Title), m.Link)))
 	if m.OriginalTitle != "" && m.OriginalTitle != m.Title {
 		text = append(text, Line(Emphasis(m.OriginalTitle)))
+	}
+	if facts := joinNonEmpty(" · ", m.Year, m.Kind.String(), rating(m.Rating)); facts != "" {
+		text = append(text, Line(Plain(facts)))
 	}
 	if facts := joinNonEmpty(" · ", strings.Join(d.Genres, " / "), length(d)); facts != "" {
 		text = append(text, Line(Plain(facts)))
@@ -89,32 +91,20 @@ func (t Target) has(d Download) bool {
 	return t.Season == nil || d.Season == nil || *d.Season == *t.Season
 }
 
-// entry is a numbered list entry: its name, then the facts about it in
-// italics on a line of their own, so a fact never wraps under the numbers.
-func entry(n int, name Span, facts ...string) Text {
-	text := Lines(Line(Plain(fmt.Sprintf("%d. ", n)), name))
-	if f := joinNonEmpty(" · ", facts...); f != "" {
-		text = append(text, Line(Emphasis(f)))
-	}
-	return text
+// entry is a numbered list entry: its name, then the facts about it on a
+// secondary line of their own, so a fact never wraps under the numbers.
+func entry(n int, name Span, facts ...string) Block {
+	return Block{Kind: Item, Number: n, Spans: []Span{name}, Facts: joinNonEmpty(" · ", facts...)}
 }
 
-// resultLines is one numbered search result: **沙丘** on its line, then
+// resultEntry is one numbered search result: **沙丘**, then
 // _Dune · 2021 · 电影 · ⭐ 7.8_ below.
-func resultLines(n int, m Media) Text {
+func resultEntry(n int, m Media) Block {
 	original := ""
 	if m.OriginalTitle != m.Title {
 		original = m.OriginalTitle
 	}
 	return entry(n, Strong(m.Title), original, m.Year, m.Kind.String(), rating(m.Rating))
-}
-
-// year is "(2021)", or empty when unknown.
-func year(m Media) string {
-	if m.Year == "" {
-		return ""
-	}
-	return "(" + m.Year + ")"
 }
 
 func length(d Details) string {

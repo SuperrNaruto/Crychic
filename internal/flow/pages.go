@@ -40,7 +40,7 @@ func (e *Engine) listPages(sess session, view listView) Reply {
 	for i := range pages {
 		pages[i].Buttons = grid(buttons[i], gridColumns)
 		if len(pages) > 1 {
-			pages[i].Text = append(pages[i].Text, Line(Emphasis(fmt.Sprintf("第 %d/%d 页", i+1, len(pages)))))
+			pages[i].Text = append(pages[i].Text, Remark(fmt.Sprintf("第 %d/%d 页", i+1, len(pages))))
 			pages[i].Buttons = append(pages[i].Buttons, listPager(sess.id, i, len(pages)))
 		}
 		pages[i].Buttons = append(pages[i].Buttons, view.footer)
@@ -53,6 +53,7 @@ func (e *Engine) listPages(sess session, view listView) Reply {
 func textSize(text Text) int {
 	n := len(text)
 	for _, block := range text {
+		n += len([]rune(block.Facts))
 		for _, span := range block.Spans {
 			n += len([]rune(span.Text))
 		}

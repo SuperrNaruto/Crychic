@@ -1,42 +1,51 @@
 >> user 1001 in chat 1001: /tasks
-<< sendMessage chat=1001 message=1 parse_mode=HTML
-   <b>📋 进行中的任务</b>
-   <b>⬇️ 下载</b>
-   1. <b>《迷途之子!!!!!》第 1 季</b>
-   <i>E10–E12 · 进度 0%</i>
-   <b>📦 整理</b>
-   2. <b>《颂乐人偶》第 1 季</b>
-   <i>已整理 0/2 个文件</i>
+<< sendRichMessage chat=1001 message=1
+   <h3>📋 进行中的任务</h3>
+   <h4>⬇️ 下载</h4>
+   <ol start="1">
+   <li value="1"><b>《迷途之子!!!!!》第 1 季</b><br>
+   <i>E10–E12 · 进度 0%</i></li>
+   </ol>
+   <h4>📦 整理</h4>
+   <ol start="2">
+   <li value="2"><b>《颂乐人偶》第 1 季</b><br>
+   <i>已整理 0/2 个文件</i></li>
+   </ol>
    [1 | 1:k:0] [2 | 1:k:1]
    [关闭 | 1:c:0]
 >> user 1001 taps 1:k:1 on message 1
-<< editMessageText chat=1001 message=1 parse_mode=HTML poster=https://image.tmdb.org/t/p/w500/xixekXvcCSZS1jXhFrYUzpCrLL6.jpg large=true above=true
-   <b>📦 《颂乐人偶》第 1 季</b>
-   已整理 0/2 个文件
-   ▶️ E13 整理中
-   ⏳ E12 等待中
-   <i>自动刷新中…</i>
+<< editMessageText chat=1001 message=1
+   <img src="https://image.tmdb.org/t/p/w500/xixekXvcCSZS1jXhFrYUzpCrLL6.jpg"/>
+   <h3>📦 《颂乐人偶》第 1 季</h3>
+   <p>已整理 0/2 个文件<br>
+   ▶️ E13 整理中<br>
+   ⏳ E12 等待中</p>
+   <footer>自动刷新中…</footer>
    [停止刷新 | 1:u:1] [返回任务列表 | 1:l:0]
 << answerCallbackQuery
 >> MoviePilot now answers GET /api/v1/transfer/queue with queue_mujica_later.json
-<< editMessageText chat=1001 message=1 parse_mode=HTML poster=https://image.tmdb.org/t/p/w500/xixekXvcCSZS1jXhFrYUzpCrLL6.jpg large=true above=true
-   <b>📦 《颂乐人偶》第 1 季</b>
-   已整理 1/2 个文件
-   ✅ E13 已完成
-   ▶️ E12 整理中
-   <i>自动刷新中…</i>
+<< editMessageText chat=1001 message=1
+   <img src="https://image.tmdb.org/t/p/w500/xixekXvcCSZS1jXhFrYUzpCrLL6.jpg"/>
+   <h3>📦 《颂乐人偶》第 1 季</h3>
+   <p>已整理 1/2 个文件<br>
+   ✅ E13 已完成<br>
+   ▶️ E12 整理中</p>
+   <footer>自动刷新中…</footer>
    [停止刷新 | 1:u:1] [返回任务列表 | 1:l:0]
 >> MoviePilot now answers GET /api/v1/transfer/queue with queue_none.json
-<< editMessageText chat=1001 message=1 parse_mode=HTML poster=https://image.tmdb.org/t/p/w500/xixekXvcCSZS1jXhFrYUzpCrLL6.jpg large=true above=true
-   <b>📦 《颂乐人偶》第 1 季</b>
-   整理任务已结束，入库情况见入库通知或 MoviePilot 的整理历史。
+<< editMessageText chat=1001 message=1
+   <img src="https://image.tmdb.org/t/p/w500/xixekXvcCSZS1jXhFrYUzpCrLL6.jpg"/>
+   <h3>📦 《颂乐人偶》第 1 季</h3>
+   <p>整理任务已结束，入库情况见入库通知或 MoviePilot 的整理历史。</p>
    [返回任务列表 | 1:l:0]
 >> user 1001 taps 1:l:0 on message 1
-<< editMessageText chat=1001 message=1 parse_mode=HTML
-   <b>📋 进行中的任务</b>
-   <b>⬇️ 下载</b>
-   1. <b>《迷途之子!!!!!》第 1 季</b>
-   <i>E10–E12 · 进度 0%</i>
+<< editMessageText chat=1001 message=1
+   <h3>📋 进行中的任务</h3>
+   <h4>⬇️ 下载</h4>
+   <ol start="1">
+   <li value="1"><b>《迷途之子!!!!!》第 1 季</b><br>
+   <i>E10–E12 · 进度 0%</i></li>
+   </ol>
    [1 | 1:k:0]
    [关闭 | 1:c:0]
 << answerCallbackQuery

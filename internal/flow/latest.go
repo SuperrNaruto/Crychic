@@ -30,10 +30,10 @@ func (e *Engine) latest(ctx context.Context, sess session) Reply {
 	if len(items) == 0 {
 		return Reply{Text: Sentence(msgNoLatest), Buttons: buttons}
 	}
-	view := listView{heading: Line(Strong(msgLatestTitle)), footer: buttons[0]}
+	view := listView{heading: Heading(Plain(msgLatestTitle)), footer: buttons[0]}
 	for i, it := range items {
 		title := Linked(Strong(fmt.Sprintf("《%s》", truncate(it.Title, listTitleRunes))), it.Link)
-		view.entries = append(view.entries, listEntry{text: entry(i+1, title, it.Year, it.Kind)})
+		view.entries = append(view.entries, listEntry{text: Lines(entry(i+1, title, it.Year, it.Kind))})
 	}
 	return e.listPages(sess, view)
 }

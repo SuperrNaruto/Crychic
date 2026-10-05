@@ -26,14 +26,14 @@ var fileStateText = map[FileState]string{
 
 // taskList numbers downloads, then transfer jobs, matching session tasks.
 func taskList(id uint64, downloads []Download, jobs []TransferJob) listView {
-	view := listView{heading: Line(Strong("📋 进行中的任务")), footer: []Button{{Label: "关闭", Data: data(id, actionClose, 0)}}}
+	view := listView{heading: Heading(Plain("📋 进行中的任务")), footer: []Button{{Label: "关闭", Data: data(id, actionClose, 0)}}}
 	section := "⬇️ 下载"
 	add := func(title string, season *int, line string) {
 		n := len(view.entries) + 1
 		title = truncate(title, listTitleRunes)
-		text := entry(n, Strong(taskName(title, season)), truncate(line, listTitleRunes))
+		text := Lines(entry(n, Strong(taskName(title, season)), truncate(line, listTitleRunes)))
 		if section != "" {
-			text = append(Lines(Line(Strong(section))), text...)
+			text = append(Lines(Group(section)), text...)
 			section = ""
 		}
 		view.entries = append(view.entries, listEntry{text: text, buttons: []Button{{Label: fmt.Sprint(n), Data: data(id, actionTask, n-1)}}})
@@ -64,12 +64,12 @@ func downloadView(d Download) Reply {
 		left = "剩余 " + d.Left
 	}
 	facts := joinNonEmpty(" · ", progress(d), speed, left)
-	return Reply{Text: Lines(Line(Strong(icon+head)), Line(Plain(facts))), Image: d.Image}
+	return Reply{Text: Lines(Heading(Plain(icon+head)), Line(Plain(facts))), Image: d.Image}
 }
 
 // transferView is one transfer job with a line per file.
 func transferView(j TransferJob) Reply {
-	text := Lines(Line(Strong("📦 "+taskName(j.Title, j.Season))), Line(Plain(filesDone(j))))
+	text := Lines(Heading(Plain("📦 "+taskName(j.Title, j.Season))), Line(Plain(filesDone(j))))
 	for i, f := range j.Files[:min(len(j.Files), maxTransferLines)] {
 		name := fmt.Sprintf("文件 %d", i+1)
 		if f.Episode > 0 {
@@ -78,7 +78,7 @@ func transferView(j TransferJob) Reply {
 		text = append(text, Line(Plain(fmt.Sprintf(fileStateText[f.State], name))))
 	}
 	if remaining := len(j.Files) - maxTransferLines; remaining > 0 {
-		text = append(text, Line(Emphasis(fmt.Sprintf("另有 %d 个文件，全部状态请在 MoviePilot 中查看。", remaining))))
+		text = append(text, Remark(fmt.Sprintf("另有 %d 个文件，全部状态请在 MoviePilot 中查看。", remaining)))
 	}
 	return Reply{Text: text, Image: j.Image}
 }

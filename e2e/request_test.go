@@ -89,6 +89,20 @@ func TestSubscribeMovie(t *testing.T) {
 	h.tr.verify(t)
 }
 
+// A poster Telegram cannot fetch costs only the poster, never the card.
+func TestUnreachablePosterKeepsTheCard(t *testing.T) {
+	h := start(t, scenario{routes: map[string]route{
+		searchPath:  ok("search_dune.json"),
+		duneDetails: ok("detail_dune.json"),
+		duneLookup:  ok("subscription_none.json"),
+	}})
+	h.tg.refuseImage(dunePoster)
+	h.say(alice, alice, "/request 沙丘")
+	h.tap(alice, 1, duneMovie)
+	h.shows(1, "确认订阅《沙丘》")
+	h.tr.verify(t)
+}
+
 func TestSubscribeOneSeasonOfShow(t *testing.T) {
 	h := start(t, scenario{routes: map[string]route{
 		searchPath:    ok("search_breaking_bad.json"),
@@ -271,23 +285,33 @@ func TestCommandMenuIsRegistered(t *testing.T) {
 func TestHomeSearchTakesATypedTitle(t *testing.T) {
 	h := start(t, scenario{routes: map[string]route{searchPath: ok("search_dune.json")}})
 	h.say(alice, alice, "/start")
-	if mustMessage(h, 1).photo == nil {
+	if len(mustMessage(h, 1).media) == 0 {
 		t.Fatal("the home menu must include the banner photo")
 	}
 	h.tap(bob, 1, "搜索订阅")
 	h.tap(alice, 1, "搜索订阅")
-	if _, ok := h.tg.message(1); ok {
-		t.Fatal("the old home photo must be removed after opening a feature")
-	}
-	h.tap(alice, 2, "首页")
-	h.tap(alice, 2, "搜索订阅")
-	h.answer(alice, 3, "沙丘")
-	h.shows(3, "「沙丘」的搜索结果")
-	h.tap(alice, 3, "返回")
-	h.tap(alice, 3, "首页")
+	h.tap(alice, 1, "首页")
+	h.tap(alice, 1, "搜索订阅")
+	h.answer(alice, 1, "沙丘")
+	h.shows(1, "「沙丘」的搜索结果")
+	h.tap(alice, 1, "返回")
+	h.tap(alice, 1, "首页")
 	h.restart()
-	h.tap(alice, 3, "搜索订阅")
-	h.shows(4, "这个菜单已失效")
+	h.tap(alice, 1, "搜索订阅")
+	h.shows(1, "这个菜单已失效")
+	h.tr.verify(t)
+}
+
+// A home menu sent as a photo by an earlier version cannot be edited into
+// a rich message: its buttons answer with a new message and the photo goes.
+func TestOldHomePhotoIsReplaced(t *testing.T) {
+	h := start(t, scenario{})
+	old := h.tg.seedPhoto(alice, "🎬 Crychic", [][]button{{{Text: "搜索订阅", CallbackData: "424242:h:0"}}})
+	h.tap(alice, old, "搜索订阅")
+	if _, ok := h.tg.message(old); ok {
+		t.Fatal("the old home photo must be removed")
+	}
+	h.shows(old+1, "这个菜单已失效")
 	h.tr.verify(t)
 }
 

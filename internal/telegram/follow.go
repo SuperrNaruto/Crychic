@@ -80,9 +80,9 @@ func (a *adapter) refreshOnce(ctx context.Context, f *follower) bool {
 	if ctx.Err() != nil || reply.Notice != "" {
 		return false
 	}
-	if html := renderHTML(reply.Text); html != f.shown {
+	if rich := renderRich(reply.Text, reply.Image); rich != f.shown {
 		a.edit(ctx, f.target, reply)
-		f.shown = html
+		f.shown = rich
 	}
 	f.data = reply.Follow
 	return reply.Follow != ""
