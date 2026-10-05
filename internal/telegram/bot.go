@@ -135,11 +135,7 @@ func New(cfg Config) (*Bot, error) {
 func (b *Bot) Run(ctx context.Context, f Flow) {
 	b.adapter.flow = f
 	b.adapter.runCtx = ctx
-	// Registering on every start keeps the menu in step with the commands;
-	// a failure only costs the menu, so the bot runs on.
-	if _, err := b.api.SetMyCommands(ctx, &bot.SetMyCommandsParams{Commands: commands}); err != nil {
-		b.log.Warn("command menu not registered", "err", err)
-	}
+	b.registerCommands(ctx)
 	b.log.Info("telegram bot started")
 	b.api.Start(ctx)
 }
@@ -164,6 +160,22 @@ func (b *Bot) Notify(ctx context.Context, n flow.Notice) error {
 		LinkPreviewOptions: preview(n.Image),
 	})
 	return err
+}
+
+// registerCommands sets the "/" menu on every start, keeping it in step
+// with the commands. A menu set for one chat outranks the default one, so
+// each whitelisted user's private chat gets it too, replacing whatever an
+// earlier program left there. A failure only costs the menu.
+func (b *Bot) registerCommands(ctx context.Context) {
+	for id := range b.adapter.allowed {
+		scope := &models.BotCommandScopeChat{ChatID: id}
+		if _, err := b.api.SetMyCommands(ctx, &bot.SetMyCommandsParams{Commands: commands, Scope: scope}); err != nil {
+			b.log.Warn("command menu not registered for user", "user", id, "err", err)
+		}
+	}
+	if _, err := b.api.SetMyCommands(ctx, &bot.SetMyCommandsParams{Commands: commands}); err != nil {
+		b.log.Warn("command menu not registered", "err", err)
+	}
 }
 
 // actorOf identifies user acting in chat.

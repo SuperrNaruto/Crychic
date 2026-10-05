@@ -43,7 +43,7 @@ type fakeTelegram struct {
 	messages  map[int]message
 	lastMsg   int
 	waiters   map[string]chan struct{}
-	commands  string // the latest setMyCommands menu, as sent
+	commands  map[string]string // setMyCommands menus by scope, as sent
 }
 
 func newFakeTelegram(tr *transcript) *fakeTelegram {
@@ -51,6 +51,7 @@ func newFakeTelegram(tr *transcript) *fakeTelegram {
 		tr:       tr,
 		arrived:  make(chan struct{}),
 		messages: map[int]message{},
+		commands: map[string]string{},
 		waiters:  map[string]chan struct{}{},
 	}
 	f.Server = httptest.NewServer(http.HandlerFunc(f.serve))
@@ -108,10 +109,16 @@ func (f *fakeTelegram) serve(w http.ResponseWriter, r *http.Request) {
 	case "answerCallbackQuery":
 		f.answer(w, r)
 	case "setMyCommands":
+		scope := r.FormValue("scope")
+		if scope == "" {
+			scope = defaultScope
+		}
 		f.mu.Lock()
-		f.commands = r.FormValue("commands")
+		f.commands[scope] = r.FormValue("commands")
 		f.mu.Unlock()
-		f.finish(commandsKey)
+		if scope == defaultScope {
+			f.finish(commandsKey)
+		}
 		reply(w, true, nil)
 	default:
 		reply(w, nil, fmt.Errorf("method %s not supported by fake", method))
@@ -204,14 +211,19 @@ func (f *fakeTelegram) answer(w http.ResponseWriter, r *http.Request) {
 	reply(w, true, nil)
 }
 
-// commandsKey completes when the bot registers its command menu, which it
-// does on every start; it stays out of transcripts except where asserted.
-const commandsKey = "commands"
+// commandsKey completes when the bot registers its default command menu,
+// which it does last on every start; menus stay out of transcripts except
+// where asserted.
+const (
+	commandsKey  = "commands"
+	defaultScope = "default"
+)
 
-// menu is the registered command menu, one "/command – description" a line.
-func (f *fakeTelegram) menu() []string {
+// menu is the command menu registered for scope (defaultScope or a scope
+// as JSON), one "/command – description" a line.
+func (f *fakeTelegram) menu(scope string) []string {
 	f.mu.Lock()
-	raw := f.commands
+	raw := f.commands[scope]
 	f.mu.Unlock()
 	var cmds []struct{ Command, Description string }
 	_ = json.Unmarshal([]byte(raw), &cmds)

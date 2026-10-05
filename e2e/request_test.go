@@ -1,6 +1,7 @@
 package e2e
 
 import (
+	"fmt"
 	"net/http"
 	"testing"
 )
@@ -251,10 +252,16 @@ func TestSubscribeSeveralSeasons(t *testing.T) {
 	h.tr.verify(t)
 }
 
-// Typing "/" offers the bot's commands; the menu is registered on start.
+// Typing "/" offers the bot's commands; the menu is registered on start,
+// also for each whitelisted user's chat, where a menu an earlier program
+// left would otherwise outrank it.
 func TestCommandMenuIsRegistered(t *testing.T) {
 	h := start(t, scenario{})
-	h.tr.add("<< setMyCommands", h.tg.menu()...)
+	h.tr.add("<< setMyCommands", h.tg.menu(defaultScope)...)
+	for _, user := range []int64{alice, bob} {
+		scope := fmt.Sprintf(`{"type":"chat","chat_id":%d}`, user)
+		h.tr.add("<< setMyCommands scope="+scope, h.tg.menu(scope)...)
+	}
 	h.tr.verify(t)
 }
 
