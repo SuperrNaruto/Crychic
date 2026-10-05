@@ -22,6 +22,9 @@ func (e *Engine) latest(ctx context.Context, sess session) Reply {
 		e.store.take(sess.id)
 		return e.failure("latest", err)
 	}
+	if len(items) == 0 && sess.menu {
+		return Reply{Notice: msgNoLatest}
+	}
 	e.store.put(sess)
 	buttons := [][]Button{{homeButton(sess.id)}}
 	if len(items) == 0 {

@@ -76,12 +76,10 @@
    [相似推荐 | 1:r:0]
    [返回 | 1:bk:0] [取消 | 1:x:0]
 << answerCallbackQuery
->> user 1001 taps 1:x:0 on message 1
+>> user 1001 taps 1:bk:0 on message 1
 -> MoviePilot GET /api/v1/media/search?count=10&title=列女战纪：女娲石记&type=media
 -> Bangumi GET /v0/subjects/390200
 << editMessageText chat=1001 message=1 parse_mode=HTML
-   已取消。
-
    <b>🎌 新番放送 · 星期一（今天） · 第 1/1 页</b>
 
    <b>2026-10-05 首播</b>

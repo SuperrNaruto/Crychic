@@ -48,8 +48,8 @@ func (e *Engine) listTasks(ctx context.Context, sess session) Reply {
 		e.store.take(sess.id)
 		return e.failure("transfers", err)
 	}
-	if len(downloads)+len(jobs) == 0 && sess.home {
-		return withNote(msgNoTasks, e.home(session{id: sess.id, owner: sess.owner}))
+	if len(downloads)+len(jobs) == 0 && sess.menu {
+		return Reply{Notice: msgNoTasks}
 	}
 	if len(downloads)+len(jobs) == 0 {
 		e.store.take(sess.id)

@@ -141,7 +141,7 @@ func (e *Engine) Choose(ctx context.Context, actor Actor, raw string) Reply {
 	case actionPage:
 		return e.page(sess, p.arg)
 	case actionBack:
-		return e.back(sess)
+		return e.back(ctx, sess)
 	}
 	for _, choose := range []chooser{e.chooseHome, e.chooseRequest, e.chooseSeasons, e.chooseTask, e.chooseChart, e.chooseSubs, e.chooseRelated} {
 		if reply, ok := choose(ctx, sess, p); ok {
@@ -163,27 +163,15 @@ func (e *Engine) chooseRequest(ctx context.Context, sess session, p press) (Repl
 	case actionAskFrom:
 		return askStart(sess, ""), true
 	case actionCancel:
-		return e.cancel(ctx, sess), true
+		return e.cancel(sess), true
 	}
 	return Reply{}, false
 }
 
-// cancel drops the request in sess. One picked from a chart goes back to
-// the chart page it came from; any other ends the conversation.
-func (e *Engine) cancel(ctx context.Context, sess session) Reply {
-	if sess.picks == nil {
-		e.store.take(sess.id)
-		return Reply{Text: Sentence(msgCancelled)}
-	}
-	back := sess
-	back.results, back.picked, back.seasons, back.library, back.target, back.chosen = nil, card{}, nil, Library{}, nil, nil
-	return withNote(msgCancelled, e.chartPage(ctx, back, sess.page))
-}
-
-// withNote puts a short note above a reply's text.
-func withNote(note string, r Reply) Reply {
-	r.Text = append(Lines(Line(Plain(note)), Line()), r.Text...)
-	return r
+// cancel ends the conversation; 返回 is the way back.
+func (e *Engine) cancel(sess session) Reply {
+	e.store.take(sess.id)
+	return Reply{Text: Sentence(msgCancelled)}
 }
 
 func (e *Engine) pickMedia(ctx context.Context, sess session, index int) Reply {

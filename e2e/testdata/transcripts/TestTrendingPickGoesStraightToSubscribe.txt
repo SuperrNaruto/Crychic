@@ -57,10 +57,8 @@
    [确认订阅 | 1:ok:0] [返回 | 1:bk:0] [取消 | 1:x:0]
    [相似推荐 | 1:r:0] [同系列 | 1:n:0]
 << answerCallbackQuery
->> user 1001 taps 1:x:0 on message 1
+>> user 1001 taps 1:bk:0 on message 1
 << editMessageText chat=1001 message=1 parse_mode=HTML
-   已取消。
-
    <b>🔥 TMDB 流行趋势 · 第 1/2 页</b>
 
    1. <a href="https://www.themoviedb.org/movie/1248832"><b>挖掘者</b></a>

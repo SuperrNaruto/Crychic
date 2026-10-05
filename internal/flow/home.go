@@ -35,7 +35,6 @@ func (e *Engine) Home(_ context.Context, actor Actor) Reply {
 }
 
 func (e *Engine) home(sess session) Reply {
-	sess.home = true
 	e.store.put(sess)
 	var buttons []Button
 	for i, f := range e.features() {
@@ -59,6 +58,7 @@ func (e *Engine) chooseHome(ctx context.Context, sess session, p press) (Reply, 
 		if p.arg < 0 || p.arg >= len(features) {
 			return Reply{Notice: msgInvalidChoice}, true
 		}
+		sess.menu = true
 		return features[p.arg].open(ctx, sess), true
 	}
 	return Reply{}, false

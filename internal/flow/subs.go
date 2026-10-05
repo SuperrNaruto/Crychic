@@ -53,6 +53,9 @@ func (e *Engine) listSubs(ctx context.Context, sess session) Reply {
 		e.store.take(sess.id)
 		return e.failure("subscriptions", err)
 	}
+	if len(subs) == 0 && sess.menu {
+		return Reply{Notice: msgNoSubs}
+	}
 	sess.subs, sess.mine = subs, e.watcher.Requested(sess.owner.UserID)
 	e.store.put(sess)
 	if len(subs) == 0 {

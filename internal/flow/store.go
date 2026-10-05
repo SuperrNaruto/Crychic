@@ -14,7 +14,7 @@ const sessionIDBytes = 8
 type session struct {
 	id      uint64
 	owner   Actor
-	home    bool // opened from the home menu
+	menu    bool // a home menu button is opening a feature; navigate clears it
 	results []Media
 	picked  card
 	seasons []Season

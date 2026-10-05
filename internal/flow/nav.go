@@ -1,6 +1,9 @@
 package flow
 
-import "slices"
+import (
+	"context"
+	"slices"
+)
 
 const (
 	actionBack = "bk" // shows the screen before the current one again
@@ -14,7 +17,11 @@ const (
 type screen struct {
 	state *session
 	reply Reply
+	chart bool // a chart page, shown afresh so its missing synopses are retried
 }
+
+// chartViews are the steps that show a chart page.
+var chartViews = map[string]bool{actionChart: true, actionChartPage: true, actionWeekday: true}
 
 // forward are the steps that lead on from a screen, which 返回 leads back
 // to; same-level steps (paging, ticking, a weekday) only replace the screen,
@@ -52,7 +59,8 @@ func (e *Engine) navigate(prev session, action string, reply Reply) Reply {
 	if len(next.history) > 0 {
 		reply = withBack(next.id, reply)
 	}
-	next.screen = screen{state: snapshot(next), reply: reply}
+	next.menu = false
+	next.screen = screen{state: snapshot(next), reply: reply, chart: chartViews[action]}
 	e.store.put(next)
 	return reply
 }
@@ -62,8 +70,9 @@ func (e *Engine) shown(id uint64, reply Reply) Reply {
 	return e.navigate(session{id: id}, "", reply)
 }
 
-// back shows the previous screen with the state it had.
-func (e *Engine) back(sess session) Reply {
+// back shows the previous screen with the state it had; a chart page is
+// shown afresh from that state.
+func (e *Engine) back(ctx context.Context, sess session) Reply {
 	if len(sess.history) == 0 {
 		return Reply{Notice: msgInvalidChoice}
 	}
@@ -71,6 +80,9 @@ func (e *Engine) back(sess session) Reply {
 	restored := *last.state
 	restored.history, restored.screen = sess.history[:len(sess.history)-1], last
 	e.store.put(restored)
+	if last.chart {
+		return e.navigate(restored, actionChartPage, e.chartPage(ctx, restored, restored.page))
+	}
 	return last.reply
 }
 
