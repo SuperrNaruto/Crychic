@@ -52,6 +52,25 @@ func (n *Notifier) Watch(_ context.Context, req flow.Request) error {
 	return n.update(func(st state) state { return withRequest(st, req) })
 }
 
+// Requested implements flow.Watcher.
+func (n *Notifier) Requested(userID int64) []int {
+	var ids []int
+	for _, w := range n.snapshot().Watches {
+		for _, r := range w.Requesters {
+			if r.UserID == userID {
+				ids = append(ids, w.SubscriptionID)
+				break
+			}
+		}
+	}
+	return ids
+}
+
+// Forget implements flow.Watcher.
+func (n *Notifier) Forget(_ context.Context, subscriptionID int) error {
+	return n.update(func(st state) state { return without(st, subscriptionID) })
+}
+
 // Run polls until ctx is cancelled, starting immediately.
 func (n *Notifier) Run(ctx context.Context) {
 	ticker := time.NewTicker(n.opts.Interval)

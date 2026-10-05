@@ -3,7 +3,7 @@
    <b>🎬 Crychic</b>
    搜索并订阅电影和剧集，入库后通知你。
    [🔍 搜索订阅 | 1:h:0] [🔥 发现 | 1:h:1]
-   [📋 任务进度 | 1:h:2]
+   [📚 订阅 | 1:h:2] [📋 任务进度 | 1:h:3]
 >> user 1001 taps 1:h:1 on message 1
 << editMessageText chat=1001 message=1 parse_mode=HTML
    <b>🔥 发现</b>

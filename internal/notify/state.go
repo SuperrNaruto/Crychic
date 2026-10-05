@@ -165,6 +165,17 @@ func (w watch) wants(ep int) bool {
 	return ep >= w.Start && (w.Total == 0 || ep <= w.Total)
 }
 
+// without drops the watch of a subscription.
+func without(st state, subscriptionID int) state {
+	next := state{Baseline: st.Baseline, LastTransfer: st.LastTransfer}
+	for _, w := range st.Watches {
+		if w.SubscriptionID != subscriptionID {
+			next.Watches = append(next.Watches, w)
+		}
+	}
+	return next
+}
+
 // withActivity records which subscriptions MoviePilot no longer has and
 // drops watches that have been orphaned for longer than orphanGrace. MoviePilot
 // closes a subscription when downloads finish, before files are transferred,

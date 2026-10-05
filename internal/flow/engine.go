@@ -124,7 +124,7 @@ func (e *Engine) Choose(ctx context.Context, actor Actor, raw string) Reply {
 	if sess.owner.UserID != actor.UserID {
 		return Reply{Notice: msgNotYours}
 	}
-	for _, choose := range []chooser{e.chooseHome, e.chooseRequest, e.chooseSeasons, e.chooseTask, e.chooseChart} {
+	for _, choose := range []chooser{e.chooseHome, e.chooseRequest, e.chooseSeasons, e.chooseTask, e.chooseChart, e.chooseSubs} {
 		if reply, ok := choose(ctx, sess, p); ok {
 			return reply
 		}

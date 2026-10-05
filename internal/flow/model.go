@@ -129,6 +129,19 @@ type TransferJob struct {
 	Files  []TransferFile
 }
 
+// Subscription is one of the backend's subscriptions.
+type Subscription struct {
+	ID     int
+	Title  string
+	Year   string
+	Kind   Kind
+	Season *int
+	State  string // backend state code, e.g. "R" while subscribed
+	Lack   int    // episodes still missing
+	Total  int    // episodes in the season, 0 when unknown
+	Poster string
+}
+
 // Backend is the media server the bot subscribes through.
 type Backend interface {
 	Search(ctx context.Context, term string) ([]Media, error)
@@ -140,6 +153,9 @@ type Backend interface {
 	// Discover lists a chart's picks; they may come from other metadata
 	// sources than search does.
 	Discover(ctx context.Context, chart Chart) ([]Media, error)
+	Subscriptions(ctx context.Context) ([]Subscription, error)
+	// Unsubscribe deletes a subscription; deleting one already gone is fine.
+	Unsubscribe(ctx context.Context, id int) error
 	// FindSubscription returns the id of an existing subscription, 0 if none.
 	FindSubscription(ctx context.Context, target Target) (int, error)
 	// Subscribe creates a subscription and returns its id.
@@ -158,6 +174,10 @@ type Request struct {
 // Watcher remembers requests so requesters hear about arrivals.
 type Watcher interface {
 	Watch(ctx context.Context, req Request) error
+	// Requested lists the subscriptions userID asked for.
+	Requested(userID int64) []int
+	// Forget drops a subscription's requests, e.g. once it is cancelled.
+	Forget(ctx context.Context, subscriptionID int) error
 }
 
 // Actor is the chat user driving a conversation, in platform terms.

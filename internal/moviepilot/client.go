@@ -236,6 +236,17 @@ func kindType(k flow.Kind) string {
 	return typeMovie
 }
 
+// statusError is a MoviePilot answer with a non-2xx status.
+type statusError struct {
+	call string
+	code int
+	body string
+}
+
+func (e *statusError) Error() string {
+	return fmt.Sprintf("moviepilot %s: status %d: %s", e.call, e.code, e.body)
+}
+
 // call is one MoviePilot API request.
 type call struct {
 	method string
@@ -259,7 +270,7 @@ func (c *Client) do(ctx context.Context, cl call, out any) error {
 	}
 	if resp.StatusCode < http.StatusOK || resp.StatusCode >= http.StatusMultipleChoices {
 		snippet, _ := io.ReadAll(io.LimitReader(resp.Body, maxErrorBody))
-		return fmt.Errorf("moviepilot %s %s: status %d: %s", cl.method, cl.path, resp.StatusCode, snippet)
+		return &statusError{call: cl.method + " " + cl.path, code: resp.StatusCode, body: string(snippet)}
 	}
 	var env struct {
 		Success bool            `json:"success"`
