@@ -13,8 +13,8 @@ import (
 const mpAPIKey = "mp-test-key"
 
 // route is a canned MoviePilot answer. Fixtures are trimmed recordings from a
-// live v3.1.0 instance, except subscribe_*.json and server_error.json, which
-// follow the source because creating subscriptions has side effects.
+// live v3.1.0 instance, except subscribe_rejected.json and server_error.json,
+// which follow the source because those failures are hard to trigger safely.
 type route struct {
 	status  int
 	fixture string
