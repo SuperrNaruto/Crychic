@@ -31,6 +31,8 @@ const (
 	msgNoSeasons     = "没有查到这部剧的季信息。"
 	msgPickSeason    = "选择要订阅的季："
 	msgInvalidChoice = "无效的选项。"
+	msgWillNotify    = "入库后会通知你。"
+	msgNoNotice      = "MoviePilot 会自动搜索下载。"
 )
 
 // Options configures an Engine.
@@ -105,6 +107,9 @@ func (e *Engine) Choose(ctx context.Context, actor Actor, raw string) Reply {
 	if reply, ok := e.chooseTask(ctx, sess, action, arg); ok {
 		return reply
 	}
+	if reply, ok := e.chooseSeasons(ctx, sess, action, arg); ok {
+		return reply
+	}
 	switch action {
 	case actionMedia:
 		return e.pickMedia(ctx, sess, arg)
@@ -145,9 +150,12 @@ func (e *Engine) pickMedia(ctx context.Context, sess session, index int) Reply {
 	}
 	sess.seasons = seasons
 	e.store.put(sess)
-	rows := make([][]Button, 0, len(seasons)+1)
+	rows := make([][]Button, 0, len(seasons)+2)
 	for _, s := range seasons {
 		rows = append(rows, []Button{{Label: sess.seasonLabel(s), Data: data(sess.id, actionSeason, s.Number)}})
+	}
+	if len(sess.selectable()) > 1 {
+		rows = append(rows, []Button{{Label: "多选季…", Data: data(sess.id, actionMulti, 0)}})
 	}
 	rows = append(rows, []Button{cancelButton(sess.id)})
 	return sess.picked.reply(Line(Strong(msgPickSeason)), rows)
@@ -268,17 +276,24 @@ func (e *Engine) confirm(ctx context.Context, sess session, from int) Reply {
 // watch registers the session owner for an arrival notice and returns the
 // sentence ending that tells them whether they will get one.
 func (e *Engine) watch(ctx context.Context, sess session, id int, target Target) string {
+	if !e.remember(ctx, sess, id, target) {
+		return "，" + msgNoNotice
+	}
+	return "，" + msgWillNotify
+}
+
+// remember registers the session owner for an arrival notice of target.
+func (e *Engine) remember(ctx context.Context, sess session, id int, target Target) bool {
 	req := Request{SubscriptionID: id, Target: target, Requester: sess.owner}
 	if target.Season != nil {
 		req.SeasonEpisodes = sess.episodeCount(*target.Season)
 		req.Held = sess.library.Episodes[*target.Season]
 	}
-	err := e.watcher.Watch(ctx, req)
-	if err != nil {
+	if err := e.watcher.Watch(ctx, req); err != nil {
 		e.log.Error("cannot remember request for notification", "subscription", id, "err", err)
-		return "，MoviePilot 会自动搜索下载。"
+		return false
 	}
-	return "，入库后会通知你。"
+	return true
 }
 
 func (e *Engine) failure(step string, err error) Reply {

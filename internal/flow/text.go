@@ -21,7 +21,12 @@ type card struct {
 
 // reply shows the card, poster above, then message and buttons.
 func (c card) reply(message Block, buttons [][]Button) Reply {
-	text := append(c.text(), Line(), message)
+	return c.replyLines(Lines(message), buttons)
+}
+
+// replyLines is reply with a message of several lines.
+func (c card) replyLines(message Text, buttons [][]Button) Reply {
+	text := append(append(c.text(), Line()), message...)
 	return Reply{Text: text, Image: c.Media.PosterURL, Buttons: buttons}
 }
 

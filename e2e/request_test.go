@@ -225,3 +225,28 @@ func mustMessage(h *harness, id int) message {
 	}
 	return msg
 }
+
+// Several seasons are subscribed in one go, each from its first episode,
+// and each is watched for arrivals.
+func TestSubscribeSeveralSeasons(t *testing.T) {
+	h := start(t, scenario{routes: map[string]route{
+		searchPath:    ok("search_breaking_bad.json"),
+		breakDetails:  ok("detail_breaking_bad.json"),
+		seasonsPath:   ok("seasons_breaking_bad.json"),
+		breakingQuery: ok("subscription_none.json"),
+		subscribePath: ok("subscribe_created.json"),
+	}})
+	h.say(alice, alice, "/request 绝命毒师")
+	h.tap(alice, 1, "1. 绝命毒师 (2008)")
+	h.tap(alice, 1, "多选季…")
+	h.tap(alice, 1, "⬜ 第 1 季 · 7 集")
+	h.tap(alice, 1, "⬜ 第 2 季 · 13 集")
+	h.tap(alice, 1, "☑️ 第 1 季 · 7 集")
+	h.tap(alice, 1, "⬜ 第 3 季 · 13 集")
+	h.tap(alice, 1, "订阅所选 2 季")
+	h.shows(1, "✅ 第 2 季：已订阅")
+	h.shows(1, "✅ 第 3 季：已订阅")
+	h.arrives(alice, episodeFile("绝命毒师", "1396", "S03", "E01", breakingImage))
+	h.shows(2, "第 3 季")
+	h.tr.verify(t)
+}

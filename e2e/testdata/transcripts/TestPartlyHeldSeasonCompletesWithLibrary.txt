@@ -24,6 +24,7 @@
    <b>选择要订阅的季：</b>
    [特别篇 · 3 集 | 1:s:0]
    [第 1 季 · 13 集 · 已有 1 集 | 1:s:1]
+   [多选季… | 1:a:0]
    [取消 | 1:x:0]
 << answerCallbackQuery
 >> user 1001 taps 1:s:1 on message 1

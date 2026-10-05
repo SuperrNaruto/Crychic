@@ -34,6 +34,7 @@ Data flow: Telegram update → `telegram.adapter` → `flow.Engine.Start/Choose`
 - `internal/flow/model.go` - `Backend`, `Reply`, `UserError`: the contract every platform and backend uses
 - `internal/flow/engine.go` - conversation steps; `internal/flow/text.go` - all user-facing copy (result lines, media card)
 - `internal/flow/tasks.go` - `/tasks`: list downloads and transfer jobs, follow one live (`Reply.Follow`); `internal/telegram/follow.go` re-asks the flow every `CRYCHIC_PROGRESS_INTERVAL` and edits only on change
+- `internal/flow/seasons.go` - multi-season picker (「多选季…」): tick seasons, subscribe each from episode 1, report per season
 - `internal/flow/episodes.go` - start-episode choices for seasons and typed answers (`Engine.Answer`)
 - `internal/flow/rich.go` - `flow.Text`: formatting by meaning (bold, italic, code, link, collapsible quote)
 - `internal/telegram/html.go` - renders `flow.Text` to Telegram HTML, escaping everything
@@ -87,6 +88,7 @@ Data flow: Telegram update → `telegram.adapter` → `flow.Engine.Start/Choose`
 - MoviePilot transfers episodes one by one as their downloads finish, often minutes apart. A show's arrivals stay pending (persisted) until nothing new came for `CRYCHIC_NOTIFY_QUIET`, then go out as one notice; a watch whose every wanted episode is in (and any movie) is announced at once. The e2e default is `300ms`; `transfers` waits until a whole poll handled the records, so a test can act between polls
 - Notifier state is saved before notices are sent: a crash may drop a notice, never repeat one. Polling calls are kept out of e2e transcripts; the notices they cause are recorded
 - Button data is `<session>:<action>:<arg>` and must stay ≤ 64 bytes (Telegram limit). A stale button only has its action to go on, so `/tasks` buttons use their own actions (`k f u l c`) and `flow.expired` points them back to `/tasks`, everything else to `/request`
+- The fake numbers subscriptions created from `subscribe_created.json` 1, 2, 3, ... like MoviePilot; two watches sharing an id would merge
 - Confirm and cancel use `store.take`, so a double tap acts once; keep that for any step that ends a conversation
 - A `Reply` with `Notice` must not edit the message (another group member tapping your buttons)
 - Library checks go through MoviePilot to its media server and are cosmetic like details (failure = nothing held). Shows use `POST /api/v1/mediaserver/exists_remote` (`{"3":[1,2,...]}`, `{}` when absent; needs `title`+`year`, ids alone answer `{}`). Movies use `POST /api/v1/mediaserver/notexists` (`[]` = held), because `exists_remote` answers `{}` for movies either way. `GET /api/v1/mediaserver/exists` reads MoviePilot's own sync table, which is empty unless library sync runs, so it isn't used

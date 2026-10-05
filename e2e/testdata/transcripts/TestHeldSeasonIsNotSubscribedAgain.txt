@@ -24,6 +24,7 @@
    [第 2 季 · 12 集 | 1:s:2]
    [第 3 季 · 12 集 · 已入库 | 1:s:3]
    [第 4 季 | 1:s:4]
+   [多选季… | 1:a:0]
    [取消 | 1:x:0]
 << answerCallbackQuery
 >> user 1001 taps 1:s:3 on message 1

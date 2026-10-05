@@ -15,6 +15,7 @@ type session struct {
 	seasons []Season
 	library Library
 	target  *Target
+	chosen  []int // seasons ticked in the multi-season picker
 	tasks   []taskRef
 	follow  following
 	expires time.Time

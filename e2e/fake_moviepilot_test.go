@@ -2,6 +2,7 @@ package e2e
 
 import (
 	"encoding/json"
+	"fmt"
 	"io"
 	"maps"
 	"net/http"
@@ -26,6 +27,9 @@ const (
 	libraryMoviePath = "POST /api/v1/mediaserver/notexists"
 	downloadsPath    = "GET /api/v1/download/"
 	queuePath        = "GET /api/v1/transfer/queue"
+
+	createdFixture = "subscribe_created.json"
+	createdID      = `"id": 1`
 )
 
 // idleServer answers the library and downloader checks the way MoviePilot
@@ -80,6 +84,7 @@ type fakeMoviePilot struct {
 	transfers []transfer // newest first, like MoviePilot
 	polled    chan struct{}
 	readers   []reader
+	created   int // subscriptions created so far
 }
 
 // reader waits for the notifier to finish a poll that read the transfer
@@ -201,7 +206,20 @@ func (f *fakeMoviePilot) serveRoute(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		f.t.Errorf("fixture: %v", err)
 	}
-	writeEnvelope(w, rt.status, string(data))
+	body := string(data)
+	if rt.fixture == createdFixture {
+		body = f.numbered(body)
+	}
+	writeEnvelope(w, rt.status, body)
+}
+
+// numbered gives each created subscription its own id, as MoviePilot does;
+// the recording carries the id of the one live subscription.
+func (f *fakeMoviePilot) numbered(body string) string {
+	f.mu.Lock()
+	defer f.mu.Unlock()
+	f.created++
+	return strings.Replace(body, createdID, fmt.Sprintf(`"id": %d`, f.created), 1)
 }
 
 // serveTransfers pages the history the way MoviePilot does (newest first).
