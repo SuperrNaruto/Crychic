@@ -94,6 +94,7 @@ type fakeMoviePilot struct {
 	created   int  // subscriptions created so far
 	lagging   bool // the media server has not scanned new transfers yet
 	scanned   int  // transfers the media server shows while lagging
+	searches  map[string]string
 }
 
 // reader waits for the notifier to finish a poll that read the transfer
@@ -214,6 +215,9 @@ func (f *fakeMoviePilot) serveRoute(w http.ResponseWriter, r *http.Request) {
 	path, _ := url.PathUnescape(r.URL.EscapedPath())
 	f.mu.Lock()
 	rt, found := f.routes[r.Method+" "+path]
+	if fixture, ok := f.searches[r.URL.Query().Get("title")]; ok && r.Method+" "+path == searchPath {
+		rt, found = route{status: http.StatusOK, fixture: fixture}, true
+	}
 	f.mu.Unlock()
 	if !found {
 		writeEnvelope(w, http.StatusNotFound, `{"success":false,"message":"Not Found","data":null}`)

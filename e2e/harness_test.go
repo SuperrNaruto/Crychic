@@ -37,6 +37,9 @@ type scenario struct {
 	history []transfer // transfers that predate the bot
 	quiet   string     // CRYCHIC_NOTIFY_QUIET, notifyQuiet if empty
 	lagging bool       // the media server shows new transfers only on catchUp
+	// searches answers a search for one title with its own fixture; other
+	// titles get the searchPath route.
+	searches map[string]string
 }
 
 type harness struct {
@@ -56,7 +59,7 @@ func start(t *testing.T, sc scenario) *harness {
 	tr := &transcript{}
 	mp := newFakeMoviePilot(t, tr, sc.routes)
 	mp.add(sc.history...)
-	mp.lagging, mp.scanned = sc.lagging, len(sc.history)
+	mp.lagging, mp.scanned, mp.searches = sc.lagging, len(sc.history), sc.searches
 	tg := newFakeTelegram(tr)
 	if sc.apiKey == "" {
 		sc.apiKey = mpAPIKey

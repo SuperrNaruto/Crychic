@@ -9,6 +9,8 @@ const (
 	trendingPath  = "GET /api/v1/recommend/tmdb_trending"
 	doubanTVPath  = "GET /api/v1/recommend/douban_tv_hot"
 	animePath     = "GET /api/v1/recommend/bangumi_calendar"
+	nuwaDetails   = "GET /api/v1/media/390200"
+	psyrenDetails = "GET /api/v1/media/614640"
 )
 
 // A trending TMDB pick is found again by search and goes straight to its
@@ -49,12 +51,31 @@ func TestDoubanPicksAreMatchedByTitle(t *testing.T) {
 	h.tr.verify(t)
 }
 
-// The anime calendar shows when each show first airs.
-func TestAnimeCalendarShowsAirDates(t *testing.T) {
-	h := start(t, scenario{routes: map[string]route{animePath: ok("chart_anime.json")}})
+// The anime calendar groups picks by air date and links each to its TMDB
+// page with a collapsed synopsis, found by its title or else its original
+// title; a show TMDB lacks, or has no synopsis for, gets Bangumi's.
+func TestAnimeCalendarShowsAirDatesAndSynopses(t *testing.T) {
+	h := start(t, scenario{
+		routes: map[string]route{
+			animePath:     ok("chart_anime.json"),
+			searchPath:    ok("empty.json"),
+			nuwaDetails:   ok("detail_calendar_nuwa.json"),
+			psyrenDetails: ok("detail_calendar_psyren.json"),
+		},
+		searches: map[string]string{
+			"列女战纪：女娲石记":            "search_calendar_nuwa.json",
+			"魔法少女育成计划 restart":     "search_calendar_mahou.json",
+			"罗梅莉亚战记":               "search_calendar_romelia.json",
+			"PSYREN -决战游戏-":        "search_calendar_psyren.json",
+			"PSYREN -サイレン-":        "search_calendar_psyren_original.json",
+			"你好，我是受心上人所托来做恋爱药的魔女。": "search_calendar_majo.json",
+		},
+	})
 	h.say(alice, alice, "/start")
 	h.tap(alice, 1, "🔥 发现")
 	h.tap(alice, 1, "🎌 新番放送")
 	h.shows(1, "2026-10-05 首播")
+	h.shows(1, "themoviedb.org/tv/297903")
+	h.shows(1, "bgm.tv/subject/390200")
 	h.tr.verify(t)
 }

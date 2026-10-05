@@ -58,6 +58,7 @@ type Details struct {
 	Episodes int // TV only
 	Cast     []string
 	Next     Episode // next episode to air; zero when unknown or ended
+	Overview string
 }
 
 // Episode locates one episode of a show.

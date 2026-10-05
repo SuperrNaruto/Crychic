@@ -1,0 +1,19 @@
+{
+  "success": true,
+  "message": "",
+  "data": [
+    {
+      "media_source": "themoviedb",
+      "media_id": "313068",
+      "type": "电视剧",
+      "title": "你好，我是受心上人所托来做恋爱药的魔女。",
+      "year": "2026",
+      "original_title": "どうも、好きな人に惚れ薬を依頼された魔女です。",
+      "release_date": "2026-10-05",
+      "poster_path": "https://image.tmdb.org/t/p/original/7VjZRZD5sHjsIaoNiUiXzO0qC10.jpg",
+      "vote_average": 6.0,
+      "detail_link": "https://www.themoviedb.org/tv/313068",
+      "overview": "“希望你能帮我制作迷情药” 隐居在湖畔的魔女萝赛，从她暗恋的骑士哈利玖口中听到了这句话。 他心里挂念着别人，而非自己——面对这一现实，萝赛失恋了。 即便如此，她依然无法拒绝他的委托。 心想哪怕只在迷情药完成前的这段时间里能和他待在一起也好，萝赛将这份苦涩的爱恋深藏心底，度过着每一天。 哪怕明知这是一场无望的单恋，这份心意也无法抹去。 这是一位笨拙的家里蹲魔女×一位爱照顾人又一本正经的骑士。 以迷情药为契机交织而成的，令人揪心的恋爱物语。"
+    }
+  ]
+}

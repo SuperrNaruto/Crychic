@@ -1,0 +1,32 @@
+{
+  "success": true,
+  "message": "",
+  "data": [
+    {
+      "media_source": "themoviedb",
+      "media_id": "68079",
+      "type": "电视剧",
+      "title": "魔法少女育成计划",
+      "year": "2016",
+      "original_title": "魔法少女育成計画",
+      "release_date": "2016-10-01",
+      "poster_path": "https://image.tmdb.org/t/p/original/vUGQhcXIkPHS6dyM6w3ruzRw7DQ.jpg",
+      "vote_average": 5.8,
+      "detail_link": "https://www.themoviedb.org/tv/68079",
+      "overview": "热门社交游戏“魔法少女育成计划”，为数万人之中仅一人能成为魔法少女的奇迹般游戏。幸运地获得魔法，过着充实生活的众少女。然而，就在某一天，她们收到法布传来“因人数过多，为了确保魔力供给足够，要裁掉一半的魔法少女”的片面通知，需在16人中削减8人，于是由16位魔法少女所带来的残酷激烈、惨无人道的殊死竞存比赛，由此拉开序幕。"
+    },
+    {
+      "media_source": "themoviedb",
+      "media_id": "337277",
+      "type": "电视剧",
+      "title": "魔法少女育成计划 restart",
+      "year": "2026",
+      "original_title": "魔法少女育成計画 restart",
+      "release_date": "2026-10-06",
+      "poster_path": "https://image.tmdb.org/t/p/original/yFRVyWWmNMJ72CqxRc2dZqW9TAE.jpg",
+      "vote_average": 0.0,
+      "detail_link": "https://www.themoviedb.org/tv/337277",
+      "overview": "获得「魔法王国」所赐之魔力、每日勤奋奔走于助人的魔法少女们——她们收到了来自神秘寄信人所寄出，名为『魔法少女育成计划』的游戏邀请函。受到隐藏着死亡风险、毫无逻辑可言的游戏所囚禁的十六位魔法少女，在幕后黑手策划的诡计玩弄下，开始为了存活下来而绞尽脑汁苦思对策……"
+    }
+  ]
+}

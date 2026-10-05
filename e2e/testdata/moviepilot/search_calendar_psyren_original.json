@@ -1,0 +1,19 @@
+{
+  "success": true,
+  "message": "",
+  "data": [
+    {
+      "media_source": "themoviedb",
+      "media_id": "297903",
+      "type": "电视剧",
+      "title": "PSYREN -サイレン-",
+      "year": "2026",
+      "original_title": "PSYREN -サイレン-",
+      "release_date": "2026-10-05",
+      "poster_path": "https://image.tmdb.org/t/p/original/EQNjH4oeCm9pD58fi2s4WZyjgA.jpg",
+      "vote_average": 0.0,
+      "detail_link": "https://www.themoviedb.org/tv/297903",
+      "overview": ""
+    }
+  ]
+}

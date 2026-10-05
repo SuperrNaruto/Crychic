@@ -13,14 +13,14 @@
 << editMessageText chat=1001 message=1 parse_mode=HTML
    <b>📺 豆瓣热门剧集 · 第 1/2 页</b>
    
-   1. <b>深渊无间</b> (2026) · ⭐ 7.3
-   2. <b>兰香如故</b> (2026) · ⭐ 7.5
-   3. <b>早春晴朗</b> (2026) · ⭐ 6.7
-   4. <b>现在不是出轨的问题</b> (2026) · ⭐ 8.7
-   5. <b>交锋</b> (2026) · ⭐ 7.3
-   6. <b>一瓯春</b> (2026) · ⭐ 5.4
-   7. <b>冬城猎凶</b> (2026) · ⭐ 7.1
-   8. <b>直到T恤干透</b> (2026) · ⭐ 7.4
+   1. <a href="https://movie.douban.com/subject/36576514"><b>深渊无间</b></a> (2026) · ⭐ 7.3
+   2. <a href="https://movie.douban.com/subject/36449295"><b>兰香如故</b></a> (2026) · ⭐ 7.5
+   3. <a href="https://movie.douban.com/subject/36660844"><b>早春晴朗</b></a> (2026) · ⭐ 6.7
+   4. <a href="https://movie.douban.com/subject/37501131"><b>现在不是出轨的问题</b></a> (2026) · ⭐ 8.7
+   5. <a href="https://movie.douban.com/subject/36314809"><b>交锋</b></a> (2026) · ⭐ 7.3
+   6. <a href="https://movie.douban.com/subject/35644140"><b>一瓯春</b></a> (2026) · ⭐ 5.4
+   7. <a href="https://movie.douban.com/subject/37264799"><b>冬城猎凶</b></a> (2026) · ⭐ 7.1
+   8. <a href="https://movie.douban.com/subject/38462800"><b>直到T恤干透</b></a> (2026) · ⭐ 7.4
    [1 | 1:i:0] [2 | 1:i:1] [3 | 1:i:2] [4 | 1:i:3]
    [5 | 1:i:4] [6 | 1:i:5] [7 | 1:i:6] [8 | 1:i:7]
    [下一页 › | 1:g:1]
@@ -59,14 +59,14 @@
 << editMessageText chat=1001 message=2 parse_mode=HTML
    <b>📺 豆瓣热门剧集 · 第 1/2 页</b>
    
-   1. <b>深渊无间</b> (2026) · ⭐ 7.3
-   2. <b>兰香如故</b> (2026) · ⭐ 7.5
-   3. <b>早春晴朗</b> (2026) · ⭐ 6.7
-   4. <b>现在不是出轨的问题</b> (2026) · ⭐ 8.7
-   5. <b>交锋</b> (2026) · ⭐ 7.3
-   6. <b>一瓯春</b> (2026) · ⭐ 5.4
-   7. <b>冬城猎凶</b> (2026) · ⭐ 7.1
-   8. <b>直到T恤干透</b> (2026) · ⭐ 7.4
+   1. <a href="https://movie.douban.com/subject/36576514"><b>深渊无间</b></a> (2026) · ⭐ 7.3
+   2. <a href="https://movie.douban.com/subject/36449295"><b>兰香如故</b></a> (2026) · ⭐ 7.5
+   3. <a href="https://movie.douban.com/subject/36660844"><b>早春晴朗</b></a> (2026) · ⭐ 6.7
+   4. <a href="https://movie.douban.com/subject/37501131"><b>现在不是出轨的问题</b></a> (2026) · ⭐ 8.7
+   5. <a href="https://movie.douban.com/subject/36314809"><b>交锋</b></a> (2026) · ⭐ 7.3
+   6. <a href="https://movie.douban.com/subject/35644140"><b>一瓯春</b></a> (2026) · ⭐ 5.4
+   7. <a href="https://movie.douban.com/subject/37264799"><b>冬城猎凶</b></a> (2026) · ⭐ 7.1
+   8. <a href="https://movie.douban.com/subject/38462800"><b>直到T恤干透</b></a> (2026) · ⭐ 7.4
    [1 | 2:i:0] [2 | 2:i:1] [3 | 2:i:2] [4 | 2:i:3]
    [5 | 2:i:4] [6 | 2:i:5] [7 | 2:i:6] [8 | 2:i:7]
    [下一页 › | 2:g:1]
@@ -76,8 +76,8 @@
 << editMessageText chat=1001 message=2 parse_mode=HTML
    <b>📺 豆瓣热门剧集 · 第 2/2 页</b>
    
-   9. <b>花开锦绣</b> (2026) · ⭐ 7.2
-   10. <b>流人 第六季</b> (2026) · ⭐ 9.2
+   9. <a href="https://movie.douban.com/subject/36810153"><b>花开锦绣</b></a> (2026) · ⭐ 7.2
+   10. <a href="https://movie.douban.com/subject/36689816"><b>流人 第六季</b></a> (2026) · ⭐ 9.2
    [9 | 2:i:8] [10 | 2:i:9]
    [‹ 上一页 | 2:g:0]
    [返回榜单 | 2:b:0] [🏠 首页 | 2:o:0]

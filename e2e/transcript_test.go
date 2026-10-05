@@ -25,11 +25,38 @@ func (tr *transcript) add(head string, body ...string) {
 	tr.mu.Lock()
 	defer tr.mu.Unlock()
 	tr.lines = append(tr.lines, head)
+	if len(body) == 0 {
+		tr.settle()
+	}
 	for _, b := range body {
 		for _, line := range strings.Split(b, "\n") {
 			tr.lines = append(tr.lines, "   "+line)
 		}
 	}
+}
+
+// settle sorts the last line into the run of reads of the same route
+// before it: the bot makes such reads at once (a chart page's lookups), so
+// they arrive in any order.
+func (tr *transcript) settle() {
+	for i := len(tr.lines) - 1; i > 0; i-- {
+		prev, last := tr.lines[i-1], tr.lines[i]
+		if readRoute(prev) == "" || readRoute(prev) != readRoute(last) || prev <= last {
+			return
+		}
+		tr.lines[i-1], tr.lines[i] = last, prev
+	}
+}
+
+// readRoute is a MoviePilot read's path without its query and trailing id,
+// or "" for any other line.
+func readRoute(line string) string {
+	path, found := strings.CutPrefix(line, "-> MoviePilot GET ")
+	if !found {
+		return ""
+	}
+	path, _, _ = strings.Cut(path, "?")
+	return strings.TrimRight(path, "0123456789")
 }
 
 func (tr *transcript) String() string {

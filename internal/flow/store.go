@@ -18,6 +18,7 @@ type session struct {
 	chosen  []int   // seasons ticked in the multi-season picker
 	chart   int     // index into charts being browsed
 	picks   []Media // the chart's picks
+	noted   []bool  // picks already given a link and synopsis
 	subs    []Subscription
 	mine    []int // ids of subs the owner asked for
 	tasks   []taskRef

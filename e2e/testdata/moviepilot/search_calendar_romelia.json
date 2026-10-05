@@ -1,0 +1,19 @@
+{
+  "success": true,
+  "message": "",
+  "data": [
+    {
+      "media_source": "themoviedb",
+      "media_id": "305313",
+      "type": "电视剧",
+      "title": "罗梅莉亚战记",
+      "year": "2026",
+      "original_title": "ロメリア戦記",
+      "release_date": "2026-10-05",
+      "poster_path": "https://image.tmdb.org/t/p/original/2wqyITVWs1wZMih2VraylRjqzCo.jpg",
+      "vote_average": 0.0,
+      "detail_link": "https://www.themoviedb.org/tv/305313",
+      "overview": "“罗梅，不，罗梅莉亚伯爵千金。我和你已经没法再继续下去了，我要解除跟你的婚约，一回国便分手吧。”当亨利王子夙愿以偿打倒了魔王塞尔吉斯，喜悦未平的时候，他突然这么跟我说道。但王子他们不知道。我拥有名为“恩宠”的奇迹之力……这是在打倒魔王后被王子当场宣布退婚的女主角罗梅莉亚，开启了“战后”重建新世界的传奇故事。"
+    }
+  ]
+}

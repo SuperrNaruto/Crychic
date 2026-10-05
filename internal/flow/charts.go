@@ -15,6 +15,8 @@ const (
 	chartPageSize = 8
 	// gridColumns is how many number buttons share a row.
 	gridColumns = 4
+	// chartOverviewRunes keeps a full page of synopses inside one message.
+	chartOverviewRunes = 300
 
 	msgCharts      = "🔥 发现"
 	msgPickChart   = "选择一个榜单："
@@ -25,7 +27,7 @@ const (
 type chart struct {
 	kind  Chart
 	label string
-	aired bool // show first air dates, for release calendars
+	aired bool // group by first air date, link and annotate each pick
 }
 
 var charts = []chart{
@@ -47,7 +49,7 @@ func (e *Engine) chooseChart(ctx context.Context, sess session, p press) (Reply,
 		}
 		return e.openChart(ctx, sess, p.arg), true
 	case actionChartPage:
-		return e.chartPage(sess, p.arg), true
+		return e.chartPage(ctx, sess, p.arg), true
 	case actionChartPick:
 		if p.arg < 0 || p.arg >= len(sess.picks) {
 			return Reply{Notice: msgInvalidChoice}, true
@@ -80,20 +82,24 @@ func (e *Engine) openChart(ctx context.Context, sess session, index int) Reply {
 		return e.failure("discover", err)
 	}
 	sess.chart, sess.picks = index, picks
-	return e.chartPage(sess, 0)
+	return e.chartPage(ctx, sess, 0)
 }
 
 // chartPage shows page of the current chart's picks, numbered, with a grid
-// of number buttons to pick one.
-func (e *Engine) chartPage(sess session, page int) Reply {
+// of number buttons to pick one. Calendar picks are annotated first.
+func (e *Engine) chartPage(ctx context.Context, sess session, page int) Reply {
 	pages := max((len(sess.picks)+chartPageSize-1)/chartPageSize, 1)
 	if page < 0 || page >= pages {
 		return Reply{Notice: msgInvalidChoice}
 	}
-	e.store.put(sess)
 	c := charts[sess.chart]
 	first := page * chartPageSize
-	shown := sess.picks[first:min(first+chartPageSize, len(sess.picks))]
+	end := min(first+chartPageSize, len(sess.picks))
+	if c.aired {
+		e.annotate(ctx, &sess, first, end)
+	}
+	e.store.put(sess)
+	shown := sess.picks[first:end]
 	text := Lines(Line(Strong(fmt.Sprintf("%s · 第 %d/%d 页", c.label, page+1, pages))))
 	text = append(text, pickLines(first, shown, c.aired)...)
 	if len(sess.picks) == 0 {
@@ -122,6 +128,9 @@ func pickLines(first int, picks []Media, aired bool) Text {
 			text = append(text, Line())
 		}
 		text = append(text, pickLine(first+i+1, m, pickLook{year: !aired, kind: mixed}))
+		if aired && m.Overview != "" {
+			text = append(text, Quote(truncate(m.Overview, chartOverviewRunes)))
+		}
 	}
 	return text
 }
@@ -129,10 +138,11 @@ func pickLines(first int, picks []Media, aired bool) Text {
 // pickLook says which metadata a chart line repeats.
 type pickLook struct{ year, kind bool }
 
-// pickLine is a short chart line, e.g. "1. **沙丘** (2021) · ⭐ 7.8"; the
-// original title waits for the card.
+// pickLine is a short chart line, e.g. "1. **沙丘** (2021) · ⭐ 7.8", the
+// title linked to the media's page when known; the original title waits
+// for the card.
 func pickLine(n int, m Media, look pickLook) Block {
-	spans := []Span{Plain(fmt.Sprintf("%d. ", n)), Strong(m.Title)}
+	spans := []Span{Plain(fmt.Sprintf("%d. ", n)), Linked(Strong(m.Title), m.Link)}
 	if y := year(m); look.year && y != "" {
 		spans = append(spans, Plain(" "+y))
 	}

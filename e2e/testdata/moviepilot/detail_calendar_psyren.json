@@ -1,0 +1,408 @@
+{
+  "success": true,
+  "message": "",
+  "data": {
+    "genres": [
+      {
+        "id": "2026年10月",
+        "name": "2026年10月"
+      },
+      {
+        "id": "Satelight",
+        "name": "Satelight"
+      },
+      {
+        "id": "漫画改",
+        "name": "漫画改"
+      },
+      {
+        "id": "2026",
+        "name": "2026"
+      },
+      {
+        "id": "TV",
+        "name": "TV"
+      },
+      {
+        "id": "小野胜巳",
+        "name": "小野胜巳"
+      },
+      {
+        "id": "战斗",
+        "name": "战斗"
+      },
+      {
+        "id": "少年向",
+        "name": "少年向"
+      },
+      {
+        "id": "サテライト",
+        "name": "サテライト"
+      },
+      {
+        "id": "日本",
+        "name": "日本"
+      },
+      {
+        "id": "科幻",
+        "name": "科幻"
+      },
+      {
+        "id": "漫改",
+        "name": "漫改"
+      },
+      {
+        "id": "小野勝巳",
+        "name": "小野勝巳"
+      },
+      {
+        "id": "安田陸矢",
+        "name": "安田陸矢"
+      },
+      {
+        "id": "風間万裕子",
+        "name": "風間万裕子"
+      },
+      {
+        "id": "时间穿梭",
+        "name": "时间穿梭"
+      },
+      {
+        "id": "日本动画",
+        "name": "日本动画"
+      },
+      {
+        "id": "TVA",
+        "name": "TVA"
+      },
+      {
+        "id": "小死神",
+        "name": "小死神"
+      },
+      {
+        "id": "週刊少年ジャンプ",
+        "name": "週刊少年ジャンプ"
+      },
+      {
+        "id": "TVA-00",
+        "name": "TVA-00"
+      },
+      {
+        "id": "NOVA",
+        "name": "NOVA"
+      },
+      {
+        "id": "吉田伸",
+        "name": "吉田伸"
+      },
+      {
+        "id": "26秋",
+        "name": "26秋"
+      },
+      {
+        "id": "最希望能动画化的漫画",
+        "name": "最希望能动画化的漫画"
+      },
+      {
+        "id": "表",
+        "name": "表"
+      },
+      {
+        "id": "SF",
+        "name": "SF"
+      },
+      {
+        "id": "超能力",
+        "name": "超能力"
+      },
+      {
+        "id": "未上映",
+        "name": "未上映"
+      },
+      {
+        "id": "JUMP",
+        "name": "JUMP"
+      }
+    ],
+    "runtime": null,
+    "number_of_seasons": 1,
+    "number_of_episodes": 12,
+    "actors": [
+      {
+        "id": 32089,
+        "name": "安田陸矢",
+        "original_name": null,
+        "character": null,
+        "type": 1,
+        "gender": null,
+        "adult": null,
+        "known_for_department": null,
+        "profile_path": null,
+        "credit_id": null,
+        "cast_id": null,
+        "order": null,
+        "department": null,
+        "job": null,
+        "popularity": null,
+        "roles": [],
+        "title": null,
+        "url": null,
+        "uri": null,
+        "sharing_url": null,
+        "avatar": null,
+        "images": {
+          "large": "https://lain.bgm.tv/pic/crt/l/9e/9e/32089_prsn_rWIL4.jpg",
+          "common": null,
+          "medium": "https://lain.bgm.tv/r/400/pic/crt/l/9e/9e/32089_prsn_rWIL4.jpg",
+          "normal": null,
+          "small": "https://lain.bgm.tv/r/100/pic/crt/l/9e/9e/32089_prsn_rWIL4.jpg",
+          "grid": "https://lain.bgm.tv/pic/crt/g/9e/9e/32089_prsn_rWIL4.jpg"
+        },
+        "latin_name": null,
+        "career": [
+          "夜科アゲハ"
+        ],
+        "relation": null,
+        "user": null
+      },
+      {
+        "id": 36081,
+        "name": "風間万裕子",
+        "original_name": null,
+        "character": null,
+        "type": 1,
+        "gender": null,
+        "adult": null,
+        "known_for_department": null,
+        "profile_path": null,
+        "credit_id": null,
+        "cast_id": null,
+        "order": null,
+        "department": null,
+        "job": null,
+        "popularity": null,
+        "roles": [],
+        "title": null,
+        "url": null,
+        "uri": null,
+        "sharing_url": null,
+        "avatar": null,
+        "images": {
+          "large": "https://lain.bgm.tv/pic/crt/l/40/05/36081_prsn_sFePd.jpg?r=1698414272",
+          "common": null,
+          "medium": "https://lain.bgm.tv/r/400/pic/crt/l/40/05/36081_prsn_sFePd.jpg?r=1698414272",
+          "normal": null,
+          "small": "https://lain.bgm.tv/r/100/pic/crt/l/40/05/36081_prsn_sFePd.jpg?r=1698414272",
+          "grid": "https://lain.bgm.tv/pic/crt/g/40/05/36081_prsn_sFePd.jpg?r=1698414272"
+        },
+        "latin_name": null,
+        "career": [
+          "雨宮桜子"
+        ],
+        "relation": null,
+        "user": null
+      },
+      {
+        "id": 16361,
+        "name": "武内駿輔",
+        "original_name": null,
+        "character": null,
+        "type": 1,
+        "gender": null,
+        "adult": null,
+        "known_for_department": null,
+        "profile_path": null,
+        "credit_id": null,
+        "cast_id": null,
+        "order": null,
+        "department": null,
+        "job": null,
+        "popularity": null,
+        "roles": [],
+        "title": null,
+        "url": null,
+        "uri": null,
+        "sharing_url": null,
+        "avatar": null,
+        "images": {
+          "large": "https://lain.bgm.tv/pic/crt/l/b9/41/16361_prsn_6vPo1.jpg",
+          "common": null,
+          "medium": "https://lain.bgm.tv/r/400/pic/crt/l/b9/41/16361_prsn_6vPo1.jpg",
+          "normal": null,
+          "small": "https://lain.bgm.tv/r/100/pic/crt/l/b9/41/16361_prsn_6vPo1.jpg",
+          "grid": "https://lain.bgm.tv/pic/crt/g/b9/41/16361_prsn_6vPo1.jpg"
+        },
+        "latin_name": null,
+        "career": [
+          "朝河飛龍"
+        ],
+        "relation": null,
+        "user": null
+      },
+      {
+        "id": 14604,
+        "name": "斉藤壮馬",
+        "original_name": null,
+        "character": null,
+        "type": 1,
+        "gender": null,
+        "adult": null,
+        "known_for_department": null,
+        "profile_path": null,
+        "credit_id": null,
+        "cast_id": null,
+        "order": null,
+        "department": null,
+        "job": null,
+        "popularity": null,
+        "roles": [],
+        "title": null,
+        "url": null,
+        "uri": null,
+        "sharing_url": null,
+        "avatar": null,
+        "images": {
+          "large": "https://lain.bgm.tv/pic/crt/l/8c/e3/14604_prsn_b1xVh.jpg?r=1758100707",
+          "common": null,
+          "medium": "https://lain.bgm.tv/r/400/pic/crt/l/8c/e3/14604_prsn_b1xVh.jpg?r=1758100707",
+          "normal": null,
+          "small": "https://lain.bgm.tv/r/100/pic/crt/l/8c/e3/14604_prsn_b1xVh.jpg?r=1758100707",
+          "grid": "https://lain.bgm.tv/pic/crt/g/8c/e3/14604_prsn_b1xVh.jpg?r=1758100707"
+        },
+        "latin_name": null,
+        "career": [
+          "望月朧"
+        ],
+        "relation": null,
+        "user": null
+      },
+      {
+        "id": 31504,
+        "name": "野津山幸宏",
+        "original_name": null,
+        "character": null,
+        "type": 1,
+        "gender": null,
+        "adult": null,
+        "known_for_department": null,
+        "profile_path": null,
+        "credit_id": null,
+        "cast_id": null,
+        "order": null,
+        "department": null,
+        "job": null,
+        "popularity": null,
+        "roles": [],
+        "title": null,
+        "url": null,
+        "uri": null,
+        "sharing_url": null,
+        "avatar": null,
+        "images": {
+          "large": "https://lain.bgm.tv/pic/crt/l/4a/44/31504_prsn_cjN41.jpg",
+          "common": null,
+          "medium": "https://lain.bgm.tv/r/400/pic/crt/l/4a/44/31504_prsn_cjN41.jpg",
+          "normal": null,
+          "small": "https://lain.bgm.tv/r/100/pic/crt/l/4a/44/31504_prsn_cjN41.jpg",
+          "grid": "https://lain.bgm.tv/pic/crt/g/4a/44/31504_prsn_cjN41.jpg"
+        },
+        "latin_name": null,
+        "career": [
+          "霧崎兜"
+        ],
+        "relation": null,
+        "user": null
+      },
+      {
+        "id": 4245,
+        "name": "甲斐田裕子",
+        "original_name": null,
+        "character": null,
+        "type": 1,
+        "gender": null,
+        "adult": null,
+        "known_for_department": null,
+        "profile_path": null,
+        "credit_id": null,
+        "cast_id": null,
+        "order": null,
+        "department": null,
+        "job": null,
+        "popularity": null,
+        "roles": [],
+        "title": null,
+        "url": null,
+        "uri": null,
+        "sharing_url": null,
+        "avatar": null,
+        "images": {
+          "large": "https://lain.bgm.tv/pic/crt/l/35/60/4245_prsn_277mJ.jpg?r=1755869041",
+          "common": null,
+          "medium": "https://lain.bgm.tv/r/400/pic/crt/l/35/60/4245_prsn_277mJ.jpg?r=1755869041",
+          "normal": null,
+          "small": "https://lain.bgm.tv/r/100/pic/crt/l/35/60/4245_prsn_277mJ.jpg?r=1755869041",
+          "grid": "https://lain.bgm.tv/pic/crt/g/35/60/4245_prsn_277mJ.jpg?r=1755869041"
+        },
+        "latin_name": null,
+        "career": [
+          "八雲祭"
+        ],
+        "relation": null,
+        "user": null
+      },
+      {
+        "id": 4105,
+        "name": "檜山修之",
+        "original_name": null,
+        "character": null,
+        "type": 1,
+        "gender": null,
+        "adult": null,
+        "known_for_department": null,
+        "profile_path": null,
+        "credit_id": null,
+        "cast_id": null,
+        "order": null,
+        "department": null,
+        "job": null,
+        "popularity": null,
+        "roles": [],
+        "title": null,
+        "url": null,
+        "uri": null,
+        "sharing_url": null,
+        "avatar": null,
+        "images": {
+          "large": "https://lain.bgm.tv/pic/crt/l/d8/c2/4105_prsn_6dzrY.jpg?r=1732374320",
+          "common": null,
+          "medium": "https://lain.bgm.tv/r/400/pic/crt/l/d8/c2/4105_prsn_6dzrY.jpg?r=1732374320",
+          "normal": null,
+          "small": "https://lain.bgm.tv/r/100/pic/crt/l/d8/c2/4105_prsn_6dzrY.jpg?r=1732374320",
+          "grid": "https://lain.bgm.tv/pic/crt/g/d8/c2/4105_prsn_6dzrY.jpg?r=1732374320"
+        },
+        "latin_name": null,
+        "career": [
+          "ドルキ"
+        ],
+        "relation": null,
+        "user": null
+      }
+    ],
+    "overview": "高校一年生・夜科アゲハは、ある日、公衆電話に放置されていた\r\n“赤いテレホンカード”を拾う。数日後、同じテレホンカードを持っていた\r\n幼馴染みの同級生・雨宮桜子が姿を消す。\r\nアゲハは彼女を捜すため、全国規模で起こっている連続“神隠し”失踪事件\r\nの黒幕と噂される「秘密結社サイレン」へとアクセスする。\r\nそして、命を懸けたゲームが始まってしまった─",
+    "next_episode_to_air": {
+      "id": null,
+      "air_date": null,
+      "episode_number": null,
+      "episode_type": null,
+      "name": null,
+      "overview": null,
+      "production_code": null,
+      "runtime": null,
+      "season_number": null,
+      "show_id": null,
+      "still_path": null,
+      "vote_average": null,
+      "vote_count": null
+    }
+  }
+}

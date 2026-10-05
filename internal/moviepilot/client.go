@@ -86,9 +86,12 @@ func (i mediaInfo) toMedia() (flow.Media, bool) {
 		Source: i.MediaSource, ID: i.MediaID, Title: strings.Trim(i.Title, invisible), OriginalTitle: i.OriginalTitle,
 		Year: i.Year, Kind: kind, Rating: i.VoteAverage,
 		PosterURL: strings.Replace(i.PosterPath, tmdbOriginalSize, tmdbPosterSize, 1),
-		Link:      i.DetailLink, Overview: i.Overview, Released: i.ReleaseDate,
+		Link:      i.DetailLink, Overview: unixLines(i.Overview), Released: i.ReleaseDate,
 	}, true
 }
+
+// unixLines drops the carriage returns Bangumi synopses carry.
+func unixLines(s string) string { return strings.ReplaceAll(s, "\r\n", "\n") }
 
 // named is a TMDB credit or genre; MoviePilot sends credits either as
 // objects or as bare names.
@@ -124,6 +127,7 @@ func (c *Client) Details(ctx context.Context, media flow.Media) (flow.Details, e
 		Seasons  int     `json:"number_of_seasons"`
 		Episodes int     `json:"number_of_episodes"`
 		Actors   []named `json:"actors"`
+		Overview string  `json:"overview"`
 		Next     struct {
 			Season  int `json:"season_number"`
 			Episode int `json:"episode_number"`
@@ -136,7 +140,8 @@ func (c *Client) Details(ctx context.Context, media flow.Media) (flow.Details, e
 	return flow.Details{
 		Genres: names(raw.Genres), Runtime: raw.Runtime,
 		Seasons: raw.Seasons, Episodes: raw.Episodes, Cast: names(raw.Actors),
-		Next: flow.Episode{Season: raw.Next.Season, Number: raw.Next.Episode},
+		Next:     flow.Episode{Season: raw.Next.Season, Number: raw.Next.Episode},
+		Overview: unixLines(raw.Overview),
 	}, nil
 }
 
