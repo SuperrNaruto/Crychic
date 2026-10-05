@@ -15,7 +15,9 @@ type session struct {
 	seasons []Season
 	library Library
 	target  *Target
-	chosen  []int // seasons ticked in the multi-season picker
+	chosen  []int   // seasons ticked in the multi-season picker
+	chart   int     // index into charts being browsed
+	picks   []Media // the chart's picks
 	tasks   []taskRef
 	follow  following
 	expires time.Time

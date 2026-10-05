@@ -1,0 +1,75 @@
+{
+  "success": true,
+  "message": "",
+  "data": {
+    "media_source": "themoviedb",
+    "type": "电视剧",
+    "title": "深渊无间",
+    "year": "2026",
+    "media_id": "301489",
+    "original_title": "深渊无间",
+    "poster_path": "https://image.tmdb.org/t/p/original/b9ngtGNgaHBbLihRrT0MsPRY0GW.jpg",
+    "vote_average": 8.0,
+    "overview": "深渊无间（别名：深渊），2026年刑侦悬疑剧，共16集，刘海波执导，改编自深蓝小说《深渊》。\n\n一篇名为《深渊》的推理网文突然上线，小说里的作案细节，竟然和多年前警方封存的“312悬案”高度吻合，包含只有凶手与办案警察才知晓的隐秘线索。新人刑警李成潜入当地网吧卧底调查，结识了网吧老板韩品木。韩品木气质温和，身份却充满谜团，正是这篇悬疑小说的幕后发布者，也是当年旧案受害者家属，身患绝症，多年暗中追查真凶。\n\n李成与刑侦队长赵干哲、退休老刑警辛吉然联手重启尘封八年的悬案。小城之内人人藏有秘密，多方嫌疑人互相博弈。随着调查深入，层层揭开旧案背后交织的亲情、恩怨与人性抉择，在正义与私刑的边界之间，探寻深渊之下的残酷真相。",
+    "actors": [
+      {
+        "id": 2084465,
+        "name": "任嘉伦",
+        "character": "Li Cheng"
+      },
+      {
+        "id": 17385,
+        "name": "秦俊杰",
+        "character": "Han Pinmu"
+      },
+      {
+        "id": 575866,
+        "name": "王砚辉",
+        "character": "Zhao Ganzhe"
+      },
+      {
+        "id": 1637213,
+        "name": "田小洁",
+        "character": "Xin Jiran"
+      },
+      {
+        "id": 586335,
+        "name": "何冰",
+        "character": "Fan Jie"
+      }
+    ],
+    "genres": [
+      {
+        "id": 9648,
+        "name": "悬疑"
+      },
+      {
+        "id": 18,
+        "name": "剧情"
+      },
+      {
+        "id": 80,
+        "name": "犯罪"
+      }
+    ],
+    "number_of_episodes": 16,
+    "number_of_seasons": 1,
+    "status": "Ended",
+    "runtime": null,
+    "next_episode_to_air": {
+      "id": null,
+      "air_date": null,
+      "episode_number": null,
+      "episode_type": null,
+      "name": null,
+      "overview": null,
+      "production_code": null,
+      "runtime": null,
+      "season_number": null,
+      "show_id": null,
+      "still_path": null,
+      "vote_average": null,
+      "vote_count": null
+    }
+  }
+}

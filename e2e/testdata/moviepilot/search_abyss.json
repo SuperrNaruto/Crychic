@@ -1,0 +1,22 @@
+{
+  "success": true,
+  "message": "",
+  "data": [
+    {
+      "media_source": "themoviedb",
+      "media_id": "301489",
+      "type": "电视剧",
+      "title": "深渊无间",
+      "year": "2026",
+      "title_year": "深渊无间 (2026)",
+      "tmdb_id": 301489,
+      "original_title": "深渊无间",
+      "release_date": "2026-09-09",
+      "poster_path": "https://image.tmdb.org/t/p/original/b9ngtGNgaHBbLihRrT0MsPRY0GW.jpg",
+      "vote_average": 8.0,
+      "category": "",
+      "detail_link": "https://www.themoviedb.org/tv/301489",
+      "overview": "深渊无间（别名：深渊），2026年刑侦悬疑剧，共16集，刘海波执导，改编自深蓝小说《深渊》。\n\n一篇名为《深渊》的推理网文突然上线，小说里的作案细节，竟然和多年前警方封存的“312悬案”高度吻合，包含只有凶手与办案警察才知晓的隐秘线索。新人刑警李成潜入当地网吧卧底调查，结识了网吧老板韩品木。韩品木气质温和，身份却充满谜团，正是这篇悬疑小说的幕后发布者，也是当年旧案受害者家属，身患绝症，多年暗中追查真凶。\n\n李成与刑侦队长赵干哲、退休老刑警辛吉然联手重启尘封八年的悬案。小城之内人人藏有秘密，多方嫌疑人互相博弈。随着调查深入，层层揭开旧案背后交织的亲情、恩怨与人性抉择，在正义与私刑的边界之间，探寻深渊之下的残酷真相。"
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "success": true,
+  "message": "",
+  "data": [
+    {
+      "id": null,
+      "air_date": "2026-09-09",
+      "episode_count": 16,
+      "name": "第 1 季",
+      "overview": "",
+      "poster_path": "/9gPX3NaZRf2d1xcTAtkFxwDQDvP.jpg",
+      "season_number": 1,
+      "vote_average": 0.0,
+      "order": null,
+      "locked": null,
+      "episodes": []
+    }
+  ]
+}

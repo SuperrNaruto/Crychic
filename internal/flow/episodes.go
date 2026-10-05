@@ -56,19 +56,22 @@ type Typed struct {
 }
 
 // Answer takes the text a user typed in response to a Reply with Input.
-func (e *Engine) Answer(_ context.Context, actor Actor, typed Typed) Reply {
+func (e *Engine) Answer(ctx context.Context, actor Actor, typed Typed) Reply {
 	id, p, ok := parseData(typed.Input)
-	if !ok || p.action != actionAskFrom {
+	if !ok || (p.action != actionAskFrom && p.action != actionAskTitle) {
 		return Reply{Notice: msgInvalidChoice}
 	}
 	sess, ok := e.store.get(id)
 	if !ok {
-		return Reply{Text: Sentence(msgExpired)}
+		return expired(p.action)
 	}
 	if sess.owner.UserID != actor.UserID {
 		return Reply{Notice: msgNotYours}
 	}
 	text := strings.TrimSpace(typed.Text)
+	if p.action == actionAskTitle {
+		return e.search(ctx, sess, text)
+	}
 	from, err := strconv.Atoi(text)
 	if err != nil || from < 1 || !sess.validStart(from) {
 		return askStart(sess, fmt.Sprintf("⚠️「%s」不是有效的集数。", text))

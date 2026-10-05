@@ -1,0 +1,38 @@
+package moviepilot
+
+import (
+	"context"
+	"fmt"
+	"net/http"
+
+	"github.com/SuperrNauto/Crychic/internal/flow"
+)
+
+// chartPaths are MoviePilot's recommendation lists behind each chart.
+var chartPaths = map[flow.Chart]string{
+	flow.Trending:   "/api/v1/recommend/tmdb_trending",
+	flow.HotMovies:  "/api/v1/recommend/douban_movie_hot",
+	flow.HotShows:   "/api/v1/recommend/douban_tv_hot",
+	flow.InTheaters: "/api/v1/recommend/douban_showing",
+	flow.NewAnime:   "/api/v1/recommend/bangumi_calendar",
+}
+
+// Discover reads a recommendation list; its entries are shaped like search
+// results but may be Douban or Bangumi media.
+func (c *Client) Discover(ctx context.Context, chart flow.Chart) ([]flow.Media, error) {
+	path, ok := chartPaths[chart]
+	if !ok {
+		return nil, fmt.Errorf("moviepilot: unknown chart %d", chart)
+	}
+	var infos []mediaInfo
+	if err := c.do(ctx, call{method: http.MethodGet, path: path}, &infos); err != nil {
+		return nil, err
+	}
+	medias := make([]flow.Media, 0, len(infos))
+	for _, info := range infos {
+		if m, ok := info.toMedia(); ok {
+			medias = append(medias, m)
+		}
+	}
+	return medias, nil
+}

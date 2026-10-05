@@ -36,7 +36,19 @@ type Media struct {
 	PosterURL     string
 	Link          string // the media's page on its metadata site
 	Overview      string
+	Released      string // first release or air date, YYYY-MM-DD, when known
 }
+
+// Chart is a list of picks to discover media from.
+type Chart int
+
+const (
+	Trending Chart = iota
+	HotMovies
+	HotShows
+	InTheaters
+	NewAnime
+)
 
 // Details is metadata only fetched once a result is picked.
 type Details struct {
@@ -125,6 +137,9 @@ type Backend interface {
 	Library(ctx context.Context, media Media) (Library, error)
 	Downloads(ctx context.Context) ([]Download, error)
 	Transfers(ctx context.Context) ([]TransferJob, error)
+	// Discover lists a chart's picks; they may come from other metadata
+	// sources than search does.
+	Discover(ctx context.Context, chart Chart) ([]Media, error)
 	// FindSubscription returns the id of an existing subscription, 0 if none.
 	FindSubscription(ctx context.Context, target Target) (int, error)
 	// Subscribe creates a subscription and returns its id.

@@ -30,6 +30,9 @@ const (
 	tmdbPosterSize   = "/t/p/w500/"
 )
 
+// invisible are marks Douban leaves around titles (e.g. U+200E).
+const invisible = "\u200e\u200f "
+
 var errAuth = &flow.UserError{Message: "MoviePilot 拒绝了请求，请管理员检查 API Key。"}
 
 // Client talks to one MoviePilot instance.
@@ -54,6 +57,7 @@ type mediaInfo struct {
 	PosterPath    string  `json:"poster_path"`
 	DetailLink    string  `json:"detail_link"`
 	Overview      string  `json:"overview"`
+	ReleaseDate   string  `json:"release_date"`
 }
 
 func (c *Client) Search(ctx context.Context, term string) ([]flow.Media, error) {
@@ -79,10 +83,10 @@ func (i mediaInfo) toMedia() (flow.Media, bool) {
 		return flow.Media{}, false
 	}
 	return flow.Media{
-		Source: i.MediaSource, ID: i.MediaID, Title: i.Title, OriginalTitle: i.OriginalTitle,
+		Source: i.MediaSource, ID: i.MediaID, Title: strings.Trim(i.Title, invisible), OriginalTitle: i.OriginalTitle,
 		Year: i.Year, Kind: kind, Rating: i.VoteAverage,
 		PosterURL: strings.Replace(i.PosterPath, tmdbOriginalSize, tmdbPosterSize, 1),
-		Link:      i.DetailLink, Overview: i.Overview,
+		Link:      i.DetailLink, Overview: i.Overview, Released: i.ReleaseDate,
 	}, true
 }
 

@@ -257,3 +257,13 @@ func TestCommandMenuIsRegistered(t *testing.T) {
 	h.tr.add("<< setMyCommands", h.tg.menu()...)
 	h.tr.verify(t)
 }
+
+// The home menu leads to every feature; searching from it takes a typed title.
+func TestHomeSearchTakesATypedTitle(t *testing.T) {
+	h := start(t, scenario{routes: map[string]route{searchPath: ok("search_dune.json")}})
+	h.say(alice, alice, "/start")
+	h.tap(alice, 1, "🔍 搜索订阅")
+	h.answer(alice, 1, "沙丘")
+	h.shows(1, "「沙丘」的搜索结果")
+	h.tr.verify(t)
+}

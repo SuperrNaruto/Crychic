@@ -187,6 +187,8 @@ func expired(action string) Reply {
 	switch action {
 	case actionTask, actionFollow, actionUnfollow, actionList, actionClose:
 		return Reply{Text: Sentence(msgTasksExpired)}
+	case actionMedia, actionSeason, actionConfirm, actionAskFrom, actionCancel, actionMulti, actionTick, actionSubscribed:
+		return Reply{Text: Sentence(msgExpired)}
 	}
-	return Reply{Text: Sentence(msgExpired)}
+	return Reply{Text: Sentence(msgHomeExpired)}
 }

@@ -1,0 +1,109 @@
+>> user 1001 in chat 1001: /hot
+<< sendMessage chat=1001 message=1 parse_mode=HTML
+   <b>🔥 发现</b>
+   选择一个榜单：
+   [🔥 TMDB 流行趋势 | 1:d:0]
+   [🎬 豆瓣热门电影 | 1:d:1]
+   [📺 豆瓣热门剧集 | 1:d:2]
+   [🎟️ 正在热映 | 1:d:3]
+   [🎌 新番放送 | 1:d:4]
+   [🏠 首页 | 1:o:0]
+>> user 1001 taps 1:d:2 on message 1
+-> MoviePilot GET /api/v1/recommend/douban_tv_hot
+<< editMessageText chat=1001 message=1 parse_mode=HTML
+   <b>📺 豆瓣热门剧集 · 第 1/2 页</b>
+   1. <b>深渊无间</b> (2026) · 电视剧 · ⭐ 7.3
+   2. <b>兰香如故</b> (2026) · 电视剧 · ⭐ 7.5
+   3. <b>早春晴朗</b> (2026) · 电视剧 · ⭐ 6.7
+   4. <b>现在不是出轨的问题</b> (2026) · 电视剧 · ⭐ 8.7
+   5. <b>交锋</b> (2026) · 电视剧 · ⭐ 7.3
+   6. <b>一瓯春</b> (2026) · 电视剧 · ⭐ 5.4
+   7. <b>冬城猎凶</b> (2026) · 电视剧 · ⭐ 7.1
+   8. <b>直到T恤干透</b> (2026) · 电视剧 · ⭐ 7.4
+   [1. 深渊无间 (2026) | 1:i:0]
+   [2. 兰香如故 (2026) | 1:i:1]
+   [3. 早春晴朗 (2026) | 1:i:2]
+   [4. 现在不是出轨的问题 (2026) | 1:i:3]
+   [5. 交锋 (2026) | 1:i:4]
+   [6. 一瓯春 (2026) | 1:i:5]
+   [7. 冬城猎凶 (2026) | 1:i:6]
+   [8. 直到T恤干透 (2026) | 1:i:7]
+   [下一页 › | 1:g:1]
+   [返回榜单 | 1:b:0] [🏠 首页 | 1:o:0]
+<< answerCallbackQuery
+>> user 1001 taps 1:i:0 on message 1
+-> MoviePilot GET /api/v1/media/search?count=10&title=深渊无间&type=media
+-> MoviePilot GET /api/v1/media/301489?media_source=themoviedb&type_name=电视剧
+-> MoviePilot POST /api/v1/mediaserver/exists_remote
+   {"type":"电视剧","title":"深渊无间","year":"2026","media_source":"themoviedb","media_id":"301489"}
+-> MoviePilot GET /api/v1/media/seasons?media_id=301489&media_source=themoviedb
+<< editMessageText chat=1001 message=1 parse_mode=HTML poster=https://image.tmdb.org/t/p/w500/b9ngtGNgaHBbLihRrT0MsPRY0GW.jpg large=true above=true
+   📺 <a href="https://www.themoviedb.org/tv/301489"><b>深渊无间</b></a> (2026) · 电视剧 · ⭐ 8.0
+   悬疑 / 剧情 / 犯罪 · 共 1 季 16 集
+   主演：任嘉伦、秦俊杰、王砚辉
+   <blockquote expandable>深渊无间（别名：深渊），2026年刑侦悬疑剧，共16集，刘海波执导，改编自深蓝小说《深渊》。
+   
+   一篇名为《深渊》的推理网文突然上线，小说里的作案细节，竟然和多年前警方封存的“312悬案”高度吻合，包含只有凶手与办案警察才知晓的隐秘线索。新人刑警李成潜入当地网吧卧底调查，结识了网吧老板韩品木。韩品木气质温和，身份却充满谜团，正是这篇悬疑小说的幕后发布者，也是当年旧案受害者家属，身患绝症，多年暗中追查真凶。
+   
+   李成与刑侦队长赵干哲、退休老刑警辛吉然联手重启尘封八年的悬案。小城之内人人藏有秘密，多方嫌疑人互相博弈。随着调查深入，层层揭开旧案背后交织的亲情、恩怨与人性抉择，在正义与私刑的边界之间，探寻深渊之下的残酷真相。</blockquote>
+   
+   <b>选择要订阅的季：</b>
+   [第 1 季 · 16 集 | 1:s:1]
+   [取消 | 1:x:0]
+<< answerCallbackQuery
+>> user 1001 in chat 1001: /hot
+<< sendMessage chat=1001 message=2 parse_mode=HTML
+   <b>🔥 发现</b>
+   选择一个榜单：
+   [🔥 TMDB 流行趋势 | 2:d:0]
+   [🎬 豆瓣热门电影 | 2:d:1]
+   [📺 豆瓣热门剧集 | 2:d:2]
+   [🎟️ 正在热映 | 2:d:3]
+   [🎌 新番放送 | 2:d:4]
+   [🏠 首页 | 2:o:0]
+>> user 1001 taps 2:d:2 on message 2
+-> MoviePilot GET /api/v1/recommend/douban_tv_hot
+<< editMessageText chat=1001 message=2 parse_mode=HTML
+   <b>📺 豆瓣热门剧集 · 第 1/2 页</b>
+   1. <b>深渊无间</b> (2026) · 电视剧 · ⭐ 7.3
+   2. <b>兰香如故</b> (2026) · 电视剧 · ⭐ 7.5
+   3. <b>早春晴朗</b> (2026) · 电视剧 · ⭐ 6.7
+   4. <b>现在不是出轨的问题</b> (2026) · 电视剧 · ⭐ 8.7
+   5. <b>交锋</b> (2026) · 电视剧 · ⭐ 7.3
+   6. <b>一瓯春</b> (2026) · 电视剧 · ⭐ 5.4
+   7. <b>冬城猎凶</b> (2026) · 电视剧 · ⭐ 7.1
+   8. <b>直到T恤干透</b> (2026) · 电视剧 · ⭐ 7.4
+   [1. 深渊无间 (2026) | 2:i:0]
+   [2. 兰香如故 (2026) | 2:i:1]
+   [3. 早春晴朗 (2026) | 2:i:2]
+   [4. 现在不是出轨的问题 (2026) | 2:i:3]
+   [5. 交锋 (2026) | 2:i:4]
+   [6. 一瓯春 (2026) | 2:i:5]
+   [7. 冬城猎凶 (2026) | 2:i:6]
+   [8. 直到T恤干透 (2026) | 2:i:7]
+   [下一页 › | 2:g:1]
+   [返回榜单 | 2:b:0] [🏠 首页 | 2:o:0]
+<< answerCallbackQuery
+>> user 1001 taps 2:g:1 on message 2
+<< editMessageText chat=1001 message=2 parse_mode=HTML
+   <b>📺 豆瓣热门剧集 · 第 2/2 页</b>
+   9. <b>花开锦绣</b> (2026) · 电视剧 · ⭐ 7.2
+   10. <b>流人 第六季</b> (2026) · 电视剧 · ⭐ 9.2
+   [9. 花开锦绣 (2026) | 2:i:8]
+   [10. 流人 第六季 (2026) | 2:i:9]
+   [‹ 上一页 | 2:g:0]
+   [返回榜单 | 2:b:0] [🏠 首页 | 2:o:0]
+<< answerCallbackQuery
+>> user 1001 taps 2:i:9 on message 2
+-> MoviePilot GET /api/v1/media/search?count=10&title=流人 第六季&type=media
+<< editMessageText chat=1001 message=2 parse_mode=HTML
+   <b>🔍「流人 第六季」的搜索结果</b>
+   1. <b>千古风流人物 第六季</b> (2021) · 电视剧 · <i>千古风流人物</i>
+   2. <b>数风流人物 第六季</b> (2022) · 电视剧 · <i>数风流人物</i>
+   3. <b>许鞍华数风流人物 第六季</b> (1992) · 电视剧 · <i>許鞍華數風流人物</i>
+   <i>没有对应的条目？可以用 /request 换个名字搜。</i>
+   [1. 千古风流人物 第六季 (2021) | 2:m:0]
+   [2. 数风流人物 第六季 (2022) | 2:m:1]
+   [3. 许鞍华数风流人物 第六季 (1992) | 2:m:2]
+   [取消 | 2:x:0]
+<< answerCallbackQuery

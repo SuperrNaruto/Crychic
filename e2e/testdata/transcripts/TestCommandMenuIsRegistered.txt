@@ -1,4 +1,6 @@
 << setMyCommands
+   /start – 首页：所有功能入口
    /request – 搜索电影或剧集并订阅
+   /hot – 发现热门和新番
    /tasks – 查看下载和整理进度
    /help – 使用说明

@@ -1,0 +1,71 @@
+{
+  "success": true,
+  "message": "",
+  "data": {
+    "media_source": "themoviedb",
+    "type": "电影",
+    "title": "挖掘者",
+    "year": "2026",
+    "media_id": "1248832",
+    "original_title": "Digger",
+    "poster_path": "https://image.tmdb.org/t/p/original/c8UJ50GM0jiVIk6YO9hEiqEe0dP.jpg",
+    "vote_average": 7.5,
+    "overview": "世界上最有权势的男子极力证明自己其实是人类的救世主，结果等来了他酝酿的灾难要摧毁万物。",
+    "actors": [
+      {
+        "id": 500,
+        "name": "汤姆·克鲁斯",
+        "character": "Rockwell"
+      },
+      {
+        "id": 53240,
+        "name": "里兹·阿迈德",
+        "character": "Ganesh"
+      },
+      {
+        "id": 1230,
+        "name": "约翰·古德曼",
+        "character": "President Compson"
+      },
+      {
+        "id": 7152,
+        "name": "桑德拉·惠勒",
+        "character": "Emma"
+      },
+      {
+        "id": 72873,
+        "name": "迈克尔·斯图巴",
+        "character": "Vice President"
+      }
+    ],
+    "genres": [
+      {
+        "id": 35,
+        "name": "喜剧"
+      },
+      {
+        "id": 18,
+        "name": "剧情"
+      }
+    ],
+    "number_of_episodes": null,
+    "number_of_seasons": null,
+    "status": "Released",
+    "runtime": 129,
+    "next_episode_to_air": {
+      "id": null,
+      "air_date": null,
+      "episode_number": null,
+      "episode_type": null,
+      "name": null,
+      "overview": null,
+      "production_code": null,
+      "runtime": null,
+      "season_number": null,
+      "show_id": null,
+      "still_path": null,
+      "vote_average": null,
+      "vote_count": null
+    }
+  }
+}

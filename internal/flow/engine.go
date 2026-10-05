@@ -68,17 +68,28 @@ func (e *Engine) Start(ctx context.Context, actor Actor, term string) Reply {
 	if term == "" {
 		return Reply{Text: Sentence(msgUsage)}
 	}
+	return e.search(ctx, e.store.create(actor, nil), term)
+}
+
+// search looks term up and offers the results in sess.
+func (e *Engine) search(ctx context.Context, sess session, term string) Reply {
 	results, err := e.backend.Search(ctx, term)
 	if err != nil {
+		e.store.take(sess.id)
 		return e.failure("search", err)
 	}
 	if len(results) == 0 {
+		e.store.take(sess.id)
 		return Reply{Text: Sentence(fmt.Sprintf("🔍 没有找到「%s」相关的影视。", term))}
 	}
-	if len(results) > MaxResults {
-		results = results[:MaxResults]
-	}
-	sess := e.store.create(actor, results)
+	sess.results = results[:min(len(results), MaxResults)]
+	e.store.put(sess)
+	return resultList(sess, term)
+}
+
+// resultList numbers sess's results as buttons.
+func resultList(sess session, term string) Reply {
+	results := sess.results
 	text := make(Text, 0, len(results)+1)
 	text = append(text, Line(Strong(fmt.Sprintf("🔍「%s」的搜索结果", term))))
 	rows := make([][]Button, 0, len(results)+1)
@@ -113,7 +124,7 @@ func (e *Engine) Choose(ctx context.Context, actor Actor, raw string) Reply {
 	if sess.owner.UserID != actor.UserID {
 		return Reply{Notice: msgNotYours}
 	}
-	for _, choose := range []chooser{e.chooseRequest, e.chooseSeasons, e.chooseTask} {
+	for _, choose := range []chooser{e.chooseHome, e.chooseRequest, e.chooseSeasons, e.chooseTask, e.chooseChart} {
 		if reply, ok := choose(ctx, sess, p); ok {
 			return reply
 		}

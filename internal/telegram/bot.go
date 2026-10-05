@@ -27,19 +27,24 @@ const (
 
 	cmdRequest = "request"
 	cmdTasks   = "tasks"
+	cmdHot     = "hot"
 	cmdStart   = "start"
 	cmdHelp    = "help"
 )
 
 // help explains the commands.
 var help = flow.Lines(
-	flow.Line(flow.Plain("发送 "), flow.Mono("/request <片名>"), flow.Plain(" 搜索电影或剧集，并在 MoviePilot 中订阅。")),
-	flow.Line(flow.Plain("发送 "), flow.Mono("/tasks"), flow.Plain(" 查看下载中和整理中的任务，选一个实时查看进度。")),
+	flow.Line(flow.Mono("/start"), flow.Plain(" 首页，所有功能的入口。")),
+	flow.Line(flow.Mono("/request <片名>"), flow.Plain(" 搜索电影或剧集，并在 MoviePilot 中订阅。")),
+	flow.Line(flow.Mono("/hot"), flow.Plain(" 浏览热门榜单和新番，一键订阅。")),
+	flow.Line(flow.Mono("/tasks"), flow.Plain(" 查看下载中和整理中的任务，选一个实时查看进度。")),
 )
 
 // commands is the menu Telegram shows when a user types "/".
 var commands = []models.BotCommand{
+	{Command: cmdStart, Description: "首页：所有功能入口"},
 	{Command: cmdRequest, Description: "搜索电影或剧集并订阅"},
+	{Command: cmdHot, Description: "发现热门和新番"},
 	{Command: cmdTasks, Description: "查看下载和整理进度"},
 	{Command: cmdHelp, Description: "使用说明"},
 }
@@ -50,6 +55,8 @@ type Flow interface {
 	Choose(ctx context.Context, actor flow.Actor, data string) flow.Reply
 	Answer(ctx context.Context, actor flow.Actor, typed flow.Typed) flow.Reply
 	Tasks(ctx context.Context, actor flow.Actor) flow.Reply
+	Home(ctx context.Context, actor flow.Actor) flow.Reply
+	Charts(ctx context.Context, actor flow.Actor) flow.Reply
 }
 
 // Config configures the Telegram bot.
@@ -178,21 +185,16 @@ func (a *adapter) onMessage(ctx context.Context, b *bot.Bot, msg *models.Message
 		a.onText(ctx, b, msg)
 		return
 	}
-	var reply flow.Reply
-	switch {
-	case cmd != cmdRequest && cmd != cmdTasks && cmd != cmdStart && cmd != cmdHelp:
+	run, known := a.commands()[cmd]
+	if !known {
 		return
-	case !a.allowed[msg.From.ID]:
-		reply = flow.Reply{Text: flow.Lines(flow.Line(
-			flow.Plain("🚫 你没有使用权限。你的 Telegram ID："),
-			flow.Mono(strconv.FormatInt(msg.From.ID, decimal)),
-		))}
-	case cmd == cmdRequest:
-		reply = a.flow.Start(ctx, actorOf(*msg.From, msg.Chat.ID), arg)
-	case cmd == cmdTasks:
-		reply = a.flow.Tasks(ctx, actorOf(*msg.From, msg.Chat.ID))
-	default:
-		reply = flow.Reply{Text: help}
+	}
+	reply := flow.Reply{Text: flow.Lines(flow.Line(
+		flow.Plain("🚫 你没有使用权限。你的 Telegram ID："),
+		flow.Mono(strconv.FormatInt(msg.From.ID, decimal)),
+	))}
+	if a.allowed[msg.From.ID] {
+		reply = run(ctx, actorOf(*msg.From, msg.Chat.ID), arg)
 	}
 	_, err := b.SendMessage(ctx, &bot.SendMessageParams{
 		ChatID:             msg.Chat.ID,
@@ -202,6 +204,23 @@ func (a *adapter) onMessage(ctx context.Context, b *bot.Bot, msg *models.Message
 		ReplyMarkup:        keyboard(reply.Buttons),
 	})
 	a.logFailure("sendMessage", err)
+}
+
+// command answers one slash command with its argument.
+type command func(ctx context.Context, actor flow.Actor, arg string) flow.Reply
+
+// commands maps every command the bot answers to its handler.
+func (a *adapter) commands() map[string]command {
+	noArg := func(f func(context.Context, flow.Actor) flow.Reply) command {
+		return func(ctx context.Context, actor flow.Actor, _ string) flow.Reply { return f(ctx, actor) }
+	}
+	return map[string]command{
+		cmdStart:   noArg(a.flow.Home),
+		cmdRequest: a.flow.Start,
+		cmdHot:     noArg(a.flow.Charts),
+		cmdTasks:   noArg(a.flow.Tasks),
+		cmdHelp:    func(context.Context, flow.Actor, string) flow.Reply { return flow.Reply{Text: help} },
+	}
 }
 
 // onCallback answers the query last, so the client's spinner covers the
