@@ -12,8 +12,8 @@ const (
 	actionTick       = "t" // arg: season number to tick or untick
 	actionSubscribed = "y" // subscribes every ticked season
 
-	msgPickSeasons = "选择要订阅的季（可多选，每季从第 1 集开始）："
-	msgPickOne     = "请先选择至少一季。"
+	msgPickSeasons = "想订哪几季呀？可以多选，每季都从第 1 集开始～"
+	msgPickOne     = "先挑至少一季嘛～"
 )
 
 // chooseSeasons applies the multi-season actions; ok is false for others.
@@ -131,7 +131,7 @@ func outcomeLines(m Media, outcomes []seasonOutcome) Text {
 		rows = append(rows, []Span{Strong(seasonName(o.season)), Plain(result)})
 		notified = notified || o.notified
 	}
-	text := Lines(Line(Strong(fmt.Sprintf("《%s》订阅结果：", m.Title))), Table(outcomeHead, rows...))
+	text := Lines(Line(Strong(fmt.Sprintf("《%s》的订阅结果来啦：", m.Title))), Table(outcomeHead, rows...))
 	if notified {
 		text = append(text, Line(Plain(msgWillNotify)))
 	}

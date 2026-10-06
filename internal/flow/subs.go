@@ -11,10 +11,10 @@ const (
 	actionAskCancel   = "v" // arg: index into session subs; asks to confirm
 	actionUnsubscribe = "z" // arg: index into session subs; cancels it
 
-	msgNoSubs       = "当前没有订阅。"
-	msgSubsTitle    = "📚 订阅列表"
+	msgNoSubs       = "现在还没有订阅哦～"
+	msgSubsTitle    = "📚 订阅清单"
 	msgCancelTitle  = "取消订阅"
-	msgCancelEffect = "MoviePilot 将不再为它搜索下载。"
+	msgCancelEffect = "取消后 MoviePilot 就不会再帮它搜索下载了哦。"
 	msgRequestedTag = "你请求的"
 )
 
@@ -106,7 +106,7 @@ func seasonSuffix(s Subscription) string {
 // askCancel asks before deleting the subscription at index.
 func askCancel(sess session, index int) Reply {
 	s := sess.subs[index]
-	question := fmt.Sprintf("确认取消订阅《%s》%s？", s.Title, seasonSuffix(s))
+	question := fmt.Sprintf("真的要取消订阅《%s》%s吗？", s.Title, seasonSuffix(s))
 	return Reply{
 		Text:  Lines(Heading(Plain(msgCancelTitle)), Line(Strong(question)), Line(Plain(msgCancelEffect))),
 		Image: s.Poster,
@@ -127,7 +127,7 @@ func (e *Engine) unsubscribe(ctx context.Context, sess session, s Subscription) 
 		e.log.Error("cannot forget cancelled subscription", "subscription", s.ID, "err", err)
 	}
 	e.store.put(sess)
-	done := fmt.Sprintf("✅ 已取消订阅《%s》%s。", s.Title, seasonSuffix(s))
+	done := fmt.Sprintf("✅ 好哒，《%s》%s的订阅已经取消啦。", s.Title, seasonSuffix(s))
 	return Reply{Text: Sentence(done), Buttons: [][]Button{{
 		{Label: "返回订阅列表", Data: data(sess.id, actionSubs, 0)}, homeButton(sess.id),
 	}}}

@@ -2,13 +2,13 @@
 << sendRichMessage chat=1001 message=1 photo=home.jpg 1280x720 sha256=044ae094690453fdfcc5a20f29e8ff7a06c6474e8287e02309152b59b90cd814
    <img src="tg://photo?id=home"/>
    <h3>🎬 Crychic</h3>
-   <p>搜索并订阅电影和剧集，入库后通知你。私聊直接发送片名即可搜索。</p>
+   <p>想看什么告诉我呀～我帮你找片、订阅，入库了第一时间喊你！私聊直接发片名就能搜哦 (๑•̀ㅂ•́)و✧</p>
    [搜索订阅 | 1:h:0] [发现 | 1:h:1]
    [订阅 | 1:h:2] [最新入库 | 1:h:3]
    [任务进度 | 1:h:4]
 >> user 1001 taps 1:h:4 on message 1
 << editMessageText chat=1001 message=1
-   <h3>📋 进行中的任务</h3>
+   <h3>📋 正在忙的任务</h3>
    <h4>⬇️ 下载</h4>
    <ol start="1">
    <li value="1"><b>《迷途之子!!!!!》第 1 季</b><br>
@@ -30,7 +30,7 @@
    <tr><th>进度</th></tr>
    <tr><td>0%</td></tr>
    </table>
-   <footer>自动刷新中…</footer>
+   <footer>正在帮你盯着进度…</footer>
    [停止刷新 | 1:u:0] [返回任务列表 | 1:l:0]
 << answerCallbackQuery
 >> MoviePilot now answers GET /api/v1/download/ with downloads_mygo_later.json
@@ -41,7 +41,7 @@
    <tr><th>进度</th><th>速度</th><th>剩余</th></tr>
    <tr><td>43%</td><td>3.1MB/s</td><td>5分12秒</td></tr>
    </table>
-   <footer>自动刷新中…</footer>
+   <footer>正在帮你盯着进度…</footer>
    [停止刷新 | 1:u:0] [返回任务列表 | 1:l:0]
 >> user 1001 taps 1:u:0 on message 1
 << editMessageText chat=1001 message=1
@@ -51,12 +51,12 @@
    <tr><th>进度</th><th>速度</th><th>剩余</th></tr>
    <tr><td>43%</td><td>3.1MB/s</td><td>5分12秒</td></tr>
    </table>
-   <footer>已停止自动刷新。</footer>
+   <footer>好，不自动刷新啦～</footer>
    [继续刷新 | 1:k:0] [返回任务列表 | 1:l:0]
 << answerCallbackQuery
 >> user 1001 taps 1:l:0 on message 1
 << editMessageText chat=1001 message=1
-   <h3>📋 进行中的任务</h3>
+   <h3>📋 正在忙的任务</h3>
    <h4>⬇️ 下载</h4>
    <ol start="1">
    <li value="1"><b>《迷途之子!!!!!》第 1 季</b><br>
@@ -78,12 +78,12 @@
    <tr><th>进度</th><th>速度</th><th>剩余</th></tr>
    <tr><td>43%</td><td>3.1MB/s</td><td>5分12秒</td></tr>
    </table>
-   <footer>自动刷新中…</footer>
+   <footer>正在帮你盯着进度…</footer>
    [停止刷新 | 1:u:0] [返回任务列表 | 1:l:0]
 << answerCallbackQuery
 >> MoviePilot now answers GET /api/v1/download/ with downloads_none.json
 << editMessageText chat=1001 message=1
    <img src="https://image.tmdb.org/t/p/w500/dDknWHLYaQB76QSViNdzXOC5v64.jpg"/>
    <h3>⬇️ 《迷途之子!!!!!》第 1 季 E10–E12</h3>
-   <p>下载任务已结束（下载完成或被移除）。</p>
+   <p>下载任务结束啦（下完了或者被移除了）。</p>
    [返回任务列表 | 1:l:0]

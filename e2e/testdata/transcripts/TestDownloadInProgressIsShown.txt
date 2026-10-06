@@ -6,7 +6,7 @@
    <img src="https://image.tmdb.org/t/p/w500/bMW0kwyK44LvDbQ3s0b3GCVOtLs.jpg"/>
    <img src="https://image.tmdb.org/t/p/w500/bleKkUg0l8X4AAxqxgkmYlLO7bN.jpg"/>
    </tg-slideshow>
-   <h3>🔍「迷途之子」的搜索结果</h3>
+   <h3>🔍 帮你找到这些「迷途之子」啦</h3>
    <ol start="1">
    <li value="1"><b>迷途之子!!!!!</b><br>
    <i>BanG Dream! It&#39;s MyGO!!!!! · 2023 · 电视剧 · ⭐ 8.0</i></li>
@@ -26,7 +26,7 @@
    <footer><i>BanG Dream! It&#39;s MyGO!!!!!</i> · 2023 · 电视剧 · ⭐ 8.0 · 动画 / 剧情 · 共 1 季 13 集 · 主演：羊宫妃那、立石凛、青木阳菜</footer>
    <blockquote expandable>“你能，和我组一辈子乐队吗？”……高一的春末，羽丘女子学园的所有人都加入了乐队，晚入学的爱音为了尽快融入班级，急急忙忙地寻找着乐队成员。这时她得知，「羽丘的不可思议女孩」灯还没有加入乐队，于是爱音不由自主地向她打起了招呼，但是……这是遍体鳞伤又狼狈不堪的，我们的＜音乐呐喊＞。迷失方向也无所谓，在迷茫中前进吧！</blockquote>
    <hr/>
-   <p><b>选择要订阅的季：</b></p>
+   <p><b>想订哪一季呀？</b></p>
    <table bordered compact>
    <tr><th>季</th><th>集数</th><th>入库</th></tr>
    <tr><td><b>特别篇</b></td><td>3 集</td><td></td></tr>
@@ -44,9 +44,9 @@
    <h3>📺 <a href="https://www.themoviedb.org/tv/224207">迷途之子!!!!!</a></h3>
    <footer><i>BanG Dream! It&#39;s MyGO!!!!!</i> · 2023 · 电视剧 · ⭐ 8.0 · 动画 / 剧情 · 共 1 季 13 集 · 主演：羊宫妃那、立石凛、青木阳菜</footer>
    <blockquote expandable>“你能，和我组一辈子乐队吗？”……高一的春末，羽丘女子学园的所有人都加入了乐队，晚入学的爱音为了尽快融入班级，急急忙忙地寻找着乐队成员。这时她得知，「羽丘的不可思议女孩」灯还没有加入乐队，于是爱音不由自主地向她打起了招呼，但是……这是遍体鳞伤又狼狈不堪的，我们的＜音乐呐喊＞。迷失方向也无所谓，在迷茫中前进吧！</blockquote>
-   <p>⬇️ 正在下载 E10–E12 · 0%</p>
+   <p>⬇️ 正在努力下载 E10–E12 · 0%</p>
    <hr/>
-   <p>ℹ️ 《迷途之子!!!!!》第 1 季已在订阅中，入库后会通知你。</p>
+   <p>ℹ️ 《迷途之子!!!!!》第 1 季早就订阅上啦，入库了我第一时间叫你！</p>
    [相似推荐 | 1:r:0]
    [返回 | 1:bk:0]
 << answerCallbackQuery

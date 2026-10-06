@@ -8,14 +8,14 @@
    <footer><i>Dune</i> · 2021 · 电影 · ⭐ 7.8 · 科幻 / 冒险 · 156 分钟 · 主演：提莫西·查拉梅、丽贝卡·弗格森、奥斯卡·伊萨克</footer>
    <blockquote expandable>电影《沙丘》为观众呈现了一段神秘而感人至深的英雄之旅。天赋异禀的少年保罗·厄崔迪（提莫西·查拉梅 饰）被命运指引，为了保卫自己的家族和人民，决心前往浩瀚宇宙间最危险的星球，开启一场惊心动魄的冒险。与此同时，各路势力为了抢夺这颗星球上一种能够释放人类最大潜力的珍贵资源而纷纷加入战场。最终，唯有那些能够战胜内心恐惧的人才能生存下去。</blockquote>
    <hr/>
-   <p><b>确认订阅《沙丘》？</b></p>
+   <p><b>要订阅《沙丘》吗？</b></p>
    [确认订阅 | 1:ok:0] [取消 | 1:x:0]
    [相似推荐 | 1:r:0] [同系列 | 1:n:0]
    [重新搜索 | 1:rs:0]
 >> user 1001 taps 1:rs:0 on message 1
 << editMessageText chat=1001 message=1
-   <h3>🔍 重新搜索</h3>
-   <p>请直接回复要搜索的片名：</p>
+   <h3>🔍 换个名字搜搜</h3>
+   <p>想找哪部呀？直接回复片名告诉我～</p>
    [返回 | 1:bk:0] [取消 | 1:x:0]
 << answerCallbackQuery
 >> user 1001 taps 1:bk:0 on message 1
@@ -25,15 +25,15 @@
    <footer><i>Dune</i> · 2021 · 电影 · ⭐ 7.8 · 科幻 / 冒险 · 156 分钟 · 主演：提莫西·查拉梅、丽贝卡·弗格森、奥斯卡·伊萨克</footer>
    <blockquote expandable>电影《沙丘》为观众呈现了一段神秘而感人至深的英雄之旅。天赋异禀的少年保罗·厄崔迪（提莫西·查拉梅 饰）被命运指引，为了保卫自己的家族和人民，决心前往浩瀚宇宙间最危险的星球，开启一场惊心动魄的冒险。与此同时，各路势力为了抢夺这颗星球上一种能够释放人类最大潜力的珍贵资源而纷纷加入战场。最终，唯有那些能够战胜内心恐惧的人才能生存下去。</blockquote>
    <hr/>
-   <p><b>确认订阅《沙丘》？</b></p>
+   <p><b>要订阅《沙丘》吗？</b></p>
    [确认订阅 | 1:ok:0] [取消 | 1:x:0]
    [相似推荐 | 1:r:0] [同系列 | 1:n:0]
    [重新搜索 | 1:rs:0]
 << answerCallbackQuery
 >> user 1001 taps 1:rs:0 on message 1
 << editMessageText chat=1001 message=1
-   <h3>🔍 重新搜索</h3>
-   <p>请直接回复要搜索的片名：</p>
+   <h3>🔍 换个名字搜搜</h3>
+   <p>想找哪部呀？直接回复片名告诉我～</p>
    [返回 | 1:bk:0] [取消 | 1:x:0]
 << answerCallbackQuery
 >> user 1001 in chat 1001: 名侦探柯南
@@ -49,7 +49,7 @@
    <img src="https://image.tmdb.org/t/p/w500/kvqzHlTfPuSunPeT9sP27acV6aX.jpg"/>
    <img src="https://image.tmdb.org/t/p/w500/h2ZJJ0pSiPOvyP5Zoo52JREWCeP.jpg"/>
    </tg-slideshow>
-   <h3>🔍「名侦探柯南」的搜索结果</h3>
+   <h3>🔍 帮你找到这些「名侦探柯南」啦</h3>
    <ol start="1">
    <li value="1"><b>名侦探柯南</b><br>
    <i>名探偵コナン · 1996 · 电视剧 · ⭐ 8.0</i></li>
@@ -75,5 +75,5 @@
    [重新搜索 | 2:rs:0] [取消 | 2:x:0]
 >> user 1001 taps 1:ok:0 on message 1
 << editMessageText chat=1001 message=1
-   <p>⌛ 这个请求已失效，请重新 /search。</p>
+   <p>⌛ 这个请求过期啦，重新 /search 一下吧～</p>
 << answerCallbackQuery

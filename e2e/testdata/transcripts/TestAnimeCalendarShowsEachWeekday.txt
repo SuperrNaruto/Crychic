@@ -2,14 +2,14 @@
 << sendRichMessage chat=1001 message=1 photo=home.jpg 1280x720 sha256=044ae094690453fdfcc5a20f29e8ff7a06c6474e8287e02309152b59b90cd814
    <img src="tg://photo?id=home"/>
    <h3>🎬 Crychic</h3>
-   <p>搜索并订阅电影和剧集，入库后通知你。私聊直接发送片名即可搜索。</p>
+   <p>想看什么告诉我呀～我帮你找片、订阅，入库了第一时间喊你！私聊直接发片名就能搜哦 (๑•̀ㅂ•́)و✧</p>
    [搜索订阅 | 1:h:0] [发现 | 1:h:1]
    [订阅 | 1:h:2] [最新入库 | 1:h:3]
    [任务进度 | 1:h:4]
 >> user 1001 taps 1:h:1 on message 1
 << editMessageText chat=1001 message=1
-   <h3>🔥 发现</h3>
-   <p>选择一个榜单：</p>
+   <h3>🔥 发现好片</h3>
+   <p>今天想逛哪个榜单呀？</p>
    [TMDB 流行趋势 | 1:d:0] [豆瓣热门电影 | 1:d:1]
    [豆瓣热门剧集 | 1:d:2] [正在热映 | 1:d:3]
    [新番放送 | 1:d:4]
@@ -84,7 +84,7 @@
    <footer><i>魔法少女育成計画 restart</i> · 2026 · 电视剧</footer>
    <blockquote expandable>获得「魔法王国」所赐之魔力、每日勤奋奔走于助人的魔法少女们——她们收到了来自神秘寄信人所寄出，名为『魔法少女育成计划』的游戏邀请函。受到隐藏着死亡风险、毫无逻辑可言的游戏所囚禁的十六位魔法少女，在幕后黑手策划的诡计玩弄下，开始为了存活下来而绞尽脑汁苦思对策……</blockquote>
    <hr/>
-   <p><b>选择要订阅的季：</b></p>
+   <p><b>想订哪一季呀？</b></p>
    <table bordered compact>
    <tr><th>季</th><th>集数</th></tr>
    <tr><td><b>特别篇</b></td><td>3 集</td></tr>
@@ -187,7 +187,7 @@
 >> user 1001 taps 1:w:3 on message 1
 << editMessageText chat=1001 message=1
    <h3>🎌 新番放送 · 星期三</h3>
-   <p>这天没有新番放送。</p>
+   <p>这天没有新番放送哦～</p>
    [一 | 1:w:1] [二 | 1:w:2] [·三· | 1:w:3] [四 | 1:w:4] [五 | 1:w:5] [六 | 1:w:6] [日 | 1:w:7]
    [返回榜单 | 1:b:0] [首页 | 1:o:0]
 << answerCallbackQuery

@@ -11,7 +11,7 @@
    <img src="https://image.tmdb.org/t/p/w500/iIf5XeuuBKPtG6H7MfWLirbJGrQ.jpg"/>
    <img src="https://image.tmdb.org/t/p/w500/nQLdzYYB71sUugtSR7e7YdjF6Vx.jpg"/>
    </tg-slideshow>
-   <h3>🔍「沙丘」的搜索结果</h3>
+   <h3>🔍 帮你找到这些「沙丘」啦</h3>
    <ol start="1">
    <li value="1"><b>沙丘</b><br>
    <i>Dune · 2021 · 电影 · ⭐ 7.8</i></li>
@@ -41,7 +41,7 @@
    <img src="https://image.tmdb.org/t/p/w500/2KZAfpU7UH2pIv6LMbJgPF0SK2e.jpg"/>
    <img src="https://image.tmdb.org/t/p/w500/jRNt7YRAPtYrCnd8eqkIsB6Gppd.jpg"/>
    </tg-slideshow>
-   <h3>🔍「沙丘」的搜索结果</h3>
+   <h3>🔍 帮你找到这些「沙丘」啦</h3>
    <ol start="9">
    <li value="9"><b>沙丘戰士</b><br>
    <i>1992 · 电影 · ⭐ 10.0</i></li>
@@ -62,7 +62,7 @@
    <footer><i>The Dunes</i> · 2019 · 电影 · ⭐ 6.2</footer>
    <blockquote expandable>家暴谘询师杰拉德与分居中的妻子玛妮，正在谈论儿子史考提的监护权，因无法接受玛妮计划带着史考提与新欢搬到加州，他派人调查玛妮的交往对象史都华，发现他过往有家暴的前科。而预计要和史都华移居加州的玛妮，突然像是在隐瞒什么，拒绝了史都华，他失控地辱骂玛妮并施予暴力，这时，杰拉德拿着枪闯进屋内，与玛妮将史都华捆绑后，从口袋掏出沾有格蕾丝指纹的刀子…。</blockquote>
    <hr/>
-   <p><b>确认订阅《沙丘》？</b></p>
+   <p><b>要订阅《沙丘》吗？</b></p>
    [确认订阅 | 1:ok:0] [返回 | 1:bk:0] [取消 | 1:x:0]
    [相似推荐 | 1:r:0] [同系列 | 1:n:0]
 << answerCallbackQuery
@@ -72,7 +72,7 @@
    <img src="https://image.tmdb.org/t/p/w500/2KZAfpU7UH2pIv6LMbJgPF0SK2e.jpg"/>
    <img src="https://image.tmdb.org/t/p/w500/jRNt7YRAPtYrCnd8eqkIsB6Gppd.jpg"/>
    </tg-slideshow>
-   <h3>🔍「沙丘」的搜索结果</h3>
+   <h3>🔍 帮你找到这些「沙丘」啦</h3>
    <ol start="9">
    <li value="9"><b>沙丘戰士</b><br>
    <i>1992 · 电影 · ⭐ 10.0</i></li>
@@ -96,7 +96,7 @@
    <img src="https://image.tmdb.org/t/p/w500/iIf5XeuuBKPtG6H7MfWLirbJGrQ.jpg"/>
    <img src="https://image.tmdb.org/t/p/w500/nQLdzYYB71sUugtSR7e7YdjF6Vx.jpg"/>
    </tg-slideshow>
-   <h3>🔍「沙丘」的搜索结果</h3>
+   <h3>🔍 帮你找到这些「沙丘」啦</h3>
    <ol start="1">
    <li value="1"><b>沙丘</b><br>
    <i>Dune · 2021 · 电影 · ⭐ 7.8</i></li>

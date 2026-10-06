@@ -17,10 +17,10 @@ const (
 	actionList     = "l" // back to the task list
 	actionClose    = "c" // closes the task list
 
-	msgTasksExpired = "⌛ 这个任务列表已失效，请重新 /tasks。"
-	msgClosed       = "已关闭。"
+	msgTasksExpired = "⌛ 这个任务列表过期啦，重新 /tasks 一下吧～"
+	msgClosed       = "已经关掉啦～"
 
-	msgNotFollowing = "已停止刷新。"
+	msgNotFollowing = "已经不刷新啦～"
 )
 
 // taskRef identifies a listed task across refreshes.

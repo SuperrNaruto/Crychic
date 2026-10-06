@@ -7,7 +7,7 @@
    <img src="https://image.tmdb.org/t/p/w500/uI6dU5hbhskkgA7TQL0qq74ALjR.jpg"/>
    <img src="https://image.tmdb.org/t/p/w500/2BcQ0ZScTBj3sihSQkV1SXYHqdU.jpg"/>
    </tg-slideshow>
-   <h3>🔍「绝命毒师」的搜索结果</h3>
+   <h3>🔍 帮你找到这些「绝命毒师」啦</h3>
    <ol start="1">
    <li value="1"><b>绝命毒师</b><br>
    <i>Breaking Bad · 2008 · 电视剧 · ⭐ 9.0</i></li>
@@ -29,7 +29,7 @@
    <footer><i>Breaking Bad</i> · 2008 · 电视剧 · ⭐ 9.0 · 剧情 / 犯罪 · 共 5 季 62 集 · 主演：布莱恩·克兰斯顿、亚伦·保尔、安娜·冈</footer>
    <blockquote expandable>高中化学教师沃尔特·怀特被诊断患有晚期癌症，为保障家人经济生活，他与学生杰西制毒贩毒，并逐渐坠落至万劫不复的深渊。</blockquote>
    <hr/>
-   <p><b>选择要订阅的季：</b></p>
+   <p><b>想订哪一季呀？</b></p>
    <table bordered compact>
    <tr><th>季</th><th>集数</th></tr>
    <tr><td><b>特别篇</b></td><td>9 集</td></tr>
@@ -53,7 +53,7 @@
    <footer><i>Breaking Bad</i> · 2008 · 电视剧 · ⭐ 9.0 · 剧情 / 犯罪 · 共 5 季 62 集 · 主演：布莱恩·克兰斯顿、亚伦·保尔、安娜·冈</footer>
    <blockquote expandable>高中化学教师沃尔特·怀特被诊断患有晚期癌症，为保障家人经济生活，他与学生杰西制毒贩毒，并逐渐坠落至万劫不复的深渊。</blockquote>
    <hr/>
-   <p><b>确认订阅《绝命毒师》第 2 季（共 13 集）？</b></p>
+   <p><b>要订阅《绝命毒师》第 2 季（共 13 集）吗？</b></p>
    [从第 1 集开始 | 1:ok:0]
    [指定起始集… | 1:e:0]
    [返回 | 1:bk:0] [取消 | 1:x:0]
@@ -67,12 +67,12 @@
    <footer><i>Breaking Bad</i> · 2008 · 电视剧 · ⭐ 9.0 · 剧情 / 犯罪 · 共 5 季 62 集 · 主演：布莱恩·克兰斯顿、亚伦·保尔、安娜·冈</footer>
    <blockquote expandable>高中化学教师沃尔特·怀特被诊断患有晚期癌症，为保障家人经济生活，他与学生杰西制毒贩毒，并逐渐坠落至万劫不复的深渊。</blockquote>
    <hr/>
-   <p>✅ 已订阅《绝命毒师》第 2 季，入库后会通知你。</p>
+   <p>✅ 帮你订好《绝命毒师》第 2 季啦，入库了我第一时间叫你！ ヾ(≧▽≦*)o</p>
 << answerCallbackQuery
 >> user 1001 in chat 1001: /subscribe
 -> MoviePilot GET /api/v1/subscribe/
 << sendRichMessage chat=1001 message=2
-   <h3>📚 订阅列表（3）</h3>
+   <h3>📚 订阅清单（3）</h3>
    <ol start="1">
    <li value="1"><b>《绝命毒师》第 2 季</b><br>
    <i>订阅中 · 缺 13/13 集 · <mark>你请求的</mark></i></li>
@@ -87,14 +87,14 @@
 << editMessageText chat=1001 message=2
    <img src="https://image.tmdb.org/t/p/w500/rqliuvX7NdknSHu5qaSDfESplQi.jpg"/>
    <h3>取消订阅</h3>
-   <p><b>确认取消订阅《绝命毒师》第 2 季？</b><br>
-   MoviePilot 将不再为它搜索下载。</p>
+   <p><b>真的要取消订阅《绝命毒师》第 2 季吗？</b><br>
+   取消后 MoviePilot 就不会再帮它搜索下载了哦。</p>
    [确认取消 | 2:z:0] [返回 | 2:j:0]
 << answerCallbackQuery
 >> user 1001 taps 2:j:0 on message 2
 -> MoviePilot GET /api/v1/subscribe/
 << editMessageText chat=1001 message=2
-   <h3>📚 订阅列表（3）</h3>
+   <h3>📚 订阅清单（3）</h3>
    <ol start="1">
    <li value="1"><b>《绝命毒师》第 2 季</b><br>
    <i>订阅中 · 缺 13/13 集 · <mark>你请求的</mark></i></li>
@@ -110,20 +110,20 @@
 << editMessageText chat=1001 message=2
    <img src="https://image.tmdb.org/t/p/w500/rqliuvX7NdknSHu5qaSDfESplQi.jpg"/>
    <h3>取消订阅</h3>
-   <p><b>确认取消订阅《绝命毒师》第 2 季？</b><br>
-   MoviePilot 将不再为它搜索下载。</p>
+   <p><b>真的要取消订阅《绝命毒师》第 2 季吗？</b><br>
+   取消后 MoviePilot 就不会再帮它搜索下载了哦。</p>
    [确认取消 | 2:z:0] [返回 | 2:j:0]
 << answerCallbackQuery
 >> user 1001 taps 2:z:0 on message 2
 -> MoviePilot DELETE /api/v1/subscribe/1
 << editMessageText chat=1001 message=2
-   <p>✅ 已取消订阅《绝命毒师》第 2 季。</p>
+   <p>✅ 好哒，《绝命毒师》第 2 季的订阅已经取消啦。</p>
    [返回订阅列表 | 2:j:0] [首页 | 2:o:0]
 << answerCallbackQuery
 >> user 1001 taps 2:j:0 on message 2
 -> MoviePilot GET /api/v1/subscribe/
 << editMessageText chat=1001 message=2
-   <h3>📚 订阅列表（3）</h3>
+   <h3>📚 订阅清单（3）</h3>
    <ol start="1">
    <li value="1"><b>《绝命毒师》第 2 季</b><br>
    <i>订阅中 · 缺 13/13 集</i></li>
@@ -138,7 +138,7 @@
 >> user 1002 in chat 1002: /subscribe
 -> MoviePilot GET /api/v1/subscribe/
 << sendRichMessage chat=1002 message=3
-   <h3>📚 订阅列表（3）</h3>
+   <h3>📚 订阅清单（3）</h3>
    <ol start="1">
    <li value="1"><b>《绝命毒师》第 2 季</b><br>
    <i>订阅中 · 缺 13/13 集</i></li>

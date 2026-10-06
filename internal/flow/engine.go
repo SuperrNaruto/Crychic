@@ -26,16 +26,16 @@ const (
 )
 
 const (
-	msgUsage         = "用法：/search <片名>"
-	msgExpired       = "⌛ 这个请求已失效，请重新 /search。"
-	msgNotYours      = "这不是你发起的请求。"
-	msgBackendDown   = "⚠️ MoviePilot 暂时不可用，请稍后再试。"
-	msgCancelled     = "已取消。"
-	msgNoSeasons     = "没有查到这部剧的季信息。"
-	msgPickSeason    = "选择要订阅的季："
-	msgInvalidChoice = "无效的选项。"
-	msgWillNotify    = "入库后会通知你。"
-	msgNoNotice      = "MoviePilot 会自动搜索下载。"
+	msgUsage         = "要在 /search 后面带上片名哦，比如 /search 沙丘～"
+	msgExpired       = "⌛ 这个请求过期啦，重新 /search 一下吧～"
+	msgNotYours      = "这是别人的请求哦，不能替 TA 点～"
+	msgBackendDown   = "⚠️ MoviePilot 好像打了个盹，稍后再来找我吧 (´-ω-`)"
+	msgCancelled     = "好哒，已经取消啦～"
+	msgNoSeasons     = "呜，没查到这部剧有哪几季…"
+	msgPickSeason    = "想订哪一季呀？"
+	msgInvalidChoice = "这个选项不太对哦～"
+	msgWillNotify    = "入库了我第一时间叫你！"
+	msgNoNotice      = "MoviePilot 会自己去搜索下载哒。"
 )
 
 // Options configures an Engine.
@@ -213,11 +213,11 @@ func (e *Engine) downloads(ctx context.Context, target Target) []Download {
 // session stays only to browse on from it.
 func (e *Engine) held(sess session, target Target) Reply {
 	e.store.put(sess)
-	what := "已在媒体库中"
+	what := "已经在媒体库里啦"
 	if target.Season != nil {
-		what = "已全部在媒体库中"
+		what = "已经全部在媒体库里啦"
 	}
-	return sess.picked.reply(Line(Plain(fmt.Sprintf("✅ %s%s，可以直接观看。", targetName(target), what))), [][]Button{relatedRow(sess)})
+	return sess.picked.reply(Line(Plain(fmt.Sprintf("✅ %s%s，直接去看吧～", targetName(target), what))), [][]Button{relatedRow(sess)})
 }
 
 func (e *Engine) pickSeason(ctx context.Context, sess session, number int) Reply {
@@ -249,7 +249,7 @@ func (e *Engine) confirmation(ctx context.Context, sess session, sub subscriptio
 	target := sub.target
 	if sub.id != 0 {
 		e.store.put(sess)
-		status := fmt.Sprintf("ℹ️ %s已在订阅中%s", targetName(target), e.watch(ctx, sess, sub))
+		status := fmt.Sprintf("ℹ️ %s早就订阅上啦%s", targetName(target), e.watch(ctx, sess, sub))
 		return sess.picked.reply(Line(Plain(status)), [][]Button{relatedRow(sess)})
 	}
 	sess.target = &target
@@ -263,7 +263,7 @@ func (e *Engine) confirmation(ctx context.Context, sess session, sub subscriptio
 // confirmCard asks for the final go-ahead on a fully specified target.
 func confirmCard(sess session, target Target) Reply {
 	confirm := Button{Label: "确认订阅", Data: data(sess.id, actionConfirm, target.StartEpisode)}
-	question := Line(Strong(fmt.Sprintf("确认订阅%s？", targetName(target))))
+	question := Line(Strong(fmt.Sprintf("要订阅%s吗？", targetName(target))))
 	rows := [][]Button{{confirm, cancelButton(sess.id)}}
 	if target.Season == nil {
 		rows = append(rows, relatedRow(sess))
@@ -290,7 +290,7 @@ func (e *Engine) confirm(ctx context.Context, sess session, from int) Reply {
 	if err != nil {
 		return sess.picked.replyLines(e.failure("subscribe", err).Text, nil)
 	}
-	done := fmt.Sprintf("✅ 已订阅%s%s", targetName(target), e.watch(ctx, sess, subscription{id: id, target: target}))
+	done := fmt.Sprintf("✅ 帮你订好%s啦%s ヾ(≧▽≦*)o", targetName(target), e.watch(ctx, sess, subscription{id: id, target: target}))
 	return sess.picked.reply(Line(Plain(done)), nil)
 }
 

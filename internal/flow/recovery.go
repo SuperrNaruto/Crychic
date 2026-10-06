@@ -32,12 +32,12 @@ func (e *Engine) readFailure(sess session, retry recovery, err error) Reply {
 	}}
 	if retry.step != readSearch && sess.picked.Media.ID != "" {
 		if retry.step == readSubscription {
-			context := Line(Plain(fmt.Sprintf("暂时无法确认%s是否已订阅。", targetName(retry.target))))
+			context := Line(Plain(fmt.Sprintf("暂时没法确认%s有没有订阅过…", targetName(retry.target))))
 			failure.Text = append(Lines(context), failure.Text...)
 		}
 		return sess.picked.replyLines(failure.Text, rows)
 	}
-	text := Lines(Heading(Plain("🔍 搜索未完成")), Line(Plain(fmt.Sprintf("正在查找「%s」。", sess.query))))
+	text := Lines(Heading(Plain("🔍 搜到一半卡住了")), Line(Plain(fmt.Sprintf("刚才在找「%s」。", sess.query))))
 	return Reply{Text: append(text, failure.Text...), Buttons: rows}
 }
 
@@ -67,7 +67,7 @@ func (e *Engine) retryConfirmation(ctx context.Context, sess session) Reply {
 	return e.confirmation(ctx, sess, subscription{id: id, target: target})
 }
 
-const msgSubmitUnknown = "未能确认订阅结果。请先用 /subscribe 核对，确认没有订阅后再发起请求。"
+const msgSubmitUnknown = "呜，没能确认订阅有没有成功…先用 /subscribe 看一眼，确认没订上再来找我哦。"
 
 // submit attempts the write once. A transport/response failure, including
 // a missing receipt, is not proof that MoviePilot rejected the request.

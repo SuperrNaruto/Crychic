@@ -45,16 +45,16 @@ func TestResearchReplacesOldConfirmation(t *testing.T) {
 		},
 	})
 	h.say(alice, alice, "沙丘")
-	h.shows(1, "确认订阅《沙丘》")
+	h.shows(1, "要订阅《沙丘》")
 	old, _ := findButton(mustMessage(h, 1).rows, "确认订阅")
 	h.tap(alice, 1, "重新搜索")
 	h.tap(alice, 1, "返回")
-	h.shows(1, "确认订阅《沙丘》")
+	h.shows(1, "要订阅《沙丘》")
 	h.tap(alice, 1, "重新搜索")
 	h.answer(alice, 1, "名侦探柯南")
-	h.shows(1, "「名侦探柯南」的搜索结果")
+	h.shows(1, "这些「名侦探柯南」啦")
 	h.tapData(alice, 1, old)
-	h.shows(1, "已失效")
+	h.shows(1, "过期啦")
 	h.tr.verify(t)
 }
 
@@ -69,9 +69,9 @@ func TestSingleResultAndSeasonGoStraightToConfirm(t *testing.T) {
 		subscribePath: ok("subscribe_created.json"),
 	}})
 	h.say(alice, alice, "深渊无间")
-	h.shows(1, "确认订阅《深渊无间》第 1 季")
+	h.shows(1, "要订阅《深渊无间》第 1 季")
 	h.tap(alice, 1, "从第 1 集开始")
-	h.shows(1, "已订阅《深渊无间》第 1 季")
+	h.shows(1, "帮你订好《深渊无间》第 1 季")
 	h.tr.verify(t)
 }
 
@@ -84,9 +84,9 @@ func TestSingleSpecialNeedsExplicitChoice(t *testing.T) {
 		abyssLookup:  ok("subscription_none.json"),
 	}})
 	h.say(alice, alice, "深渊无间")
-	h.shows(1, "选择要订阅的季")
+	h.shows(1, "想订哪一季呀")
 	h.tap(alice, 1, "特别篇")
-	h.shows(1, "确认订阅")
+	h.shows(1, "要订阅")
 	h.tap(alice, 1, "取消")
 	h.tr.verify(t)
 }

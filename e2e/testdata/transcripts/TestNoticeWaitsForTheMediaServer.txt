@@ -11,7 +11,7 @@
    <img src="https://image.tmdb.org/t/p/w500/iIf5XeuuBKPtG6H7MfWLirbJGrQ.jpg"/>
    <img src="https://image.tmdb.org/t/p/w500/nQLdzYYB71sUugtSR7e7YdjF6Vx.jpg"/>
    </tg-slideshow>
-   <h3>🔍「沙丘」的搜索结果</h3>
+   <h3>🔍 帮你找到这些「沙丘」啦</h3>
    <ol start="1">
    <li value="1"><b>沙丘</b><br>
    <i>Dune · 2021 · 电影 · ⭐ 7.8</i></li>
@@ -44,7 +44,7 @@
    <footer><i>Dune</i> · 2021 · 电影 · ⭐ 7.8 · 科幻 / 冒险 · 156 分钟 · 主演：提莫西·查拉梅、丽贝卡·弗格森、奥斯卡·伊萨克</footer>
    <blockquote expandable>电影《沙丘》为观众呈现了一段神秘而感人至深的英雄之旅。天赋异禀的少年保罗·厄崔迪（提莫西·查拉梅 饰）被命运指引，为了保卫自己的家族和人民，决心前往浩瀚宇宙间最危险的星球，开启一场惊心动魄的冒险。与此同时，各路势力为了抢夺这颗星球上一种能够释放人类最大潜力的珍贵资源而纷纷加入战场。最终，唯有那些能够战胜内心恐惧的人才能生存下去。</blockquote>
    <hr/>
-   <p><b>确认订阅《沙丘》？</b></p>
+   <p><b>要订阅《沙丘》吗？</b></p>
    [确认订阅 | 1:ok:0] [返回 | 1:bk:0] [取消 | 1:x:0]
    [相似推荐 | 1:r:0] [同系列 | 1:n:0]
 << answerCallbackQuery
@@ -57,14 +57,14 @@
    <footer><i>Dune</i> · 2021 · 电影 · ⭐ 7.8 · 科幻 / 冒险 · 156 分钟 · 主演：提莫西·查拉梅、丽贝卡·弗格森、奥斯卡·伊萨克</footer>
    <blockquote expandable>电影《沙丘》为观众呈现了一段神秘而感人至深的英雄之旅。天赋异禀的少年保罗·厄崔迪（提莫西·查拉梅 饰）被命运指引，为了保卫自己的家族和人民，决心前往浩瀚宇宙间最危险的星球，开启一场惊心动魄的冒险。与此同时，各路势力为了抢夺这颗星球上一种能够释放人类最大潜力的珍贵资源而纷纷加入战场。最终，唯有那些能够战胜内心恐惧的人才能生存下去。</blockquote>
    <hr/>
-   <p>✅ 已订阅《沙丘》，入库后会通知你。</p>
+   <p>✅ 帮你订好《沙丘》啦，入库了我第一时间叫你！ ヾ(≧▽≦*)o</p>
 << answerCallbackQuery
 >> MoviePilot transfers 沙丘 (themoviedb/438631)
 >> the media server scans the new files
 << sendRichMessage chat=1001 message=2
    <img src="https://image.tmdb.org/t/p/w500/6hsJknqlPceFxExOe87z5VGgNG9.jpg"/>
-   <h3>📥 已入库</h3>
-   <p>你请求的<b>《沙丘》</b>已入库，可以观看了。</p>
+   <h3>📥 入库啦</h3>
+   <p>你想看的<b>《沙丘》</b>到家啦，快去看吧！(ﾉ&gt;ω&lt;)ﾉ</p>
    <tg-button-row align="left">
    <tg-button type="url" style="success" url="https://emby.example.com/web/index.html#!/item?id=438631">在 Emby 中观看</tg-button>
    </tg-button-row>

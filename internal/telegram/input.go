@@ -21,7 +21,7 @@ func (a *adapter) lockInput(ctx context.Context, msg *models.Message) (func(), b
 
 func refused(user int64) flow.Reply {
 	return flow.Reply{Text: flow.Lines(flow.Line(
-		flow.Plain("🚫 你没有使用权限。你的 Telegram ID："),
+		flow.Plain("🚫 抱歉，你还没有使用权限哦。把你的 Telegram ID 发给管理员吧："),
 		flow.Mono(strconv.FormatInt(user, decimal)),
 	))}
 }

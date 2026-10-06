@@ -37,9 +37,9 @@ func TestRequesterHearsWhenMovieArrives(t *testing.T) {
 	h.say(alice, alice, "/search 沙丘")
 	h.tap(alice, 1, duneMovie)
 	h.tap(alice, 1, "确认订阅")
-	h.shows(1, "入库后会通知你")
+	h.shows(1, "入库了我第一时间叫你")
 	h.arrives(alice, duneFile())
-	h.shows(2, "已入库")
+	h.shows(2, "入库啦")
 	h.tr.verify(t)
 }
 
@@ -63,7 +63,7 @@ func TestGroupHearsArrivedEpisodesTogether(t *testing.T) {
 		breakingBad.file("S02", "E02-E03"),
 		breakingBad.file("S02", "E05"),
 	)
-	h.shows(2, "E01–E03、E05 已入库")
+	h.shows(2, "E01–E03、E05 到家啦")
 	h.tr.verify(t)
 }
 
@@ -84,7 +84,7 @@ func TestEpisodesArrivingApartShareOneNotice(t *testing.T) {
 	h.transfers(breakingBad.file("S02", "E01"))
 	h.restart()
 	h.arrives(alice, breakingBad.file("S02", "E02"))
-	h.shows(2, "E01–E02 已入库")
+	h.shows(2, "E01–E02 到家啦")
 	h.tr.verify(t)
 }
 
@@ -97,7 +97,7 @@ func TestAlreadySubscribedRequesterIsNotified(t *testing.T) {
 	}})
 	h.say(alice, alice, "/search 沙丘")
 	h.tap(alice, 1, duneMovie)
-	h.shows(1, "已在订阅中，入库后会通知你")
+	h.shows(1, "早就订阅上啦，入库了我第一时间叫你")
 	h.arrives(alice, duneFile())
 	h.tr.verify(t)
 }
@@ -115,7 +115,7 @@ func TestRequestsSurviveRestart(t *testing.T) {
 		conan.file("S01", "E1215"),
 		conan.file("S01", "E1216"),
 	)
-	h.shows(2, "全部入库")
+	h.shows(2, "全部到齐啦")
 	h.tr.verify(t)
 }
 
@@ -148,6 +148,6 @@ func TestDisabledLibraryWaitAnnouncesImmediately(t *testing.T) {
 	h.tap(alice, 1, duneMovie)
 	h.tap(alice, 1, "确认订阅")
 	h.transfers(duneFile())
-	h.shows(2, "已入库")
+	h.shows(2, "入库啦")
 	h.tr.verify(t)
 }

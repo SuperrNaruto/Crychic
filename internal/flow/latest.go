@@ -6,8 +6,8 @@ import (
 )
 
 const (
-	msgLatestTitle = "🆕 最新入库"
-	msgNoLatest    = "媒体库最近没有新内容。"
+	msgLatestTitle = "🆕 新鲜入库"
+	msgNoLatest    = "媒体库最近还没有新东西哦～"
 )
 
 // Latest lists what reached the media servers most recently.

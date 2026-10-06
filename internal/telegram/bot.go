@@ -37,14 +37,14 @@ const (
 
 // help explains the commands.
 var help = flow.Lines(
-	flow.Heading(flow.Plain("使用说明")),
-	flow.Line(flow.Plain("私聊直接发送片名即可搜索；等待起始集数时，请先回答或用 /search 换片。")),
-	flow.Line(flow.Mono("/start"), flow.Plain(" 首页，所有功能的入口。")),
-	flow.Line(flow.Mono("/search <片名>"), flow.Plain(" 搜索电影或剧集，并在 MoviePilot 中订阅。")),
-	flow.Line(flow.Mono("/trending"), flow.Plain(" 浏览热门榜单和新番，一键订阅。")),
-	flow.Line(flow.Mono("/subscribe"), flow.Plain(" 查看所有订阅，取消你请求的订阅。")),
-	flow.Line(flow.Mono("/newly_added"), flow.Plain(" 媒体库最新入库，点片名直接观看。")),
-	flow.Line(flow.Mono("/tasks"), flow.Plain(" 查看下载中和整理中的任务，选一个实时查看进度。")),
+	flow.Heading(flow.Plain("我能帮你做这些～")),
+	flow.Line(flow.Plain("私聊直接发片名我就去搜；在等你回复起始集数的时候，先回答我，或者用 /search 换一部～")),
+	flow.Line(flow.Mono("/start"), flow.Plain(" 回到首页，所有功能都在这儿～")),
+	flow.Line(flow.Mono("/search <片名>"), flow.Plain(" 帮你搜电影和剧集，顺手在 MoviePilot 里订上～")),
+	flow.Line(flow.Mono("/trending"), flow.Plain(" 逛逛热门榜单和新番，看中了一键订阅～")),
+	flow.Line(flow.Mono("/subscribe"), flow.Plain(" 看看所有订阅，你请求的也能在这里取消～")),
+	flow.Line(flow.Mono("/newly_added"), flow.Plain(" 媒体库新到的片子，点片名直接去看～")),
+	flow.Line(flow.Mono("/tasks"), flow.Plain(" 看看下载和整理的进度，选一个我帮你实时盯着～")),
 )
 
 // commands is the menu Telegram shows when a user types "/".
@@ -251,7 +251,7 @@ func (a *adapter) onCallback(ctx context.Context, b *bot.Bot, cq *models.Callbac
 		return
 	}
 	defer unlock()
-	reply := flow.Reply{Notice: "你没有使用权限。"}
+	reply := flow.Reply{Notice: "抱歉，你还没有使用权限哦～"}
 	actor := actorOf(cq.From, callbackChat(cq))
 	if a.allowed[cq.From.ID] {
 		a.stopOwnedFollower(callbackKey(cq), actor.UserID)

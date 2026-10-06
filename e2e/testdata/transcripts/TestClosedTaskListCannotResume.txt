@@ -1,6 +1,6 @@
 >> user 1001 in chat 1001: /tasks
 << sendRichMessage chat=1001 message=1
-   <h3>📋 进行中的任务</h3>
+   <h3>📋 正在忙的任务</h3>
    <h4>⬇️ 下载</h4>
    <ol start="1">
    <li value="1"><b>《迷途之子!!!!!》第 1 季</b><br>
@@ -15,9 +15,9 @@
    [关闭 | 1:c:0]
 >> user 1001 taps 1:c:0 on message 1
 << editMessageText chat=1001 message=1
-   <p>已关闭。</p>
+   <p>已经关掉啦～</p>
 << answerCallbackQuery
 >> user 1001 taps 1:k:0 on message 1
 << editMessageText chat=1001 message=1
-   <p>⌛ 这个任务列表已失效，请重新 /tasks。</p>
+   <p>⌛ 这个任务列表过期啦，重新 /tasks 一下吧～</p>
 << answerCallbackQuery

@@ -34,8 +34,8 @@ func (e *Engine) search(ctx context.Context, sess session, term string) Reply {
 	if len(results) == 0 {
 		reply := askResearch(sess)
 		reply.Text = Lines(
-			Heading(Plain("🔍 没有找到相关影视")),
-			Line(Plain(fmt.Sprintf("没有找到「%s」相关的影视，请直接回复新的片名。", term))),
+			Heading(Plain("🔍 呜…什么都没找到")),
+			Line(Plain(fmt.Sprintf("翻遍了也没找到「%s」(｡•́︿•̀｡) 换个名字直接回复我，再搜搜看呀？", term))),
 		)
 		return reply
 	}
@@ -53,7 +53,7 @@ func (e *Engine) search(ctx context.Context, sess session, term string) Reply {
 // and the same content budget as other lists.
 func (e *Engine) resultList(sess session, term string) Reply {
 	view := listView{
-		heading:   Heading(Plain(fmt.Sprintf("🔍「%s」的搜索结果", term))),
+		heading:   Heading(Plain(fmt.Sprintf("🔍 帮你找到这些「%s」啦", term))),
 		pageItems: searchPageItems,
 		footer:    []Button{researchButton(sess.id), cancelButton(sess.id)},
 	}
@@ -89,7 +89,7 @@ func withResearch(reply Reply, id uint64) Reply {
 
 func askResearch(sess session) Reply {
 	return Reply{
-		Text:    Lines(Heading(Plain("🔍 重新搜索")), Line(Plain(msgAskTitle))),
+		Text:    Lines(Heading(Plain("🔍 换个名字搜搜")), Line(Plain(msgAskTitle))),
 		Buttons: [][]Button{{cancelButton(sess.id)}},
 		Input:   data(sess.id, actionResearch, 0),
 	}

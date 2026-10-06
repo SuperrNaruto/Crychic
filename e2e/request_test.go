@@ -42,7 +42,7 @@ func TestFollowOnlyNewEpisodes(t *testing.T) {
 	h.tap(alice, 1, conanShow)
 	h.tap(alice, 1, conanFirst)
 	h.tap(alice, 1, "只追新集（第 1216 集起）")
-	h.shows(1, "已订阅《名侦探柯南》第 1 季（从第 1216 集开始）")
+	h.shows(1, "帮你订好《名侦探柯南》第 1 季（从第 1216 集开始）")
 	h.tr.verify(t)
 }
 
@@ -54,12 +54,12 @@ func TestStartFromTypedEpisode(t *testing.T) {
 	h.tap(alice, 1, conanFirst)
 	h.tap(alice, 1, "指定起始集…")
 	h.answer(alice, 1, "沙丘")
-	h.shows(1, "「沙丘」不是有效的集数")
+	h.shows(1, "「沙丘」好像不是有效的集数")
 	h.answer(alice, 1, "1300")
-	h.shows(1, "「1300」不是有效的集数")
+	h.shows(1, "「1300」好像不是有效的集数")
 	h.answer(alice, 1, "500")
 	h.tap(alice, 1, "确认订阅")
-	h.shows(1, "已订阅《名侦探柯南》第 1 季（从第 500 集开始）")
+	h.shows(1, "帮你订好《名侦探柯南》第 1 季（从第 500 集开始）")
 	h.tr.verify(t)
 }
 
@@ -73,7 +73,7 @@ func TestGroupChatterIsNotAnAnswer(t *testing.T) {
 	h.chatter(alice, group, "500")
 	h.chatter(bob, group, "600")
 	h.answerQuoting(alice, 1, "700")
-	h.shows(1, "确认订阅《名侦探柯南》第 1 季（从第 700 集开始）")
+	h.shows(1, "要订阅《名侦探柯南》第 1 季（从第 700 集开始）")
 	h.tr.verify(t)
 }
 
@@ -87,7 +87,7 @@ func TestSubscribeMovie(t *testing.T) {
 	h.say(alice, alice, "沙丘")
 	h.tap(alice, 1, duneMovie)
 	h.tap(alice, 1, "确认订阅")
-	h.shows(1, "已订阅《沙丘》")
+	h.shows(1, "帮你订好《沙丘》")
 	h.tr.verify(t)
 }
 
@@ -101,7 +101,7 @@ func TestUnreachablePosterKeepsTheCard(t *testing.T) {
 	h.tg.refuseImage(dunePoster)
 	h.say(alice, alice, "/search 沙丘")
 	h.tap(alice, 1, duneMovie)
-	h.shows(1, "确认订阅《沙丘》")
+	h.shows(1, "要订阅《沙丘》")
 	h.tr.verify(t)
 }
 
@@ -117,7 +117,7 @@ func TestSubscribeOneSeasonOfShow(t *testing.T) {
 	h.tap(alice, 1, "1")
 	h.tap(alice, 1, "第 2 季")
 	h.tap(alice, 1, "从第 1 集开始")
-	h.shows(1, "已订阅《绝命毒师》第 2 季")
+	h.shows(1, "帮你订好《绝命毒师》第 2 季")
 	h.tr.verify(t)
 }
 
@@ -131,7 +131,7 @@ func TestMissingDetailsDoNotBlockSubscribing(t *testing.T) {
 	h.say(alice, alice, "/search 沙丘")
 	h.tap(alice, 1, duneMovie)
 	h.tap(alice, 1, "确认订阅")
-	h.shows(1, "已订阅《沙丘》")
+	h.shows(1, "帮你订好《沙丘》")
 	h.tr.verify(t)
 }
 
@@ -143,7 +143,7 @@ func TestAlreadySubscribedEndsEarly(t *testing.T) {
 	}})
 	h.say(alice, alice, "/search 沙丘")
 	h.tap(alice, 1, duneMovie)
-	h.shows(1, "已在订阅中")
+	h.shows(1, "早就订阅上啦")
 	h.tr.verify(t)
 }
 
@@ -160,7 +160,7 @@ func TestConfirmTwiceSubscribesOnce(t *testing.T) {
 	confirm, _ := findButton(mustMessage(h, 1).rows, "确认订阅")
 	h.tap(alice, 1, "确认订阅")
 	h.tapData(alice, 1, confirm)
-	h.shows(1, "已失效")
+	h.shows(1, "过期啦")
 	h.tr.verify(t)
 }
 
@@ -169,18 +169,18 @@ func TestCancelledRequestCannotResume(t *testing.T) {
 	h.say(alice, alice, "/search 沙丘")
 	pick, _ := findButton(mustMessage(h, 1).rows, duneMovie)
 	h.tap(alice, 1, "取消")
-	h.shows(1, "已取消")
+	h.shows(1, "已经取消啦")
 	h.tapData(alice, 1, pick)
-	h.shows(1, "已失效")
+	h.shows(1, "过期啦")
 	h.tr.verify(t)
 }
 
 func TestStrangerIsRefused(t *testing.T) {
 	h := start(t, scenario{})
 	h.say(stranger, stranger, "沙丘")
-	h.shows(1, "你没有使用权限")
+	h.shows(1, "你还没有使用权限")
 	h.say(stranger, stranger, "/start")
-	h.shows(2, "你没有使用权限")
+	h.shows(2, "你还没有使用权限")
 	h.tr.verify(t)
 }
 
@@ -200,12 +200,12 @@ func TestPrivateCommandsReplacePendingAnswer(t *testing.T) {
 	h.tap(alice, 1, "指定起始集…")
 	h.say(alice, alice, "/start")
 	h.say(alice, alice, "沙丘")
-	h.shows(3, "「沙丘」的搜索结果")
+	h.shows(3, "这些「沙丘」啦")
 	h.tap(alice, 1, "返回")
 	h.tap(alice, 1, "指定起始集…")
 	h.say(alice, alice, "/search 沙丘")
 	h.say(alice, alice, "沙丘")
-	h.shows(5, "「沙丘」的搜索结果")
+	h.shows(5, "这些「沙丘」啦")
 	h.tr.verify(t)
 }
 
@@ -218,9 +218,9 @@ func TestOnlyRequesterCanChoose(t *testing.T) {
 	}})
 	h.say(alice, group, "/search@crychic_bot 沙丘")
 	h.tap(bob, 1, duneMovie)
-	h.shows(1, "的搜索结果")
+	h.shows(1, "帮你找到这些")
 	h.tap(alice, 1, duneMovie)
-	h.shows(1, "确认订阅《沙丘》")
+	h.shows(1, "要订阅《沙丘》")
 	h.tr.verify(t)
 }
 
@@ -230,9 +230,9 @@ func TestNothingFound(t *testing.T) {
 		"沙丘":     "search_dune.json",
 	}})
 	h.say(alice, alice, "/search 不存在的电影")
-	h.shows(1, "没有找到")
+	h.shows(1, "什么都没找到")
 	h.answer(alice, 1, "沙丘")
-	h.shows(1, "「沙丘」的搜索结果")
+	h.shows(1, "这些「沙丘」啦")
 	h.tr.verify(t)
 }
 
@@ -262,14 +262,14 @@ func TestMoviePilotOutageIsReported(t *testing.T) {
 		searchPath: {status: http.StatusInternalServerError, fixture: "server_error.json"},
 	}})
 	h.say(alice, alice, "/search 沙丘")
-	h.shows(1, "MoviePilot 暂时不可用")
+	h.shows(1, "MoviePilot 好像打了个盹")
 	retry, _ := findButton(mustMessage(h, 1).rows, "重试")
 	h.tap(alice, 1, "重试")
 	h.mp.setRoute(searchPath, ok("search_dune.json"))
 	h.tap(alice, 1, "重试")
-	h.shows(1, "「沙丘」的搜索结果")
+	h.shows(1, "这些「沙丘」啦")
 	h.tapData(alice, 1, retry)
-	h.shows(1, "「沙丘」的搜索结果")
+	h.shows(1, "这些「沙丘」啦")
 	h.tr.verify(t)
 }
 
@@ -332,12 +332,12 @@ func TestHomeSearchTakesATypedTitle(t *testing.T) {
 	h.tap(alice, 1, "首页")
 	h.tap(alice, 1, "搜索订阅")
 	h.answer(alice, 1, "沙丘")
-	h.shows(1, "「沙丘」的搜索结果")
+	h.shows(1, "这些「沙丘」啦")
 	h.tap(alice, 1, "返回")
 	h.tap(alice, 1, "首页")
 	h.restart()
 	h.tap(alice, 1, "搜索订阅")
-	h.shows(1, "这个菜单已失效")
+	h.shows(1, "这个菜单睡着啦")
 	h.tr.verify(t)
 }
 
@@ -350,7 +350,7 @@ func TestOldHomePhotoIsReplaced(t *testing.T) {
 	if _, ok := h.tg.message(old); ok {
 		t.Fatal("the old home photo must be removed")
 	}
-	h.shows(old+1, "这个菜单已失效")
+	h.shows(old+1, "这个菜单睡着啦")
 	h.tr.verify(t)
 }
 
@@ -380,12 +380,12 @@ func TestCancelOwnSubscription(t *testing.T) {
 	h.say(alice, alice, "/subscribe")
 	h.tap(alice, 2, cancelBreaking)
 	h.tap(alice, 2, "返回")
-	h.shows(2, "订阅列表")
+	h.shows(2, "订阅清单")
 	h.tap(alice, 2, cancelBreaking)
 	h.tap(alice, 2, "确认取消")
-	h.shows(2, "已取消订阅《绝命毒师》第 2 季")
+	h.shows(2, "《绝命毒师》第 2 季的订阅已经取消啦")
 	h.tap(alice, 2, "返回订阅列表")
-	h.shows(2, "订阅列表")
+	h.shows(2, "订阅清单")
 	h.transfers(breakingBad.file("S02", "E01-E13"))
 	h.say(bob, bob, "/subscribe")
 	h.tr.verify(t)
@@ -406,9 +406,9 @@ func TestOldConfirmationCannotSubscribeAfterRestart(t *testing.T) {
 	h.say(alice, alice, "/search 挖掘者")
 	h.tap(alice, 2, "1")
 	h.tap(alice, 1, "确认订阅")
-	h.shows(1, "已失效")
+	h.shows(1, "过期啦")
 	h.tap(alice, 2, "确认订阅")
-	h.shows(2, "已订阅《挖掘者》")
+	h.shows(2, "帮你订好《挖掘者》")
 	h.tr.verify(t)
 }
 
@@ -436,14 +436,14 @@ func TestBackRetracesTheRequest(t *testing.T) {
 	h.tap(alice, 1, "第 2 季")
 	h.tap(alice, 1, "指定起始集…")
 	h.tap(alice, 1, "返回")
-	h.shows(1, "确认订阅《绝命毒师》第 2 季")
+	h.shows(1, "要订阅《绝命毒师》第 2 季")
 	h.tap(alice, 1, "返回")
-	h.shows(1, "选择要订阅的季")
+	h.shows(1, "想订哪一季呀")
 	h.tap(alice, 1, "返回")
-	h.shows(1, "「绝命毒师」的搜索结果")
+	h.shows(1, "这些「绝命毒师」啦")
 	h.tap(alice, 1, "1")
 	h.tap(alice, 1, "第 2 季")
 	h.tap(alice, 1, "从第 1 集开始")
-	h.shows(1, "已订阅《绝命毒师》第 2 季")
+	h.shows(1, "帮你订好《绝命毒师》第 2 季")
 	h.tr.verify(t)
 }

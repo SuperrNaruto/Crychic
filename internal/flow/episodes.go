@@ -30,7 +30,7 @@ func startChoices(sess session, season int) Reply {
 	if len(facts) > 0 {
 		total = "（" + strings.Join(facts, "，") + "）"
 	}
-	question := fmt.Sprintf("确认订阅%s%s？", targetName(*sess.target), total)
+	question := fmt.Sprintf("要订阅%s%s吗？", targetName(*sess.target), total)
 	return sess.picked.reply(Line(Strong(question)), rows)
 }
 
@@ -40,11 +40,11 @@ func askStart(sess session, problem string) Reply {
 	if sess.target == nil || sess.target.Season == nil {
 		return Reply{Notice: msgInvalidChoice}
 	}
-	prompt := "请直接回复起始集数"
+	prompt := "想从第几集开始追呀？直接回复集数就好"
 	if count := sess.episodeCount(*sess.target.Season); count > 0 {
 		prompt += fmt.Sprintf("（1–%d）", count)
 	}
-	reply := sess.picked.reply(Line(Plain(problem+prompt+"：")), [][]Button{{cancelButton(sess.id)}})
+	reply := sess.picked.reply(Line(Plain(problem+prompt+"～")), [][]Button{{cancelButton(sess.id)}})
 	reply.Input = data(sess.id, actionAskFrom, 0)
 	return reply
 }
@@ -83,7 +83,7 @@ func (e *Engine) Answer(ctx context.Context, actor Actor, typed Typed) Reply {
 func startFrom(sess session, text string) Reply {
 	from, err := strconv.Atoi(text)
 	if err != nil || from < 1 || !sess.validStart(from) {
-		return askStart(sess, fmt.Sprintf("⚠️「%s」不是有效的集数。", text))
+		return askStart(sess, fmt.Sprintf("⚠️「%s」好像不是有效的集数哦～", text))
 	}
 	target := *sess.target
 	target.StartEpisode = from

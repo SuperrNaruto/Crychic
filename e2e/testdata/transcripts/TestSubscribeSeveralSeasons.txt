@@ -7,7 +7,7 @@
    <img src="https://image.tmdb.org/t/p/w500/uI6dU5hbhskkgA7TQL0qq74ALjR.jpg"/>
    <img src="https://image.tmdb.org/t/p/w500/2BcQ0ZScTBj3sihSQkV1SXYHqdU.jpg"/>
    </tg-slideshow>
-   <h3>🔍「绝命毒师」的搜索结果</h3>
+   <h3>🔍 帮你找到这些「绝命毒师」啦</h3>
    <ol start="1">
    <li value="1"><b>绝命毒师</b><br>
    <i>Breaking Bad · 2008 · 电视剧 · ⭐ 9.0</i></li>
@@ -29,7 +29,7 @@
    <footer><i>Breaking Bad</i> · 2008 · 电视剧 · ⭐ 9.0 · 剧情 / 犯罪 · 共 5 季 62 集 · 主演：布莱恩·克兰斯顿、亚伦·保尔、安娜·冈</footer>
    <blockquote expandable>高中化学教师沃尔特·怀特被诊断患有晚期癌症，为保障家人经济生活，他与学生杰西制毒贩毒，并逐渐坠落至万劫不复的深渊。</blockquote>
    <hr/>
-   <p><b>选择要订阅的季：</b></p>
+   <p><b>想订哪一季呀？</b></p>
    <table bordered compact>
    <tr><th>季</th><th>集数</th></tr>
    <tr><td><b>特别篇</b></td><td>9 集</td></tr>
@@ -52,7 +52,7 @@
    <footer><i>Breaking Bad</i> · 2008 · 电视剧 · ⭐ 9.0 · 剧情 / 犯罪 · 共 5 季 62 集 · 主演：布莱恩·克兰斯顿、亚伦·保尔、安娜·冈</footer>
    <blockquote expandable>高中化学教师沃尔特·怀特被诊断患有晚期癌症，为保障家人经济生活，他与学生杰西制毒贩毒，并逐渐坠落至万劫不复的深渊。</blockquote>
    <hr/>
-   <p><b>选择要订阅的季（可多选，每季从第 1 集开始）：</b></p>
+   <p><b>想订哪几季呀？可以多选，每季都从第 1 集开始～</b></p>
    <ul>
    <li><input type="checkbox"><b>特别篇</b> · 9 集</li>
    <li><input type="checkbox"><b>第 1 季</b> · 7 集</li>
@@ -72,7 +72,7 @@
    <footer><i>Breaking Bad</i> · 2008 · 电视剧 · ⭐ 9.0 · 剧情 / 犯罪 · 共 5 季 62 集 · 主演：布莱恩·克兰斯顿、亚伦·保尔、安娜·冈</footer>
    <blockquote expandable>高中化学教师沃尔特·怀特被诊断患有晚期癌症，为保障家人经济生活，他与学生杰西制毒贩毒，并逐渐坠落至万劫不复的深渊。</blockquote>
    <hr/>
-   <p><b>选择要订阅的季（可多选，每季从第 1 集开始）：</b></p>
+   <p><b>想订哪几季呀？可以多选，每季都从第 1 集开始～</b></p>
    <ul>
    <li><input type="checkbox"><b>特别篇</b> · 9 集</li>
    <li><input type="checkbox" checked><b>第 1 季</b> · 7 集</li>
@@ -92,7 +92,7 @@
    <footer><i>Breaking Bad</i> · 2008 · 电视剧 · ⭐ 9.0 · 剧情 / 犯罪 · 共 5 季 62 集 · 主演：布莱恩·克兰斯顿、亚伦·保尔、安娜·冈</footer>
    <blockquote expandable>高中化学教师沃尔特·怀特被诊断患有晚期癌症，为保障家人经济生活，他与学生杰西制毒贩毒，并逐渐坠落至万劫不复的深渊。</blockquote>
    <hr/>
-   <p><b>选择要订阅的季（可多选，每季从第 1 集开始）：</b></p>
+   <p><b>想订哪几季呀？可以多选，每季都从第 1 集开始～</b></p>
    <ul>
    <li><input type="checkbox"><b>特别篇</b> · 9 集</li>
    <li><input type="checkbox" checked><b>第 1 季</b> · 7 集</li>
@@ -112,7 +112,7 @@
    <footer><i>Breaking Bad</i> · 2008 · 电视剧 · ⭐ 9.0 · 剧情 / 犯罪 · 共 5 季 62 集 · 主演：布莱恩·克兰斯顿、亚伦·保尔、安娜·冈</footer>
    <blockquote expandable>高中化学教师沃尔特·怀特被诊断患有晚期癌症，为保障家人经济生活，他与学生杰西制毒贩毒，并逐渐坠落至万劫不复的深渊。</blockquote>
    <hr/>
-   <p><b>选择要订阅的季（可多选，每季从第 1 集开始）：</b></p>
+   <p><b>想订哪几季呀？可以多选，每季都从第 1 集开始～</b></p>
    <ul>
    <li><input type="checkbox"><b>特别篇</b> · 9 集</li>
    <li><input type="checkbox"><b>第 1 季</b> · 7 集</li>
@@ -132,7 +132,7 @@
    <footer><i>Breaking Bad</i> · 2008 · 电视剧 · ⭐ 9.0 · 剧情 / 犯罪 · 共 5 季 62 集 · 主演：布莱恩·克兰斯顿、亚伦·保尔、安娜·冈</footer>
    <blockquote expandable>高中化学教师沃尔特·怀特被诊断患有晚期癌症，为保障家人经济生活，他与学生杰西制毒贩毒，并逐渐坠落至万劫不复的深渊。</blockquote>
    <hr/>
-   <p><b>选择要订阅的季（可多选，每季从第 1 集开始）：</b></p>
+   <p><b>想订哪几季呀？可以多选，每季都从第 1 集开始～</b></p>
    <ul>
    <li><input type="checkbox"><b>特别篇</b> · 9 集</li>
    <li><input type="checkbox"><b>第 1 季</b> · 7 集</li>
@@ -158,19 +158,19 @@
    <footer><i>Breaking Bad</i> · 2008 · 电视剧 · ⭐ 9.0 · 剧情 / 犯罪 · 共 5 季 62 集 · 主演：布莱恩·克兰斯顿、亚伦·保尔、安娜·冈</footer>
    <blockquote expandable>高中化学教师沃尔特·怀特被诊断患有晚期癌症，为保障家人经济生活，他与学生杰西制毒贩毒，并逐渐坠落至万劫不复的深渊。</blockquote>
    <hr/>
-   <p><b>《绝命毒师》订阅结果：</b></p>
+   <p><b>《绝命毒师》的订阅结果来啦：</b></p>
    <table bordered compact>
    <tr><th>季</th><th>结果</th></tr>
    <tr><td><b>第 2 季</b></td><td>✅ 已订阅</td></tr>
    <tr><td><b>第 3 季</b></td><td>✅ 已订阅</td></tr>
    </table>
-   <p>入库后会通知你。</p>
+   <p>入库了我第一时间叫你！</p>
 << answerCallbackQuery
 >> MoviePilot transfers 绝命毒师 (themoviedb/1396) S03E01
 << sendRichMessage chat=1001 message=2
    <img src="https://image.tmdb.org/t/p/w500/rqliuvX7NdknSHu5qaSDfESplQi.jpg"/>
-   <h3>📥 已入库</h3>
-   <p>你请求的<b>《绝命毒师》第 3 季</b> E01 已入库。</p>
+   <h3>📥 入库啦</h3>
+   <p>你想看的<b>《绝命毒师》第 3 季</b> E01 到家啦！</p>
    <tg-button-row align="left">
    <tg-button type="url" style="success" url="https://emby.example.com/web/index.html#!/item?id=1396">在 Emby 中观看</tg-button>
    </tg-button-row>

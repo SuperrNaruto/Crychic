@@ -17,7 +17,7 @@ func TestHeldMovieIsNotSubscribedAgain(t *testing.T) {
 	}})
 	h.say(alice, alice, "/search 沙丘")
 	h.tap(alice, 1, duneMovie)
-	h.shows(1, "《沙丘》已在媒体库中，可以直接观看")
+	h.shows(1, "《沙丘》已经在媒体库里啦，直接去看吧")
 	h.tr.verify(t)
 }
 
@@ -33,7 +33,7 @@ func TestHeldSeasonIsNotSubscribedAgain(t *testing.T) {
 	h.say(alice, alice, "/search 碧蓝之海")
 	h.tap(alice, 1, "1")
 	h.tap(alice, 1, "第 3 季")
-	h.shows(1, "《碧蓝之海》第 3 季已全部在媒体库中")
+	h.shows(1, "《碧蓝之海》第 3 季已经全部在媒体库里啦")
 	h.tr.verify(t)
 }
 
@@ -54,7 +54,7 @@ func TestPartlyHeldSeasonCompletesWithLibrary(t *testing.T) {
 	h.shows(1, "媒体库已有 E13")
 	h.tap(alice, 1, "从第 1 集开始")
 	h.arrives(alice, mygo.file("S01", "E01-E12"))
-	h.shows(2, "本季请求的剧集已全部入库")
+	h.shows(2, "这一季你要的剧集全部到齐啦")
 	h.tr.verify(t)
 }
 
@@ -71,7 +71,7 @@ func TestDownloadInProgressIsShown(t *testing.T) {
 	h.say(alice, alice, "/search 迷途之子")
 	h.tap(alice, 1, "1")
 	h.tap(alice, 1, "第 1 季")
-	h.shows(1, "⬇️ 正在下载 E10–E12 · 0%")
-	h.shows(1, "已在订阅中")
+	h.shows(1, "⬇️ 正在努力下载 E10–E12 · 0%")
+	h.shows(1, "早就订阅上啦")
 	h.tr.verify(t)
 }

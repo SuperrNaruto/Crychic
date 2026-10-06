@@ -33,7 +33,7 @@ func (c card) reply(message Block, buttons [][]Button) Reply {
 func (c card) replyLines(message Text, buttons [][]Button) Reply {
 	text := append(c.text(), Divider())
 	if c.LibraryUnknown {
-		text = append(text, Line(Plain("⚠️ 媒体库状态暂时无法确认。")))
+		text = append(text, Line(Plain("⚠️ 暂时看不到媒体库里有没有它…")))
 	}
 	text = append(text, message...)
 	return Reply{Text: text, Image: c.Media.PosterURL, Buttons: buttons}
@@ -85,9 +85,9 @@ func (c card) smallPrint() Block {
 
 // downloadLine is e.g. "⬇️ 正在下载 E10–E12 · 37% · 剩余 1时5分3秒".
 func downloadLine(d Download) Block {
-	head := "⬇️ 正在下载"
+	head := "⬇️ 正在努力下载"
 	if d.Paused {
-		head = "⏸️ 下载已暂停"
+		head = "⏸️ 下载暂停中"
 	}
 	if len(d.Episodes) > 0 {
 		head += " " + EpisodeRanges(d.Episodes)

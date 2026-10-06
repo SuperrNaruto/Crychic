@@ -1,16 +1,16 @@
 >> user 1001 in chat 1001: /search 沙丘
 -> MoviePilot GET /api/v1/media/search?count=10&title=沙丘&type=media
 << sendRichMessage chat=1001 message=1
-   <h3>🔍 搜索未完成</h3>
-   <p>正在查找「沙丘」。<br>
-   ⚠️ MoviePilot 暂时不可用，请稍后再试。</p>
+   <h3>🔍 搜到一半卡住了</h3>
+   <p>刚才在找「沙丘」。<br>
+   ⚠️ MoviePilot 好像打了个盹，稍后再来找我吧 (´-ω-`)</p>
    [重试 | 1:rt:0] [重新搜索 | 1:rs:0] [取消 | 1:x:0]
 >> user 1001 taps 1:rt:0 on message 1
 -> MoviePilot GET /api/v1/media/search?count=10&title=沙丘&type=media
 << editMessageText chat=1001 message=1
-   <h3>🔍 搜索未完成</h3>
-   <p>正在查找「沙丘」。<br>
-   ⚠️ MoviePilot 暂时不可用，请稍后再试。</p>
+   <h3>🔍 搜到一半卡住了</h3>
+   <p>刚才在找「沙丘」。<br>
+   ⚠️ MoviePilot 好像打了个盹，稍后再来找我吧 (´-ω-`)</p>
    [重试 | 1:rt:0] [重新搜索 | 1:rs:0] [取消 | 1:x:0]
 << answerCallbackQuery
 >> user 1001 taps 1:rt:0 on message 1
@@ -26,7 +26,7 @@
    <img src="https://image.tmdb.org/t/p/w500/iIf5XeuuBKPtG6H7MfWLirbJGrQ.jpg"/>
    <img src="https://image.tmdb.org/t/p/w500/nQLdzYYB71sUugtSR7e7YdjF6Vx.jpg"/>
    </tg-slideshow>
-   <h3>🔍「沙丘」的搜索结果</h3>
+   <h3>🔍 帮你找到这些「沙丘」啦</h3>
    <ol start="1">
    <li value="1"><b>沙丘</b><br>
    <i>Dune · 2021 · 电影 · ⭐ 7.8</i></li>
@@ -52,4 +52,4 @@
    [重新搜索 | 1:rs:0] [取消 | 1:x:0]
 << answerCallbackQuery
 >> user 1001 taps 1:rt:0 on message 1
-<< answerCallbackQuery notice="无效的选项。"
+<< answerCallbackQuery notice="这个选项不太对哦～"

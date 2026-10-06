@@ -7,8 +7,8 @@ const (
 	actionFeature  = "h" // arg: index into the home features
 	actionAskTitle = "q" // typed answer: a title to search for
 
-	msgHomeExpired = "⌛ 这个菜单已失效，请重新 /start。"
-	msgAskTitle    = "请直接回复要搜索的片名："
+	msgHomeExpired = "⌛ 这个菜单睡着啦，发 /start 叫醒我吧～"
+	msgAskTitle    = "想找哪部呀？直接回复片名告诉我～"
 )
 
 // feature is one entry of the home menu.
@@ -43,7 +43,7 @@ func (e *Engine) home(sess session) Reply {
 	rows := grid(buttons, menuColumns)
 	text := Lines(
 		Heading(Plain("🎬 Crychic")),
-		Line(Plain("搜索并订阅电影和剧集，入库后通知你。私聊直接发送片名即可搜索。")),
+		Line(Plain("想看什么告诉我呀～我帮你找片、订阅，入库了第一时间喊你！私聊直接发片名就能搜哦 (๑•̀ㅂ•́)و✧")),
 	)
 	return Reply{Text: text, Banner: true, Buttons: rows}
 }

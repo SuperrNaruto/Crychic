@@ -24,11 +24,11 @@ const (
 	// chartOverviewRunes keeps a full page of synopses inside one message.
 	chartOverviewRunes = 300
 
-	msgCharts      = "🔥 发现"
-	msgPickChart   = "选择一个榜单："
-	msgNoExactPick = "没有对应的条目？可以用 /search 换个名字搜。"
-	msgEmptyChart  = "这个榜单暂时是空的。"
-	msgEmptyDay    = "这天没有新番放送。"
+	msgCharts      = "🔥 发现好片"
+	msgPickChart   = "今天想逛哪个榜单呀？"
+	msgNoExactPick = "没有你想要的那部？用 /search 换个名字搜搜吧～"
+	msgEmptyChart  = "这个榜单暂时空空的～"
+	msgEmptyDay    = "这天没有新番放送哦～"
 	msgDetailPage  = "查看详情页"
 
 	daysInWeek = 7
@@ -341,7 +341,7 @@ func (e *Engine) pickFromChart(ctx context.Context, sess session, pick Media) Re
 	}
 	if len(results) == 0 {
 		e.store.take(sess.id)
-		return Reply{Text: Sentence(fmt.Sprintf("🔍 没有找到「%s」的可订阅条目，可以用 /search 换个名字搜。", pick.Title))}
+		return Reply{Text: Sentence(fmt.Sprintf("🔍 没找到「%s」能订阅的条目 (｡•́︿•̀｡) 用 /search 换个名字搜搜吧～", pick.Title))}
 	}
 	sess.results = results[:min(len(results), MaxResults)]
 	if i, ok := sameMedia(sess.results, pick); ok {

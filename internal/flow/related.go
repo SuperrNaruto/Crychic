@@ -12,8 +12,8 @@ const (
 	// maxSeriesParts bounds a series list; long ones still fit a page.
 	maxSeriesParts = 20
 
-	msgNoRelated = "没有找到相似的作品。"
-	msgNoSeries  = "没有找到这部电影所属的系列。"
+	msgNoRelated = "没找到相似的作品呢～"
+	msgNoSeries  = "没找到这部电影的系列呢～"
 )
 
 // chooseRelated applies the browse-onward actions; ok is false for others.
@@ -46,10 +46,10 @@ func (e *Engine) browse(ctx context.Context, sess session, series bool) Reply {
 		return Reply{Notice: msgInvalidChoice}
 	}
 	list, limit, empty := e.backend.Related, MaxResults, msgNoRelated
-	heading := fmt.Sprintf("🔍 与「%s」相似的作品", media.Title)
+	heading := fmt.Sprintf("🔍 喜欢「%s」的话，也许会喜欢这些～", media.Title)
 	if series {
 		list, limit, empty = e.backend.Series, maxSeriesParts, msgNoSeries
-		heading = fmt.Sprintf("🎬「%s」所属系列", media.Title)
+		heading = fmt.Sprintf("🎬「%s」的同系列作品", media.Title)
 	}
 	found, err := list(ctx, media)
 	if err != nil {

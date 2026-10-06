@@ -3,18 +3,18 @@ package flow
 import "fmt"
 
 const (
-	msgNoTasks       = "当前没有下载中或整理中的任务。"
-	msgUnfollowed    = "已停止自动刷新。"
-	msgRefreshFailed = "⚠️ 暂时拿不到最新进度，稍后自动重试。"
-	msgFollowing     = "自动刷新中…"
-	msgDownloadGone  = "下载任务已结束（下载完成或被移除）。"
-	msgTransferGone  = "整理任务已结束，入库情况见入库通知或 MoviePilot 的整理历史。"
+	msgNoTasks       = "现在没有在下载或整理的任务，大家都歇着呢～"
+	msgUnfollowed    = "好，不自动刷新啦～"
+	msgRefreshFailed = "⚠️ 暂时拿不到最新进度，我等下再自动试试～"
+	msgFollowing     = "正在帮你盯着进度…"
+	msgDownloadGone  = "下载任务结束啦（下完了或者被移除了）。"
+	msgTransferGone  = "整理任务结束啦，入库情况看入库通知，或者去 MoviePilot 的整理历史瞧瞧～"
 	// idleSpeed is how MoviePilot words a stalled download's speed.
 	idleSpeed        = "0.0B"
 	maxTransferLines = 100
 )
 
-var msgFollowExpired = fmt.Sprintf("已自动刷新 %d 分钟，暂停刷新。", int(FollowFor.Minutes()))
+var msgFollowExpired = fmt.Sprintf("已经帮你盯了 %d 分钟，先歇一下～", int(FollowFor.Minutes()))
 
 // fileStateText words each transfer file state with its marker.
 var fileStateText = map[FileState]string{
@@ -32,7 +32,7 @@ var fileHead = []string{"集", "状态"}
 
 // taskList numbers downloads, then transfer jobs, matching session tasks.
 func taskList(id uint64, downloads []Download, jobs []TransferJob) listView {
-	view := listView{heading: Heading(Plain("📋 进行中的任务")), footer: []Button{{Label: "关闭", Data: data(id, actionClose, 0)}}}
+	view := listView{heading: Heading(Plain("📋 正在忙的任务")), footer: []Button{{Label: "关闭", Data: data(id, actionClose, 0)}}}
 	section := "⬇️ 下载"
 	add := func(title string, season *int, line string) {
 		n := len(view.entries) + 1
@@ -90,7 +90,7 @@ func transferView(j TransferJob) Reply {
 		text = append(text, Table(fileHead, rows...))
 	}
 	if remaining := len(j.Files) - maxTransferLines; remaining > 0 {
-		text = append(text, Remark(fmt.Sprintf("另有 %d 个文件，全部状态请在 MoviePilot 中查看。", remaining)))
+		text = append(text, Remark(fmt.Sprintf("还有 %d 个文件没列出来，完整状态去 MoviePilot 看看吧～", remaining)))
 	}
 	return Reply{Text: text, Image: j.Image}
 }

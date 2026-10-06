@@ -26,11 +26,11 @@ func TestFollowDownloadUntilItFinishes(t *testing.T) {
 	h.reports(1, downloadsPath, "downloads_mygo_later.json")
 	h.shows(1, "<td>43%</td><td>3.1MB/s</td><td>5分12秒</td>")
 	h.tap(alice, 1, stopRefresh)
-	h.shows(1, "已停止自动刷新")
+	h.shows(1, "不自动刷新啦")
 	h.tap(alice, 1, "返回任务列表")
 	h.tap(alice, 1, mygoTask)
 	h.reports(1, downloadsPath, "downloads_none.json")
-	h.shows(1, "下载任务已结束")
+	h.shows(1, "下载任务结束啦")
 	h.tr.verify(t)
 }
 
@@ -44,7 +44,7 @@ func TestFollowTransferUntilItFinishes(t *testing.T) {
 	h.reports(1, queuePath, "queue_mujica_later.json")
 	h.shows(1, "已整理 1/2 个文件")
 	h.reports(1, queuePath, "queue_none.json")
-	h.shows(1, "整理任务已结束")
+	h.shows(1, "整理任务结束啦")
 	h.tap(alice, 1, "返回任务列表")
 	h.shows(1, "<i>E10–E12 · 进度 0%</i>")
 	h.tr.verify(t)
@@ -55,11 +55,11 @@ func TestFollowTransferUntilItFinishes(t *testing.T) {
 func TestNothingToList(t *testing.T) {
 	h := start(t, scenario{routes: map[string]route{subsPath: ok("subscriptions_none.json")}})
 	h.say(alice, alice, "/tasks")
-	h.shows(1, "当前没有下载中或整理中的任务")
+	h.shows(1, "现在没有在下载或整理的任务")
 	h.say(alice, alice, "/start")
 	h.tap(alice, 2, "任务进度")
 	h.tap(alice, 2, "订阅")
-	h.shows(2, "搜索并订阅电影和剧集")
+	h.shows(2, "我帮你找片")
 	h.tr.verify(t)
 }
 
@@ -69,8 +69,8 @@ func TestClosedTaskListCannotResume(t *testing.T) {
 	h.say(alice, alice, "/tasks")
 	pick, _ := findButton(mustMessage(h, 1).rows, mygoTask)
 	h.tap(alice, 1, "关闭")
-	h.shows(1, "已关闭")
+	h.shows(1, "已经关掉啦")
 	h.tapData(alice, 1, pick)
-	h.shows(1, "这个任务列表已失效，请重新 /tasks")
+	h.shows(1, "这个任务列表过期啦，重新 /tasks")
 	h.tr.verify(t)
 }

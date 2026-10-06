@@ -1,6 +1,6 @@
 >> user 2002 in chat 2002: 沙丘
 << sendRichMessage chat=2002 message=1
-   <p>🚫 你没有使用权限。你的 Telegram ID：<code>2002</code></p>
+   <p>🚫 抱歉，你还没有使用权限哦。把你的 Telegram ID 发给管理员吧：<code>2002</code></p>
 >> user 2002 in chat 2002: /start
 << sendRichMessage chat=2002 message=2
-   <p>🚫 你没有使用权限。你的 Telegram ID：<code>2002</code></p>
+   <p>🚫 抱歉，你还没有使用权限哦。把你的 Telegram ID 发给管理员吧：<code>2002</code></p>

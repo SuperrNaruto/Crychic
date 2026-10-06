@@ -72,7 +72,7 @@ func TestSlowMetadataDoesNotAddEveryDelay(t *testing.T) {
 	if elapsed >= replyBudget {
 		t.Errorf("independent reads exceeded %s", replyBudget)
 	}
-	if !strings.Contains(mustMessage(h, 1).text, "确认订阅") {
+	if !strings.Contains(mustMessage(h, 1).text, "要订阅") {
 		t.Error("card did not reach confirmation")
 	}
 	h.tr.verify(t)

@@ -1,7 +1,7 @@
 >> user 1001 in chat 1001: /subscribe
 -> MoviePilot GET /api/v1/subscribe/
 << sendRichMessage chat=1001 message=1
-   <h3>📚 订阅列表（150）</h3>
+   <h3>📚 订阅清单（150）</h3>
    <ol start="1">
    <li value="1"><b>《绝命毒师》第 2 季</b><br>
    <i>订阅中 · 缺 13/13 集</i></li>
@@ -49,7 +49,7 @@
    [首页 | 1:o:0]
 >> user 1001 taps 1:p:1 on message 1
 << editMessageText chat=1001 message=1
-   <h3>📚 订阅列表（150）</h3>
+   <h3>📚 订阅清单（150）</h3>
    <ol start="21">
    <li value="21"><b>《绝命毒师》第 2 季</b><br>
    <i>订阅中 · 缺 13/13 集</i></li>
@@ -98,7 +98,7 @@
 << answerCallbackQuery
 >> user 1001 taps 1:p:2 on message 1
 << editMessageText chat=1001 message=1
-   <h3>📚 订阅列表（150）</h3>
+   <h3>📚 订阅清单（150）</h3>
    <ol start="41">
    <li value="41"><b>《绝命毒师》第 2 季</b><br>
    <i>订阅中 · 缺 13/13 集</i></li>
@@ -147,7 +147,7 @@
 << answerCallbackQuery
 >> user 1001 taps 1:p:3 on message 1
 << editMessageText chat=1001 message=1
-   <h3>📚 订阅列表（150）</h3>
+   <h3>📚 订阅清单（150）</h3>
    <ol start="61">
    <li value="61"><b>《绝命毒师》第 2 季</b><br>
    <i>订阅中 · 缺 13/13 集</i></li>
@@ -196,7 +196,7 @@
 << answerCallbackQuery
 >> user 1001 taps 1:p:4 on message 1
 << editMessageText chat=1001 message=1
-   <h3>📚 订阅列表（150）</h3>
+   <h3>📚 订阅清单（150）</h3>
    <ol start="81">
    <li value="81"><b>《绝命毒师》第 2 季</b><br>
    <i>订阅中 · 缺 13/13 集</i></li>
@@ -245,7 +245,7 @@
 << answerCallbackQuery
 >> user 1001 taps 1:p:5 on message 1
 << editMessageText chat=1001 message=1
-   <h3>📚 订阅列表（150）</h3>
+   <h3>📚 订阅清单（150）</h3>
    <ol start="101">
    <li value="101"><b>《绝命毒师》第 2 季</b><br>
    <i>订阅中 · 缺 13/13 集</i></li>
@@ -294,7 +294,7 @@
 << answerCallbackQuery
 >> user 1001 taps 1:p:6 on message 1
 << editMessageText chat=1001 message=1
-   <h3>📚 订阅列表（150）</h3>
+   <h3>📚 订阅清单（150）</h3>
    <ol start="121">
    <li value="121"><b>《绝命毒师》第 2 季</b><br>
    <i>订阅中 · 缺 13/13 集</i></li>
@@ -343,7 +343,7 @@
 << answerCallbackQuery
 >> user 1001 taps 1:p:7 on message 1
 << editMessageText chat=1001 message=1
-   <h3>📚 订阅列表（150）</h3>
+   <h3>📚 订阅清单（150）</h3>
    <ol start="141">
    <li value="141"><b>《绝命毒师》第 2 季</b><br>
    <i>订阅中 · 缺 13/13 集</i></li>
@@ -372,7 +372,7 @@
 << answerCallbackQuery
 >> user 1001 taps 1:p:6 on message 1
 << editMessageText chat=1001 message=1
-   <h3>📚 订阅列表（150）</h3>
+   <h3>📚 订阅清单（150）</h3>
    <ol start="121">
    <li value="121"><b>《绝命毒师》第 2 季</b><br>
    <i>订阅中 · 缺 13/13 集</i></li>

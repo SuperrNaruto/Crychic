@@ -37,7 +37,7 @@ const (
 // invisible are marks Douban leaves around titles (e.g. U+200E).
 const invisible = "\u200e\u200f "
 
-var errAuth = &flow.UserError{Message: "MoviePilot 拒绝了请求，请管理员检查 API Key。"}
+var errAuth = &flow.UserError{Message: "MoviePilot 不让我进门…请管理员检查一下 API Key。"}
 
 // Client talks to one MoviePilot instance.
 type Client struct {
@@ -310,7 +310,7 @@ func (c *Client) do(ctx context.Context, cl call, out any) error {
 // refusal turns an unsuccessful envelope (HTTP 200) into a user-facing error.
 func refusal(message string) error {
 	if message == "" {
-		message = "MoviePilot 拒绝了这次操作。"
+		message = "MoviePilot 拒绝了这次操作…"
 	}
 	return &flow.UserError{Message: message}
 }

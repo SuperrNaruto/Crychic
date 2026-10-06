@@ -11,7 +11,7 @@
    <img src="https://image.tmdb.org/t/p/w500/iIf5XeuuBKPtG6H7MfWLirbJGrQ.jpg"/>
    <img src="https://image.tmdb.org/t/p/w500/nQLdzYYB71sUugtSR7e7YdjF6Vx.jpg"/>
    </tg-slideshow>
-   <h3>🔍「沙丘」的搜索结果</h3>
+   <h3>🔍 帮你找到这些「沙丘」啦</h3>
    <ol start="1">
    <li value="1"><b>沙丘</b><br>
    <i>Dune · 2021 · 电影 · ⭐ 7.8</i></li>
@@ -44,13 +44,13 @@
    <footer>2021 · 电影 · ⭐ 6.7</footer>
    <blockquote expandable>在不远的未来，人类大量排放废气制造垃圾，远远超出地球的承载能力，地球迎来无法逆转的沙化期。动植物变异产生地球新主人“沙虫”，它们屠城略地将人类逼到灭绝边缘，幸存者只能孤注一掷，寻找大漠深处仅存的避难所“绿洲”。一支由富商、科学家、保安队长、机械师一家以及混混组成的流亡小队乘着特制装甲车踏上寻找“绿洲”的冒险旅程，但嗜血虫族却尾随在后紧追不舍。为了生存，众人不仅要躲避暴走沙虫的追击，还要应对同伴间的背叛和选择，死伤惨烈，希望渺茫。等待人类的将会是怎样的命运？</blockquote>
    <hr/>
-   <p><b>确认订阅《沙丘虫暴》？</b></p>
+   <p><b>要订阅《沙丘虫暴》吗？</b></p>
    [确认订阅 | 1:ok:0] [返回 | 1:bk:0] [取消 | 1:x:0]
    [相似推荐 | 1:r:0] [同系列 | 1:n:0]
 << answerCallbackQuery
 >> user 1001 taps 1:n:0 on message 1
 -> MoviePilot GET /api/v1/media/search?count=10&title=沙丘虫暴&type=collection
-<< answerCallbackQuery notice="没有找到这部电影所属的系列。"
+<< answerCallbackQuery notice="没找到这部电影的系列呢～"
 >> user 1001 taps 1:ok:0 on message 1
 -> MoviePilot POST /api/v1/subscribe/
    {"name":"沙丘虫暴","year":"2021","type":"电影","media_source":"themoviedb","media_id":"911972"}
@@ -60,5 +60,5 @@
    <footer>2021 · 电影 · ⭐ 6.7</footer>
    <blockquote expandable>在不远的未来，人类大量排放废气制造垃圾，远远超出地球的承载能力，地球迎来无法逆转的沙化期。动植物变异产生地球新主人“沙虫”，它们屠城略地将人类逼到灭绝边缘，幸存者只能孤注一掷，寻找大漠深处仅存的避难所“绿洲”。一支由富商、科学家、保安队长、机械师一家以及混混组成的流亡小队乘着特制装甲车踏上寻找“绿洲”的冒险旅程，但嗜血虫族却尾随在后紧追不舍。为了生存，众人不仅要躲避暴走沙虫的追击，还要应对同伴间的背叛和选择，死伤惨烈，希望渺茫。等待人类的将会是怎样的命运？</blockquote>
    <hr/>
-   <p>✅ 已订阅《沙丘虫暴》，入库后会通知你。</p>
+   <p>✅ 帮你订好《沙丘虫暴》啦，入库了我第一时间叫你！ ヾ(≧▽≦*)o</p>
 << answerCallbackQuery

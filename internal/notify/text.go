@@ -7,22 +7,22 @@ import (
 )
 
 // arrivedHeading opens every arrival notice.
-var arrivedHeading = flow.Heading(flow.Plain("📥 已入库"))
+var arrivedHeading = flow.Heading(flow.Plain("📥 入库啦"))
 
-// arrivalText is the notice for one delivery, e.g. "📥 已入库" over
-// "你请求的《碧蓝之海》第 3 季 E01–E03、E05 已入库。".
+// arrivalText is the notice for one delivery, e.g. "📥 入库啦" over
+// "你想看的《碧蓝之海》第 3 季 E01–E03、E05 到家啦！".
 func arrivalText(d delivery) flow.Text {
 	w := d.watch
 	name := fmt.Sprintf("《%s》", w.Title)
 	if w.Season == nil {
-		return withWatchLink(flow.Lines(arrivedHeading, flow.Line(flow.Plain("你请求的"), flow.Strong(name), flow.Plain("已入库，可以观看了。"))), d)
+		return withWatchLink(flow.Lines(arrivedHeading, flow.Line(flow.Plain("你想看的"), flow.Strong(name), flow.Plain("到家啦，快去看吧！(ﾉ>ω<)ﾉ"))), d)
 	}
 	name += fmt.Sprintf("第 %d 季", *w.Season)
 	text := flow.Lines(arrivedHeading, flow.Line(
-		flow.Plain("你请求的"), flow.Strong(name), flow.Plain(" "+flow.EpisodeRanges(d.episodes)+" 已入库。"),
+		flow.Plain("你想看的"), flow.Strong(name), flow.Plain(" "+flow.EpisodeRanges(d.episodes)+" 到家啦！"),
 	))
 	if d.complete {
-		text = append(text, flow.Line(flow.Plain("本季请求的剧集已全部入库。")))
+		text = append(text, flow.Line(flow.Plain("这一季你要的剧集全部到齐啦 ヾ(≧▽≦*)o")))
 	}
 	return withWatchLink(text, d)
 }

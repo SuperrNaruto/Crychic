@@ -1,5 +1,5 @@
 >> user 1001 taps 1:h:0 on message 1
 << sendRichMessage chat=1001 message=2
-   <p>⌛ 这个菜单已失效，请重新 /start。</p>
+   <p>⌛ 这个菜单睡着啦，发 /start 叫醒我吧～</p>
 << deleteMessage chat=1001 message=1
 << answerCallbackQuery

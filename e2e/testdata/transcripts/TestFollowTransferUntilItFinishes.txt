@@ -1,6 +1,6 @@
 >> user 1001 in chat 1001: /tasks
 << sendRichMessage chat=1001 message=1
-   <h3>📋 进行中的任务</h3>
+   <h3>📋 正在忙的任务</h3>
    <h4>⬇️ 下载</h4>
    <ol start="1">
    <li value="1"><b>《迷途之子!!!!!》第 1 季</b><br>
@@ -23,7 +23,7 @@
    <tr><td>E13</td><td>▶️ 整理中</td></tr>
    <tr><td>E12</td><td>⏳ 等待中</td></tr>
    </table>
-   <footer>自动刷新中…</footer>
+   <footer>正在帮你盯着进度…</footer>
    [停止刷新 | 1:u:1] [返回任务列表 | 1:l:0]
 << answerCallbackQuery
 >> MoviePilot now answers GET /api/v1/transfer/queue with queue_mujica_later.json
@@ -36,17 +36,17 @@
    <tr><td>E13</td><td>✅ 已完成</td></tr>
    <tr><td>E12</td><td>▶️ 整理中</td></tr>
    </table>
-   <footer>自动刷新中…</footer>
+   <footer>正在帮你盯着进度…</footer>
    [停止刷新 | 1:u:1] [返回任务列表 | 1:l:0]
 >> MoviePilot now answers GET /api/v1/transfer/queue with queue_none.json
 << editMessageText chat=1001 message=1
    <img src="https://image.tmdb.org/t/p/w500/xixekXvcCSZS1jXhFrYUzpCrLL6.jpg"/>
    <h3>📦 《颂乐人偶》第 1 季</h3>
-   <p>整理任务已结束，入库情况见入库通知或 MoviePilot 的整理历史。</p>
+   <p>整理任务结束啦，入库情况看入库通知，或者去 MoviePilot 的整理历史瞧瞧～</p>
    [返回任务列表 | 1:l:0]
 >> user 1001 taps 1:l:0 on message 1
 << editMessageText chat=1001 message=1
-   <h3>📋 进行中的任务</h3>
+   <h3>📋 正在忙的任务</h3>
    <h4>⬇️ 下载</h4>
    <ol start="1">
    <li value="1"><b>《迷途之子!!!!!》第 1 季</b><br>

@@ -29,10 +29,10 @@ func TestBrowseRecommendationsAndSeries(t *testing.T) {
 	h.tap(alice, 1, "相似推荐")
 	h.tap(alice, 1, "1")
 	h.tap(alice, 1, "同系列")
-	h.shows(1, "「沙丘2」所属系列")
+	h.shows(1, "「沙丘2」的同系列作品")
 	h.tap(alice, 1, "1")
 	h.tap(alice, 1, "确认订阅")
-	h.shows(1, "已订阅《沙丘》")
+	h.shows(1, "帮你订好《沙丘》")
 	h.tr.verify(t)
 }
 
@@ -47,6 +47,6 @@ func TestMovieWithoutSeriesKeepsItsCard(t *testing.T) {
 	h.tap(alice, 1, "8")
 	h.tap(alice, 1, "同系列")
 	h.tap(alice, 1, "确认订阅")
-	h.shows(1, "已订阅《沙丘虫暴》")
+	h.shows(1, "帮你订好《沙丘虫暴》")
 	h.tr.verify(t)
 }
