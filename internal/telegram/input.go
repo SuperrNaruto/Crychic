@@ -7,7 +7,7 @@ import (
 
 	"github.com/go-telegram/bot/models"
 
-	"github.com/SuperrNauto/Crychic/internal/flow"
+	"github.com/SuperrNaruto/Crychic/internal/flow"
 )
 
 // Private text and commands share an input lane (message zero is not a

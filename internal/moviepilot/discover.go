@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/SuperrNauto/Crychic/internal/flow"
+	"github.com/SuperrNaruto/Crychic/internal/flow"
 )
 
 // chartPaths are MoviePilot's recommendation lists behind each chart.

@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/SuperrNauto/Crychic/internal/flow"
+	"github.com/SuperrNaruto/Crychic/internal/flow"
 )
 
 const statePaused = "paused"

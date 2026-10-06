@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/SuperrNauto/Crychic/internal/flow"
+	"github.com/SuperrNaruto/Crychic/internal/flow"
 )
 
 type subscriptionRecord struct {

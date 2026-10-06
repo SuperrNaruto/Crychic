@@ -7,7 +7,7 @@ package notify
 import (
 	"context"
 
-	"github.com/SuperrNauto/Crychic/internal/flow"
+	"github.com/SuperrNaruto/Crychic/internal/flow"
 )
 
 // Transfer is one file MoviePilot moved into the library.

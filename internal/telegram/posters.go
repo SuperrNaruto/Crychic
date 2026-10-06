@@ -16,7 +16,7 @@ import (
 
 	"github.com/go-telegram/bot/models"
 
-	"github.com/SuperrNauto/Crychic/internal/flow"
+	"github.com/SuperrNaruto/Crychic/internal/flow"
 )
 
 const (

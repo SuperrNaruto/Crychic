@@ -1,4 +1,4 @@
-module github.com/SuperrNauto/Crychic
+module github.com/SuperrNaruto/Crychic
 
 go 1.25.0
 

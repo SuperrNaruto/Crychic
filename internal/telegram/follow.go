@@ -4,7 +4,7 @@ import (
 	"context"
 	"time"
 
-	"github.com/SuperrNauto/Crychic/internal/flow"
+	"github.com/SuperrNaruto/Crychic/internal/flow"
 )
 
 // messageKey identifies one message the bot may keep refreshing.

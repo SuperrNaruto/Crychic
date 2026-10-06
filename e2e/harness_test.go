@@ -13,8 +13,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/SuperrNauto/Crychic/internal/app"
-	"github.com/SuperrNauto/Crychic/internal/config"
+	"github.com/SuperrNaruto/Crychic/internal/app"
+	"github.com/SuperrNaruto/Crychic/internal/config"
 )
 
 const (

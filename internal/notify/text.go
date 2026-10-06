@@ -3,7 +3,7 @@ package notify
 import (
 	"fmt"
 
-	"github.com/SuperrNauto/Crychic/internal/flow"
+	"github.com/SuperrNaruto/Crychic/internal/flow"
 )
 
 // arrivedHeading opens every arrival notice.

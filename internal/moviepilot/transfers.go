@@ -8,7 +8,7 @@ import (
 	"slices"
 	"strconv"
 
-	"github.com/SuperrNauto/Crychic/internal/notify"
+	"github.com/SuperrNaruto/Crychic/internal/notify"
 )
 
 const (

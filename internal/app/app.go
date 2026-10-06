@@ -10,12 +10,12 @@ import (
 	"sync"
 	"time"
 
-	"github.com/SuperrNauto/Crychic/internal/bangumi"
-	"github.com/SuperrNauto/Crychic/internal/config"
-	"github.com/SuperrNauto/Crychic/internal/flow"
-	"github.com/SuperrNauto/Crychic/internal/moviepilot"
-	"github.com/SuperrNauto/Crychic/internal/notify"
-	"github.com/SuperrNauto/Crychic/internal/telegram"
+	"github.com/SuperrNaruto/Crychic/internal/bangumi"
+	"github.com/SuperrNaruto/Crychic/internal/config"
+	"github.com/SuperrNaruto/Crychic/internal/flow"
+	"github.com/SuperrNaruto/Crychic/internal/moviepilot"
+	"github.com/SuperrNaruto/Crychic/internal/notify"
+	"github.com/SuperrNaruto/Crychic/internal/telegram"
 )
 
 const (

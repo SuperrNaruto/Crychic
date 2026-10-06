@@ -7,7 +7,7 @@ import (
 
 	"github.com/go-telegram/bot/models"
 
-	"github.com/SuperrNauto/Crychic/internal/flow"
+	"github.com/SuperrNaruto/Crychic/internal/flow"
 )
 
 // richMessage renders flow text as a Telegram rich message, with image (an

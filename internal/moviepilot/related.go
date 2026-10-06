@@ -10,7 +10,7 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/SuperrNauto/Crychic/internal/flow"
+	"github.com/SuperrNaruto/Crychic/internal/flow"
 )
 
 const (
