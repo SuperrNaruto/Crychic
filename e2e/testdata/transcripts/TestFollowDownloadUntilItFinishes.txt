@@ -12,7 +12,7 @@
    <h4>⬇️ 下载</h4>
    <ol start="1">
    <li value="1"><b>《迷途之子!!!!!》第 1 季</b><br>
-   <i>E10–E12 · 进度 0%</i></li>
+   <i>E10–E12 · 17.5 GiB · 进度 0%</i></li>
    </ol>
    <h4>📦 整理</h4>
    <ol start="2">
@@ -27,8 +27,8 @@
    <img src="https://image.tmdb.org/t/p/w500/dDknWHLYaQB76QSViNdzXOC5v64.jpg"/>
    <h3>⬇️ 《迷途之子!!!!!》第 1 季 E10–E12</h3>
    <table bordered compact>
-   <tr><th>进度</th></tr>
-   <tr><td>0%</td></tr>
+   <tr><th>大小</th><th>进度</th></tr>
+   <tr><td>17.5 GiB</td><td>0%</td></tr>
    </table>
    <footer>正在帮你盯着进度…</footer>
    [停止刷新 | 1:u:0] [返回任务列表 | 1:l:0]
@@ -38,8 +38,8 @@
    <img src="tg://photo?id=p0"/>
    <h3>⬇️ 《迷途之子!!!!!》第 1 季 E10–E12</h3>
    <table bordered compact>
-   <tr><th>进度</th><th>速度</th><th>剩余</th></tr>
-   <tr><td>43%</td><td>3.1MB/s</td><td>5分12秒</td></tr>
+   <tr><th>大小</th><th>进度</th><th>速度</th><th>剩余</th></tr>
+   <tr><td>17.5 GiB</td><td>43%</td><td>3.1MB/s</td><td>5分12秒</td></tr>
    </table>
    <footer>正在帮你盯着进度…</footer>
    [停止刷新 | 1:u:0] [返回任务列表 | 1:l:0]
@@ -48,8 +48,8 @@
    <img src="tg://photo?id=p0"/>
    <h3>⬇️ 《迷途之子!!!!!》第 1 季 E10–E12</h3>
    <table bordered compact>
-   <tr><th>进度</th><th>速度</th><th>剩余</th></tr>
-   <tr><td>43%</td><td>3.1MB/s</td><td>5分12秒</td></tr>
+   <tr><th>大小</th><th>进度</th><th>速度</th><th>剩余</th></tr>
+   <tr><td>17.5 GiB</td><td>43%</td><td>3.1MB/s</td><td>5分12秒</td></tr>
    </table>
    <footer>好，不自动刷新啦～</footer>
    [继续刷新 | 1:k:0] [返回任务列表 | 1:l:0]
@@ -60,7 +60,7 @@
    <h4>⬇️ 下载</h4>
    <ol start="1">
    <li value="1"><b>《迷途之子!!!!!》第 1 季</b><br>
-   <i>E10–E12 · 进度 43%</i></li>
+   <i>E10–E12 · 17.5 GiB · 进度 43%</i></li>
    </ol>
    <h4>📦 整理</h4>
    <ol start="2">
@@ -75,8 +75,8 @@
    <img src="tg://photo?id=p0"/>
    <h3>⬇️ 《迷途之子!!!!!》第 1 季 E10–E12</h3>
    <table bordered compact>
-   <tr><th>进度</th><th>速度</th><th>剩余</th></tr>
-   <tr><td>43%</td><td>3.1MB/s</td><td>5分12秒</td></tr>
+   <tr><th>大小</th><th>进度</th><th>速度</th><th>剩余</th></tr>
+   <tr><td>17.5 GiB</td><td>43%</td><td>3.1MB/s</td><td>5分12秒</td></tr>
    </table>
    <footer>正在帮你盯着进度…</footer>
    [停止刷新 | 1:u:0] [返回任务列表 | 1:l:0]

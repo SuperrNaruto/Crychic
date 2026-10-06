@@ -46,7 +46,7 @@ func TestFollowTransferUntilItFinishes(t *testing.T) {
 	h.reports(1, queuePath, "queue_none.json")
 	h.shows(1, "整理任务结束啦")
 	h.tap(alice, 1, "返回任务列表")
-	h.shows(1, "<i>E10–E12 · 进度 0%</i>")
+	h.shows(1, "<i>E10–E12 · 17.5 GiB · 进度 0%</i>")
 	h.tr.verify(t)
 }
 

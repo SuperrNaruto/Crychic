@@ -100,6 +100,7 @@ type Download struct {
 	Image    string
 	Season   *int    // nil for movies or when unknown
 	Episodes []int   // empty when unknown
+	Size     float64 // bytes being downloaded, 0 when unknown
 	Progress float64 // percent
 	Paused   bool
 	Speed    string // download speed as the backend words it

@@ -12,7 +12,11 @@ const (
 	// idleSpeed is how MoviePilot words a stalled download's speed.
 	idleSpeed        = "0.0B"
 	maxTransferLines = 100
+	bytesPerKiB      = 1024
 )
+
+// sizeUnits word sizes the way qBittorrent does.
+var sizeUnits = []string{"B", "KiB", "MiB", "GiB", "TiB"}
 
 var msgFollowExpired = fmt.Sprintf("已经帮你盯了 %d 分钟，先歇一下～", int(FollowFor.Minutes()))
 
@@ -25,7 +29,7 @@ var fileStateText = map[FileState]string{
 }
 
 // downloadHead names the download view's table columns.
-var downloadHead = []string{"进度", "速度", "剩余"}
+var downloadHead = []string{"大小", "进度", "速度", "剩余"}
 
 // fileHead names the transfer view's table columns.
 var fileHead = []string{"集", "状态"}
@@ -45,7 +49,7 @@ func taskList(id uint64, downloads []Download, jobs []TransferJob) listView {
 		view.entries = append(view.entries, listEntry{text: text, buttons: []Button{{Label: fmt.Sprint(n), Data: data(id, actionTask, n-1)}}})
 	}
 	for _, d := range downloads {
-		add(d.Title, d.Season, joinNonEmpty(" · ", EpisodeRanges(d.Episodes), progress(d)))
+		add(d.Title, d.Season, joinNonEmpty(" · ", EpisodeRanges(d.Episodes), size(d.Size), progress(d)))
 	}
 	section = "📦 整理"
 	for _, j := range jobs {
@@ -54,8 +58,8 @@ func taskList(id uint64, downloads []Download, jobs []TransferJob) listView {
 	return view
 }
 
-// downloadView is one download, its progress, speed and time left in a
-// table, e.g. 37% | 3.1MB/s | 5分12秒.
+// downloadView is one download, its size, progress, speed and time left in
+// a table, e.g. 17.5 GiB | 37% | 3.1MB/s | 5分12秒.
 func downloadView(d Download) Reply {
 	icon := "⬇️ "
 	if d.Paused {
@@ -70,7 +74,7 @@ func downloadView(d Download) Reply {
 	if !d.Paused && d.Speed != "" && d.Speed != idleSpeed {
 		speed = d.Speed + "/s"
 	}
-	row := []Span{Plain(percent), Plain(speed), Plain(d.Left)}
+	row := []Span{Plain(size(d.Size)), Plain(percent), Plain(speed), Plain(d.Left)}
 	return Reply{Text: Lines(Heading(Plain(icon+head)), Table(downloadHead, row)), Image: d.Image}
 }
 
@@ -100,6 +104,19 @@ func progress(d Download) string {
 		return fmt.Sprintf("已暂停 %.0f%%", d.Progress)
 	}
 	return fmt.Sprintf("进度 %.0f%%", d.Progress)
+}
+
+// size is e.g. "17.5 GiB", "" when unknown.
+func size(bytes float64) string {
+	if bytes <= 0 {
+		return ""
+	}
+	unit := 0
+	for bytes >= bytesPerKiB && unit < len(sizeUnits)-1 {
+		bytes /= bytesPerKiB
+		unit++
+	}
+	return fmt.Sprintf("%.1f %s", bytes, sizeUnits[unit])
 }
 
 func filesDone(j TransferJob) string {
