@@ -32,7 +32,7 @@
 -> Bangumi GET /v0/subjects/614640
 -> Bangumi GET /v0/subjects/624923
 << editMessageText chat=1001 message=1
-   <h3>🎌 新番放送 · 星期一（今天） · 第 1/1 页</h3>
+   <h3>🎌 新番放送 · 星期一（今天）</h3>
    <h4>2026-10-05 首播</h4>
    <ol start="1">
    <li value="1"><a href="https://bgm.tv/subject/390200"><b>列女战纪：女娲石记</b></a></li>
@@ -92,7 +92,7 @@
 -> MoviePilot GET /api/v1/media/search?count=10&title=列女战纪：女娲石记&type=media
 -> Bangumi GET /v0/subjects/390200
 << editMessageText chat=1001 message=1
-   <h3>🎌 新番放送 · 星期一（今天） · 第 1/1 页</h3>
+   <h3>🎌 新番放送 · 星期一（今天）</h3>
    <h4>2026-10-05 首播</h4>
    <ol start="1">
    <li value="1"><details><summary><b>列女战纪：女娲石记</b></summary>
@@ -139,7 +139,7 @@
 -> Bangumi GET /v0/subjects/505550
 -> Bangumi GET /v0/subjects/513878
 << editMessageText chat=1001 message=1
-   <h3>🎌 新番放送 · 星期二 · 第 1/1 页</h3>
+   <h3>🎌 新番放送 · 星期二</h3>
    <h4>2026-10-13 首播</h4>
    <ol start="1">
    <li value="1"><details><summary><b>Dark Machine The Animation</b> · <i>⭐ 7.8</i></summary>
@@ -168,7 +168,7 @@
 << answerCallbackQuery
 >> user 1001 taps 1:w:3 on message 1
 << editMessageText chat=1001 message=1
-   <h3>🎌 新番放送 · 星期三 · 第 1/1 页</h3>
+   <h3>🎌 新番放送 · 星期三</h3>
    <p>这天没有新番放送。</p>
    [一 | 1:w:1] [二 | 1:w:2] [·三· | 1:w:3] [四 | 1:w:4] [五 | 1:w:5] [六 | 1:w:6] [日 | 1:w:7]
    [返回榜单 | 1:b:0] [首页 | 1:o:0]

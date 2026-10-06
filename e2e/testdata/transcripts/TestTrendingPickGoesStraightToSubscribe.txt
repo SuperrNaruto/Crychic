@@ -9,7 +9,7 @@
 >> user 1001 taps 1:d:0 on message 1
 -> MoviePilot GET /api/v1/recommend/tmdb_trending
 << editMessageText chat=1001 message=1
-   <h3>🔥 TMDB 流行趋势 · 第 1/2 页</h3>
+   <h3>🔥 TMDB 流行趋势</h3>
    <ol start="1">
    <li value="1"><details><summary><b>挖掘者</b> · <i>2026 · 电影 · ⭐ 7.5</i></summary>
    <p>世界上最有权势的男子极力证明自己其实是人类的救世主，结果等来了他酝酿的灾难要摧毁万物。</p>
@@ -52,6 +52,7 @@
    </details>
    </li>
    </ol>
+   <footer>第 1/2 页</footer>
    [1 | 1:i:0] [2 | 1:i:1] [3 | 1:i:2] [4 | 1:i:3]
    [5 | 1:i:4] [6 | 1:i:5] [7 | 1:i:6] [8 | 1:i:7]
    [下一页 › | 1:g:1]
@@ -73,7 +74,7 @@
 << answerCallbackQuery
 >> user 1001 taps 1:bk:0 on message 1
 << editMessageText chat=1001 message=1
-   <h3>🔥 TMDB 流行趋势 · 第 1/2 页</h3>
+   <h3>🔥 TMDB 流行趋势</h3>
    <ol start="1">
    <li value="1"><details><summary><b>挖掘者</b> · <i>2026 · 电影 · ⭐ 7.5</i></summary>
    <p>世界上最有权势的男子极力证明自己其实是人类的救世主，结果等来了他酝酿的灾难要摧毁万物。</p>
@@ -116,6 +117,7 @@
    </details>
    </li>
    </ol>
+   <footer>第 1/2 页</footer>
    [1 | 1:i:0] [2 | 1:i:1] [3 | 1:i:2] [4 | 1:i:3]
    [5 | 1:i:4] [6 | 1:i:5] [7 | 1:i:6] [8 | 1:i:7]
    [下一页 › | 1:g:1]

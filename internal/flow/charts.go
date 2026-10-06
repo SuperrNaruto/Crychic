@@ -182,10 +182,13 @@ func (e *Engine) chartPage(ctx context.Context, sess session, page int) Reply {
 	}
 	sess.page = page
 	e.store.put(sess)
-	text := Lines(Heading(Plain(fmt.Sprintf("%s %s%s · 第 %d/%d 页", c.icon, c.label, e.dayName(sess.day), page+1, pages))))
+	text := Lines(Heading(Plain(fmt.Sprintf("%s %s%s", c.icon, c.label, e.dayName(sess.day)))))
 	text = append(text, pickLines(at, sess.picks[at.first:at.end], c.aired)...)
 	if hi == lo {
 		text = append(text, Line(Plain(emptyNote(c))))
+	}
+	if pages > 1 {
+		text = append(text, Remark(fmt.Sprintf("第 %d/%d 页", page+1, pages)))
 	}
 	rows := numberGrid(sess.id, at)
 	if nav := pager(sess.id, page, pages); len(nav) > 0 {

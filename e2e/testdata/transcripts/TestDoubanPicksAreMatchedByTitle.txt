@@ -9,7 +9,7 @@
 >> user 1001 taps 1:d:2 on message 1
 -> MoviePilot GET /api/v1/recommend/douban_tv_hot
 << editMessageText chat=1001 message=1
-   <h3>📺 豆瓣热门剧集 · 第 1/2 页</h3>
+   <h3>📺 豆瓣热门剧集</h3>
    <ol start="1">
    <li value="1"><details><summary><b>深渊无间</b> · <i>2026 · ⭐ 7.3</i></summary>
    <p>中国大陆 / 剧情 悬疑 犯罪 / 刘海波 / 任嘉伦 秦俊杰</p>
@@ -52,6 +52,7 @@
    </details>
    </li>
    </ol>
+   <footer>第 1/2 页</footer>
    [1 | 1:i:0] [2 | 1:i:1] [3 | 1:i:2] [4 | 1:i:3]
    [5 | 1:i:4] [6 | 1:i:5] [7 | 1:i:6] [8 | 1:i:7]
    [下一页 › | 1:g:1]
@@ -88,7 +89,7 @@
 >> user 1001 taps 2:d:2 on message 2
 -> MoviePilot GET /api/v1/recommend/douban_tv_hot
 << editMessageText chat=1001 message=2
-   <h3>📺 豆瓣热门剧集 · 第 1/2 页</h3>
+   <h3>📺 豆瓣热门剧集</h3>
    <ol start="1">
    <li value="1"><details><summary><b>深渊无间</b> · <i>2026 · ⭐ 7.3</i></summary>
    <p>中国大陆 / 剧情 悬疑 犯罪 / 刘海波 / 任嘉伦 秦俊杰</p>
@@ -131,6 +132,7 @@
    </details>
    </li>
    </ol>
+   <footer>第 1/2 页</footer>
    [1 | 2:i:0] [2 | 2:i:1] [3 | 2:i:2] [4 | 2:i:3]
    [5 | 2:i:4] [6 | 2:i:5] [7 | 2:i:6] [8 | 2:i:7]
    [下一页 › | 2:g:1]
@@ -138,7 +140,7 @@
 << answerCallbackQuery
 >> user 1001 taps 2:g:1 on message 2
 << editMessageText chat=1001 message=2
-   <h3>📺 豆瓣热门剧集 · 第 2/2 页</h3>
+   <h3>📺 豆瓣热门剧集</h3>
    <ol start="9">
    <li value="9"><details><summary><b>花开锦绣</b> · <i>2026 · ⭐ 7.2</i></summary>
    <p>中国大陆 / 剧情 古装 / 邓科 / 丁禹兮 邓恩熙</p>
@@ -151,6 +153,7 @@
    </details>
    </li>
    </ol>
+   <footer>第 2/2 页</footer>
    [9 | 2:i:8] [10 | 2:i:9]
    [‹ 上一页 | 2:g:0]
    [返回榜单 | 2:b:0] [首页 | 2:o:0]
@@ -173,7 +176,7 @@
 << answerCallbackQuery
 >> user 1001 taps 2:bk:0 on message 2
 << editMessageText chat=1001 message=2
-   <h3>📺 豆瓣热门剧集 · 第 2/2 页</h3>
+   <h3>📺 豆瓣热门剧集</h3>
    <ol start="9">
    <li value="9"><details><summary><b>花开锦绣</b> · <i>2026 · ⭐ 7.2</i></summary>
    <p>中国大陆 / 剧情 古装 / 邓科 / 丁禹兮 邓恩熙</p>
@@ -186,6 +189,7 @@
    </details>
    </li>
    </ol>
+   <footer>第 2/2 页</footer>
    [9 | 2:i:8] [10 | 2:i:9]
    [‹ 上一页 | 2:g:0]
    [返回榜单 | 2:b:0] [首页 | 2:o:0]

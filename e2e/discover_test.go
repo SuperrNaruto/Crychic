@@ -29,7 +29,7 @@ func TestTrendingPickGoesStraightToSubscribe(t *testing.T) {
 	h.tap(alice, 1, "1")
 	h.shows(1, "确认订阅《挖掘者》")
 	h.tap(alice, 1, "返回")
-	h.shows(1, "TMDB 流行趋势 · 第 1/2 页")
+	h.shows(1, "第 1/2 页")
 	h.tr.verify(t)
 }
 
@@ -96,7 +96,7 @@ func TestDoubanPicksAreMatchedByTitle(t *testing.T) {
 	h.tap(alice, 2, "10")
 	h.shows(2, "没有对应的条目？")
 	h.tap(alice, 2, "返回")
-	h.shows(2, "豆瓣热门剧集 · 第 2/")
+	h.shows(2, "第 2/2 页")
 	h.mp.setRoute(searchPath, ok("search_calendar_psyren.json"))
 	h.tap(alice, 2, "10")
 	h.shows(2, "没有对应的条目？")
@@ -138,7 +138,7 @@ func TestAnimeCalendarShowsEachWeekday(t *testing.T) {
 	h.shows(1, "补天的时代已经过去")
 	h.shows(1, "bgm.tv/subject/390200")
 	h.tap(alice, 1, "二")
-	h.shows(1, "星期二 · 第 1/1 页")
+	h.shows(1, "星期二</h3>")
 	h.shows(1, "2026-10-13 首播")
 	h.tap(alice, 1, "三")
 	h.shows(1, "这天没有新番放送")
