@@ -92,7 +92,7 @@ func (w *richWriter) item(b flow.Block) {
 		w.block(fmt.Sprintf(`<ol start="%d">`, b.Number))
 		w.open = "ol"
 	}
-	head := renderSpans(b.Spans) + renderFacts(b.Facts, b.Tag)
+	head := renderSpans(b.Spans) + renderFacts(b)
 	if len(b.Body) > 0 {
 		head = "<details><summary>" + head + "</summary>" + renderRich(b.Body, "") + "</details>"
 	}
@@ -100,8 +100,9 @@ func (w *richWriter) item(b flow.Block) {
 }
 
 // renderFacts puts an entry's facts in italics on a line below its name,
-// its tag highlighted after them.
-func renderFacts(facts, tag string) string {
+// or after it for a brief entry, its tag highlighted after them.
+func renderFacts(b flow.Block) string {
+	facts, tag := b.Facts, b.Tag
 	if facts == "" && tag == "" {
 		return ""
 	}
@@ -111,6 +112,9 @@ func renderFacts(facts, tag string) string {
 	}
 	if tag != "" {
 		out += "<mark>" + html.EscapeString(tag) + "</mark>"
+	}
+	if b.Brief {
+		return " · <i>" + out + "</i>"
 	}
 	return "<br><i>" + out + "</i>"
 }

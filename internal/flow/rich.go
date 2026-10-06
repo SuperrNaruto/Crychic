@@ -46,6 +46,7 @@ type Block struct {
 	Number int      // Item only
 	Facts  string   // Item only: secondary facts, e.g. "Dune · 2021 · 电影"
 	Tag    string   // Item only: a fact singled out after the others, e.g. 你请求的
+	Brief  bool     // Item only: the facts follow the name on its line
 	Body   Text     // Item only: shown once the reader opens the entry by its name
 	Head   []string // Tabular only
 	Rows   [][]Span // Tabular only: a span per cell

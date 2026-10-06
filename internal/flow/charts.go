@@ -250,7 +250,7 @@ func pickLines(at span, picks []Media, aired bool) Text {
 // pickLook says which metadata a chart line repeats.
 type pickLook struct{ year, kind bool }
 
-// pickEntry is a short chart entry, e.g. "1. **沙丘**" over "_2021 · ⭐ 7.8_";
+// pickEntry is a short chart entry on one line, e.g. "1. **沙丘** · _2021 · ⭐ 7.8_";
 // the original title waits for the card. A pick with a synopsis opens by
 // its name to show it, with the link to the media's page below; one
 // without has its name linked instead.
@@ -262,10 +262,12 @@ func pickEntry(n int, m Media, look pickLook) Block {
 	if look.kind {
 		kind = m.Kind.String()
 	}
+	item := entry(n, Linked(Strong(m.Title), m.Link), y, kind, rating(m.Rating))
+	item.Brief = true
 	if m.Overview == "" {
-		return entry(n, Linked(Strong(m.Title), m.Link), y, kind, rating(m.Rating))
+		return item
 	}
-	item := entry(n, Strong(m.Title), y, kind, rating(m.Rating))
+	item.Spans = []Span{Strong(m.Title)}
 	item.Body = Lines(Line(Plain(truncate(m.Overview, chartOverviewRunes))))
 	if m.Link != "" {
 		item.Body = append(item.Body, Line(), Line(Linked(Plain(msgDetailPage), m.Link)))
