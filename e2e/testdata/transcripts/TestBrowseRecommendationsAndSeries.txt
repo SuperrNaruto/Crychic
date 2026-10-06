@@ -29,10 +29,7 @@
 << editMessageText chat=1001 message=1
    <img src="https://image.tmdb.org/t/p/w500/6hsJknqlPceFxExOe87z5VGgNG9.jpg"/>
    <h3>🎬 <a href="https://www.themoviedb.org/movie/438631">沙丘</a></h3>
-   <footer><i>Dune</i><br>
-   2021 · 电影 · ⭐ 7.8<br>
-   科幻 / 冒险 · 156 分钟<br>
-   主演：提莫西·查拉梅、丽贝卡·弗格森、奥斯卡·伊萨克</footer>
+   <footer><i>Dune</i> · 2021 · 电影 · ⭐ 7.8 · 科幻 / 冒险 · 156 分钟 · 主演：提莫西·查拉梅、丽贝卡·弗格森、奥斯卡·伊萨克</footer>
    <blockquote expandable>电影《沙丘》为观众呈现了一段神秘而感人至深的英雄之旅。天赋异禀的少年保罗·厄崔迪（提莫西·查拉梅 饰）被命运指引，为了保卫自己的家族和人民，决心前往浩瀚宇宙间最危险的星球，开启一场惊心动魄的冒险。与此同时，各路势力为了抢夺这颗星球上一种能够释放人类最大潜力的珍贵资源而纷纷加入战场。最终，唯有那些能够战胜内心恐惧的人才能生存下去。</blockquote>
    <hr/>
    <p><b>确认订阅《沙丘》？</b></p>
@@ -71,10 +68,7 @@
 << editMessageText chat=1001 message=1
    <img src="https://image.tmdb.org/t/p/w500/9uaCR4HEZqxUqgORq0uZqTNm43G.jpg"/>
    <h3>🎬 <a href="https://www.themoviedb.org/movie/693134">沙丘2</a></h3>
-   <footer><i>Dune: Part Two</i><br>
-   2024 · 电影 · ⭐ 8.1<br>
-   科幻 / 冒险 · 166 分钟<br>
-   主演：提莫西·查拉梅、赞达亚·科尔曼、丽贝卡·弗格森</footer>
+   <footer><i>Dune: Part Two</i> · 2024 · 电影 · ⭐ 8.1 · 科幻 / 冒险 · 166 分钟 · 主演：提莫西·查拉梅、赞达亚·科尔曼、丽贝卡·弗格森</footer>
    <blockquote expandable>《沙丘2》承接第一部剧情，讲述保罗·厄崔迪（提莫西·查拉梅 Timothée Chalamet 饰）被帕迪沙皇帝和哈克南人联手灭族后，在厄拉科斯星球遇到弗雷曼女战士契妮（赞达亚 Zendaya 饰）以及加入弗雷曼人后展开的传奇旅程。保罗与让他家破人亡的阴谋家们开战，同时面临着一生所爱与已知宇宙命运的两难选择。</blockquote>
    <hr/>
    <p><b>确认订阅《沙丘2》？</b></p>
@@ -104,10 +98,7 @@
 << editMessageText chat=1001 message=1
    <img src="https://image.tmdb.org/t/p/w500/6hsJknqlPceFxExOe87z5VGgNG9.jpg"/>
    <h3>🎬 <a href="https://www.themoviedb.org/movie/438631">沙丘</a></h3>
-   <footer><i>Dune</i><br>
-   2021 · 电影 · ⭐ 7.8<br>
-   科幻 / 冒险 · 156 分钟<br>
-   主演：提莫西·查拉梅、丽贝卡·弗格森、奥斯卡·伊萨克</footer>
+   <footer><i>Dune</i> · 2021 · 电影 · ⭐ 7.8 · 科幻 / 冒险 · 156 分钟 · 主演：提莫西·查拉梅、丽贝卡·弗格森、奥斯卡·伊萨克</footer>
    <blockquote expandable>电影《沙丘》为观众呈现了一段神秘而感人至深的英雄之旅。天赋异禀的少年保罗·厄崔迪（提莫西·查拉梅 饰）被命运指引，为了保卫自己的家族和人民，决心前往浩瀚宇宙间最危险的星球，开启一场惊心动魄的冒险。与此同时，各路势力为了抢夺这颗星球上一种能够释放人类最大潜力的珍贵资源而纷纷加入战场。最终，唯有那些能够战胜内心恐惧的人才能生存下去。</blockquote>
    <hr/>
    <p><b>确认订阅《沙丘》？</b></p>
@@ -120,10 +111,7 @@
 << editMessageText chat=1001 message=1
    <img src="https://image.tmdb.org/t/p/w500/6hsJknqlPceFxExOe87z5VGgNG9.jpg"/>
    <h3>🎬 <a href="https://www.themoviedb.org/movie/438631">沙丘</a></h3>
-   <footer><i>Dune</i><br>
-   2021 · 电影 · ⭐ 7.8<br>
-   科幻 / 冒险 · 156 分钟<br>
-   主演：提莫西·查拉梅、丽贝卡·弗格森、奥斯卡·伊萨克</footer>
+   <footer><i>Dune</i> · 2021 · 电影 · ⭐ 7.8 · 科幻 / 冒险 · 156 分钟 · 主演：提莫西·查拉梅、丽贝卡·弗格森、奥斯卡·伊萨克</footer>
    <blockquote expandable>电影《沙丘》为观众呈现了一段神秘而感人至深的英雄之旅。天赋异禀的少年保罗·厄崔迪（提莫西·查拉梅 饰）被命运指引，为了保卫自己的家族和人民，决心前往浩瀚宇宙间最危险的星球，开启一场惊心动魄的冒险。与此同时，各路势力为了抢夺这颗星球上一种能够释放人类最大潜力的珍贵资源而纷纷加入战场。最终，唯有那些能够战胜内心恐惧的人才能生存下去。</blockquote>
    <hr/>
    <p>✅ 已订阅《沙丘》，入库后会通知你。</p>
