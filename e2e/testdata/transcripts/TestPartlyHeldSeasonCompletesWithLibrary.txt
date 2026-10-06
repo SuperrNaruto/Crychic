@@ -18,10 +18,10 @@
 << editMessageText chat=1001 message=1
    <img src="https://image.tmdb.org/t/p/w500/dDknWHLYaQB76QSViNdzXOC5v64.jpg"/>
    <h3>📺 <a href="https://www.themoviedb.org/tv/224207">迷途之子!!!!!</a></h3>
-   <p><i>BanG Dream! It&#39;s MyGO!!!!!</i><br>
+   <footer><i>BanG Dream! It&#39;s MyGO!!!!!</i><br>
    2023 · 电视剧 · ⭐ 8.0<br>
    动画 / 剧情 · 共 1 季 13 集<br>
-   主演：羊宫妃那、立石凛、青木阳菜</p>
+   主演：羊宫妃那、立石凛、青木阳菜</footer>
    <blockquote expandable>“你能，和我组一辈子乐队吗？”……高一的春末，羽丘女子学园的所有人都加入了乐队，晚入学的爱音为了尽快融入班级，急急忙忙地寻找着乐队成员。这时她得知，「羽丘的不可思议女孩」灯还没有加入乐队，于是爱音不由自主地向她打起了招呼，但是……这是遍体鳞伤又狼狈不堪的，我们的＜音乐呐喊＞。迷失方向也无所谓，在迷茫中前进吧！</blockquote>
    <hr/>
    <p><b>选择要订阅的季：</b></p>
@@ -40,10 +40,10 @@
 << editMessageText chat=1001 message=1
    <img src="https://image.tmdb.org/t/p/w500/dDknWHLYaQB76QSViNdzXOC5v64.jpg"/>
    <h3>📺 <a href="https://www.themoviedb.org/tv/224207">迷途之子!!!!!</a></h3>
-   <p><i>BanG Dream! It&#39;s MyGO!!!!!</i><br>
+   <footer><i>BanG Dream! It&#39;s MyGO!!!!!</i><br>
    2023 · 电视剧 · ⭐ 8.0<br>
    动画 / 剧情 · 共 1 季 13 集<br>
-   主演：羊宫妃那、立石凛、青木阳菜</p>
+   主演：羊宫妃那、立石凛、青木阳菜</footer>
    <blockquote expandable>“你能，和我组一辈子乐队吗？”……高一的春末，羽丘女子学园的所有人都加入了乐队，晚入学的爱音为了尽快融入班级，急急忙忙地寻找着乐队成员。这时她得知，「羽丘的不可思议女孩」灯还没有加入乐队，于是爱音不由自主地向她打起了招呼，但是……这是遍体鳞伤又狼狈不堪的，我们的＜音乐呐喊＞。迷失方向也无所谓，在迷茫中前进吧！</blockquote>
    <hr/>
    <p><b>确认订阅《迷途之子!!!!!》第 1 季（共 13 集，媒体库已有 E13）？</b></p>
@@ -57,10 +57,10 @@
 << editMessageText chat=1001 message=1
    <img src="https://image.tmdb.org/t/p/w500/dDknWHLYaQB76QSViNdzXOC5v64.jpg"/>
    <h3>📺 <a href="https://www.themoviedb.org/tv/224207">迷途之子!!!!!</a></h3>
-   <p><i>BanG Dream! It&#39;s MyGO!!!!!</i><br>
+   <footer><i>BanG Dream! It&#39;s MyGO!!!!!</i><br>
    2023 · 电视剧 · ⭐ 8.0<br>
    动画 / 剧情 · 共 1 季 13 集<br>
-   主演：羊宫妃那、立石凛、青木阳菜</p>
+   主演：羊宫妃那、立石凛、青木阳菜</footer>
    <blockquote expandable>“你能，和我组一辈子乐队吗？”……高一的春末，羽丘女子学园的所有人都加入了乐队，晚入学的爱音为了尽快融入班级，急急忙忙地寻找着乐队成员。这时她得知，「羽丘的不可思议女孩」灯还没有加入乐队，于是爱音不由自主地向她打起了招呼，但是……这是遍体鳞伤又狼狈不堪的，我们的＜音乐呐喊＞。迷失方向也无所谓，在迷茫中前进吧！</blockquote>
    <hr/>
    <p>✅ 已订阅《迷途之子!!!!!》第 1 季，入库后会通知你。</p>

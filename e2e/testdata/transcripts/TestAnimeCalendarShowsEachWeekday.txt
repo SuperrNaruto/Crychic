@@ -79,8 +79,8 @@
 << editMessageText chat=1001 message=1
    <img src="https://image.tmdb.org/t/p/w500/yFRVyWWmNMJ72CqxRc2dZqW9TAE.jpg"/>
    <h3>📺 <a href="https://www.themoviedb.org/tv/337277">魔法少女育成计划 restart</a></h3>
-   <p><i>魔法少女育成計画 restart</i><br>
-   2026 · 电视剧</p>
+   <footer><i>魔法少女育成計画 restart</i><br>
+   2026 · 电视剧</footer>
    <blockquote expandable>获得「魔法王国」所赐之魔力、每日勤奋奔走于助人的魔法少女们——她们收到了来自神秘寄信人所寄出，名为『魔法少女育成计划』的游戏邀请函。受到隐藏着死亡风险、毫无逻辑可言的游戏所囚禁的十六位魔法少女，在幕后黑手策划的诡计玩弄下，开始为了存活下来而绞尽脑汁苦思对策……</blockquote>
    <hr/>
    <p><b>选择要订阅的季：</b></p>

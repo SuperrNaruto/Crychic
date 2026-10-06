@@ -36,6 +36,9 @@ const (
 	Tick
 	// Action opens Spans' link from a button inside the message.
 	Action
+	// Fine is a line of secondary facts in small print; consecutive lines
+	// form one block.
+	Fine
 )
 
 // Block is one structural piece of a message.
@@ -122,6 +125,10 @@ func Ticked(on bool, spans ...Span) Block { return Block{Kind: Tick, Spans: span
 func Open(label, url string) Block {
 	return Block{Kind: Action, Spans: []Span{Linked(Plain(label), url)}}
 }
+
+// Small is a line of secondary facts in small print, e.g. a card's year,
+// kind and rating.
+func Small(spans ...Span) Block { return Block{Kind: Fine, Spans: spans} }
 
 // Lines builds a Text.
 func Lines(blocks ...Block) Text { return blocks }

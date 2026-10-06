@@ -37,7 +37,7 @@ func (c card) replyLines(message Text, buttons [][]Button) Reply {
 // text renders e.g.
 //
 //	# 🎬 沙丘                       heading, title linked to its page
-//	_Dune_
+//	_Dune_                         small print from here
 //	2021 · 电影 · ⭐ 7.8
 //	科幻 / 冒险 · 156 分钟
 //	主演：提莫西·查拉梅、丽贝卡·弗格森
@@ -50,16 +50,16 @@ func (c card) text() Text {
 	}
 	text := Lines(Heading(Plain(icon), Linked(Plain(m.Title), m.Link)))
 	if m.OriginalTitle != "" && m.OriginalTitle != m.Title {
-		text = append(text, Line(Emphasis(m.OriginalTitle)))
+		text = append(text, Small(Emphasis(m.OriginalTitle)))
 	}
 	if facts := joinNonEmpty(" · ", m.Year, m.Kind.String(), rating(m.Rating)); facts != "" {
-		text = append(text, Line(Plain(facts)))
+		text = append(text, Small(Plain(facts)))
 	}
 	if facts := joinNonEmpty(" · ", strings.Join(d.Genres, " / "), length(d)); facts != "" {
-		text = append(text, Line(Plain(facts)))
+		text = append(text, Small(Plain(facts)))
 	}
 	if len(d.Cast) > 0 {
-		text = append(text, Line(Plain("主演："+strings.Join(d.Cast[:min(len(d.Cast), maxCast)], "、"))))
+		text = append(text, Small(Plain("主演："+strings.Join(d.Cast[:min(len(d.Cast), maxCast)], "、"))))
 	}
 	if m.Overview != "" {
 		text = append(text, Quote(truncate(m.Overview, maxOverviewRunes)))

@@ -36,13 +36,15 @@ func renderRich(text flow.Text, image string) string {
 // consecutive lines or items continue it.
 type richWriter struct {
 	strings.Builder
-	open string // "p", "ol" or "ul" while one is open
+	open string // "p", "footer", "ol" or "ul" while one is open
 }
 
 func (w *richWriter) add(b flow.Block) {
 	switch b.Kind {
 	case flow.Para:
-		w.line(b.Spans)
+		w.line("p", b.Spans)
+	case flow.Fine:
+		w.line("footer", b.Spans)
 	case flow.Item:
 		w.item(b)
 	case flow.Title:
@@ -69,17 +71,18 @@ func (w *richWriter) add(b flow.Block) {
 	}
 }
 
-// line continues the open paragraph; an empty line ends it.
-func (w *richWriter) line(spans []flow.Span) {
+// line continues the open paragraph (p) or small print (footer); an
+// empty line ends it.
+func (w *richWriter) line(tag string, spans []flow.Span) {
 	if len(spans) == 0 {
 		w.close()
 		return
 	}
-	if w.open == "p" {
+	if w.open == tag {
 		w.WriteString("<br>")
 	} else {
-		w.block("<p>")
-		w.open = "p"
+		w.block("<" + tag + ">")
+		w.open = tag
 	}
 	w.WriteString(renderSpans(spans))
 }
