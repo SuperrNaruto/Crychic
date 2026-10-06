@@ -30,7 +30,7 @@ const (
 	posterFetches = 4
 	// posterAgent names the bot to image hosts; Douban refuses Go's default
 	// User-Agent with 403 on some of its hosts.
-	posterAgent = "Crychic (+https://github.com/SuperrNauto/Crychic)"
+	posterAgent = "Crychic (+https://github.com/SuperrNaruto/Crychic)"
 )
 
 // hotlinked are image hosts that refuse requests without their site as
