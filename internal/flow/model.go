@@ -243,6 +243,17 @@ type Button struct {
 	Data  string
 }
 
+// Banner names a bundled image for a home or feature screen; empty means none.
+type Banner string
+
+const (
+	BannerHome          Banner = "home"
+	BannerDiscover      Banner = "trending"
+	BannerSubscriptions Banner = "subscribe"
+	BannerLatest        Banner = "newly_added"
+	BannerTasks         Banner = "tasks"
+)
+
 // Reply is what the platform shows after an action. Image is a poster URL
 // to show with the text; Gallery, used only without Image, holds the posters
 // of a listed page in list order. A Reply with Notice set leaves the conversation
@@ -257,7 +268,7 @@ type Reply struct {
 	Text    Text
 	Image   string
 	Gallery []string
-	Banner  bool // show the built-in brand banner above the home menu
+	Banner  Banner // show the named built-in banner instead of posters
 	Buttons [][]Button
 	Notice  string
 	Input   string

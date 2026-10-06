@@ -45,7 +45,7 @@ func (e *Engine) home(sess session) Reply {
 		Heading(Plain("🎬 Crychic")),
 		Line(Plain("想看什么告诉我呀～我帮你找片、订阅，入库了第一时间喊你！私聊直接发片名就能搜哦 (๑•̀ㅂ•́)و✧")),
 	)
-	return Reply{Text: text, Banner: true, Buttons: rows}
+	return Reply{Text: text, Banner: BannerHome, Buttons: rows}
 }
 
 // chooseHome applies the home menu actions; ok is false for others.

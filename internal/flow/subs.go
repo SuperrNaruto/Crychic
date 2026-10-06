@@ -63,9 +63,12 @@ func (e *Engine) listSubs(ctx context.Context, sess session) Reply {
 	sess.subs, sess.mine = subs, e.watcher.Requested(sess.owner.UserID)
 	e.store.put(sess)
 	if len(subs) == 0 {
-		return Reply{Text: Sentence(msgNoSubs), Buttons: [][]Button{{homeButton(sess.id)}}}
+		return Reply{Text: Sentence(msgNoSubs), Banner: BannerSubscriptions, Buttons: [][]Button{{homeButton(sess.id)}}}
 	}
-	view := listView{heading: Heading(Plain(fmt.Sprintf("%s（%d）", msgSubsTitle, len(subs)))), footer: []Button{homeButton(sess.id)}}
+	view := listView{
+		heading: Heading(Plain(fmt.Sprintf("%s（%d）", msgSubsTitle, len(subs)))),
+		banner:  BannerSubscriptions, footer: []Button{homeButton(sess.id)},
+	}
 	for i, s := range subs {
 		s.Title = truncate(s.Title, listTitleRunes)
 		mine := slices.Contains(sess.mine, s.ID)

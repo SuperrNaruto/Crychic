@@ -1,6 +1,7 @@
 >> user 1001 in chat 1001: /subscribe
 -> MoviePilot GET /api/v1/subscribe/
-<< sendRichMessage chat=1001 message=1
+<< sendRichMessage chat=1001 message=1 photo=subscribe.jpg 1280x720 sha256=7b987883d5fc3010605ea37711d6b2eb6184479e790f4096dc79c790b644d27f
+   <img src="tg://photo?id=subscribe"/>
    <h3>📚 订阅清单（150）</h3>
    <ol start="1">
    <li value="1"><b>《绝命毒师》第 2 季</b><br>
@@ -53,7 +54,8 @@
    [下一页 › | 1:p:1]
    [首页 | 1:o:0]
 >> user 1001 taps 1:p:1 on message 1
-<< editMessageText chat=1001 message=1
+<< editMessageText chat=1001 message=1 photo=subscribe.jpg 1280x720 sha256=7b987883d5fc3010605ea37711d6b2eb6184479e790f4096dc79c790b644d27f
+   <img src="tg://photo?id=subscribe"/>
    <h3>📚 订阅清单（150）</h3>
    <ol start="21">
    <li value="21"><b>《绝命毒师》第 2 季</b><br>
@@ -107,7 +109,8 @@
    [首页 | 1:o:0]
 << answerCallbackQuery
 >> user 1001 taps 1:p:2 on message 1
-<< editMessageText chat=1001 message=1
+<< editMessageText chat=1001 message=1 photo=subscribe.jpg 1280x720 sha256=7b987883d5fc3010605ea37711d6b2eb6184479e790f4096dc79c790b644d27f
+   <img src="tg://photo?id=subscribe"/>
    <h3>📚 订阅清单（150）</h3>
    <ol start="41">
    <li value="41"><b>《绝命毒师》第 2 季</b><br>
@@ -161,7 +164,8 @@
    [首页 | 1:o:0]
 << answerCallbackQuery
 >> user 1001 taps 1:p:3 on message 1
-<< editMessageText chat=1001 message=1
+<< editMessageText chat=1001 message=1 photo=subscribe.jpg 1280x720 sha256=7b987883d5fc3010605ea37711d6b2eb6184479e790f4096dc79c790b644d27f
+   <img src="tg://photo?id=subscribe"/>
    <h3>📚 订阅清单（150）</h3>
    <ol start="61">
    <li value="61"><b>《绝命毒师》第 2 季</b><br>
@@ -215,7 +219,8 @@
    [首页 | 1:o:0]
 << answerCallbackQuery
 >> user 1001 taps 1:p:4 on message 1
-<< editMessageText chat=1001 message=1
+<< editMessageText chat=1001 message=1 photo=subscribe.jpg 1280x720 sha256=7b987883d5fc3010605ea37711d6b2eb6184479e790f4096dc79c790b644d27f
+   <img src="tg://photo?id=subscribe"/>
    <h3>📚 订阅清单（150）</h3>
    <ol start="81">
    <li value="81"><b>《绝命毒师》第 2 季</b><br>
@@ -269,7 +274,8 @@
    [首页 | 1:o:0]
 << answerCallbackQuery
 >> user 1001 taps 1:p:5 on message 1
-<< editMessageText chat=1001 message=1
+<< editMessageText chat=1001 message=1 photo=subscribe.jpg 1280x720 sha256=7b987883d5fc3010605ea37711d6b2eb6184479e790f4096dc79c790b644d27f
+   <img src="tg://photo?id=subscribe"/>
    <h3>📚 订阅清单（150）</h3>
    <ol start="101">
    <li value="101"><b>《绝命毒师》第 2 季</b><br>
@@ -323,7 +329,8 @@
    [首页 | 1:o:0]
 << answerCallbackQuery
 >> user 1001 taps 1:p:6 on message 1
-<< editMessageText chat=1001 message=1
+<< editMessageText chat=1001 message=1 photo=subscribe.jpg 1280x720 sha256=7b987883d5fc3010605ea37711d6b2eb6184479e790f4096dc79c790b644d27f
+   <img src="tg://photo?id=subscribe"/>
    <h3>📚 订阅清单（150）</h3>
    <ol start="121">
    <li value="121"><b>《绝命毒师》第 2 季</b><br>
@@ -377,7 +384,8 @@
    [首页 | 1:o:0]
 << answerCallbackQuery
 >> user 1001 taps 1:p:7 on message 1
-<< editMessageText chat=1001 message=1
+<< editMessageText chat=1001 message=1 photo=subscribe.jpg 1280x720 sha256=7b987883d5fc3010605ea37711d6b2eb6184479e790f4096dc79c790b644d27f
+   <img src="tg://photo?id=subscribe"/>
    <h3>📚 订阅清单（150）</h3>
    <ol start="141">
    <li value="141"><b>《绝命毒师》第 2 季</b><br>
@@ -409,7 +417,8 @@
    [首页 | 1:o:0]
 << answerCallbackQuery
 >> user 1001 taps 1:p:6 on message 1
-<< editMessageText chat=1001 message=1
+<< editMessageText chat=1001 message=1 photo=subscribe.jpg 1280x720 sha256=7b987883d5fc3010605ea37711d6b2eb6184479e790f4096dc79c790b644d27f
+   <img src="tg://photo?id=subscribe"/>
    <h3>📚 订阅清单（150）</h3>
    <ol start="121">
    <li value="121"><b>《绝命毒师》第 2 季</b><br>

@@ -53,7 +53,7 @@ func (e *Engine) listTasks(ctx context.Context, sess session) Reply {
 	}
 	if len(downloads)+len(jobs) == 0 {
 		e.store.take(sess.id)
-		return Reply{Text: Sentence(msgNoTasks)}
+		return Reply{Text: Sentence(msgNoTasks), Banner: BannerTasks}
 	}
 	sess.tasks, sess.follow = nil, following{}
 	for _, d := range downloads {

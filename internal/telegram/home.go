@@ -3,7 +3,7 @@ package telegram
 import (
 	"bytes"
 	"context"
-	_ "embed"
+	"embed"
 	"strings"
 
 	"github.com/go-telegram/bot"
@@ -13,30 +13,31 @@ import (
 )
 
 const (
-	homeFilename = "home.jpg"
-	homeMediaID  = "home"
 	// notModified is Telegram's answer to an edit that changes nothing.
 	notModified = "message is not modified"
 )
 
-//go:embed assets/home.jpg
-var homePhoto []byte
+//go:embed assets/*.jpg
+var bannerPhotos embed.FS
 
-// content is a reply as rich message content: the home menu carries the
-// bundled banner as uploaded media, other replies their poster URLs or
+// content is a reply as rich message content: home and feature screens carry
+// their bundled banner as uploaded media, other replies their poster URLs or
 // uploaded posters. A fresh reader per request keeps concurrent chats
 // independent.
 func content(o outgoing) *models.InputRichMessage {
 	reply := o.reply
-	if !reply.Banner {
+	name := string(reply.Banner) + ".jpg"
+	photo, err := bannerPhotos.ReadFile("assets/" + name)
+	if err != nil {
 		rich := richMessage(reply)
 		rich.Media = o.media()
 		return rich
 	}
-	reply.Image = "tg://photo?id=" + homeMediaID
+	id := string(reply.Banner)
+	reply.Image = "tg://photo?id=" + id
 	rich := richMessage(reply)
-	rich.Media = []models.InputRichMessageMedia{{ID: homeMediaID, Media: &models.InputMediaPhoto{
-		Media: "attach://" + homeFilename, MediaAttachment: bytes.NewReader(homePhoto),
+	rich.Media = []models.InputRichMessageMedia{{ID: id, Media: &models.InputMediaPhoto{
+		Media: "attach://" + name, MediaAttachment: bytes.NewReader(photo),
 	}}}
 	return rich
 }
