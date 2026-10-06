@@ -29,6 +29,7 @@ const (
 	msgNoExactPick = "没有对应的条目？可以用 /request 换个名字搜。"
 	msgEmptyChart  = "这个榜单暂时是空的。"
 	msgEmptyDay    = "这天没有新番放送。"
+	msgSynopsis    = "简介"
 
 	daysInWeek = 7
 	// calendarOffset is the time zone "today" is taken in: the bot's users
@@ -243,7 +244,7 @@ func pickLines(at span, picks []Media, aired bool) Text {
 		}
 		text = append(text, pickEntry(at.first-at.base+i+1, m, pickLook{year: !aired, kind: mixed}))
 		if m.Overview != "" {
-			text = append(text, Quote(truncate(m.Overview, chartOverviewRunes)))
+			text = append(text, Fold(msgSynopsis, truncate(m.Overview, chartOverviewRunes)))
 		}
 	}
 	return text

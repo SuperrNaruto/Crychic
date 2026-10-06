@@ -23,14 +23,18 @@ const (
 	Note
 	// Rule separates a media card from the question below it.
 	Rule
+	// Folded is hidden behind its always shown Summary until opened, used
+	// for the synopses of list entries.
+	Folded
 )
 
 // Block is one structural piece of a message.
 type Block struct {
-	Kind   BlockKind
-	Spans  []Span
-	Number int    // Item only
-	Facts  string // Item only: secondary facts, e.g. "Dune · 2021 · 电影"
+	Kind    BlockKind
+	Spans   []Span
+	Number  int    // Item only
+	Facts   string // Item only: secondary facts, e.g. "Dune · 2021 · 电影"
+	Summary string // Folded only: the label shown while closed
 }
 
 // Style marks how a span is emphasised.
@@ -72,6 +76,11 @@ func Divider() Block { return Block{Kind: Rule} }
 
 // Quote is a collapsible quoted block, used for long synopses.
 func Quote(s string) Block { return Block{Kind: Quoted, Spans: []Span{Plain(s)}} }
+
+// Fold hides body behind summary until the reader opens it.
+func Fold(summary, body string) Block {
+	return Block{Kind: Folded, Spans: []Span{Plain(body)}, Summary: summary}
+}
 
 // Lines builds a Text.
 func Lines(blocks ...Block) Text { return blocks }

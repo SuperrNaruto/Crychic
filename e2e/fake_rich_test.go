@@ -135,6 +135,7 @@ var (
 	richTags = map[string]bool{
 		"b": false, "i": false, "code": false, "a": false, "h3": false, "h4": false, "p": false,
 		"ol": false, "li": false, "blockquote": false, "footer": false,
+		"details": false, "summary": false,
 		"br": true, "hr": true, "img": true,
 	}
 )
@@ -165,7 +166,7 @@ func checkRichHTML(markup string) error {
 }
 
 // richLines lays rich HTML out a block or line break per transcript line.
-var richBreak = regexp.MustCompile(`(</h[1-6]>|</p>|</li>|</ol>|</blockquote>|</footer>|<hr/>|<img [^>]*/>|<ol [^>]*>|<br>)`)
+var richBreak = regexp.MustCompile(`(</h[1-6]>|</p>|</li>|</ol>|</blockquote>|</summary>|</details>|</footer>|<hr/>|<img [^>]*/>|<ol [^>]*>|<br>)`)
 
 func richLines(markup string) []string {
 	return strings.Split(strings.TrimSuffix(richBreak.ReplaceAllString(markup, "$1\n"), "\n"), "\n")

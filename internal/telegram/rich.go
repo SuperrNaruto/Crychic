@@ -17,8 +17,8 @@ func richMessage(text flow.Text, image string) *models.InputRichMessage {
 }
 
 // renderRich turns flow text into rich HTML: a heading, paragraphs whose
-// lines are joined by breaks, numbered lists, collapsible quotes and
-// footers. All content is escaped so titles and synopses can never break
+// lines are joined by breaks, numbered lists, collapsible quotes, closed
+// details and footers. All content is escaped so titles and synopses can never break
 // the markup.
 func renderRich(text flow.Text, image string) string {
 	var w richWriter
@@ -55,6 +55,9 @@ func (w *richWriter) add(b flow.Block) {
 		w.block("<footer>" + renderSpans(b.Spans) + "</footer>")
 	case flow.Rule:
 		w.block("<hr/>")
+	case flow.Folded:
+		w.block("<details><summary>" + html.EscapeString(b.Summary) + "</summary><p>" +
+			renderSpans(b.Spans) + "</p></details>")
 	}
 }
 
