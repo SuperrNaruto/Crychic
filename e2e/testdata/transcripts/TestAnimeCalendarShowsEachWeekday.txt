@@ -75,6 +75,7 @@
    [返回榜单 | 1:b:0] [首页 | 1:o:0]
 << answerCallbackQuery
 >> user 1001 taps 1:i:1 on message 1
+-> MoviePilot GET /api/v1/media/search?count=10&title=魔法少女育成計画 restart&type=media
 -> MoviePilot GET /api/v1/media/search?count=10&title=魔法少女育成计划 restart&type=media
 -> MoviePilot GET /api/v1/media/337277?media_source=themoviedb&type_name=电视剧
 -> MoviePilot GET /api/v1/media/seasons?media_id=337277&media_source=themoviedb

@@ -5,6 +5,7 @@ import (
 	"context"
 	"fmt"
 	"slices"
+	"sync"
 	"time"
 )
 
@@ -331,10 +332,7 @@ func pager(id uint64, page, pages int) []Button {
 // carry, so the pick is looked up by title: a sure match goes straight on,
 // otherwise the user chooses among the search results.
 func (e *Engine) pickFromChart(ctx context.Context, sess session, pick Media) Reply {
-	results, err := e.backend.Search(ctx, pick.Title)
-	if err == nil && len(results) == 0 && pick.OriginalTitle != "" && pick.OriginalTitle != pick.Title {
-		results, err = e.backend.Search(ctx, pick.OriginalTitle)
-	}
+	results, err := e.chartSearch(ctx, pick)
 	if err != nil {
 		e.store.take(sess.id)
 		return e.failure("search", err)
@@ -351,6 +349,26 @@ func (e *Engine) pickFromChart(ctx context.Context, sess session, pick Media) Re
 	reply := e.resultList(sess, pick.Title)
 	reply.Text = append(reply.Text, Remark(msgNoExactPick))
 	return reply
+}
+
+// chartSearch searches pick by its title, else by its original title. Both
+// are searched at once, so a title finding nothing costs no extra round
+// trip; the original title's answer only counts then.
+func (e *Engine) chartSearch(ctx context.Context, pick Media) ([]Media, error) {
+	original := pick.OriginalTitle
+	if original == "" || original == pick.Title {
+		return e.backend.Search(ctx, pick.Title)
+	}
+	var byOriginal []Media
+	var errOriginal error
+	var wg sync.WaitGroup
+	wg.Go(func() { byOriginal, errOriginal = e.backend.Search(ctx, original) })
+	results, err := e.backend.Search(ctx, pick.Title)
+	wg.Wait()
+	if err != nil || len(results) > 0 {
+		return results, err
+	}
+	return byOriginal, errOriginal
 }
 
 // sameMedia finds pick among results: by identity, else the one result

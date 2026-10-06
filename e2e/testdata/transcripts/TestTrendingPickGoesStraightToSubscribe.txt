@@ -69,6 +69,7 @@
    [返回榜单 | 1:b:0] [首页 | 1:o:0]
 << answerCallbackQuery
 >> user 1001 taps 1:i:0 on message 1
+-> MoviePilot GET /api/v1/media/search?count=10&title=Digger&type=media
 -> MoviePilot GET /api/v1/media/search?count=10&title=挖掘者&type=media
 -> MoviePilot GET /api/v1/media/1248832?media_source=themoviedb&type_name=电影
 -> MoviePilot GET /api/v1/subscribe/media/1248832?media_source=themoviedb&mtype=电影&title=挖掘者&year=2026

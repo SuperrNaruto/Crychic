@@ -8,6 +8,7 @@ import (
 	"slices"
 	"strconv"
 	"strings"
+	"sync"
 
 	"github.com/SuperrNauto/Crychic/internal/flow"
 )
@@ -41,23 +42,82 @@ func (c *Client) Related(ctx context.Context, media flow.Media) ([]flow.Media, e
 // Series lists the parts of the TMDB collection movie media belongs to, in
 // release order. MoviePilot's details leave a movie's collection out, so
 // collections are searched by the movie's names and the one listing the
-// movie is taken; none found means none.
+// movie is taken; none found means none. Every name is searched at once,
+// then every candidate opened at once, so a movie without a series costs
+// two round trips instead of one per name and candidate; the names keep
+// their order of preference.
 func (c *Client) Series(ctx context.Context, media flow.Media) ([]flow.Media, error) {
 	if media.Source != sourceTMDB || media.Kind != flow.Movie {
 		return nil, nil
 	}
+	names := seriesNames(media)
+	found := make([]read[[]int], len(names))
+	var wg sync.WaitGroup
+	for i, name := range names {
+		wg.Go(func() { found[i].value, found[i].err = c.collections(ctx, name) })
+	}
+	wg.Wait()
 	tried := map[int]bool{}
-	for _, name := range seriesNames(media) {
-		ids, err := c.collections(ctx, name)
-		if err != nil {
-			return nil, err
+	var ids []int
+	for _, f := range found {
+		ids = append(ids, unseen(f.value, tried)...)
+	}
+	opened := c.openAll(ctx, ids)
+	return seriesOf(media, found, opened)
+}
+
+// read is one lookup's answer.
+type read[T any] struct {
+	value T
+	err   error
+}
+
+// openAll reads the collections ids at once.
+func (c *Client) openAll(ctx context.Context, ids []int) map[int]read[[]flow.Media] {
+	opened := make([]read[[]flow.Media], len(ids))
+	var wg sync.WaitGroup
+	for i, id := range ids {
+		wg.Go(func() {
+			opened[i].value, opened[i].err = c.medias(ctx, "/api/v1/tmdb/collection/"+strconv.Itoa(id))
+		})
+	}
+	wg.Wait()
+	out := make(map[int]read[[]flow.Media], len(ids))
+	for i, id := range ids {
+		out[id] = opened[i]
+	}
+	return out
+}
+
+// seriesOf walks the names' candidates in order of preference, as if read
+// one at a time: the first collection listing media wins, and a failed
+// read before it is the answer.
+func seriesOf(media flow.Media, found []read[[]int], opened map[int]read[[]flow.Media]) ([]flow.Media, error) {
+	tried := map[int]bool{}
+	for _, f := range found {
+		if f.err != nil {
+			return nil, f.err
 		}
-		parts, err := c.partsWith(ctx, media, unseen(ids, tried))
-		if err != nil || len(parts) > 0 {
-			return parts, err
+		for _, id := range unseen(f.value, tried) {
+			if parts, err := listing(media, opened[id]); err != nil || len(parts) > 0 {
+				return parts, err
+			}
 		}
 	}
 	return nil, nil
+}
+
+// listing is a collection's parts in release order when it lists media.
+func listing(media flow.Media, col read[[]flow.Media]) ([]flow.Media, error) {
+	if col.err != nil {
+		return nil, col.err
+	}
+	parts := col.value
+	if !slices.ContainsFunc(parts, func(m flow.Media) bool { return m.Source == media.Source && m.ID == media.ID }) {
+		return nil, nil
+	}
+	slices.SortStableFunc(parts, func(a, b flow.Media) int { return cmp.Compare(releaseKey(a), releaseKey(b)) })
+	return parts, nil
 }
 
 // seriesNames are the names a movie's series may go by: its titles and
@@ -111,21 +171,6 @@ func (c *Client) collections(ctx context.Context, name string) ([]int, error) {
 		}
 	}
 	return ids, nil
-}
-
-// partsWith returns the parts of the first collection listing media.
-func (c *Client) partsWith(ctx context.Context, media flow.Media, ids []int) ([]flow.Media, error) {
-	for _, id := range ids {
-		parts, err := c.medias(ctx, "/api/v1/tmdb/collection/"+strconv.Itoa(id))
-		if err != nil {
-			return nil, err
-		}
-		if slices.ContainsFunc(parts, func(m flow.Media) bool { return m.Source == media.Source && m.ID == media.ID }) {
-			slices.SortStableFunc(parts, func(a, b flow.Media) int { return cmp.Compare(releaseKey(a), releaseKey(b)) })
-			return parts, nil
-		}
-	}
-	return nil, nil
 }
 
 // releaseKey orders by release date, unknown dates last.

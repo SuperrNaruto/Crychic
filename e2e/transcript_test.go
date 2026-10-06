@@ -87,8 +87,8 @@ func readRoute(line string) string {
 	}
 	path, query, _ := strings.Cut(path, "?")
 	if strings.Contains(query, "type=collection") {
-		// a movie's series is searched name after name, in order
-		return ""
+		// a movie's series is searched by all its names at once
+		return service + " collections"
 	}
 	route := strings.TrimRight(path, "0123456789")
 	if route == mediaRoute || path == mediaRoute+"search" || path == mediaRoute+"seasons" || route == subjectsPath {

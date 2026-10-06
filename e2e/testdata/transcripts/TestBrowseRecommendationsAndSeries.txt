@@ -122,8 +122,10 @@
    [相似推荐 | 1:r:0] [同系列 | 1:n:0]
 << answerCallbackQuery
 >> user 1001 taps 1:n:0 on message 1
--> MoviePilot GET /api/v1/media/search?count=10&title=沙丘2&type=collection
+-> MoviePilot GET /api/v1/media/search?count=10&title=Dune&type=collection
+-> MoviePilot GET /api/v1/media/search?count=10&title=Dune: Part Two&type=collection
 -> MoviePilot GET /api/v1/media/search?count=10&title=沙丘&type=collection
+-> MoviePilot GET /api/v1/media/search?count=10&title=沙丘2&type=collection
 -> MoviePilot GET /api/v1/tmdb/collection/726871
 << editMessageText chat=1001 message=1 reuses=url-ae95e58e reuses=url-0603bc04 reuses=url-f3924e4d
    <tg-slideshow>
