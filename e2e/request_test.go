@@ -225,9 +225,14 @@ func TestOnlyRequesterCanChoose(t *testing.T) {
 }
 
 func TestNothingFound(t *testing.T) {
-	h := start(t, scenario{routes: map[string]route{searchPath: ok("empty.json")}})
+	h := start(t, scenario{searches: map[string]string{
+		"不存在的电影": "empty.json",
+		"沙丘":     "search_dune.json",
+	}})
 	h.say(alice, alice, "/request 不存在的电影")
 	h.shows(1, "没有找到")
+	h.answer(alice, 1, "沙丘")
+	h.shows(1, "「沙丘」的搜索结果")
 	h.tr.verify(t)
 }
 

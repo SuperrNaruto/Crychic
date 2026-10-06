@@ -1,0 +1,95 @@
+>> user 1001 in chat 1001: 沙丘
+-> MoviePilot GET /api/v1/media/search?count=10&title=沙丘&type=media
+<< sendRichMessage chat=1001 message=1
+   <h3>🔍「沙丘」的搜索结果</h3>
+   <ol start="1">
+   <li value="1"><b>沙丘</b><br>
+   <i>Dune · 2021 · 电影 · ⭐ 7.8</i></li>
+   <li value="2"><b>沙丘：预言</b><br>
+   <i>Dune: Prophecy · 2024 · 电视剧 · ⭐ 7.2</i></li>
+   <li value="3"><b>沙丘</b><br>
+   <i>Dune · 1984 · 电影 · ⭐ 6.2</i></li>
+   <li value="4"><b>沙丘2</b><br>
+   <i>Dune: Part Two · 2024 · 电影 · ⭐ 8.1</i></li>
+   <li value="5"><b>沙丘3</b><br>
+   <i>Dune: Part Three · 2026 · 电影</i></li>
+   <li value="6"><b>沙丘之子</b><br>
+   <i>Frank Herbert&#39;s Children of Dune · 2003 · 电视剧 · ⭐ 6.9</i></li>
+   <li value="7"><b>沙丘魔堡2000</b><br>
+   <i>Frank Herbert&#39;s Dune · 2000 · 电视剧 · ⭐ 6.8</i></li>
+   <li value="8"><b>沙丘虫暴</b><br>
+   <i>2021 · 电影 · ⭐ 6.7</i></li>
+   </ol>
+   <footer>第 1/2 页</footer>
+   [1 | 1:m:0] [2 | 1:m:1] [3 | 1:m:2] [4 | 1:m:3]
+   [5 | 1:m:4] [6 | 1:m:5] [7 | 1:m:6] [8 | 1:m:7]
+   [下一页 › | 1:p:1]
+   [重新搜索 | 1:rs:0] [取消 | 1:x:0]
+>> user 1001 taps 1:p:1 on message 1
+<< editMessageText chat=1001 message=1
+   <h3>🔍「沙丘」的搜索结果</h3>
+   <ol start="9">
+   <li value="9"><b>沙丘戰士</b><br>
+   <i>1992 · 电影 · ⭐ 10.0</i></li>
+   <li value="10"><b>沙丘</b><br>
+   <i>The Dunes · 2019 · 电影 · ⭐ 6.2</i></li>
+   </ol>
+   <footer>第 2/2 页</footer>
+   [9 | 1:m:8] [10 | 1:m:9]
+   [‹ 上一页 | 1:p:0]
+   [重新搜索 | 1:rs:0] [取消 | 1:x:0]
+<< answerCallbackQuery
+>> user 1001 taps 1:m:9 on message 1
+-> MoviePilot GET /api/v1/media/641213?media_source=themoviedb&type_name=电影
+-> MoviePilot GET /api/v1/subscribe/media/641213?media_source=themoviedb&mtype=电影&title=沙丘&year=2019
+<< editMessageText chat=1001 message=1
+   <img src="https://image.tmdb.org/t/p/w500/jRNt7YRAPtYrCnd8eqkIsB6Gppd.jpg"/>
+   <h3>🎬 <a href="https://www.themoviedb.org/movie/641213">沙丘</a></h3>
+   <footer><i>The Dunes</i> · 2019 · 电影 · ⭐ 6.2</footer>
+   <blockquote expandable>家暴谘询师杰拉德与分居中的妻子玛妮，正在谈论儿子史考提的监护权，因无法接受玛妮计划带着史考提与新欢搬到加州，他派人调查玛妮的交往对象史都华，发现他过往有家暴的前科。而预计要和史都华移居加州的玛妮，突然像是在隐瞒什么，拒绝了史都华，他失控地辱骂玛妮并施予暴力，这时，杰拉德拿着枪闯进屋内，与玛妮将史都华捆绑后，从口袋掏出沾有格蕾丝指纹的刀子…。</blockquote>
+   <hr/>
+   <p><b>确认订阅《沙丘》？</b></p>
+   [确认订阅 | 1:ok:0] [返回 | 1:bk:0] [取消 | 1:x:0]
+   [相似推荐 | 1:r:0] [同系列 | 1:n:0]
+<< answerCallbackQuery
+>> user 1001 taps 1:bk:0 on message 1
+<< editMessageText chat=1001 message=1
+   <h3>🔍「沙丘」的搜索结果</h3>
+   <ol start="9">
+   <li value="9"><b>沙丘戰士</b><br>
+   <i>1992 · 电影 · ⭐ 10.0</i></li>
+   <li value="10"><b>沙丘</b><br>
+   <i>The Dunes · 2019 · 电影 · ⭐ 6.2</i></li>
+   </ol>
+   <footer>第 2/2 页</footer>
+   [9 | 1:m:8] [10 | 1:m:9]
+   [‹ 上一页 | 1:p:0]
+   [重新搜索 | 1:rs:0] [取消 | 1:x:0]
+<< answerCallbackQuery
+>> user 1001 taps 1:p:0 on message 1
+<< editMessageText chat=1001 message=1
+   <h3>🔍「沙丘」的搜索结果</h3>
+   <ol start="1">
+   <li value="1"><b>沙丘</b><br>
+   <i>Dune · 2021 · 电影 · ⭐ 7.8</i></li>
+   <li value="2"><b>沙丘：预言</b><br>
+   <i>Dune: Prophecy · 2024 · 电视剧 · ⭐ 7.2</i></li>
+   <li value="3"><b>沙丘</b><br>
+   <i>Dune · 1984 · 电影 · ⭐ 6.2</i></li>
+   <li value="4"><b>沙丘2</b><br>
+   <i>Dune: Part Two · 2024 · 电影 · ⭐ 8.1</i></li>
+   <li value="5"><b>沙丘3</b><br>
+   <i>Dune: Part Three · 2026 · 电影</i></li>
+   <li value="6"><b>沙丘之子</b><br>
+   <i>Frank Herbert&#39;s Children of Dune · 2003 · 电视剧 · ⭐ 6.9</i></li>
+   <li value="7"><b>沙丘魔堡2000</b><br>
+   <i>Frank Herbert&#39;s Dune · 2000 · 电视剧 · ⭐ 6.8</i></li>
+   <li value="8"><b>沙丘虫暴</b><br>
+   <i>2021 · 电影 · ⭐ 6.7</i></li>
+   </ol>
+   <footer>第 1/2 页</footer>
+   [1 | 1:m:0] [2 | 1:m:1] [3 | 1:m:2] [4 | 1:m:3]
+   [5 | 1:m:4] [6 | 1:m:5] [7 | 1:m:6] [8 | 1:m:7]
+   [下一页 › | 1:p:1]
+   [重新搜索 | 1:rs:0] [取消 | 1:x:0]
+<< answerCallbackQuery

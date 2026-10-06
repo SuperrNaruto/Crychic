@@ -334,7 +334,7 @@ func (e *Engine) pickFromChart(ctx context.Context, sess session, pick Media) Re
 		return e.pickMedia(ctx, sess, i)
 	}
 	e.store.put(sess)
-	reply := resultList(sess, pick.Title)
+	reply := e.resultList(sess, pick.Title)
 	reply.Text = append(reply.Text, Remark(msgNoExactPick))
 	return reply
 }

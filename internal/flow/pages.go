@@ -15,20 +15,25 @@ type listEntry struct {
 }
 
 type listView struct {
-	heading Block
-	entries []listEntry
-	footer  []Button
+	heading   Block
+	entries   []listEntry
+	footer    []Button
+	pageItems int // zero uses the default; search pages use fewer entries
 }
 
 // listPages keeps text and its action buttons on the same bounded page,
 // the buttons gridColumns a row.
 func (e *Engine) listPages(sess session, view listView) Reply {
+	maxItems := view.pageItems
+	if maxItems <= 0 {
+		maxItems = listPageItems
+	}
 	pages := []Reply{{Text: Lines(view.heading)}}
 	buttons := [][]Button{nil}
 	used, items := 0, 0
 	for _, entry := range view.entries {
 		size := textSize(entry.text)
-		if items > 0 && (items >= listPageItems || used+size > listPageRunes) {
+		if items > 0 && (items >= maxItems || used+size > listPageRunes) {
 			pages, buttons = append(pages, Reply{Text: Lines(view.heading)}), append(buttons, nil)
 			used, items = 0, 0
 		}
@@ -76,6 +81,5 @@ func (e *Engine) page(sess session, index int) Reply {
 	if index < 0 || index >= len(sess.pages) {
 		return Reply{Notice: msgInvalidChoice}
 	}
-	e.store.put(sess)
-	return sess.pages[index]
+	return e.navigate(sess, actionPage, sess.pages[index])
 }

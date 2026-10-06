@@ -9,7 +9,7 @@
    <i>ぐらんぶる · 2020 · 电影 · ⭐ 5.9</i></li>
    </ol>
    [1 | 1:m:0] [2 | 1:m:1]
-   [取消 | 1:x:0]
+   [重新搜索 | 1:rs:0] [取消 | 1:x:0]
 >> user 1001 taps 1:m:0 on message 1
 -> MoviePilot GET /api/v1/media/79166?media_source=themoviedb&type_name=电视剧
 -> MoviePilot GET /api/v1/media/seasons?media_id=79166&media_source=themoviedb

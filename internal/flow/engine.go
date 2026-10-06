@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	// MaxResults caps how many search results become buttons.
+	// MaxResults caps discovery matches and recommendations, not search pages.
 	MaxResults = 8
 	// SessionTTL is how long an untouched conversation stays answerable.
 	SessionTTL = 10 * time.Minute
@@ -68,52 +68,6 @@ func New(opts Options) *Engine {
 	}
 }
 
-// Start searches for term and offers the results.
-func (e *Engine) Start(ctx context.Context, actor Actor, term string) Reply {
-	term = strings.TrimSpace(term)
-	if term == "" {
-		return Reply{Text: Sentence(msgUsage)}
-	}
-	sess := e.store.create(actor, nil)
-	return e.shown(sess.id, e.search(ctx, sess, term))
-}
-
-// search looks term up and offers the results in sess.
-func (e *Engine) search(ctx context.Context, sess session, term string) Reply {
-	results, err := e.backend.Search(ctx, term)
-	if err != nil {
-		e.store.take(sess.id)
-		return e.failure("search", err)
-	}
-	if len(results) == 0 {
-		e.store.take(sess.id)
-		return Reply{Text: Sentence(fmt.Sprintf("🔍 没有找到「%s」相关的影视。", term))}
-	}
-	sess.results = results[:min(len(results), MaxResults)]
-	e.store.put(sess)
-	return resultList(sess, term)
-}
-
-// resultList numbers sess's results, found searching term, as buttons.
-func resultList(sess session, term string) Reply {
-	return numberedResults(sess, Heading(Plain(fmt.Sprintf("🔍「%s」的搜索结果", term))))
-}
-
-// numberedResults lists sess's results under heading, numbered, with a
-// number button to pick each.
-func numberedResults(sess session, heading Block) Reply {
-	results := sess.results
-	text := make(Text, 0, len(results)+1)
-	text = append(text, heading)
-	picks := make([]Button, 0, len(results))
-	for i, m := range results {
-		text = append(text, resultEntry(i+1, m))
-		picks = append(picks, Button{Label: fmt.Sprint(i + 1), Data: data(sess.id, actionMedia, i)})
-	}
-	rows := append(grid(picks, gridColumns), []Button{cancelButton(sess.id)})
-	return Reply{Text: text, Buttons: rows}
-}
-
 // press is a button press: an action and its argument.
 type press struct {
 	action string
@@ -162,6 +116,8 @@ func (e *Engine) chooseRequest(ctx context.Context, sess session, p press) (Repl
 		return e.confirm(ctx, sess, p.arg), true
 	case actionAskFrom:
 		return askStart(sess, ""), true
+	case actionResearch:
+		return askResearch(sess), true
 	case actionCancel:
 		return e.cancel(sess), true
 	}
@@ -186,6 +142,10 @@ func (e *Engine) pickMedia(ctx context.Context, sess session, index int) Reply {
 	if media.Kind == Movie {
 		return e.offerConfirm(ctx, sess, Target{Media: media})
 	}
+	return e.offerSeasons(ctx, sess)
+}
+
+func (e *Engine) offerSeasons(ctx context.Context, sess session) Reply {
 	seasons, err := e.backend.Seasons(ctx, sess.picked.Media)
 	if err != nil {
 		e.store.take(sess.id)
@@ -197,6 +157,9 @@ func (e *Engine) pickMedia(ctx context.Context, sess session, index int) Reply {
 	}
 	sess.seasons = seasons
 	e.store.put(sess)
+	if len(seasons) == 1 && seasons[0].Number > 0 {
+		return e.pickSeason(ctx, sess, seasons[0].Number)
+	}
 	picks := make([]Button, 0, len(seasons))
 	for _, s := range seasons {
 		picks = append(picks, Button{Label: seasonName(s.Number), Data: data(sess.id, actionSeason, s.Number)})

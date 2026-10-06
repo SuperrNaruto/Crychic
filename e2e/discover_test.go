@@ -83,11 +83,12 @@ func TestDoubanPicksAreMatchedByTitle(t *testing.T) {
 		searchPath:   ok("search_abyss.json"),
 		abyssDetails: ok("detail_abyss.json"),
 		seasonsPath:  ok("seasons_abyss.json"),
+		abyssLookup:  ok("subscription_none.json"),
 	}})
 	h.say(alice, alice, "/hot")
 	h.tap(alice, 1, "豆瓣热门剧集")
 	h.tap(alice, 1, "1")
-	h.shows(1, "选择要订阅的季")
+	h.shows(1, "确认订阅《深渊无间》第 1 季")
 	h.say(alice, alice, "/hot")
 	h.tap(alice, 2, "豆瓣热门剧集")
 	h.tap(alice, 2, "下一页 ›")
@@ -96,6 +97,10 @@ func TestDoubanPicksAreMatchedByTitle(t *testing.T) {
 	h.shows(2, "没有对应的条目？")
 	h.tap(alice, 2, "返回")
 	h.shows(2, "豆瓣热门剧集 · 第 2/")
+	h.mp.setRoute(searchPath, ok("search_calendar_psyren.json"))
+	h.tap(alice, 2, "10")
+	h.shows(2, "没有对应的条目？")
+	h.shows(2, `<li value="1">`)
 	h.tr.verify(t)
 }
 

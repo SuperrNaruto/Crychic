@@ -58,7 +58,7 @@ type Typed struct {
 // Answer takes the text a user typed in response to a Reply with Input.
 func (e *Engine) Answer(ctx context.Context, actor Actor, typed Typed) Reply {
 	id, p, ok := parseData(typed.Input)
-	if !ok || (p.action != actionAskFrom && p.action != actionAskTitle) {
+	if !ok || (p.action != actionAskFrom && p.action != actionAskTitle && p.action != actionResearch) {
 		return Reply{Notice: msgInvalidChoice}
 	}
 	sess, unlock, ok := e.lockSession(ctx, actor, id)
@@ -70,6 +70,9 @@ func (e *Engine) Answer(ctx context.Context, actor Actor, typed Typed) Reply {
 		return Reply{Notice: msgNotYours}
 	}
 	text := strings.TrimSpace(typed.Text)
+	if p.action == actionResearch {
+		return e.research(ctx, sess, text)
+	}
 	if p.action == actionAskTitle {
 		return e.navigate(sess, p.action, e.search(ctx, sess, text))
 	}
