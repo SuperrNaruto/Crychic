@@ -53,7 +53,7 @@ func (e *Engine) listPages(sess session, view listView) Reply {
 func textSize(text Text) int {
 	n := len(text)
 	for _, block := range text {
-		n += len([]rune(block.Facts))
+		n += len([]rune(block.Facts)) + len([]rune(block.Tag))
 		for _, span := range block.Spans {
 			n += len([]rune(span.Text))
 		}

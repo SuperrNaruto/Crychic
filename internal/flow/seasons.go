@@ -73,7 +73,7 @@ func (e *Engine) tickBox(sess session) Reply {
 	}
 	subscribe := Button{Label: fmt.Sprintf("订阅所选 %d 季", len(sess.chosen)), Data: data(sess.id, actionSubscribed, 0)}
 	rows := append(grid(ticks, seasonColumns), []Button{subscribe, cancelButton(sess.id)})
-	return sess.picked.replyLines(sess.seasonLines(msgPickSeasons, seasons), rows)
+	return sess.picked.replyLines(sess.seasonChecklist(msgPickSeasons, seasons, sess.chosen), rows)
 }
 
 // seasonOutcome is what happened to one season of a multi-season request.
@@ -116,26 +116,30 @@ func (e *Engine) subscribeSeason(ctx context.Context, sess session, season int) 
 	return out
 }
 
-// outcomeLines words each season's outcome, e.g. "✅ 第 2 季：已订阅".
+// outcomeLines tables each season's outcome, e.g. 第 2 季 | ✅ 已订阅.
 func outcomeLines(m Media, outcomes []seasonOutcome) Text {
-	text := Lines(Line(Strong(fmt.Sprintf("《%s》订阅结果：", m.Title))))
+	rows := make([][]Span, 0, len(outcomes))
 	notified := false
 	for _, o := range outcomes {
-		line := fmt.Sprintf("✅ 第 %d 季：已订阅", o.season)
+		result := "✅ 已订阅"
 		switch {
 		case o.err != nil:
-			line = fmt.Sprintf("⚠️ 第 %d 季：%s", o.season, failureText(o.err))
+			result = "⚠️ " + failureText(o.err)
 		case o.existing:
-			line = fmt.Sprintf("ℹ️ 第 %d 季：已在订阅中", o.season)
+			result = "ℹ️ 已在订阅中"
 		}
-		text = append(text, Line(Plain(line)))
+		rows = append(rows, []Span{Strong(seasonName(o.season)), Plain(result)})
 		notified = notified || o.notified
 	}
+	text := Lines(Line(Strong(fmt.Sprintf("《%s》订阅结果：", m.Title))), Table(outcomeHead, rows...))
 	if notified {
 		text = append(text, Line(Plain(msgWillNotify)))
 	}
 	return text
 }
+
+// outcomeHead names the multi-season result's table columns.
+var outcomeHead = []string{"季", "结果"}
 
 // failureText is the user-safe reason a call failed.
 func failureText(err error) string {

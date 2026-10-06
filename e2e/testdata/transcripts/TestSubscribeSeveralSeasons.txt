@@ -26,13 +26,16 @@
    主演：布莱恩·克兰斯顿、亚伦·保尔、安娜·冈</p>
    <blockquote expandable>高中化学教师沃尔特·怀特被诊断患有晚期癌症，为保障家人经济生活，他与学生杰西制毒贩毒，并逐渐坠落至万劫不复的深渊。</blockquote>
    <hr/>
-   <p><b>选择要订阅的季：</b><br>
-   <b>特别篇</b> · 9 集<br>
-   <b>第 1 季</b> · 7 集<br>
-   <b>第 2 季</b> · 13 集<br>
-   <b>第 3 季</b> · 13 集<br>
-   <b>第 4 季</b> · 13 集<br>
-   <b>第 5 季</b> · 16 集</p>
+   <p><b>选择要订阅的季：</b></p>
+   <table bordered compact>
+   <tr><th>季</th><th>集数</th></tr>
+   <tr><td><b>特别篇</b></td><td>9 集</td></tr>
+   <tr><td><b>第 1 季</b></td><td>7 集</td></tr>
+   <tr><td><b>第 2 季</b></td><td>13 集</td></tr>
+   <tr><td><b>第 3 季</b></td><td>13 集</td></tr>
+   <tr><td><b>第 4 季</b></td><td>13 集</td></tr>
+   <tr><td><b>第 5 季</b></td><td>16 集</td></tr>
+   </table>
    [特别篇 | 1:s:0] [第 1 季 | 1:s:1] [第 2 季 | 1:s:2]
    [第 3 季 | 1:s:3] [第 4 季 | 1:s:4] [第 5 季 | 1:s:5]
    [多选季… | 1:a:0]
@@ -49,13 +52,15 @@
    主演：布莱恩·克兰斯顿、亚伦·保尔、安娜·冈</p>
    <blockquote expandable>高中化学教师沃尔特·怀特被诊断患有晚期癌症，为保障家人经济生活，他与学生杰西制毒贩毒，并逐渐坠落至万劫不复的深渊。</blockquote>
    <hr/>
-   <p><b>选择要订阅的季（可多选，每季从第 1 集开始）：</b><br>
-   <b>特别篇</b> · 9 集<br>
-   <b>第 1 季</b> · 7 集<br>
-   <b>第 2 季</b> · 13 集<br>
-   <b>第 3 季</b> · 13 集<br>
-   <b>第 4 季</b> · 13 集<br>
-   <b>第 5 季</b> · 16 集</p>
+   <p><b>选择要订阅的季（可多选，每季从第 1 集开始）：</b></p>
+   <ul>
+   <li><input type="checkbox"><b>特别篇</b> · 9 集</li>
+   <li><input type="checkbox"><b>第 1 季</b> · 7 集</li>
+   <li><input type="checkbox"><b>第 2 季</b> · 13 集</li>
+   <li><input type="checkbox"><b>第 3 季</b> · 13 集</li>
+   <li><input type="checkbox"><b>第 4 季</b> · 13 集</li>
+   <li><input type="checkbox"><b>第 5 季</b> · 16 集</li>
+   </ul>
    [特别篇 | 1:t:0] [第 1 季 | 1:t:1] [第 2 季 | 1:t:2]
    [第 3 季 | 1:t:3] [第 4 季 | 1:t:4] [第 5 季 | 1:t:5]
    [订阅所选 0 季 | 1:y:0] [返回 | 1:bk:0] [取消 | 1:x:0]
@@ -70,13 +75,15 @@
    主演：布莱恩·克兰斯顿、亚伦·保尔、安娜·冈</p>
    <blockquote expandable>高中化学教师沃尔特·怀特被诊断患有晚期癌症，为保障家人经济生活，他与学生杰西制毒贩毒，并逐渐坠落至万劫不复的深渊。</blockquote>
    <hr/>
-   <p><b>选择要订阅的季（可多选，每季从第 1 集开始）：</b><br>
-   <b>特别篇</b> · 9 集<br>
-   <b>第 1 季</b> · 7 集<br>
-   <b>第 2 季</b> · 13 集<br>
-   <b>第 3 季</b> · 13 集<br>
-   <b>第 4 季</b> · 13 集<br>
-   <b>第 5 季</b> · 16 集</p>
+   <p><b>选择要订阅的季（可多选，每季从第 1 集开始）：</b></p>
+   <ul>
+   <li><input type="checkbox"><b>特别篇</b> · 9 集</li>
+   <li><input type="checkbox" checked><b>第 1 季</b> · 7 集</li>
+   <li><input type="checkbox"><b>第 2 季</b> · 13 集</li>
+   <li><input type="checkbox"><b>第 3 季</b> · 13 集</li>
+   <li><input type="checkbox"><b>第 4 季</b> · 13 集</li>
+   <li><input type="checkbox"><b>第 5 季</b> · 16 集</li>
+   </ul>
    [特别篇 | 1:t:0] [✓ 第 1 季 | 1:t:1] [第 2 季 | 1:t:2]
    [第 3 季 | 1:t:3] [第 4 季 | 1:t:4] [第 5 季 | 1:t:5]
    [订阅所选 1 季 | 1:y:0] [返回 | 1:bk:0] [取消 | 1:x:0]
@@ -91,13 +98,15 @@
    主演：布莱恩·克兰斯顿、亚伦·保尔、安娜·冈</p>
    <blockquote expandable>高中化学教师沃尔特·怀特被诊断患有晚期癌症，为保障家人经济生活，他与学生杰西制毒贩毒，并逐渐坠落至万劫不复的深渊。</blockquote>
    <hr/>
-   <p><b>选择要订阅的季（可多选，每季从第 1 集开始）：</b><br>
-   <b>特别篇</b> · 9 集<br>
-   <b>第 1 季</b> · 7 集<br>
-   <b>第 2 季</b> · 13 集<br>
-   <b>第 3 季</b> · 13 集<br>
-   <b>第 4 季</b> · 13 集<br>
-   <b>第 5 季</b> · 16 集</p>
+   <p><b>选择要订阅的季（可多选，每季从第 1 集开始）：</b></p>
+   <ul>
+   <li><input type="checkbox"><b>特别篇</b> · 9 集</li>
+   <li><input type="checkbox" checked><b>第 1 季</b> · 7 集</li>
+   <li><input type="checkbox" checked><b>第 2 季</b> · 13 集</li>
+   <li><input type="checkbox"><b>第 3 季</b> · 13 集</li>
+   <li><input type="checkbox"><b>第 4 季</b> · 13 集</li>
+   <li><input type="checkbox"><b>第 5 季</b> · 16 集</li>
+   </ul>
    [特别篇 | 1:t:0] [✓ 第 1 季 | 1:t:1] [✓ 第 2 季 | 1:t:2]
    [第 3 季 | 1:t:3] [第 4 季 | 1:t:4] [第 5 季 | 1:t:5]
    [订阅所选 2 季 | 1:y:0] [返回 | 1:bk:0] [取消 | 1:x:0]
@@ -112,13 +121,15 @@
    主演：布莱恩·克兰斯顿、亚伦·保尔、安娜·冈</p>
    <blockquote expandable>高中化学教师沃尔特·怀特被诊断患有晚期癌症，为保障家人经济生活，他与学生杰西制毒贩毒，并逐渐坠落至万劫不复的深渊。</blockquote>
    <hr/>
-   <p><b>选择要订阅的季（可多选，每季从第 1 集开始）：</b><br>
-   <b>特别篇</b> · 9 集<br>
-   <b>第 1 季</b> · 7 集<br>
-   <b>第 2 季</b> · 13 集<br>
-   <b>第 3 季</b> · 13 集<br>
-   <b>第 4 季</b> · 13 集<br>
-   <b>第 5 季</b> · 16 集</p>
+   <p><b>选择要订阅的季（可多选，每季从第 1 集开始）：</b></p>
+   <ul>
+   <li><input type="checkbox"><b>特别篇</b> · 9 集</li>
+   <li><input type="checkbox"><b>第 1 季</b> · 7 集</li>
+   <li><input type="checkbox" checked><b>第 2 季</b> · 13 集</li>
+   <li><input type="checkbox"><b>第 3 季</b> · 13 集</li>
+   <li><input type="checkbox"><b>第 4 季</b> · 13 集</li>
+   <li><input type="checkbox"><b>第 5 季</b> · 16 集</li>
+   </ul>
    [特别篇 | 1:t:0] [第 1 季 | 1:t:1] [✓ 第 2 季 | 1:t:2]
    [第 3 季 | 1:t:3] [第 4 季 | 1:t:4] [第 5 季 | 1:t:5]
    [订阅所选 1 季 | 1:y:0] [返回 | 1:bk:0] [取消 | 1:x:0]
@@ -133,13 +144,15 @@
    主演：布莱恩·克兰斯顿、亚伦·保尔、安娜·冈</p>
    <blockquote expandable>高中化学教师沃尔特·怀特被诊断患有晚期癌症，为保障家人经济生活，他与学生杰西制毒贩毒，并逐渐坠落至万劫不复的深渊。</blockquote>
    <hr/>
-   <p><b>选择要订阅的季（可多选，每季从第 1 集开始）：</b><br>
-   <b>特别篇</b> · 9 集<br>
-   <b>第 1 季</b> · 7 集<br>
-   <b>第 2 季</b> · 13 集<br>
-   <b>第 3 季</b> · 13 集<br>
-   <b>第 4 季</b> · 13 集<br>
-   <b>第 5 季</b> · 16 集</p>
+   <p><b>选择要订阅的季（可多选，每季从第 1 集开始）：</b></p>
+   <ul>
+   <li><input type="checkbox"><b>特别篇</b> · 9 集</li>
+   <li><input type="checkbox"><b>第 1 季</b> · 7 集</li>
+   <li><input type="checkbox" checked><b>第 2 季</b> · 13 集</li>
+   <li><input type="checkbox" checked><b>第 3 季</b> · 13 集</li>
+   <li><input type="checkbox"><b>第 4 季</b> · 13 集</li>
+   <li><input type="checkbox"><b>第 5 季</b> · 16 集</li>
+   </ul>
    [特别篇 | 1:t:0] [第 1 季 | 1:t:1] [✓ 第 2 季 | 1:t:2]
    [✓ 第 3 季 | 1:t:3] [第 4 季 | 1:t:4] [第 5 季 | 1:t:5]
    [订阅所选 2 季 | 1:y:0] [返回 | 1:bk:0] [取消 | 1:x:0]
@@ -160,13 +173,19 @@
    主演：布莱恩·克兰斯顿、亚伦·保尔、安娜·冈</p>
    <blockquote expandable>高中化学教师沃尔特·怀特被诊断患有晚期癌症，为保障家人经济生活，他与学生杰西制毒贩毒，并逐渐坠落至万劫不复的深渊。</blockquote>
    <hr/>
-   <p><b>《绝命毒师》订阅结果：</b><br>
-   ✅ 第 2 季：已订阅<br>
-   ✅ 第 3 季：已订阅<br>
-   入库后会通知你。</p>
+   <p><b>《绝命毒师》订阅结果：</b></p>
+   <table bordered compact>
+   <tr><th>季</th><th>结果</th></tr>
+   <tr><td><b>第 2 季</b></td><td>✅ 已订阅</td></tr>
+   <tr><td><b>第 3 季</b></td><td>✅ 已订阅</td></tr>
+   </table>
+   <p>入库后会通知你。</p>
 << answerCallbackQuery
 >> MoviePilot transfers 绝命毒师 (themoviedb/1396) S03E01
 << sendRichMessage chat=1001 message=2
    <img src="https://image.tmdb.org/t/p/w500/rqliuvX7NdknSHu5qaSDfESplQi.jpg"/>
-   <p>📥 你请求的<b>《绝命毒师》第 3 季</b> E01 已入库。<br>
-   <a href="https://emby.example.com/web/index.html#!/item?id=1396">▶️ 在 Emby 中观看</a></p>
+   <h3>📥 已入库</h3>
+   <p>你请求的<b>《绝命毒师》第 3 季</b> E01 已入库。</p>
+   <tg-button-row align="left">
+   <tg-button type="url" style="success" url="https://emby.example.com/web/index.html#!/item?id=1396">在 Emby 中观看</tg-button>
+   </tg-button-row>

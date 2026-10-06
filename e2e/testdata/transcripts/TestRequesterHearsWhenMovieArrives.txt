@@ -56,5 +56,8 @@
 >> MoviePilot transfers 沙丘 (themoviedb/438631)
 << sendRichMessage chat=1001 message=2
    <img src="https://image.tmdb.org/t/p/w500/6hsJknqlPceFxExOe87z5VGgNG9.jpg"/>
-   <p>📥 你请求的<b>《沙丘》</b>已入库，可以观看了。<br>
-   <a href="https://emby.example.com/web/index.html#!/item?id=438631">▶️ 在 Emby 中观看</a></p>
+   <h3>📥 已入库</h3>
+   <p>你请求的<b>《沙丘》</b>已入库，可以观看了。</p>
+   <tg-button-row align="left">
+   <tg-button type="url" style="success" url="https://emby.example.com/web/index.html#!/item?id=438631">在 Emby 中观看</tg-button>
+   </tg-button-row>

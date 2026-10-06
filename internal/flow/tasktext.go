@@ -18,11 +18,17 @@ var msgFollowExpired = fmt.Sprintf("已自动刷新 %d 分钟，暂停刷新。"
 
 // fileStateText words each transfer file state with its marker.
 var fileStateText = map[FileState]string{
-	FileWaiting: "⏳ %s 等待中",
-	FileRunning: "▶️ %s 整理中",
-	FileDone:    "✅ %s 已完成",
-	FileFailed:  "⚠️ %s 失败",
+	FileWaiting: "⏳ 等待中",
+	FileRunning: "▶️ 整理中",
+	FileDone:    "✅ 已完成",
+	FileFailed:  "⚠️ 失败",
 }
+
+// downloadHead names the download view's table columns.
+var downloadHead = []string{"进度", "速度", "剩余"}
+
+// fileHead names the transfer view's table columns.
+var fileHead = []string{"集", "状态"}
 
 // taskList numbers downloads, then transfer jobs, matching session tasks.
 func taskList(id uint64, downloads []Download, jobs []TransferJob) listView {
@@ -48,34 +54,40 @@ func taskList(id uint64, downloads []Download, jobs []TransferJob) listView {
 	return view
 }
 
-// downloadView is one download, e.g. "进度 37% · ↓ 3.1MB/s · 剩余 5分12秒".
+// downloadView is one download, its progress, speed and time left in a
+// table, e.g. 37% | 3.1MB/s | 5分12秒.
 func downloadView(d Download) Reply {
 	icon := "⬇️ "
 	if d.Paused {
 		icon = "⏸️ "
 	}
 	head := joinNonEmpty(" ", taskName(d.Title, d.Season), EpisodeRanges(d.Episodes))
+	percent := fmt.Sprintf("%.0f%%", d.Progress)
+	if d.Paused {
+		percent = "已暂停 " + percent
+	}
 	speed := ""
 	if !d.Paused && d.Speed != "" && d.Speed != idleSpeed {
-		speed = "↓ " + d.Speed + "/s"
+		speed = d.Speed + "/s"
 	}
-	left := ""
-	if d.Left != "" {
-		left = "剩余 " + d.Left
-	}
-	facts := joinNonEmpty(" · ", progress(d), speed, left)
-	return Reply{Text: Lines(Heading(Plain(icon+head)), Line(Plain(facts))), Image: d.Image}
+	row := []Span{Plain(percent), Plain(speed), Plain(d.Left)}
+	return Reply{Text: Lines(Heading(Plain(icon+head)), Table(downloadHead, row)), Image: d.Image}
 }
 
-// transferView is one transfer job with a line per file.
+// transferView is one transfer job with a table row per file.
 func transferView(j TransferJob) Reply {
-	text := Lines(Heading(Plain("📦 "+taskName(j.Title, j.Season))), Line(Plain(filesDone(j))))
-	for i, f := range j.Files[:min(len(j.Files), maxTransferLines)] {
+	shown := j.Files[:min(len(j.Files), maxTransferLines)]
+	rows := make([][]Span, 0, len(shown))
+	for i, f := range shown {
 		name := fmt.Sprintf("文件 %d", i+1)
 		if f.Episode > 0 {
 			name = fmt.Sprintf("E%02d", f.Episode)
 		}
-		text = append(text, Line(Plain(fmt.Sprintf(fileStateText[f.State], name))))
+		rows = append(rows, []Span{Plain(name), Plain(fileStateText[f.State])})
+	}
+	text := Lines(Heading(Plain("📦 "+taskName(j.Title, j.Season))), Line(Plain(filesDone(j))))
+	if len(rows) > 0 {
+		text = append(text, Table(fileHead, rows...))
 	}
 	if remaining := len(j.Files) - maxTransferLines; remaining > 0 {
 		text = append(text, Remark(fmt.Sprintf("另有 %d 个文件，全部状态请在 MoviePilot 中查看。", remaining)))

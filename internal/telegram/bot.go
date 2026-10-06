@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"log/slog"
 	"net/http"
+	"slices"
 	"strconv"
 	"strings"
 	"sync"
@@ -149,13 +150,24 @@ func (b *Bot) Notify(ctx context.Context, n flow.Notice) error {
 	if err != nil {
 		return fmt.Errorf("telegram address %q: %w", to.Address, err)
 	}
-	if chat != to.UserID && len(text) > 0 {
-		mention := flow.Linked(flow.Plain(to.Name), "tg://user?id="+strconv.FormatInt(to.UserID, decimal))
-		first := flow.Line(append([]flow.Span{mention, flow.Plain(" ")}, text[0].Spans...)...)
-		text = append(flow.Lines(first), text[1:]...)
+	if chat != to.UserID {
+		text = withMention(text, to)
 	}
 	_, err = b.adapter.send(ctx, chat, flow.Reply{Text: text, Image: n.Image})
 	return err
+}
+
+// withMention starts the notice's first paragraph line with a mention of
+// the requester, leaving its heading on top.
+func withMention(text flow.Text, to flow.Actor) flow.Text {
+	i := slices.IndexFunc(text, func(b flow.Block) bool { return b.Kind == flow.Para && len(b.Spans) > 0 })
+	if i < 0 {
+		return text
+	}
+	mention := flow.Linked(flow.Plain(to.Name), "tg://user?id="+strconv.FormatInt(to.UserID, decimal))
+	out := slices.Clone(text)
+	out[i] = flow.Line(append([]flow.Span{mention, flow.Plain(" ")}, text[i].Spans...)...)
+	return out
 }
 
 // registerCommands sets the "/" menu on every start, keeping it in step

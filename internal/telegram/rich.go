@@ -17,8 +17,8 @@ func richMessage(text flow.Text, image string) *models.InputRichMessage {
 }
 
 // renderRich turns flow text into rich HTML: a heading, paragraphs whose
-// lines are joined by breaks, numbered lists, collapsible quotes, closed
-// details and footers. All content is escaped so titles and synopses can never break
+// lines are joined by breaks, numbered lists, checklists, tables, link
+// buttons, collapsible quotes, closed details and footers. All content is escaped so titles and synopses can never break
 // the markup.
 func renderRich(text flow.Text, image string) string {
 	var w richWriter
@@ -36,7 +36,7 @@ func renderRich(text flow.Text, image string) string {
 // consecutive lines or items continue it.
 type richWriter struct {
 	strings.Builder
-	open string // "p" or "ol" while one is open
+	open string // "p", "ol" or "ul" while one is open
 }
 
 func (w *richWriter) add(b flow.Block) {
@@ -55,6 +55,14 @@ func (w *richWriter) add(b flow.Block) {
 		w.block("<footer>" + renderSpans(b.Spans) + "</footer>")
 	case flow.Rule:
 		w.block("<hr/>")
+	case flow.Tick:
+		w.tick(b)
+	case flow.Tabular:
+		if len(b.Head) > 0 {
+			w.block(renderTable(b))
+		}
+	case flow.Action:
+		w.block(renderAction(b.Spans))
 	case flow.Folded:
 		w.block("<details><summary>" + html.EscapeString(b.Summary) + "</summary><p>" +
 			renderSpans(b.Spans) + "</p></details>")
@@ -84,10 +92,65 @@ func (w *richWriter) item(b flow.Block) {
 		w.open = "ol"
 	}
 	fmt.Fprintf(w, `<li value="%d">%s`, b.Number, renderSpans(b.Spans))
-	if b.Facts != "" {
-		w.WriteString("<br><i>" + html.EscapeString(b.Facts) + "</i>")
+	w.WriteString(renderFacts(b.Facts, b.Tag) + "</li>")
+}
+
+// renderFacts puts an entry's facts in italics on a line below its name,
+// its tag highlighted after them.
+func renderFacts(facts, tag string) string {
+	if facts == "" && tag == "" {
+		return ""
 	}
-	w.WriteString("</li>")
+	out := html.EscapeString(facts)
+	if tag != "" && facts != "" {
+		out += " · "
+	}
+	if tag != "" {
+		out += "<mark>" + html.EscapeString(tag) + "</mark>"
+	}
+	return "<br><i>" + out + "</i>"
+}
+
+// tick continues the open checklist.
+func (w *richWriter) tick(b flow.Block) {
+	if w.open != "ul" {
+		w.block("<ul>")
+		w.open = "ul"
+	}
+	box := `<input type="checkbox">`
+	if b.On {
+		box = `<input type="checkbox" checked>`
+	}
+	w.WriteString("<li>" + box + renderSpans(b.Spans) + "</li>")
+}
+
+// renderTable is a compact bordered table, the column names on top.
+func renderTable(b flow.Block) string {
+	var t strings.Builder
+	t.WriteString("<table bordered compact><tr>")
+	for _, name := range b.Head {
+		t.WriteString("<th>" + html.EscapeString(name) + "</th>")
+	}
+	t.WriteString("</tr>")
+	for _, row := range b.Rows {
+		t.WriteString("<tr>")
+		for _, cell := range row {
+			t.WriteString("<td>" + renderSpan(cell) + "</td>")
+		}
+		t.WriteString("</tr>")
+	}
+	return t.String() + "</table>"
+}
+
+// renderAction is a button opening the spans' link, left aligned.
+func renderAction(spans []flow.Span) string {
+	var row strings.Builder
+	row.WriteString(`<tg-button-row align="left">`)
+	for _, s := range spans {
+		row.WriteString(`<tg-button type="url" style="success" url="` + html.EscapeString(s.Link) + `">` +
+			html.EscapeString(s.Text) + "</tg-button>")
+	}
+	return row.String() + "</tg-button-row>"
 }
 
 // block starts a top-level block, closing any open paragraph or list.

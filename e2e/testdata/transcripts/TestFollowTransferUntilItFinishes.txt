@@ -17,9 +17,12 @@
 << editMessageText chat=1001 message=1
    <img src="https://image.tmdb.org/t/p/w500/xixekXvcCSZS1jXhFrYUzpCrLL6.jpg"/>
    <h3>📦 《颂乐人偶》第 1 季</h3>
-   <p>已整理 0/2 个文件<br>
-   ▶️ E13 整理中<br>
-   ⏳ E12 等待中</p>
+   <p>已整理 0/2 个文件</p>
+   <table bordered compact>
+   <tr><th>集</th><th>状态</th></tr>
+   <tr><td>E13</td><td>▶️ 整理中</td></tr>
+   <tr><td>E12</td><td>⏳ 等待中</td></tr>
+   </table>
    <footer>自动刷新中…</footer>
    [停止刷新 | 1:u:1] [返回任务列表 | 1:l:0]
 << answerCallbackQuery
@@ -27,9 +30,12 @@
 << editMessageText chat=1001 message=1
    <img src="https://image.tmdb.org/t/p/w500/xixekXvcCSZS1jXhFrYUzpCrLL6.jpg"/>
    <h3>📦 《颂乐人偶》第 1 季</h3>
-   <p>已整理 1/2 个文件<br>
-   ✅ E13 已完成<br>
-   ▶️ E12 整理中</p>
+   <p>已整理 1/2 个文件</p>
+   <table bordered compact>
+   <tr><th>集</th><th>状态</th></tr>
+   <tr><td>E13</td><td>✅ 已完成</td></tr>
+   <tr><td>E12</td><td>▶️ 整理中</td></tr>
+   </table>
    <footer>自动刷新中…</footer>
    [停止刷新 | 1:u:1] [返回任务列表 | 1:l:0]
 >> MoviePilot now answers GET /api/v1/transfer/queue with queue_none.json

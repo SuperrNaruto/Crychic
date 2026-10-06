@@ -2,6 +2,7 @@ package flow
 
 import (
 	"fmt"
+	"slices"
 	"strings"
 )
 
@@ -11,6 +12,9 @@ const (
 	// maxOverviewRunes keeps the collapsed synopsis well inside chat limits.
 	maxOverviewRunes = 1000
 )
+
+// seasonHead names the season picker's table columns.
+var seasonHead = []string{"季", "集数", "入库"}
 
 // card is the picked media with everything known about it.
 type card struct {
@@ -156,34 +160,49 @@ func seasonName(number int) string {
 	return fmt.Sprintf("第 %d 季", number)
 }
 
-// seasonLines asks question above a line per season.
-func (sess session) seasonLines(question string, seasons []Season) Text {
+// seasonTable asks question above a table of the seasons: name, episode
+// count and what the library holds.
+func (sess session) seasonTable(question string, seasons []Season) Text {
+	rows := make([][]Span, 0, len(seasons))
+	for _, s := range seasons {
+		rows = append(rows, []Span{Strong(seasonName(s.Number)), Plain(episodeCount(s)), Plain(sess.seasonHeld(s))})
+	}
+	return Lines(Line(Strong(question)), Table(seasonHead, rows...))
+}
+
+// seasonChecklist asks question above a checklist of the seasons, those in
+// chosen ticked, e.g. "☑ **第 2 季** · 13 集 · 已有 5 集".
+func (sess session) seasonChecklist(question string, seasons []Season, chosen []int) Text {
 	text := Lines(Line(Strong(question)))
 	for _, s := range seasons {
-		name, facts, _ := strings.Cut(sess.seasonLabel(s), " · ")
-		line := Line(Strong(name))
-		if facts != "" {
-			line = Line(Strong(name), Plain(" · "+facts))
+		spans := []Span{Strong(seasonName(s.Number))}
+		if facts := joinNonEmpty(" · ", episodeCount(s), sess.seasonHeld(s)); facts != "" {
+			spans = append(spans, Plain(" · "+facts))
 		}
-		text = append(text, line)
+		text = append(text, Ticked(slices.Contains(chosen, s.Number), spans...))
 	}
 	return text
 }
 
-// seasonLabel describes a season, e.g. "第 2 季 · 13 集 · 已有 5 集".
-func (sess session) seasonLabel(s Season) string {
-	label := seasonName(s.Number)
-	if s.EpisodeCount > 0 {
-		label = fmt.Sprintf("%s · %d 集", label, s.EpisodeCount)
+// episodeCount is e.g. "13 集", empty while unknown.
+func episodeCount(s Season) string {
+	if s.EpisodeCount == 0 {
+		return ""
 	}
+	return fmt.Sprintf("%d 集", s.EpisodeCount)
+}
+
+// seasonHeld is what the library holds of a season: 已入库, 已有 5 集 or
+// nothing.
+func (sess session) seasonHeld(s Season) string {
 	held := len(sess.library.Episodes[s.Number])
 	switch {
 	case sess.wholeSeasonHeld(s):
-		label += " · 已入库"
+		return "已入库"
 	case held > 0:
-		label += fmt.Sprintf(" · 已有 %d 集", held)
+		return fmt.Sprintf("已有 %d 集", held)
 	}
-	return label
+	return ""
 }
 
 // EpisodeRanges renders sorted episode numbers compactly: E01–E03、E05.

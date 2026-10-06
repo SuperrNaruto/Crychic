@@ -35,9 +35,12 @@
    主演：高山南、山口胜平、山崎和佳奈</p>
    <blockquote expandable>高中生侦探工藤新一与毛利兰在游乐园游玩时发现两个行动诡异的黑衣男子，便跟踪他们，不料被灌下一种叫「APTX4869」的神秘毒药，然而因为药物副作用，新一的身体竟回到孩童状态。为不使周围的人受到牵连，他化名为「江户川柯南」，寄住在毛利兰家中，用阿笠博士发明的手表型麻醉枪让毛利小五郎睡着，接着用蝴蝶结变声器模仿他的声音来进行推理，解决了许多案件，并一直寻找着黑衣组织的人的下落，希望有朝一日将其绳之以法，并变回原来的样子。</blockquote>
    <hr/>
-   <p><b>选择要订阅的季：</b><br>
-   <b>特别篇</b> · 35 集<br>
-   <b>第 1 季</b> · 1216 集</p>
+   <p><b>选择要订阅的季：</b></p>
+   <table bordered compact>
+   <tr><th>季</th><th>集数</th></tr>
+   <tr><td><b>特别篇</b></td><td>35 集</td></tr>
+   <tr><td><b>第 1 季</b></td><td>1216 集</td></tr>
+   </table>
    [特别篇 | 1:s:0] [第 1 季 | 1:s:1]
    [多选季… | 1:a:0]
    [相似推荐 | 1:r:0]
@@ -78,6 +81,9 @@
 >> MoviePilot transfers 名侦探柯南 (themoviedb/30983) S01E1216
 << sendRichMessage chat=1001 message=2
    <img src="https://image.tmdb.org/t/p/w500/7qBrY88hNwMrMb75PkBZjhFolbL.jpg"/>
-   <p>📥 你请求的<b>《名侦探柯南》第 1 季</b> E1216 已入库。<br>
-   本季请求的剧集已全部入库。<br>
-   <a href="https://emby.example.com/web/index.html#!/item?id=30983">▶️ 在 Emby 中观看</a></p>
+   <h3>📥 已入库</h3>
+   <p>你请求的<b>《名侦探柯南》第 1 季</b> E1216 已入库。<br>
+   本季请求的剧集已全部入库。</p>
+   <tg-button-row align="left">
+   <tg-button type="url" style="success" url="https://emby.example.com/web/index.html#!/item?id=30983">在 Emby 中观看</tg-button>
+   </tg-button-row>

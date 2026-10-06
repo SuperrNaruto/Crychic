@@ -206,7 +206,7 @@ func (e *Engine) pickMedia(ctx context.Context, sess session, index int) Reply {
 		rows = append(rows, []Button{{Label: "多选季…", Data: data(sess.id, actionMulti, 0)}})
 	}
 	rows = append(rows, relatedRow(sess), []Button{cancelButton(sess.id)})
-	return sess.picked.replyLines(sess.seasonLines(msgPickSeason, seasons), rows)
+	return sess.picked.replyLines(sess.seasonTable(msgPickSeason, seasons), rows)
 }
 
 // details enriches the card; it is cosmetic, so a failure is logged and the

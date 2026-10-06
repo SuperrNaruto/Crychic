@@ -11,8 +11,11 @@ const (
 	actionAskCancel   = "v" // arg: index into session subs; asks to confirm
 	actionUnsubscribe = "z" // arg: index into session subs; cancels it
 
-	msgNoSubs    = "当前没有订阅。"
-	msgSubsTitle = "📚 订阅列表"
+	msgNoSubs       = "当前没有订阅。"
+	msgSubsTitle    = "📚 订阅列表"
+	msgCancelTitle  = "取消订阅"
+	msgCancelEffect = "MoviePilot 将不再为它搜索下载。"
+	msgRequestedTag = "你请求的"
 )
 
 // stateText words MoviePilot's subscription states.
@@ -84,12 +87,12 @@ func subEntry(n int, s Subscription, mine bool) Block {
 			missing = fmt.Sprintf("缺 %d/%d 集", s.Lack, s.Total)
 		}
 	}
-	who := ""
-	if mine {
-		who = "你请求的"
-	}
 	name := fmt.Sprintf("《%s》%s", s.Title, seasonSuffix(s))
-	return entry(n, Strong(name), stateText[s.State], missing, who)
+	item := entry(n, Strong(name), stateText[s.State], missing)
+	if mine {
+		item.Tag = msgRequestedTag
+	}
+	return item
 }
 
 // seasonSuffix follows a 《title》, e.g. 第 2 季.
@@ -103,9 +106,9 @@ func seasonSuffix(s Subscription) string {
 // askCancel asks before deleting the subscription at index.
 func askCancel(sess session, index int) Reply {
 	s := sess.subs[index]
-	question := fmt.Sprintf("确认取消订阅《%s》%s？MoviePilot 将不再为它搜索下载。", s.Title, seasonSuffix(s))
+	question := fmt.Sprintf("确认取消订阅《%s》%s？", s.Title, seasonSuffix(s))
 	return Reply{
-		Text:  Lines(Heading(Plain(question))),
+		Text:  Lines(Heading(Plain(msgCancelTitle)), Line(Strong(question)), Line(Plain(msgCancelEffect))),
 		Image: s.Poster,
 		Buttons: [][]Button{{
 			{Label: "确认取消", Data: data(sess.id, actionUnsubscribe, index)},

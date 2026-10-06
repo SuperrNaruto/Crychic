@@ -16,107 +16,110 @@
 >> user 1001 taps 1:k:1 on message 1
 << editMessageText chat=1001 message=1
    <h3>📦 《颂乐人偶》第 1 季</h3>
-   <p>已整理 0/500 个文件<br>
-   ⏳ E01 等待中<br>
-   ⏳ E02 等待中<br>
-   ⏳ E03 等待中<br>
-   ⏳ E04 等待中<br>
-   ⏳ E05 等待中<br>
-   ⏳ E06 等待中<br>
-   ⏳ E07 等待中<br>
-   ⏳ E08 等待中<br>
-   ⏳ E09 等待中<br>
-   ⏳ E10 等待中<br>
-   ⏳ E11 等待中<br>
-   ⏳ E12 等待中<br>
-   ⏳ E13 等待中<br>
-   ⏳ E14 等待中<br>
-   ⏳ E15 等待中<br>
-   ⏳ E16 等待中<br>
-   ⏳ E17 等待中<br>
-   ⏳ E18 等待中<br>
-   ⏳ E19 等待中<br>
-   ⏳ E20 等待中<br>
-   ⏳ E21 等待中<br>
-   ⏳ E22 等待中<br>
-   ⏳ E23 等待中<br>
-   ⏳ E24 等待中<br>
-   ⏳ E25 等待中<br>
-   ⏳ E26 等待中<br>
-   ⏳ E27 等待中<br>
-   ⏳ E28 等待中<br>
-   ⏳ E29 等待中<br>
-   ⏳ E30 等待中<br>
-   ⏳ E31 等待中<br>
-   ⏳ E32 等待中<br>
-   ⏳ E33 等待中<br>
-   ⏳ E34 等待中<br>
-   ⏳ E35 等待中<br>
-   ⏳ E36 等待中<br>
-   ⏳ E37 等待中<br>
-   ⏳ E38 等待中<br>
-   ⏳ E39 等待中<br>
-   ⏳ E40 等待中<br>
-   ⏳ E41 等待中<br>
-   ⏳ E42 等待中<br>
-   ⏳ E43 等待中<br>
-   ⏳ E44 等待中<br>
-   ⏳ E45 等待中<br>
-   ⏳ E46 等待中<br>
-   ⏳ E47 等待中<br>
-   ⏳ E48 等待中<br>
-   ⏳ E49 等待中<br>
-   ⏳ E50 等待中<br>
-   ⏳ E51 等待中<br>
-   ⏳ E52 等待中<br>
-   ⏳ E53 等待中<br>
-   ⏳ E54 等待中<br>
-   ⏳ E55 等待中<br>
-   ⏳ E56 等待中<br>
-   ⏳ E57 等待中<br>
-   ⏳ E58 等待中<br>
-   ⏳ E59 等待中<br>
-   ⏳ E60 等待中<br>
-   ⏳ E61 等待中<br>
-   ⏳ E62 等待中<br>
-   ⏳ E63 等待中<br>
-   ⏳ E64 等待中<br>
-   ⏳ E65 等待中<br>
-   ⏳ E66 等待中<br>
-   ⏳ E67 等待中<br>
-   ⏳ E68 等待中<br>
-   ⏳ E69 等待中<br>
-   ⏳ E70 等待中<br>
-   ⏳ E71 等待中<br>
-   ⏳ E72 等待中<br>
-   ⏳ E73 等待中<br>
-   ⏳ E74 等待中<br>
-   ⏳ E75 等待中<br>
-   ⏳ E76 等待中<br>
-   ⏳ E77 等待中<br>
-   ⏳ E78 等待中<br>
-   ⏳ E79 等待中<br>
-   ⏳ E80 等待中<br>
-   ⏳ E81 等待中<br>
-   ⏳ E82 等待中<br>
-   ⏳ E83 等待中<br>
-   ⏳ E84 等待中<br>
-   ⏳ E85 等待中<br>
-   ⏳ E86 等待中<br>
-   ⏳ E87 等待中<br>
-   ⏳ E88 等待中<br>
-   ⏳ E89 等待中<br>
-   ⏳ E90 等待中<br>
-   ⏳ E91 等待中<br>
-   ⏳ E92 等待中<br>
-   ⏳ E93 等待中<br>
-   ⏳ E94 等待中<br>
-   ⏳ E95 等待中<br>
-   ⏳ E96 等待中<br>
-   ⏳ E97 等待中<br>
-   ⏳ E98 等待中<br>
-   ⏳ E99 等待中<br>
-   ⏳ E100 等待中</p>
+   <p>已整理 0/500 个文件</p>
+   <table bordered compact>
+   <tr><th>集</th><th>状态</th></tr>
+   <tr><td>E01</td><td>⏳ 等待中</td></tr>
+   <tr><td>E02</td><td>⏳ 等待中</td></tr>
+   <tr><td>E03</td><td>⏳ 等待中</td></tr>
+   <tr><td>E04</td><td>⏳ 等待中</td></tr>
+   <tr><td>E05</td><td>⏳ 等待中</td></tr>
+   <tr><td>E06</td><td>⏳ 等待中</td></tr>
+   <tr><td>E07</td><td>⏳ 等待中</td></tr>
+   <tr><td>E08</td><td>⏳ 等待中</td></tr>
+   <tr><td>E09</td><td>⏳ 等待中</td></tr>
+   <tr><td>E10</td><td>⏳ 等待中</td></tr>
+   <tr><td>E11</td><td>⏳ 等待中</td></tr>
+   <tr><td>E12</td><td>⏳ 等待中</td></tr>
+   <tr><td>E13</td><td>⏳ 等待中</td></tr>
+   <tr><td>E14</td><td>⏳ 等待中</td></tr>
+   <tr><td>E15</td><td>⏳ 等待中</td></tr>
+   <tr><td>E16</td><td>⏳ 等待中</td></tr>
+   <tr><td>E17</td><td>⏳ 等待中</td></tr>
+   <tr><td>E18</td><td>⏳ 等待中</td></tr>
+   <tr><td>E19</td><td>⏳ 等待中</td></tr>
+   <tr><td>E20</td><td>⏳ 等待中</td></tr>
+   <tr><td>E21</td><td>⏳ 等待中</td></tr>
+   <tr><td>E22</td><td>⏳ 等待中</td></tr>
+   <tr><td>E23</td><td>⏳ 等待中</td></tr>
+   <tr><td>E24</td><td>⏳ 等待中</td></tr>
+   <tr><td>E25</td><td>⏳ 等待中</td></tr>
+   <tr><td>E26</td><td>⏳ 等待中</td></tr>
+   <tr><td>E27</td><td>⏳ 等待中</td></tr>
+   <tr><td>E28</td><td>⏳ 等待中</td></tr>
+   <tr><td>E29</td><td>⏳ 等待中</td></tr>
+   <tr><td>E30</td><td>⏳ 等待中</td></tr>
+   <tr><td>E31</td><td>⏳ 等待中</td></tr>
+   <tr><td>E32</td><td>⏳ 等待中</td></tr>
+   <tr><td>E33</td><td>⏳ 等待中</td></tr>
+   <tr><td>E34</td><td>⏳ 等待中</td></tr>
+   <tr><td>E35</td><td>⏳ 等待中</td></tr>
+   <tr><td>E36</td><td>⏳ 等待中</td></tr>
+   <tr><td>E37</td><td>⏳ 等待中</td></tr>
+   <tr><td>E38</td><td>⏳ 等待中</td></tr>
+   <tr><td>E39</td><td>⏳ 等待中</td></tr>
+   <tr><td>E40</td><td>⏳ 等待中</td></tr>
+   <tr><td>E41</td><td>⏳ 等待中</td></tr>
+   <tr><td>E42</td><td>⏳ 等待中</td></tr>
+   <tr><td>E43</td><td>⏳ 等待中</td></tr>
+   <tr><td>E44</td><td>⏳ 等待中</td></tr>
+   <tr><td>E45</td><td>⏳ 等待中</td></tr>
+   <tr><td>E46</td><td>⏳ 等待中</td></tr>
+   <tr><td>E47</td><td>⏳ 等待中</td></tr>
+   <tr><td>E48</td><td>⏳ 等待中</td></tr>
+   <tr><td>E49</td><td>⏳ 等待中</td></tr>
+   <tr><td>E50</td><td>⏳ 等待中</td></tr>
+   <tr><td>E51</td><td>⏳ 等待中</td></tr>
+   <tr><td>E52</td><td>⏳ 等待中</td></tr>
+   <tr><td>E53</td><td>⏳ 等待中</td></tr>
+   <tr><td>E54</td><td>⏳ 等待中</td></tr>
+   <tr><td>E55</td><td>⏳ 等待中</td></tr>
+   <tr><td>E56</td><td>⏳ 等待中</td></tr>
+   <tr><td>E57</td><td>⏳ 等待中</td></tr>
+   <tr><td>E58</td><td>⏳ 等待中</td></tr>
+   <tr><td>E59</td><td>⏳ 等待中</td></tr>
+   <tr><td>E60</td><td>⏳ 等待中</td></tr>
+   <tr><td>E61</td><td>⏳ 等待中</td></tr>
+   <tr><td>E62</td><td>⏳ 等待中</td></tr>
+   <tr><td>E63</td><td>⏳ 等待中</td></tr>
+   <tr><td>E64</td><td>⏳ 等待中</td></tr>
+   <tr><td>E65</td><td>⏳ 等待中</td></tr>
+   <tr><td>E66</td><td>⏳ 等待中</td></tr>
+   <tr><td>E67</td><td>⏳ 等待中</td></tr>
+   <tr><td>E68</td><td>⏳ 等待中</td></tr>
+   <tr><td>E69</td><td>⏳ 等待中</td></tr>
+   <tr><td>E70</td><td>⏳ 等待中</td></tr>
+   <tr><td>E71</td><td>⏳ 等待中</td></tr>
+   <tr><td>E72</td><td>⏳ 等待中</td></tr>
+   <tr><td>E73</td><td>⏳ 等待中</td></tr>
+   <tr><td>E74</td><td>⏳ 等待中</td></tr>
+   <tr><td>E75</td><td>⏳ 等待中</td></tr>
+   <tr><td>E76</td><td>⏳ 等待中</td></tr>
+   <tr><td>E77</td><td>⏳ 等待中</td></tr>
+   <tr><td>E78</td><td>⏳ 等待中</td></tr>
+   <tr><td>E79</td><td>⏳ 等待中</td></tr>
+   <tr><td>E80</td><td>⏳ 等待中</td></tr>
+   <tr><td>E81</td><td>⏳ 等待中</td></tr>
+   <tr><td>E82</td><td>⏳ 等待中</td></tr>
+   <tr><td>E83</td><td>⏳ 等待中</td></tr>
+   <tr><td>E84</td><td>⏳ 等待中</td></tr>
+   <tr><td>E85</td><td>⏳ 等待中</td></tr>
+   <tr><td>E86</td><td>⏳ 等待中</td></tr>
+   <tr><td>E87</td><td>⏳ 等待中</td></tr>
+   <tr><td>E88</td><td>⏳ 等待中</td></tr>
+   <tr><td>E89</td><td>⏳ 等待中</td></tr>
+   <tr><td>E90</td><td>⏳ 等待中</td></tr>
+   <tr><td>E91</td><td>⏳ 等待中</td></tr>
+   <tr><td>E92</td><td>⏳ 等待中</td></tr>
+   <tr><td>E93</td><td>⏳ 等待中</td></tr>
+   <tr><td>E94</td><td>⏳ 等待中</td></tr>
+   <tr><td>E95</td><td>⏳ 等待中</td></tr>
+   <tr><td>E96</td><td>⏳ 等待中</td></tr>
+   <tr><td>E97</td><td>⏳ 等待中</td></tr>
+   <tr><td>E98</td><td>⏳ 等待中</td></tr>
+   <tr><td>E99</td><td>⏳ 等待中</td></tr>
+   <tr><td>E100</td><td>⏳ 等待中</td></tr>
+   </table>
    <footer>另有 400 个文件，全部状态请在 MoviePilot 中查看。</footer>
    <footer>自动刷新中…</footer>
    [停止刷新 | 1:u:1] [返回任务列表 | 1:l:0]
@@ -124,107 +127,110 @@
 >> user 1001 taps 1:u:1 on message 1
 << editMessageText chat=1001 message=1
    <h3>📦 《颂乐人偶》第 1 季</h3>
-   <p>已整理 0/500 个文件<br>
-   ⏳ E01 等待中<br>
-   ⏳ E02 等待中<br>
-   ⏳ E03 等待中<br>
-   ⏳ E04 等待中<br>
-   ⏳ E05 等待中<br>
-   ⏳ E06 等待中<br>
-   ⏳ E07 等待中<br>
-   ⏳ E08 等待中<br>
-   ⏳ E09 等待中<br>
-   ⏳ E10 等待中<br>
-   ⏳ E11 等待中<br>
-   ⏳ E12 等待中<br>
-   ⏳ E13 等待中<br>
-   ⏳ E14 等待中<br>
-   ⏳ E15 等待中<br>
-   ⏳ E16 等待中<br>
-   ⏳ E17 等待中<br>
-   ⏳ E18 等待中<br>
-   ⏳ E19 等待中<br>
-   ⏳ E20 等待中<br>
-   ⏳ E21 等待中<br>
-   ⏳ E22 等待中<br>
-   ⏳ E23 等待中<br>
-   ⏳ E24 等待中<br>
-   ⏳ E25 等待中<br>
-   ⏳ E26 等待中<br>
-   ⏳ E27 等待中<br>
-   ⏳ E28 等待中<br>
-   ⏳ E29 等待中<br>
-   ⏳ E30 等待中<br>
-   ⏳ E31 等待中<br>
-   ⏳ E32 等待中<br>
-   ⏳ E33 等待中<br>
-   ⏳ E34 等待中<br>
-   ⏳ E35 等待中<br>
-   ⏳ E36 等待中<br>
-   ⏳ E37 等待中<br>
-   ⏳ E38 等待中<br>
-   ⏳ E39 等待中<br>
-   ⏳ E40 等待中<br>
-   ⏳ E41 等待中<br>
-   ⏳ E42 等待中<br>
-   ⏳ E43 等待中<br>
-   ⏳ E44 等待中<br>
-   ⏳ E45 等待中<br>
-   ⏳ E46 等待中<br>
-   ⏳ E47 等待中<br>
-   ⏳ E48 等待中<br>
-   ⏳ E49 等待中<br>
-   ⏳ E50 等待中<br>
-   ⏳ E51 等待中<br>
-   ⏳ E52 等待中<br>
-   ⏳ E53 等待中<br>
-   ⏳ E54 等待中<br>
-   ⏳ E55 等待中<br>
-   ⏳ E56 等待中<br>
-   ⏳ E57 等待中<br>
-   ⏳ E58 等待中<br>
-   ⏳ E59 等待中<br>
-   ⏳ E60 等待中<br>
-   ⏳ E61 等待中<br>
-   ⏳ E62 等待中<br>
-   ⏳ E63 等待中<br>
-   ⏳ E64 等待中<br>
-   ⏳ E65 等待中<br>
-   ⏳ E66 等待中<br>
-   ⏳ E67 等待中<br>
-   ⏳ E68 等待中<br>
-   ⏳ E69 等待中<br>
-   ⏳ E70 等待中<br>
-   ⏳ E71 等待中<br>
-   ⏳ E72 等待中<br>
-   ⏳ E73 等待中<br>
-   ⏳ E74 等待中<br>
-   ⏳ E75 等待中<br>
-   ⏳ E76 等待中<br>
-   ⏳ E77 等待中<br>
-   ⏳ E78 等待中<br>
-   ⏳ E79 等待中<br>
-   ⏳ E80 等待中<br>
-   ⏳ E81 等待中<br>
-   ⏳ E82 等待中<br>
-   ⏳ E83 等待中<br>
-   ⏳ E84 等待中<br>
-   ⏳ E85 等待中<br>
-   ⏳ E86 等待中<br>
-   ⏳ E87 等待中<br>
-   ⏳ E88 等待中<br>
-   ⏳ E89 等待中<br>
-   ⏳ E90 等待中<br>
-   ⏳ E91 等待中<br>
-   ⏳ E92 等待中<br>
-   ⏳ E93 等待中<br>
-   ⏳ E94 等待中<br>
-   ⏳ E95 等待中<br>
-   ⏳ E96 等待中<br>
-   ⏳ E97 等待中<br>
-   ⏳ E98 等待中<br>
-   ⏳ E99 等待中<br>
-   ⏳ E100 等待中</p>
+   <p>已整理 0/500 个文件</p>
+   <table bordered compact>
+   <tr><th>集</th><th>状态</th></tr>
+   <tr><td>E01</td><td>⏳ 等待中</td></tr>
+   <tr><td>E02</td><td>⏳ 等待中</td></tr>
+   <tr><td>E03</td><td>⏳ 等待中</td></tr>
+   <tr><td>E04</td><td>⏳ 等待中</td></tr>
+   <tr><td>E05</td><td>⏳ 等待中</td></tr>
+   <tr><td>E06</td><td>⏳ 等待中</td></tr>
+   <tr><td>E07</td><td>⏳ 等待中</td></tr>
+   <tr><td>E08</td><td>⏳ 等待中</td></tr>
+   <tr><td>E09</td><td>⏳ 等待中</td></tr>
+   <tr><td>E10</td><td>⏳ 等待中</td></tr>
+   <tr><td>E11</td><td>⏳ 等待中</td></tr>
+   <tr><td>E12</td><td>⏳ 等待中</td></tr>
+   <tr><td>E13</td><td>⏳ 等待中</td></tr>
+   <tr><td>E14</td><td>⏳ 等待中</td></tr>
+   <tr><td>E15</td><td>⏳ 等待中</td></tr>
+   <tr><td>E16</td><td>⏳ 等待中</td></tr>
+   <tr><td>E17</td><td>⏳ 等待中</td></tr>
+   <tr><td>E18</td><td>⏳ 等待中</td></tr>
+   <tr><td>E19</td><td>⏳ 等待中</td></tr>
+   <tr><td>E20</td><td>⏳ 等待中</td></tr>
+   <tr><td>E21</td><td>⏳ 等待中</td></tr>
+   <tr><td>E22</td><td>⏳ 等待中</td></tr>
+   <tr><td>E23</td><td>⏳ 等待中</td></tr>
+   <tr><td>E24</td><td>⏳ 等待中</td></tr>
+   <tr><td>E25</td><td>⏳ 等待中</td></tr>
+   <tr><td>E26</td><td>⏳ 等待中</td></tr>
+   <tr><td>E27</td><td>⏳ 等待中</td></tr>
+   <tr><td>E28</td><td>⏳ 等待中</td></tr>
+   <tr><td>E29</td><td>⏳ 等待中</td></tr>
+   <tr><td>E30</td><td>⏳ 等待中</td></tr>
+   <tr><td>E31</td><td>⏳ 等待中</td></tr>
+   <tr><td>E32</td><td>⏳ 等待中</td></tr>
+   <tr><td>E33</td><td>⏳ 等待中</td></tr>
+   <tr><td>E34</td><td>⏳ 等待中</td></tr>
+   <tr><td>E35</td><td>⏳ 等待中</td></tr>
+   <tr><td>E36</td><td>⏳ 等待中</td></tr>
+   <tr><td>E37</td><td>⏳ 等待中</td></tr>
+   <tr><td>E38</td><td>⏳ 等待中</td></tr>
+   <tr><td>E39</td><td>⏳ 等待中</td></tr>
+   <tr><td>E40</td><td>⏳ 等待中</td></tr>
+   <tr><td>E41</td><td>⏳ 等待中</td></tr>
+   <tr><td>E42</td><td>⏳ 等待中</td></tr>
+   <tr><td>E43</td><td>⏳ 等待中</td></tr>
+   <tr><td>E44</td><td>⏳ 等待中</td></tr>
+   <tr><td>E45</td><td>⏳ 等待中</td></tr>
+   <tr><td>E46</td><td>⏳ 等待中</td></tr>
+   <tr><td>E47</td><td>⏳ 等待中</td></tr>
+   <tr><td>E48</td><td>⏳ 等待中</td></tr>
+   <tr><td>E49</td><td>⏳ 等待中</td></tr>
+   <tr><td>E50</td><td>⏳ 等待中</td></tr>
+   <tr><td>E51</td><td>⏳ 等待中</td></tr>
+   <tr><td>E52</td><td>⏳ 等待中</td></tr>
+   <tr><td>E53</td><td>⏳ 等待中</td></tr>
+   <tr><td>E54</td><td>⏳ 等待中</td></tr>
+   <tr><td>E55</td><td>⏳ 等待中</td></tr>
+   <tr><td>E56</td><td>⏳ 等待中</td></tr>
+   <tr><td>E57</td><td>⏳ 等待中</td></tr>
+   <tr><td>E58</td><td>⏳ 等待中</td></tr>
+   <tr><td>E59</td><td>⏳ 等待中</td></tr>
+   <tr><td>E60</td><td>⏳ 等待中</td></tr>
+   <tr><td>E61</td><td>⏳ 等待中</td></tr>
+   <tr><td>E62</td><td>⏳ 等待中</td></tr>
+   <tr><td>E63</td><td>⏳ 等待中</td></tr>
+   <tr><td>E64</td><td>⏳ 等待中</td></tr>
+   <tr><td>E65</td><td>⏳ 等待中</td></tr>
+   <tr><td>E66</td><td>⏳ 等待中</td></tr>
+   <tr><td>E67</td><td>⏳ 等待中</td></tr>
+   <tr><td>E68</td><td>⏳ 等待中</td></tr>
+   <tr><td>E69</td><td>⏳ 等待中</td></tr>
+   <tr><td>E70</td><td>⏳ 等待中</td></tr>
+   <tr><td>E71</td><td>⏳ 等待中</td></tr>
+   <tr><td>E72</td><td>⏳ 等待中</td></tr>
+   <tr><td>E73</td><td>⏳ 等待中</td></tr>
+   <tr><td>E74</td><td>⏳ 等待中</td></tr>
+   <tr><td>E75</td><td>⏳ 等待中</td></tr>
+   <tr><td>E76</td><td>⏳ 等待中</td></tr>
+   <tr><td>E77</td><td>⏳ 等待中</td></tr>
+   <tr><td>E78</td><td>⏳ 等待中</td></tr>
+   <tr><td>E79</td><td>⏳ 等待中</td></tr>
+   <tr><td>E80</td><td>⏳ 等待中</td></tr>
+   <tr><td>E81</td><td>⏳ 等待中</td></tr>
+   <tr><td>E82</td><td>⏳ 等待中</td></tr>
+   <tr><td>E83</td><td>⏳ 等待中</td></tr>
+   <tr><td>E84</td><td>⏳ 等待中</td></tr>
+   <tr><td>E85</td><td>⏳ 等待中</td></tr>
+   <tr><td>E86</td><td>⏳ 等待中</td></tr>
+   <tr><td>E87</td><td>⏳ 等待中</td></tr>
+   <tr><td>E88</td><td>⏳ 等待中</td></tr>
+   <tr><td>E89</td><td>⏳ 等待中</td></tr>
+   <tr><td>E90</td><td>⏳ 等待中</td></tr>
+   <tr><td>E91</td><td>⏳ 等待中</td></tr>
+   <tr><td>E92</td><td>⏳ 等待中</td></tr>
+   <tr><td>E93</td><td>⏳ 等待中</td></tr>
+   <tr><td>E94</td><td>⏳ 等待中</td></tr>
+   <tr><td>E95</td><td>⏳ 等待中</td></tr>
+   <tr><td>E96</td><td>⏳ 等待中</td></tr>
+   <tr><td>E97</td><td>⏳ 等待中</td></tr>
+   <tr><td>E98</td><td>⏳ 等待中</td></tr>
+   <tr><td>E99</td><td>⏳ 等待中</td></tr>
+   <tr><td>E100</td><td>⏳ 等待中</td></tr>
+   </table>
    <footer>另有 400 个文件，全部状态请在 MoviePilot 中查看。</footer>
    <footer>已停止自动刷新。</footer>
    [继续刷新 | 1:k:1] [返回任务列表 | 1:l:0]

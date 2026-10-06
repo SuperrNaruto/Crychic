@@ -1,5 +1,7 @@
 package flow
 
+import "slices"
+
 // Text is formatted message content described by meaning, not markup;
 // each platform adapter renders it in its own syntax and does the escaping.
 type Text []Block
@@ -26,15 +28,27 @@ const (
 	// Folded is hidden behind its always shown Summary until opened, used
 	// for the synopses of list entries.
 	Folded
+	// Tabular is a table: Head names the columns, each of Rows is a row of
+	// cells.
+	Tabular
+	// Tick is a checklist line, ticked when On; consecutive ticks form one
+	// list.
+	Tick
+	// Action opens Spans' link from a button inside the message.
+	Action
 )
 
 // Block is one structural piece of a message.
 type Block struct {
 	Kind    BlockKind
 	Spans   []Span
-	Number  int    // Item only
-	Facts   string // Item only: secondary facts, e.g. "Dune · 2021 · 电影"
-	Summary string // Folded only: the label shown while closed
+	Number  int      // Item only
+	Facts   string   // Item only: secondary facts, e.g. "Dune · 2021 · 电影"
+	Tag     string   // Item only: a fact singled out after the others, e.g. 你请求的
+	Summary string   // Folded only: the label shown while closed
+	Head    []string // Tabular only
+	Rows    [][]Span // Tabular only: a span per cell
+	On      bool     // Tick only
 }
 
 // Style marks how a span is emphasised.
@@ -80,6 +94,33 @@ func Quote(s string) Block { return Block{Kind: Quoted, Spans: []Span{Plain(s)}}
 // Fold hides body behind summary until the reader opens it.
 func Fold(summary, body string) Block {
 	return Block{Kind: Folded, Spans: []Span{Plain(body)}, Summary: summary}
+}
+
+// Table lays rows of cells out under the column names in head, leaving
+// out every column that is empty in all rows.
+func Table(head []string, rows ...[]Span) Block {
+	t := Block{Kind: Tabular}
+	for col, name := range head {
+		if !slices.ContainsFunc(rows, func(row []Span) bool { return row[col].Text != "" }) {
+			continue
+		}
+		t.Head = append(t.Head, name)
+		for i := range rows {
+			if len(t.Rows) <= i {
+				t.Rows = append(t.Rows, nil)
+			}
+			t.Rows[i] = append(t.Rows[i], rows[i][col])
+		}
+	}
+	return t
+}
+
+// Ticked is a checklist line, ticked when on.
+func Ticked(on bool, spans ...Span) Block { return Block{Kind: Tick, Spans: spans, On: on} }
+
+// Open is a button inside the message that opens url.
+func Open(label, url string) Block {
+	return Block{Kind: Action, Spans: []Span{Linked(Plain(label), url)}}
 }
 
 // Lines builds a Text.
