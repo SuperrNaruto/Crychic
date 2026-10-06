@@ -7,6 +7,16 @@
 >> user 1001 in chat 1001: 沙丘
 -> MoviePilot GET /api/v1/media/search?count=10&title=沙丘&type=media
 << editMessageText chat=1001 message=1
+   <tg-slideshow>
+   <img src="https://image.tmdb.org/t/p/w500/6hsJknqlPceFxExOe87z5VGgNG9.jpg"/>
+   <img src="https://image.tmdb.org/t/p/w500/7KFlApfTLNMNh0y5Zp1ufsgfN0J.jpg"/>
+   <img src="https://image.tmdb.org/t/p/w500/tiWTNR4f6oMYB09059YH8nDke5K.jpg"/>
+   <img src="https://image.tmdb.org/t/p/w500/9uaCR4HEZqxUqgORq0uZqTNm43G.jpg"/>
+   <img src="https://image.tmdb.org/t/p/w500/nRFhjS20RmhuLGEpQxewDyxlhmJ.jpg"/>
+   <img src="https://image.tmdb.org/t/p/w500/yCP8lKXBMtcG1CU9K3NsWlu1RgF.jpg"/>
+   <img src="https://image.tmdb.org/t/p/w500/iIf5XeuuBKPtG6H7MfWLirbJGrQ.jpg"/>
+   <img src="https://image.tmdb.org/t/p/w500/nQLdzYYB71sUugtSR7e7YdjF6Vx.jpg"/>
+   </tg-slideshow>
    <h3>🔍「沙丘」的搜索结果</h3>
    <ol start="1">
    <li value="1"><b>沙丘</b><br>

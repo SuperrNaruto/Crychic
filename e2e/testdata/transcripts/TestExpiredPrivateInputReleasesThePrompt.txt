@@ -1,6 +1,16 @@
 >> user 1001 in chat 1001: 名侦探柯南
 -> MoviePilot GET /api/v1/media/search?count=10&title=名侦探柯南&type=media
 << sendRichMessage chat=1001 message=1
+   <tg-slideshow>
+   <img src="https://image.tmdb.org/t/p/w500/7qBrY88hNwMrMb75PkBZjhFolbL.jpg"/>
+   <img src="https://image.tmdb.org/t/p/w500/ytXNhqKBlqGRmj0Iq95K1LJyWVm.jpg"/>
+   <img src="https://image.tmdb.org/t/p/w500/xEMs8q1GgOiwigsNPsfESr9FCzh.jpg"/>
+   <img src="https://image.tmdb.org/t/p/w500/vsre1rnZ9mA8Tb4Lejp1UbZ6ca9.jpg"/>
+   <img src="https://image.tmdb.org/t/p/w500/rDqNggjA9G6oK1RIwoVzEwTuanJ.jpg"/>
+   <img src="https://image.tmdb.org/t/p/w500/f9C4lFUTOqc5RtWpzlrdbeoJMI7.jpg"/>
+   <img src="https://image.tmdb.org/t/p/w500/kvqzHlTfPuSunPeT9sP27acV6aX.jpg"/>
+   <img src="https://image.tmdb.org/t/p/w500/h2ZJJ0pSiPOvyP5Zoo52JREWCeP.jpg"/>
+   </tg-slideshow>
    <h3>🔍「名侦探柯南」的搜索结果</h3>
    <ol start="1">
    <li value="1"><b>名侦探柯南</b><br>
@@ -75,6 +85,16 @@
 >> user 1001 in chat 1001: 沙丘
 -> MoviePilot GET /api/v1/media/search?count=10&title=沙丘&type=media
 << sendRichMessage chat=1001 message=2
+   <tg-slideshow>
+   <img src="https://image.tmdb.org/t/p/w500/6hsJknqlPceFxExOe87z5VGgNG9.jpg"/>
+   <img src="https://image.tmdb.org/t/p/w500/7KFlApfTLNMNh0y5Zp1ufsgfN0J.jpg"/>
+   <img src="https://image.tmdb.org/t/p/w500/tiWTNR4f6oMYB09059YH8nDke5K.jpg"/>
+   <img src="https://image.tmdb.org/t/p/w500/9uaCR4HEZqxUqgORq0uZqTNm43G.jpg"/>
+   <img src="https://image.tmdb.org/t/p/w500/nRFhjS20RmhuLGEpQxewDyxlhmJ.jpg"/>
+   <img src="https://image.tmdb.org/t/p/w500/yCP8lKXBMtcG1CU9K3NsWlu1RgF.jpg"/>
+   <img src="https://image.tmdb.org/t/p/w500/iIf5XeuuBKPtG6H7MfWLirbJGrQ.jpg"/>
+   <img src="https://image.tmdb.org/t/p/w500/nQLdzYYB71sUugtSR7e7YdjF6Vx.jpg"/>
+   </tg-slideshow>
    <h3>🔍「沙丘」的搜索结果</h3>
    <ol start="1">
    <li value="1"><b>沙丘</b><br>

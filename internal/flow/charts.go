@@ -198,7 +198,18 @@ func (e *Engine) chartPage(ctx context.Context, sess session, page int) Reply {
 		rows = append(rows, weekdayRow(sess.id, sess.day))
 	}
 	rows = append(rows, []Button{{Label: "返回榜单", Data: data(sess.id, actionCharts, 0)}, homeButton(sess.id)})
-	return Reply{Text: text, Buttons: rows}
+	return Reply{Text: text, Gallery: posters(sess.picks[at.first:at.end]), Buttons: rows}
+}
+
+// posters are the picks' poster URLs in list order, skipping picks without one.
+func posters(picks []Media) []string {
+	var urls []string
+	for _, m := range picks {
+		if m.PosterURL != "" {
+			urls = append(urls, m.PosterURL)
+		}
+	}
+	return urls
 }
 
 func emptyNote(c chart) string {

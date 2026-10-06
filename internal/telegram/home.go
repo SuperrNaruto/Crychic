@@ -27,22 +27,25 @@ var homePhoto []byte
 // reader per request keeps concurrent chats independent.
 func content(reply flow.Reply) *models.InputRichMessage {
 	if !reply.Banner {
-		return richMessage(reply.Text, reply.Image)
+		return richMessage(reply)
 	}
-	rich := richMessage(reply.Text, "tg://photo?id="+homeMediaID)
+	reply.Image = "tg://photo?id=" + homeMediaID
+	rich := richMessage(reply)
 	rich.Media = []models.InputRichMessageMedia{{ID: homeMediaID, Media: &models.InputMediaPhoto{
 		Media: "attach://" + homeFilename, MediaAttachment: bytes.NewReader(homePhoto),
 	}}}
 	return rich
 }
 
-// withoutPoster is reply minus a poster Telegram failed to fetch, so the
-// message still goes out; edits that change nothing are not retried.
+// withoutPoster is reply minus the posters Telegram failed to fetch, so the
+// message still goes out; edits that change nothing are not retried. Telegram
+// does not say which gallery poster failed, so the whole gallery goes.
 func withoutPoster(reply flow.Reply, err error) (flow.Reply, bool) {
-	if err == nil || reply.Image == "" || strings.Contains(err.Error(), notModified) {
+	posters := reply.Image != "" || len(reply.Gallery) > 0
+	if err == nil || !posters || strings.Contains(err.Error(), notModified) {
 		return reply, false
 	}
-	reply.Image = ""
+	reply.Image, reply.Gallery = "", nil
 	return reply, true
 }
 
@@ -50,7 +53,7 @@ func withoutPoster(reply flow.Reply, err error) (flow.Reply, bool) {
 func (a *adapter) send(ctx context.Context, chat int64, reply flow.Reply) (*models.Message, error) {
 	msg, err := sendRich(ctx, a.api, chat, reply)
 	if bare, retry := withoutPoster(reply, err); retry {
-		a.log.Warn("poster rejected, sending without it", "image", reply.Image, "err", err)
+		a.log.Warn("poster rejected, sending without it", "image", reply.Image, "gallery", len(reply.Gallery), "err", err)
 		msg, err = sendRich(ctx, a.api, chat, bare)
 	}
 	return msg, err
@@ -72,7 +75,7 @@ func (a *adapter) showCallback(ctx context.Context, cq *models.CallbackQuery, re
 	if ok && reply.Follow != "" {
 		a.follow(follower{
 			target: shown, actor: actorOf(cq.From, msg.Chat.ID),
-			data: reply.Follow, shown: renderRich(reply.Text, reply.Image),
+			data: reply.Follow, shown: renderReply(reply),
 		})
 	}
 }
@@ -84,7 +87,7 @@ func (a *adapter) display(ctx context.Context, t editTarget, reply flow.Reply) (
 	}
 	err := a.editRich(ctx, t, reply)
 	if bare, retry := withoutPoster(reply, err); retry {
-		a.log.Warn("poster rejected, editing without it", "image", reply.Image, "err", err)
+		a.log.Warn("poster rejected, editing without it", "image", reply.Image, "gallery", len(reply.Gallery), "err", err)
 		err = a.editRich(ctx, t, bare)
 	}
 	return t, err

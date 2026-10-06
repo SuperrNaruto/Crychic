@@ -63,6 +63,7 @@ func (e *Engine) resultList(sess session, term string) Reply {
 		view.entries = append(view.entries, listEntry{
 			text:    Lines(resultEntry(i+1, m)),
 			buttons: []Button{{Label: fmt.Sprint(i + 1), Data: data(sess.id, actionMedia, i)}},
+			poster:  m.PosterURL,
 		})
 	}
 	return e.listPages(sess, view)

@@ -1,6 +1,10 @@
 >> user 1001 in chat 1001: /search 碧蓝之海
 -> MoviePilot GET /api/v1/media/search?count=10&title=碧蓝之海&type=media
 << sendRichMessage chat=1001 message=1
+   <tg-slideshow>
+   <img src="https://image.tmdb.org/t/p/w500/9OW05tBAeyMWeEVtvTnn6S8LH4z.jpg"/>
+   <img src="https://image.tmdb.org/t/p/w500/jy5AssTntNxxKdBo6MzhzhcFnta.jpg"/>
+   </tg-slideshow>
    <h3>🔍「碧蓝之海」的搜索结果</h3>
    <ol start="1">
    <li value="1"><b>碧蓝之海</b><br>

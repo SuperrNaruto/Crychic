@@ -12,18 +12,42 @@ import (
 
 // richMessage renders flow text as a Telegram rich message, with image (an
 // http(s) URL or a tg://photo link to uploaded media) as a block on top.
-func richMessage(text flow.Text, image string) *models.InputRichMessage {
-	return &models.InputRichMessage{HTML: renderRich(text, image)}
+func richMessage(reply flow.Reply) *models.InputRichMessage {
+	return &models.InputRichMessage{HTML: renderReply(reply)}
 }
+
+// renderReply is reply as rich HTML: its poster, or its gallery as a
+// slideshow, above the text.
+func renderReply(reply flow.Reply) string {
+	return renderRich(reply.Text, mediaHTML(reply.Image, reply.Gallery))
+}
+
+func mediaHTML(image string, gallery []string) string {
+	if image != "" {
+		return imgTag(image)
+	}
+	if len(gallery) == 0 {
+		return ""
+	}
+	var b strings.Builder
+	b.WriteString("<tg-slideshow>")
+	for _, url := range gallery {
+		b.WriteString(imgTag(url))
+	}
+	b.WriteString("</tg-slideshow>")
+	return b.String()
+}
+
+func imgTag(url string) string { return `<img src="` + html.EscapeString(url) + `"/>` }
 
 // renderRich turns flow text into rich HTML: a heading, paragraphs whose
 // lines are joined by breaks, numbered lists, checklists, tables, link
 // buttons, entries that open to show more, collapsible quotes and footers. All content is escaped so titles and synopses can never break
 // the markup.
-func renderRich(text flow.Text, image string) string {
+func renderRich(text flow.Text, media string) string {
 	var w richWriter
-	if image != "" {
-		w.block(`<img src="` + html.EscapeString(image) + `"/>`)
+	if media != "" {
+		w.block(media)
 	}
 	for _, b := range text {
 		w.add(b)

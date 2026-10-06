@@ -229,7 +229,8 @@ type Button struct {
 }
 
 // Reply is what the platform shows after an action. Image is a poster URL
-// to show with the text. A Reply with Notice set leaves the conversation
+// to show with the text; Gallery, used only without Image, holds the posters
+// of a listed page in list order. A Reply with Notice set leaves the conversation
 // message untouched and only flashes the notice. A Reply with Input set asks
 // the user to type an answer, which the platform hands to Engine.Answer
 // together with Input.
@@ -240,6 +241,7 @@ type Button struct {
 type Reply struct {
 	Text    Text
 	Image   string
+	Gallery []string
 	Banner  bool // show the built-in brand banner above the home menu
 	Buttons [][]Button
 	Notice  string

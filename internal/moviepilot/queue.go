@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"net/http"
-	"strings"
 
 	"github.com/SuperrNauto/Crychic/internal/flow"
 )
@@ -48,7 +47,7 @@ func (c *Client) Transfers(ctx context.Context) ([]flow.TransferJob, error) {
 		job := flow.TransferJob{
 			ID:    fmt.Sprintf("%s:%s:%d", j.Media.MediaSource, j.Media.MediaID, deref(j.Season)),
 			Title: j.Media.Title, Season: j.Season,
-			Image: strings.Replace(j.Media.PosterPath, tmdbOriginalSize, tmdbPosterSize, 1),
+			Image: posterURL(j.Media.PosterPath),
 		}
 		for _, t := range j.Tasks {
 			file := flow.TransferFile{State: fileStates[t.State]}

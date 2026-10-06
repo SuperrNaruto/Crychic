@@ -80,7 +80,7 @@ func (a *adapter) refreshOnce(ctx context.Context, f *follower) bool {
 	if ctx.Err() != nil || reply.Notice != "" {
 		return false
 	}
-	if rich := renderRich(reply.Text, reply.Image); rich != f.shown {
+	if rich := renderReply(reply); rich != f.shown {
 		a.edit(ctx, f.target, reply)
 		f.shown = rich
 	}

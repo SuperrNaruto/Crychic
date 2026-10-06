@@ -1,6 +1,12 @@
 >> user 1001 in chat 1001: /search 绝命毒师
 -> MoviePilot GET /api/v1/media/search?count=10&title=绝命毒师&type=media
 << sendRichMessage chat=1001 message=1
+   <tg-slideshow>
+   <img src="https://image.tmdb.org/t/p/w500/rqliuvX7NdknSHu5qaSDfESplQi.jpg"/>
+   <img src="https://image.tmdb.org/t/p/w500/xTozsIhV01a5w8n4bprFNAX8NE0.jpg"/>
+   <img src="https://image.tmdb.org/t/p/w500/uI6dU5hbhskkgA7TQL0qq74ALjR.jpg"/>
+   <img src="https://image.tmdb.org/t/p/w500/2BcQ0ZScTBj3sihSQkV1SXYHqdU.jpg"/>
+   </tg-slideshow>
    <h3>🔍「绝命毒师」的搜索结果</h3>
    <ol start="1">
    <li value="1"><b>绝命毒师</b><br>
@@ -99,6 +105,12 @@
 << answerCallbackQuery
 >> user 1001 taps 1:bk:0 on message 1
 << editMessageText chat=1001 message=1
+   <tg-slideshow>
+   <img src="https://image.tmdb.org/t/p/w500/rqliuvX7NdknSHu5qaSDfESplQi.jpg"/>
+   <img src="https://image.tmdb.org/t/p/w500/xTozsIhV01a5w8n4bprFNAX8NE0.jpg"/>
+   <img src="https://image.tmdb.org/t/p/w500/uI6dU5hbhskkgA7TQL0qq74ALjR.jpg"/>
+   <img src="https://image.tmdb.org/t/p/w500/2BcQ0ZScTBj3sihSQkV1SXYHqdU.jpg"/>
+   </tg-slideshow>
    <h3>🔍「绝命毒师」的搜索结果</h3>
    <ol start="1">
    <li value="1"><b>绝命毒师</b><br>

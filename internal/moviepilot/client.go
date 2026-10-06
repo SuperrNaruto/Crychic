@@ -28,6 +28,10 @@ const (
 	// previews only need a poster-sized rendition.
 	tmdbOriginalSize = "/t/p/original/"
 	tmdbPosterSize   = "/t/p/w500/"
+
+	// doubanImages answers 418 to every request without a Douban referer,
+	// so chat platforms can never fetch its posters.
+	doubanImages = ".doubanio.com/"
 )
 
 // invisible are marks Douban leaves around titles (e.g. U+200E).
@@ -85,9 +89,17 @@ func (i mediaInfo) toMedia() (flow.Media, bool) {
 	return flow.Media{
 		Source: i.MediaSource, ID: i.MediaID, Title: strings.Trim(i.Title, invisible), OriginalTitle: i.OriginalTitle,
 		Year: i.Year, Kind: kind, Rating: i.VoteAverage,
-		PosterURL: strings.Replace(i.PosterPath, tmdbOriginalSize, tmdbPosterSize, 1),
+		PosterURL: posterURL(i.PosterPath),
 		Link:      i.DetailLink, Overview: unixLines(i.Overview), Released: i.ReleaseDate,
 	}, true
+}
+
+// posterURL is a poster rendition chat platforms can fetch, or "" for none.
+func posterURL(path string) string {
+	if strings.Contains(path, doubanImages) {
+		return ""
+	}
+	return strings.Replace(path, tmdbOriginalSize, tmdbPosterSize, 1)
 }
 
 // unixLines drops the carriage returns Bangumi synopses carry and the

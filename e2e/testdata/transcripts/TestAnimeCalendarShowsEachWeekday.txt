@@ -32,6 +32,13 @@
 -> Bangumi GET /v0/subjects/614640
 -> Bangumi GET /v0/subjects/624923
 << editMessageText chat=1001 message=1
+   <tg-slideshow>
+   <img src="http://lain.bgm.tv/pic/cover/l/1c/b4/390200_1IA55.jpg"/>
+   <img src="https://image.tmdb.org/t/p/w500/yFRVyWWmNMJ72CqxRc2dZqW9TAE.jpg"/>
+   <img src="https://image.tmdb.org/t/p/w500/2wqyITVWs1wZMih2VraylRjqzCo.jpg"/>
+   <img src="https://image.tmdb.org/t/p/w500/EQNjH4oeCm9pD58fi2s4WZyjgA.jpg"/>
+   <img src="https://image.tmdb.org/t/p/w500/7VjZRZD5sHjsIaoNiUiXzO0qC10.jpg"/>
+   </tg-slideshow>
    <h3>🎌 新番放送 · 星期一（今天）</h3>
    <h4>2026-10-05 首播</h4>
    <ol start="1">
@@ -92,6 +99,13 @@
 -> MoviePilot GET /api/v1/media/search?count=10&title=列女战纪：女娲石记&type=media
 -> Bangumi GET /v0/subjects/390200
 << editMessageText chat=1001 message=1
+   <tg-slideshow>
+   <img src="http://lain.bgm.tv/pic/cover/l/1c/b4/390200_1IA55.jpg"/>
+   <img src="https://image.tmdb.org/t/p/w500/yFRVyWWmNMJ72CqxRc2dZqW9TAE.jpg"/>
+   <img src="https://image.tmdb.org/t/p/w500/2wqyITVWs1wZMih2VraylRjqzCo.jpg"/>
+   <img src="https://image.tmdb.org/t/p/w500/EQNjH4oeCm9pD58fi2s4WZyjgA.jpg"/>
+   <img src="https://image.tmdb.org/t/p/w500/7VjZRZD5sHjsIaoNiUiXzO0qC10.jpg"/>
+   </tg-slideshow>
    <h3>🎌 新番放送 · 星期一（今天）</h3>
    <h4>2026-10-05 首播</h4>
    <ol start="1">
@@ -139,6 +153,10 @@
 -> Bangumi GET /v0/subjects/505550
 -> Bangumi GET /v0/subjects/513878
 << editMessageText chat=1001 message=1
+   <tg-slideshow>
+   <img src="http://lain.bgm.tv/pic/cover/l/84/86/505550_OLQmz.jpg"/>
+   <img src="http://lain.bgm.tv/pic/cover/l/db/94/513878_54i56.jpg"/>
+   </tg-slideshow>
    <h3>🎌 新番放送 · 星期二</h3>
    <h4>2026-10-13 首播</h4>
    <ol start="1">

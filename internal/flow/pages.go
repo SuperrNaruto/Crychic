@@ -12,6 +12,7 @@ const (
 type listEntry struct {
 	text    Text
 	buttons []Button
+	poster  string // shown in the page's gallery when set
 }
 
 type listView struct {
@@ -40,6 +41,9 @@ func (e *Engine) listPages(sess session, view listView) Reply {
 		last := len(pages) - 1
 		pages[last].Text = append(pages[last].Text, entry.text...)
 		buttons[last] = append(buttons[last], entry.buttons...)
+		if entry.poster != "" {
+			pages[last].Gallery = append(pages[last].Gallery, entry.poster)
+		}
 		used, items = used+size, items+1
 	}
 	for i := range pages {

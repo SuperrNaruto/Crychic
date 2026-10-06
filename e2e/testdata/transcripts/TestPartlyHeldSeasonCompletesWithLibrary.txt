@@ -1,6 +1,11 @@
 >> user 1001 in chat 1001: /search 迷途之子
 -> MoviePilot GET /api/v1/media/search?count=10&title=迷途之子&type=media
 << sendRichMessage chat=1001 message=1
+   <tg-slideshow>
+   <img src="https://image.tmdb.org/t/p/w500/dDknWHLYaQB76QSViNdzXOC5v64.jpg"/>
+   <img src="https://image.tmdb.org/t/p/w500/bMW0kwyK44LvDbQ3s0b3GCVOtLs.jpg"/>
+   <img src="https://image.tmdb.org/t/p/w500/bleKkUg0l8X4AAxqxgkmYlLO7bN.jpg"/>
+   </tg-slideshow>
    <h3>🔍「迷途之子」的搜索结果</h3>
    <ol start="1">
    <li value="1"><b>迷途之子!!!!!</b><br>

@@ -161,6 +161,11 @@
 >> user 1001 taps 2:i:9 on message 2
 -> MoviePilot GET /api/v1/media/search?count=10&title=流人 第六季&type=media
 << editMessageText chat=1001 message=2
+   <tg-slideshow>
+   <img src="https://image.tmdb.org/t/p/w500/3ZaOwdTWDOiyuq1b05TvpI8QjSn.jpg"/>
+   <img src="https://image.tmdb.org/t/p/w500/3tNyVcX8OeWDet65PZVIjltuueX.jpg"/>
+   <img src="https://image.tmdb.org/t/p/w500/5YLfhrU4RLk0GgadMAb4jFu1JGc.jpg"/>
+   </tg-slideshow>
    <h3>🔍「流人 第六季」的搜索结果</h3>
    <ol start="1">
    <li value="1"><b>千古风流人物 第六季</b><br>
@@ -197,6 +202,9 @@
 >> user 1001 taps 2:i:9 on message 2
 -> MoviePilot GET /api/v1/media/search?count=10&title=流人 第六季&type=media
 << editMessageText chat=1001 message=2
+   <tg-slideshow>
+   <img src="https://image.tmdb.org/t/p/w500/2UEK62PY887kyB3ly5YIkyH1M1y.jpg"/>
+   </tg-slideshow>
    <h3>🔍「流人 第六季」的搜索结果</h3>
    <ol start="1">
    <li value="1"><b>勇敢者游戏：决战丛林</b><br>

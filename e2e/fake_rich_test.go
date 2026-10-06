@@ -137,7 +137,8 @@ var (
 		"ol": false, "li": false, "blockquote": false, "footer": false,
 		"details": false, "summary": false, "ul": false, "mark": false,
 		"table": false, "tr": false, "th": false, "td": false, "tg-button-row": false, "tg-button": false,
-		"br": true, "hr": true, "img": true, "input": true,
+		"tg-slideshow": false,
+		"br":           true, "hr": true, "img": true, "input": true,
 	}
 )
 
@@ -167,7 +168,7 @@ func checkRichHTML(markup string) error {
 }
 
 // richLines lays rich HTML out a block or line break per transcript line.
-var richBreak = regexp.MustCompile(`(</h[1-6]>|</p>|</li>|</ol>|</blockquote>|</summary>|</details>|<ul>|</ul>|</tr>|<table [^>]*>|</table>|<tg-button-row [^>]*>|</tg-button>|</tg-button-row>|</footer>|<hr/>|<img [^>]*/>|<ol [^>]*>|<br>)`)
+var richBreak = regexp.MustCompile(`(</h[1-6]>|</p>|</li>|</ol>|</blockquote>|</summary>|</details>|<ul>|</ul>|</tr>|<table [^>]*>|</table>|<tg-button-row [^>]*>|</tg-button>|</tg-button-row>|</footer>|<hr/>|<img [^>]*/>|<tg-slideshow>|</tg-slideshow>|<ol [^>]*>|<br>)`)
 
 func richLines(markup string) []string {
 	return strings.Split(strings.TrimSuffix(richBreak.ReplaceAllString(markup, "$1\n"), "\n"), "\n")
