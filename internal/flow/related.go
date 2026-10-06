@@ -38,7 +38,7 @@ func relatedRow(sess session) []Button {
 }
 
 // browse lists media related to the picked one, or its series, to pick from
-// like search results. Browsing is optional, so nothing found or a failed
+// like a chart. Browsing is optional, so nothing found or a failed
 // lookup only flashes a notice and the card stays.
 func (e *Engine) browse(ctx context.Context, sess session, series bool) Reply {
 	media := sess.picked.Media
@@ -60,8 +60,21 @@ func (e *Engine) browse(ctx context.Context, sess session, series bool) Reply {
 	}
 	sess.results = found[:min(len(found), limit)]
 	sess.seasons, sess.library, sess.target, sess.chosen = nil, Library{}, nil, nil
-	e.store.put(sess)
-	return numberedResults(sess, Heading(Plain(heading)))
+	return e.listPages(sess, relatedView(sess, heading))
+}
+
+// relatedView lists the related media like a chart: each opens to its
+// synopsis, a number button picks it.
+func relatedView(sess session, heading string) listView {
+	view := listView{heading: Heading(Plain(heading)), footer: []Button{cancelButton(sess.id)}}
+	look := pickLook{year: true, kind: mixedKinds(sess.results)}
+	for i, m := range sess.results {
+		view.entries = append(view.entries, listEntry{
+			text:    Lines(pickEntry(i+1, m, look)),
+			buttons: []Button{{Label: fmt.Sprint(i + 1), Data: data(sess.id, actionMedia, i)}},
+		})
+	}
+	return view
 }
 
 // notice is failure for a step that keeps the conversation as it was.

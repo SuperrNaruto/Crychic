@@ -18,7 +18,7 @@ func richMessage(text flow.Text, image string) *models.InputRichMessage {
 
 // renderRich turns flow text into rich HTML: a heading, paragraphs whose
 // lines are joined by breaks, numbered lists, checklists, tables, link
-// buttons, collapsible quotes, closed details and footers. All content is escaped so titles and synopses can never break
+// buttons, entries that open to show more, collapsible quotes and footers. All content is escaped so titles and synopses can never break
 // the markup.
 func renderRich(text flow.Text, image string) string {
 	var w richWriter
@@ -65,9 +65,6 @@ func (w *richWriter) add(b flow.Block) {
 		}
 	case flow.Action:
 		w.block(renderAction(b.Spans))
-	case flow.Folded:
-		w.block("<details><summary>" + html.EscapeString(b.Summary) + "</summary><p>" +
-			renderSpans(b.Spans) + "</p></details>")
 	}
 }
 
@@ -88,14 +85,18 @@ func (w *richWriter) line(tag string, spans []flow.Span) {
 }
 
 // item continues the open list; each entry keeps its own number, so a
-// later page still matches its buttons.
+// later page still matches its buttons. An entry with a body folds it
+// behind its name and facts, which open it.
 func (w *richWriter) item(b flow.Block) {
 	if w.open != "ol" {
 		w.block(fmt.Sprintf(`<ol start="%d">`, b.Number))
 		w.open = "ol"
 	}
-	fmt.Fprintf(w, `<li value="%d">%s`, b.Number, renderSpans(b.Spans))
-	w.WriteString(renderFacts(b.Facts, b.Tag) + "</li>")
+	head := renderSpans(b.Spans) + renderFacts(b.Facts, b.Tag)
+	if len(b.Body) > 0 {
+		head = "<details><summary>" + head + "</summary>" + renderRich(b.Body, "") + "</details>"
+	}
+	fmt.Fprintf(w, `<li value="%d">%s</li>`, b.Number, head)
 }
 
 // renderFacts puts an entry's facts in italics on a line below its name,

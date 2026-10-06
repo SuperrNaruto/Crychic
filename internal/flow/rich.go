@@ -17,7 +17,8 @@ const (
 	Title
 	// Section heads a group of entries within a message.
 	Section
-	// Item is a numbered entry: its name in Spans, its facts below.
+	// Item is a numbered entry: its name in Spans, its facts below, and
+	// optionally a Body that stays folded until the entry is opened.
 	Item
 	// Quoted is a collapsible quote, used for long synopses.
 	Quoted
@@ -25,9 +26,6 @@ const (
 	Note
 	// Rule separates a media card from the question below it.
 	Rule
-	// Folded is hidden behind its always shown Summary until opened, used
-	// for the synopses of list entries.
-	Folded
 	// Tabular is a table: Head names the columns, each of Rows is a row of
 	// cells.
 	Tabular
@@ -43,15 +41,15 @@ const (
 
 // Block is one structural piece of a message.
 type Block struct {
-	Kind    BlockKind
-	Spans   []Span
-	Number  int      // Item only
-	Facts   string   // Item only: secondary facts, e.g. "Dune · 2021 · 电影"
-	Tag     string   // Item only: a fact singled out after the others, e.g. 你请求的
-	Summary string   // Folded only: the label shown while closed
-	Head    []string // Tabular only
-	Rows    [][]Span // Tabular only: a span per cell
-	On      bool     // Tick only
+	Kind   BlockKind
+	Spans  []Span
+	Number int      // Item only
+	Facts  string   // Item only: secondary facts, e.g. "Dune · 2021 · 电影"
+	Tag    string   // Item only: a fact singled out after the others, e.g. 你请求的
+	Body   Text     // Item only: shown once the reader opens the entry by its name
+	Head   []string // Tabular only
+	Rows   [][]Span // Tabular only: a span per cell
+	On     bool     // Tick only
 }
 
 // Style marks how a span is emphasised.
@@ -93,11 +91,6 @@ func Divider() Block { return Block{Kind: Rule} }
 
 // Quote is a collapsible quoted block, used for long synopses.
 func Quote(s string) Block { return Block{Kind: Quoted, Spans: []Span{Plain(s)}} }
-
-// Fold hides body behind summary until the reader opens it.
-func Fold(summary, body string) Block {
-	return Block{Kind: Folded, Spans: []Span{Plain(body)}, Summary: summary}
-}
 
 // Table lays rows of cells out under the column names in head, leaving
 // out every column that is empty in all rows.

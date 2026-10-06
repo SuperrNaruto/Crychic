@@ -29,7 +29,7 @@ const (
 	msgNoExactPick = "没有对应的条目？可以用 /request 换个名字搜。"
 	msgEmptyChart  = "这个榜单暂时是空的。"
 	msgEmptyDay    = "这天没有新番放送。"
-	msgSynopsis    = "简介"
+	msgDetailPage  = "查看详情页"
 
 	daysInWeek = 7
 	// calendarOffset is the time zone "today" is taken in: the bot's users
@@ -229,8 +229,8 @@ func weekdayRow(id uint64, shown int) []Button {
 	return row
 }
 
-// pickLines lists picks numbered from at.first-at.base+1, each with its synopsis
-// collapsed (Douban's is a year / region / genre / cast line). Calendars
+// pickLines lists picks numbered from at.first-at.base+1, each opening to
+// its synopsis (Douban's is a year / region / genre / cast line). Calendars
 // group them under their air date, which stands in for the year; the kind
 // is only named when the page mixes movies and shows.
 func pickLines(at span, picks []Media, aired bool) Text {
@@ -243,9 +243,6 @@ func pickLines(at span, picks []Media, aired bool) Text {
 			text = append(text, Group(airDay(day)))
 		}
 		text = append(text, pickEntry(at.first-at.base+i+1, m, pickLook{year: !aired, kind: mixed}))
-		if m.Overview != "" {
-			text = append(text, Fold(msgSynopsis, truncate(m.Overview, chartOverviewRunes)))
-		}
 	}
 	return text
 }
@@ -253,9 +250,10 @@ func pickLines(at span, picks []Media, aired bool) Text {
 // pickLook says which metadata a chart line repeats.
 type pickLook struct{ year, kind bool }
 
-// pickEntry is a short chart entry, e.g. "1. **沙丘**" over "_2021 · ⭐ 7.8_",
-// the title linked to the media's page when known; the original title
-// waits for the card.
+// pickEntry is a short chart entry, e.g. "1. **沙丘**" over "_2021 · ⭐ 7.8_";
+// the original title waits for the card. A pick with a synopsis opens by
+// its name to show it, with the link to the media's page below; one
+// without has its name linked instead.
 func pickEntry(n int, m Media, look pickLook) Block {
 	var y, kind string
 	if look.year {
@@ -264,7 +262,15 @@ func pickEntry(n int, m Media, look pickLook) Block {
 	if look.kind {
 		kind = m.Kind.String()
 	}
-	return entry(n, Linked(Strong(m.Title), m.Link), y, kind, rating(m.Rating))
+	if m.Overview == "" {
+		return entry(n, Linked(Strong(m.Title), m.Link), y, kind, rating(m.Rating))
+	}
+	item := entry(n, Strong(m.Title), y, kind, rating(m.Rating))
+	item.Body = Lines(Line(Plain(truncate(m.Overview, chartOverviewRunes))))
+	if m.Link != "" {
+		item.Body = append(item.Body, Line(), Line(Linked(Plain(msgDetailPage), m.Link)))
+	}
+	return item
 }
 
 func airDay(day string) string {
