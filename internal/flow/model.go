@@ -93,19 +93,17 @@ type Library struct {
 
 // Download is an unfinished task in the backend's downloader.
 type Download struct {
-	ID         string // stable while the task exists
-	Downloader string
-	Size       float64 // bytes, 0 when unknown
-	Source     string
-	MediaID    string
-	Title      string
-	Image      string
-	Season     *int    // nil for movies or when unknown
-	Episodes   []int   // empty when unknown
-	Progress   float64 // percent
-	Paused     bool
-	Speed      string // download speed as the backend words it
-	Left       string // remaining time as the backend words it, "" when unknown
+	ID       string // stable while the task exists
+	Source   string
+	MediaID  string
+	Title    string
+	Image    string
+	Season   *int    // nil for movies or when unknown
+	Episodes []int   // empty when unknown
+	Progress float64 // percent
+	Paused   bool
+	Speed    string // download speed as the backend words it
+	Left     string // remaining time as the backend words it, "" when unknown
 }
 
 // FileState is where one file of a transfer job stands.
@@ -168,17 +166,6 @@ type PastSubscription struct {
 	Record       []byte
 }
 
-// Resource is a torrent recorded in a subscription's file information.
-// Files contain basenames only; tracker URLs and server paths stay private.
-type Resource struct {
-	Name       string
-	Site       string
-	Downloader string
-	DownloadID string
-	Episodes   []int
-	Files      []string
-}
-
 // Backend is the media server the bot subscribes through.
 type Backend interface {
 	Search(ctx context.Context, term string) ([]Media, error)
@@ -196,7 +183,6 @@ type Backend interface {
 	// release order; empty when it belongs to none.
 	Series(ctx context.Context, media Media) ([]Media, error)
 	Subscriptions(ctx context.Context) ([]Subscription, error)
-	Resources(ctx context.Context, subscriptionID int) ([]Resource, error)
 	// SubscriptionHistory lists at most count past subscriptions of kind,
 	// newest first.
 	SubscriptionHistory(ctx context.Context, kind Kind, count int) ([]PastSubscription, error)

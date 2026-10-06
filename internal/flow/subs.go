@@ -97,12 +97,12 @@ func firstKind(subs []Subscription) Kind {
 	return Movie
 }
 
-// subsPage lists the session's subscriptions of its kind; number buttons
-// open their resources, and one shared button cancels.
+// subsPage lists the session's subscriptions of its kind; one shared
+// button cancels.
 func (e *Engine) subsPage(sess session) Reply {
 	var view listView
 	mine := false
-	for i, s := range sess.subs {
+	for _, s := range sess.subs {
 		if s.Kind != sess.kind {
 			continue
 		}
@@ -110,10 +110,7 @@ func (e *Engine) subsPage(sess session) Reply {
 		requested := slices.Contains(sess.mine, s.ID)
 		mine = mine || requested
 		s.Title = truncate(s.Title, listTitleRunes)
-		view.entries = append(view.entries, listEntry{
-			text:    Lines(subEntry(n, s, requested)),
-			buttons: []Button{{Label: fmt.Sprint(n), Data: data(sess.id, actionResources, i)}},
-		})
+		view.entries = append(view.entries, listEntry{text: Lines(subEntry(n, s, requested))})
 	}
 	view.heading = Heading(Plain(fmt.Sprintf("%s · %s（%d）", msgSubsTitle, sess.kind, len(view.entries))))
 	if len(view.entries) == 0 {

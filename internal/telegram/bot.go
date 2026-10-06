@@ -42,7 +42,7 @@ var help = flow.Lines(
 	flow.Line(flow.Mono("/start"), flow.Plain(" 回到首页，所有功能都在这儿～")),
 	flow.Line(flow.Mono("/search <片名>"), flow.Plain(" 帮你搜电影和剧集，顺手在 MoviePilot 里订上～")),
 	flow.Line(flow.Mono("/trending"), flow.Plain(" 逛逛热门榜单和新番，看中了一键订阅～")),
-	flow.Line(flow.Mono("/subscribe"), flow.Plain(" 按电视剧、电影看订阅，点编号查看资源，还能取消你请求的、从订阅历史重新订阅～")),
+	flow.Line(flow.Mono("/subscribe"), flow.Plain(" 按电视剧、电影看订阅，还能取消你请求的、从订阅历史重新订阅～")),
 	flow.Line(flow.Mono("/newly_added"), flow.Plain(" 媒体库新到的片子，点片名直接去看～")),
 	flow.Line(flow.Mono("/tasks"), flow.Plain(" 看看下载和整理的进度，选一个我帮你实时盯着～")),
 )

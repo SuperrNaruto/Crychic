@@ -46,11 +46,7 @@
 /subscribe
 ```
 
-列出 MoviePilot 的所有订阅（状态、缺几集）。点编号打开该订阅的资源列表，再点资源名称展开站点、下载器和文件名；同一个下载器中的整季包会合并显示涵盖的集数。下载器仍有对应任务时，还会显示体积和进度，点「刷新」重新查询。
-
-资源页读取 MoviePilot 已有的下载文件记录，可能包含该媒体与季的较早下载，不会重新搜种或触发下载。没有记录、订阅已完成移除或查询失败时会提示；进度不可用不影响查看资源记录。只展示文件名，不展示服务器完整路径、种子下载链接或 tracker/passkey。已结束的订阅不再出现在清单中，完整历史仍需到 MoviePilot 查看。
-
-你通过 Crychic 请求的订阅也可以在这里取消，取消后不再通知。资源查看沿用机器人的用户白名单及会话归属校验，不会作为交互按钮发布到通知频道。
+按电视剧、电影分开列出 MoviePilot 的所有订阅（状态、缺几集），用按钮切换。你通过 Crychic 请求的订阅可以用「取消订阅」选出来取消，取消后不再通知。已结束的订阅在「订阅历史」里，每类显示最近 10 条，可以按原来的设置重新订阅。
 
 ```
 /tasks
@@ -89,9 +85,9 @@ go build -o crychic ./cmd/crychic && ./crychic
 CRYCHIC_TELEGRAM_NOTIFY_CHAT_ID=-1001234567890
 ```
 
-此配置只改变入库通知的投递位置；订阅、资源查询等交互继续在与机器人的聊天中进行。频道成员可以看到通知中的片名、集数及媒体服务器观看链接，请按频道受众设置访问权限。频道不可写时会记录投递错误，不回退到请求聊天；通知状态仍按原有策略先保存再发送，发送失败不会自动补发。
+此配置只改变入库通知的投递位置；订阅等交互继续在与机器人的聊天中进行。频道成员可以看到通知中的片名、集数及媒体服务器观看链接，请按频道受众设置访问权限。频道不可写时会记录投递错误，不回退到请求聊天；通知状态仍按原有策略先保存再发送，发送失败不会自动补发。
 
-频道 `chat_id` 格式和发布权限依据 [Telegram Bot API](https://core.telegram.org/bots/api#sendrichmessage)；资源读取使用 [MoviePilot v3.1.0 的订阅文件接口](https://github.com/jxxghp/MoviePilot/blob/v3.1.0/app/api/endpoints/subscribe.py)，字段及关联方式依据其[查询实现](https://github.com/jxxghp/MoviePilot/blob/v3.1.0/app/chain/subscribe/query.py)。
+频道 `chat_id` 格式和发布权限依据 [Telegram Bot API](https://core.telegram.org/bots/api#sendrichmessage)。
 
 ## 部署（Docker）
 
@@ -128,4 +124,4 @@ go test ./...                    # 运行
 go test ./e2e/ -update           # 行为有意变更后重新生成记录，审阅 diff 后提交
 ```
 
-`e2e/testdata/moviepilot/` 大部分 fixture 是 MoviePilot v3.1.0 的裁剪录制；不能安全触发的写入结果及资源场景按同版本源码编写。`resources_*.json` 和 `downloads_resources.json` 使用虚构的站点、种子名和文件路径，不含真实账户信息。
+`e2e/testdata/moviepilot/` 大部分 fixture 是 MoviePilot v3.1.0 的裁剪录制；不能安全触发的写入结果按同版本源码编写。
