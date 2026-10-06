@@ -41,31 +41,34 @@ const (
 
 // Options configures an Engine.
 type Options struct {
-	Backend  Backend
-	Calendar Calendar
-	Watcher  Watcher
-	Log      *slog.Logger
-	Now      func() time.Time
+	Backend         Backend
+	Calendar        Calendar
+	Watcher         Watcher
+	Log             *slog.Logger
+	Now             func() time.Time
+	NoticeInChannel bool
 }
 
 // Engine runs request conversations against a Backend.
 type Engine struct {
-	backend  Backend
-	calendar Calendar
-	watcher  Watcher
-	log      *slog.Logger
-	now      func() time.Time
-	store    *store
+	backend         Backend
+	calendar        Calendar
+	watcher         Watcher
+	log             *slog.Logger
+	now             func() time.Time
+	store           *store
+	noticeInChannel bool
 }
 
 func New(opts Options) *Engine {
 	return &Engine{
-		backend:  opts.Backend,
-		calendar: opts.Calendar,
-		watcher:  opts.Watcher,
-		log:      opts.Log,
-		now:      opts.Now,
-		store:    newStore(opts.Now, SessionTTL),
+		backend:         opts.Backend,
+		calendar:        opts.Calendar,
+		watcher:         opts.Watcher,
+		log:             opts.Log,
+		now:             opts.Now,
+		store:           newStore(opts.Now, SessionTTL),
+		noticeInChannel: opts.NoticeInChannel,
 	}
 }
 
@@ -98,7 +101,7 @@ func (e *Engine) Choose(ctx context.Context, actor Actor, raw string) Reply {
 	case actionBack:
 		return e.back(ctx, sess)
 	}
-	for _, choose := range []chooser{e.chooseHome, e.chooseRequest, e.chooseSeasons, e.chooseTask, e.chooseChart, e.chooseSubs, e.chooseRelated} {
+	for _, choose := range []chooser{e.chooseHome, e.chooseRequest, e.chooseSeasons, e.chooseTask, e.chooseChart, e.chooseSubs, e.chooseResources, e.chooseRelated} {
 		if reply, ok := choose(ctx, sess, p); ok {
 			return e.navigate(sess, p.action, reply)
 		}
@@ -319,6 +322,9 @@ type subscription struct {
 func (e *Engine) watch(ctx context.Context, sess session, sub subscription) string {
 	if !e.remember(ctx, sess, sub) {
 		return "，" + msgNoNotice
+	}
+	if e.noticeInChannel {
+		return "，入库后我会在通知频道告诉你！"
 	}
 	return "，" + msgWillNotify
 }

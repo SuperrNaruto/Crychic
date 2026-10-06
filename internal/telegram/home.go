@@ -54,9 +54,11 @@ func withoutPoster(reply flow.Reply, err error) (flow.Reply, bool) {
 }
 
 // send sends reply as a new rich message.
-func (a *adapter) send(ctx context.Context, chat int64, reply flow.Reply) (*models.Message, error) {
+func (a *adapter) send(ctx context.Context, chat any, reply flow.Reply) (*models.Message, error) {
 	return a.deliver(ctx, reply, func(out outgoing) (*models.Message, error) {
-		return sendRich(ctx, a.api, chat, out)
+		return a.api.SendRichMessage(ctx, &bot.SendRichMessageParams{
+			ChatID: chat, RichMessage: *content(out), ReplyMarkup: keyboard(out.reply.Buttons),
+		})
 	})
 }
 
@@ -78,12 +80,6 @@ func (a *adapter) deliver(ctx context.Context, reply flow.Reply, try func(outgoi
 		msg, err = try(outgoing{reply: bare})
 	}
 	return msg, err
-}
-
-func sendRich(ctx context.Context, api *bot.Bot, chat int64, out outgoing) (*models.Message, error) {
-	return api.SendRichMessage(ctx, &bot.SendRichMessageParams{
-		ChatID: chat, RichMessage: *content(out), ReplyMarkup: keyboard(out.reply.Buttons),
-	})
 }
 
 // showCallback uses Telegram's message kind, including after a restart,

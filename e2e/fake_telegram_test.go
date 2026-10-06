@@ -323,8 +323,19 @@ func reply(w http.ResponseWriter, result any, err error) {
 }
 
 func chatType(chat int64) string {
+	if chat == noticeChannel {
+		return "channel"
+	}
 	if chat < 0 {
 		return "group"
 	}
 	return "private"
+}
+
+// Telegram resolves a public channel username to its numeric ID in replies.
+func resolveChat(raw string) (int64, error) {
+	if raw == channelName {
+		return noticeChannel, nil
+	}
+	return strconv.ParseInt(raw, 10, 64)
 }

@@ -109,7 +109,10 @@ func (f *fakeTelegram) seedPhoto(chat int64, caption string, rows [][]button) in
 }
 
 func (f *fakeTelegram) readMessage(r *http.Request, method string) (message, error) {
-	chat, _ := strconv.ParseInt(r.FormValue("chat_id"), 10, 64)
+	chat, err := resolveChat(r.FormValue("chat_id"))
+	if err != nil {
+		return message{}, fmt.Errorf("chat not found")
+	}
 	m := message{chat: chat}
 	var markup struct {
 		InlineKeyboard [][]button `json:"inline_keyboard"`
@@ -121,22 +124,14 @@ func (f *fakeTelegram) readMessage(r *http.Request, method string) (message, err
 	}
 	m.rows = markup.InlineKeyboard
 	if method == "editMessageText" {
-		id, _ := strconv.Atoi(r.FormValue("message_id"))
-		old, ok := f.message(id)
-		if !ok || old.chat != chat {
-			return m, fmt.Errorf("message to edit not found")
-		}
-		if old.photo != nil {
-			return m, fmt.Errorf("there is no text in the message to edit")
-		}
-		if r.FormValue("text") != "" {
-			return m, fmt.Errorf("the bot only edits rich messages")
+		if err := f.checkRichEdit(r, chat); err != nil {
+			return m, err
 		}
 	}
 	f.mu.Lock()
 	known := maps.Clone(f.fileIDs)
 	f.mu.Unlock()
-	m, err := readRichMessage(r, m, known)
+	m, err = readRichMessage(r, m, known)
 	f.mu.Lock()
 	bad := f.badImage
 	f.mu.Unlock()
@@ -144,6 +139,21 @@ func (f *fakeTelegram) readMessage(r *http.Request, method string) (message, err
 		err = fmt.Errorf("failed to get HTTP URL content")
 	}
 	return m, err
+}
+
+func (f *fakeTelegram) checkRichEdit(r *http.Request, chat int64) error {
+	id, _ := strconv.Atoi(r.FormValue("message_id"))
+	old, ok := f.message(id)
+	if !ok || old.chat != chat {
+		return fmt.Errorf("message to edit not found")
+	}
+	if old.photo != nil {
+		return fmt.Errorf("there is no text in the message to edit")
+	}
+	if r.FormValue("text") != "" {
+		return fmt.Errorf("the bot only edits rich messages")
+	}
+	return nil
 }
 
 // richInput is the InputRichMessage fields the bot uses.

@@ -11,11 +11,13 @@ import (
 const statePaused = "paused"
 
 type downloadTask struct {
-	Hash     string  `json:"hash"`
-	Progress float64 `json:"progress"` // percent
-	State    string  `json:"state"`    // downloading, paused
-	Speed    string  `json:"dlspeed"`  // e.g. "3.1MB"
-	LeftTime string  `json:"left_time"`
+	Hash       string  `json:"hash"`
+	Downloader string  `json:"downloader"`
+	Size       float64 `json:"size"`
+	Progress   float64 `json:"progress"` // percent
+	State      string  `json:"state"`    // downloading, paused
+	Speed      string  `json:"dlspeed"`  // e.g. "3.1MB"
+	LeftTime   string  `json:"left_time"`
 	// Media is filled from MoviePilot's download history; tasks added to the
 	// downloader by hand have none.
 	Media *struct {
@@ -54,6 +56,7 @@ func (c *Client) Downloads(ctx context.Context) ([]flow.Download, error) {
 		}
 		out = append(out, flow.Download{
 			ID: t.Hash, Source: t.Media.MediaSource, MediaID: t.Media.MediaID,
+			Downloader: t.Downloader, Size: t.Size,
 			Title: t.Media.Title, Image: t.Media.Image,
 			Season: parseSeason(string(t.Media.Season)), Episodes: parseEpisodes(string(t.Media.Episode)),
 			Progress: t.Progress, Paused: t.State == statePaused, Speed: t.Speed, Left: t.LeftTime,

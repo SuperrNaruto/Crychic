@@ -29,6 +29,9 @@ type Options struct {
 	Path     string // state file
 	Interval time.Duration
 	Quiet    time.Duration // how long a show's arrivals settle before a notice
+	// Destination replaces requester delivery when set; it is an opaque
+	// platform address. No requester identity is included in broadcasts.
+	Destination string
 	// LibraryWait is how long a settled notice waits for the media server
 	// to show what arrived; after that it goes out anyway.
 	LibraryWait time.Duration
@@ -244,7 +247,11 @@ func (n *Notifier) checkActivity(ctx context.Context) error {
 func (n *Notifier) send(ctx context.Context, deliveries []delivery) {
 	for _, d := range deliveries {
 		text := arrivalText(d)
-		for _, to := range d.watch.Requesters {
+		recipients := d.watch.Requesters
+		if n.opts.Destination != "" {
+			recipients = []flow.Actor{{Address: n.opts.Destination}}
+		}
+		for _, to := range recipients {
 			if err := n.opts.Sender.Notify(ctx, flow.Notice{To: to, Text: text, Image: d.image}); err != nil {
 				n.opts.Log.Error("arrival notice not delivered", "user", to.UserID, "err", err)
 			}

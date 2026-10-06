@@ -26,7 +26,9 @@
 
 媒体库查询失败时，卡片会显示「媒体库状态暂时无法确认」，仍可手动确认订阅。详情、海报和下载进度不可用时也不会阻断订阅流程。
 
-订阅的内容入库后，机器人会在请求所在的聊天里通知请求人（群聊中会 @ 对方）。通知会等到媒体服务器（Emby 等）能看到新文件再发（最多等 `CRYCHIC_NOTIFY_LIBRARY_WAIT`），并附上「▶️ 在 Emby 中观看」链接。
+订阅的内容入库后，机器人默认在请求所在的聊天里通知请求人（群聊中会 @ 对方）。设置 `CRYCHIC_TELEGRAM_NOTIFY_CHAT_ID` 后，通知改为只发到指定频道，不再发回请求聊天，也不公开请求人的身份；多人请求同一条订阅时，频道只收到一条通知。它仍然只通知通过 Crychic 请求的内容，不广播整个媒体库。
+
+通知会等到媒体服务器（Emby 等）能看到新文件再发（最多等 `CRYCHIC_NOTIFY_LIBRARY_WAIT`），并在能匹配到观看地址时附上「在 Emby 中观看」链接。
 
 ```
 /newly_added
@@ -44,7 +46,11 @@
 /subscribe
 ```
 
-列出 MoviePilot 的所有订阅（状态、缺几集）；你通过 Crychic 请求的订阅可以在这里取消，取消后不再通知。
+列出 MoviePilot 的所有订阅（状态、缺几集）。点编号打开该订阅的资源列表，再点资源名称展开站点、下载器和文件名；同一个下载器中的整季包会合并显示涵盖的集数。下载器仍有对应任务时，还会显示体积和进度，点「刷新」重新查询。
+
+资源页读取 MoviePilot 已有的下载文件记录，可能包含该媒体与季的较早下载，不会重新搜种或触发下载。没有记录、订阅已完成移除或查询失败时会提示；进度不可用不影响查看资源记录。只展示文件名，不展示服务器完整路径、种子下载链接或 tracker/passkey。已结束的订阅不再出现在清单中，完整历史仍需到 MoviePilot 查看。
+
+你通过 Crychic 请求的订阅也可以在这里取消，取消后不再通知。资源查看沿用机器人的用户白名单及会话归属校验，不会作为交互按钮发布到通知频道。
 
 ```
 /tasks
@@ -63,6 +69,7 @@
 | `CRYCHIC_TELEGRAM_TOKEN` | 是 | BotFather 发放的 Bot Token |
 | `CRYCHIC_TELEGRAM_ALLOWED_USERS` | 是 | 允许使用的 Telegram 用户 ID，逗号分隔。陌生人使用时机器人会回复其 ID |
 | `CRYCHIC_TELEGRAM_API_URL` | 否 | 自建 Bot API 服务器地址，默认 `https://api.telegram.org` |
+| `CRYCHIC_TELEGRAM_NOTIFY_CHAT_ID` | 否 | 入库通知频道，如 `-1001234567890` 或 `@crychic_arrivals`；留空保持原聊天通知 |
 | `CRYCHIC_BANGUMI_API_URL` | 否 | Bangumi API 地址，默认 `https://api.bgm.tv`；新番放送按周几读取它的每日放送 |
 | `CRYCHIC_DATA_DIR` | 否 | 数据目录，默认 `data`，保存等待入库通知的请求 |
 | `CRYCHIC_NOTIFY_INTERVAL` | 否 | 检查入库的间隔，默认 `1m` |
@@ -73,6 +80,18 @@
 ```sh
 go build -o crychic ./cmd/crychic && ./crychic
 ```
+
+### 独立通知频道
+
+把机器人添加为目标频道的管理员，并授予发布消息的权限。公开频道可以填 `@频道用户名`，私有频道使用数字频道 ID。
+
+```sh
+CRYCHIC_TELEGRAM_NOTIFY_CHAT_ID=-1001234567890
+```
+
+此配置只改变入库通知的投递位置；订阅、资源查询等交互继续在与机器人的聊天中进行。频道成员可以看到通知中的片名、集数及媒体服务器观看链接，请按频道受众设置访问权限。频道不可写时会记录投递错误，不回退到请求聊天；通知状态仍按原有策略先保存再发送，发送失败不会自动补发。
+
+频道 `chat_id` 格式和发布权限依据 [Telegram Bot API](https://core.telegram.org/bots/api#sendrichmessage)；资源读取使用 [MoviePilot v3.1.0 的订阅文件接口](https://github.com/jxxghp/MoviePilot/blob/v3.1.0/app/api/endpoints/subscribe.py)，字段及关联方式依据其[查询实现](https://github.com/jxxghp/MoviePilot/blob/v3.1.0/app/chain/subscribe/query.py)。
 
 ## 部署（Docker）
 
@@ -109,4 +128,4 @@ go test ./...                    # 运行
 go test ./e2e/ -update           # 行为有意变更后重新生成记录，审阅 diff 后提交
 ```
 
-`e2e/testdata/moviepilot/` 中的响应 fixture 依据 MoviePilot v3.1.0 源码中的响应模型编写，尚未用真实实例录制校准。
+`e2e/testdata/moviepilot/` 大部分 fixture 是 MoviePilot v3.1.0 的裁剪录制；不能安全触发的写入结果及资源场景按同版本源码编写。`resources_*.json` 和 `downloads_resources.json` 使用虚构的站点、种子名和文件路径，不含真实账户信息。

@@ -4,6 +4,7 @@ package config
 import (
 	"errors"
 	"fmt"
+	"regexp"
 	"strconv"
 	"strings"
 	"time"
@@ -38,27 +39,29 @@ var notifyQuiet = durationVar{"CRYCHIC_NOTIFY_QUIET", defaultNotifyQuiet, 0}
 
 // Config is the full runtime configuration.
 type Config struct {
-	MoviePilotURL    string
-	MoviePilotAPIKey string
-	TelegramToken    string
-	TelegramAPIURL   string
-	TelegramAllowed  []int64
-	BangumiAPIURL    string
-	DataDir          string
-	NotifyInterval   time.Duration
-	NotifyQuiet      time.Duration
-	LibraryWait      time.Duration
-	FollowEvery      time.Duration
+	MoviePilotURL      string
+	MoviePilotAPIKey   string
+	TelegramToken      string
+	TelegramAPIURL     string
+	TelegramAllowed    []int64
+	TelegramNotifyChat string
+	BangumiAPIURL      string
+	DataDir            string
+	NotifyInterval     time.Duration
+	NotifyQuiet        time.Duration
+	LibraryWait        time.Duration
+	FollowEvery        time.Duration
 }
 
 // Load builds a Config from getenv (os.Getenv in production), reporting
 // every missing or malformed variable at once.
 func Load(getenv func(string) string) (Config, error) {
 	cfg := Config{
-		MoviePilotURL:    getenv("CRYCHIC_MOVIEPILOT_URL"),
-		MoviePilotAPIKey: getenv("CRYCHIC_MOVIEPILOT_API_KEY"),
-		TelegramToken:    getenv("CRYCHIC_TELEGRAM_TOKEN"),
-		TelegramAPIURL:   getenv("CRYCHIC_TELEGRAM_API_URL"),
+		MoviePilotURL:      getenv("CRYCHIC_MOVIEPILOT_URL"),
+		MoviePilotAPIKey:   getenv("CRYCHIC_MOVIEPILOT_API_KEY"),
+		TelegramToken:      getenv("CRYCHIC_TELEGRAM_TOKEN"),
+		TelegramAPIURL:     getenv("CRYCHIC_TELEGRAM_API_URL"),
+		TelegramNotifyChat: strings.TrimSpace(getenv("CRYCHIC_TELEGRAM_NOTIFY_CHAT_ID")),
 	}
 	if cfg.TelegramAPIURL == "" {
 		cfg.TelegramAPIURL = defaultTelegramAPI
@@ -85,6 +88,12 @@ func Load(getenv func(string) string) (Config, error) {
 	if cfg.FollowEvery, err = followEvery.parse(getenv); err != nil {
 		errs = append(errs, err)
 	}
+	errs = append(errs, cfg.validate(), cfg.allowedUsers(getenv("CRYCHIC_TELEGRAM_ALLOWED_USERS")))
+	return cfg, errors.Join(errs...)
+}
+
+func (cfg *Config) validate() error {
+	var errs []error
 	required := []struct{ name, value string }{
 		{"CRYCHIC_MOVIEPILOT_URL", cfg.MoviePilotURL},
 		{"CRYCHIC_MOVIEPILOT_API_KEY", cfg.MoviePilotAPIKey},
@@ -95,12 +104,30 @@ func Load(getenv func(string) string) (Config, error) {
 			errs = append(errs, fmt.Errorf("%s is required", r.name))
 		}
 	}
-	allowed, err := parseIDs(getenv("CRYCHIC_TELEGRAM_ALLOWED_USERS"))
+	if !validNotifyChat(cfg.TelegramNotifyChat) {
+		errs = append(errs, errors.New("CRYCHIC_TELEGRAM_NOTIFY_CHAT_ID: want a negative chat ID or @channelusername"))
+	}
+	return errors.Join(errs...)
+}
+
+var channelUsername = regexp.MustCompile(`^@[A-Za-z0-9_]+$`)
+
+func validNotifyChat(raw string) bool {
+	if raw == "" || channelUsername.MatchString(raw) {
+		return true
+	}
+	const decimal, int64Bits = 10, 64
+	id, err := strconv.ParseInt(raw, decimal, int64Bits)
+	return err == nil && id < 0
+}
+
+func (cfg *Config) allowedUsers(raw string) error {
+	allowed, err := parseIDs(raw)
 	if err != nil {
-		errs = append(errs, fmt.Errorf("CRYCHIC_TELEGRAM_ALLOWED_USERS: %w", err))
+		return fmt.Errorf("CRYCHIC_TELEGRAM_ALLOWED_USERS: %w", err)
 	}
 	cfg.TelegramAllowed = allowed
-	return cfg, errors.Join(errs...)
+	return nil
 }
 
 // durationVar is a duration setting with a default and a lower bound.

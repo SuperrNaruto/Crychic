@@ -42,7 +42,7 @@ var help = flow.Lines(
 	flow.Line(flow.Mono("/start"), flow.Plain(" 回到首页，所有功能都在这儿～")),
 	flow.Line(flow.Mono("/search <片名>"), flow.Plain(" 帮你搜电影和剧集，顺手在 MoviePilot 里订上～")),
 	flow.Line(flow.Mono("/trending"), flow.Plain(" 逛逛热门榜单和新番，看中了一键订阅～")),
-	flow.Line(flow.Mono("/subscribe"), flow.Plain(" 看看所有订阅，你请求的也能在这里取消～")),
+	flow.Line(flow.Mono("/subscribe"), flow.Plain(" 看看所有订阅，点编号查看资源，你请求的也能在这里取消～")),
 	flow.Line(flow.Mono("/newly_added"), flow.Plain(" 媒体库新到的片子，点片名直接去看～")),
 	flow.Line(flow.Mono("/tasks"), flow.Plain(" 看看下载和整理的进度，选一个我帮你实时盯着～")),
 )
@@ -160,10 +160,14 @@ func (a *adapter) enter() bool {
 	return true
 }
 
-// Notify sends a notice to where the requester asked; in a group it
-// mentions them so the notice reaches the right person.
+// Notify sends a notice to its destination; requester notices in groups
+// include a mention. Broadcasts have no UserID and disclose no requester.
 func (b *Bot) Notify(ctx context.Context, n flow.Notice) error {
 	to, text := n.To, n.Text
+	if to.UserID == 0 {
+		_, err := b.adapter.send(ctx, to.Address, flow.Reply{Text: text, Image: n.Image})
+		return err
+	}
 	chat, err := strconv.ParseInt(to.Address, 10, 64)
 	if err != nil {
 		return fmt.Errorf("telegram address %q: %w", to.Address, err)

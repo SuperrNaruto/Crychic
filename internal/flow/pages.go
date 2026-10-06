@@ -19,6 +19,7 @@ type listView struct {
 	heading   Block
 	entries   []listEntry
 	footer    []Button
+	note      string
 	pageItems int // zero uses the default; search pages use fewer entries
 }
 
@@ -48,6 +49,9 @@ func (e *Engine) listPages(sess session, view listView) Reply {
 	}
 	for i := range pages {
 		pages[i].Buttons = grid(buttons[i], gridColumns)
+		if view.note != "" {
+			pages[i].Text = append(pages[i].Text, Remark(view.note))
+		}
 		if len(pages) > 1 {
 			pages[i].Text = append(pages[i].Text, Remark(fmt.Sprintf("第 %d/%d 页", i+1, len(pages))))
 			pages[i].Buttons = append(pages[i].Buttons, listPager(sess.id, i, len(pages)))
@@ -65,6 +69,14 @@ func textSize(text Text) int {
 		n += len([]rune(block.Facts)) + len([]rune(block.Tag)) + textSize(block.Body)
 		for _, span := range block.Spans {
 			n += len([]rune(span.Text))
+		}
+		for _, head := range block.Head {
+			n += len([]rune(head))
+		}
+		for _, row := range block.Rows {
+			for _, cell := range row {
+				n += len([]rune(cell.Text))
+			}
 		}
 	}
 	return n

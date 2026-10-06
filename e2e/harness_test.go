@@ -43,6 +43,7 @@ type scenario struct {
 	history     []transfer // transfers that predate the bot
 	quiet       string     // CRYCHIC_NOTIFY_QUIET, notifyQuiet if empty
 	libraryWait string     // empty uses the production default
+	notifyChat  string     // optional channel for arrival notices
 	lagging     bool       // the media server shows new transfers only on catchUp
 	// searches answers a search for one title with its own fixture; other
 	// titles get the searchPath route.
@@ -80,17 +81,18 @@ func start(t *testing.T, sc scenario) *harness {
 		sc.quiet = notifyQuiet
 	}
 	env := map[string]string{
-		"CRYCHIC_MOVIEPILOT_URL":         mp.URL,
-		"CRYCHIC_MOVIEPILOT_API_KEY":     sc.apiKey,
-		"CRYCHIC_TELEGRAM_TOKEN":         tgToken,
-		"CRYCHIC_TELEGRAM_API_URL":       tg.URL,
-		"CRYCHIC_BANGUMI_API_URL":        bgm.URL,
-		"CRYCHIC_TELEGRAM_ALLOWED_USERS": fmt.Sprintf("%d, %d", alice, bob),
-		"CRYCHIC_DATA_DIR":               t.TempDir(),
-		"CRYCHIC_NOTIFY_INTERVAL":        notifyInterval,
-		"CRYCHIC_NOTIFY_QUIET":           sc.quiet,
-		"CRYCHIC_NOTIFY_LIBRARY_WAIT":    sc.libraryWait,
-		"CRYCHIC_PROGRESS_INTERVAL":      progressInterval,
+		"CRYCHIC_MOVIEPILOT_URL":          mp.URL,
+		"CRYCHIC_MOVIEPILOT_API_KEY":      sc.apiKey,
+		"CRYCHIC_TELEGRAM_TOKEN":          tgToken,
+		"CRYCHIC_TELEGRAM_API_URL":        tg.URL,
+		"CRYCHIC_BANGUMI_API_URL":         bgm.URL,
+		"CRYCHIC_TELEGRAM_ALLOWED_USERS":  fmt.Sprintf("%d, %d", alice, bob),
+		"CRYCHIC_DATA_DIR":                t.TempDir(),
+		"CRYCHIC_NOTIFY_INTERVAL":         notifyInterval,
+		"CRYCHIC_NOTIFY_QUIET":            sc.quiet,
+		"CRYCHIC_NOTIFY_LIBRARY_WAIT":     sc.libraryWait,
+		"CRYCHIC_PROGRESS_INTERVAL":       progressInterval,
+		"CRYCHIC_TELEGRAM_NOTIFY_CHAT_ID": sc.notifyChat,
 	}
 	cfg, err := config.Load(func(k string) string { return env[k] })
 	if err != nil {

@@ -28,7 +28,8 @@ var stateText = map[string]string{
 
 // Subscriptions opens the subscription list.
 func (e *Engine) Subscriptions(ctx context.Context, actor Actor) Reply {
-	return e.listSubs(ctx, e.store.create(actor, nil))
+	sess := e.store.create(actor, nil)
+	return e.shown(sess.id, e.listSubs(ctx, sess))
 }
 
 // chooseSubs applies the subscription list actions; ok is false for others.
@@ -49,7 +50,7 @@ func (e *Engine) chooseSubs(ctx context.Context, sess session, p press) (Reply, 
 }
 
 // listSubs shows every subscription; the ones the user asked for get a
-// cancel button.
+// cancel button; number buttons open their resources.
 func (e *Engine) listSubs(ctx context.Context, sess session) Reply {
 	subs, err := e.backend.Subscriptions(ctx)
 	if err != nil {
@@ -69,9 +70,10 @@ func (e *Engine) listSubs(ctx context.Context, sess session) Reply {
 		s.Title = truncate(s.Title, listTitleRunes)
 		mine := slices.Contains(sess.mine, s.ID)
 		entry := listEntry{text: Lines(subEntry(i+1, s, mine))}
+		entry.buttons = []Button{{Label: fmt.Sprint(i + 1), Data: data(sess.id, actionResources, i)}}
 		if mine {
 			label := fmt.Sprintf("取消 %d", i+1)
-			entry.buttons = []Button{{Label: label, Data: data(sess.id, actionAskCancel, i)}}
+			entry.buttons = append(entry.buttons, Button{Label: label, Data: data(sess.id, actionAskCancel, i)})
 		}
 		view.entries = append(view.entries, entry)
 	}

@@ -29,6 +29,8 @@ e2e/                 # behavior tests: real app vs fake Telegram Bot API + fake 
 
 Arrivals: `notify.Notifier` polls `GET /api/v1/history/transfer` → `arrive` records matches as pending (media + season + episode range) → `flush` announces once settled → `telegram.Bot.Notify` posts in the requesting chat, mentioning the requester in groups.
 
+With `CRYCHIC_TELEGRAM_NOTIFY_CHAT_ID` set, `notify.Options.Destination` replaces requester delivery: one notice per watch delivery to the channel, with no requester identity and no fallback to the originating chats. Blank keeps the original behavior. The destination is a negative chat ID or `@channelusername`; the bot needs channel posting rights. Delivery still persists before sending and does not replay failed sends.
+
 Data flow: Telegram update → `telegram.adapter` → `flow.Engine.Start/Choose` → `flow.Backend` (MoviePilot) → `flow.Reply` → `sendRichMessage` (command) or `editMessageText` with `rich_message` (button) → `answerCallbackQuery` last.
 
 ## Key Files
@@ -44,6 +46,7 @@ Data flow: Telegram update → `telegram.adapter` → `flow.Engine.Start/Choose`
 - `internal/flow/nav.go` - 返回: every shown reply is kept with the session state behind it (`screen`); forward steps (`forward`: pick, season, 相似/系列, multi-season, start-episode prompt, chart pick, typed title) push the previous screen, same-level steps (paging, ticking, weekday, a typed episode) replace it, any other step clears the history; 返回 restores a screen exactly, with no backend call. `grid` lays out button rows
 - `internal/flow/latest.go` - `/newly_added`: newest media server items linked to their web page
 - `internal/flow/subscribe.go` - `/subscribe`: every subscription, cancel only those the user requested (`Watcher.Requested`), then `Watcher.Forget`
+- `internal/flow/resources.go` - subscription number buttons (`res`) read resource records, refresh (`rr`) replaces the view, 返回 restores the subscription page. `internal/moviepilot/resources.go` reads `GET /api/v1/subscribe/files/{id}`; groups by torrent and downloader across episodes, keeps basenames only, never shows tracker/download URLs. Live size/progress join by hash + downloader and are cosmetic; records may include earlier downloads of the same media/season. Missing/finished subscriptions and empty/failed reads leave the previous screen with a toast. Resource files are bounded and lists use `listPages`; table cells count towards its text budget.
 - `internal/flow/seasons.go` - multi-season picker (「多选季…」): tick seasons, subscribe each from episode 1, report per season
 - `internal/flow/episodes.go` - start-episode choices for seasons and typed answers (`Engine.Answer`)
 - `internal/flow/rich.go` - `flow.Text`: blocks by meaning (`Heading`, `Line` paragraphs, numbered `entry` items (a `Body` folds behind the name), `Group` section heads, `Quote`, `Table` (columns empty in every row are dropped), `Ticked` checklist lines, `Open` link button, `Small` print, `Remark` notes, `Divider`) of spans (bold, italic, code, link); an entry's `Tag` is a highlighted fact (你请求的)
@@ -62,6 +65,7 @@ Data flow: Telegram update → `telegram.adapter` → `flow.Engine.Start/Choose`
 - `CRYCHIC_MOVIEPILOT_URL`, `CRYCHIC_MOVIEPILOT_API_KEY` (MoviePilot `API_TOKEN`), `CRYCHIC_TELEGRAM_TOKEN` - required
 - `CRYCHIC_TELEGRAM_ALLOWED_USERS` - required, comma-separated user IDs; empty refuses to start
 - `CRYCHIC_TELEGRAM_API_URL` - optional, defaults to `https://api.telegram.org`
+- `CRYCHIC_TELEGRAM_NOTIFY_CHAT_ID` - optional arrival channel, negative ID or `@channelusername`; empty notifies request chats
 - `CRYCHIC_BANGUMI_API_URL` - optional, defaults to `https://api.bgm.tv`; the 新番放送 calendar is read from it
 - `CRYCHIC_DATA_DIR` - optional, defaults to `data`; holds `requests.json` (pending requests, last seen transfer)
 - `CRYCHIC_NOTIFY_INTERVAL` - optional, defaults to `1m`, minimum `100ms`; how often transfer history is polled

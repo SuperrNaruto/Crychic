@@ -29,12 +29,12 @@ var chartViews = map[string]bool{actionChart: true, actionChartPage: true, actio
 var forward = map[string]bool{
 	actionMedia: true, actionSeason: true, actionRelated: true, actionSeries: true,
 	actionMulti: true, actionAskFrom: true, actionChartPick: true, actionAskTitle: true,
-	actionResearch: true,
+	actionResearch: true, actionResources: true,
 }
 
 var sameLevel = map[string]bool{
 	actionTick: true, actionChartPage: true, actionWeekday: true, actionPage: true, answered: true,
-	actionRetry: true,
+	actionRetry: true, actionRefreshResources: true,
 }
 
 // answered stands for a typed start episode, which replaces its prompt.

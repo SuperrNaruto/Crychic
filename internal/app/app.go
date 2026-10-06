@@ -69,6 +69,7 @@ func Run(ctx context.Context, cfg config.Config, deps Deps) error {
 		Path:        filepath.Join(cfg.DataDir, stateFile),
 		Interval:    cfg.NotifyInterval,
 		Quiet:       cfg.NotifyQuiet,
+		Destination: cfg.TelegramNotifyChat,
 		LibraryWait: cfg.LibraryWait,
 		Now:         now,
 		Log:         log,
@@ -77,7 +78,10 @@ func Run(ctx context.Context, cfg config.Config, deps Deps) error {
 		return err
 	}
 	calendar := bangumi.New(cfg.BangumiAPIURL, &http.Client{Timeout: backendTimeout, Transport: transport})
-	engine := flow.New(flow.Options{Backend: backend, Calendar: calendar, Watcher: notifier, Log: log, Now: now})
+	engine := flow.New(flow.Options{
+		Backend: backend, Calendar: calendar, Watcher: notifier, Log: log, Now: now,
+		NoticeInChannel: cfg.TelegramNotifyChat != "",
+	})
 	var wg sync.WaitGroup
 	wg.Go(func() { notifier.Run(ctx) })
 	tg.Run(ctx, engine)
