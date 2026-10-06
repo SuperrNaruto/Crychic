@@ -246,6 +246,7 @@ func (n *Notifier) checkActivity(ctx context.Context) error {
 
 func (n *Notifier) send(ctx context.Context, deliveries []delivery) {
 	for _, d := range deliveries {
+		d.qualities = n.qualities(ctx, d.releases)
 		text := arrivalText(d)
 		recipients := d.watch.Requesters
 		if n.opts.Destination != "" {

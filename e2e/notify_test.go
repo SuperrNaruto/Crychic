@@ -68,9 +68,19 @@ func TestGroupHearsArrivedEpisodesTogether(t *testing.T) {
 }
 
 // Episodes that arrive one poll apart share a notice once they settle, and
-// arrivals not yet announced survive a restart.
+// arrivals not yet announced survive a restart. The notice words each
+// download's quality once, as MoviePilot's recognizer does from one of its
+// file names; a download it cannot recognize adds nothing.
 func TestEpisodesArrivingApartShareOneNotice(t *testing.T) {
-	h := start(t, scenario{quiet: "2s", routes: map[string]route{
+	const pack, other = "rovers-pack-hash", "unknown-release-hash"
+	release := func(episode, hash, name string) transfer {
+		f := breakingBad.file("S02", episode)
+		f.Src, f.Hash = "/downloads/Breaking.Bad.S02/"+name, hash
+		return f
+	}
+	h := start(t, scenario{quiet: "2s", recognized: map[string]string{
+		"Breaking.Bad.S02E01.1080p.BluRay.x265.10bit.DTS-HD.MA.5.1-ROVERS.mkv": "recognize_breaking_bad.json",
+	}, routes: map[string]route{
 		searchPath:    ok("search_breaking_bad.json"),
 		breakDetails:  ok("detail_breaking_bad.json"),
 		seasonsPath:   ok("seasons_breaking_bad.json"),
@@ -81,10 +91,14 @@ func TestEpisodesArrivingApartShareOneNotice(t *testing.T) {
 	h.tap(alice, 1, "1")
 	h.tap(alice, 1, "第 2 季")
 	h.tap(alice, 1, "从第 1 集开始")
-	h.transfers(breakingBad.file("S02", "E01"))
+	h.transfers(release("E01", pack, "Breaking.Bad.S02E01.1080p.BluRay.x265.10bit.DTS-HD.MA.5.1-ROVERS.mkv"))
 	h.restart()
-	h.arrives(alice, breakingBad.file("S02", "E02"))
-	h.shows(2, "E01–E02 到家啦")
+	h.arrives(alice,
+		release("E02", pack, "Breaking.Bad.S02E02.1080p.BluRay.x265.10bit.DTS-HD.MA.5.1-ROVERS.mkv"),
+		release("E03", other, "bb-s02e03.mkv"),
+	)
+	h.shows(2, "E01–E03 到家啦")
+	h.shows(2, "1080p · BluRay · x265 10bit · DTS-HD MA 5.1")
 	h.tr.verify(t)
 }
 

@@ -4,9 +4,11 @@ import (
 	"context"
 	"net/http"
 	"net/url"
+	"path"
 	"regexp"
 	"slices"
 	"strconv"
+	"strings"
 
 	"github.com/SuperrNaruto/Crychic/internal/notify"
 )
@@ -30,6 +32,8 @@ type transferRecord struct {
 	Seasons     string `json:"seasons"`
 	Episodes    string `json:"episodes"`
 	Image       string `json:"image"`
+	Src         string `json:"src"` // the downloaded file's server path
+	Hash        string `json:"download_hash"`
 }
 
 // transferPage is one page of successful transfers, newest first.
@@ -73,12 +77,23 @@ func (c *Client) TransfersAfter(ctx context.Context, id int) ([]notify.Transfer,
 	return out, nil
 }
 
-// toTransfer parses MoviePilot's "S03" / "E01-E03" labels.
+// toTransfer parses MoviePilot's "S03" / "E01-E03" labels and keeps only
+// the source file's name, never the server path.
 func (r transferRecord) toTransfer() notify.Transfer {
 	return notify.Transfer{
 		ID: r.ID, Source: r.MediaSource, MediaID: r.MediaID, Image: r.Image,
 		Season: parseSeason(r.Seasons), Episodes: parseEpisodes(r.Episodes),
+		File: fileName(r.Src), Download: r.Hash,
 	}
+}
+
+// fileName is the last element of a Linux or Windows path, "" for none.
+func fileName(p string) string {
+	name := path.Base(strings.ReplaceAll(p, `\`, "/"))
+	if name == "." || name == "/" {
+		return ""
+	}
+	return name
 }
 
 // parseSeason reads "S03" as 3, nil when there is no season.

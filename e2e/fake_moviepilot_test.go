@@ -31,6 +31,7 @@ const (
 	queuePath        = "GET /api/v1/transfer/queue"
 	clientsPath      = "GET /api/v1/mediaserver/clients"
 	latestPath       = "GET /api/v1/mediaserver/latest"
+	recognizePath    = "GET /api/v1/media/recognize"
 
 	createdFixture = "subscribe_created.json"
 	createdID      = `"id": 1`
@@ -78,6 +79,8 @@ type transfer struct {
 	Image       string `json:"image"`
 	Year        string `json:"year"`
 	Status      bool   `json:"status"`
+	Src         string `json:"src,omitempty"`
+	Hash        string `json:"download_hash,omitempty"`
 }
 
 // fakeMoviePilot serves canned routes plus the live transfer history a
@@ -90,14 +93,15 @@ type fakeMoviePilot struct {
 	tr     *transcript
 	routes map[string]route
 
-	mu        sync.Mutex
-	transfers []transfer // newest first, like MoviePilot
-	polled    chan struct{}
-	readers   []reader
-	created   int  // subscriptions created so far
-	lagging   bool // the media server has not scanned new transfers yet
-	scanned   int  // transfers the media server shows while lagging
-	searches  map[string]string
+	mu         sync.Mutex
+	transfers  []transfer // newest first, like MoviePilot
+	polled     chan struct{}
+	readers    []reader
+	created    int  // subscriptions created so far
+	lagging    bool // the media server has not scanned new transfers yet
+	scanned    int  // transfers the media server shows while lagging
+	searches   map[string]string
+	recognized map[string]string
 }
 
 // reader waits for the notifier to finish a poll that read the transfer
@@ -245,6 +249,10 @@ func (f *fakeMoviePilot) serveRoute(w http.ResponseWriter, r *http.Request) {
 	rt, found := f.routes[key]
 	if fixture, ok := f.searches[title]; ok && key == searchPath {
 		rt, found = route{status: http.StatusOK, fixture: fixture}, true
+	}
+	if key == recognizePath {
+		// MoviePilot answers a file it cannot recognize with no meta_info.
+		rt, found = ok(cmp.Or(f.recognized[title], "recognize_none.json")), true
 	}
 	if key == searchPath && r.URL.Query().Get("type") == "collection" {
 		// MoviePilot answers a name matching no collection with an empty list.

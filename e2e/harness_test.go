@@ -48,6 +48,9 @@ type scenario struct {
 	// searches answers a search for one title with its own fixture; other
 	// titles get the searchPath route.
 	searches map[string]string
+	// recognized answers MoviePilot's release-name recognizer for one file
+	// name with its own fixture; others are not recognized, as live.
+	recognized map[string]string
 }
 
 type harness struct {
@@ -71,7 +74,7 @@ func start(t *testing.T, sc scenario) *harness {
 	tr := &transcript{}
 	mp := newFakeMoviePilot(t, tr, sc.routes)
 	mp.add(sc.history...)
-	mp.lagging, mp.scanned, mp.searches = sc.lagging, len(sc.history), sc.searches
+	mp.lagging, mp.scanned, mp.searches, mp.recognized = sc.lagging, len(sc.history), sc.searches, sc.recognized
 	tg := newFakeTelegram(tr)
 	bgm := newFakeBangumi(t, tr)
 	if sc.apiKey == "" {

@@ -1,0 +1,16 @@
+{
+  "success": true,
+  "message": "",
+  "data": {
+    "meta_info": {
+      "resource_pix": "1080p",
+      "edition": "BluRay",
+      "resource_type": "BluRay",
+      "resource_effect": null,
+      "web_source": null,
+      "video_encode": "x265 10bit",
+      "audio_encode": "DTS-HD MA 5.1",
+      "resource_team": null
+    }
+  }
+}

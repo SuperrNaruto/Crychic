@@ -18,6 +18,19 @@ type Transfer struct {
 	Season   *int // nil for movies
 	Episodes []int
 	Image    string
+	File     string // the downloaded file's name, "" when unknown
+	Download string // the download (torrent hash) the file came from
+}
+
+// Quality is how the backend's release-name parser words a file, e.g.
+// 1080p, BluRay, x265, FLAC 2.0, FROGE; empty fields are unknown.
+type Quality struct {
+	Resolution string
+	Edition    string
+	WebSource  string
+	Video      string
+	Audio      string
+	Group      string
 }
 
 // Feed is where arrivals are read from.
@@ -30,6 +43,9 @@ type Feed interface {
 	// Library and Latest ask the media server what it shows.
 	Library(ctx context.Context, media flow.Media) (flow.Library, error)
 	Latest(ctx context.Context) ([]flow.LibraryItem, error)
+	// Quality parses a downloaded file's name; a zero Quality when the
+	// backend cannot recognize it.
+	Quality(ctx context.Context, file string) (Quality, error)
 }
 
 // Sender delivers a notice to a requester on their platform.

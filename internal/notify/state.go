@@ -38,18 +38,30 @@ type watch struct {
 	Delivered      []int        `json:"delivered,omitempty"` // episodes arrived so far
 	Pending        []int        `json:"pending,omitempty"`   // arrived, not yet announced
 	Image          string       `json:"image,omitempty"`     // poster of the latest pending arrival
+	Releases       []release    `json:"releases,omitempty"`  // one file per download among pending arrivals
 	ArrivedAt      *time.Time   `json:"arrived_at,omitempty"`
 	InactiveSince  *time.Time   `json:"inactive_since,omitempty"`
 	Requesters     []flow.Actor `json:"requesters"`
 }
 
+// release is a download that pending arrivals came from, by one of its files.
+type release struct {
+	Download string `json:"download,omitempty"`
+	File     string `json:"file"`
+}
+
+// maxReleases bounds the releases a notice describes.
+const maxReleases = 3
+
 // delivery is what one watch's requesters are told after a poll.
 type delivery struct {
-	watch    watch
-	episodes []int
-	complete bool
-	image    string
-	watchAt  flow.LibraryItem // where to watch it; Link is "" when unknown
+	watch     watch
+	episodes  []int
+	complete  bool
+	image     string
+	releases  []release
+	qualities []string         // the releases' qualities as worded for the notice
+	watchAt   flow.LibraryItem // where to watch it; Link is "" when unknown
 }
 
 // withRequest adds req to st, joining an existing watch of the same
@@ -107,8 +119,22 @@ func (w watch) collect(transfers []Transfer, now time.Time) watch {
 		w.Delivered = slices.Sorted(slices.Values(append(slices.Clone(w.Delivered), fresh...)))
 		w.Pending = slices.Sorted(slices.Values(append(slices.Clone(w.Pending), fresh...)))
 		w.Image, w.ArrivedAt = t.Image, &now
+		w.Releases = w.withRelease(t)
 	}
 	return w
+}
+
+// withRelease adds t's download unless one of its files is known already.
+func (w watch) withRelease(t Transfer) []release {
+	if t.File == "" || len(w.Releases) >= maxReleases {
+		return w.Releases
+	}
+	for _, r := range w.Releases {
+		if r.File == t.File || (t.Download != "" && r.Download == t.Download) {
+			return w.Releases
+		}
+	}
+	return append(slices.Clone(w.Releases), release{Download: t.Download, File: t.File})
 }
 
 // settled reports whether w's pending arrivals are ready to announce:
@@ -141,9 +167,9 @@ func flush(st state, now time.Time, settle settling) (state, []delivery) {
 			next.Watches = append(next.Watches, w)
 			continue
 		}
-		out = append(out, delivery{watch: w, episodes: w.Pending, complete: complete, image: w.Image})
+		out = append(out, delivery{watch: w, episodes: w.Pending, complete: complete, image: w.Image, releases: w.Releases})
 		if !complete {
-			w.Pending, w.Image, w.ArrivedAt = nil, "", nil
+			w.Pending, w.Image, w.ArrivedAt, w.Releases = nil, "", nil, nil
 			next.Watches = append(next.Watches, w)
 		}
 	}

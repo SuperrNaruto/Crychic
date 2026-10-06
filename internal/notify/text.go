@@ -15,16 +15,27 @@ func arrivalText(d delivery) flow.Text {
 	w := d.watch
 	name := fmt.Sprintf("《%s》", w.Title)
 	if w.Season == nil {
-		return withWatchLink(flow.Lines(arrivedHeading, flow.Line(flow.Plain("你想看的"), flow.Strong(name), flow.Plain("到家啦，快去看吧！(ﾉ>ω<)ﾉ"))), d)
+		text := flow.Lines(arrivedHeading, flow.Line(flow.Plain("你想看的"), flow.Strong(name), flow.Plain("到家啦，快去看吧！(ﾉ>ω<)ﾉ")))
+		return withWatchLink(withQualities(text, d), d)
 	}
 	name += fmt.Sprintf("第 %d 季", *w.Season)
 	text := flow.Lines(arrivedHeading, flow.Line(
 		flow.Plain("你想看的"), flow.Strong(name), flow.Plain(" "+flow.EpisodeRanges(d.episodes)+" 到家啦！"),
 	))
+	text = withQualities(text, d)
 	if d.complete {
 		text = append(text, flow.Line(flow.Plain("这一季你要的剧集全部到齐啦 ヾ(≧▽≦*)o")))
 	}
 	return withWatchLink(text, d)
+}
+
+// withQualities adds a line of small print per release quality, e.g.
+// "1080p · BluRay · x265 · FLAC 2.0 · FROGE".
+func withQualities(text flow.Text, d delivery) flow.Text {
+	for _, q := range d.qualities {
+		text = append(text, flow.Small(flow.Plain(q)))
+	}
+	return text
 }
 
 // withWatchLink adds a button to where to watch, e.g. "在 Emby 中观看".

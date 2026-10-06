@@ -72,10 +72,14 @@
 >> MoviePilot transfers 绝命毒师 (themoviedb/1396) S02E01
 >> Crychic restarts
 >> MoviePilot transfers 绝命毒师 (themoviedb/1396) S02E02
+>> MoviePilot transfers 绝命毒师 (themoviedb/1396) S02E03
+-> MoviePilot GET /api/v1/media/recognize?title=Breaking.Bad.S02E01.1080p.BluRay.x265.10bit.DTS-HD.MA.5.1-ROVERS.mkv
+-> MoviePilot GET /api/v1/media/recognize?title=bb-s02e03.mkv
 << sendRichMessage chat=1001 message=2
    <img src="https://image.tmdb.org/t/p/w500/rqliuvX7NdknSHu5qaSDfESplQi.jpg"/>
    <h3>📥 入库啦</h3>
-   <p>你想看的<b>《绝命毒师》第 2 季</b> E01–E02 到家啦！</p>
+   <p>你想看的<b>《绝命毒师》第 2 季</b> E01–E03 到家啦！</p>
+   <footer>1080p · BluRay · x265 10bit · DTS-HD MA 5.1</footer>
    <tg-button-row align="left">
    <tg-button type="url" style="success" url="https://emby.example.com/web/index.html#!/item?id=1396">在 Emby 中观看</tg-button>
    </tg-button-row>
