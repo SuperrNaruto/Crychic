@@ -1,0 +1,24 @@
+{
+  "success": true,
+  "message": "",
+  "data": [
+    {
+      "id": 1,
+      "name": "沙丘",
+      "year": "2021",
+      "type": "电影",
+      "season": null,
+      "media_source": "themoviedb",
+      "media_id": "438631",
+      "poster": "https://image.tmdb.org/t/p/w500/6hsJknqlPceFxExOe87z5VGgNG9.jpg",
+      "date": "2026-10-05 11:18:33",
+      "start_episode": 0,
+      "total_episode": 0,
+      "best_version": 0,
+      "sites": null,
+      "quality": null,
+      "resolution": null,
+      "effect": null
+    }
+  ]
+}

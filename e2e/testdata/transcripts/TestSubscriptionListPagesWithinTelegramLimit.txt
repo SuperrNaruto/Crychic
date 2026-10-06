@@ -1,7 +1,7 @@
 >> user 1001 in chat 1001: /subscribe
 -> MoviePilot GET /api/v1/subscribe/
 << sendRichMessage chat=1001 message=1
-   <h3>📚 订阅清单（150）</h3>
+   <h3>📚 订阅清单 · 电视剧（150）</h3>
    <ol start="1">
    <li value="1"><b>《绝命毒师》第 2 季</b><br>
    <i>订阅中 · 缺 13/13 集</i></li>
@@ -51,10 +51,12 @@
    [13 | 1:res:12] [14 | 1:res:13] [15 | 1:res:14] [16 | 1:res:15]
    [17 | 1:res:16] [18 | 1:res:17] [19 | 1:res:18] [20 | 1:res:19]
    [下一页 › | 1:p:1]
+   [电视剧 | 1:sf:2] [电影 | 1:sf:1]
+   [订阅历史 | 1:hs:2]
    [首页 | 1:o:0]
 >> user 1001 taps 1:p:1 on message 1
 << editMessageText chat=1001 message=1
-   <h3>📚 订阅清单（150）</h3>
+   <h3>📚 订阅清单 · 电视剧（150）</h3>
    <ol start="21">
    <li value="21"><b>《绝命毒师》第 2 季</b><br>
    <i>订阅中 · 缺 13/13 集</i></li>
@@ -104,11 +106,13 @@
    [33 | 1:res:32] [34 | 1:res:33] [35 | 1:res:34] [36 | 1:res:35]
    [37 | 1:res:36] [38 | 1:res:37] [39 | 1:res:38] [40 | 1:res:39]
    [‹ 上一页 | 1:p:0] [下一页 › | 1:p:2]
+   [电视剧 | 1:sf:2] [电影 | 1:sf:1]
+   [订阅历史 | 1:hs:2]
    [首页 | 1:o:0]
 << answerCallbackQuery
 >> user 1001 taps 1:p:2 on message 1
 << editMessageText chat=1001 message=1
-   <h3>📚 订阅清单（150）</h3>
+   <h3>📚 订阅清单 · 电视剧（150）</h3>
    <ol start="41">
    <li value="41"><b>《绝命毒师》第 2 季</b><br>
    <i>订阅中 · 缺 13/13 集</i></li>
@@ -158,11 +162,13 @@
    [53 | 1:res:52] [54 | 1:res:53] [55 | 1:res:54] [56 | 1:res:55]
    [57 | 1:res:56] [58 | 1:res:57] [59 | 1:res:58] [60 | 1:res:59]
    [‹ 上一页 | 1:p:1] [下一页 › | 1:p:3]
+   [电视剧 | 1:sf:2] [电影 | 1:sf:1]
+   [订阅历史 | 1:hs:2]
    [首页 | 1:o:0]
 << answerCallbackQuery
 >> user 1001 taps 1:p:3 on message 1
 << editMessageText chat=1001 message=1
-   <h3>📚 订阅清单（150）</h3>
+   <h3>📚 订阅清单 · 电视剧（150）</h3>
    <ol start="61">
    <li value="61"><b>《绝命毒师》第 2 季</b><br>
    <i>订阅中 · 缺 13/13 集</i></li>
@@ -212,11 +218,13 @@
    [73 | 1:res:72] [74 | 1:res:73] [75 | 1:res:74] [76 | 1:res:75]
    [77 | 1:res:76] [78 | 1:res:77] [79 | 1:res:78] [80 | 1:res:79]
    [‹ 上一页 | 1:p:2] [下一页 › | 1:p:4]
+   [电视剧 | 1:sf:2] [电影 | 1:sf:1]
+   [订阅历史 | 1:hs:2]
    [首页 | 1:o:0]
 << answerCallbackQuery
 >> user 1001 taps 1:p:4 on message 1
 << editMessageText chat=1001 message=1
-   <h3>📚 订阅清单（150）</h3>
+   <h3>📚 订阅清单 · 电视剧（150）</h3>
    <ol start="81">
    <li value="81"><b>《绝命毒师》第 2 季</b><br>
    <i>订阅中 · 缺 13/13 集</i></li>
@@ -266,11 +274,13 @@
    [93 | 1:res:92] [94 | 1:res:93] [95 | 1:res:94] [96 | 1:res:95]
    [97 | 1:res:96] [98 | 1:res:97] [99 | 1:res:98] [100 | 1:res:99]
    [‹ 上一页 | 1:p:3] [下一页 › | 1:p:5]
+   [电视剧 | 1:sf:2] [电影 | 1:sf:1]
+   [订阅历史 | 1:hs:2]
    [首页 | 1:o:0]
 << answerCallbackQuery
 >> user 1001 taps 1:p:5 on message 1
 << editMessageText chat=1001 message=1
-   <h3>📚 订阅清单（150）</h3>
+   <h3>📚 订阅清单 · 电视剧（150）</h3>
    <ol start="101">
    <li value="101"><b>《绝命毒师》第 2 季</b><br>
    <i>订阅中 · 缺 13/13 集</i></li>
@@ -320,11 +330,13 @@
    [113 | 1:res:112] [114 | 1:res:113] [115 | 1:res:114] [116 | 1:res:115]
    [117 | 1:res:116] [118 | 1:res:117] [119 | 1:res:118] [120 | 1:res:119]
    [‹ 上一页 | 1:p:4] [下一页 › | 1:p:6]
+   [电视剧 | 1:sf:2] [电影 | 1:sf:1]
+   [订阅历史 | 1:hs:2]
    [首页 | 1:o:0]
 << answerCallbackQuery
 >> user 1001 taps 1:p:6 on message 1
 << editMessageText chat=1001 message=1
-   <h3>📚 订阅清单（150）</h3>
+   <h3>📚 订阅清单 · 电视剧（150）</h3>
    <ol start="121">
    <li value="121"><b>《绝命毒师》第 2 季</b><br>
    <i>订阅中 · 缺 13/13 集</i></li>
@@ -374,11 +386,13 @@
    [133 | 1:res:132] [134 | 1:res:133] [135 | 1:res:134] [136 | 1:res:135]
    [137 | 1:res:136] [138 | 1:res:137] [139 | 1:res:138] [140 | 1:res:139]
    [‹ 上一页 | 1:p:5] [下一页 › | 1:p:7]
+   [电视剧 | 1:sf:2] [电影 | 1:sf:1]
+   [订阅历史 | 1:hs:2]
    [首页 | 1:o:0]
 << answerCallbackQuery
 >> user 1001 taps 1:p:7 on message 1
 << editMessageText chat=1001 message=1
-   <h3>📚 订阅清单（150）</h3>
+   <h3>📚 订阅清单 · 电视剧（150）</h3>
    <ol start="141">
    <li value="141"><b>《绝命毒师》第 2 季</b><br>
    <i>订阅中 · 缺 13/13 集</i></li>
@@ -406,11 +420,13 @@
    [145 | 1:res:144] [146 | 1:res:145] [147 | 1:res:146] [148 | 1:res:147]
    [149 | 1:res:148] [150 | 1:res:149]
    [‹ 上一页 | 1:p:6]
+   [电视剧 | 1:sf:2] [电影 | 1:sf:1]
+   [订阅历史 | 1:hs:2]
    [首页 | 1:o:0]
 << answerCallbackQuery
 >> user 1001 taps 1:p:6 on message 1
 << editMessageText chat=1001 message=1
-   <h3>📚 订阅清单（150）</h3>
+   <h3>📚 订阅清单 · 电视剧（150）</h3>
    <ol start="121">
    <li value="121"><b>《绝命毒师》第 2 季</b><br>
    <i>订阅中 · 缺 13/13 集</i></li>
@@ -460,5 +476,7 @@
    [133 | 1:res:132] [134 | 1:res:133] [135 | 1:res:134] [136 | 1:res:135]
    [137 | 1:res:136] [138 | 1:res:137] [139 | 1:res:138] [140 | 1:res:139]
    [‹ 上一页 | 1:p:5] [下一页 › | 1:p:7]
+   [电视剧 | 1:sf:2] [电影 | 1:sf:1]
+   [订阅历史 | 1:hs:2]
    [首页 | 1:o:0]
 << answerCallbackQuery

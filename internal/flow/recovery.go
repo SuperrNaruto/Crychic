@@ -72,7 +72,13 @@ const msgSubmitUnknown = "呜，没能确认订阅有没有成功…先用 /subs
 // submit attempts the write once. A transport/response failure, including
 // a missing receipt, is not proof that MoviePilot rejected the request.
 func (e *Engine) submit(ctx context.Context, target Target) (int, error) {
-	id, err := e.backend.Subscribe(ctx, target)
+	return e.written(target, func() (int, error) { return e.backend.Subscribe(ctx, target) })
+}
+
+// written classifies one subscription write for target: a positive id is
+// done, a safe MoviePilot refusal is passed on, anything else is unknown.
+func (e *Engine) written(target Target, write func() (int, error)) (int, error) {
+	id, err := write()
 	if err == nil && id > 0 {
 		return id, nil
 	}

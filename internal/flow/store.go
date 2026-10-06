@@ -30,6 +30,8 @@ type session struct {
 	noted   []bool  // picks already given a link and synopsis
 	subs    []Subscription
 	mine    []int // ids of subs the owner asked for
+	kind    Kind  // the kind of subscription or history shown
+	past    []PastSubscription
 	tasks   []taskRef
 	follow  following
 	pages   []Reply

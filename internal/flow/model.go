@@ -156,6 +156,18 @@ type Subscription struct {
 	Poster string
 }
 
+// PastSubscription is a finished or cancelled subscription in the backend's
+// history. Record is the backend's own copy of it, handed back unchanged to
+// Resubscribe so the new subscription keeps the old one's settings.
+type PastSubscription struct {
+	ID           int
+	Media        Media
+	Season       *int
+	StartEpisode int
+	Date         string // when it entered the history, as the backend words it
+	Record       []byte
+}
+
 // Resource is a torrent recorded in a subscription's file information.
 // Files contain basenames only; tracker URLs and server paths stay private.
 type Resource struct {
@@ -185,6 +197,12 @@ type Backend interface {
 	Series(ctx context.Context, media Media) ([]Media, error)
 	Subscriptions(ctx context.Context) ([]Subscription, error)
 	Resources(ctx context.Context, subscriptionID int) ([]Resource, error)
+	// SubscriptionHistory lists at most count past subscriptions of kind,
+	// newest first.
+	SubscriptionHistory(ctx context.Context, kind Kind, count int) ([]PastSubscription, error)
+	// Resubscribe subscribes past again with its own settings and returns
+	// the new subscription's id.
+	Resubscribe(ctx context.Context, past PastSubscription) (int, error)
 	// Latest lists the newest additions to the media servers.
 	Latest(ctx context.Context) ([]LibraryItem, error)
 	// Unsubscribe deletes a subscription; deleting one already gone is fine.

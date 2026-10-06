@@ -18,6 +18,7 @@ type listEntry struct {
 type listView struct {
 	heading   Block
 	entries   []listEntry
+	menu      [][]Button // rows above the footer on every page
 	footer    []Button
 	note      string
 	pageItems int // zero uses the default; search pages use fewer entries
@@ -56,7 +57,7 @@ func (e *Engine) listPages(sess session, view listView) Reply {
 			pages[i].Text = append(pages[i].Text, Remark(fmt.Sprintf("第 %d/%d 页", i+1, len(pages))))
 			pages[i].Buttons = append(pages[i].Buttons, listPager(sess.id, i, len(pages)))
 		}
-		pages[i].Buttons = append(pages[i].Buttons, view.footer)
+		pages[i].Buttons = append(append(pages[i].Buttons, view.menu...), view.footer)
 	}
 	sess.pages = pages
 	e.store.put(sess)

@@ -198,7 +198,8 @@ func backButton(id uint64) Button {
 // back to /tasks, all others to /search.
 func expired(action string) Reply {
 	switch action {
-	case actionResources, actionRefreshResources:
+	case actionResources, actionRefreshResources, actionSubsKind, actionCancelPick, actionHistory, actionHistoryKind,
+		actionHistoryPick, actionResubscribe:
 		return Reply{Text: Sentence("⌛ 这个订阅列表过期啦，重新 /subscribe 一下吧～")}
 	case actionTask, actionFollow, actionUnfollow, actionList, actionClose:
 		return Reply{Text: Sentence(msgTasksExpired)}

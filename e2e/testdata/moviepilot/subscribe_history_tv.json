@@ -1,0 +1,144 @@
+{
+  "success": true,
+  "message": "",
+  "data": [
+    {
+      "id": 8,
+      "name": "颂乐人偶",
+      "year": "2025",
+      "type": "电视剧",
+      "season": 1,
+      "media_source": "themoviedb",
+      "media_id": "274580",
+      "poster": "https://image.tmdb.org/t/p/w500/xixekXvcCSZS1jXhFrYUzpCrLL6.jpg",
+      "date": "2026-10-06 22:36:35",
+      "start_episode": 0,
+      "total_episode": 0,
+      "best_version": 0,
+      "sites": [
+        1
+      ],
+      "quality": null,
+      "resolution": null,
+      "effect": null
+    },
+    {
+      "id": 7,
+      "name": "颂乐人偶",
+      "year": "2025",
+      "type": "电视剧",
+      "season": 1,
+      "media_source": "themoviedb",
+      "media_id": "274580",
+      "poster": "https://image.tmdb.org/t/p/w500/xixekXvcCSZS1jXhFrYUzpCrLL6.jpg",
+      "date": "2026-10-06 22:26:03",
+      "start_episode": 0,
+      "total_episode": 0,
+      "best_version": 0,
+      "sites": [
+        1
+      ],
+      "quality": null,
+      "resolution": null,
+      "effect": null
+    },
+    {
+      "id": 6,
+      "name": "颂乐人偶",
+      "year": "2025",
+      "type": "电视剧",
+      "season": 1,
+      "media_source": "themoviedb",
+      "media_id": "274580",
+      "poster": "https://image.tmdb.org/t/p/w500/xixekXvcCSZS1jXhFrYUzpCrLL6.jpg",
+      "date": "2026-10-06 17:56:25",
+      "start_episode": 0,
+      "total_episode": 0,
+      "best_version": 0,
+      "sites": [
+        1
+      ],
+      "quality": null,
+      "resolution": null,
+      "effect": null
+    },
+    {
+      "id": 5,
+      "name": "颂乐人偶",
+      "year": "2025",
+      "type": "电视剧",
+      "season": 1,
+      "media_source": "themoviedb",
+      "media_id": "274580",
+      "poster": "https://image.tmdb.org/t/p/w500/xixekXvcCSZS1jXhFrYUzpCrLL6.jpg",
+      "date": "2026-10-05 13:52:24",
+      "start_episode": 12,
+      "total_episode": 0,
+      "best_version": 0,
+      "sites": [
+        1
+      ],
+      "quality": null,
+      "resolution": null,
+      "effect": null
+    },
+    {
+      "id": 4,
+      "name": "迷途之子!!!!!",
+      "year": "2023",
+      "type": "电视剧",
+      "season": 1,
+      "media_source": "themoviedb",
+      "media_id": "224207",
+      "poster": "https://image.tmdb.org/t/p/w500/dDknWHLYaQB76QSViNdzXOC5v64.jpg",
+      "date": "2026-10-05 13:47:53",
+      "start_episode": 10,
+      "total_episode": 0,
+      "best_version": 0,
+      "sites": [
+        1
+      ],
+      "quality": null,
+      "resolution": null,
+      "effect": null
+    },
+    {
+      "id": 3,
+      "name": "迷途之子!!!!!",
+      "year": "2023",
+      "type": "电视剧",
+      "season": 1,
+      "media_source": "themoviedb",
+      "media_id": "224207",
+      "poster": "https://image.tmdb.org/t/p/w500/dDknWHLYaQB76QSViNdzXOC5v64.jpg",
+      "date": "2026-10-05 12:53:44",
+      "start_episode": 12,
+      "total_episode": 0,
+      "best_version": 0,
+      "sites": [
+        1
+      ],
+      "quality": null,
+      "resolution": null,
+      "effect": null
+    },
+    {
+      "id": 2,
+      "name": "碧蓝之海",
+      "year": "2018",
+      "type": "电视剧",
+      "season": 3,
+      "media_source": "themoviedb",
+      "media_id": "79166",
+      "poster": "https://image.tmdb.org/t/p/w500/9OW05tBAeyMWeEVtvTnn6S8LH4z.jpg",
+      "date": "2026-10-05 11:25:13",
+      "start_episode": 0,
+      "total_episode": 0,
+      "best_version": 0,
+      "sites": null,
+      "quality": null,
+      "resolution": null,
+      "effect": null
+    }
+  ]
+}

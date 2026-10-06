@@ -371,14 +371,13 @@ func TestOldHomePhotoIsReplaced(t *testing.T) {
 }
 
 const (
-	subsPath       = "GET /api/v1/subscribe/"
-	deleteFirst    = "DELETE /api/v1/subscribe/1"
-	cancelBreaking = "取消 1"
+	subsPath    = "GET /api/v1/subscribe/"
+	deleteFirst = "DELETE /api/v1/subscribe/1"
 )
 
-// The subscription list offers to cancel only what the user asked for;
-// a cancelled subscription is deleted and its arrivals are no longer
-// announced.
+// The subscription list offers one cancel button, which lists only what
+// the user asked for; a cancelled subscription is deleted and its arrivals
+// are no longer announced. Someone who asked for nothing gets no button.
 func TestCancelOwnSubscription(t *testing.T) {
 	h := start(t, scenario{routes: map[string]route{
 		searchPath:    ok("search_breaking_bad.json"),
@@ -394,16 +393,23 @@ func TestCancelOwnSubscription(t *testing.T) {
 	h.tap(alice, 1, "第 2 季")
 	h.tap(alice, 1, "从第 1 集开始")
 	h.say(alice, alice, "/subscribe")
-	h.tap(alice, 2, cancelBreaking)
+	h.tap(alice, 2, "取消订阅")
+	h.tap(alice, 2, "1")
+	h.tap(alice, 2, "返回")
+	h.shows(2, "只能取消你请求的订阅")
 	h.tap(alice, 2, "返回")
 	h.shows(2, "订阅清单")
-	h.tap(alice, 2, cancelBreaking)
+	h.tap(alice, 2, "取消订阅")
+	h.tap(alice, 2, "1")
 	h.tap(alice, 2, "确认取消")
 	h.shows(2, "《绝命毒师》第 2 季的订阅已经取消啦")
 	h.tap(alice, 2, "返回订阅列表")
 	h.shows(2, "订阅清单")
 	h.transfers(breakingBad.file("S02", "E01-E13"))
 	h.say(bob, bob, "/subscribe")
+	if _, found := findButton(mustMessage(h, 3).rows, "取消订阅"); found {
+		t.Fatal("bob asked for nothing, so there must be nothing for him to cancel")
+	}
 	h.tr.verify(t)
 }
 
