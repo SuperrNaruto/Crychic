@@ -31,10 +31,11 @@ func newTransport() *http.Transport {
 	return transport
 }
 
-// preferIPv4 dials IPv4 first and falls back to the requested network. The
-// production host's IPv6 route to Telegram drops full-size packets: TCP
-// connects, then TLS and HTTP/2 stall, which Go's Happy Eyeballs cannot
-// fall back from because it only races the connect.
+// preferIPv4 dials IPv4 first and falls back to the requested network. On
+// the production host about one IPv6 TCP flow to Telegram in eight goes
+// dead (at connect or midway; ping and smaller MSS are unaffected, so it is
+// per-flow loss, not MTU), while IPv4 flows all work. Go's Happy Eyeballs
+// only races the connect, so it cannot leave a flow that dies later.
 func preferIPv4(d *net.Dialer) func(context.Context, string, string) (net.Conn, error) {
 	return func(ctx context.Context, network, addr string) (net.Conn, error) {
 		if conn, err := d.DialContext(ctx, "tcp4", addr); err == nil {
