@@ -23,6 +23,7 @@ const (
 	// TMDB upstream.
 	backendTimeout  = 30 * time.Second
 	telegramTimeout = 70 * time.Second // longer than Telegram's one-minute long poll
+	imageTimeout    = 10 * time.Second
 	// stateFile holds requests awaiting arrival, inside the data dir.
 	stateFile = "requests.json"
 )
@@ -31,11 +32,18 @@ const (
 type Deps struct {
 	Log *slog.Logger
 	Now func() time.Time
+	// Images downloads posters chat platforms cannot fetch themselves;
+	// nil uses a plain client.
+	Images *http.Client
 }
 
 // Run serves the Telegram bot and arrival notices until ctx is cancelled.
 func Run(ctx context.Context, cfg config.Config, deps Deps) error {
 	log, now := deps.Log, deps.Now
+	images := deps.Images
+	if images == nil {
+		images = &http.Client{Timeout: imageTimeout}
+	}
 	backend := moviepilot.New(cfg.MoviePilotURL, cfg.MoviePilotAPIKey, &http.Client{Timeout: backendTimeout})
 	tg, err := telegram.New(telegram.Config{
 		Token:        cfg.TelegramToken,
@@ -43,6 +51,7 @@ func Run(ctx context.Context, cfg config.Config, deps Deps) error {
 		AllowedUsers: cfg.TelegramAllowed,
 		FollowEvery:  cfg.FollowEvery,
 		HTTPClient:   &http.Client{Timeout: telegramTimeout},
+		ImageClient:  images,
 		Log:          log,
 	})
 	if err != nil {

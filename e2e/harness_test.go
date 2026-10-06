@@ -55,6 +55,7 @@ type harness struct {
 	tg     *fakeTelegram
 	mp     *fakeMoviePilot
 	bgm    *fakeBangumi
+	img    *fakeImages
 	cfg    config.Config
 	began  time.Time // real time at epoch; restarts keep the clock going
 	stop   func()
@@ -95,7 +96,7 @@ func start(t *testing.T, sc scenario) *harness {
 	if err != nil {
 		t.Fatal(err)
 	}
-	h := &harness{t: t, tr: tr, tg: tg, mp: mp, bgm: bgm, cfg: cfg, began: time.Now()}
+	h := &harness{t: t, tr: tr, tg: tg, mp: mp, bgm: bgm, img: newFakeImages(), cfg: cfg, began: time.Now()}
 	registered := tg.expect(commandsKey)
 	h.launch()
 	h.wait(registered, "registering the command menu")
@@ -105,6 +106,7 @@ func start(t *testing.T, sc scenario) *harness {
 		tg.Close()
 		mp.Close()
 		bgm.Close()
+		h.img.Close()
 	})
 	return h
 }
@@ -114,7 +116,7 @@ func (h *harness) launch() {
 	stopped := make(chan error, 1)
 	log := slog.New(slog.NewTextHandler(testWriter{h.t}, nil))
 	now := func() time.Time { return epoch.Add(time.Since(h.began) + time.Duration(h.offset.Load())) }
-	go func() { stopped <- app.Run(ctx, h.cfg, app.Deps{Log: log, Now: now}) }()
+	go func() { stopped <- app.Run(ctx, h.cfg, app.Deps{Log: log, Now: now, Images: h.img.client()}) }()
 	h.stop = func() {
 		cancel()
 		if err := <-stopped; err != nil {

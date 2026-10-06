@@ -28,10 +28,6 @@ const (
 	// previews only need a poster-sized rendition.
 	tmdbOriginalSize = "/t/p/original/"
 	tmdbPosterSize   = "/t/p/w500/"
-
-	// doubanImages answers 418 to every request without a Douban referer,
-	// so chat platforms can never fetch its posters.
-	doubanImages = ".doubanio.com/"
 )
 
 // invisible are marks Douban leaves around titles (e.g. U+200E).
@@ -94,11 +90,8 @@ func (i mediaInfo) toMedia() (flow.Media, bool) {
 	}, true
 }
 
-// posterURL is a poster rendition chat platforms can fetch, or "" for none.
+// posterURL is the poster rendition chat previews need.
 func posterURL(path string) string {
-	if strings.Contains(path, doubanImages) {
-		return ""
-	}
 	return strings.Replace(path, tmdbOriginalSize, tmdbPosterSize, 1)
 }
 

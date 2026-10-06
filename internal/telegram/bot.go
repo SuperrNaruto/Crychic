@@ -65,6 +65,7 @@ type Config struct {
 	AllowedUsers []int64
 	FollowEvery  time.Duration // how often a live reply (flow.Reply.Follow) refreshes
 	HTTPClient   *http.Client
+	ImageClient  *http.Client // downloads posters Telegram cannot fetch itself
 	Log          *slog.Logger
 }
 
@@ -73,6 +74,7 @@ type adapter struct {
 	allowed     map[int64]bool
 	log         *slog.Logger
 	followEvery time.Duration
+	posters     *posters
 	runCtx      context.Context
 	api         *bot.Bot // set once connected, before any update arrives
 
@@ -106,7 +108,7 @@ func New(cfg Config) (*Bot, error) {
 		allowed[id] = true
 	}
 	a := &adapter{
-		allowed: allowed, log: cfg.Log, followEvery: cfg.FollowEvery,
+		allowed: allowed, log: cfg.Log, followEvery: cfg.FollowEvery, posters: newPosters(cfg.ImageClient, cfg.Log),
 		pending: map[inputKey]pendingInput{}, followers: map[messageKey]*follower{}, lanes: map[messageKey]*messageLane{},
 	}
 	api, err := bot.New(cfg.Token,

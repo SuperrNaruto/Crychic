@@ -74,6 +74,9 @@ func (h *harness) waitLookup(want string) {
 	}
 }
 
+// missingDoubanPoster is a chart poster Douban's image host no longer has.
+const missingDoubanPoster = "/view/photo/m_ratio_poster/public/p2933527614.webp"
+
 // Douban picks carry Douban ids, so they are matched by title: a sure
 // match goes on to its seasons, an unsure one lets the user choose, and
 // 返回 leads back to the page the pick was on.
@@ -85,6 +88,7 @@ func TestDoubanPicksAreMatchedByTitle(t *testing.T) {
 		seasonsPath:  ok("seasons_abyss.json"),
 		abyssLookup:  ok("subscription_none.json"),
 	}})
+	h.img.setMissing(missingDoubanPoster)
 	h.say(alice, alice, "/trending")
 	h.tap(alice, 1, "豆瓣热门剧集")
 	h.tap(alice, 1, "1")

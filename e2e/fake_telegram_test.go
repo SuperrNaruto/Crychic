@@ -24,12 +24,14 @@ type button struct {
 }
 
 // message is a message on screen: a rich message (text is its HTML,
-// media its uploaded photos) or a photo with a caption.
+// media its uploaded or reused photos, files the file_id behind each media
+// id) or a photo with a caption.
 type message struct {
 	chat  int64
 	text  string
 	rows  [][]button
 	media []photo
+	files map[string]string
 	photo *photo
 }
 
@@ -50,7 +52,8 @@ type fakeTelegram struct {
 	commands  map[string]string // setMyCommands menus by scope, as sent
 	stall     string
 	stalled   chan struct{}
-	badImage  string // an image URL Telegram fails to fetch
+	badImage  string          // an image URL Telegram fails to fetch
+	fileIDs   map[string]bool // file_ids handed out for uploaded photos
 }
 
 func newFakeTelegram(tr *transcript) *fakeTelegram {
@@ -58,6 +61,7 @@ func newFakeTelegram(tr *transcript) *fakeTelegram {
 		tr:       tr,
 		arrived:  make(chan struct{}),
 		messages: map[int]message{},
+		fileIDs:  map[string]bool{},
 		commands: map[string]string{},
 		waiters:  map[string]chan struct{}{},
 	}
@@ -231,6 +235,9 @@ func (f *fakeTelegram) store(r *http.Request, method string) (map[string]any, er
 		id = f.lastMsg
 	}
 	f.messages[id] = m
+	for _, p := range m.media {
+		f.fileIDs[p.fileID] = true
+	}
 	f.mu.Unlock()
 
 	head := fmt.Sprintf("<< %s chat=%d message=%d", method, m.chat, id)

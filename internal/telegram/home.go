@@ -23,11 +23,15 @@ const (
 var homePhoto []byte
 
 // content is a reply as rich message content: the home menu carries the
-// bundled banner as uploaded media, other replies their poster URL. A fresh
-// reader per request keeps concurrent chats independent.
-func content(reply flow.Reply) *models.InputRichMessage {
+// bundled banner as uploaded media, other replies their poster URLs or
+// uploaded posters. A fresh reader per request keeps concurrent chats
+// independent.
+func content(o outgoing) *models.InputRichMessage {
+	reply := o.reply
 	if !reply.Banner {
-		return richMessage(reply)
+		rich := richMessage(reply)
+		rich.Media = o.media()
+		return rich
 	}
 	reply.Image = "tg://photo?id=" + homeMediaID
 	rich := richMessage(reply)
@@ -51,17 +55,19 @@ func withoutPoster(reply flow.Reply, err error) (flow.Reply, bool) {
 
 // send sends reply as a new rich message.
 func (a *adapter) send(ctx context.Context, chat int64, reply flow.Reply) (*models.Message, error) {
-	msg, err := sendRich(ctx, a.api, chat, reply)
+	out := a.posters.prepare(ctx, reply)
+	msg, err := sendRich(ctx, a.api, chat, out)
+	a.posters.sent(out, msg, err)
 	if bare, retry := withoutPoster(reply, err); retry {
 		a.log.Warn("poster rejected, sending without it", "image", reply.Image, "gallery", len(reply.Gallery), "err", err)
-		msg, err = sendRich(ctx, a.api, chat, bare)
+		msg, err = sendRich(ctx, a.api, chat, outgoing{reply: bare})
 	}
 	return msg, err
 }
 
-func sendRich(ctx context.Context, api *bot.Bot, chat int64, reply flow.Reply) (*models.Message, error) {
+func sendRich(ctx context.Context, api *bot.Bot, chat int64, out outgoing) (*models.Message, error) {
 	return api.SendRichMessage(ctx, &bot.SendRichMessageParams{
-		ChatID: chat, RichMessage: *content(reply), ReplyMarkup: keyboard(reply.Buttons),
+		ChatID: chat, RichMessage: *content(out), ReplyMarkup: keyboard(out.reply.Buttons),
 	})
 }
 
@@ -85,20 +91,21 @@ func (a *adapter) display(ctx context.Context, t editTarget, reply flow.Reply) (
 	if t.photo {
 		return a.replacePhoto(ctx, t, reply)
 	}
-	err := a.editRich(ctx, t, reply)
+	out := a.posters.prepare(ctx, reply)
+	msg, err := a.editRich(ctx, t, out)
+	a.posters.sent(out, msg, err)
 	if bare, retry := withoutPoster(reply, err); retry {
 		a.log.Warn("poster rejected, editing without it", "image", reply.Image, "gallery", len(reply.Gallery), "err", err)
-		err = a.editRich(ctx, t, bare)
+		_, err = a.editRich(ctx, t, outgoing{reply: bare})
 	}
 	return t, err
 }
 
-func (a *adapter) editRich(ctx context.Context, t editTarget, reply flow.Reply) error {
-	_, err := a.api.EditMessageText(ctx, &bot.EditMessageTextParams{
+func (a *adapter) editRich(ctx context.Context, t editTarget, out outgoing) (*models.Message, error) {
+	return a.api.EditMessageText(ctx, &bot.EditMessageTextParams{
 		ChatID: t.chat, MessageID: t.message,
-		RichMessage: content(reply), ReplyMarkup: keyboard(reply.Buttons),
+		RichMessage: content(out), ReplyMarkup: keyboard(out.reply.Buttons),
 	})
-	return err
 }
 
 // A home menu sent as a photo before rich messages cannot become one.

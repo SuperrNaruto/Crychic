@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"image/jpeg"
 	"io"
+	"maps"
 	"net/http"
 	"regexp"
 	"strconv"
@@ -16,10 +17,58 @@ import (
 type photo struct {
 	name, digest  string
 	width, height int
+	fileID        string
+	reused        bool // sent by file_id instead of uploaded
 }
 
 func (p photo) description() string {
+	if p.reused {
+		return " reuses=" + p.fileID
+	}
 	return fmt.Sprintf(" photo=%s %dx%d sha256=%s", p.name, p.width, p.height, p.digest)
+}
+
+// fileIDLength is how much of a digest the fake's file_ids keep.
+const fileIDLength = 12
+
+var (
+	imageSrc  = regexp.MustCompile(`<img src="([^"]*)"/>`)
+	slideshow = regexp.MustCompile(`^<tg-slideshow>(.*?)</tg-slideshow>`)
+)
+
+// headerBlocks are the photo or slideshow topping a rich message as
+// Telegram returns them, each photo with the file_id it was stored under;
+// the fake leaves out the text blocks, which the bot never reads back.
+func (m message) headerBlocks() []any {
+	var srcs []string
+	show := slideshow.FindStringSubmatch(m.text)
+	switch {
+	case show != nil:
+		for _, s := range imageSrc.FindAllStringSubmatch(show[1], -1) {
+			srcs = append(srcs, s[1])
+		}
+	case strings.HasPrefix(m.text, "<img "):
+		srcs = []string{imageSrc.FindStringSubmatch(m.text)[1]}
+	}
+	photos := []any{}
+	for _, src := range srcs {
+		photos = append(photos, map[string]any{"type": "photo", "photo": []map[string]any{{
+			"file_id": m.fileOf(src), "file_unique_id": m.fileOf(src), "width": posterWidth, "height": posterHeight,
+		}}})
+	}
+	if show != nil {
+		return []any{map[string]any{"type": "slideshow", "blocks": photos}}
+	}
+	return photos
+}
+
+// fileOf is the file_id Telegram stores an image under: the uploaded or
+// reused one for a media reference, one of its own for a fetched URL.
+func (m message) fileOf(src string) string {
+	if id, ok := strings.CutPrefix(src, "tg://photo?id="); ok {
+		return m.files[id]
+	}
+	return fmt.Sprintf("url-%x", sha256.Sum256([]byte(src)))[:fileIDLength]
 }
 
 // wire preserves Telegram's distinction between rich messages and photos,
@@ -30,7 +79,7 @@ func (m message) wire(id int) map[string]any {
 		"chat": map[string]any{"id": m.chat, "type": chatType(m.chat)},
 	}
 	if m.photo == nil {
-		out["rich_message"] = map[string]any{"blocks": []any{}}
+		out["rich_message"] = map[string]any{"blocks": m.headerBlocks()}
 		return out
 	}
 	out["caption"] = m.text
@@ -76,7 +125,10 @@ func (f *fakeTelegram) readMessage(r *http.Request, method string) (message, err
 			return m, fmt.Errorf("the bot only edits rich messages")
 		}
 	}
-	m, err := readRichMessage(r, m)
+	f.mu.Lock()
+	known := maps.Clone(f.fileIDs)
+	f.mu.Unlock()
+	m, err := readRichMessage(r, m, known)
 	f.mu.Lock()
 	bad := f.badImage
 	f.mu.Unlock()
@@ -99,8 +151,8 @@ type richInput struct {
 }
 
 // readRichMessage checks the rich HTML as Telegram parses it and reads the
-// photos it uploads.
-func readRichMessage(r *http.Request, m message) (message, error) {
+// photos it uploads or reuses by the file_ids in known.
+func readRichMessage(r *http.Request, m message, known map[string]bool) (message, error) {
 	var in richInput
 	if err := json.Unmarshal([]byte(r.FormValue("rich_message")), &in); err != nil {
 		return m, fmt.Errorf("rich_message: %w", err)
@@ -111,21 +163,39 @@ func readRichMessage(r *http.Request, m message) (message, error) {
 	if err := checkRichHTML(in.HTML); err != nil {
 		return m, err
 	}
-	m.text = in.HTML
+	m.text, m.files = in.HTML, map[string]string{}
 	for _, item := range in.Media {
-		if item.Media.Type != "photo" || !strings.HasPrefix(item.Media.Media, "attach://") {
-			return m, fmt.Errorf("expected an uploaded photo")
+		if item.Media.Type != "photo" {
+			return m, fmt.Errorf("expected a photo")
 		}
 		if !strings.Contains(in.HTML, `src="tg://photo?id=`+item.ID+`"`) {
 			return m, fmt.Errorf("media %s is not used", item.ID)
 		}
-		p, err := readPhoto(r, strings.TrimPrefix(item.Media.Media, "attach://"))
+		p, err := mediaPhoto(r, item.Media.Media, known)
 		if err != nil {
 			return m, err
 		}
-		m.media = append(m.media, p)
+		m.media, m.files[item.ID] = append(m.media, p), p.fileID
 	}
 	return m, nil
+}
+
+// mediaPhoto is an uploaded photo (attach://) or one sent by a file_id
+// Telegram handed out earlier.
+func mediaPhoto(r *http.Request, media string, known map[string]bool) (photo, error) {
+	field, upload := strings.CutPrefix(media, "attach://")
+	if !upload {
+		if !known[media] {
+			return photo{}, fmt.Errorf("wrong file identifier/HTTP URL specified")
+		}
+		return photo{fileID: media, reused: true}, nil
+	}
+	p, err := readPhoto(r, field)
+	if err != nil {
+		return p, err
+	}
+	p.fileID = "file-" + p.digest[:fileIDLength]
+	return p, nil
 }
 
 var (

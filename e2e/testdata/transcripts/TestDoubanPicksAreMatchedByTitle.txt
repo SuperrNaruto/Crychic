@@ -8,7 +8,16 @@
    [首页 | 1:o:0]
 >> user 1001 taps 1:d:2 on message 1
 -> MoviePilot GET /api/v1/recommend/douban_tv_hot
-<< editMessageText chat=1001 message=1
+<< editMessageText chat=1001 message=1 photo=p0-p2931762705.webp 2x3 sha256=f5f6d5b17cb11ee11cf44ed25dc5348adfece286572dcdf0710170dad1dbc6e7 photo=p2-p2932319485.webp 2x3 sha256=66a056afde763621e3149ad5de08f246d87c04694be04a641f06cef4c60a88b2 photo=p3-p2934748119.webp 2x3 sha256=83960d583ad829fd76e9b053d6d6856cb254bf022cb264fe5e433730a1dbc897 photo=p4-p2931558074.webp 2x3 sha256=be1494efdb6f9510421bf70153fb72d24808f6a29197435abae9cc29f71b8013 photo=p5-p2935819627.webp 2x3 sha256=9d36627e87010d1801261bb8c7fba9c783ecfdc4bfa161ac25c6a804e7e47bbb photo=p6-p2935615919.webp 2x3 sha256=e3b7ec8154b63bc06c1d29034d9405de2d5e86d5189a55cdf4c4c6ee41d290ea photo=p7-p2933773245.webp 2x3 sha256=35170920dd0a9b2d107b55aed682088b1b42f8d3a92029659eb76f73c591ed81
+   <tg-slideshow>
+   <img src="tg://photo?id=p0"/>
+   <img src="tg://photo?id=p2"/>
+   <img src="tg://photo?id=p3"/>
+   <img src="tg://photo?id=p4"/>
+   <img src="tg://photo?id=p5"/>
+   <img src="tg://photo?id=p6"/>
+   <img src="tg://photo?id=p7"/>
+   </tg-slideshow>
    <h3>📺 豆瓣热门剧集</h3>
    <ol start="1">
    <li value="1"><details><summary><b>深渊无间</b> · <i>2026 · ⭐ 7.3</i></summary>
@@ -88,7 +97,16 @@
    [首页 | 2:o:0]
 >> user 1001 taps 2:d:2 on message 2
 -> MoviePilot GET /api/v1/recommend/douban_tv_hot
-<< editMessageText chat=1001 message=2
+<< editMessageText chat=1001 message=2 reuses=file-f5f6d5b17cb1 reuses=file-66a056afde76 reuses=file-83960d583ad8 reuses=file-be1494efdb6f reuses=file-9d36627e8701 reuses=file-e3b7ec8154b6 reuses=file-35170920dd0a
+   <tg-slideshow>
+   <img src="tg://photo?id=p0"/>
+   <img src="tg://photo?id=p2"/>
+   <img src="tg://photo?id=p3"/>
+   <img src="tg://photo?id=p4"/>
+   <img src="tg://photo?id=p5"/>
+   <img src="tg://photo?id=p6"/>
+   <img src="tg://photo?id=p7"/>
+   </tg-slideshow>
    <h3>📺 豆瓣热门剧集</h3>
    <ol start="1">
    <li value="1"><details><summary><b>深渊无间</b> · <i>2026 · ⭐ 7.3</i></summary>
@@ -139,7 +157,11 @@
    [返回榜单 | 2:b:0] [首页 | 2:o:0]
 << answerCallbackQuery
 >> user 1001 taps 2:g:1 on message 2
-<< editMessageText chat=1001 message=2
+<< editMessageText chat=1001 message=2 photo=p0-p2934718593.webp 2x3 sha256=8017ebda8598e1032e565261282ac7abd17dfdc2cf03fe24f6bee829a74392e5 photo=p1-p2935061677.webp 2x3 sha256=88b4ebcd93c9d427fd2d2e305fd1c644074ebd6c9902bade203ee14c20701c5b
+   <tg-slideshow>
+   <img src="tg://photo?id=p0"/>
+   <img src="tg://photo?id=p1"/>
+   </tg-slideshow>
    <h3>📺 豆瓣热门剧集</h3>
    <ol start="9">
    <li value="9"><details><summary><b>花开锦绣</b> · <i>2026 · ⭐ 7.2</i></summary>
@@ -180,7 +202,11 @@
    [重新搜索 | 2:rs:0] [返回 | 2:bk:0] [取消 | 2:x:0]
 << answerCallbackQuery
 >> user 1001 taps 2:bk:0 on message 2
-<< editMessageText chat=1001 message=2
+<< editMessageText chat=1001 message=2 reuses=file-8017ebda8598 reuses=file-88b4ebcd93c9
+   <tg-slideshow>
+   <img src="tg://photo?id=p0"/>
+   <img src="tg://photo?id=p1"/>
+   </tg-slideshow>
    <h3>📺 豆瓣热门剧集</h3>
    <ol start="9">
    <li value="9"><details><summary><b>花开锦绣</b> · <i>2026 · ⭐ 7.2</i></summary>
