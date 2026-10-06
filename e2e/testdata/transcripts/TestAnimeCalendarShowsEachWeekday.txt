@@ -1,6 +1,6 @@
 >> user 1001 in chat 1001: /start
 << sendRichMessage chat=1001 message=1 photo=home.jpg 1280x720 sha256=d620fc3c5f168f03372b7fd77d4572d577b95fa1f410d95e2b60e5799f0d2315
-   <img src="tg://photo?id=home"/>
+   <img src="tg://photo?id=p0"/>
    <h3>🎬 Crychic</h3>
    <p>想看什么告诉我呀～我帮你找片、订阅，入库了第一时间喊你！私聊直接发片名就能搜哦 (๑•̀ㅂ•́)و✧</p>
    [搜索订阅 | 1:h:0] [发现 | 1:h:1]
@@ -8,7 +8,7 @@
    [任务进度 | 1:h:4]
 >> user 1001 taps 1:h:1 on message 1
 << editMessageText chat=1001 message=1 photo=trending.jpg 1280x720 sha256=aec4090e605ebe6e873d06d87e188c608c0948099e47aa633df199dd2c483443
-   <img src="tg://photo?id=trending"/>
+   <img src="tg://photo?id=p0"/>
    <h3>🔥 发现好片</h3>
    <p>今天想逛哪个榜单呀？</p>
    [TMDB 流行趋势 | 1:d:0] [豆瓣热门电影 | 1:d:1]

@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"container/list"
 	"context"
+	"embed"
 	"fmt"
 	"io"
 	"log/slog"
@@ -32,6 +33,29 @@ const (
 	// User-Agent with 403 on some of its hosts.
 	posterAgent = "Crychic (+https://github.com/SuperrNaruto/Crychic)"
 )
+
+// bannerScheme prefixes a bundled banner's name where a poster URL would be,
+// so banners share the posters' file_id cache; it is never fetched.
+const bannerScheme = "banner:"
+
+//go:embed assets/*.jpg
+var bannerFiles embed.FS
+
+// banners holds every flow.Banner's bundled image; a missing one stops the
+// bot at start rather than leaving a screen silently bare.
+var banners = loadBanners()
+
+func loadBanners() map[flow.Banner][]byte {
+	out := map[flow.Banner][]byte{}
+	for _, b := range flow.Banners {
+		data, err := bannerFiles.ReadFile("assets/" + string(b) + ".jpg")
+		if err != nil {
+			panic(fmt.Sprintf("banner %q has no bundled image: %v", b, err))
+		}
+		out[b] = data
+	}
+	return out
+}
 
 // hotlinked are image hosts that refuse requests without their site as
 // referer (Douban answers 418), so Telegram cannot fetch their posters
@@ -87,9 +111,10 @@ type upload struct {
 
 type reuse struct{ id, url, fileID string }
 
-// prepare swaps posters for the file_id of an earlier message, and
-// hotlinked ones without one for uploads; a hotlinked poster that cannot
-// be downloaded is left out. Every poster sent afresh is learnt.
+// prepare swaps posters and banners for the file_id of an earlier message,
+// and banners and hotlinked posters without one for uploads; a hotlinked
+// poster that cannot be downloaded is left out. Every image sent afresh is
+// learnt.
 func (p *posters) prepare(ctx context.Context, reply flow.Reply) outgoing {
 	out := outgoing{reply: reply, learn: map[int]string{}}
 	urls := shownPosters(reply)
@@ -97,31 +122,48 @@ func (p *posters) prepare(ctx context.Context, reply flow.Reply) outgoing {
 	var kept []string
 	for i, raw := range urls {
 		id := fmt.Sprintf("p%d", i)
-		_, hotlinked := refererFor(raw)
 		if fileID, ok := p.lookup(raw); ok {
 			out.reuses = append(out.reuses, reuse{id: id, url: raw, fileID: fileID})
 			kept = append(kept, "tg://photo?id="+id)
 			continue
 		}
-		if !hotlinked {
+		up, fetchable := p.upload(id, raw, fetched)
+		switch {
+		case fetchable:
 			out.learn[len(kept)] = raw
 			kept = append(kept, raw)
-			continue
+		case up != nil:
+			out.uploads = append(out.uploads, *up)
+			out.learn[len(kept)] = raw
+			kept = append(kept, "tg://photo?id="+id)
 		}
-		data, ok := fetched[raw]
-		if !ok {
-			continue
-		}
-		out.uploads = append(out.uploads, upload{id: id, name: id + "-" + path.Base(raw), data: data})
-		out.learn[len(kept)] = raw
-		kept = append(kept, "tg://photo?id="+id)
 	}
 	out.reply = withPosters(reply, kept)
 	return out
 }
 
-// shownPosters are the posters a reply shows, in message order.
+// upload is how an image without a file_id reaches Telegram: a bundled
+// banner or a downloaded hotlinked poster is uploaded, any other URL
+// Telegram fetches itself. Neither means a hotlinked poster that failed.
+func (p *posters) upload(id, raw string, fetched map[string][]byte) (up *upload, fetchable bool) {
+	if name, ok := strings.CutPrefix(raw, bannerScheme); ok {
+		return &upload{id: id, name: name + ".jpg", data: banners[flow.Banner(name)]}, false
+	}
+	if _, hotlinked := refererFor(raw); !hotlinked {
+		return nil, true
+	}
+	if data, ok := fetched[raw]; ok {
+		return &upload{id: id, name: id + "-" + path.Base(raw), data: data}, false
+	}
+	return nil, false
+}
+
+// shownPosters are the images a reply shows, in message order; a banner
+// stands in as its bannerScheme key.
 func shownPosters(reply flow.Reply) []string {
+	if reply.Banner != "" {
+		return []string{bannerScheme + string(reply.Banner)}
+	}
 	if reply.Image != "" {
 		return []string{reply.Image}
 	}
@@ -129,7 +171,7 @@ func shownPosters(reply flow.Reply) []string {
 }
 
 func withPosters(reply flow.Reply, urls []string) flow.Reply {
-	if reply.Image != "" {
+	if reply.Image != "" || reply.Banner != "" {
 		reply.Image = ""
 		if len(urls) > 0 {
 			reply.Image = urls[0]

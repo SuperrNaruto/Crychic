@@ -1,6 +1,6 @@
 >> user 1001 in chat 1001: /tasks
 << sendRichMessage chat=1001 message=1 photo=tasks.jpg 1280x720 sha256=073881ee9990d0b268dc6dd099e569afe5d364e5014f11a6c07d0beaed89248c
-   <img src="tg://photo?id=tasks"/>
+   <img src="tg://photo?id=p0"/>
    <h3>📋 正在忙的任务</h3>
    <h4>⬇️ 下载</h4>
    <ol start="1">
@@ -46,8 +46,8 @@
    <p>整理任务结束啦，入库情况看入库通知，或者去 MoviePilot 的整理历史瞧瞧～</p>
    [返回任务列表 | 1:l:0]
 >> user 1001 taps 1:l:0 on message 1
-<< editMessageText chat=1001 message=1 photo=tasks.jpg 1280x720 sha256=073881ee9990d0b268dc6dd099e569afe5d364e5014f11a6c07d0beaed89248c
-   <img src="tg://photo?id=tasks"/>
+<< editMessageText chat=1001 message=1 reuses=file-073881ee9990
+   <img src="tg://photo?id=p0"/>
    <h3>📋 正在忙的任务</h3>
    <h4>⬇️ 下载</h4>
    <ol start="1">

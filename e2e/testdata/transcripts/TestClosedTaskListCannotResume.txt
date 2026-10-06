@@ -1,6 +1,6 @@
 >> user 1001 in chat 1001: /tasks
 << sendRichMessage chat=1001 message=1 photo=tasks.jpg 1280x720 sha256=073881ee9990d0b268dc6dd099e569afe5d364e5014f11a6c07d0beaed89248c
-   <img src="tg://photo?id=tasks"/>
+   <img src="tg://photo?id=p0"/>
    <h3>📋 正在忙的任务</h3>
    <h4>⬇️ 下载</h4>
    <ol start="1">

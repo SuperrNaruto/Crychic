@@ -254,6 +254,9 @@ const (
 	BannerTasks         Banner = "tasks"
 )
 
+// Banners lists every Banner; a platform checks it has an image for each.
+var Banners = []Banner{BannerHome, BannerDiscover, BannerSubscriptions, BannerLatest, BannerTasks}
+
 // Reply is what the platform shows after an action. Image is a poster URL
 // to show with the text; Gallery, used only without Image, holds the posters
 // of a listed page in list order. A Reply with Notice set leaves the conversation

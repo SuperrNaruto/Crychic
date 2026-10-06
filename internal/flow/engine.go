@@ -36,6 +36,7 @@ const (
 	msgPickSeason    = "想订哪一季呀？"
 	msgInvalidChoice = "这个选项不太对哦～"
 	msgWillNotify    = "入库了我第一时间叫你！"
+	msgWillPost      = "入库后我会在通知频道告诉你！"
 	msgNoNotice      = "MoviePilot 会自己去搜索下载哒。"
 )
 
@@ -324,7 +325,7 @@ func (e *Engine) watch(ctx context.Context, sess session, sub subscription) stri
 		return "，" + msgNoNotice
 	}
 	if e.noticeInChannel {
-		return "，入库后我会在通知频道告诉你！"
+		return "，" + msgWillPost
 	}
 	return "，" + msgWillNotify
 }

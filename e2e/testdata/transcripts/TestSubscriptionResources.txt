@@ -1,7 +1,7 @@
 >> user 1001 in chat -500: /subscribe
 -> MoviePilot GET /api/v1/subscribe/
 << sendRichMessage chat=-500 message=1 photo=subscribe.jpg 1280x720 sha256=7b987883d5fc3010605ea37711d6b2eb6184479e790f4096dc79c790b644d27f
-   <img src="tg://photo?id=subscribe"/>
+   <img src="tg://photo?id=p0"/>
    <h3>📚 订阅清单（3）</h3>
    <ol start="1">
    <li value="1"><b>《绝命毒师》第 2 季</b><br>
@@ -55,8 +55,8 @@
    [返回 | 1:bk:0]
 << answerCallbackQuery
 >> user 1001 taps 1:bk:0 on message 1
-<< editMessageText chat=-500 message=1 photo=subscribe.jpg 1280x720 sha256=7b987883d5fc3010605ea37711d6b2eb6184479e790f4096dc79c790b644d27f
-   <img src="tg://photo?id=subscribe"/>
+<< editMessageText chat=-500 message=1 reuses=file-7b987883d5fc
+   <img src="tg://photo?id=p0"/>
    <h3>📚 订阅清单（3）</h3>
    <ol start="1">
    <li value="1"><b>《绝命毒师》第 2 季</b><br>

@@ -1,6 +1,6 @@
 >> user 1001 in chat 1001: /newly_added
 << sendRichMessage chat=1001 message=1 photo=newly_added.jpg 1280x720 sha256=9dde60da15adb73db35b2a37cf6a80def9dbfcb4678f09dea4bdd7bf3dc45518
-   <img src="tg://photo?id=newly_added"/>
+   <img src="tg://photo?id=p0"/>
    <h3>🆕 新鲜入库</h3>
    <ol start="1">
    <li value="1"><a href="https://emby.example.com/web/index.html#!/item?id=118&amp;context=home"><b>《颂乐人偶》</b></a><br>

@@ -1,6 +1,6 @@
 >> user 1001 in chat 1001: /start
 << sendRichMessage chat=1001 message=1 photo=home.jpg 1280x720 sha256=d620fc3c5f168f03372b7fd77d4572d577b95fa1f410d95e2b60e5799f0d2315
-   <img src="tg://photo?id=home"/>
+   <img src="tg://photo?id=p0"/>
    <h3>🎬 Crychic</h3>
    <p>想看什么告诉我呀～我帮你找片、订阅，入库了第一时间喊你！私聊直接发片名就能搜哦 (๑•̀ㅂ•́)و✧</p>
    [搜索订阅 | 1:h:0] [发现 | 1:h:1]
@@ -8,7 +8,7 @@
    [任务进度 | 1:h:4]
 >> user 1001 taps 1:h:1 on message 1
 << editMessageText chat=1001 message=1 photo=trending.jpg 1280x720 sha256=aec4090e605ebe6e873d06d87e188c608c0948099e47aa633df199dd2c483443
-   <img src="tg://photo?id=trending"/>
+   <img src="tg://photo?id=p0"/>
    <h3>🔥 发现好片</h3>
    <p>今天想逛哪个榜单呀？</p>
    [TMDB 流行趋势 | 1:d:0] [豆瓣热门电影 | 1:d:1]
@@ -79,8 +79,8 @@
    [返回榜单 | 1:b:0] [首页 | 1:o:0]
 << answerCallbackQuery
 >> user 1001 taps 1:b:0 on message 1
-<< editMessageText chat=1001 message=1 photo=trending.jpg 1280x720 sha256=aec4090e605ebe6e873d06d87e188c608c0948099e47aa633df199dd2c483443
-   <img src="tg://photo?id=trending"/>
+<< editMessageText chat=1001 message=1 reuses=file-aec4090e605e
+   <img src="tg://photo?id=p0"/>
    <h3>🔥 发现好片</h3>
    <p>今天想逛哪个榜单呀？</p>
    [TMDB 流行趋势 | 1:d:0] [豆瓣热门电影 | 1:d:1]
@@ -89,8 +89,8 @@
    [首页 | 1:o:0]
 << answerCallbackQuery
 >> user 1001 taps 1:o:0 on message 1
-<< editMessageText chat=1001 message=1 photo=home.jpg 1280x720 sha256=d620fc3c5f168f03372b7fd77d4572d577b95fa1f410d95e2b60e5799f0d2315
-   <img src="tg://photo?id=home"/>
+<< editMessageText chat=1001 message=1 reuses=file-d620fc3c5f16
+   <img src="tg://photo?id=p0"/>
    <h3>🎬 Crychic</h3>
    <p>想看什么告诉我呀～我帮你找片、订阅，入库了第一时间喊你！私聊直接发片名就能搜哦 (๑•̀ㅂ•́)و✧</p>
    [搜索订阅 | 1:h:0] [发现 | 1:h:1]
@@ -100,7 +100,7 @@
 >> user 1001 taps 1:h:2 on message 1
 -> MoviePilot GET /api/v1/subscribe/
 << editMessageText chat=1001 message=1 photo=subscribe.jpg 1280x720 sha256=7b987883d5fc3010605ea37711d6b2eb6184479e790f4096dc79c790b644d27f
-   <img src="tg://photo?id=subscribe"/>
+   <img src="tg://photo?id=p0"/>
    <h3>📚 订阅清单（3）</h3>
    <ol start="1">
    <li value="1"><b>《绝命毒师》第 2 季</b><br>
@@ -133,8 +133,8 @@
    [返回 | 1:bk:0]
 << answerCallbackQuery
 >> user 1001 taps 1:bk:0 on message 1
-<< editMessageText chat=1001 message=1 photo=subscribe.jpg 1280x720 sha256=7b987883d5fc3010605ea37711d6b2eb6184479e790f4096dc79c790b644d27f
-   <img src="tg://photo?id=subscribe"/>
+<< editMessageText chat=1001 message=1 reuses=file-7b987883d5fc
+   <img src="tg://photo?id=p0"/>
    <h3>📚 订阅清单（3）</h3>
    <ol start="1">
    <li value="1"><b>《绝命毒师》第 2 季</b><br>
@@ -148,8 +148,8 @@
    [首页 | 1:o:0]
 << answerCallbackQuery
 >> user 1001 taps 1:o:0 on message 1
-<< editMessageText chat=1001 message=1 photo=home.jpg 1280x720 sha256=d620fc3c5f168f03372b7fd77d4572d577b95fa1f410d95e2b60e5799f0d2315
-   <img src="tg://photo?id=home"/>
+<< editMessageText chat=1001 message=1 reuses=file-d620fc3c5f16
+   <img src="tg://photo?id=p0"/>
    <h3>🎬 Crychic</h3>
    <p>想看什么告诉我呀～我帮你找片、订阅，入库了第一时间喊你！私聊直接发片名就能搜哦 (๑•̀ㅂ•́)و✧</p>
    [搜索订阅 | 1:h:0] [发现 | 1:h:1]
@@ -158,7 +158,7 @@
 << answerCallbackQuery
 >> user 1001 taps 1:h:3 on message 1
 << editMessageText chat=1001 message=1 photo=newly_added.jpg 1280x720 sha256=9dde60da15adb73db35b2a37cf6a80def9dbfcb4678f09dea4bdd7bf3dc45518
-   <img src="tg://photo?id=newly_added"/>
+   <img src="tg://photo?id=p0"/>
    <h3>🆕 新鲜入库</h3>
    <ol start="1">
    <li value="1"><a href="https://emby.example.com/web/index.html#!/item?id=118&amp;context=home"><b>《颂乐人偶》</b></a><br>
@@ -173,8 +173,8 @@
    [首页 | 1:o:0]
 << answerCallbackQuery
 >> user 1001 taps 1:o:0 on message 1
-<< editMessageText chat=1001 message=1 photo=home.jpg 1280x720 sha256=d620fc3c5f168f03372b7fd77d4572d577b95fa1f410d95e2b60e5799f0d2315
-   <img src="tg://photo?id=home"/>
+<< editMessageText chat=1001 message=1 reuses=file-d620fc3c5f16
+   <img src="tg://photo?id=p0"/>
    <h3>🎬 Crychic</h3>
    <p>想看什么告诉我呀～我帮你找片、订阅，入库了第一时间喊你！私聊直接发片名就能搜哦 (๑•̀ㅂ•́)و✧</p>
    [搜索订阅 | 1:h:0] [发现 | 1:h:1]
@@ -183,7 +183,7 @@
 << answerCallbackQuery
 >> user 1001 taps 1:h:4 on message 1
 << editMessageText chat=1001 message=1 photo=tasks.jpg 1280x720 sha256=073881ee9990d0b268dc6dd099e569afe5d364e5014f11a6c07d0beaed89248c
-   <img src="tg://photo?id=tasks"/>
+   <img src="tg://photo?id=p0"/>
    <h3>📋 正在忙的任务</h3>
    <h4>⬇️ 下载</h4>
    <ol start="1">
@@ -221,8 +221,8 @@
    [继续刷新 | 1:k:0] [返回任务列表 | 1:l:0]
 << answerCallbackQuery
 >> user 1001 taps 1:l:0 on message 1
-<< editMessageText chat=1001 message=1 photo=tasks.jpg 1280x720 sha256=073881ee9990d0b268dc6dd099e569afe5d364e5014f11a6c07d0beaed89248c
-   <img src="tg://photo?id=tasks"/>
+<< editMessageText chat=1001 message=1 reuses=file-073881ee9990
+   <img src="tg://photo?id=p0"/>
    <h3>📋 正在忙的任务</h3>
    <h4>⬇️ 下载</h4>
    <ol start="1">

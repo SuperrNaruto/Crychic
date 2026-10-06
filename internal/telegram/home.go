@@ -1,9 +1,7 @@
 package telegram
 
 import (
-	"bytes"
 	"context"
-	"embed"
 	"strings"
 
 	"github.com/go-telegram/bot"
@@ -17,28 +15,11 @@ const (
 	notModified = "message is not modified"
 )
 
-//go:embed assets/*.jpg
-var bannerPhotos embed.FS
-
-// content is a reply as rich message content: home and feature screens carry
-// their bundled banner as uploaded media, other replies their poster URLs or
-// uploaded posters. A fresh reader per request keeps concurrent chats
-// independent.
+// content is a reply as rich message content: its poster, gallery or
+// bundled banner by URL, file_id or upload as prepared.
 func content(o outgoing) *models.InputRichMessage {
-	reply := o.reply
-	name := string(reply.Banner) + ".jpg"
-	photo, err := bannerPhotos.ReadFile("assets/" + name)
-	if err != nil {
-		rich := richMessage(reply)
-		rich.Media = o.media()
-		return rich
-	}
-	id := string(reply.Banner)
-	reply.Image = "tg://photo?id=" + id
-	rich := richMessage(reply)
-	rich.Media = []models.InputRichMessageMedia{{ID: id, Media: &models.InputMediaPhoto{
-		Media: "attach://" + name, MediaAttachment: bytes.NewReader(photo),
-	}}}
+	rich := richMessage(o.reply)
+	rich.Media = o.media()
 	return rich
 }
 
