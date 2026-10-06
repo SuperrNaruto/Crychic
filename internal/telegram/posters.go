@@ -28,6 +28,9 @@ const (
 	posterCacheSize = 1000
 	// posterFetches is how many posters download at once.
 	posterFetches = 4
+	// posterAgent names the bot to image hosts; Douban refuses Go's default
+	// User-Agent with 403 on some of its hosts.
+	posterAgent = "Crychic (+https://github.com/SuperrNauto/Crychic)"
 )
 
 // hotlinked are image hosts that refuse requests without their site as
@@ -193,6 +196,7 @@ func (p *posters) fetch(ctx context.Context, raw string) ([]byte, error) {
 		return nil, err
 	}
 	req.Header.Set("Referer", referer)
+	req.Header.Set("User-Agent", posterAgent)
 	resp, err := p.client.Do(req)
 	if err != nil {
 		return nil, err

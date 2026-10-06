@@ -23,8 +23,9 @@ const (
 
 // fakeImages is Douban's image host (img*.doubanio.com): it serves posters
 // only to requests that name Douban as referer and answers 418 to any
-// other, as the real host does. A poster is a tiny JPEG derived from its
-// path, so uploads are stable across runs.
+// other, and refuses Go's default User-Agent with 403, as the real hosts
+// do. A poster is a tiny JPEG derived from its path, so uploads are stable
+// across runs.
 type fakeImages struct {
 	*httptest.Server
 
@@ -52,6 +53,8 @@ func (f *fakeImages) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	switch {
 	case !strings.HasSuffix(r.Header.Get(forwardedHost), ".doubanio.com"):
 		http.Error(w, "only Douban's image host is faked", http.StatusBadGateway)
+	case strings.HasPrefix(r.UserAgent(), "Go-http-client/"):
+		http.Error(w, "403 Forbidden", http.StatusForbidden)
 	case r.Header.Get("Referer") != doubanReferer:
 		w.Header().Set("Content-Type", "text/html; charset=UTF-8")
 		w.WriteHeader(http.StatusTeapot)
