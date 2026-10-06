@@ -1,2 +1,4 @@
 /crychic
 /data/
+.env
+compose.yaml
