@@ -108,7 +108,7 @@ func TestUncertainSubscriptionIsNotRetried(t *testing.T) {
 	old, _ := findButton(mustMessage(h, 1).rows, "确认订阅")
 	h.tap(alice, 1, "确认订阅")
 	h.shows(1, "未能确认订阅结果")
-	h.shows(1, "/subs")
+	h.shows(1, "/subscribe")
 	h.tapData(alice, 1, old)
 	h.shows(1, "已失效")
 	h.mp.setRoute(subscribePath, ok("subscription_none.json"))

@@ -20,7 +20,7 @@ func TestSubscriptionListPagesWithinTelegramLimit(t *testing.T) {
 	h := start(t, scenario{routes: map[string]route{
 		subsPath: ok(manySubscriptions(t, subscriptions)),
 	}})
-	h.say(alice, alice, "/subs")
+	h.say(alice, alice, "/subscribe")
 	for {
 		msg := mustMessage(h, 1)
 		checkTextBudget(t, msg.text)

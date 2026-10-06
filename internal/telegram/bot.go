@@ -26,13 +26,13 @@ const (
 	// decimal is the base Telegram ids are written in.
 	decimal = 10
 
-	cmdSearch   = "search"
-	cmdTasks    = "tasks"
-	cmdTrending = "trending"
-	cmdSubs     = "subs"
-	cmdNew      = "new"
-	cmdStart    = "start"
-	cmdHelp     = "help"
+	cmdSearch     = "search"
+	cmdTasks      = "tasks"
+	cmdTrending   = "trending"
+	cmdSubscribe  = "subscribe"
+	cmdNewlyAdded = "newly_added"
+	cmdStart      = "start"
+	cmdHelp       = "help"
 )
 
 // help explains the commands.
@@ -42,8 +42,8 @@ var help = flow.Lines(
 	flow.Line(flow.Mono("/start"), flow.Plain(" 首页，所有功能的入口。")),
 	flow.Line(flow.Mono("/search <片名>"), flow.Plain(" 搜索电影或剧集，并在 MoviePilot 中订阅。")),
 	flow.Line(flow.Mono("/trending"), flow.Plain(" 浏览热门榜单和新番，一键订阅。")),
-	flow.Line(flow.Mono("/subs"), flow.Plain(" 查看所有订阅，取消你请求的订阅。")),
-	flow.Line(flow.Mono("/new"), flow.Plain(" 媒体库最新入库，点片名直接观看。")),
+	flow.Line(flow.Mono("/subscribe"), flow.Plain(" 查看所有订阅，取消你请求的订阅。")),
+	flow.Line(flow.Mono("/newly_added"), flow.Plain(" 媒体库最新入库，点片名直接观看。")),
 	flow.Line(flow.Mono("/tasks"), flow.Plain(" 查看下载中和整理中的任务，选一个实时查看进度。")),
 )
 
@@ -52,8 +52,8 @@ var commands = []models.BotCommand{
 	{Command: cmdStart, Description: "首页：所有功能入口"},
 	{Command: cmdSearch, Description: "搜索电影或剧集并订阅"},
 	{Command: cmdTrending, Description: "发现热门和新番"},
-	{Command: cmdSubs, Description: "查看和取消订阅"},
-	{Command: cmdNew, Description: "最新入库"},
+	{Command: cmdSubscribe, Description: "查看和取消订阅"},
+	{Command: cmdNewlyAdded, Description: "最新入库"},
 	{Command: cmdTasks, Description: "查看下载和整理进度"},
 	{Command: cmdHelp, Description: "使用说明"},
 }
@@ -233,13 +233,13 @@ func (a *adapter) commands() map[string]command {
 		return func(ctx context.Context, actor flow.Actor, _ string) flow.Reply { return f(ctx, actor) }
 	}
 	return map[string]command{
-		cmdStart:    noArg(a.flow.Home),
-		cmdSearch:   a.flow.Start,
-		cmdTrending: noArg(a.flow.Charts),
-		cmdSubs:     noArg(a.flow.Subscriptions),
-		cmdNew:      noArg(a.flow.Latest),
-		cmdTasks:    noArg(a.flow.Tasks),
-		cmdHelp:     func(context.Context, flow.Actor, string) flow.Reply { return flow.Reply{Text: help} },
+		cmdStart:      noArg(a.flow.Home),
+		cmdSearch:     a.flow.Start,
+		cmdTrending:   noArg(a.flow.Charts),
+		cmdSubscribe:  noArg(a.flow.Subscriptions),
+		cmdNewlyAdded: noArg(a.flow.Latest),
+		cmdTasks:      noArg(a.flow.Tasks),
+		cmdHelp:       func(context.Context, flow.Actor, string) flow.Reply { return flow.Reply{Text: help} },
 	}
 }
 

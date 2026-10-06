@@ -377,7 +377,7 @@ func TestCancelOwnSubscription(t *testing.T) {
 	h.tap(alice, 1, "1")
 	h.tap(alice, 1, "第 2 季")
 	h.tap(alice, 1, "从第 1 集开始")
-	h.say(alice, alice, "/subs")
+	h.say(alice, alice, "/subscribe")
 	h.tap(alice, 2, cancelBreaking)
 	h.tap(alice, 2, "返回")
 	h.shows(2, "订阅列表")
@@ -387,7 +387,7 @@ func TestCancelOwnSubscription(t *testing.T) {
 	h.tap(alice, 2, "返回订阅列表")
 	h.shows(2, "订阅列表")
 	h.transfers(breakingBad.file("S02", "E01-E13"))
-	h.say(bob, bob, "/subs")
+	h.say(bob, bob, "/subscribe")
 	h.tr.verify(t)
 }
 
@@ -415,7 +415,7 @@ func TestOldConfirmationCannotSubscribeAfterRestart(t *testing.T) {
 // The newest library items link to where they can be watched.
 func TestLatestLinksToTheMediaServer(t *testing.T) {
 	h := start(t, scenario{routes: map[string]route{latestPath: ok("latest.json")}})
-	h.say(alice, alice, "/new")
+	h.say(alice, alice, "/newly_added")
 	h.shows(1, `<a href="https://emby.example.com/web/index.html#!/item?id=118&amp;context=home"><b>《颂乐人偶》</b></a>`)
 	h.tr.verify(t)
 }

@@ -67,7 +67,7 @@ func (e *Engine) retryConfirmation(ctx context.Context, sess session) Reply {
 	return e.confirmation(ctx, sess, subscription{id: id, target: target})
 }
 
-const msgSubmitUnknown = "未能确认订阅结果。请先用 /subs 核对，确认没有订阅后再发起请求。"
+const msgSubmitUnknown = "未能确认订阅结果。请先用 /subscribe 核对，确认没有订阅后再发起请求。"
 
 // submit attempts the write once. A transport/response failure, including
 // a missing receipt, is not proof that MoviePilot rejected the request.

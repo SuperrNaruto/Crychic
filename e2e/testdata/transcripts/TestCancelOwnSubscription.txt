@@ -69,7 +69,7 @@
    <hr/>
    <p>✅ 已订阅《绝命毒师》第 2 季，入库后会通知你。</p>
 << answerCallbackQuery
->> user 1001 in chat 1001: /subs
+>> user 1001 in chat 1001: /subscribe
 -> MoviePilot GET /api/v1/subscribe/
 << sendRichMessage chat=1001 message=2
    <h3>📚 订阅列表（3）</h3>
@@ -135,7 +135,7 @@
    [首页 | 2:o:0]
 << answerCallbackQuery
 >> MoviePilot transfers 绝命毒师 (themoviedb/1396) S02E01-E13
->> user 1002 in chat 1002: /subs
+>> user 1002 in chat 1002: /subscribe
 -> MoviePilot GET /api/v1/subscribe/
 << sendRichMessage chat=1002 message=3
    <h3>📚 订阅列表（3）</h3>

@@ -1,4 +1,4 @@
->> user 1001 in chat 1001: /new
+>> user 1001 in chat 1001: /newly_added
 << sendRichMessage chat=1001 message=1
    <h3>🆕 最新入库</h3>
    <ol start="1">
