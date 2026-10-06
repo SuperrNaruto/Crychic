@@ -53,6 +53,8 @@ func TestStartFromTypedEpisode(t *testing.T) {
 	h.tap(alice, 1, conanShow)
 	h.tap(alice, 1, conanFirst)
 	h.tap(alice, 1, "指定起始集…")
+	h.answer(alice, 1, "沙丘")
+	h.shows(1, "「沙丘」不是有效的集数")
 	h.answer(alice, 1, "1300")
 	h.shows(1, "「1300」不是有效的集数")
 	h.answer(alice, 1, "500")
@@ -82,7 +84,7 @@ func TestSubscribeMovie(t *testing.T) {
 		duneLookup:    ok("subscription_none.json"),
 		subscribePath: ok("subscribe_created.json"),
 	}})
-	h.say(alice, alice, "/request 沙丘")
+	h.say(alice, alice, "沙丘")
 	h.tap(alice, 1, duneMovie)
 	h.tap(alice, 1, "确认订阅")
 	h.shows(1, "已订阅《沙丘》")
@@ -175,10 +177,35 @@ func TestCancelledRequestCannotResume(t *testing.T) {
 
 func TestStrangerIsRefused(t *testing.T) {
 	h := start(t, scenario{})
-	h.say(stranger, stranger, "/request 沙丘")
+	h.say(stranger, stranger, "沙丘")
 	h.shows(1, "你没有使用权限")
 	h.say(stranger, stranger, "/start")
 	h.shows(2, "你没有使用权限")
+	h.tr.verify(t)
+}
+
+// A new private request or home command releases an older episode prompt,
+// so later titles are not mistaken for answers to that abandoned prompt.
+func TestPrivateCommandsReplacePendingAnswer(t *testing.T) {
+	h := start(t, scenario{
+		routes: conanRoutes(),
+		searches: map[string]string{
+			"名侦探柯南": "search_conan.json",
+			"沙丘":    "search_dune.json",
+		},
+	})
+	h.say(alice, alice, "/request 名侦探柯南")
+	h.tap(alice, 1, conanShow)
+	h.tap(alice, 1, conanFirst)
+	h.tap(alice, 1, "指定起始集…")
+	h.say(alice, alice, "/start")
+	h.say(alice, alice, "沙丘")
+	h.shows(3, "「沙丘」的搜索结果")
+	h.tap(alice, 1, "返回")
+	h.tap(alice, 1, "指定起始集…")
+	h.say(alice, alice, "/request 沙丘")
+	h.say(alice, alice, "沙丘")
+	h.shows(5, "「沙丘」的搜索结果")
 	h.tr.verify(t)
 }
 

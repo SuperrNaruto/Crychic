@@ -37,6 +37,8 @@ const (
 
 // help explains the commands.
 var help = flow.Lines(
+	flow.Heading(flow.Plain("使用说明")),
+	flow.Line(flow.Plain("私聊直接发送片名即可搜索；等待起始集数时，请先回答或用 /request 换片。")),
 	flow.Line(flow.Mono("/start"), flow.Plain(" 首页，所有功能的入口。")),
 	flow.Line(flow.Mono("/request <片名>"), flow.Plain(" 搜索电影或剧集，并在 MoviePilot 中订阅。")),
 	flow.Line(flow.Mono("/hot"), flow.Plain(" 浏览热门榜单和新番，一键订阅。")),
@@ -56,18 +58,6 @@ var commands = []models.BotCommand{
 	{Command: cmdHelp, Description: "使用说明"},
 }
 
-// Flow is the conversation engine the bot drives.
-type Flow interface {
-	Start(ctx context.Context, actor flow.Actor, term string) flow.Reply
-	Choose(ctx context.Context, actor flow.Actor, data string) flow.Reply
-	Answer(ctx context.Context, actor flow.Actor, typed flow.Typed) flow.Reply
-	Tasks(ctx context.Context, actor flow.Actor) flow.Reply
-	Home(ctx context.Context, actor flow.Actor) flow.Reply
-	Charts(ctx context.Context, actor flow.Actor) flow.Reply
-	Subscriptions(ctx context.Context, actor flow.Actor) flow.Reply
-	Latest(ctx context.Context, actor flow.Actor) flow.Reply
-}
-
 // Config configures the Telegram bot.
 type Config struct {
 	Token        string
@@ -79,7 +69,7 @@ type Config struct {
 }
 
 type adapter struct {
-	flow        Flow
+	flow        flow.Conversation
 	allowed     map[int64]bool
 	log         *slog.Logger
 	followEvery time.Duration
@@ -134,7 +124,7 @@ func New(cfg Config) (*Bot, error) {
 
 // Run long-polls Telegram, handing conversations to f, until ctx is
 // cancelled. Handlers only run once polling starts, after f is set.
-func (b *Bot) Run(ctx context.Context, f Flow) {
+func (b *Bot) Run(ctx context.Context, f flow.Conversation) {
 	b.adapter.flow = f
 	b.adapter.runCtx = ctx
 	b.registerCommands(ctx)
@@ -208,24 +198,30 @@ func (a *adapter) onMessage(ctx context.Context, b *bot.Bot, msg *models.Message
 	if msg.From == nil {
 		return
 	}
+	unlock, locked := a.lockInput(ctx, msg)
+	if !locked {
+		return
+	}
+	defer unlock()
 	cmd, arg, ok := parseCommand(msg.Text)
 	if !ok {
-		a.onText(ctx, b, msg)
+		a.onText(ctx, msg)
 		return
 	}
 	run, known := a.commands()[cmd]
 	if !known {
 		return
 	}
-	reply := flow.Reply{Text: flow.Lines(flow.Line(
-		flow.Plain("🚫 你没有使用权限。你的 Telegram ID："),
-		flow.Mono(strconv.FormatInt(msg.From.ID, decimal)),
-	))}
+	reply := refused(msg.From.ID)
 	if a.allowed[msg.From.ID] {
+		if msg.Chat.Type == models.ChatTypePrivate && (cmd == cmdStart || cmd == cmdRequest) {
+			a.mu.Lock()
+			delete(a.pending, inputKey{chat: msg.Chat.ID, user: msg.From.ID})
+			a.mu.Unlock()
+		}
 		reply = run(ctx, actorOf(*msg.From, msg.Chat.ID), arg)
 	}
-	_, err := a.send(ctx, msg.Chat.ID, reply)
-	a.logFailure("send reply", err)
+	a.replyTo(ctx, msg, reply)
 }
 
 // command answers one slash command with its argument.
@@ -277,42 +273,6 @@ func callbackChat(cq *models.CallbackQuery) int64 {
 		return cq.Message.Message.Chat.ID
 	}
 	return cq.From.ID
-}
-
-// onText routes a plain message to the conversation waiting for its
-// author's answer. In groups only a reply to that message counts, so
-// ordinary chatter is never taken as an answer.
-func (a *adapter) onText(ctx context.Context, b *bot.Bot, msg *models.Message) {
-	key := inputKey{chat: msg.Chat.ID, user: msg.From.ID}
-	a.mu.Lock()
-	p, ok := a.pending[key]
-	a.mu.Unlock()
-	if !ok || !a.allowed[msg.From.ID] {
-		return
-	}
-	unlock, locked := a.lockMessage(ctx, messageKey{chat: key.chat, message: p.message})
-	if !locked {
-		return
-	}
-	defer unlock()
-	a.mu.Lock()
-	current := a.pending[key]
-	a.mu.Unlock()
-	if current != p {
-		return
-	}
-	isReply := msg.ReplyToMessage != nil && msg.ReplyToMessage.ID == p.message
-	if msg.Chat.Type != models.ChatTypePrivate && !isReply {
-		return
-	}
-	reply := a.flow.Answer(ctx, actorOf(*msg.From, msg.Chat.ID), flow.Typed{Input: p.input, Text: msg.Text})
-	if reply.Notice != "" {
-		// Pending inputs are keyed by user and hold the bot's own token, so
-		// the flow never refuses one; keep the card rather than clobber it.
-		a.log.Warn("typed answer refused", "notice", reply.Notice)
-		return
-	}
-	a.edit(ctx, editTarget{chat: key.chat, user: key.user, message: p.message}, reply)
 }
 
 // editTarget is a conversation message and the user driving it.
