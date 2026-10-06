@@ -63,7 +63,7 @@ func TestNothingToList(t *testing.T) {
 	h.tr.verify(t)
 }
 
-// Buttons of a closed task list point back to /tasks, not /request.
+// Buttons of a closed task list point back to /tasks, not /search.
 func TestClosedTaskListCannotResume(t *testing.T) {
 	h := start(t, scenario{routes: taskRoutes()})
 	h.say(alice, alice, "/tasks")

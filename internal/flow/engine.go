@@ -26,8 +26,8 @@ const (
 )
 
 const (
-	msgUsage         = "用法：/request <片名>"
-	msgExpired       = "⌛ 这个请求已失效，请重新 /request。"
+	msgUsage         = "用法：/search <片名>"
+	msgExpired       = "⌛ 这个请求已失效，请重新 /search。"
 	msgNotYours      = "这不是你发起的请求。"
 	msgBackendDown   = "⚠️ MoviePilot 暂时不可用，请稍后再试。"
 	msgCancelled     = "已取消。"
@@ -105,7 +105,7 @@ func (e *Engine) Choose(ctx context.Context, actor Actor, raw string) Reply {
 	return Reply{Notice: msgInvalidChoice}
 }
 
-// chooseRequest applies the steps of a /request conversation.
+// chooseRequest applies the steps of a /search conversation.
 func (e *Engine) chooseRequest(ctx context.Context, sess session, p press) (Reply, bool) {
 	switch p.action {
 	case actionMedia:

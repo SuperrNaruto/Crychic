@@ -65,5 +65,5 @@
    [重新搜索 | 2:rs:0] [取消 | 2:x:0]
 >> user 1001 taps 1:ok:0 on message 1
 << editMessageText chat=1001 message=1
-   <p>⌛ 这个请求已失效，请重新 /request。</p>
+   <p>⌛ 这个请求已失效，请重新 /search。</p>
 << answerCallbackQuery

@@ -195,7 +195,7 @@ func backButton(id uint64) Button {
 }
 
 // expired tells the user how to start over: buttons of a task list lead
-// back to /tasks, all others to /request.
+// back to /tasks, all others to /search.
 func expired(action string) Reply {
 	switch action {
 	case actionTask, actionFollow, actionUnfollow, actionList, actionClose:

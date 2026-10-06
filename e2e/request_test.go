@@ -38,7 +38,7 @@ func conanRoutes() map[string]route {
 // Someone who has watched an ongoing show only wants new episodes.
 func TestFollowOnlyNewEpisodes(t *testing.T) {
 	h := start(t, scenario{routes: conanRoutes()})
-	h.say(alice, alice, "/request 名侦探柯南")
+	h.say(alice, alice, "/search 名侦探柯南")
 	h.tap(alice, 1, conanShow)
 	h.tap(alice, 1, conanFirst)
 	h.tap(alice, 1, "只追新集（第 1216 集起）")
@@ -49,7 +49,7 @@ func TestFollowOnlyNewEpisodes(t *testing.T) {
 // A typed start episode is range-checked against the season, then confirmed.
 func TestStartFromTypedEpisode(t *testing.T) {
 	h := start(t, scenario{routes: conanRoutes()})
-	h.say(alice, alice, "/request 名侦探柯南")
+	h.say(alice, alice, "/search 名侦探柯南")
 	h.tap(alice, 1, conanShow)
 	h.tap(alice, 1, conanFirst)
 	h.tap(alice, 1, "指定起始集…")
@@ -66,7 +66,7 @@ func TestStartFromTypedEpisode(t *testing.T) {
 // In a group only a reply to the conversation message counts as the answer.
 func TestGroupChatterIsNotAnAnswer(t *testing.T) {
 	h := start(t, scenario{routes: conanRoutes()})
-	h.say(alice, group, "/request 名侦探柯南")
+	h.say(alice, group, "/search 名侦探柯南")
 	h.tap(alice, 1, conanShow)
 	h.tap(alice, 1, conanFirst)
 	h.tap(alice, 1, "指定起始集…")
@@ -99,7 +99,7 @@ func TestUnreachablePosterKeepsTheCard(t *testing.T) {
 		duneLookup:  ok("subscription_none.json"),
 	}})
 	h.tg.refuseImage(dunePoster)
-	h.say(alice, alice, "/request 沙丘")
+	h.say(alice, alice, "/search 沙丘")
 	h.tap(alice, 1, duneMovie)
 	h.shows(1, "确认订阅《沙丘》")
 	h.tr.verify(t)
@@ -113,7 +113,7 @@ func TestSubscribeOneSeasonOfShow(t *testing.T) {
 		breakingQuery: ok("subscription_none.json"),
 		subscribePath: ok("subscribe_created.json"),
 	}})
-	h.say(alice, alice, "/request 绝命毒师")
+	h.say(alice, alice, "/search 绝命毒师")
 	h.tap(alice, 1, "1")
 	h.tap(alice, 1, "第 2 季")
 	h.tap(alice, 1, "从第 1 集开始")
@@ -128,7 +128,7 @@ func TestMissingDetailsDoNotBlockSubscribing(t *testing.T) {
 		duneLookup:    ok("subscription_none.json"),
 		subscribePath: ok("subscribe_created.json"),
 	}})
-	h.say(alice, alice, "/request 沙丘")
+	h.say(alice, alice, "/search 沙丘")
 	h.tap(alice, 1, duneMovie)
 	h.tap(alice, 1, "确认订阅")
 	h.shows(1, "已订阅《沙丘》")
@@ -141,7 +141,7 @@ func TestAlreadySubscribedEndsEarly(t *testing.T) {
 		duneDetails: ok("detail_dune.json"),
 		duneLookup:  ok("subscription_existing.json"),
 	}})
-	h.say(alice, alice, "/request 沙丘")
+	h.say(alice, alice, "/search 沙丘")
 	h.tap(alice, 1, duneMovie)
 	h.shows(1, "已在订阅中")
 	h.tr.verify(t)
@@ -155,7 +155,7 @@ func TestConfirmTwiceSubscribesOnce(t *testing.T) {
 		duneLookup:    ok("subscription_none.json"),
 		subscribePath: ok("subscribe_created.json"),
 	}})
-	h.say(alice, alice, "/request 沙丘")
+	h.say(alice, alice, "/search 沙丘")
 	h.tap(alice, 1, duneMovie)
 	confirm, _ := findButton(mustMessage(h, 1).rows, "确认订阅")
 	h.tap(alice, 1, "确认订阅")
@@ -166,7 +166,7 @@ func TestConfirmTwiceSubscribesOnce(t *testing.T) {
 
 func TestCancelledRequestCannotResume(t *testing.T) {
 	h := start(t, scenario{routes: map[string]route{searchPath: ok("search_dune.json")}})
-	h.say(alice, alice, "/request 沙丘")
+	h.say(alice, alice, "/search 沙丘")
 	pick, _ := findButton(mustMessage(h, 1).rows, duneMovie)
 	h.tap(alice, 1, "取消")
 	h.shows(1, "已取消")
@@ -194,7 +194,7 @@ func TestPrivateCommandsReplacePendingAnswer(t *testing.T) {
 			"沙丘":    "search_dune.json",
 		},
 	})
-	h.say(alice, alice, "/request 名侦探柯南")
+	h.say(alice, alice, "/search 名侦探柯南")
 	h.tap(alice, 1, conanShow)
 	h.tap(alice, 1, conanFirst)
 	h.tap(alice, 1, "指定起始集…")
@@ -203,7 +203,7 @@ func TestPrivateCommandsReplacePendingAnswer(t *testing.T) {
 	h.shows(3, "「沙丘」的搜索结果")
 	h.tap(alice, 1, "返回")
 	h.tap(alice, 1, "指定起始集…")
-	h.say(alice, alice, "/request 沙丘")
+	h.say(alice, alice, "/search 沙丘")
 	h.say(alice, alice, "沙丘")
 	h.shows(5, "「沙丘」的搜索结果")
 	h.tr.verify(t)
@@ -216,7 +216,7 @@ func TestOnlyRequesterCanChoose(t *testing.T) {
 		duneDetails: ok("detail_dune.json"),
 		duneLookup:  ok("subscription_none.json"),
 	}})
-	h.say(alice, group, "/request@crychic_bot 沙丘")
+	h.say(alice, group, "/search@crychic_bot 沙丘")
 	h.tap(bob, 1, duneMovie)
 	h.shows(1, "的搜索结果")
 	h.tap(alice, 1, duneMovie)
@@ -229,7 +229,7 @@ func TestNothingFound(t *testing.T) {
 		"不存在的电影": "empty.json",
 		"沙丘":     "search_dune.json",
 	}})
-	h.say(alice, alice, "/request 不存在的电影")
+	h.say(alice, alice, "/search 不存在的电影")
 	h.shows(1, "没有找到")
 	h.answer(alice, 1, "沙丘")
 	h.shows(1, "「沙丘」的搜索结果")
@@ -238,7 +238,7 @@ func TestNothingFound(t *testing.T) {
 
 func TestWrongAPIKeyIsExplained(t *testing.T) {
 	h := start(t, scenario{apiKey: "wrong-key"})
-	h.say(alice, alice, "/request 沙丘")
+	h.say(alice, alice, "/search 沙丘")
 	h.shows(1, "API Key")
 	h.tr.verify(t)
 }
@@ -250,7 +250,7 @@ func TestMoviePilotRefusalIsRelayed(t *testing.T) {
 		duneLookup:    ok("subscription_none.json"),
 		subscribePath: ok("subscribe_rejected.json"),
 	}})
-	h.say(alice, alice, "/request 沙丘")
+	h.say(alice, alice, "/search 沙丘")
 	h.tap(alice, 1, duneMovie)
 	h.tap(alice, 1, "确认订阅")
 	h.shows(1, "未识别到媒体信息")
@@ -261,7 +261,7 @@ func TestMoviePilotOutageIsReported(t *testing.T) {
 	h := start(t, scenario{routes: map[string]route{
 		searchPath: {status: http.StatusInternalServerError, fixture: "server_error.json"},
 	}})
-	h.say(alice, alice, "/request 沙丘")
+	h.say(alice, alice, "/search 沙丘")
 	h.shows(1, "MoviePilot 暂时不可用")
 	retry, _ := findButton(mustMessage(h, 1).rows, "重试")
 	h.tap(alice, 1, "重试")
@@ -292,7 +292,7 @@ func TestSubscribeSeveralSeasons(t *testing.T) {
 		breakingQuery: ok("subscription_none.json"),
 		subscribePath: ok("subscribe_created.json"),
 	}})
-	h.say(alice, alice, "/request 绝命毒师")
+	h.say(alice, alice, "/search 绝命毒师")
 	h.tap(alice, 1, "1")
 	h.tap(alice, 1, "多选季…")
 	h.tap(alice, 1, "第 1 季")
@@ -373,7 +373,7 @@ func TestCancelOwnSubscription(t *testing.T) {
 		subsPath:      ok("subscriptions.json"),
 		deleteFirst:   ok("subscribe_deleted.json"),
 	}})
-	h.say(alice, alice, "/request 绝命毒师")
+	h.say(alice, alice, "/search 绝命毒师")
 	h.tap(alice, 1, "1")
 	h.tap(alice, 1, "第 2 季")
 	h.tap(alice, 1, "从第 1 集开始")
@@ -399,11 +399,11 @@ func TestOldConfirmationCannotSubscribeAfterRestart(t *testing.T) {
 		duneLookup: ok("subscription_none.json"), subscribePath: ok("subscribe_created.json"),
 		diggerDetails: ok("detail_digger.json"), diggerLookup: ok("subscription_none.json"),
 	}})
-	h.say(alice, alice, "/request 沙丘")
+	h.say(alice, alice, "/search 沙丘")
 	h.tap(alice, 1, duneMovie)
 	h.restart()
 	h.mp.setRoute(searchPath, ok("search_digger.json"))
-	h.say(alice, alice, "/request 挖掘者")
+	h.say(alice, alice, "/search 挖掘者")
 	h.tap(alice, 2, "1")
 	h.tap(alice, 1, "确认订阅")
 	h.shows(1, "已失效")
@@ -431,7 +431,7 @@ func TestBackRetracesTheRequest(t *testing.T) {
 		breakingQuery: ok("subscription_none.json"),
 		subscribePath: ok("subscribe_created.json"),
 	}})
-	h.say(alice, alice, "/request 绝命毒师")
+	h.say(alice, alice, "/search 绝命毒师")
 	h.tap(alice, 1, "1")
 	h.tap(alice, 1, "第 2 季")
 	h.tap(alice, 1, "指定起始集…")

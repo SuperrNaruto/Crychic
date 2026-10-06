@@ -64,7 +64,7 @@ func TestSlowMetadataDoesNotAddEveryDelay(t *testing.T) {
 		downloadsPath:    {status: http.StatusOK, fixture: "downloads_none.json", delay: callDelay},
 		duneLookup:       {status: http.StatusOK, fixture: "subscription_none.json", delay: callDelay},
 	}})
-	h.say(alice, alice, "/request 沙丘")
+	h.say(alice, alice, "/search 沙丘")
 	start := time.Now()
 	h.tap(alice, 1, duneMovie)
 	elapsed := time.Since(start)

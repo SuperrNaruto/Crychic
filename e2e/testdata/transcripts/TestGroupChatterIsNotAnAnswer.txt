@@ -1,4 +1,4 @@
->> user 1001 in chat -500: /request 名侦探柯南
+>> user 1001 in chat -500: /search 名侦探柯南
 -> MoviePilot GET /api/v1/media/search?count=10&title=名侦探柯南&type=media
 << sendRichMessage chat=-500 message=1
    <h3>🔍「名侦探柯南」的搜索结果</h3>

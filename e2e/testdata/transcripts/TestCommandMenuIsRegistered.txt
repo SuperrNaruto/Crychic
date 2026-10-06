@@ -1,23 +1,23 @@
 << setMyCommands
    /start – 首页：所有功能入口
-   /request – 搜索电影或剧集并订阅
-   /hot – 发现热门和新番
+   /search – 搜索电影或剧集并订阅
+   /trending – 发现热门和新番
    /subs – 查看和取消订阅
    /new – 最新入库
    /tasks – 查看下载和整理进度
    /help – 使用说明
 << setMyCommands scope={"type":"chat","chat_id":1001}
    /start – 首页：所有功能入口
-   /request – 搜索电影或剧集并订阅
-   /hot – 发现热门和新番
+   /search – 搜索电影或剧集并订阅
+   /trending – 发现热门和新番
    /subs – 查看和取消订阅
    /new – 最新入库
    /tasks – 查看下载和整理进度
    /help – 使用说明
 << setMyCommands scope={"type":"chat","chat_id":1002}
    /start – 首页：所有功能入口
-   /request – 搜索电影或剧集并订阅
-   /hot – 发现热门和新番
+   /search – 搜索电影或剧集并订阅
+   /trending – 发现热门和新番
    /subs – 查看和取消订阅
    /new – 最新入库
    /tasks – 查看下载和整理进度

@@ -24,7 +24,7 @@ func TestBrowseRecommendationsAndSeries(t *testing.T) {
 		duneCollection:         ok("collection_dune.json"),
 		subscribePath:          ok("subscribe_created.json"),
 	}})
-	h.say(alice, alice, "/request 沙丘")
+	h.say(alice, alice, "/search 沙丘")
 	h.tap(alice, 1, duneMovie)
 	h.tap(alice, 1, "相似推荐")
 	h.tap(alice, 1, "1")
@@ -43,7 +43,7 @@ func TestMovieWithoutSeriesKeepsItsCard(t *testing.T) {
 		"GET /api/v1/subscribe/media/911972": ok("subscription_none.json"),
 		subscribePath:                        ok("subscribe_created.json"),
 	}})
-	h.say(alice, alice, "/request 沙丘")
+	h.say(alice, alice, "/search 沙丘")
 	h.tap(alice, 1, "8")
 	h.tap(alice, 1, "同系列")
 	h.tap(alice, 1, "确认订阅")

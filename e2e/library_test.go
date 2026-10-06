@@ -15,7 +15,7 @@ func TestHeldMovieIsNotSubscribedAgain(t *testing.T) {
 		duneDetails:      ok("detail_dune.json"),
 		libraryMoviePath: ok("library_movie_held.json"),
 	}})
-	h.say(alice, alice, "/request 沙丘")
+	h.say(alice, alice, "/search 沙丘")
 	h.tap(alice, 1, duneMovie)
 	h.shows(1, "《沙丘》已在媒体库中，可以直接观看")
 	h.tr.verify(t)
@@ -30,7 +30,7 @@ func TestHeldSeasonIsNotSubscribedAgain(t *testing.T) {
 		seasonsPath:      ok("seasons_grand_blue.json"),
 		libraryShowPath:  ok("library_grand_blue.json"),
 	}})
-	h.say(alice, alice, "/request 碧蓝之海")
+	h.say(alice, alice, "/search 碧蓝之海")
 	h.tap(alice, 1, "1")
 	h.tap(alice, 1, "第 3 季")
 	h.shows(1, "《碧蓝之海》第 3 季已全部在媒体库中")
@@ -48,7 +48,7 @@ func TestPartlyHeldSeasonCompletesWithLibrary(t *testing.T) {
 		mygoLookup:      ok("subscription_none.json"),
 		subscribePath:   ok("subscribe_created.json"),
 	}})
-	h.say(alice, alice, "/request 迷途之子")
+	h.say(alice, alice, "/search 迷途之子")
 	h.tap(alice, 1, "1")
 	h.tap(alice, 1, "第 1 季")
 	h.shows(1, "媒体库已有 E13")
@@ -68,7 +68,7 @@ func TestDownloadInProgressIsShown(t *testing.T) {
 		mygoLookup:      ok("subscription_existing.json"),
 		downloadsPath:   ok("downloads_mygo.json"),
 	}})
-	h.say(alice, alice, "/request 迷途之子")
+	h.say(alice, alice, "/search 迷途之子")
 	h.tap(alice, 1, "1")
 	h.tap(alice, 1, "第 1 季")
 	h.shows(1, "⬇️ 正在下载 E10–E12 · 0%")

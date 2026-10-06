@@ -34,7 +34,7 @@ func TestRequesterHearsWhenMovieArrives(t *testing.T) {
 			subscribePath: ok("subscribe_created.json"),
 		},
 	})
-	h.say(alice, alice, "/request 沙丘")
+	h.say(alice, alice, "/search 沙丘")
 	h.tap(alice, 1, duneMovie)
 	h.tap(alice, 1, "确认订阅")
 	h.shows(1, "入库后会通知你")
@@ -53,7 +53,7 @@ func TestGroupHearsArrivedEpisodesTogether(t *testing.T) {
 		breakingQuery: ok("subscription_none.json"),
 		subscribePath: ok("subscribe_created.json"),
 	}})
-	h.say(alice, group, "/request 绝命毒师")
+	h.say(alice, group, "/search 绝命毒师")
 	h.tap(alice, 1, "1")
 	h.tap(alice, 1, "第 2 季")
 	h.tap(alice, 1, "从第 1 集开始")
@@ -77,7 +77,7 @@ func TestEpisodesArrivingApartShareOneNotice(t *testing.T) {
 		breakingQuery: ok("subscription_none.json"),
 		subscribePath: ok("subscribe_created.json"),
 	}})
-	h.say(alice, alice, "/request 绝命毒师")
+	h.say(alice, alice, "/search 绝命毒师")
 	h.tap(alice, 1, "1")
 	h.tap(alice, 1, "第 2 季")
 	h.tap(alice, 1, "从第 1 集开始")
@@ -95,7 +95,7 @@ func TestAlreadySubscribedRequesterIsNotified(t *testing.T) {
 		duneDetails: ok("detail_dune.json"),
 		duneLookup:  ok("subscription_existing.json"),
 	}})
-	h.say(alice, alice, "/request 沙丘")
+	h.say(alice, alice, "/search 沙丘")
 	h.tap(alice, 1, duneMovie)
 	h.shows(1, "已在订阅中，入库后会通知你")
 	h.arrives(alice, duneFile())
@@ -106,7 +106,7 @@ func TestAlreadySubscribedRequesterIsNotified(t *testing.T) {
 // and the requester is told when everything they asked for has arrived.
 func TestRequestsSurviveRestart(t *testing.T) {
 	h := start(t, scenario{routes: conanRoutes()})
-	h.say(alice, alice, "/request 名侦探柯南")
+	h.say(alice, alice, "/search 名侦探柯南")
 	h.tap(alice, 1, conanShow)
 	h.tap(alice, 1, conanFirst)
 	h.tap(alice, 1, "只追新集（第 1216 集起）")
@@ -128,7 +128,7 @@ func TestNoticeWaitsForTheMediaServer(t *testing.T) {
 		duneLookup:    ok("subscription_none.json"),
 		subscribePath: ok("subscribe_created.json"),
 	}})
-	h.say(alice, alice, "/request 沙丘")
+	h.say(alice, alice, "/search 沙丘")
 	h.tap(alice, 1, duneMovie)
 	h.tap(alice, 1, "确认订阅")
 	h.transfers(duneFile())
@@ -144,7 +144,7 @@ func TestDisabledLibraryWaitAnnouncesImmediately(t *testing.T) {
 		searchPath: ok("search_dune.json"), duneDetails: ok("detail_dune.json"),
 		duneLookup: ok("subscription_none.json"), subscribePath: ok("subscribe_created.json"),
 	}})
-	h.say(alice, alice, "/request 沙丘")
+	h.say(alice, alice, "/search 沙丘")
 	h.tap(alice, 1, duneMovie)
 	h.tap(alice, 1, "确认订阅")
 	h.transfers(duneFile())

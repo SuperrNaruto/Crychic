@@ -24,7 +24,7 @@ func TestTrendingPickGoesStraightToSubscribe(t *testing.T) {
 		diggerDetails: ok("detail_digger.json"),
 		diggerLookup:  ok("subscription_none.json"),
 	}})
-	h.say(alice, alice, "/hot")
+	h.say(alice, alice, "/trending")
 	h.tap(alice, 1, "TMDB 流行趋势")
 	h.tap(alice, 1, "1")
 	h.shows(1, "确认订阅《挖掘者》")
@@ -38,7 +38,7 @@ func TestTrendingPickGoesStraightToSubscribe(t *testing.T) {
 func TestCalendarRetryOverlappingNavigation(t *testing.T) {
 	h := start(t, scenario{routes: map[string]route{searchPath: ok("empty.json")}})
 	h.bgm.setDown(nuwaID, true)
-	h.say(alice, alice, "/hot")
+	h.say(alice, alice, "/trending")
 	h.tap(alice, 1, "新番放送")
 	const slowLookup = 100 * time.Millisecond
 	entered := h.bgm.delay(nuwaID, slowLookup)
@@ -85,11 +85,11 @@ func TestDoubanPicksAreMatchedByTitle(t *testing.T) {
 		seasonsPath:  ok("seasons_abyss.json"),
 		abyssLookup:  ok("subscription_none.json"),
 	}})
-	h.say(alice, alice, "/hot")
+	h.say(alice, alice, "/trending")
 	h.tap(alice, 1, "豆瓣热门剧集")
 	h.tap(alice, 1, "1")
 	h.shows(1, "确认订阅《深渊无间》第 1 季")
-	h.say(alice, alice, "/hot")
+	h.say(alice, alice, "/trending")
 	h.tap(alice, 2, "豆瓣热门剧集")
 	h.tap(alice, 2, "下一页 ›")
 	h.mp.setRoute(searchPath, ok("search_slow_horses_s6.json"))

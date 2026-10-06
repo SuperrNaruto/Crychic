@@ -1,4 +1,4 @@
->> user 1001 in chat 1001: /hot
+>> user 1001 in chat 1001: /trending
 << sendRichMessage chat=1001 message=1
    <h3>🔥 发现</h3>
    <p>选择一个榜单：</p>
@@ -78,7 +78,7 @@
    [指定起始集… | 1:e:0]
    [返回 | 1:bk:0] [取消 | 1:x:0]
 << answerCallbackQuery
->> user 1001 in chat 1001: /hot
+>> user 1001 in chat 1001: /trending
 << sendRichMessage chat=1001 message=2
    <h3>🔥 发现</h3>
    <p>选择一个榜单：</p>
@@ -170,7 +170,7 @@
    <li value="3"><b>许鞍华数风流人物 第六季</b><br>
    <i>許鞍華數風流人物 · 1992 · 电视剧</i></li>
    </ol>
-   <footer>没有对应的条目？可以用 /request 换个名字搜。</footer>
+   <footer>没有对应的条目？可以用 /search 换个名字搜。</footer>
    [1 | 2:m:0] [2 | 2:m:1] [3 | 2:m:2]
    [重新搜索 | 2:rs:0] [返回 | 2:bk:0] [取消 | 2:x:0]
 << answerCallbackQuery
@@ -202,7 +202,7 @@
    <li value="1"><b>勇敢者游戏：决战丛林</b><br>
    <i>Jumanji: Welcome to the Jungle · 2017 · 电影 · ⭐ 6.8</i></li>
    </ol>
-   <footer>没有对应的条目？可以用 /request 换个名字搜。</footer>
+   <footer>没有对应的条目？可以用 /search 换个名字搜。</footer>
    [1 | 2:m:0]
    [重新搜索 | 2:rs:0] [返回 | 2:bk:0] [取消 | 2:x:0]
 << answerCallbackQuery

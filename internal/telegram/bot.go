@@ -26,22 +26,22 @@ const (
 	// decimal is the base Telegram ids are written in.
 	decimal = 10
 
-	cmdRequest = "request"
-	cmdTasks   = "tasks"
-	cmdHot     = "hot"
-	cmdSubs    = "subs"
-	cmdNew     = "new"
-	cmdStart   = "start"
-	cmdHelp    = "help"
+	cmdSearch   = "search"
+	cmdTasks    = "tasks"
+	cmdTrending = "trending"
+	cmdSubs     = "subs"
+	cmdNew      = "new"
+	cmdStart    = "start"
+	cmdHelp     = "help"
 )
 
 // help explains the commands.
 var help = flow.Lines(
 	flow.Heading(flow.Plain("使用说明")),
-	flow.Line(flow.Plain("私聊直接发送片名即可搜索；等待起始集数时，请先回答或用 /request 换片。")),
+	flow.Line(flow.Plain("私聊直接发送片名即可搜索；等待起始集数时，请先回答或用 /search 换片。")),
 	flow.Line(flow.Mono("/start"), flow.Plain(" 首页，所有功能的入口。")),
-	flow.Line(flow.Mono("/request <片名>"), flow.Plain(" 搜索电影或剧集，并在 MoviePilot 中订阅。")),
-	flow.Line(flow.Mono("/hot"), flow.Plain(" 浏览热门榜单和新番，一键订阅。")),
+	flow.Line(flow.Mono("/search <片名>"), flow.Plain(" 搜索电影或剧集，并在 MoviePilot 中订阅。")),
+	flow.Line(flow.Mono("/trending"), flow.Plain(" 浏览热门榜单和新番，一键订阅。")),
 	flow.Line(flow.Mono("/subs"), flow.Plain(" 查看所有订阅，取消你请求的订阅。")),
 	flow.Line(flow.Mono("/new"), flow.Plain(" 媒体库最新入库，点片名直接观看。")),
 	flow.Line(flow.Mono("/tasks"), flow.Plain(" 查看下载中和整理中的任务，选一个实时查看进度。")),
@@ -50,8 +50,8 @@ var help = flow.Lines(
 // commands is the menu Telegram shows when a user types "/".
 var commands = []models.BotCommand{
 	{Command: cmdStart, Description: "首页：所有功能入口"},
-	{Command: cmdRequest, Description: "搜索电影或剧集并订阅"},
-	{Command: cmdHot, Description: "发现热门和新番"},
+	{Command: cmdSearch, Description: "搜索电影或剧集并订阅"},
+	{Command: cmdTrending, Description: "发现热门和新番"},
 	{Command: cmdSubs, Description: "查看和取消订阅"},
 	{Command: cmdNew, Description: "最新入库"},
 	{Command: cmdTasks, Description: "查看下载和整理进度"},
@@ -214,7 +214,7 @@ func (a *adapter) onMessage(ctx context.Context, b *bot.Bot, msg *models.Message
 	}
 	reply := refused(msg.From.ID)
 	if a.allowed[msg.From.ID] {
-		if msg.Chat.Type == models.ChatTypePrivate && (cmd == cmdStart || cmd == cmdRequest) {
+		if msg.Chat.Type == models.ChatTypePrivate && (cmd == cmdStart || cmd == cmdSearch) {
 			a.mu.Lock()
 			delete(a.pending, inputKey{chat: msg.Chat.ID, user: msg.From.ID})
 			a.mu.Unlock()
@@ -233,13 +233,13 @@ func (a *adapter) commands() map[string]command {
 		return func(ctx context.Context, actor flow.Actor, _ string) flow.Reply { return f(ctx, actor) }
 	}
 	return map[string]command{
-		cmdStart:   noArg(a.flow.Home),
-		cmdRequest: a.flow.Start,
-		cmdHot:     noArg(a.flow.Charts),
-		cmdSubs:    noArg(a.flow.Subscriptions),
-		cmdNew:     noArg(a.flow.Latest),
-		cmdTasks:   noArg(a.flow.Tasks),
-		cmdHelp:    func(context.Context, flow.Actor, string) flow.Reply { return flow.Reply{Text: help} },
+		cmdStart:    noArg(a.flow.Home),
+		cmdSearch:   a.flow.Start,
+		cmdTrending: noArg(a.flow.Charts),
+		cmdSubs:     noArg(a.flow.Subscriptions),
+		cmdNew:      noArg(a.flow.Latest),
+		cmdTasks:    noArg(a.flow.Tasks),
+		cmdHelp:     func(context.Context, flow.Actor, string) flow.Reply { return flow.Reply{Text: help} },
 	}
 }
 
@@ -322,7 +322,7 @@ func keyboard(rows [][]flow.Button) models.ReplyMarkup {
 	return &models.InlineKeyboardMarkup{InlineKeyboard: kb}
 }
 
-// parseCommand splits "/request@SomeBot dune part two" into its command and
+// parseCommand splits "/search@SomeBot dune part two" into its command and
 // argument; group chats address commands to a bot with the @ suffix.
 func parseCommand(text string) (cmd, arg string, ok bool) {
 	if !strings.HasPrefix(text, "/") {
