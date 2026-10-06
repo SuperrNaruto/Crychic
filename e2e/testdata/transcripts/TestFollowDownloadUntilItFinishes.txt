@@ -7,8 +7,7 @@
    [订阅 | 1:h:2] [最新入库 | 1:h:3]
    [任务进度 | 1:h:4]
 >> user 1001 taps 1:h:4 on message 1
-<< editMessageText chat=1001 message=1 photo=tasks.jpg 1280x720 sha256=073881ee9990d0b268dc6dd099e569afe5d364e5014f11a6c07d0beaed89248c
-   <img src="tg://photo?id=p0"/>
+<< editMessageText chat=1001 message=1
    <h3>📋 正在忙的任务</h3>
    <h4>⬇️ 下载</h4>
    <ol start="1">
@@ -56,8 +55,7 @@
    [继续刷新 | 1:k:0] [返回任务列表 | 1:l:0]
 << answerCallbackQuery
 >> user 1001 taps 1:l:0 on message 1
-<< editMessageText chat=1001 message=1 reuses=file-073881ee9990
-   <img src="tg://photo?id=p0"/>
+<< editMessageText chat=1001 message=1
    <h3>📋 正在忙的任务</h3>
    <h4>⬇️ 下载</h4>
    <ol start="1">

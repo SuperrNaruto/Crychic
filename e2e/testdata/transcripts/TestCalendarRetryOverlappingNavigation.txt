@@ -1,6 +1,5 @@
 >> user 1001 in chat 1001: /trending
-<< sendRichMessage chat=1001 message=1 photo=trending.jpg 1280x720 sha256=aec4090e605ebe6e873d06d87e188c608c0948099e47aa633df199dd2c483443
-   <img src="tg://photo?id=p0"/>
+<< sendRichMessage chat=1001 message=1
    <h3>🔥 发现好片</h3>
    <p>今天想逛哪个榜单呀？</p>
    [TMDB 流行趋势 | 1:d:0] [豆瓣热门电影 | 1:d:1]

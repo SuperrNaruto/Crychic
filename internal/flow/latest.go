@@ -28,9 +28,9 @@ func (e *Engine) latest(ctx context.Context, sess session) Reply {
 	e.store.put(sess)
 	buttons := [][]Button{{homeButton(sess.id)}}
 	if len(items) == 0 {
-		return Reply{Text: Sentence(msgNoLatest), Banner: BannerLatest, Buttons: buttons}
+		return Reply{Text: Sentence(msgNoLatest), Buttons: buttons}
 	}
-	view := listView{heading: Heading(Plain(msgLatestTitle)), banner: BannerLatest, footer: buttons[0]}
+	view := listView{heading: Heading(Plain(msgLatestTitle)), footer: buttons[0]}
 	for i, it := range items {
 		title := Linked(Strong(fmt.Sprintf("《%s》", truncate(it.Title, listTitleRunes))), it.Link)
 		view.entries = append(view.entries, listEntry{text: Lines(entry(i+1, title, it.Year, it.Kind))})

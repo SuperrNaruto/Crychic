@@ -32,10 +32,7 @@ var fileHead = []string{"集", "状态"}
 
 // taskList numbers downloads, then transfer jobs, matching session tasks.
 func taskList(id uint64, downloads []Download, jobs []TransferJob) listView {
-	view := listView{
-		heading: Heading(Plain("📋 正在忙的任务")), banner: BannerTasks,
-		footer: []Button{{Label: "关闭", Data: data(id, actionClose, 0)}},
-	}
+	view := listView{heading: Heading(Plain("📋 正在忙的任务")), footer: []Button{{Label: "关闭", Data: data(id, actionClose, 0)}}}
 	section := "⬇️ 下载"
 	add := func(title string, season *int, line string) {
 		n := len(view.entries) + 1

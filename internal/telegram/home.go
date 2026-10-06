@@ -16,7 +16,7 @@ const (
 )
 
 // content is a reply as rich message content: its poster, gallery or
-// bundled banner by URL, file_id or upload as prepared.
+// bundled home banner by URL, file_id or upload as prepared.
 func content(o outgoing) *models.InputRichMessage {
 	rich := richMessage(o.reply)
 	rich.Media = o.media()

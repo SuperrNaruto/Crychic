@@ -101,7 +101,7 @@ func (e *Engine) chartMenu(sess session) Reply {
 		buttons = append(buttons, Button{Label: c.label, Data: data(sess.id, actionChart, i)})
 	}
 	rows := append(grid(buttons, menuColumns), []Button{homeButton(sess.id)})
-	return Reply{Text: Lines(Heading(Plain(msgCharts)), Line(Plain(msgPickChart))), Banner: BannerDiscover, Buttons: rows}
+	return Reply{Text: Lines(Heading(Plain(msgCharts)), Line(Plain(msgPickChart))), Buttons: rows}
 }
 
 // openChart reads chart index afresh; a calendar opens on today.

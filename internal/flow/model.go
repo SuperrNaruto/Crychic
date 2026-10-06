@@ -243,19 +243,13 @@ type Button struct {
 	Data  string
 }
 
-// Banner names a bundled image for a home or feature screen; empty means none.
+// Banner names a bundled image for the home menu; empty means none.
 type Banner string
 
-const (
-	BannerHome          Banner = "home"
-	BannerDiscover      Banner = "trending"
-	BannerSubscriptions Banner = "subscribe"
-	BannerLatest        Banner = "newly_added"
-	BannerTasks         Banner = "tasks"
-)
+const BannerHome Banner = "home"
 
 // Banners lists every Banner; a platform checks it has an image for each.
-var Banners = []Banner{BannerHome, BannerDiscover, BannerSubscriptions, BannerLatest, BannerTasks}
+var Banners = []Banner{BannerHome}
 
 // Reply is what the platform shows after an action. Image is a poster URL
 // to show with the text; Gallery, used only without Image, holds the posters
@@ -271,7 +265,7 @@ type Reply struct {
 	Text    Text
 	Image   string
 	Gallery []string
-	Banner  Banner // show the named built-in banner instead of posters
+	Banner  Banner // show the named built-in banner above the home menu
 	Buttons [][]Button
 	Notice  string
 	Input   string
