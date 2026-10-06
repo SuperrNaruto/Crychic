@@ -78,6 +78,11 @@ type adapter struct {
 	runCtx      context.Context
 	api         *bot.Bot // set once connected, before any update arrives
 
+	// work counts running handlers and followers: Telegram's library
+	// starts a goroutine per update and does not wait for them on stop.
+	work    sync.WaitGroup
+	stopped bool // set once stopping; later updates are dropped
+
 	mu        sync.Mutex
 	pending   map[inputKey]pendingInput
 	followers map[messageKey]*follower
@@ -132,6 +137,27 @@ func (b *Bot) Run(ctx context.Context, f flow.Conversation) {
 	b.registerCommands(ctx)
 	b.log.Info("telegram bot started")
 	b.api.Start(ctx)
+	b.adapter.drain()
+}
+
+// drain waits for the handlers and followers still running when polling
+// stopped; their context is cancelled, so they end promptly.
+func (a *adapter) drain() {
+	a.mu.Lock()
+	a.stopped = true
+	a.mu.Unlock()
+	a.work.Wait()
+}
+
+// enter counts a handler as running, unless the bot is stopping.
+func (a *adapter) enter() bool {
+	a.mu.Lock()
+	defer a.mu.Unlock()
+	if a.stopped {
+		return false
+	}
+	a.work.Add(1)
+	return true
 }
 
 // Notify sends a notice to where the requester asked; in a group it
@@ -188,6 +214,10 @@ func actorOf(u models.User, chat int64) flow.Actor {
 }
 
 func (a *adapter) handle(ctx context.Context, b *bot.Bot, upd *models.Update) {
+	if !a.enter() {
+		return
+	}
+	defer a.work.Done()
 	switch {
 	case upd.Message != nil:
 		a.onMessage(ctx, b, upd.Message)

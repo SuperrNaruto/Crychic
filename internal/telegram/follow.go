@@ -35,7 +35,8 @@ func (a *adapter) follow(f follower) {
 	}
 	a.followers[key] = &f
 	a.mu.Unlock()
-	go a.refresh(ctx, &f)
+	// Only a handler follows, so the work it is part of is still counted.
+	a.work.Go(func() { a.refresh(ctx, &f) })
 }
 
 // unfollow stops refreshing a message, e.g. because its owner pressed a
