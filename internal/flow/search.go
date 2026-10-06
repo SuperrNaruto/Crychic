@@ -3,6 +3,7 @@ package flow
 import (
 	"context"
 	"fmt"
+	"slices"
 	"strings"
 )
 
@@ -23,12 +24,12 @@ func (e *Engine) Start(ctx context.Context, actor Actor, term string) Reply {
 }
 
 func (e *Engine) search(ctx context.Context, sess session, term string) Reply {
+	sess.query = term
 	results, err := e.backend.Search(ctx, term)
 	if err != nil {
-		e.store.take(sess.id)
-		return e.failure("search", err)
+		return e.readFailure(sess, recovery{step: readSearch}, err)
 	}
-	sess.query, sess.results = term, results
+	sess.results, sess.retry = results, recovery{}
 	e.store.put(sess)
 	if len(results) == 0 {
 		reply := askResearch(sess)
@@ -41,7 +42,7 @@ func (e *Engine) search(ctx context.Context, sess session, term string) Reply {
 	if len(results) == 1 {
 		reply := e.pickMedia(ctx, sess, 0)
 		if _, live := e.store.get(sess.id); live {
-			reply.Buttons = append(reply.Buttons, []Button{researchButton(sess.id)})
+			reply = withResearch(reply, sess.id)
 		}
 		return reply
 	}
@@ -69,6 +70,20 @@ func (e *Engine) resultList(sess session, term string) Reply {
 
 func researchButton(id uint64) Button {
 	return Button{Label: "重新搜索", Data: data(id, actionResearch, 0)}
+}
+
+func withResearch(reply Reply, id uint64) Reply {
+	if reply.Input != "" || reply.Notice != "" {
+		return reply
+	}
+	button := researchButton(id)
+	for _, row := range reply.Buttons {
+		if slices.Contains(row, button) {
+			return reply
+		}
+	}
+	reply.Buttons = append(slices.Clone(reply.Buttons), []Button{button})
+	return reply
 }
 
 func askResearch(sess session) Reply {

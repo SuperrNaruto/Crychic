@@ -16,6 +16,7 @@ type session struct {
 	owner   Actor
 	menu    bool   // a home menu button is opening a feature; navigate clears it
 	query   string // the current ordinary title search
+	retry   recovery
 	results []Media
 	picked  card
 	seasons []Season

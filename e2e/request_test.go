@@ -263,6 +263,13 @@ func TestMoviePilotOutageIsReported(t *testing.T) {
 	}})
 	h.say(alice, alice, "/request 沙丘")
 	h.shows(1, "MoviePilot 暂时不可用")
+	retry, _ := findButton(mustMessage(h, 1).rows, "重试")
+	h.tap(alice, 1, "重试")
+	h.mp.setRoute(searchPath, ok("search_dune.json"))
+	h.tap(alice, 1, "重试")
+	h.shows(1, "「沙丘」的搜索结果")
+	h.tapData(alice, 1, retry)
+	h.shows(1, "「沙丘」的搜索结果")
 	h.tr.verify(t)
 }
 

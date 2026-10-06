@@ -105,7 +105,7 @@ func (e *Engine) subscribeSeason(ctx context.Context, sess session, season int) 
 		out.existing = true
 	}
 	if err == nil && id == 0 {
-		id, err = e.backend.Subscribe(ctx, target)
+		id, err = e.submit(ctx, target)
 	}
 	if err != nil {
 		e.log.Error("season subscription failed", "season", season, "err", err)

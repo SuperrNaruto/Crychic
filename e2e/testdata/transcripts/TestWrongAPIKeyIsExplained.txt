@@ -1,4 +1,7 @@
 >> user 1001 in chat 1001: /request 沙丘
 -> MoviePilot GET /api/v1/media/search?count=10&title=沙丘&type=media
 << sendRichMessage chat=1001 message=1
-   <p>⚠️ MoviePilot 拒绝了请求，请管理员检查 API Key。</p>
+   <h3>🔍 搜索未完成</h3>
+   <p>正在查找「沙丘」。<br>
+   ⚠️ MoviePilot 拒绝了请求，请管理员检查 API Key。</p>
+   [重试 | 1:rt:0] [重新搜索 | 1:rs:0] [取消 | 1:x:0]

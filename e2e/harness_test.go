@@ -9,6 +9,7 @@ import (
 	"log/slog"
 	"strconv"
 	"strings"
+	"sync/atomic"
 	"testing"
 	"time"
 
@@ -58,6 +59,7 @@ type harness struct {
 	began  time.Time // real time at epoch; restarts keep the clock going
 	stop   func()
 	nextCB int
+	offset atomic.Int64 // simulated elapsed time, in nanoseconds
 }
 
 // start boots the app with env-style configuration, as a deployment would,
@@ -111,7 +113,7 @@ func (h *harness) launch() {
 	ctx, cancel := context.WithCancel(context.Background())
 	stopped := make(chan error, 1)
 	log := slog.New(slog.NewTextHandler(testWriter{h.t}, nil))
-	now := func() time.Time { return epoch.Add(time.Since(h.began)) }
+	now := func() time.Time { return epoch.Add(time.Since(h.began) + time.Duration(h.offset.Load())) }
 	go func() { stopped <- app.Run(ctx, h.cfg, app.Deps{Log: log, Now: now}) }()
 	h.stop = func() {
 		cancel()
@@ -127,6 +129,14 @@ func (h *harness) restart() {
 	h.tr.add(">> Crychic restarts")
 	h.stop()
 	h.launch()
+}
+
+// advance moves the injected application clock without sleeping or changing
+// any internal state; timers still tick at their normal test cadence.
+func (h *harness) advance(elapsed time.Duration) {
+	h.t.Helper()
+	h.tr.add(">> clock advances " + elapsed.String())
+	h.offset.Add(int64(elapsed))
 }
 
 // arrives adds records to MoviePilot's transfer history and waits for the

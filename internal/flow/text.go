@@ -18,9 +18,10 @@ var seasonHead = []string{"季", "集数", "入库"}
 
 // card is the picked media with everything known about it.
 type card struct {
-	Media     Media
-	Details   Details
-	Downloads []Download // the chosen target's unfinished downloads
+	Media          Media
+	Details        Details
+	Downloads      []Download // the chosen target's unfinished downloads
+	LibraryUnknown bool
 }
 
 // reply shows the card, poster above, then a divider, message and buttons.
@@ -30,7 +31,11 @@ func (c card) reply(message Block, buttons [][]Button) Reply {
 
 // replyLines is reply with a message of several lines.
 func (c card) replyLines(message Text, buttons [][]Button) Reply {
-	text := append(append(c.text(), Divider()), message...)
+	text := append(c.text(), Divider())
+	if c.LibraryUnknown {
+		text = append(text, Line(Plain("⚠️ 媒体库状态暂时无法确认。")))
+	}
+	text = append(text, message...)
 	return Reply{Text: text, Image: c.Media.PosterURL, Buttons: buttons}
 }
 

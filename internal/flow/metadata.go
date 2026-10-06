@@ -13,11 +13,13 @@ func (e *Engine) enrich(ctx context.Context, sess *session, media Media) {
 	defer cancel()
 	var details Details
 	var library Library
+	var libraryErr error
 	var wg sync.WaitGroup
 	wg.Go(func() { details = e.details(ctx, media) })
-	wg.Go(func() { library = e.library(ctx, media) })
+	wg.Go(func() { library, libraryErr = e.library(ctx, media) })
 	wg.Wait()
-	sess.picked, sess.library = card{Media: media, Details: details}, library
+	sess.picked = card{Media: media, Details: details, LibraryUnknown: libraryErr != nil}
+	sess.library = library
 }
 
 func (e *Engine) confirmationInfo(ctx context.Context, sess *session, target Target) (int, error) {

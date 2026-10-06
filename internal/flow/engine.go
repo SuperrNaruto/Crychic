@@ -118,6 +118,8 @@ func (e *Engine) chooseRequest(ctx context.Context, sess session, p press) (Repl
 		return askStart(sess, ""), true
 	case actionResearch:
 		return askResearch(sess), true
+	case actionRetry:
+		return e.retryRead(ctx, sess), true
 	case actionCancel:
 		return e.cancel(sess), true
 	}
@@ -135,6 +137,7 @@ func (e *Engine) pickMedia(ctx context.Context, sess session, index int) Reply {
 		return Reply{Notice: msgInvalidChoice}
 	}
 	media := sess.results[index]
+	sess.target, sess.seasons, sess.chosen, sess.retry = nil, nil, nil, recovery{}
 	e.enrich(ctx, &sess, media)
 	if media.Kind == Movie && sess.library.Movie {
 		return e.held(sess, Target{Media: media})
@@ -148,14 +151,12 @@ func (e *Engine) pickMedia(ctx context.Context, sess session, index int) Reply {
 func (e *Engine) offerSeasons(ctx context.Context, sess session) Reply {
 	seasons, err := e.backend.Seasons(ctx, sess.picked.Media)
 	if err != nil {
-		e.store.take(sess.id)
-		return e.failure("seasons", err)
+		return e.readFailure(sess, recovery{step: readSeasons}, err)
 	}
 	if len(seasons) == 0 {
-		e.store.take(sess.id)
-		return sess.picked.reply(Line(Plain(msgNoSeasons)), nil)
+		return e.readFailure(sess, recovery{step: readSeasons}, &UserError{Message: msgNoSeasons})
 	}
-	sess.seasons = seasons
+	sess.seasons, sess.retry = seasons, recovery{}
 	e.store.put(sess)
 	if len(seasons) == 1 && seasons[0].Number > 0 {
 		return e.pickSeason(ctx, sess, seasons[0].Number)
@@ -183,13 +184,13 @@ func (e *Engine) details(ctx context.Context, media Media) Details {
 }
 
 // library tells what the media server already holds; like details it only
-// informs the conversation, so a failure is logged and treated as nothing held.
-func (e *Engine) library(ctx context.Context, media Media) Library {
+// informs the conversation. A failed read is marked unknown on the card.
+func (e *Engine) library(ctx context.Context, media Media) (Library, error) {
 	l, err := e.backend.Library(ctx, media)
 	if err != nil {
 		e.log.Warn("library check unavailable", "media", media.ID, "err", err)
 	}
-	return l
+	return l, err
 }
 
 // downloads lists target's unfinished downloads; like library it only
@@ -238,12 +239,17 @@ func (e *Engine) pickSeason(ctx context.Context, sess session, number int) Reply
 func (e *Engine) offerConfirm(ctx context.Context, sess session, target Target) Reply {
 	existing, err := e.confirmationInfo(ctx, &sess, target)
 	if err != nil {
-		e.store.take(sess.id)
-		return e.failure("subscription lookup", err)
+		return e.readFailure(sess, recovery{step: readSubscription, target: target}, err)
 	}
-	if existing != 0 {
+	return e.confirmation(ctx, sess, subscription{id: existing, target: target})
+}
+
+func (e *Engine) confirmation(ctx context.Context, sess session, sub subscription) Reply {
+	sess.retry, sess.target = recovery{}, nil
+	target := sub.target
+	if sub.id != 0 {
 		e.store.put(sess)
-		status := fmt.Sprintf("ℹ️ %s已在订阅中%s", targetName(target), e.watch(ctx, sess, subscription{id: existing, target: target}))
+		status := fmt.Sprintf("ℹ️ %s已在订阅中%s", targetName(target), e.watch(ctx, sess, sub))
 		return sess.picked.reply(Line(Plain(status)), [][]Button{relatedRow(sess)})
 	}
 	sess.target = &target
@@ -280,9 +286,9 @@ func (e *Engine) confirm(ctx context.Context, sess session, from int) Reply {
 	}
 	target := *sess.target
 	target.StartEpisode = from
-	id, err := e.backend.Subscribe(ctx, target)
+	id, err := e.submit(ctx, target)
 	if err != nil {
-		return e.failure("subscribe", err)
+		return sess.picked.replyLines(e.failure("subscribe", err).Text, nil)
 	}
 	done := fmt.Sprintf("✅ 已订阅%s%s", targetName(target), e.watch(ctx, sess, subscription{id: id, target: target}))
 	return sess.picked.reply(Line(Plain(done)), nil)

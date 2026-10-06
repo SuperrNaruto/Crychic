@@ -1,0 +1,101 @@
+>> user 1001 in chat 1001: 名侦探柯南
+-> MoviePilot GET /api/v1/media/search?count=10&title=名侦探柯南&type=media
+<< sendRichMessage chat=1001 message=1
+   <h3>🔍「名侦探柯南」的搜索结果</h3>
+   <ol start="1">
+   <li value="1"><b>名侦探柯南</b><br>
+   <i>名探偵コナン · 1996 · 电视剧 · ⭐ 8.0</i></li>
+   <li value="2"><b>名侦探柯南粤语版</b><br>
+   <i>1998 · 电视剧</i></li>
+   <li value="3"><b>名侦探柯南（中配）</b><br>
+   <i>1996 · 电视剧 · ⭐ 9.3</i></li>
+   <li value="4"><b>名侦探柯南：高速公路的堕天使</b><br>
+   <i>名探偵コナン ハイウェイの堕天使 · 2026 · 电影 · ⭐ 7.4</i></li>
+   <li value="5"><b>名侦探柯南：独眼的残像</b><br>
+   <i>名探偵コナン 隻眼の残像 · 2025 · 电影 · ⭐ 7.2</i></li>
+   <li value="6"><b>名侦探柯南：绝海的侦探</b><br>
+   <i>名探偵コナン・絶海の探偵 · 2013 · 电影 · ⭐ 6.6</i></li>
+   <li value="7"><b>名侦探柯南：零的日常</b><br>
+   <i>名探偵コナン ゼロの日常 · 2022 · 电视剧 · ⭐ 6.7</i></li>
+   <li value="8"><b>名侦探柯南：黑铁的鱼影</b><br>
+   <i>名探偵コナン 黒鉄の魚影（サブマリン） · 2023 · 电影 · ⭐ 7.0</i></li>
+   </ol>
+   <footer>第 1/2 页</footer>
+   [1 | 1:m:0] [2 | 1:m:1] [3 | 1:m:2] [4 | 1:m:3]
+   [5 | 1:m:4] [6 | 1:m:5] [7 | 1:m:6] [8 | 1:m:7]
+   [下一页 › | 1:p:1]
+   [重新搜索 | 1:rs:0] [取消 | 1:x:0]
+>> user 1001 taps 1:m:0 on message 1
+-> MoviePilot GET /api/v1/media/30983?media_source=themoviedb&type_name=电视剧
+-> MoviePilot GET /api/v1/media/seasons?media_id=30983&media_source=themoviedb
+<< editMessageText chat=1001 message=1
+   <img src="https://image.tmdb.org/t/p/w500/7qBrY88hNwMrMb75PkBZjhFolbL.jpg"/>
+   <h3>📺 <a href="https://www.themoviedb.org/tv/30983">名侦探柯南</a></h3>
+   <footer><i>名探偵コナン</i> · 1996 · 电视剧 · ⭐ 8.0 · 动画 / 犯罪 / 悬疑 / 喜剧 · 共 1 季 1216 集 · 主演：高山南、山口胜平、山崎和佳奈</footer>
+   <blockquote expandable>高中生侦探工藤新一与毛利兰在游乐园游玩时发现两个行动诡异的黑衣男子，便跟踪他们，不料被灌下一种叫「APTX4869」的神秘毒药，然而因为药物副作用，新一的身体竟回到孩童状态。为不使周围的人受到牵连，他化名为「江户川柯南」，寄住在毛利兰家中，用阿笠博士发明的手表型麻醉枪让毛利小五郎睡着，接着用蝴蝶结变声器模仿他的声音来进行推理，解决了许多案件，并一直寻找着黑衣组织的人的下落，希望有朝一日将其绳之以法，并变回原来的样子。</blockquote>
+   <hr/>
+   <p><b>选择要订阅的季：</b></p>
+   <table bordered compact>
+   <tr><th>季</th><th>集数</th></tr>
+   <tr><td><b>特别篇</b></td><td>35 集</td></tr>
+   <tr><td><b>第 1 季</b></td><td>1216 集</td></tr>
+   </table>
+   [特别篇 | 1:s:0] [第 1 季 | 1:s:1]
+   [多选季… | 1:a:0]
+   [相似推荐 | 1:r:0]
+   [返回 | 1:bk:0] [取消 | 1:x:0]
+<< answerCallbackQuery
+>> user 1001 taps 1:s:1 on message 1
+-> MoviePilot GET /api/v1/subscribe/media/30983?media_source=themoviedb&mtype=电视剧&season=1&title=名侦探柯南&year=1996
+<< editMessageText chat=1001 message=1
+   <img src="https://image.tmdb.org/t/p/w500/7qBrY88hNwMrMb75PkBZjhFolbL.jpg"/>
+   <h3>📺 <a href="https://www.themoviedb.org/tv/30983">名侦探柯南</a></h3>
+   <footer><i>名探偵コナン</i> · 1996 · 电视剧 · ⭐ 8.0 · 动画 / 犯罪 / 悬疑 / 喜剧 · 共 1 季 1216 集 · 主演：高山南、山口胜平、山崎和佳奈</footer>
+   <blockquote expandable>高中生侦探工藤新一与毛利兰在游乐园游玩时发现两个行动诡异的黑衣男子，便跟踪他们，不料被灌下一种叫「APTX4869」的神秘毒药，然而因为药物副作用，新一的身体竟回到孩童状态。为不使周围的人受到牵连，他化名为「江户川柯南」，寄住在毛利兰家中，用阿笠博士发明的手表型麻醉枪让毛利小五郎睡着，接着用蝴蝶结变声器模仿他的声音来进行推理，解决了许多案件，并一直寻找着黑衣组织的人的下落，希望有朝一日将其绳之以法，并变回原来的样子。</blockquote>
+   <hr/>
+   <p><b>确认订阅《名侦探柯南》第 1 季（共 1216 集）？</b></p>
+   [从第 1 集开始 | 1:ok:0] [只追新集（第 1216 集起） | 1:ok:1216]
+   [指定起始集… | 1:e:0]
+   [返回 | 1:bk:0] [取消 | 1:x:0]
+<< answerCallbackQuery
+>> user 1001 taps 1:e:0 on message 1
+<< editMessageText chat=1001 message=1
+   <img src="https://image.tmdb.org/t/p/w500/7qBrY88hNwMrMb75PkBZjhFolbL.jpg"/>
+   <h3>📺 <a href="https://www.themoviedb.org/tv/30983">名侦探柯南</a></h3>
+   <footer><i>名探偵コナン</i> · 1996 · 电视剧 · ⭐ 8.0 · 动画 / 犯罪 / 悬疑 / 喜剧 · 共 1 季 1216 集 · 主演：高山南、山口胜平、山崎和佳奈</footer>
+   <blockquote expandable>高中生侦探工藤新一与毛利兰在游乐园游玩时发现两个行动诡异的黑衣男子，便跟踪他们，不料被灌下一种叫「APTX4869」的神秘毒药，然而因为药物副作用，新一的身体竟回到孩童状态。为不使周围的人受到牵连，他化名为「江户川柯南」，寄住在毛利兰家中，用阿笠博士发明的手表型麻醉枪让毛利小五郎睡着，接着用蝴蝶结变声器模仿他的声音来进行推理，解决了许多案件，并一直寻找着黑衣组织的人的下落，希望有朝一日将其绳之以法，并变回原来的样子。</blockquote>
+   <hr/>
+   <p>请直接回复起始集数（1–1216）：</p>
+   [返回 | 1:bk:0] [取消 | 1:x:0]
+<< answerCallbackQuery
+>> clock advances 11m0s
+>> user 1001 in chat 1001: 500
+<< editMessageText chat=1001 message=1
+   <p>⌛ 这个请求已失效，请重新 /request。</p>
+>> user 1001 in chat 1001: 沙丘
+-> MoviePilot GET /api/v1/media/search?count=10&title=沙丘&type=media
+<< sendRichMessage chat=1001 message=2
+   <h3>🔍「沙丘」的搜索结果</h3>
+   <ol start="1">
+   <li value="1"><b>沙丘</b><br>
+   <i>Dune · 2021 · 电影 · ⭐ 7.8</i></li>
+   <li value="2"><b>沙丘：预言</b><br>
+   <i>Dune: Prophecy · 2024 · 电视剧 · ⭐ 7.2</i></li>
+   <li value="3"><b>沙丘</b><br>
+   <i>Dune · 1984 · 电影 · ⭐ 6.2</i></li>
+   <li value="4"><b>沙丘2</b><br>
+   <i>Dune: Part Two · 2024 · 电影 · ⭐ 8.1</i></li>
+   <li value="5"><b>沙丘3</b><br>
+   <i>Dune: Part Three · 2026 · 电影</i></li>
+   <li value="6"><b>沙丘之子</b><br>
+   <i>Frank Herbert&#39;s Children of Dune · 2003 · 电视剧 · ⭐ 6.9</i></li>
+   <li value="7"><b>沙丘魔堡2000</b><br>
+   <i>Frank Herbert&#39;s Dune · 2000 · 电视剧 · ⭐ 6.8</i></li>
+   <li value="8"><b>沙丘虫暴</b><br>
+   <i>2021 · 电影 · ⭐ 6.7</i></li>
+   </ol>
+   <footer>第 1/2 页</footer>
+   [1 | 2:m:0] [2 | 2:m:1] [3 | 2:m:2] [4 | 2:m:3]
+   [5 | 2:m:4] [6 | 2:m:5] [7 | 2:m:6] [8 | 2:m:7]
+   [下一页 › | 2:p:1]
+   [重新搜索 | 2:rs:0] [取消 | 2:x:0]
