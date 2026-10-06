@@ -63,8 +63,8 @@ func (e *Engine) browse(ctx context.Context, sess session, series bool) Reply {
 	return e.listPages(sess, relatedView(sess, heading))
 }
 
-// relatedView lists the related media like a chart: each opens to its
-// synopsis, a number button picks it.
+// relatedView lists the related media like a chart: posters in a gallery,
+// each entry opens to its synopsis, a number button picks it.
 func relatedView(sess session, heading string) listView {
 	view := listView{heading: Heading(Plain(heading)), footer: []Button{cancelButton(sess.id)}}
 	look := pickLook{year: true, kind: mixedKinds(sess.results)}
@@ -72,6 +72,7 @@ func relatedView(sess session, heading string) listView {
 		view.entries = append(view.entries, listEntry{
 			text:    Lines(pickEntry(i+1, m, look)),
 			buttons: []Button{{Label: fmt.Sprint(i + 1), Data: data(sess.id, actionMedia, i)}},
+			poster:  m.PosterURL,
 		})
 	}
 	return view
