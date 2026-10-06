@@ -66,6 +66,7 @@ func Run(ctx context.Context, cfg config.Config, deps Deps) error {
 		Quiet:       cfg.NotifyQuiet,
 		Destination: cfg.TelegramNotifyChat,
 		LibraryWait: cfg.LibraryWait,
+		Stall:       cfg.NotifyStall,
 		Now:         now,
 		Log:         log,
 	})

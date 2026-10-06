@@ -1,6 +1,10 @@
 package e2e
 
-import "testing"
+import (
+	"fmt"
+	"testing"
+	"time"
+)
 
 const dunePoster = "https://image.tmdb.org/t/p/w500/6hsJknqlPceFxExOe87z5VGgNG9.jpg"
 
@@ -163,5 +167,41 @@ func TestDisabledLibraryWaitAnnouncesImmediately(t *testing.T) {
 	h.tap(alice, 1, "确认订阅")
 	h.transfers(duneFile())
 	h.shows(2, "入库啦")
+	h.tr.verify(t)
+}
+
+// A requested download that stops moving is told about once: progress
+// restarts the clock, and the telling survives a restart, so it is never
+// repeated for the same torrent.
+func TestStalledDownloadIsToldOnce(t *testing.T) {
+	const step = 40 * time.Minute
+	h := start(t, scenario{stall: "1h", routes: map[string]route{
+		searchPath:      ok("search_mygo.json"),
+		mygoDetails:     ok("detail_mygo.json"),
+		seasonsPath:     ok("seasons_mygo.json"),
+		libraryShowPath: ok("library_mygo.json"),
+		mygoLookup:      ok("subscription_none.json"),
+		subscribePath:   ok("subscribe_created.json"),
+		downloadsPath:   ok("downloads_mygo.json"),
+	}})
+	h.say(alice, alice, "/search 迷途之子")
+	h.tap(alice, 1, "1")
+	h.tap(alice, 1, "第 1 季")
+	h.tap(alice, 1, "从第 1 集开始")
+	h.transfers()
+	h.advance(step)
+	h.mp.setRoute(downloadsPath, ok("downloads_mygo_later.json"))
+	h.transfers()
+	h.advance(step)
+	h.transfers()
+	told := h.tg.expect(fmt.Sprintf("send:%d", alice))
+	h.advance(step)
+	h.wait(told, "a stalled download notice")
+	h.shows(2, "下载好像卡住了")
+	h.shows(2, "一直停在 43%")
+	h.restart()
+	h.transfers()
+	h.advance(2 * time.Hour)
+	h.transfers()
 	h.tr.verify(t)
 }

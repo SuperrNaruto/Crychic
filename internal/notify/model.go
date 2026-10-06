@@ -43,6 +43,8 @@ type Feed interface {
 	// Library and Latest ask the media server what it shows.
 	Library(ctx context.Context, media flow.Media) (flow.Library, error)
 	Latest(ctx context.Context) ([]flow.LibraryItem, error)
+	// Downloads lists the downloader's unfinished tasks.
+	Downloads(ctx context.Context) ([]flow.Download, error)
 	// Quality parses a downloaded file's name; a zero Quality when the
 	// backend cannot recognize it.
 	Quality(ctx context.Context, file string) (Quality, error)

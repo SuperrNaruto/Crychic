@@ -42,6 +42,7 @@ type scenario struct {
 	apiKey      string
 	history     []transfer // transfers that predate the bot
 	quiet       string     // CRYCHIC_NOTIFY_QUIET, notifyQuiet if empty
+	stall       string     // CRYCHIC_NOTIFY_STALL, the production default if empty
 	libraryWait string     // empty uses the production default
 	notifyChat  string     // optional channel for arrival notices
 	lagging     bool       // the media server shows new transfers only on catchUp
@@ -93,6 +94,7 @@ func start(t *testing.T, sc scenario) *harness {
 		"CRYCHIC_DATA_DIR":                t.TempDir(),
 		"CRYCHIC_NOTIFY_INTERVAL":         notifyInterval,
 		"CRYCHIC_NOTIFY_QUIET":            sc.quiet,
+		"CRYCHIC_NOTIFY_STALL":            sc.stall,
 		"CRYCHIC_NOTIFY_LIBRARY_WAIT":     sc.libraryWait,
 		"CRYCHIC_PROGRESS_INTERVAL":       progressInterval,
 		"CRYCHIC_TELEGRAM_NOTIFY_CHAT_ID": sc.notifyChat,

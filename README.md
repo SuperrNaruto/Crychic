@@ -72,6 +72,7 @@
 | `CRYCHIC_NOTIFY_LIBRARY_WAIT` | 否 | 入库通知最多等媒体服务器多久，默认 `30m`；`0s` 表示整理完立即通知 |
 | `CRYCHIC_PROGRESS_INTERVAL` | 否 | `/tasks` 进度的刷新间隔，默认 `5s` |
 | `CRYCHIC_NOTIFY_QUIET` | 否 | 剧集入库的静默期，默认 `3m`：一段时间内没有新集入库后，把这段时间到的集合并成一条通知；`0s` 表示不合并 |
+| `CRYCHIC_NOTIFY_STALL` | 否 | 下载卡住提醒，默认 `6h`：你请求的剧集或电影对应的下载这么久进度没有变化（手动暂停的不算），就提醒一次（设置了通知频道则发到频道）；每个种子只提醒一次；`0s` 关闭。MoviePilot 只要加了种子就算订阅完成、不再检查进度，所以死种不提醒就会一直等不到入库 |
 
 ```sh
 go build -o crychic ./cmd/crychic && ./crychic

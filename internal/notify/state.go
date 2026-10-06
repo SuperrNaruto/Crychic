@@ -27,21 +27,23 @@ type state struct {
 
 // watch is one subscription and the people waiting for it.
 type watch struct {
-	SubscriptionID int          `json:"subscription_id"`
-	Source         string       `json:"source"`
-	MediaID        string       `json:"media_id"`
-	Title          string       `json:"title"`
-	Year           string       `json:"year,omitempty"`
-	Season         *int         `json:"season,omitempty"`
-	Start          int          `json:"start,omitempty"`     // first wanted episode
-	Total          int          `json:"total,omitempty"`     // last wanted episode, 0 if unknown
-	Delivered      []int        `json:"delivered,omitempty"` // episodes arrived so far
-	Pending        []int        `json:"pending,omitempty"`   // arrived, not yet announced
-	Image          string       `json:"image,omitempty"`     // poster of the latest pending arrival
-	Releases       []release    `json:"releases,omitempty"`  // one file per download among pending arrivals
-	ArrivedAt      *time.Time   `json:"arrived_at,omitempty"`
-	InactiveSince  *time.Time   `json:"inactive_since,omitempty"`
-	Requesters     []flow.Actor `json:"requesters"`
+	SubscriptionID int        `json:"subscription_id"`
+	Source         string     `json:"source"`
+	MediaID        string     `json:"media_id"`
+	Title          string     `json:"title"`
+	Year           string     `json:"year,omitempty"`
+	Season         *int       `json:"season,omitempty"`
+	Start          int        `json:"start,omitempty"`     // first wanted episode
+	Total          int        `json:"total,omitempty"`     // last wanted episode, 0 if unknown
+	Delivered      []int      `json:"delivered,omitempty"` // episodes arrived so far
+	Pending        []int      `json:"pending,omitempty"`   // arrived, not yet announced
+	Image          string     `json:"image,omitempty"`     // poster of the latest pending arrival
+	Releases       []release  `json:"releases,omitempty"`  // one file per download among pending arrivals
+	ArrivedAt      *time.Time `json:"arrived_at,omitempty"`
+	InactiveSince  *time.Time `json:"inactive_since,omitempty"`
+	Stalled        []string   `json:"stalled,omitempty"` // downloads whose stall was told
+
+	Requesters []flow.Actor `json:"requesters"`
 }
 
 // release is a download that pending arrivals came from, by one of its files.

@@ -35,8 +35,11 @@ type Options struct {
 	// LibraryWait is how long a settled notice waits for the media server
 	// to show what arrived; after that it goes out anyway.
 	LibraryWait time.Duration
-	Now         func() time.Time
-	Log         *slog.Logger
+	// Stall is how long a watched download may make no progress before its
+	// requesters are told it is stuck; zero never tells them.
+	Stall time.Duration
+	Now   func() time.Time
+	Log   *slog.Logger
 }
 
 // Notifier remembers requests and announces arrivals to their requesters.
@@ -46,6 +49,9 @@ type Notifier struct {
 	mu           sync.Mutex
 	st           state
 	lastActivity time.Time
+	// marks is when each unfinished download last made progress; only the
+	// polling goroutine uses it, and a restart starts the clocks afresh.
+	marks map[string]mark
 }
 
 // New loads remembered requests from opts.Path.
@@ -54,7 +60,7 @@ func New(opts Options) (*Notifier, error) {
 	if err != nil {
 		return nil, err
 	}
-	return &Notifier{opts: opts, st: st}, nil
+	return &Notifier{opts: opts, st: st, marks: map[string]mark{}}, nil
 }
 
 // Watch implements flow.Watcher.
@@ -136,6 +142,7 @@ func (n *Notifier) poll(ctx context.Context) error {
 		return err
 	}
 	n.send(ctx, n.withLinks(ctx, deliveries))
+	n.checkStalls(ctx)
 	return n.checkActivity(ctx)
 }
 
@@ -247,15 +254,20 @@ func (n *Notifier) checkActivity(ctx context.Context) error {
 func (n *Notifier) send(ctx context.Context, deliveries []delivery) {
 	for _, d := range deliveries {
 		d.qualities = n.qualities(ctx, d.releases)
-		text := arrivalText(d)
-		recipients := d.watch.Requesters
-		if n.opts.Destination != "" {
-			recipients = []flow.Actor{{Address: n.opts.Destination}}
-		}
-		for _, to := range recipients {
-			if err := n.opts.Sender.Notify(ctx, flow.Notice{To: to, Text: text, Image: d.image}); err != nil {
-				n.opts.Log.Error("arrival notice not delivered", "user", to.UserID, "err", err)
-			}
+		n.tell(ctx, d.watch, flow.Notice{Text: arrivalText(d), Image: d.image})
+	}
+}
+
+// tell sends notice to w's requesters, or to the destination instead.
+func (n *Notifier) tell(ctx context.Context, w watch, notice flow.Notice) {
+	recipients := w.Requesters
+	if n.opts.Destination != "" {
+		recipients = []flow.Actor{{Address: n.opts.Destination}}
+	}
+	for _, to := range recipients {
+		notice.To = to
+		if err := n.opts.Sender.Notify(ctx, notice); err != nil {
+			n.opts.Log.Error("notice not delivered", "user", to.UserID, "err", err)
 		}
 	}
 }

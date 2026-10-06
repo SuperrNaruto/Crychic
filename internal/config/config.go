@@ -18,6 +18,7 @@ const (
 	minimumNotifyInterval = 100 * time.Millisecond
 	defaultNotifyQuiet    = 3 * time.Minute
 	defaultLibraryWait    = 30 * time.Minute
+	defaultNotifyStall    = 6 * time.Hour
 	defaultFollowEvery    = 5 * time.Second
 	minimumFollowEvery    = 100 * time.Millisecond
 )
@@ -37,6 +38,10 @@ var notifyInterval = durationVar{"CRYCHIC_NOTIFY_INTERVAL", defaultNotifyInterva
 // covers them all; "0s" announces every poll's arrivals right away.
 var notifyQuiet = durationVar{"CRYCHIC_NOTIFY_QUIET", defaultNotifyQuiet, 0}
 
+// notifyStall is how long a requested download may make no progress before
+// its requesters hear it is stuck; "0s" never tells them.
+var notifyStall = durationVar{"CRYCHIC_NOTIFY_STALL", defaultNotifyStall, 0}
+
 // Config is the full runtime configuration.
 type Config struct {
 	MoviePilotURL      string
@@ -50,6 +55,7 @@ type Config struct {
 	NotifyInterval     time.Duration
 	NotifyQuiet        time.Duration
 	LibraryWait        time.Duration
+	NotifyStall        time.Duration
 	FollowEvery        time.Duration
 }
 
@@ -75,18 +81,18 @@ func Load(getenv func(string) string) (Config, error) {
 		cfg.DataDir = defaultDataDir
 	}
 	var errs []error
-	var err error
-	if cfg.NotifyInterval, err = notifyInterval.parse(getenv); err != nil {
-		errs = append(errs, err)
+	durations := []struct {
+		v  durationVar
+		to *time.Duration
+	}{
+		{notifyInterval, &cfg.NotifyInterval}, {notifyQuiet, &cfg.NotifyQuiet},
+		{libraryWait, &cfg.LibraryWait}, {notifyStall, &cfg.NotifyStall}, {followEvery, &cfg.FollowEvery},
 	}
-	if cfg.NotifyQuiet, err = notifyQuiet.parse(getenv); err != nil {
-		errs = append(errs, err)
-	}
-	if cfg.LibraryWait, err = libraryWait.parse(getenv); err != nil {
-		errs = append(errs, err)
-	}
-	if cfg.FollowEvery, err = followEvery.parse(getenv); err != nil {
-		errs = append(errs, err)
+	for _, d := range durations {
+		var err error
+		if *d.to, err = d.v.parse(getenv); err != nil {
+			errs = append(errs, err)
+		}
 	}
 	errs = append(errs, cfg.validate(), cfg.allowedUsers(getenv("CRYCHIC_TELEGRAM_ALLOWED_USERS")))
 	return cfg, errors.Join(errs...)
