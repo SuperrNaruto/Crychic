@@ -51,9 +51,10 @@ func refererFor(raw string) (string, bool) {
 	return "", false
 }
 
-// posters uploads hotlinked posters and remembers the file_id Telegram
-// gives each one, so a poster is downloaded and uploaded only once while
-// it stays among the most recently used.
+// posters remembers the file_id Telegram gives each poster it shows, so a
+// poster is fetched by Telegram (or, when hotlinked, downloaded and
+// uploaded by the bot) only once while it stays among the most recently
+// used; later messages send it by file_id, which Telegram need not fetch.
 type posters struct {
 	client *http.Client
 	log    *slog.Logger
@@ -86,27 +87,33 @@ type upload struct {
 
 type reuse struct{ id, url, fileID string }
 
-// prepare swaps hotlinked posters for uploads, or for the file_id of an
-// earlier upload; a poster that cannot be downloaded is left out.
+// prepare swaps posters for the file_id of an earlier message, and
+// hotlinked ones without one for uploads; a hotlinked poster that cannot
+// be downloaded is left out. Every poster sent afresh is learnt.
 func (p *posters) prepare(ctx context.Context, reply flow.Reply) outgoing {
 	out := outgoing{reply: reply, learn: map[int]string{}}
 	urls := shownPosters(reply)
 	fetched := p.fetchAll(ctx, p.missing(urls))
 	var kept []string
 	for i, raw := range urls {
-		if _, ok := refererFor(raw); !ok {
+		id := fmt.Sprintf("p%d", i)
+		_, hotlinked := refererFor(raw)
+		if fileID, ok := p.lookup(raw); ok {
+			out.reuses = append(out.reuses, reuse{id: id, url: raw, fileID: fileID})
+			kept = append(kept, "tg://photo?id="+id)
+			continue
+		}
+		if !hotlinked {
+			out.learn[len(kept)] = raw
 			kept = append(kept, raw)
 			continue
 		}
-		id := fmt.Sprintf("p%d", i)
-		if fileID, ok := p.lookup(raw); ok {
-			out.reuses = append(out.reuses, reuse{id: id, url: raw, fileID: fileID})
-		} else if data, ok := fetched[raw]; ok {
-			out.uploads = append(out.uploads, upload{id: id, name: id + "-" + path.Base(raw), data: data})
-			out.learn[len(kept)] = raw
-		} else {
+		data, ok := fetched[raw]
+		if !ok {
 			continue
 		}
+		out.uploads = append(out.uploads, upload{id: id, name: id + "-" + path.Base(raw), data: data})
+		out.learn[len(kept)] = raw
 		kept = append(kept, "tg://photo?id="+id)
 	}
 	out.reply = withPosters(reply, kept)

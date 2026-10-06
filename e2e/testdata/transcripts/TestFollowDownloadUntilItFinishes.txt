@@ -34,8 +34,8 @@
    [停止刷新 | 1:u:0] [返回任务列表 | 1:l:0]
 << answerCallbackQuery
 >> MoviePilot now answers GET /api/v1/download/ with downloads_mygo_later.json
-<< editMessageText chat=1001 message=1
-   <img src="https://image.tmdb.org/t/p/w500/dDknWHLYaQB76QSViNdzXOC5v64.jpg"/>
+<< editMessageText chat=1001 message=1 reuses=url-f1d1c3e9
+   <img src="tg://photo?id=p0"/>
    <h3>⬇️ 《迷途之子!!!!!》第 1 季 E10–E12</h3>
    <table bordered compact>
    <tr><th>进度</th><th>速度</th><th>剩余</th></tr>
@@ -44,8 +44,8 @@
    <footer>正在帮你盯着进度…</footer>
    [停止刷新 | 1:u:0] [返回任务列表 | 1:l:0]
 >> user 1001 taps 1:u:0 on message 1
-<< editMessageText chat=1001 message=1
-   <img src="https://image.tmdb.org/t/p/w500/dDknWHLYaQB76QSViNdzXOC5v64.jpg"/>
+<< editMessageText chat=1001 message=1 reuses=url-f1d1c3e9
+   <img src="tg://photo?id=p0"/>
    <h3>⬇️ 《迷途之子!!!!!》第 1 季 E10–E12</h3>
    <table bordered compact>
    <tr><th>进度</th><th>速度</th><th>剩余</th></tr>
@@ -71,8 +71,8 @@
    [关闭 | 1:c:0]
 << answerCallbackQuery
 >> user 1001 taps 1:k:0 on message 1
-<< editMessageText chat=1001 message=1
-   <img src="https://image.tmdb.org/t/p/w500/dDknWHLYaQB76QSViNdzXOC5v64.jpg"/>
+<< editMessageText chat=1001 message=1 reuses=url-f1d1c3e9
+   <img src="tg://photo?id=p0"/>
    <h3>⬇️ 《迷途之子!!!!!》第 1 季 E10–E12</h3>
    <table bordered compact>
    <tr><th>进度</th><th>速度</th><th>剩余</th></tr>
@@ -82,8 +82,8 @@
    [停止刷新 | 1:u:0] [返回任务列表 | 1:l:0]
 << answerCallbackQuery
 >> MoviePilot now answers GET /api/v1/download/ with downloads_none.json
-<< editMessageText chat=1001 message=1
-   <img src="https://image.tmdb.org/t/p/w500/dDknWHLYaQB76QSViNdzXOC5v64.jpg"/>
+<< editMessageText chat=1001 message=1 reuses=url-f1d1c3e9
+   <img src="tg://photo?id=p0"/>
    <h3>⬇️ 《迷途之子!!!!!》第 1 季 E10–E12</h3>
    <p>下载任务结束啦（下完了或者被移除了）。</p>
    [返回任务列表 | 1:l:0]

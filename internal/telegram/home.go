@@ -55,12 +55,27 @@ func withoutPoster(reply flow.Reply, err error) (flow.Reply, bool) {
 
 // send sends reply as a new rich message.
 func (a *adapter) send(ctx context.Context, chat int64, reply flow.Reply) (*models.Message, error) {
+	return a.deliver(ctx, reply, func(out outgoing) (*models.Message, error) {
+		return sendRich(ctx, a.api, chat, out)
+	})
+}
+
+// deliver shows reply through try with its posters by remembered file_id.
+// If Telegram refuses, it tries once more with the posters sent afresh, as
+// a reused file_id may be what it refused, and then without posters.
+func (a *adapter) deliver(ctx context.Context, reply flow.Reply, try func(outgoing) (*models.Message, error)) (*models.Message, error) {
 	out := a.posters.prepare(ctx, reply)
-	msg, err := sendRich(ctx, a.api, chat, out)
+	msg, err := try(out)
 	a.posters.sent(out, msg, err)
+	if err != nil && len(out.reuses) > 0 && !strings.Contains(err.Error(), notModified) {
+		a.log.Warn("reused poster rejected, sending it afresh", "err", err)
+		out = a.posters.prepare(ctx, reply)
+		msg, err = try(out)
+		a.posters.sent(out, msg, err)
+	}
 	if bare, retry := withoutPoster(reply, err); retry {
 		a.log.Warn("poster rejected, sending without it", "image", reply.Image, "gallery", len(reply.Gallery), "err", err)
-		msg, err = sendRich(ctx, a.api, chat, outgoing{reply: bare})
+		msg, err = try(outgoing{reply: bare})
 	}
 	return msg, err
 }
@@ -91,13 +106,9 @@ func (a *adapter) display(ctx context.Context, t editTarget, reply flow.Reply) (
 	if t.photo {
 		return a.replacePhoto(ctx, t, reply)
 	}
-	out := a.posters.prepare(ctx, reply)
-	msg, err := a.editRich(ctx, t, out)
-	a.posters.sent(out, msg, err)
-	if bare, retry := withoutPoster(reply, err); retry {
-		a.log.Warn("poster rejected, editing without it", "image", reply.Image, "gallery", len(reply.Gallery), "err", err)
-		_, err = a.editRich(ctx, t, outgoing{reply: bare})
-	}
+	_, err := a.deliver(ctx, reply, func(out outgoing) (*models.Message, error) {
+		return a.editRich(ctx, t, out)
+	})
 	return t, err
 }
 

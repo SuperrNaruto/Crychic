@@ -169,6 +169,14 @@ func (f *fakeTelegram) refuseImage(url string) {
 	f.badImage = url
 }
 
+// forgetFiles refuses every file_id handed out so far, as Telegram
+// refuses one it no longer serves.
+func (f *fakeTelegram) forgetFiles() {
+	f.mu.Lock()
+	defer f.mu.Unlock()
+	clear(f.fileIDs)
+}
+
 // stallNext keeps one API request open until its client cancels it.
 func (f *fakeTelegram) stallNext(method string) <-chan struct{} {
 	f.mu.Lock()
@@ -237,6 +245,11 @@ func (f *fakeTelegram) store(r *http.Request, method string) (map[string]any, er
 	f.messages[id] = m
 	for _, p := range m.media {
 		f.fileIDs[p.fileID] = true
+	}
+	for _, src := range imageSrc.FindAllStringSubmatch(m.text, -1) {
+		if !strings.HasPrefix(src[1], "tg://") {
+			f.fileIDs[m.fileOf(src[1])] = true // Telegram keeps what it fetched
+		}
 	}
 	f.mu.Unlock()
 

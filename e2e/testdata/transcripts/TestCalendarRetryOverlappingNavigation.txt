@@ -89,13 +89,13 @@
 -> MoviePilot GET /api/v1/media/search?count=10&title=列女战纪：女娲石记&type=media
 -> Bangumi GET /v0/subjects/390200
 >> user 1001 taps 1:w:1 on message 1
-<< editMessageText chat=1001 message=1
+<< editMessageText chat=1001 message=1 reuses=url-9e933bf5 reuses=url-f53af761 reuses=url-8b4da0bf reuses=url-1e587b41 reuses=url-2b4fc794
    <tg-slideshow>
-   <img src="http://lain.bgm.tv/pic/cover/l/1c/b4/390200_1IA55.jpg"/>
-   <img src="http://lain.bgm.tv/pic/cover/l/52/fe/418229_gcFij.jpg"/>
-   <img src="http://lain.bgm.tv/pic/cover/l/dc/f7/511936_XDkXO.jpg"/>
-   <img src="http://lain.bgm.tv/pic/cover/l/1b/1e/614640_ESMLl.jpg"/>
-   <img src="http://lain.bgm.tv/pic/cover/l/73/99/624923_4u99L.jpg"/>
+   <img src="tg://photo?id=p0"/>
+   <img src="tg://photo?id=p1"/>
+   <img src="tg://photo?id=p2"/>
+   <img src="tg://photo?id=p3"/>
+   <img src="tg://photo?id=p4"/>
    </tg-slideshow>
    <h3>🎌 新番放送 · 星期一（今天）</h3>
    <h4>2026-10-05 首播</h4>
@@ -154,13 +154,13 @@
 << answerCallbackQuery
 -> MoviePilot GET /api/v1/media/search?count=10&title=列女战纪：女娲石记&type=media
 -> Bangumi GET /v0/subjects/390200
-<< editMessageText chat=1001 message=1
+<< editMessageText chat=1001 message=1 reuses=url-9e933bf5 reuses=url-f53af761 reuses=url-8b4da0bf reuses=url-1e587b41 reuses=url-2b4fc794
    <tg-slideshow>
-   <img src="http://lain.bgm.tv/pic/cover/l/1c/b4/390200_1IA55.jpg"/>
-   <img src="http://lain.bgm.tv/pic/cover/l/52/fe/418229_gcFij.jpg"/>
-   <img src="http://lain.bgm.tv/pic/cover/l/dc/f7/511936_XDkXO.jpg"/>
-   <img src="http://lain.bgm.tv/pic/cover/l/1b/1e/614640_ESMLl.jpg"/>
-   <img src="http://lain.bgm.tv/pic/cover/l/73/99/624923_4u99L.jpg"/>
+   <img src="tg://photo?id=p0"/>
+   <img src="tg://photo?id=p1"/>
+   <img src="tg://photo?id=p2"/>
+   <img src="tg://photo?id=p3"/>
+   <img src="tg://photo?id=p4"/>
    </tg-slideshow>
    <h3>🎌 新番放送 · 星期一（今天）</h3>
    <h4>2026-10-05 首播</h4>

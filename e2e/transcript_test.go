@@ -71,8 +71,9 @@ func (tr *transcript) settle() {
 const (
 	// mediaRoute is where MoviePilot media searches and details are read.
 	mediaRoute = "/api/v1/media/"
-	// lookups is the route of the reads a calendar page makes at once:
-	// MoviePilot media searches and details, and Bangumi subjects.
+	// lookups is the route of the reads the bot makes at once (a calendar
+	// page, a show's card and seasons): MoviePilot media searches, details
+	// and seasons, and Bangumi subjects.
 	lookups = "lookups"
 )
 
@@ -90,7 +91,7 @@ func readRoute(line string) string {
 		return ""
 	}
 	route := strings.TrimRight(path, "0123456789")
-	if route == mediaRoute || path == mediaRoute+"search" || route == subjectsPath {
+	if route == mediaRoute || path == mediaRoute+"search" || path == mediaRoute+"seasons" || route == subjectsPath {
 		return lookups
 	}
 	return service + " " + route

@@ -6,6 +6,7 @@ import (
 	"log/slog"
 	"strconv"
 	"strings"
+	"sync"
 	"time"
 )
 
@@ -138,18 +139,31 @@ func (e *Engine) pickMedia(ctx context.Context, sess session, index int) Reply {
 	}
 	media := sess.results[index]
 	sess.target, sess.seasons, sess.chosen, sess.retry = nil, nil, nil, recovery{}
-	e.enrich(ctx, &sess, media)
-	if media.Kind == Movie && sess.library.Movie {
-		return e.held(sess, Target{Media: media})
-	}
 	if media.Kind == Movie {
+		e.enrich(ctx, &sess, media)
+		if sess.library.Movie {
+			return e.held(sess, Target{Media: media})
+		}
 		return e.offerConfirm(ctx, sess, Target{Media: media})
 	}
-	return e.offerSeasons(ctx, sess)
+	// A show's seasons are read alongside the card's metadata: both wait
+	// on TMDB through MoviePilot, so the pick costs one round trip.
+	var seasons []Season
+	var err error
+	var wg sync.WaitGroup
+	wg.Go(func() { seasons, err = e.backend.Seasons(ctx, media) })
+	e.enrich(ctx, &sess, media)
+	wg.Wait()
+	return e.showSeasons(ctx, sess, seasons, err)
 }
 
 func (e *Engine) offerSeasons(ctx context.Context, sess session) Reply {
 	seasons, err := e.backend.Seasons(ctx, sess.picked.Media)
+	return e.showSeasons(ctx, sess, seasons, err)
+}
+
+// showSeasons offers the seasons just read, or the read's failure.
+func (e *Engine) showSeasons(ctx context.Context, sess session, seasons []Season, err error) Reply {
 	if err != nil {
 		return e.readFailure(sess, recovery{step: readSeasons}, err)
 	}

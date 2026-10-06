@@ -72,8 +72,8 @@
 -> MoviePilot GET /api/v1/media/search?count=10&title=挖掘者&type=media
 -> MoviePilot GET /api/v1/media/1248832?media_source=themoviedb&type_name=电影
 -> MoviePilot GET /api/v1/subscribe/media/1248832?media_source=themoviedb&mtype=电影&title=挖掘者&year=2026
-<< editMessageText chat=1001 message=1
-   <img src="https://image.tmdb.org/t/p/w500/c8UJ50GM0jiVIk6YO9hEiqEe0dP.jpg"/>
+<< editMessageText chat=1001 message=1 reuses=url-9dcf3aee
+   <img src="tg://photo?id=p0"/>
    <h3>🎬 <a href="https://www.themoviedb.org/movie/1248832">挖掘者</a></h3>
    <footer><i>Digger</i> · 2026 · 电影 · ⭐ 7.5 · 喜剧 / 剧情 · 129 分钟 · 主演：汤姆·克鲁斯、里兹·阿迈德、约翰·古德曼</footer>
    <blockquote expandable>世界上最有权势的男子极力证明自己其实是人类的救世主，结果等来了他酝酿的灾难要摧毁万物。</blockquote>
@@ -83,16 +83,16 @@
    [相似推荐 | 1:r:0] [同系列 | 1:n:0]
 << answerCallbackQuery
 >> user 1001 taps 1:bk:0 on message 1
-<< editMessageText chat=1001 message=1
+<< editMessageText chat=1001 message=1 reuses=url-9dcf3aee reuses=url-dcad966d reuses=url-06abdbfb reuses=url-2b85c6da reuses=url-6699a89a reuses=url-6565e988 reuses=url-d511ae90 reuses=url-ae96557e
    <tg-slideshow>
-   <img src="https://image.tmdb.org/t/p/w500/c8UJ50GM0jiVIk6YO9hEiqEe0dP.jpg"/>
-   <img src="https://image.tmdb.org/t/p/w500/5ZmOP60VIEfM2cnt7CpAK1j9mEv.jpg"/>
-   <img src="https://image.tmdb.org/t/p/w500/uLI9v21yjlFcrL0qdBPHpNk1Gmu.jpg"/>
-   <img src="https://image.tmdb.org/t/p/w500/bou3s9jCvcZ1iGPiYilD7C0LdLo.jpg"/>
-   <img src="https://image.tmdb.org/t/p/w500/fD6hgmReIOGiFv3l22eVSQLxqFX.jpg"/>
-   <img src="https://image.tmdb.org/t/p/w500/qMvRqzzDVfQpLi5ZoKwttTQdaJe.jpg"/>
-   <img src="https://image.tmdb.org/t/p/w500/slYjlpkFnaCSZJICqj2G158Eoqg.jpg"/>
-   <img src="https://image.tmdb.org/t/p/w500/xONOMna5Z102bw0jMPBM4H73B9m.jpg"/>
+   <img src="tg://photo?id=p0"/>
+   <img src="tg://photo?id=p1"/>
+   <img src="tg://photo?id=p2"/>
+   <img src="tg://photo?id=p3"/>
+   <img src="tg://photo?id=p4"/>
+   <img src="tg://photo?id=p5"/>
+   <img src="tg://photo?id=p6"/>
+   <img src="tg://photo?id=p7"/>
    </tg-slideshow>
    <h3>🔥 TMDB 流行趋势</h3>
    <ol start="1">

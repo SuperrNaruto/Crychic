@@ -24,6 +24,10 @@ const (
 	backendTimeout  = 30 * time.Second
 	telegramTimeout = 70 * time.Second // longer than Telegram's one-minute long poll
 	imageTimeout    = 10 * time.Second
+	// idleConnsPerHost keeps a page's parallel reads (a calendar page looks
+	// up every pick at once) on open connections for the next page; Go's
+	// default keeps 2.
+	idleConnsPerHost = 16
 	// stateFile holds requests awaiting arrival, inside the data dir.
 	stateFile = "requests.json"
 )
@@ -40,17 +44,19 @@ type Deps struct {
 // Run serves the Telegram bot and arrival notices until ctx is cancelled.
 func Run(ctx context.Context, cfg config.Config, deps Deps) error {
 	log, now := deps.Log, deps.Now
+	transport := http.DefaultTransport.(*http.Transport).Clone()
+	transport.MaxIdleConnsPerHost = idleConnsPerHost
 	images := deps.Images
 	if images == nil {
-		images = &http.Client{Timeout: imageTimeout}
+		images = &http.Client{Timeout: imageTimeout, Transport: transport}
 	}
-	backend := moviepilot.New(cfg.MoviePilotURL, cfg.MoviePilotAPIKey, &http.Client{Timeout: backendTimeout})
+	backend := moviepilot.New(cfg.MoviePilotURL, cfg.MoviePilotAPIKey, &http.Client{Timeout: backendTimeout, Transport: transport})
 	tg, err := telegram.New(telegram.Config{
 		Token:        cfg.TelegramToken,
 		APIURL:       cfg.TelegramAPIURL,
 		AllowedUsers: cfg.TelegramAllowed,
 		FollowEvery:  cfg.FollowEvery,
-		HTTPClient:   &http.Client{Timeout: telegramTimeout},
+		HTTPClient:   &http.Client{Timeout: telegramTimeout, Transport: transport},
 		ImageClient:  images,
 		Log:          log,
 	})
@@ -70,7 +76,7 @@ func Run(ctx context.Context, cfg config.Config, deps Deps) error {
 	if err != nil {
 		return err
 	}
-	calendar := bangumi.New(cfg.BangumiAPIURL, &http.Client{Timeout: backendTimeout})
+	calendar := bangumi.New(cfg.BangumiAPIURL, &http.Client{Timeout: backendTimeout, Transport: transport})
 	engine := flow.New(flow.Options{Backend: backend, Calendar: calendar, Watcher: notifier, Log: log, Now: now})
 	var wg sync.WaitGroup
 	wg.Go(func() { notifier.Run(ctx) })

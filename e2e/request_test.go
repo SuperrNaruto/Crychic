@@ -105,6 +105,22 @@ func TestUnreachablePosterKeepsTheCard(t *testing.T) {
 	h.tr.verify(t)
 }
 
+// A poster shown before goes by its file_id; when Telegram refuses that,
+// the card is sent with the poster's URL again instead of without it.
+func TestRefusedPosterFileIsSentAfresh(t *testing.T) {
+	h := start(t, scenario{routes: map[string]route{
+		searchPath:  ok("search_dune.json"),
+		duneDetails: ok("detail_dune.json"),
+		duneLookup:  ok("subscription_none.json"),
+	}})
+	h.say(alice, alice, "/search 沙丘")
+	h.tg.forgetFiles()
+	h.tap(alice, 1, duneMovie)
+	h.shows(1, `<img src="`+dunePoster+`"/>`)
+	h.shows(1, "要订阅《沙丘》")
+	h.tr.verify(t)
+}
+
 func TestSubscribeOneSeasonOfShow(t *testing.T) {
 	h := start(t, scenario{routes: map[string]route{
 		searchPath:    ok("search_breaking_bad.json"),

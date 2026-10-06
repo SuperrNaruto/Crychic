@@ -71,6 +71,14 @@ func (m message) fileOf(src string) string {
 	return fmt.Sprintf("url-%x", sha256.Sum256([]byte(src)))[:fileIDLength]
 }
 
+// seen is the message as its reader sees it: each image as the file
+// Telegram shows, whether sent by URL, upload or file_id.
+func (m message) seen() string {
+	return imageSrc.ReplaceAllStringFunc(m.text, func(img string) string {
+		return `<img src="` + m.fileOf(imageSrc.FindStringSubmatch(img)[1]) + `"/>`
+	})
+}
+
 // wire preserves Telegram's distinction between rich messages and photos,
 // including the photo metadata attached to callback queries.
 func (m message) wire(id int) map[string]any {

@@ -23,7 +23,7 @@ func TestSearchPagesKeepLastResultAndBack(t *testing.T) {
 	h.tap(alice, 1, "10")
 	h.tap(alice, 1, "返回")
 	h.shows(1, "第 2/2 页")
-	if mustMessage(h, 1).text != last.text {
+	if mustMessage(h, 1).seen() != last.seen() {
 		t.Fatal("return did not restore the search page")
 	}
 	h.tap(alice, 1, "‹ 上一页")
