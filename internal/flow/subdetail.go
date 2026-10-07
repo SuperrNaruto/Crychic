@@ -23,9 +23,11 @@ type subscriptionDetail struct {
 	library      Library
 	downloads    []Download
 	transfers    []TransferJob
+	upkeep       SubscriptionUpkeep
 	libraryErr   error
 	downloadsErr error
 	transfersErr error
+	upkeepErr    error
 }
 
 func (e *Engine) chooseSubDetail(ctx context.Context, sess session, p press) (Reply, bool) {
@@ -73,20 +75,21 @@ func subDetailGone(sess session) Reply {
 
 func (e *Engine) readSubDetail(ctx context.Context, sub Subscription) subscriptionDetail {
 	d := subscriptionDetail{sub: sub}
+	ctx, cancel := context.WithTimeout(ctx, cosmeticTimeout)
+	defer cancel()
+	var wg sync.WaitGroup
+	wg.Go(func() { d.upkeep, d.upkeepErr = e.backend.SubscriptionUpkeep(ctx) })
 	if sub.Source == "" || sub.MediaID == "" || (sub.Kind == TV && sub.Season == nil) {
 		err := errors.New("subscription has no usable media identity or season")
 		d.libraryErr, d.downloadsErr, d.transfersErr = err, err, err
-		return d
+	} else {
+		media := Media{Source: sub.Source, ID: sub.MediaID, Title: sub.Title, Year: sub.Year, Kind: sub.Kind}
+		wg.Go(func() { d.library, d.libraryErr = e.backend.Library(ctx, media) })
+		wg.Go(func() { d.downloads, d.downloadsErr = e.backend.Downloads(ctx) })
+		wg.Go(func() { d.transfers, d.transfersErr = e.backend.Transfers(ctx) })
 	}
-	ctx, cancel := context.WithTimeout(ctx, cosmeticTimeout)
-	defer cancel()
-	media := Media{Source: sub.Source, ID: sub.MediaID, Title: sub.Title, Year: sub.Year, Kind: sub.Kind}
-	var wg sync.WaitGroup
-	wg.Go(func() { d.library, d.libraryErr = e.backend.Library(ctx, media) })
-	wg.Go(func() { d.downloads, d.downloadsErr = e.backend.Downloads(ctx) })
-	wg.Go(func() { d.transfers, d.transfersErr = e.backend.Transfers(ctx) })
 	wg.Wait()
-	for _, err := range []error{d.libraryErr, d.downloadsErr, d.transfersErr} {
+	for _, err := range []error{d.libraryErr, d.downloadsErr, d.transfersErr, d.upkeepErr} {
 		if err != nil {
 			e.log.Warn("subscription progress unavailable", "subscription", sub.ID, "err", err)
 		}

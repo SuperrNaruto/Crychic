@@ -32,6 +32,8 @@ const (
 	clientsPath      = "GET /api/v1/mediaserver/clients"
 	latestPath       = "GET /api/v1/mediaserver/latest"
 	recognizePath    = "GET /api/v1/media/recognize"
+	ruleGroupsPath   = "GET /api/v1/system/setting/SubscribeFilterRuleGroups"
+	schedulePath     = "GET /api/v1/dashboard/schedule"
 
 	downloadPath       = "POST /api/v1/download/"
 	downloadTaskPrefix = "/api/v1/download/"
@@ -45,12 +47,15 @@ const (
 )
 
 // idleServer answers the downloader checks the way MoviePilot does with
-// nothing downloading, and names its one media server; scenarios override
-// them. The library itself is served from the transfers (fake_library_test).
+// nothing downloading, names its one media server, and keeps subscriptions
+// going as the owner's instance does (global rule groups, subscription
+// refresh on, scheduled search off); scenarios override them. The library itself is served from the transfers (fake_library_test).
 var idleServer = map[string]route{
-	downloadsPath: ok("downloads_none.json"),
-	queuePath:     ok("queue_none.json"),
-	clientsPath:   ok("mediaserver_clients.json"),
+	downloadsPath:  ok("downloads_none.json"),
+	queuePath:      ok("queue_none.json"),
+	clientsPath:    ok("mediaserver_clients.json"),
+	ruleGroupsPath: ok("subscribe_filter_groups.json"),
+	schedulePath:   ok("schedule.json"),
 }
 
 // polledPaths are read over and over, by live task views and by the

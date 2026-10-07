@@ -179,6 +179,21 @@ type SubscriptionExecution struct {
 	HasError bool
 }
 
+// SubscriptionUpkeep is how the backend keeps every subscription going:
+// the rule groups that apply when a subscription sets none, and its
+// background jobs looking for new releases (nil when a job is off).
+type SubscriptionUpkeep struct {
+	FilterGroups []string
+	Refresh      *Job // browses the sites' newest releases for every subscription
+	Search       *Job // searches the sites for every subscription
+}
+
+// Job is one of the backend's background jobs.
+type Job struct {
+	Running bool
+	Next    string // until the next run, as the backend words it, e.g. 19分钟
+}
+
 // PastSubscription is a finished or cancelled subscription in the backend's
 // history. Record is the backend's own copy of it, handed back unchanged to
 // Resubscribe so the new subscription keeps the old one's settings.
@@ -231,6 +246,8 @@ type Backend interface {
 	// release order; empty when it belongs to none.
 	Series(ctx context.Context, media Media) ([]Media, error)
 	Subscriptions(ctx context.Context) ([]Subscription, error)
+	// SubscriptionUpkeep tells what applies to every subscription.
+	SubscriptionUpkeep(ctx context.Context) (SubscriptionUpkeep, error)
 	// SubscriptionHistory lists at most count past subscriptions of kind,
 	// newest first.
 	SubscriptionHistory(ctx context.Context, kind Kind, count int) ([]PastSubscription, error)

@@ -17,6 +17,8 @@
 << answerCallbackQuery notice="暂时查不到订阅详情，稍后再点一次试试吧～"
 >> user 1001 taps 1:sd:0 on message 1
 -> MoviePilot GET /api/v1/subscribe/
+-> MoviePilot GET /api/v1/system/setting/SubscribeFilterRuleGroups
+-> MoviePilot GET /api/v1/dashboard/schedule
 << editMessageText chat=1001 message=1
    <img src="https://image.tmdb.org/t/p/w500/rqliuvX7NdknSHu5qaSDfESplQi.jpg"/>
    <h3>📚 订阅详情 · 《绝命毒师》第 2 季</h3>
@@ -30,6 +32,9 @@
    <b>执行状态 </b>等待站点额度<br>
    <b>下次安排 </b>2026-10-05 13:30（北京时间）<br>
    MoviePilot 返回了执行提示，具体原因请到后台查看哦～</p>
+   <h4>自动查找</h4>
+   <p><b>订阅刷新 </b>约 19分钟后（浏览站点最新种子）<br>
+   <b>定时搜索 </b>未开启</p>
    <h4>入库与任务</h4>
    <table bordered compact>
    <tr><th>集数</th><th>媒体库</th><th>下载与整理</th></tr>
@@ -44,6 +49,8 @@
 << answerCallbackQuery
 >> user 1001 taps 1:su:0 on message 1
 -> MoviePilot GET /api/v1/subscribe/
+-> MoviePilot GET /api/v1/system/setting/SubscribeFilterRuleGroups
+-> MoviePilot GET /api/v1/dashboard/schedule
 << editMessageText chat=1001 message=1 reuses=url-1bc43c78
    <img src="tg://photo?id=p0"/>
    <h3>📚 订阅详情 · 《绝命毒师》第 2 季</h3>
@@ -57,6 +64,9 @@
    <b>执行状态 </b>等待站点额度<br>
    <b>下次安排 </b>2026-10-05 13:30（北京时间）<br>
    MoviePilot 返回了执行提示，具体原因请到后台查看哦～</p>
+   <h4>自动查找</h4>
+   <p><b>订阅刷新 </b>约 19分钟后（浏览站点最新种子）<br>
+   <b>定时搜索 </b>未开启</p>
    <h4>入库与任务</h4>
    <table bordered compact>
    <tr><th>集数</th><th>媒体库</th><th>下载与整理</th></tr>
@@ -90,17 +100,22 @@
 << answerCallbackQuery
 >> user 1001 taps 1:sd:1 on message 1
 -> MoviePilot GET /api/v1/subscribe/
+-> MoviePilot GET /api/v1/system/setting/SubscribeFilterRuleGroups
+-> MoviePilot GET /api/v1/dashboard/schedule
 << editMessageText chat=1001 message=1
    <img src="https://image.tmdb.org/t/p/w500/xixekXvcCSZS1jXhFrYUzpCrLL6.jpg"/>
    <h3>📚 订阅详情 · 《颂乐人偶》第 1 季</h3>
    <footer>2025 · 电视剧 · 待定</footer>
    <h4>订阅设置</h4>
    <p>普通订阅 · 从第 1 集开始 · 总集数暂未确定<br>
-   <b>规格 </b>未单独设置<br>
-   <b>规则组 </b>未单独设置</p>
+   <b>规格 </b>不限（未单独设置）<br>
+   <b>规则组 </b>沿用全局 14 组：前置过滤 · 动画电影 · 华语电影 · 欧美电影 · 日番 · 国漫 · 纪录片 · 综艺 · 国产剧 · 港台剧 · 欧美剧 · 日韩剧 · 其他 · 未分类</p>
    <h4>最近一次搜索</h4>
-   <p><b>最近搜索 </b>未知<br>
+   <p><b>最近搜索 </b>还没有记录<br>
    <b>执行状态 </b>暂无执行记录</p>
+   <h4>自动查找</h4>
+   <p><b>订阅刷新 </b>约 19分钟后（浏览站点最新种子）<br>
+   <b>定时搜索 </b>未开启</p>
    <h4>入库与任务</h4>
    <p>还没有可展示的单集信息哦～</p>
    <footer>仅查询，不会触发搜索或下载；点击刷新查看最新状态哦～</footer>

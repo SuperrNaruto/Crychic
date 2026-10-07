@@ -35,7 +35,7 @@ func (d subscriptionDetail) view() listView {
 		image:   s.Poster, pageItems: subDetailPageItems, note: d.progressNote(omitted, ambiguous),
 	}
 	if len(rows) == 0 {
-		text := append(subDetailText(s), Group("入库与任务"), Line(Plain("还没有可展示的单集信息哦～")))
+		text := append(d.settingsText(), Group("入库与任务"), Line(Plain("还没有可展示的单集信息哦～")))
 		view.entries = []listEntry{{text: text}}
 		return view
 	}
@@ -45,30 +45,64 @@ func (d subscriptionDetail) view() listView {
 	}
 	for start := 0; start < len(rows); start += subDetailPageRows {
 		end := min(start+subDetailPageRows, len(rows))
-		text := append(subDetailText(s), Group("入库与任务"), Table(head, rows[start:end]...))
+		text := append(d.settingsText(), Group("入库与任务"), Table(head, rows[start:end]...))
 		view.entries = append(view.entries, listEntry{text: text})
 	}
 	return view
 }
 
-func subDetailText(s Subscription) Text {
+// settingsText is the subscription's settings, what applies where it sets
+// none, its last search and how MoviePilot goes on looking for releases.
+func (d subscriptionDetail) settingsText() Text {
+	s := d.sub
 	text := Lines(
 		Small(Plain(joinNonEmpty(" · ", s.Year, s.Kind.String(), cmp.Or(stateText[s.State], "状态未知")))),
 		Group("订阅设置"),
 		Line(Plain(subScope(s))),
-		Line(Strong("规格 "), Plain(cmp.Or(subSetting(joinNonEmpty(" · ", s.Resolution, s.Quality, s.Effect)), "未单独设置"))),
-		Line(Strong("规则组 "), Plain(cmp.Or(subSetting(strings.Join(s.FilterGroups, " · ")), "未单独设置"))),
+		Line(Strong("规格 "), Plain(cmp.Or(subSetting(joinNonEmpty(" · ", s.Resolution, s.Quality, s.Effect)), "不限（未单独设置）"))),
+		Line(Strong("规则组 "), Plain(cmp.Or(subSetting(strings.Join(s.FilterGroups, " · ")), d.globalGroups()))),
 		Group("最近一次搜索"),
 		Line(Strong("最近搜索 "), Plain(subTime(s.LastSearch))),
 		Line(Strong("执行状态 "), Plain(subExecutionState(s.Execution))),
 	)
-	if s.Execution != nil {
+	if s.Execution != nil && !s.Execution.NextRun.IsZero() {
 		text = append(text, Line(Strong("下次安排 "), Plain(subTime(s.Execution.NextRun))))
-		if s.Execution.HasError {
-			text = append(text, Line(Plain("MoviePilot 返回了执行提示，具体原因请到后台查看哦～")))
-		}
 	}
-	return text
+	if s.Execution != nil && s.Execution.HasError {
+		text = append(text, Line(Plain("MoviePilot 返回了执行提示，具体原因请到后台查看哦～")))
+	}
+	return append(text,
+		Group("自动查找"),
+		Line(Strong("订阅刷新 "), Plain(d.jobText(d.upkeep.Refresh, "浏览站点最新种子"))),
+		Line(Strong("定时搜索 "), Plain(d.jobText(d.upkeep.Search, "逐个搜索所有订阅"))),
+	)
+}
+
+// globalGroups words the rule groups a subscription without its own uses.
+func (d subscriptionDetail) globalGroups() string {
+	switch {
+	case d.upkeepErr != nil:
+		return "沿用全局规则组（暂时读不到）"
+	case len(d.upkeep.FilterGroups) == 0:
+		return "不限（全局也未设置）"
+	}
+	groups := subSetting(strings.Join(d.upkeep.FilterGroups, " · "))
+	return fmt.Sprintf("沿用全局 %d 组：%s", len(d.upkeep.FilterGroups), groups)
+}
+
+// jobText is when a background job runs next, e.g. 约 19分钟后（浏览站点最新种子）.
+func (d subscriptionDetail) jobText(job *Job, does string) string {
+	switch {
+	case d.upkeepErr != nil:
+		return "暂时读不到"
+	case job == nil:
+		return "未开启"
+	case job.Running:
+		return fmt.Sprintf("正在进行（%s）", does)
+	case job.Next == "":
+		return fmt.Sprintf("已开启（%s）", does)
+	}
+	return fmt.Sprintf("约 %s后（%s）", job.Next, does)
 }
 
 func subScope(s Subscription) string {
@@ -95,7 +129,7 @@ func subExecutionState(execution *SubscriptionExecution) string {
 
 func subTime(t time.Time) string {
 	if t.IsZero() {
-		return "未知"
+		return "还没有记录"
 	}
 	return t.In(calendarZone).Format(subTimeLayout) + "（北京时间）"
 }
