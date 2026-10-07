@@ -413,6 +413,39 @@ func TestCancelOwnSubscription(t *testing.T) {
 	h.tr.verify(t)
 }
 
+// A subscription the user asked for can be paused and resumed from its
+// details, which then show its state read afresh; MoviePilot's refusal is
+// relayed and keeps the details. Nobody else gets the button.
+func TestPauseOwnSubscription(t *testing.T) {
+	h := start(t, scenario{routes: map[string]route{
+		searchPath:    ok("search_breaking_bad.json"),
+		breakDetails:  ok("detail_breaking_bad.json"),
+		seasonsPath:   ok("seasons_breaking_bad.json"),
+		breakingQuery: ok("subscription_none.json"),
+		subscribePath: ok("subscribe_created.json"),
+		subsPath:      ok("subscriptions.json"),
+	}})
+	h.say(alice, alice, "/search 绝命毒师")
+	h.tap(alice, 1, "1")
+	h.tap(alice, 1, "第 2 季")
+	h.tap(alice, 1, "从第 1 集开始")
+	h.say(alice, alice, "/subscribe")
+	h.tap(alice, 2, "1")
+	h.tap(alice, 2, "暂停订阅")
+	h.shows(2, "已暂停")
+	h.tap(alice, 2, "恢复订阅")
+	h.shows(2, "订阅中")
+	h.mp.setRoute("PUT /api/v1/subscribe/status/1", ok("subscribe_gone.json"))
+	h.tap(alice, 2, "暂停订阅")
+	h.shows(2, "订阅中")
+	h.say(bob, bob, "/subscribe")
+	h.tap(bob, 3, "1")
+	if _, found := findButton(mustMessage(h, 3).rows, "暂停订阅"); found {
+		t.Fatal("bob asked for nothing, so there must be nothing for him to pause")
+	}
+	h.tr.verify(t)
+}
+
 // A confirmation on a pre-restart card cannot consume a new conversation,
 // even when its owner is also the new conversation's owner.
 func TestOldConfirmationCannotSubscribeAfterRestart(t *testing.T) {

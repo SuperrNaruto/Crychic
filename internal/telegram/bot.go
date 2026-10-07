@@ -42,7 +42,7 @@ var help = flow.Lines(
 	flow.Line(flow.Mono("/start"), flow.Plain(" 回到首页，所有功能都在这儿～")),
 	flow.Line(flow.Mono("/search <片名>"), flow.Plain(" 帮你搜电影和剧集，顺手在 MoviePilot 里订上；也能点「搜索资源」挑种子直接下载，一次可以多选哦～")),
 	flow.Line(flow.Mono("/trending"), flow.Plain(" 逛逛热门榜单和新番，看中了一键订阅～")),
-	flow.Line(flow.Mono("/subscribe"), flow.Plain(" 按电视剧、电影看订阅，还能取消你请求的、从订阅历史重新订阅～")),
+	flow.Line(flow.Mono("/subscribe"), flow.Plain(" 按电视剧、电影看订阅，还能暂停或取消你请求的、从订阅历史重新订阅～")),
 	flow.Line(flow.Mono("/newly_added"), flow.Plain(" 媒体库新到的片子，点片名直接去看～")),
 	flow.Line(flow.Mono("/tasks"), flow.Plain(" 看看下载和整理的进度，选一个我帮你实时盯着，不要的下载也能删掉～")),
 )
@@ -52,7 +52,7 @@ var commands = []models.BotCommand{
 	{Command: cmdStart, Description: "首页：所有功能入口"},
 	{Command: cmdSearch, Description: "搜索电影或剧集，订阅或下载"},
 	{Command: cmdTrending, Description: "发现热门和新番"},
-	{Command: cmdSubscribe, Description: "查看和取消订阅"},
+	{Command: cmdSubscribe, Description: "查看、暂停和取消订阅"},
 	{Command: cmdNewlyAdded, Description: "最新入库"},
 	{Command: cmdTasks, Description: "查看进度，删除下载任务"},
 	{Command: cmdHelp, Description: "使用说明"},

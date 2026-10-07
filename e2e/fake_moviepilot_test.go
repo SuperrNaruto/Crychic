@@ -116,6 +116,7 @@ type fakeMoviePilot struct {
 	searches   map[string]string
 	recognized map[string]string
 	deleted    map[string]bool // downloads removed from the downloader, by hash
+	states     map[int]string  // subscription states set, by id
 }
 
 // reader waits for the notifier to finish a poll that read the transfer
@@ -129,7 +130,7 @@ type reader struct {
 func newFakeMoviePilot(t *testing.T, tr *transcript, routes map[string]route) *fakeMoviePilot {
 	all := maps.Clone(idleServer)
 	maps.Copy(all, routes)
-	f := &fakeMoviePilot{t: t, tr: tr, routes: all, polled: make(chan struct{}), deleted: map[string]bool{}}
+	f := &fakeMoviePilot{t: t, tr: tr, routes: all, polled: make(chan struct{}), deleted: map[string]bool{}, states: map[int]string{}}
 	f.Server = httptest.NewServer(http.HandlerFunc(f.serve))
 	return f
 }
@@ -188,6 +189,7 @@ func (f *fakeMoviePilot) serve(w http.ResponseWriter, r *http.Request) {
 		f.serveSubscription(w, r)
 	case f.servesLibrary(w, r):
 	case f.deletesDownload(w, r):
+	case f.setsSubscriptionState(w, r):
 	default:
 		f.serveRoute(w, r)
 	}
@@ -316,6 +318,9 @@ func (f *fakeMoviePilot) serveRoute(w http.ResponseWriter, r *http.Request) {
 	}
 	if key == downloadsPath {
 		body = f.undeleted(body)
+	}
+	if key == subsPath && rt.status == http.StatusOK {
+		body = f.restated(body)
 	}
 	if key == downloadPath && rt.status == http.StatusOK {
 		body = f.hashed(body)

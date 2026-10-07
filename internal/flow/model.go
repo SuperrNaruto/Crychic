@@ -256,6 +256,8 @@ type Backend interface {
 	Resubscribe(ctx context.Context, past PastSubscription) (int, error)
 	// Latest lists the newest additions to the media servers.
 	Latest(ctx context.Context) ([]LibraryItem, error)
+	// SetSubscriptionPaused pauses a subscription, or resumes searching for it.
+	SetSubscriptionPaused(ctx context.Context, id int, paused bool) error
 	// Unsubscribe deletes a subscription; deleting one already gone is fine.
 	Unsubscribe(ctx context.Context, id int) error
 	// FindSubscription returns the id of an existing subscription, 0 if none.

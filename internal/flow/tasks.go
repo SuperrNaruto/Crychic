@@ -215,7 +215,7 @@ func tasksBack(id uint64) Button {
 func expired(action string) Reply {
 	switch action {
 	case actionSubs, actionSubsKind, actionCancelPick, actionHistory, actionHistoryKind,
-		actionHistoryPick, actionResubscribe, actionSubDetail, actionRefreshSubDetail:
+		actionHistoryPick, actionResubscribe, actionSubDetail, actionRefreshSubDetail, actionPauseSub, actionResumeSub:
 		return expiredText("⌛ 这个订阅列表过期啦，重新 /subscribe 一下吧～")
 	case actionTask, actionFollow, actionUnfollow, actionList, actionAskDelete, actionDelete:
 		return expiredText(msgTasksExpired)

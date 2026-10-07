@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"net/http"
+	"net/url"
 	"strconv"
 	"time"
 
@@ -80,6 +81,18 @@ func subscriptionTime(raw string) time.Time {
 		}
 	}
 	return time.Time{}
+}
+
+// SetSubscriptionPaused sets a subscription's state to S (paused) or R
+// (subscribed); MoviePilot answers success false for one that is gone.
+func (c *Client) SetSubscriptionPaused(ctx context.Context, id int, paused bool) error {
+	state := "R"
+	if paused {
+		state = "S"
+	}
+	q := url.Values{"state": {state}}
+	var result struct{}
+	return c.do(ctx, call{method: http.MethodPut, path: "/api/v1/subscribe/status/" + strconv.Itoa(id), query: q}, &result)
 }
 
 // Unsubscribe deletes a subscription; one already gone counts as deleted.

@@ -58,7 +58,8 @@ func (e *Engine) subDetail(ctx context.Context, sess session, index int) Reply {
 	}
 	detail := e.readSubDetail(ctx, subs[i])
 	view := detail.view()
-	view.menu = [][]Button{{{Label: "刷新", Data: data(sess.id, actionRefreshSubDetail, index)}}}
+	refresh := Button{Label: "刷新", Data: data(sess.id, actionRefreshSubDetail, index)}
+	view.menu = [][]Button{append([]Button{refresh}, pauseButton(sess, subs[i], index)...)}
 	view.footer = browseRow(sess.id)
 	return e.listPages(sess, view)
 }
