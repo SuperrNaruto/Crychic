@@ -22,7 +22,8 @@ type session struct {
 	seasons  []Season
 	library  Library
 	target   *Target
-	focus    *Target // what the card shows, for 搜索资源; nil before a target is chosen
+	focus    *Target      // what the card shows, for 搜索资源; nil before a target is chosen
+	hunt     *torrentHunt // the resource search running for focus
 	torrents []Torrent
 	release  *int    // index of the release shown to download
 	chosen   []int   // seasons ticked in the multi-season picker

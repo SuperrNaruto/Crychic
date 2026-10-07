@@ -133,6 +133,7 @@ func (e *Engine) chooseRequest(ctx context.Context, sess session, p press) (Repl
 
 // cancel ends the conversation; 返回 is the way back.
 func (e *Engine) cancel(sess session) Reply {
+	sess.hunt.stop()
 	e.store.take(sess.id)
 	return Reply{Text: Sentence(msgCancelled)}
 }

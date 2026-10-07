@@ -19,9 +19,8 @@ const (
 	// siteSearch is how long the fake takes to search the sites, so the
 	// search outlasts the button press like a real one does.
 	siteSearch = 200 * time.Millisecond
-	// searchUnderway outlasts the first refresh (progressInterval), so the
-	// search is running when a scenario presses on.
-	searchUnderway = 300 * time.Millisecond
+	// searchedFor is how long a scenario lets the sites be searched.
+	searchedFor = 20 * time.Second
 )
 
 func searchingSites(fixture string) route {
@@ -145,9 +144,9 @@ func TestResourceSearchAndDownloadFailures(t *testing.T) {
 	h.tr.verify(t)
 }
 
-// Cancelling while the sites are still being searched stops the search at
-// once; the press does not wait for the search to finish.
-func TestCancelStopsResourceSearch(t *testing.T) {
+// While the sites are searched the card says for how long, and cancelling
+// stops the search at once.
+func TestResourceSearchShowsElapsedAndCancels(t *testing.T) {
 	h := start(t, scenario{routes: map[string]route{
 		searchPath:   ok("search_dune.json"),
 		duneDetails:  ok("detail_dune.json"),
@@ -157,7 +156,11 @@ func TestCancelStopsResourceSearch(t *testing.T) {
 	h.say(alice, alice, "/search 沙丘")
 	h.tap(alice, 1, duneMovie)
 	h.tap(alice, 1, searchResources)
-	time.Sleep(searchUnderway)
+	h.shows(1, "要等一会儿哦")
+	refreshed := h.tg.expect("edit:1")
+	h.advance(searchedFor)
+	h.wait(refreshed, "the elapsed search time")
+	h.shows(1, "已经搜了 20 秒")
 	h.tap(alice, 1, "取消")
 	h.shows(1, "已经取消啦")
 	h.tr.verify(t)

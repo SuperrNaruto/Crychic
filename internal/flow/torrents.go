@@ -3,19 +3,21 @@ package flow
 import (
 	"context"
 	"fmt"
+	"time"
 )
 
 const (
 	actionTorrents     = "ts" // searches the indexer sites for the card's target
-	actionTorrentRun   = "tg" // runs that search (Follow data), leading on from the card
+	actionTorrentRun   = "tg" // how that search goes (Follow data); its results lead on from the card
 	actionTorrentRetry = "tr" // searches again after a failure
-	actionTorrentAgain = "tq" // runs the repeated search, replacing the failure
+	actionTorrentAgain = "tq" // how the repeated search goes; its results replace the failure
 	actionTorrentPick  = "tp" // arg: index into session torrents; shows the release
 	actionTorrentGet   = "td" // arg: index; downloads the release
 
 	torrentPageItems = 8
 
 	msgTorrentsSearching = "🔍 正在各个站点搜索资源，要等一会儿哦…"
+	msgTorrentsSearched  = "🔍 正在各个站点搜索资源，已经搜了 %d 秒，再等等哦…"
 	msgTorrentsNote      = "按 MoviePilot 的优先级排好啦，点编号看详情～"
 	msgTorrentAsk        = "要下载这个资源吗？"
 	msgHitAndRun         = "⚠️ 这是 H&R 资源，下完要保种够时间，不然站点会记过哦。"
@@ -31,7 +33,7 @@ func (e *Engine) chooseTorrents(ctx context.Context, sess session, p press) (Rep
 	case actionTorrentRetry:
 		return e.searching(sess, actionTorrentAgain), true
 	case actionTorrentRun, actionTorrentAgain:
-		return e.searchTorrents(ctx, sess), true
+		return e.searchTorrents(sess, p.action), true
 	case actionTorrentPick:
 		return e.pickTorrent(sess, p.arg), true
 	case actionTorrentGet:
@@ -45,38 +47,53 @@ func torrentButton(id uint64) Button {
 	return Button{Label: "搜索资源", Data: data(id, actionTorrents, 0)}
 }
 
-// searching shows the card while the sites are searched: the search takes
-// tens of seconds, so the platform runs it as the reply's next refresh
-// rather than holding the button press.
+// searching starts searching the sites for the card's target in the
+// background and shows the card meanwhile; the search takes tens of
+// seconds, so the platform asks how it is going (run) as the reply's
+// refresh.
 func (e *Engine) searching(sess session, run string) Reply {
 	if sess.focus == nil {
 		return Reply{Notice: msgInvalidChoice}
 	}
-	reply := sess.picked.reply(Line(Plain(msgTorrentsSearching)), [][]Button{{cancelButton(sess.id)}})
+	sess.hunt.stop()
+	sess.hunt = e.hunt(*sess.focus)
+	e.store.put(sess)
+	return searchingView(sess, run, 0)
+}
+
+// searchingView is the card with how long the sites have been searched.
+func searchingView(sess session, run string, elapsed time.Duration) Reply {
+	words := msgTorrentsSearching
+	if elapsed >= time.Second {
+		words = fmt.Sprintf(msgTorrentsSearched, int(elapsed.Seconds()))
+	}
+	reply := sess.picked.reply(Line(Plain(words)), [][]Button{{cancelButton(sess.id)}})
 	reply.Follow = data(sess.id, run, 0)
 	return reply
 }
 
-// searchTorrents lists the releases found for the card's target; a failed
-// search keeps the card and offers to search again.
-func (e *Engine) searchTorrents(ctx context.Context, sess session) Reply {
-	if sess.focus == nil {
+// searchTorrents shows how long the search has run, or once it is done
+// the releases found for the card's target; a failed search keeps the
+// card and offers to search again.
+func (e *Engine) searchTorrents(sess session, run string) Reply {
+	h := sess.hunt
+	if h == nil || sess.focus == nil {
 		return Reply{Notice: msgInvalidChoice}
 	}
+	select {
+	case <-h.done:
+	default:
+		return searchingView(sess, run, e.now().Sub(h.started))
+	}
+	h.stop()
 	target := *sess.focus
-	found, err := e.backend.SearchTorrents(ctx, target)
-	if ctx.Err() != nil {
-		// The owner pressed on, which decides what shows; a notice leaves
-		// the screen and its 返回 history as they are.
-		return Reply{Notice: msgCancelled}
-	}
-	sess.torrents, sess.release = found, nil
+	sess.hunt, sess.torrents, sess.release = nil, h.found, nil
 	e.store.put(sess)
-	if err != nil {
+	if h.err != nil {
 		rows := [][]Button{{{Label: "重试", Data: data(sess.id, actionTorrentRetry, 0)}, cancelButton(sess.id)}}
-		return sess.picked.replyLines(e.failure("torrent search", err).Text, rows)
+		return sess.picked.replyLines(e.failure("torrent search", h.err).Text, rows)
 	}
-	if len(found) == 0 {
+	if len(h.found) == 0 {
 		text := Sentence(fmt.Sprintf("🔍 没搜到%s的资源 (｡•́︿•̀｡) 过段时间再来试试吧～", targetName(target)))
 		rows := [][]Button{{{Label: "重试", Data: data(sess.id, actionTorrentRetry, 0)}, cancelButton(sess.id)}}
 		return sess.picked.replyLines(text, rows)
