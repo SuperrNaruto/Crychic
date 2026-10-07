@@ -21,8 +21,11 @@ func torrentList(sess session, target Target) listView {
 		heading:   Heading(Plain(heading)),
 		note:      fmt.Sprintf("共 %d 个，%s，点编号看详情～", len(shown), torrentSorts[sess.torrentSort].note),
 		pageItems: torrentPageItems,
-		menu:      [][]Button{sortRow(sess), {{Label: msgSiteFilter, Data: data(sess.id, actionTorrentSites, 0)}}},
+		menu:      [][]Button{sortRow(sess)},
 		footer:    []Button{cancelButton(sess.id)},
+	}
+	if sess.torrentSite != "" || len(torrentSites(sess.torrents)) > 1 {
+		view.menu = append(view.menu, []Button{{Label: msgSiteFilter, Data: data(sess.id, actionTorrentSites, 0)}})
 	}
 	for n, i := range shown {
 		view.entries = append(view.entries, listEntry{

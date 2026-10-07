@@ -17,6 +17,9 @@ const (
 	msgAllSites   = "全部站点"
 	msgPickSite   = "只看哪个站点的资源呀？"
 	msgSiteFilter = "筛选站点"
+	// msgUnknownSite names a release's site when the backend gave none, so
+	// it can be filtered and never makes an empty button.
+	msgUnknownSite = "未知站点"
 )
 
 // torrentSort is one order to show the releases in, as MoviePilot's
@@ -32,7 +35,12 @@ var torrentSorts = []torrentSort{
 	{label: "做种", note: "做种人数从多到少", less: func(a, b Torrent) int { return cmp.Compare(b.Seeders, a.Seeders) }},
 	{label: "时间", note: "发布时间从新到旧", less: newerFirst},
 	{label: "大小", note: "体积从大到小", less: func(a, b Torrent) int { return cmp.Compare(b.Size, a.Size) }},
-	{label: "站点", note: "按站点名排列", less: func(a, b Torrent) int { return cmp.Compare(a.Site, b.Site) }},
+	{label: "站点", note: "按站点名排列", less: func(a, b Torrent) int { return cmp.Compare(siteOf(a), siteOf(b)) }},
+}
+
+// siteOf is the site a release is listed and filtered under.
+func siteOf(t Torrent) string {
+	return cmp.Or(t.Site, msgUnknownSite)
 }
 
 // newerFirst orders by publish time, newest first; MoviePilot words it
@@ -89,7 +97,7 @@ func (e *Engine) releases(sess session) Reply {
 func (sess session) shownTorrents() []int {
 	var shown []int
 	for i, t := range sess.torrents {
-		if sess.torrentSite == "" || t.Site == sess.torrentSite {
+		if sess.torrentSite == "" || siteOf(t) == sess.torrentSite {
 			shown = append(shown, i)
 		}
 	}
@@ -118,9 +126,9 @@ type siteCount struct {
 func torrentSites(torrents []Torrent) []siteCount {
 	var sites []siteCount
 	for _, t := range torrents {
-		i := slices.IndexFunc(sites, func(s siteCount) bool { return s.name == t.Site })
+		i := slices.IndexFunc(sites, func(s siteCount) bool { return s.name == siteOf(t) })
 		if i < 0 {
-			sites = append(sites, siteCount{name: t.Site})
+			sites = append(sites, siteCount{name: siteOf(t)})
 			i = len(sites) - 1
 		}
 		sites[i].count++
