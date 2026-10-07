@@ -45,6 +45,7 @@ type scenario struct {
 	stall       string     // CRYCHIC_NOTIFY_STALL, the production default if empty
 	libraryWait string     // empty uses the production default
 	notifyChat  string     // optional channel for arrival notices
+	digest      string     // CRYCHIC_NOTIFY_DIGEST, none if empty
 	lagging     bool       // the media server shows new transfers only on catchUp
 	// searches answers a search for one title with its own fixture; other
 	// titles get the searchPath route.
@@ -98,6 +99,7 @@ func start(t *testing.T, sc scenario) *harness {
 		"CRYCHIC_NOTIFY_LIBRARY_WAIT":     sc.libraryWait,
 		"CRYCHIC_PROGRESS_INTERVAL":       progressInterval,
 		"CRYCHIC_TELEGRAM_NOTIFY_CHAT_ID": sc.notifyChat,
+		"CRYCHIC_NOTIFY_DIGEST":           sc.digest,
 	}
 	cfg, err := config.Load(func(k string) string { return env[k] })
 	if err != nil {

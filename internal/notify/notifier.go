@@ -38,8 +38,12 @@ type Options struct {
 	// Stall is how long a watched download may make no progress before its
 	// requesters are told it is stuck; zero never tells them.
 	Stall time.Duration
-	Now   func() time.Time
-	Log   *slog.Logger
+	// Digest is when a weekly digest of every arrival goes out, to
+	// Destination when set, else to each of DigestTo; a nil Zone sends none.
+	Digest   Schedule
+	DigestTo []flow.Actor
+	Now      func() time.Time
+	Log      *slog.Logger
 }
 
 // Notifier remembers requests and announces arrivals to their requesters.
@@ -122,7 +126,8 @@ func (n *Notifier) poll(ctx context.Context) error {
 			return err
 		}
 		return n.update(func(st state) state {
-			return state{Baseline: true, LastTransfer: latest, Watches: st.Watches}
+			st.Baseline, st.LastTransfer = true, latest
+			return st
 		})
 	}
 	transfers, err := n.opts.Feed.TransfersAfter(ctx, snapshot.LastTransfer)
@@ -132,7 +137,11 @@ func (n *Notifier) poll(ctx context.Context) error {
 	now := n.opts.Now()
 	var ready []watch
 	err = n.update(func(st state) state {
-		next := arrive(st, newerThan(transfers, st.LastTransfer), now)
+		fresh := newerThan(transfers, st.LastTransfer)
+		next := arrive(st, fresh, now)
+		if n.opts.Digest.Zone != nil {
+			next = withDigest(next, fresh, now)
+		}
 		ready = due(next, now, n.opts.Quiet)
 		return next
 	})
@@ -151,6 +160,9 @@ func (n *Notifier) poll(ctx context.Context) error {
 	}
 	n.send(ctx, n.withLinks(ctx, deliveries))
 	n.checkStalls(ctx)
+	if err := n.checkDigest(ctx); err != nil {
+		return err
+	}
 	return n.checkActivity(ctx)
 }
 

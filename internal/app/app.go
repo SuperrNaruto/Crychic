@@ -7,6 +7,7 @@ import (
 	"log/slog"
 	"net/http"
 	"path/filepath"
+	"strconv"
 	"sync"
 	"time"
 
@@ -26,6 +27,7 @@ const (
 	imageTimeout    = 10 * time.Second
 	// stateFile holds requests awaiting arrival, inside the data dir.
 	stateFile = "requests.json"
+	decimal   = 10
 )
 
 // Deps are what the app takes from its host besides configuration.
@@ -67,6 +69,8 @@ func Run(ctx context.Context, cfg config.Config, deps Deps) error {
 		Destination: cfg.TelegramNotifyChat,
 		LibraryWait: cfg.LibraryWait,
 		Stall:       cfg.NotifyStall,
+		Digest:      notify.Schedule(cfg.NotifyDigest),
+		DigestTo:    privateChats(cfg.TelegramAllowed),
 		Now:         now,
 		Log:         log,
 	})
@@ -83,4 +87,14 @@ func Run(ctx context.Context, cfg config.Config, deps Deps) error {
 	tg.Run(ctx, engine)
 	wg.Wait()
 	return nil
+}
+
+// privateChats are the whitelisted users' private chats with the bot,
+// where a weekly digest goes when no notify channel is set.
+func privateChats(users []int64) []flow.Actor {
+	chats := make([]flow.Actor, 0, len(users))
+	for _, id := range users {
+		chats = append(chats, flow.Actor{UserID: id, Address: strconv.FormatInt(id, decimal)})
+	}
+	return chats
 }

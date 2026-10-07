@@ -59,6 +59,7 @@ Data flow: Telegram update → `telegram.adapter` → `flow.Engine.Start/Choose`
 - `internal/flow/store.go` - in-memory sessions (10 min TTL)
 - `internal/flow/pages.go` - bounded pages for subscriptions, tasks and latest items; page buttons keep item indices stable
 - `internal/telegram/lanes.go` - serializes each message's state transition and edit, including background refreshes
+- `internal/notify/digest.go` - weekly digest (`Options.Digest`, a `Schedule`): while enabled, every successful transfer of each poll (requested or not, title and year from the record) is kept in `state.Digest`; once the schedule's latest moment is after `state.LastDigest`, the entries are cleared and `LastDigest` set before one notice goes to `Destination` or each of `DigestTo` (title + season merged in first-arrival order, linked via `GET /api/v1/mediaserver/latest`, at most 30 listed); the first check after enabling only sets `LastDigest`, and an empty week sends nothing. Transitions keep fields they do not touch (`state.emptied`)
 - `internal/notify/state.go` - pure state transitions (`withRequest`, `arrive`, `flush`, `withActivity`) and atomic persistence
 - `e2e/harness_test.go` - `start`, `say`, `answer`, `answerQuoting`, `chatter`, `tap`, `tapData`, `shows`, `arrives`, `transfers`, `reports`, `restart`
 - `e2e/testdata/transcripts/*.txt` - golden transcripts, one per scenario
@@ -76,6 +77,7 @@ Data flow: Telegram update → `telegram.adapter` → `flow.Engine.Start/Choose`
 - `CRYCHIC_PROGRESS_INTERVAL` - optional, defaults to `5s`, minimum `100ms`; how often a followed `/tasks` view refreshes (Telegram throttles frequent edits)
 - `CRYCHIC_NOTIFY_STALL` - optional, defaults to `6h`, `0s` disables; how long a requested download may make no progress before its requesters (or the notify channel) are told once that it seems stuck
 - `CRYCHIC_NOTIFY_QUIET` - optional, defaults to `3m`, `0s` disables; how long a show's arrivals settle before one notice covers them
+- `CRYCHIC_NOTIFY_DIGEST` - optional weekly digest moment in China time, e.g. `sun 20:00`; empty sends none. Goes to the notify channel when set, else privately to each whitelisted user
 
 ## Code Style
 

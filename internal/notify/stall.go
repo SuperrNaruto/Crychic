@@ -82,7 +82,7 @@ func (n *Notifier) unmoved(downloads []flow.Download, now time.Time) []flow.Down
 // withStalls records the stuck downloads not yet told about against the
 // watches waiting for them, and returns those to tell.
 func withStalls(st state, stuck []flow.Download) (state, []stall) {
-	next := state{Baseline: st.Baseline, LastTransfer: st.LastTransfer}
+	next := st.emptied()
 	var out []stall
 	for _, w := range st.Watches {
 		for _, d := range stuck {

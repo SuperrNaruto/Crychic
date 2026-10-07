@@ -23,6 +23,18 @@ type state struct {
 	Baseline     bool    `json:"baseline"`
 	LastTransfer int     `json:"last_transfer"`
 	Watches      []watch `json:"watches"`
+	// Digest is every arrival since the last weekly digest; LastDigest is
+	// when that went out, or when digests began.
+	Digest     []digestEntry `json:"digest,omitempty"`
+	LastDigest *time.Time    `json:"last_digest,omitempty"`
+}
+
+// emptied is st without its watches, for a transition to fill them anew;
+// everything else carries over.
+func (st state) emptied() state {
+	next := st
+	next.Watches = nil
+	return next
 }
 
 // watch is one subscription, or one download added by hand, and the people
@@ -100,7 +112,7 @@ func withRequest(st state, req flow.Request) state {
 // arrive records transfers against the watches without announcing them;
 // flush decides when to speak.
 func arrive(st state, transfers []Transfer, now time.Time) state {
-	next := state{Baseline: st.Baseline, LastTransfer: st.LastTransfer}
+	next := st.emptied()
 	for _, t := range transfers {
 		next.LastTransfer = max(next.LastTransfer, t.ID)
 	}
@@ -163,7 +175,7 @@ func due(st state, now time.Time, quiet time.Duration) []watch {
 // subscription id) until the media server shows them. A complete watch ends
 // with its notice.
 func flush(st state, now time.Time, settle settling) (state, []delivery) {
-	next := state{Baseline: st.Baseline, LastTransfer: st.LastTransfer}
+	next := st.emptied()
 	var out []delivery
 	for _, w := range st.Watches {
 		complete := w.complete()
@@ -244,7 +256,7 @@ func (w watch) wants(ep int) bool {
 
 // without drops the watch of a subscription.
 func without(st state, subscriptionID int) state {
-	next := state{Baseline: st.Baseline, LastTransfer: st.LastTransfer}
+	next := st.emptied()
 	for _, w := range st.Watches {
 		if w.Download != "" || w.SubscriptionID != subscriptionID {
 			next.Watches = append(next.Watches, w)
@@ -255,7 +267,7 @@ func without(st state, subscriptionID int) state {
 
 // withoutDownload drops the watch of a download.
 func withoutDownload(st state, id string) state {
-	next := state{Baseline: st.Baseline, LastTransfer: st.LastTransfer}
+	next := st.emptied()
 	for _, w := range st.Watches {
 		if w.Download == "" || w.Download != id {
 			next.Watches = append(next.Watches, w)
@@ -270,7 +282,7 @@ func withoutDownload(st state, id string) state {
 // finish, and a download leaves the list once it finishes, both before
 // files are transferred, so neither alone may end a watch.
 func withActivity(st state, active map[string]bool, now time.Time) state {
-	next := state{Baseline: st.Baseline, LastTransfer: st.LastTransfer}
+	next := st.emptied()
 	for _, w := range st.Watches {
 		isActive, checked := active[w.key()]
 		switch {

@@ -57,6 +57,9 @@ type Config struct {
 	LibraryWait        time.Duration
 	NotifyStall        time.Duration
 	FollowEvery        time.Duration
+	// NotifyDigest is when the weekly arrival digest goes out; a nil Zone
+	// sends none.
+	NotifyDigest Digest
 }
 
 // Load builds a Config from getenv (os.Getenv in production), reporting
@@ -93,6 +96,10 @@ func Load(getenv func(string) string) (Config, error) {
 		if *d.to, err = d.v.parse(getenv); err != nil {
 			errs = append(errs, err)
 		}
+	}
+	var err error
+	if cfg.NotifyDigest, err = parseDigest(getenv("CRYCHIC_NOTIFY_DIGEST")); err != nil {
+		errs = append(errs, err)
 	}
 	errs = append(errs, cfg.validate(), cfg.allowedUsers(getenv("CRYCHIC_TELEGRAM_ALLOWED_USERS")))
 	return cfg, errors.Join(errs...)
@@ -174,4 +181,39 @@ func parseIDs(raw string) ([]int64, error) {
 		return nil, errors.New("at least one user id is required")
 	}
 	return ids, nil
+}
+
+// Digest is when the weekly arrival digest goes out: Day at At past
+// midnight in Zone (China time); a nil Zone sends none.
+type Digest struct {
+	Day  time.Weekday
+	At   time.Duration
+	Zone *time.Location
+}
+
+const chinaOffset = 8 * 60 * 60
+
+// digestZone is the time zone digest moments are read in.
+var digestZone = time.FixedZone("UTC+8", chinaOffset)
+
+var digestDays = map[string]time.Weekday{
+	"sun": time.Sunday, "mon": time.Monday, "tue": time.Tuesday, "wed": time.Wednesday,
+	"thu": time.Thursday, "fri": time.Friday, "sat": time.Saturday,
+}
+
+// parseDigest reads CRYCHIC_NOTIFY_DIGEST, e.g. "sun 20:00"; empty sends
+// no digest.
+func parseDigest(raw string) (Digest, error) {
+	raw = strings.TrimSpace(raw)
+	if raw == "" {
+		return Digest{}, nil
+	}
+	day, clock, _ := strings.Cut(strings.ToLower(raw), " ")
+	weekday, okDay := digestDays[day]
+	at, err := time.Parse("15:04", strings.TrimSpace(clock))
+	if !okDay || err != nil {
+		return Digest{}, fmt.Errorf("CRYCHIC_NOTIFY_DIGEST: want a weekday and time like \"sun 20:00\", got %q", raw)
+	}
+	offset := time.Duration(at.Hour())*time.Hour + time.Duration(at.Minute())*time.Minute
+	return Digest{Day: weekday, At: offset, Zone: digestZone}, nil
 }

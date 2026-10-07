@@ -27,6 +27,8 @@ var (
 
 type transferRecord struct {
 	ID          int    `json:"id"`
+	Title       string `json:"title"`
+	Year        string `json:"year"`
 	MediaSource string `json:"media_source"`
 	MediaID     string `json:"media_id"`
 	Seasons     string `json:"seasons"`
@@ -81,7 +83,7 @@ func (c *Client) TransfersAfter(ctx context.Context, id int) ([]notify.Transfer,
 // the source file's name, never the server path.
 func (r transferRecord) toTransfer() notify.Transfer {
 	return notify.Transfer{
-		ID: r.ID, Source: r.MediaSource, MediaID: r.MediaID, Image: r.Image,
+		ID: r.ID, Source: r.MediaSource, MediaID: r.MediaID, Title: r.Title, Year: r.Year, Image: r.Image,
 		Season: parseSeason(r.Seasons), Episodes: parseEpisodes(r.Episodes),
 		File: fileName(r.Src), Download: r.Hash,
 	}

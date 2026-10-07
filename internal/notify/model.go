@@ -15,6 +15,8 @@ type Transfer struct {
 	ID       int
 	Source   string
 	MediaID  string
+	Title    string
+	Year     string
 	Season   *int // nil for movies
 	Episodes []int
 	Image    string
