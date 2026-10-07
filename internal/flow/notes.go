@@ -82,7 +82,8 @@ func (e *Engine) lookup(ctx context.Context, term string) []Media {
 // tmdbTwin is the one TMDB result that is m under either of its titles,
 // the same year and kind, keeping the calendar's air date, weekday, id and
 // its own rating, if any; m itself when there is none or more than one. The TMDB
-// title is kept too, so a later pick searches by it and matches by id.
+// title is kept too, so a later pick searches by it and matches by id; a
+// sequel keeps its own name (青之箱 第二季), whose search names its season.
 func tmdbTwin(m Media, results []Media) (Media, bool) {
 	var twin *Media
 	for i, r := range results {
@@ -99,6 +100,9 @@ func tmdbTwin(m Media, results []Media) (Media, bool) {
 	}
 	t := *twin
 	t.Released, t.Weekday, t.CalendarID = m.Released, m.Weekday, m.CalendarID
+	if t.Season > 0 {
+		t.Title = m.Title
+	}
 	if m.Rating > 0 {
 		t.Rating = m.Rating
 	}
@@ -109,7 +113,17 @@ func (r Media) twinOf(m Media) bool {
 	if r.Source != tmdbSource || r.Kind != m.Kind || !r.sameRun(m) {
 		return false
 	}
-	return r.Title == m.Title || r.Title == m.OriginalTitle || (m.OriginalTitle != "" && r.OriginalTitle == m.OriginalTitle)
+	return r.searched() == m.Title || r.Title == m.Title || r.Title == m.OriginalTitle ||
+		(m.OriginalTitle != "" && r.OriginalTitle == m.OriginalTitle)
+}
+
+// searched is r's title as MoviePilot's search named it, with the season
+// the search term named.
+func (r Media) searched() string {
+	if r.Season > 0 {
+		return r.Title + SeasonSuffix(r.Season)
+	}
+	return r.Title
 }
 
 // sameRun tells whether a TMDB result r can be calendar pick m by its year.

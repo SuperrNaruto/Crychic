@@ -149,14 +149,14 @@
 -> MoviePilot GET /api/v1/media/search?count=10&title=青之箱 第二季&type=media
 -> MoviePilot GET /api/v1/media/207347?media_source=themoviedb&type_name=电视剧
 -> MoviePilot GET /api/v1/media/seasons?media_id=207347&media_source=themoviedb
--> MoviePilot GET /api/v1/subscribe/media/207347?media_source=themoviedb&mtype=电视剧&season=1&title=青之箱 第二季&year=2024
+-> MoviePilot GET /api/v1/subscribe/media/207347?media_source=themoviedb&mtype=电视剧&season=1&title=青之箱&year=2024
 << editMessageText chat=1001 message=1 reuses=url-856963c9
    <img src="tg://photo?id=p0"/>
-   <h3>📺 <a href="https://www.themoviedb.org/tv/207347">青之箱 第二季</a></h3>
+   <h3>📺 <a href="https://www.themoviedb.org/tv/207347">青之箱</a></h3>
    <footer><i>アオのハコ</i> · 2024 · 电视剧 · ⭐ 7.8 · 动画 / 剧情 · 共 1 季 37 集 · 主演：千叶翔也、上田丽奈、鬼头明里</footer>
    <blockquote expandable>进入中高一贯制体育强校──荣明高校男子羽毛球部的一年级生猪股大喜，每天早晨在晨练时都会遇到比他大一岁的的鹿野千夏学姐，并对她产生了爱慕之情。千夏是女子篮球队的王牌，无论在校内还是校外都是备受瞩目的高岭之花。就这样，忙于社团活动、恋爱和学习的高中生活就这样开始了，而在某一天……</blockquote>
    <hr/>
-   <p><b>要订阅《青之箱 第二季》第 1 季（共 37 集）吗？</b></p>
+   <p><b>要订阅《青之箱》第 1 季（共 37 集）吗？</b></p>
    [从第 1 集开始 | 1:ok:0] [只追新集（第 27 集起） | 1:ok:27]
    [指定起始集… | 1:e:0]
    [搜索资源 | 1:ts:0] [相似推荐 | 1:r:0]
@@ -164,14 +164,14 @@
 << answerCallbackQuery
 >> user 1001 taps 1:ok:27 on message 1
 -> MoviePilot POST /api/v1/subscribe/
-   {"name":"青之箱 第二季","year":"2024","type":"电视剧","media_source":"themoviedb","media_id":"207347","season":1,"start_episode":27}
+   {"name":"青之箱","year":"2024","type":"电视剧","media_source":"themoviedb","media_id":"207347","season":1,"start_episode":27}
 << editMessageText chat=1001 message=1 reuses=url-856963c9
    <img src="tg://photo?id=p0"/>
-   <h3>📺 <a href="https://www.themoviedb.org/tv/207347">青之箱 第二季</a></h3>
+   <h3>📺 <a href="https://www.themoviedb.org/tv/207347">青之箱</a></h3>
    <footer><i>アオのハコ</i> · 2024 · 电视剧 · ⭐ 7.8 · 动画 / 剧情 · 共 1 季 37 集 · 主演：千叶翔也、上田丽奈、鬼头明里</footer>
    <blockquote expandable>进入中高一贯制体育强校──荣明高校男子羽毛球部的一年级生猪股大喜，每天早晨在晨练时都会遇到比他大一岁的的鹿野千夏学姐，并对她产生了爱慕之情。千夏是女子篮球队的王牌，无论在校内还是校外都是备受瞩目的高岭之花。就这样，忙于社团活动、恋爱和学习的高中生活就这样开始了，而在某一天……</blockquote>
    <hr/>
-   <p>✅ 帮你订好《青之箱 第二季》第 1 季（从第 27 集开始）啦，入库了我第一时间叫你！ ヾ(≧▽≦*)o</p>
+   <p>✅ 帮你订好《青之箱》第 1 季（从第 27 集开始）啦，入库了我第一时间叫你！ ヾ(≧▽≦*)o</p>
    [返回 | 1:bk:0] [首页 | 1:o:0] [关闭 | 1:c:0]
 << answerCallbackQuery
 >> user 1001 taps 1:bk:0 on message 1
@@ -224,10 +224,10 @@
 -> MoviePilot GET /api/v1/media/search?count=10&title=青之芦苇 第二季&type=media
 -> MoviePilot GET /api/v1/media/126437?media_source=themoviedb&type_name=电视剧
 -> MoviePilot GET /api/v1/media/seasons?media_id=126437&media_source=themoviedb
--> MoviePilot GET /api/v1/subscribe/media/126437?media_source=themoviedb&mtype=电视剧&season=2&title=青之芦苇 第二季&year=2022
+-> MoviePilot GET /api/v1/subscribe/media/126437?media_source=themoviedb&mtype=电视剧&season=2&title=青之芦苇&year=2022
 << editMessageText chat=1001 message=1 reuses=url-9cb26c37
    <img src="tg://photo?id=p0"/>
-   <h3>📺 <a href="https://www.themoviedb.org/tv/126437">青之芦苇 第二季</a></h3>
+   <h3>📺 <a href="https://www.themoviedb.org/tv/126437">青之芦苇</a></h3>
    <footer><i>アオアシ</i> · 2022 · 电视剧 · ⭐ 7.8 · 动画 · 共 2 季 48 集 · 主演：大铃功起</footer>
    <blockquote expandable>“我来带你走向世界。”<br>
    <br>
@@ -243,7 +243,7 @@
    <br>
    接受福田的邀请，青井决定去东京参加选拔考试。</blockquote>
    <hr/>
-   <p><b>要订阅《青之芦苇 第二季》第 2 季（共 24 集）吗？</b></p>
+   <p><b>要订阅《青之芦苇》第 2 季（共 24 集）吗？</b></p>
    [从第 1 集开始 | 1:ok:0] [只追新集（第 2 集起） | 1:ok:2]
    [指定起始集… | 1:e:0]
    [搜索资源 | 1:ts:0] [相似推荐 | 1:r:0]

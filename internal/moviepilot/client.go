@@ -91,12 +91,23 @@ func (i mediaInfo) toMedia() (flow.Media, bool) {
 		return flow.Media{}, false
 	}
 	return flow.Media{
-		Source: i.MediaSource, ID: i.MediaID, Title: strings.Trim(i.Title, invisible), OriginalTitle: i.OriginalTitle,
+		Source: i.MediaSource, ID: i.MediaID, Title: i.showTitle(kind), OriginalTitle: i.OriginalTitle,
 		Year: i.Year, Kind: kind, Rating: i.VoteAverage,
 		PosterURL: posterURL(i.PosterPath),
 		Link:      i.DetailLink, Overview: unixLines(i.Overview), Released: i.ReleaseDate,
 		Season: i.Season,
 	}, true
+}
+
+// showTitle is the media's own title: a search naming a season appends it
+// to TMDB shows' titles (青之箱 第二季), while the show stays 青之箱 and a
+// subscription to its season 1 must not read 《青之箱 第二季》第 1 季.
+func (i mediaInfo) showTitle(kind flow.Kind) string {
+	title := strings.Trim(i.Title, invisible)
+	if kind != flow.TV || i.MediaSource != sourceTMDB || i.Season <= 0 {
+		return title
+	}
+	return strings.TrimSuffix(title, flow.SeasonSuffix(i.Season))
 }
 
 // posterURL is the poster rendition chat previews need.

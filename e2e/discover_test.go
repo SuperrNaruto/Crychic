@@ -71,11 +71,11 @@ func TestCalendarSequelIsItsTMDBShow(t *testing.T) {
 	h.tap(alice, 1, "2")
 	h.shows(1, "每天早晨在晨练时")
 	h.tap(alice, 1, "只追新集（第 27 集起）")
-	h.shows(1, "帮你订好")
+	h.shows(1, "帮你订好《青之箱》第 1 季（从第 27 集开始）")
 	h.tap(alice, 1, "返回")
 	h.mp.setRoute(seasonsPath, ok("seasons_ashi.json"))
 	h.tap(alice, 1, "3")
-	h.shows(1, "要订阅《青之芦苇 第二季》第 2 季")
+	h.shows(1, "要订阅《青之芦苇》第 2 季")
 	h.tr.verify(t)
 }
 
