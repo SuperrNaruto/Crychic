@@ -135,7 +135,7 @@ func (e *Engine) chooseRequest(ctx context.Context, sess session, p press) (Repl
 func (e *Engine) cancel(sess session) Reply {
 	sess.hunt.stop()
 	e.store.take(sess.id)
-	return Reply{Text: Sentence(msgCancelled)}
+	return Reply{Text: Lines(Heading(Plain("已取消")), Line(Plain(msgCancelled)))}
 }
 
 func (e *Engine) pickMedia(ctx context.Context, sess session, index int) Reply {
@@ -237,7 +237,7 @@ func (e *Engine) held(sess session, target Target) Reply {
 	if target.Season != nil {
 		what = "已经全部在媒体库里啦"
 	}
-	return sess.picked.reply(Line(Plain(fmt.Sprintf("✅ %s%s，直接去看吧～", targetName(target), what))), [][]Button{relatedRow(sess)})
+	return sess.picked.reply(Line(Plain(fmt.Sprintf("✅ %s%s，直接去看吧～", targetName(target), what))), onward(sess))
 }
 
 func (e *Engine) pickSeason(ctx context.Context, sess session, number int) Reply {
@@ -271,7 +271,7 @@ func (e *Engine) confirmation(ctx context.Context, sess session, sub subscriptio
 	if sub.id != 0 {
 		e.store.put(sess)
 		status := fmt.Sprintf("ℹ️ %s早就订阅上啦%s", targetName(target), e.watch(ctx, sess, sub))
-		return sess.picked.reply(Line(Plain(status)), [][]Button{relatedRow(sess)})
+		return sess.picked.reply(Line(Plain(status)), onward(sess))
 	}
 	sess.target = &target
 	e.store.put(sess)
@@ -285,11 +285,7 @@ func (e *Engine) confirmation(ctx context.Context, sess session, sub subscriptio
 func confirmCard(sess session, target Target) Reply {
 	confirm := Button{Label: "确认订阅", Data: data(sess.id, actionConfirm, target.StartEpisode)}
 	question := Line(Strong(fmt.Sprintf("要订阅%s吗？", targetName(target))))
-	rows := [][]Button{{confirm, cancelButton(sess.id)}}
-	if target.Season == nil {
-		rows = append(rows, relatedRow(sess))
-	}
-	return sess.picked.reply(question, rows)
+	return sess.picked.reply(question, append([][]Button{{confirm}}, onward(sess)...))
 }
 
 // confirm subscribes from episode from (0 for movies or the season start).
@@ -297,13 +293,13 @@ func confirmCard(sess session, target Target) Reply {
 // cannot consume it.
 func (e *Engine) confirm(ctx context.Context, sess session, from int) Reply {
 	if sess.target == nil {
-		return Reply{Text: Sentence(msgExpired)}
+		return expiredText(msgExpired)
 	}
 	if !sess.validStart(from) {
 		return Reply{Notice: msgInvalidChoice}
 	}
 	if _, ok := e.store.take(sess.id); !ok {
-		return Reply{Text: Sentence(msgExpired)}
+		return expiredText(msgExpired)
 	}
 	target := *sess.target
 	target.StartEpisode = from
@@ -373,6 +369,12 @@ func parseData(raw string) (id uint64, p press, ok bool) {
 	id, errID := strconv.ParseUint(parts[0], 10, 64)
 	arg, errArg := strconv.Atoi(parts[2])
 	return id, press{action: parts[1], arg: arg}, errID == nil && errArg == nil
+}
+
+// onward are a card's last rows: browse on from it (搜索资源, 相似推荐,
+// 同系列), then 取消.
+func onward(sess session) [][]Button {
+	return [][]Button{relatedRow(sess), {cancelButton(sess.id)}}
 }
 
 func cancelButton(id uint64) Button {

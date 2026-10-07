@@ -10,6 +10,7 @@ import (
 const (
 	actionSubDetail        = "sd"
 	actionRefreshSubDetail = "su"
+	msgSubDetailTitle      = "📚 订阅详情"
 	msgSubDetailFailed     = "暂时查不到订阅详情，稍后再点一次试试吧～"
 	msgSubDetailGone       = "这条订阅已经结束或被取消啦，可以回订阅列表或查看订阅历史哦～"
 )
@@ -55,17 +56,18 @@ func (e *Engine) subDetail(ctx context.Context, sess session, index int) Reply {
 	}
 	detail := e.readSubDetail(ctx, subs[i])
 	view := detail.view()
-	view.footer = []Button{{Label: "刷新", Data: data(sess.id, actionRefreshSubDetail, index)}}
+	view.menu = [][]Button{{{Label: "刷新", Data: data(sess.id, actionRefreshSubDetail, index)}}}
+	view.footer = browseRow(sess.id)
 	return e.listPages(sess, view)
 }
 
 func subDetailGone(sess session) Reply {
 	return Reply{
-		Text: Lines(Heading(Plain("订阅详情")), Line(Plain(msgSubDetailGone))),
-		Buttons: [][]Button{{
-			{Label: "返回订阅列表", Data: data(sess.id, actionSubs, 0)},
-			{Label: "订阅历史", Data: data(sess.id, actionHistory, int(sess.kind))},
-		}},
+		Text: Lines(Heading(Plain(msgSubDetailTitle)), Line(Plain(msgSubDetailGone))),
+		Buttons: [][]Button{
+			{{Label: "订阅历史", Data: data(sess.id, actionHistory, int(sess.kind))}},
+			append([]Button{backTo(sess.id, actionSubs, 0)}, browseRow(sess.id)...),
+		},
 	}
 }
 

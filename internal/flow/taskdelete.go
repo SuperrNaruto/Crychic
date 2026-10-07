@@ -6,7 +6,8 @@ const (
 	actionAskDelete = "kd" // arg: index into session tasks; asks to delete that download
 	actionDelete    = "ky" // arg: index; deletes it
 
-	msgDeleteTitle   = "⚠️ 要删除这个下载任务吗？"
+	msgDeleteTitle   = "删除下载任务"
+	msgDeleteAsk     = "⚠️ 要删除这个下载任务吗？"
 	msgDeleteFiles   = "会把已经下载的文件一起删掉，删了就找不回来啦。"
 	msgDeleteSub     = "它还在订阅里：如果这个任务是订阅下的，MoviePilot 已经把它记成下好了，删掉后订阅不会自动重新下载哦。"
 	msgDeleteUnknown = "呜，没能确认有没有删掉…用 /tasks 看一眼吧。"
@@ -41,21 +42,21 @@ func (e *Engine) askDelete(ctx context.Context, sess session, index int) Reply {
 	downloads, err := e.backend.Downloads(ctx)
 	if err != nil {
 		e.store.put(sess)
-		return withTaskButtons(e.failure("downloads", err), sess.id)
+		return withTaskButtons(titled(msgTasksTitle, e.failure("downloads", err)), sess)
 	}
 	d, found := findDownload(downloads, sess.tasks[index].id)
 	if !found {
 		e.store.put(sess)
-		return withTaskButtons(Reply{Text: Sentence(msgDownloadGone)}, sess.id)
+		return withTaskButtons(titled(msgTasksTitle, Reply{Text: Sentence(msgDownloadGone)}), sess)
 	}
 	sess.doomed = d.ID
 	e.store.put(sess)
 	view := downloadView(d)
-	view.Text = append(view.Text, Divider(), Line(Strong(msgDeleteTitle)), Line(Plain(msgDeleteFiles)))
+	view.Text = append(view.Text, Divider(), Line(Strong(msgDeleteAsk)), Line(Plain(msgDeleteFiles)))
 	if e.subscribed(ctx, d) {
 		view.Text = append(view.Text, Line(Plain(msgDeleteSub)))
 	}
-	view.Buttons = [][]Button{{{Label: msgDeleteLabel, Data: data(sess.id, actionDelete, index)}, backButton(sess.id)}}
+	view.Buttons = [][]Button{{{Label: msgDeleteLabel, Data: data(sess.id, actionDelete, index)}}, {tasksBack(sess.id)}}
 	return view
 }
 
@@ -85,12 +86,13 @@ func (e *Engine) deleteDownload(ctx context.Context, sess session, index int) Re
 	sess.doomed = ""
 	e.store.put(sess)
 	if err := e.backend.DeleteDownload(ctx, id); err != nil {
-		return withTaskButtons(e.deleteFailure(id, err), sess.id)
+		return withTaskButtons(titled(msgDeleteTitle, e.deleteFailure(id, err)), sess)
 	}
 	if err := e.watcher.ForgetDownload(ctx, id); err != nil {
 		e.log.Error("cannot forget deleted download", "download", id, "err", err)
 	}
-	return withTaskButtons(Reply{Text: Sentence("✅ 已经删掉啦，下载的文件也一起清掉了～")}, sess.id)
+	done := Lines(Heading(Plain("✅ 已删除")), Line(Plain("已经删掉啦，下载的文件也一起清掉了～")))
+	return withTaskButtons(Reply{Text: done}, sess)
 }
 
 // deleteFailure passes a MoviePilot refusal on; anything else may still
@@ -118,7 +120,7 @@ func findDownload(downloads []Download, id string) (Download, bool) {
 }
 
 // withTaskButtons leads back to the task list.
-func withTaskButtons(reply Reply, id uint64) Reply {
-	reply.Buttons = [][]Button{{backButton(id)}}
+func withTaskButtons(reply Reply, sess session) Reply {
+	reply.Buttons = taskRows(sess, nil)
 	return reply
 }

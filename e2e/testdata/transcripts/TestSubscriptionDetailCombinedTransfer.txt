@@ -9,14 +9,14 @@
    <i>待定</i></li>
    </ol>
    [1 | 1:sd:0] [2 | 1:sd:1]
-   [电视剧 | 1:sf:2] [电影 | 1:sf:1]
+   [·电视剧· | 1:sf:2] [电影 | 1:sf:1]
    [订阅历史 | 1:hs:2]
-   [首页 | 1:o:0]
+   [首页 | 1:o:0] [关闭 | 1:c:0]
 >> user 1001 taps 1:sd:0 on message 1
 -> MoviePilot GET /api/v1/subscribe/
 << editMessageText chat=1001 message=1
    <img src="https://image.tmdb.org/t/p/w500/rqliuvX7NdknSHu5qaSDfESplQi.jpg"/>
-   <h3>订阅详情 · 《绝命毒师》第 2 季</h3>
+   <h3>📚 订阅详情 · 《绝命毒师》第 2 季</h3>
    <footer>2008 · 电视剧 · 订阅中</footer>
    <h4>订阅设置</h4>
    <p>普通订阅 · 从第 2 集开始 · 共 13 集 · MoviePilot 待获取 9 集<br>
@@ -36,7 +36,7 @@
    </table>
    <footer>仅查询，不会触发搜索或下载；点击刷新查看最新状态哦～</footer>
    [刷新 | 1:su:0]
-   [返回 | 1:bk:0]
+   [返回 | 1:bk:0] [首页 | 1:o:0] [关闭 | 1:c:0]
 << answerCallbackQuery
 >> user 1001 in chat 1001: /tasks
 << sendRichMessage chat=1001 message=2
@@ -47,7 +47,7 @@
    <i>已整理 0/1 个文件</i></li>
    </ol>
    [1 | 2:k:0]
-   [关闭 | 2:c:0]
+   [首页 | 2:o:0] [关闭 | 2:c:0]
 >> user 1001 taps 2:k:0 on message 2
 << editMessageText chat=1001 message=2
    <h3>📦 《绝命毒师》第 2 季</h3>
@@ -57,5 +57,6 @@
    <tr><td>E02–E03</td><td>▶️ 整理中</td></tr>
    </table>
    <footer>正在帮你盯着进度…</footer>
-   [停止刷新 | 2:u:0] [返回任务列表 | 2:l:0]
+   [停止刷新 | 2:u:0]
+   [返回 | 2:l:0] [首页 | 2:o:0] [关闭 | 2:c:0]
 << answerCallbackQuery

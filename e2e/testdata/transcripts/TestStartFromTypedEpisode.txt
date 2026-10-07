@@ -34,7 +34,8 @@
    [1 | 1:m:0] [2 | 1:m:1] [3 | 1:m:2] [4 | 1:m:3]
    [5 | 1:m:4] [6 | 1:m:5] [7 | 1:m:6] [8 | 1:m:7]
    [下一页 › | 1:p:1]
-   [重新搜索 | 1:rs:0] [取消 | 1:x:0]
+   [重新搜索 | 1:rs:0]
+   [取消 | 1:x:0]
 >> user 1001 taps 1:m:0 on message 1
 -> MoviePilot GET /api/v1/media/30983?media_source=themoviedb&type_name=电视剧
 -> MoviePilot GET /api/v1/media/seasons?media_id=30983&media_source=themoviedb
@@ -65,7 +66,8 @@
    <hr/>
    <p><b>要订阅《名侦探柯南》第 1 季（共 1216 集）吗？</b></p>
    [从第 1 集开始 | 1:ok:0] [只追新集（第 1216 集起） | 1:ok:1216]
-   [指定起始集… | 1:e:0] [搜索资源 | 1:ts:0]
+   [指定起始集… | 1:e:0]
+   [搜索资源 | 1:ts:0] [相似推荐 | 1:r:0]
    [返回 | 1:bk:0] [取消 | 1:x:0]
 << answerCallbackQuery
 >> user 1001 taps 1:e:0 on message 1
@@ -104,7 +106,9 @@
    <blockquote expandable>高中生侦探工藤新一与毛利兰在游乐园游玩时发现两个行动诡异的黑衣男子，便跟踪他们，不料被灌下一种叫「APTX4869」的神秘毒药，然而因为药物副作用，新一的身体竟回到孩童状态。为不使周围的人受到牵连，他化名为「江户川柯南」，寄住在毛利兰家中，用阿笠博士发明的手表型麻醉枪让毛利小五郎睡着，接着用蝴蝶结变声器模仿他的声音来进行推理，解决了许多案件，并一直寻找着黑衣组织的人的下落，希望有朝一日将其绳之以法，并变回原来的样子。</blockquote>
    <hr/>
    <p><b>要订阅《名侦探柯南》第 1 季（从第 500 集开始）吗？</b></p>
-   [确认订阅 | 1:ok:500] [返回 | 1:bk:0] [取消 | 1:x:0]
+   [确认订阅 | 1:ok:500]
+   [搜索资源 | 1:ts:0] [相似推荐 | 1:r:0]
+   [返回 | 1:bk:0] [取消 | 1:x:0]
 >> user 1001 taps 1:ok:500 on message 1
 -> MoviePilot POST /api/v1/subscribe/
    {"name":"名侦探柯南","year":"1996","type":"电视剧","media_source":"themoviedb","media_id":"30983","season":1,"start_episode":500}

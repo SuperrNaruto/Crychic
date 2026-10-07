@@ -100,7 +100,7 @@ func (e *Engine) chartMenu(sess session) Reply {
 	for i, c := range charts {
 		buttons = append(buttons, Button{Label: c.label, Data: data(sess.id, actionChart, i)})
 	}
-	rows := append(grid(buttons, menuColumns), []Button{homeButton(sess.id)})
+	rows := append(grid(buttons, menuColumns), browseRow(sess.id))
 	return Reply{Text: Lines(Heading(Plain(msgCharts)), Line(Plain(msgPickChart))), Buttons: rows}
 }
 
@@ -109,7 +109,7 @@ func (e *Engine) openChart(ctx context.Context, sess session, index int) Reply {
 	picks, err := e.chartPicks(ctx, charts[index])
 	if err != nil {
 		e.store.take(sess.id)
-		return e.failure("discover", err)
+		return titled(msgCharts, e.failure("discover", err))
 	}
 	sess.chart, sess.picks, sess.noted, sess.day = index, picks, nil, 0
 	if charts[index].aired {
@@ -198,7 +198,7 @@ func (e *Engine) chartPage(ctx context.Context, sess session, page int) Reply {
 	if c.aired {
 		rows = append(rows, weekdayRow(sess.id, sess.day))
 	}
-	rows = append(rows, []Button{{Label: "返回榜单", Data: data(sess.id, actionCharts, 0)}, homeButton(sess.id)})
+	rows = append(rows, append([]Button{backTo(sess.id, actionCharts, 0)}, browseRow(sess.id)...))
 	return Reply{Text: text, Gallery: posters(sess.picks[at.first:at.end]), Buttons: rows}
 }
 
@@ -236,10 +236,7 @@ func (e *Engine) dayName(day int) string {
 func weekdayRow(id uint64, shown int) []Button {
 	row := make([]Button, 0, daysInWeek)
 	for i, name := range weekdayNames {
-		if i+1 == shown {
-			name = "·" + name + "·"
-		}
-		row = append(row, Button{Label: name, Data: data(id, actionWeekday, i+1)})
+		row = append(row, Button{Label: markShown(name, i+1 == shown), Data: data(id, actionWeekday, i+1)})
 	}
 	return row
 }
@@ -335,11 +332,11 @@ func (e *Engine) pickFromChart(ctx context.Context, sess session, pick Media) Re
 	results, err := e.chartSearch(ctx, pick)
 	if err != nil {
 		e.store.take(sess.id)
-		return e.failure("search", err)
+		return titled("🔍 搜索", e.failure("search", err))
 	}
 	if len(results) == 0 {
 		e.store.take(sess.id)
-		return Reply{Text: Sentence(fmt.Sprintf("🔍 没找到「%s」能订阅的条目 (｡•́︿•̀｡) 用 /search 换个名字搜搜吧～", pick.Title))}
+		return Reply{Text: Lines(Heading(Plain("🔍 没找到")), Line(Plain(fmt.Sprintf("没找到「%s」能订阅的条目 (｡•́︿•̀｡) 用 /search 换个名字搜搜吧～", pick.Title))))}
 	}
 	sess.results = results[:min(len(results), MaxResults)]
 	if i, ok := sameMedia(sess.results, pick); ok {

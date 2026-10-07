@@ -114,11 +114,15 @@ func (tr *transcript) String() string {
 	return strings.Join(tr.lines, "\n") + "\n"
 }
 
-// verify compares the transcript with the scenario's golden file.
+// verify compares the transcript with the scenario's golden file, after
+// checking that every message the bot showed opens with a heading.
 func (tr *transcript) verify(t *testing.T) {
 	t.Helper()
-	path := filepath.Join("testdata", "transcripts", t.Name()+".txt")
 	got := tr.String()
+	if untitled := untitledMessages(got); len(untitled) > 0 {
+		t.Errorf("messages without a heading:\n%s", strings.Join(untitled, "\n"))
+	}
+	path := filepath.Join("testdata", "transcripts", t.Name()+".txt")
 	if *update {
 		if err := os.WriteFile(path, []byte(got), 0o644); err != nil {
 			t.Fatal(err)
@@ -133,6 +137,43 @@ func (tr *transcript) verify(t *testing.T) {
 		t.Fatalf("transcript differs from %s (run with -update after reviewing)\n--- got ---\n%s\n--- want ---\n%s",
 			path, got, want)
 	}
+}
+
+// untitledMessages lists the messages sent or edited whose content does not
+// open with a heading (posters above it aside), by their first line.
+func untitledMessages(transcript string) []string {
+	var out []string
+	lines := strings.Split(transcript, "\n")
+	for i, line := range lines {
+		if !strings.HasPrefix(line, "<< sendRichMessage") && !strings.HasPrefix(line, "<< editMessageText") {
+			continue
+		}
+		if first := firstContent(lines[i+1:]); first != "" && !strings.HasPrefix(first, "<h3>") {
+			out = append(out, line+"\n"+first)
+		}
+	}
+	return out
+}
+
+// firstContent is a message body's first line after its posters.
+func firstContent(body []string) string {
+	inGallery := false
+	for _, line := range body {
+		content, ok := strings.CutPrefix(line, "   ")
+		if !ok {
+			return ""
+		}
+		switch {
+		case content == "<tg-slideshow>":
+			inGallery = true
+		case content == "</tg-slideshow>":
+			inGallery = false
+		case inGallery, strings.HasPrefix(content, "<img "):
+		default:
+			return content
+		}
+	}
+	return ""
 }
 
 func buttonLines(rows [][]button) string {

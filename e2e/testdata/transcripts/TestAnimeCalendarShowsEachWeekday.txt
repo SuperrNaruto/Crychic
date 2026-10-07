@@ -3,8 +3,8 @@
    <img src="tg://photo?id=p0"/>
    <h3>🎬 Crychic</h3>
    <p>想看什么告诉我呀～我帮你找片、订阅，入库了第一时间喊你！私聊直接发片名就能搜哦 (๑•̀ㅂ•́)و✧</p>
-   [搜索订阅 | 1:h:0] [发现 | 1:h:1]
-   [订阅 | 1:h:2] [最新入库 | 1:h:3]
+   [搜索 | 1:h:0] [发现 | 1:h:1]
+   [我的订阅 | 1:h:2] [最新入库 | 1:h:3]
    [任务进度 | 1:h:4]
 >> user 1001 taps 1:h:1 on message 1
 << editMessageText chat=1001 message=1
@@ -13,7 +13,7 @@
    [TMDB 流行趋势 | 1:d:0] [豆瓣热门电影 | 1:d:1]
    [豆瓣热门剧集 | 1:d:2] [正在热映 | 1:d:3]
    [新番放送 | 1:d:4]
-   [首页 | 1:o:0]
+   [首页 | 1:o:0] [关闭 | 1:c:0]
 << answerCallbackQuery
 >> user 1001 taps 1:d:4 on message 1
 -> Bangumi GET /calendar
@@ -72,7 +72,7 @@
    [1 | 1:i:0] [2 | 1:i:1] [3 | 1:i:2] [4 | 1:i:3]
    [5 | 1:i:4]
    [·一· | 1:w:1] [二 | 1:w:2] [三 | 1:w:3] [四 | 1:w:4] [五 | 1:w:5] [六 | 1:w:6] [日 | 1:w:7]
-   [返回榜单 | 1:b:0] [首页 | 1:o:0]
+   [返回 | 1:b:0] [首页 | 1:o:0] [关闭 | 1:c:0]
 << answerCallbackQuery
 >> user 1001 taps 1:i:1 on message 1
 -> MoviePilot GET /api/v1/media/search?count=10&title=魔法少女育成計画 restart&type=media
@@ -145,7 +145,7 @@
    [1 | 1:i:0] [2 | 1:i:1] [3 | 1:i:2] [4 | 1:i:3]
    [5 | 1:i:4]
    [·一· | 1:w:1] [二 | 1:w:2] [三 | 1:w:3] [四 | 1:w:4] [五 | 1:w:5] [六 | 1:w:6] [日 | 1:w:7]
-   [返回榜单 | 1:b:0] [首页 | 1:o:0]
+   [返回 | 1:b:0] [首页 | 1:o:0] [关闭 | 1:c:0]
 << answerCallbackQuery
 >> user 1001 taps 1:w:2 on message 1
 -> MoviePilot GET /api/v1/media/search?count=10&title=Cyberpunk: Edgerunners 2&type=media
@@ -183,12 +183,12 @@
    </ol>
    [1 | 1:i:5] [2 | 1:i:6]
    [一 | 1:w:1] [·二· | 1:w:2] [三 | 1:w:3] [四 | 1:w:4] [五 | 1:w:5] [六 | 1:w:6] [日 | 1:w:7]
-   [返回榜单 | 1:b:0] [首页 | 1:o:0]
+   [返回 | 1:b:0] [首页 | 1:o:0] [关闭 | 1:c:0]
 << answerCallbackQuery
 >> user 1001 taps 1:w:3 on message 1
 << editMessageText chat=1001 message=1
    <h3>🎌 新番放送 · 星期三</h3>
    <p>这天没有新番放送哦～</p>
    [一 | 1:w:1] [二 | 1:w:2] [·三· | 1:w:3] [四 | 1:w:4] [五 | 1:w:5] [六 | 1:w:6] [日 | 1:w:7]
-   [返回榜单 | 1:b:0] [首页 | 1:o:0]
+   [返回 | 1:b:0] [首页 | 1:o:0] [关闭 | 1:c:0]
 << answerCallbackQuery

@@ -12,7 +12,7 @@
    <i>已整理 0/500 个文件</i></li>
    </ol>
    [1 | 1:k:0] [2 | 1:k:1]
-   [关闭 | 1:c:0]
+   [首页 | 1:o:0] [关闭 | 1:c:0]
 >> user 1001 taps 1:k:1 on message 1
 << editMessageText chat=1001 message=1
    <h3>📦 《颂乐人偶》第 1 季</h3>
@@ -122,7 +122,8 @@
    </table>
    <footer>还有 400 个文件没列出来，完整状态去 MoviePilot 看看吧～</footer>
    <footer>正在帮你盯着进度…</footer>
-   [停止刷新 | 1:u:1] [返回任务列表 | 1:l:0]
+   [停止刷新 | 1:u:1]
+   [返回 | 1:l:0] [首页 | 1:o:0] [关闭 | 1:c:0]
 << answerCallbackQuery
 >> user 1001 taps 1:u:1 on message 1
 << editMessageText chat=1001 message=1
@@ -233,5 +234,6 @@
    </table>
    <footer>还有 400 个文件没列出来，完整状态去 MoviePilot 看看吧～</footer>
    <footer>好，不自动刷新啦～</footer>
-   [继续刷新 | 1:k:1] [返回任务列表 | 1:l:0]
+   [继续刷新 | 1:k:1]
+   [返回 | 1:l:0] [首页 | 1:o:0] [关闭 | 1:c:0]
 << answerCallbackQuery

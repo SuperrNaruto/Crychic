@@ -12,12 +12,14 @@
    <i>已整理 0/2 个文件</i></li>
    </ol>
    [1 | 1:k:0] [2 | 1:k:1]
-   [关闭 | 1:c:0]
+   [首页 | 1:o:0] [关闭 | 1:c:0]
 >> user 1001 taps 1:c:0 on message 1
 << editMessageText chat=1001 message=1
+   <h3>已关闭</h3>
    <p>已经关掉啦～</p>
 << answerCallbackQuery
 >> user 1001 taps 1:k:0 on message 1
 << editMessageText chat=1001 message=1
-   <p>⌛ 这个任务列表过期啦，重新 /tasks 一下吧～</p>
+   <h3>⌛ 过期啦</h3>
+   <p>这个任务列表过期啦，重新 /tasks 一下吧～</p>
 << answerCallbackQuery

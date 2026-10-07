@@ -2,6 +2,7 @@ package flow
 
 import (
 	"context"
+	"strings"
 	"sync"
 	"time"
 )
@@ -14,11 +15,9 @@ const (
 	actionTask     = "k" // arg: index into session tasks; starts following
 	actionFollow   = "f" // arg: index; one refresh of a followed task
 	actionUnfollow = "u" // arg: index
-	actionList     = "l" // back to the task list
-	actionClose    = "c" // closes the task list
+	actionList     = "l" // back to the task list, read afresh
 
 	msgTasksExpired = "⌛ 这个任务列表过期啦，重新 /tasks 一下吧～"
-	msgClosed       = "已经关掉啦～"
 
 	msgNotFollowing = "已经不刷新啦～"
 )
@@ -46,14 +45,14 @@ func (e *Engine) listTasks(ctx context.Context, sess session) Reply {
 	downloads, jobs, err := e.taskLists(ctx)
 	if err != nil {
 		e.store.take(sess.id)
-		return e.failure("transfers", err)
+		return titled(msgTasksTitle, e.failure("transfers", err))
 	}
 	if len(downloads)+len(jobs) == 0 && sess.menu {
 		return Reply{Notice: msgNoTasks}
 	}
 	if len(downloads)+len(jobs) == 0 {
 		e.store.take(sess.id)
-		return Reply{Text: Sentence(msgNoTasks)}
+		return Reply{Text: Lines(Heading(Plain(msgTasksTitle)), Line(Plain(msgNoTasks)))}
 	}
 	sess.tasks, sess.follow = nil, following{}
 	for _, d := range downloads {
@@ -97,9 +96,6 @@ func (e *Engine) chooseTask(ctx context.Context, sess session, p press) (Reply, 
 		return pausedView(sess, p.arg, msgUnfollowed), true
 	case actionList:
 		return e.listTasks(ctx, sess), true
-	case actionClose:
-		e.store.take(sess.id)
-		return Reply{Text: Sentence(msgClosed)}, true
 	}
 	return Reply{}, false
 }
@@ -113,7 +109,7 @@ func (e *Engine) refresh(ctx context.Context, sess session, index int) Reply {
 	view, gone, err := e.taskView(ctx, sess.tasks[index])
 	if err != nil && len(sess.follow.last.Text) == 0 {
 		e.store.take(sess.id)
-		return e.failure("task", err)
+		return titled(msgTasksTitle, e.failure("task", err))
 	}
 	if err != nil {
 		e.log.Warn("task refresh failed", "task", sess.tasks[index].id, "err", err)
@@ -123,7 +119,7 @@ func (e *Engine) refresh(ctx context.Context, sess session, index int) Reply {
 		sess.follow.on = false
 		e.store.put(sess)
 		view = ended(sess.follow.last, view)
-		view.Buttons = [][]Button{{backButton(sess.id)}}
+		view.Buttons = taskRows(sess, nil)
 		return view
 	}
 	if err == nil {
@@ -136,10 +132,7 @@ func (e *Engine) refresh(ctx context.Context, sess session, index int) Reply {
 	}
 	e.store.put(sess)
 	live := withWarning(view, msgFollowing)
-	live.Buttons = [][]Button{{{Label: "停止刷新", Data: data(sess.id, actionUnfollow, index)}, backButton(sess.id)}}
-	if sess.isDownload(index) {
-		live.Buttons = append(live.Buttons, []Button{deleteButton(sess.id, index)})
-	}
+	live.Buttons = taskRows(sess, sess.taskControls(index, Button{Label: "停止刷新", Data: data(sess.id, actionUnfollow, index)}))
 	live.Follow = data(sess.id, actionFollow, index)
 	return live
 }
@@ -175,7 +168,7 @@ func (e *Engine) taskView(ctx context.Context, ref taskRef) (view Reply, gone bo
 // word, so the message still says which task finished.
 func ended(last, final Reply) Reply {
 	if len(last.Text) == 0 {
-		return final
+		return titled(msgTasksTitle, final)
 	}
 	return Reply{Text: append(Lines(last.Text[0]), final.Text...), Image: last.Image}
 }
@@ -183,10 +176,7 @@ func ended(last, final Reply) Reply {
 // pausedView is the last view with refreshing stopped and a way to resume.
 func pausedView(sess session, index int, why string) Reply {
 	view := withWarning(sess.follow.last, why)
-	view.Buttons = [][]Button{{{Label: "继续刷新", Data: data(sess.id, actionTask, index)}, backButton(sess.id)}}
-	if sess.isDownload(index) {
-		view.Buttons = append(view.Buttons, []Button{deleteButton(sess.id, index)})
-	}
+	view.Buttons = taskRows(sess, sess.taskControls(index, Button{Label: "继续刷新", Data: data(sess.id, actionTask, index)}))
 	return view
 }
 
@@ -196,8 +186,28 @@ func withWarning(view Reply, note string) Reply {
 	return Reply{Text: text, Image: view.Image}
 }
 
-func backButton(id uint64) Button {
-	return Button{Label: "返回任务列表", Data: data(id, actionList, 0)}
+// taskControls are refresh control's row in task index's view, with
+// 删除任务 for a download.
+func (sess session) taskControls(index int, refresh Button) []Button {
+	if sess.isDownload(index) {
+		return []Button{refresh, deleteButton(sess.id, index)}
+	}
+	return []Button{refresh}
+}
+
+// taskRows are a task view's buttons: its controls above 返回 to the list
+// read afresh, 首页 and 关闭.
+func taskRows(sess session, controls []Button) [][]Button {
+	nav := append([]Button{tasksBack(sess.id)}, browseRow(sess.id)...)
+	if len(controls) == 0 {
+		return [][]Button{nav}
+	}
+	return [][]Button{controls, nav}
+}
+
+// tasksBack leads back to the task list, read afresh.
+func tasksBack(id uint64) Button {
+	return backTo(id, actionList, 0)
 }
 
 // expired tells the user how to start over: buttons of a task list lead
@@ -206,13 +216,19 @@ func expired(action string) Reply {
 	switch action {
 	case actionSubs, actionSubsKind, actionCancelPick, actionHistory, actionHistoryKind,
 		actionHistoryPick, actionResubscribe, actionSubDetail, actionRefreshSubDetail:
-		return Reply{Text: Sentence("⌛ 这个订阅列表过期啦，重新 /subscribe 一下吧～")}
-	case actionTask, actionFollow, actionUnfollow, actionList, actionClose, actionAskDelete, actionDelete:
-		return Reply{Text: Sentence(msgTasksExpired)}
+		return expiredText("⌛ 这个订阅列表过期啦，重新 /subscribe 一下吧～")
+	case actionTask, actionFollow, actionUnfollow, actionList, actionAskDelete, actionDelete:
+		return expiredText(msgTasksExpired)
 	case actionMedia, actionSeason, actionConfirm, actionAskFrom, actionCancel, actionMulti, actionTick, actionSubscribed,
 		actionRelated, actionSeries, actionBack, actionResearch, actionRetry,
 		actionTorrents, actionTorrentRun, actionTorrentRetry, actionTorrentAgain, actionTorrentPick, actionTorrentGet:
-		return Reply{Text: Sentence(msgExpired)}
+		return expiredText(msgExpired)
 	}
-	return Reply{Text: Sentence(msgHomeExpired)}
+	return expiredText(msgHomeExpired)
+}
+
+// expiredText is an expiry message under its heading, e.g. "⌛ 过期啦"
+// over "这个请求过期啦，重新 /search 一下吧～".
+func expiredText(message string) Reply {
+	return Reply{Text: Lines(Heading(Plain("⌛ 过期啦")), Line(Plain(strings.TrimPrefix(message, "⌛ "))))}
 }

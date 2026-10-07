@@ -3,29 +3,31 @@
    <img src="tg://photo?id=p0"/>
    <h3>🎬 Crychic</h3>
    <p>想看什么告诉我呀～我帮你找片、订阅，入库了第一时间喊你！私聊直接发片名就能搜哦 (๑•̀ㅂ•́)و✧</p>
-   [搜索订阅 | 1:h:0] [发现 | 1:h:1]
-   [订阅 | 1:h:2] [最新入库 | 1:h:3]
+   [搜索 | 1:h:0] [发现 | 1:h:1]
+   [我的订阅 | 1:h:2] [最新入库 | 1:h:3]
    [任务进度 | 1:h:4]
 >> user 1002 taps 1:h:0 on message 1
 << answerCallbackQuery notice="这是别人的请求哦，不能替 TA 点～"
 >> user 1001 taps 1:h:0 on message 1
 << editMessageText chat=1001 message=1
+   <h3>🔍 搜索</h3>
    <p>想找哪部呀？直接回复片名告诉我～</p>
-   [首页 | 1:o:0]
+   [首页 | 1:o:0] [取消 | 1:x:0]
 << answerCallbackQuery
 >> user 1001 taps 1:o:0 on message 1
 << editMessageText chat=1001 message=1 reuses=file-d620fc3c5f16
    <img src="tg://photo?id=p0"/>
    <h3>🎬 Crychic</h3>
    <p>想看什么告诉我呀～我帮你找片、订阅，入库了第一时间喊你！私聊直接发片名就能搜哦 (๑•̀ㅂ•́)و✧</p>
-   [搜索订阅 | 1:h:0] [发现 | 1:h:1]
-   [订阅 | 1:h:2] [最新入库 | 1:h:3]
+   [搜索 | 1:h:0] [发现 | 1:h:1]
+   [我的订阅 | 1:h:2] [最新入库 | 1:h:3]
    [任务进度 | 1:h:4]
 << answerCallbackQuery
 >> user 1001 taps 1:h:0 on message 1
 << editMessageText chat=1001 message=1
+   <h3>🔍 搜索</h3>
    <p>想找哪部呀？直接回复片名告诉我～</p>
-   [首页 | 1:o:0]
+   [首页 | 1:o:0] [取消 | 1:x:0]
 << answerCallbackQuery
 >> user 1001 in chat 1001: 沙丘
 -> MoviePilot GET /api/v1/media/search?count=10&title=沙丘&type=media
@@ -63,23 +65,26 @@
    [1 | 1:m:0] [2 | 1:m:1] [3 | 1:m:2] [4 | 1:m:3]
    [5 | 1:m:4] [6 | 1:m:5] [7 | 1:m:6] [8 | 1:m:7]
    [下一页 › | 1:p:1]
-   [重新搜索 | 1:rs:0] [返回 | 1:bk:0] [取消 | 1:x:0]
+   [重新搜索 | 1:rs:0]
+   [返回 | 1:bk:0] [取消 | 1:x:0]
 >> user 1001 taps 1:bk:0 on message 1
 << editMessageText chat=1001 message=1
+   <h3>🔍 搜索</h3>
    <p>想找哪部呀？直接回复片名告诉我～</p>
-   [首页 | 1:o:0]
+   [首页 | 1:o:0] [取消 | 1:x:0]
 << answerCallbackQuery
 >> user 1001 taps 1:o:0 on message 1
 << editMessageText chat=1001 message=1 reuses=file-d620fc3c5f16
    <img src="tg://photo?id=p0"/>
    <h3>🎬 Crychic</h3>
    <p>想看什么告诉我呀～我帮你找片、订阅，入库了第一时间喊你！私聊直接发片名就能搜哦 (๑•̀ㅂ•́)و✧</p>
-   [搜索订阅 | 1:h:0] [发现 | 1:h:1]
-   [订阅 | 1:h:2] [最新入库 | 1:h:3]
+   [搜索 | 1:h:0] [发现 | 1:h:1]
+   [我的订阅 | 1:h:2] [最新入库 | 1:h:3]
    [任务进度 | 1:h:4]
 << answerCallbackQuery
 >> Crychic restarts
 >> user 1001 taps 1:h:0 on message 1
 << editMessageText chat=1001 message=1
-   <p>⌛ 这个菜单睡着啦，发 /start 叫醒我吧～</p>
+   <h3>⌛ 过期啦</h3>
+   <p>这个菜单睡着啦，发 /start 叫醒我吧～</p>
 << answerCallbackQuery

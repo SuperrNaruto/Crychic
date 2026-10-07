@@ -6,9 +6,11 @@ const (
 	actionHome     = "o" // shows the home menu
 	actionFeature  = "h" // arg: index into the home features
 	actionAskTitle = "q" // typed answer: a title to search for
+	actionClose    = "c" // closes a browsing screen
 
 	msgHomeExpired = "⌛ 这个菜单睡着啦，发 /start 叫醒我吧～"
 	msgAskTitle    = "想找哪部呀？直接回复片名告诉我～"
+	msgClosed      = "已经关掉啦～"
 )
 
 // feature is one entry of the home menu.
@@ -20,9 +22,9 @@ type feature struct {
 // features are the home menu entries, in order.
 func (e *Engine) features() []feature {
 	return []feature{
-		{"搜索订阅", func(_ context.Context, sess session) Reply { return askTitle(sess) }},
+		{"搜索", func(_ context.Context, sess session) Reply { return askTitle(sess) }},
 		{"发现", func(_ context.Context, sess session) Reply { return e.chartMenu(sess) }},
-		{"订阅", e.listSubs},
+		{"我的订阅", e.listSubs},
 		{"最新入库", e.latest},
 		{"任务进度", e.listTasks},
 	}
@@ -53,6 +55,9 @@ func (e *Engine) chooseHome(ctx context.Context, sess session, p press) (Reply, 
 	switch p.action {
 	case actionHome:
 		return e.home(sess), true
+	case actionClose:
+		e.store.take(sess.id)
+		return Reply{Text: Lines(Heading(Plain("已关闭")), Line(Plain(msgClosed)))}, true
 	case actionFeature:
 		features := e.features()
 		if p.arg < 0 || p.arg >= len(features) {
@@ -67,8 +72,8 @@ func (e *Engine) chooseHome(ctx context.Context, sess session, p press) (Reply, 
 // askTitle prompts for a title to search for.
 func askTitle(sess session) Reply {
 	return Reply{
-		Text:    Sentence(msgAskTitle),
-		Buttons: [][]Button{{homeButton(sess.id)}},
+		Text:    Lines(Heading(Plain("🔍 搜索")), Line(Plain(msgAskTitle))),
+		Buttons: [][]Button{{homeButton(sess.id), cancelButton(sess.id)}},
 		Input:   data(sess.id, actionAskTitle, 0),
 	}
 }

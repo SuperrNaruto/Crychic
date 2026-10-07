@@ -19,8 +19,8 @@
    </table>
    [特别篇 | 1:s:0]
    [相似推荐 | 1:r:0]
-   [取消 | 1:x:0]
    [重新搜索 | 1:rs:0]
+   [取消 | 1:x:0]
 >> user 1001 taps 1:s:0 on message 1
 -> MoviePilot GET /api/v1/subscribe/media/301489?media_source=themoviedb&mtype=电视剧&season=0&title=深渊无间&year=2026
 << editMessageText chat=1001 message=1 reuses=url-0e877991
@@ -35,10 +35,12 @@
    <hr/>
    <p><b>要订阅《深渊无间》第 0 季（共 35 集）吗？</b></p>
    [从第 1 集开始 | 1:ok:0]
-   [指定起始集… | 1:e:0] [搜索资源 | 1:ts:0]
+   [指定起始集… | 1:e:0]
+   [搜索资源 | 1:ts:0] [相似推荐 | 1:r:0]
    [返回 | 1:bk:0] [取消 | 1:x:0]
 << answerCallbackQuery
 >> user 1001 taps 1:x:0 on message 1
 << editMessageText chat=1001 message=1
+   <h3>已取消</h3>
    <p>好哒，已经取消啦～</p>
 << answerCallbackQuery

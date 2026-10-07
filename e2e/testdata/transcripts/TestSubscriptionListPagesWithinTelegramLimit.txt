@@ -51,9 +51,9 @@
    [13 | 1:sd:12] [14 | 1:sd:13] [15 | 1:sd:14] [16 | 1:sd:15]
    [17 | 1:sd:16] [18 | 1:sd:17] [19 | 1:sd:18] [20 | 1:sd:19]
    [下一页 › | 1:p:1]
-   [电视剧 | 1:sf:2] [电影 | 1:sf:1]
+   [·电视剧· | 1:sf:2] [电影 | 1:sf:1]
    [订阅历史 | 1:hs:2]
-   [首页 | 1:o:0]
+   [首页 | 1:o:0] [关闭 | 1:c:0]
 >> user 1001 taps 1:p:1 on message 1
 << editMessageText chat=1001 message=1
    <h3>📚 订阅清单 · 电视剧（150）</h3>
@@ -106,9 +106,9 @@
    [33 | 1:sd:32] [34 | 1:sd:33] [35 | 1:sd:34] [36 | 1:sd:35]
    [37 | 1:sd:36] [38 | 1:sd:37] [39 | 1:sd:38] [40 | 1:sd:39]
    [‹ 上一页 | 1:p:0] [下一页 › | 1:p:2]
-   [电视剧 | 1:sf:2] [电影 | 1:sf:1]
+   [·电视剧· | 1:sf:2] [电影 | 1:sf:1]
    [订阅历史 | 1:hs:2]
-   [首页 | 1:o:0]
+   [首页 | 1:o:0] [关闭 | 1:c:0]
 << answerCallbackQuery
 >> user 1001 taps 1:p:2 on message 1
 << editMessageText chat=1001 message=1
@@ -162,9 +162,9 @@
    [53 | 1:sd:52] [54 | 1:sd:53] [55 | 1:sd:54] [56 | 1:sd:55]
    [57 | 1:sd:56] [58 | 1:sd:57] [59 | 1:sd:58] [60 | 1:sd:59]
    [‹ 上一页 | 1:p:1] [下一页 › | 1:p:3]
-   [电视剧 | 1:sf:2] [电影 | 1:sf:1]
+   [·电视剧· | 1:sf:2] [电影 | 1:sf:1]
    [订阅历史 | 1:hs:2]
-   [首页 | 1:o:0]
+   [首页 | 1:o:0] [关闭 | 1:c:0]
 << answerCallbackQuery
 >> user 1001 taps 1:p:3 on message 1
 << editMessageText chat=1001 message=1
@@ -218,9 +218,9 @@
    [73 | 1:sd:72] [74 | 1:sd:73] [75 | 1:sd:74] [76 | 1:sd:75]
    [77 | 1:sd:76] [78 | 1:sd:77] [79 | 1:sd:78] [80 | 1:sd:79]
    [‹ 上一页 | 1:p:2] [下一页 › | 1:p:4]
-   [电视剧 | 1:sf:2] [电影 | 1:sf:1]
+   [·电视剧· | 1:sf:2] [电影 | 1:sf:1]
    [订阅历史 | 1:hs:2]
-   [首页 | 1:o:0]
+   [首页 | 1:o:0] [关闭 | 1:c:0]
 << answerCallbackQuery
 >> user 1001 taps 1:p:4 on message 1
 << editMessageText chat=1001 message=1
@@ -274,9 +274,9 @@
    [93 | 1:sd:92] [94 | 1:sd:93] [95 | 1:sd:94] [96 | 1:sd:95]
    [97 | 1:sd:96] [98 | 1:sd:97] [99 | 1:sd:98] [100 | 1:sd:99]
    [‹ 上一页 | 1:p:3] [下一页 › | 1:p:5]
-   [电视剧 | 1:sf:2] [电影 | 1:sf:1]
+   [·电视剧· | 1:sf:2] [电影 | 1:sf:1]
    [订阅历史 | 1:hs:2]
-   [首页 | 1:o:0]
+   [首页 | 1:o:0] [关闭 | 1:c:0]
 << answerCallbackQuery
 >> user 1001 taps 1:p:5 on message 1
 << editMessageText chat=1001 message=1
@@ -330,9 +330,9 @@
    [113 | 1:sd:112] [114 | 1:sd:113] [115 | 1:sd:114] [116 | 1:sd:115]
    [117 | 1:sd:116] [118 | 1:sd:117] [119 | 1:sd:118] [120 | 1:sd:119]
    [‹ 上一页 | 1:p:4] [下一页 › | 1:p:6]
-   [电视剧 | 1:sf:2] [电影 | 1:sf:1]
+   [·电视剧· | 1:sf:2] [电影 | 1:sf:1]
    [订阅历史 | 1:hs:2]
-   [首页 | 1:o:0]
+   [首页 | 1:o:0] [关闭 | 1:c:0]
 << answerCallbackQuery
 >> user 1001 taps 1:p:6 on message 1
 << editMessageText chat=1001 message=1
@@ -386,9 +386,9 @@
    [133 | 1:sd:132] [134 | 1:sd:133] [135 | 1:sd:134] [136 | 1:sd:135]
    [137 | 1:sd:136] [138 | 1:sd:137] [139 | 1:sd:138] [140 | 1:sd:139]
    [‹ 上一页 | 1:p:5] [下一页 › | 1:p:7]
-   [电视剧 | 1:sf:2] [电影 | 1:sf:1]
+   [·电视剧· | 1:sf:2] [电影 | 1:sf:1]
    [订阅历史 | 1:hs:2]
-   [首页 | 1:o:0]
+   [首页 | 1:o:0] [关闭 | 1:c:0]
 << answerCallbackQuery
 >> user 1001 taps 1:p:7 on message 1
 << editMessageText chat=1001 message=1
@@ -420,14 +420,14 @@
    [145 | 1:sd:144] [146 | 1:sd:145] [147 | 1:sd:146] [148 | 1:sd:147]
    [149 | 1:sd:148] [150 | 1:sd:149]
    [‹ 上一页 | 1:p:6]
-   [电视剧 | 1:sf:2] [电影 | 1:sf:1]
+   [·电视剧· | 1:sf:2] [电影 | 1:sf:1]
    [订阅历史 | 1:hs:2]
-   [首页 | 1:o:0]
+   [首页 | 1:o:0] [关闭 | 1:c:0]
 << answerCallbackQuery
 >> user 1001 taps 1:sd:149 on message 1
 -> MoviePilot GET /api/v1/subscribe/
 << editMessageText chat=1001 message=1
-   <h3>订阅详情 · 《最后一条订阅》第 2 季</h3>
+   <h3>📚 订阅详情 · 《最后一条订阅》第 2 季</h3>
    <footer>电视剧 · 订阅中</footer>
    <h4>订阅设置</h4>
    <p>普通订阅 · 从第 1 集开始 · 共 1000000 集 · MoviePilot 待获取 1000000 集<br>
@@ -465,11 +465,11 @@
    <footer>第 1/5 页</footer>
    [下一页 › | 1:p:1]
    [刷新 | 1:su:149]
-   [返回 | 1:bk:0]
+   [返回 | 1:bk:0] [首页 | 1:o:0] [关闭 | 1:c:0]
 << answerCallbackQuery
 >> user 1001 taps 1:p:1 on message 1
 << editMessageText chat=1001 message=1
-   <h3>订阅详情 · 《最后一条订阅》第 2 季</h3>
+   <h3>📚 订阅详情 · 《最后一条订阅》第 2 季</h3>
    <footer>电视剧 · 订阅中</footer>
    <h4>订阅设置</h4>
    <p>普通订阅 · 从第 1 集开始 · 共 1000000 集 · MoviePilot 待获取 1000000 集<br>
@@ -507,11 +507,11 @@
    <footer>第 2/5 页</footer>
    [‹ 上一页 | 1:p:0] [下一页 › | 1:p:2]
    [刷新 | 1:su:149]
-   [返回 | 1:bk:0]
+   [返回 | 1:bk:0] [首页 | 1:o:0] [关闭 | 1:c:0]
 << answerCallbackQuery
 >> user 1001 taps 1:p:2 on message 1
 << editMessageText chat=1001 message=1
-   <h3>订阅详情 · 《最后一条订阅》第 2 季</h3>
+   <h3>📚 订阅详情 · 《最后一条订阅》第 2 季</h3>
    <footer>电视剧 · 订阅中</footer>
    <h4>订阅设置</h4>
    <p>普通订阅 · 从第 1 集开始 · 共 1000000 集 · MoviePilot 待获取 1000000 集<br>
@@ -549,11 +549,11 @@
    <footer>第 3/5 页</footer>
    [‹ 上一页 | 1:p:1] [下一页 › | 1:p:3]
    [刷新 | 1:su:149]
-   [返回 | 1:bk:0]
+   [返回 | 1:bk:0] [首页 | 1:o:0] [关闭 | 1:c:0]
 << answerCallbackQuery
 >> user 1001 taps 1:p:3 on message 1
 << editMessageText chat=1001 message=1
-   <h3>订阅详情 · 《最后一条订阅》第 2 季</h3>
+   <h3>📚 订阅详情 · 《最后一条订阅》第 2 季</h3>
    <footer>电视剧 · 订阅中</footer>
    <h4>订阅设置</h4>
    <p>普通订阅 · 从第 1 集开始 · 共 1000000 集 · MoviePilot 待获取 1000000 集<br>
@@ -591,11 +591,11 @@
    <footer>第 4/5 页</footer>
    [‹ 上一页 | 1:p:2] [下一页 › | 1:p:4]
    [刷新 | 1:su:149]
-   [返回 | 1:bk:0]
+   [返回 | 1:bk:0] [首页 | 1:o:0] [关闭 | 1:c:0]
 << answerCallbackQuery
 >> user 1001 taps 1:p:4 on message 1
 << editMessageText chat=1001 message=1
-   <h3>订阅详情 · 《最后一条订阅》第 2 季</h3>
+   <h3>📚 订阅详情 · 《最后一条订阅》第 2 季</h3>
    <footer>电视剧 · 订阅中</footer>
    <h4>订阅设置</h4>
    <p>普通订阅 · 从第 1 集开始 · 共 1000000 集 · MoviePilot 待获取 1000000 集<br>
@@ -633,7 +633,7 @@
    <footer>第 5/5 页</footer>
    [‹ 上一页 | 1:p:3]
    [刷新 | 1:su:149]
-   [返回 | 1:bk:0]
+   [返回 | 1:bk:0] [首页 | 1:o:0] [关闭 | 1:c:0]
 << answerCallbackQuery
 >> user 1001 taps 1:bk:0 on message 1
 << editMessageText chat=1001 message=1
@@ -665,9 +665,9 @@
    [145 | 1:sd:144] [146 | 1:sd:145] [147 | 1:sd:146] [148 | 1:sd:147]
    [149 | 1:sd:148] [150 | 1:sd:149]
    [‹ 上一页 | 1:p:6]
-   [电视剧 | 1:sf:2] [电影 | 1:sf:1]
+   [·电视剧· | 1:sf:2] [电影 | 1:sf:1]
    [订阅历史 | 1:hs:2]
-   [首页 | 1:o:0]
+   [首页 | 1:o:0] [关闭 | 1:c:0]
 << answerCallbackQuery
 >> user 1001 taps 1:p:6 on message 1
 << editMessageText chat=1001 message=1
@@ -721,7 +721,7 @@
    [133 | 1:sd:132] [134 | 1:sd:133] [135 | 1:sd:134] [136 | 1:sd:135]
    [137 | 1:sd:136] [138 | 1:sd:137] [139 | 1:sd:138] [140 | 1:sd:139]
    [‹ 上一页 | 1:p:5] [下一页 › | 1:p:7]
-   [电视剧 | 1:sf:2] [电影 | 1:sf:1]
+   [·电视剧· | 1:sf:2] [电影 | 1:sf:1]
    [订阅历史 | 1:hs:2]
-   [首页 | 1:o:0]
+   [首页 | 1:o:0] [关闭 | 1:c:0]
 << answerCallbackQuery

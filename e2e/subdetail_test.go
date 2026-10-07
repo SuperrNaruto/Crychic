@@ -95,7 +95,7 @@ func TestSubscriptionDetailEnded(t *testing.T) {
 	h.mp.setRoute(subsPath, ok("subscriptions_none.json"))
 	h.tap(alice, 1, "刷新")
 	h.shows(1, "已经结束或被取消")
-	h.tap(alice, 1, "返回订阅列表")
+	h.tap(alice, 1, "返回")
 	h.shows(1, "现在还没有订阅")
 	const beyondSession = 11 * time.Minute
 	h.advance(beyondSession)

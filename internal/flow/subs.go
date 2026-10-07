@@ -16,7 +16,7 @@ const (
 	msgNoSubs          = "现在还没有订阅哦～"
 	msgNoKindSubs      = "这里还没有%s订阅哦～"
 	msgSubsTitle       = "📚 订阅清单"
-	msgCancelTitle     = "取消订阅"
+	msgCancelTitle     = "📚 取消订阅"
 	msgCancelPick      = "只能取消你请求的订阅哦，点编号选一个吧。"
 	msgNothingToCancel = "这里没有你请求的订阅可以取消哦～"
 	msgCancelEffect    = "取消后 MoviePilot 就不会再帮它搜索下载了哦。"
@@ -71,7 +71,7 @@ func (e *Engine) listSubs(ctx context.Context, sess session) Reply {
 	subs, err := e.backend.Subscriptions(ctx)
 	if err != nil {
 		e.store.take(sess.id)
-		return e.failure("subscriptions", err)
+		return titled(msgSubsTitle, e.failure("subscriptions", err))
 	}
 	if len(subs) == 0 && sess.menu {
 		return Reply{Notice: msgNoSubs}
@@ -80,7 +80,8 @@ func (e *Engine) listSubs(ctx context.Context, sess session) Reply {
 	if len(subs) == 0 {
 		e.store.put(sess)
 		history := Button{Label: "订阅历史", Data: data(sess.id, actionHistory, int(TV))}
-		return Reply{Text: Sentence(msgNoSubs), Buttons: [][]Button{{history, homeButton(sess.id)}}}
+		text := Lines(Heading(Plain(msgSubsTitle)), Line(Plain(msgNoSubs)))
+		return Reply{Text: text, Buttons: [][]Button{{history}, browseRow(sess.id)}}
 	}
 	if sess.kind == 0 {
 		sess.kind = firstKind(subs)
@@ -123,23 +124,32 @@ func (e *Engine) subsPage(sess session) Reply {
 	if mine {
 		actions = append([]Button{{Label: "取消订阅", Data: data(sess.id, actionCancelPick, 0)}}, actions...)
 	}
-	view.menu = [][]Button{kindRow(sess.id, actionSubsKind), actions}
-	view.footer = []Button{homeButton(sess.id)}
+	view.menu = [][]Button{kindRow(sess.id, actionSubsKind, sess.kind), actions}
+	view.footer = browseRow(sess.id)
 	return e.listPages(sess, view)
 }
 
-// kindRow switches a list between TV and movies.
-func kindRow(id uint64, action string) []Button {
+// kindRow switches a list between TV and movies, the shown kind marked
+// like the shown weekday, e.g. ·电视剧·.
+func kindRow(id uint64, action string, shown Kind) []Button {
 	row := make([]Button, 0, len(subKinds))
 	for _, k := range subKinds {
-		row = append(row, Button{Label: k.String(), Data: data(id, action, int(k))})
+		row = append(row, Button{Label: markShown(k.String(), k == shown), Data: data(id, action, int(k))})
 	}
 	return row
 }
 
+// markShown marks the label of the view shown now among its siblings.
+func markShown(label string, shown bool) string {
+	if shown {
+		return "·" + label + "·"
+	}
+	return label
+}
+
 // cancelPicker numbers the shown kind's subscriptions the owner asked for.
 func (e *Engine) cancelPicker(sess session) Reply {
-	view := listView{heading: Heading(Plain(msgCancelTitle)), note: msgCancelPick, footer: []Button{homeButton(sess.id)}}
+	view := listView{heading: Heading(Plain(msgCancelTitle)), note: msgCancelPick, footer: browseRow(sess.id)}
 	for i, s := range sess.subs {
 		if s.Kind != sess.kind || !slices.Contains(sess.mine, s.ID) {
 			continue
@@ -198,14 +208,13 @@ func askCancel(sess session, index int) Reply {
 // arrival that will not come.
 func (e *Engine) unsubscribe(ctx context.Context, sess session, s Subscription) Reply {
 	if err := e.backend.Unsubscribe(ctx, s.ID); err != nil {
-		return e.failure("unsubscribe", err)
+		return titled(msgCancelTitle, e.failure("unsubscribe", err))
 	}
 	if err := e.watcher.Forget(ctx, s.ID); err != nil {
 		e.log.Error("cannot forget cancelled subscription", "subscription", s.ID, "err", err)
 	}
 	e.store.put(sess)
-	done := fmt.Sprintf("✅ 好哒，《%s》%s的订阅已经取消啦。", s.Title, seasonSuffix(s))
-	return Reply{Text: Sentence(done), Buttons: [][]Button{{
-		{Label: "返回订阅列表", Data: data(sess.id, actionSubs, 0)}, homeButton(sess.id),
-	}}}
+	done := fmt.Sprintf("好哒，《%s》%s的订阅已经取消啦。", s.Title, seasonSuffix(s))
+	nav := append([]Button{backTo(sess.id, actionSubs, 0)}, browseRow(sess.id)...)
+	return Reply{Text: Lines(Heading(Plain("✅ 已取消订阅")), Line(Plain(done))), Buttons: [][]Button{nav}}
 }

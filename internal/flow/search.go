@@ -17,7 +17,7 @@ const (
 func (e *Engine) Start(ctx context.Context, actor Actor, term string) Reply {
 	term = strings.TrimSpace(term)
 	if term == "" {
-		return Reply{Text: Sentence(msgUsage)}
+		return Reply{Text: Lines(Heading(Plain("🔍 搜索")), Line(Plain(msgUsage)))}
 	}
 	sess := e.store.create(actor, nil)
 	return e.shown(sess.id, e.search(ctx, sess, term))
@@ -55,7 +55,8 @@ func (e *Engine) resultList(sess session, term string) Reply {
 	view := listView{
 		heading:   Heading(Plain(fmt.Sprintf("🔍 帮你找到这些「%s」啦", term))),
 		pageItems: searchPageItems,
-		footer:    []Button{researchButton(sess.id), cancelButton(sess.id)},
+		menu:      [][]Button{{researchButton(sess.id)}},
+		footer:    []Button{cancelButton(sess.id)},
 	}
 	for i, m := range sess.results {
 		m.Title = truncate(m.Title, listTitleRunes)
@@ -73,6 +74,8 @@ func researchButton(id uint64) Button {
 	return Button{Label: "重新搜索", Data: data(id, actionResearch, 0)}
 }
 
+// withResearch offers 重新搜索 on a row of its own above the last row, the
+// one ending the conversation.
 func withResearch(reply Reply, id uint64) Reply {
 	if reply.Input != "" || reply.Notice != "" {
 		return reply
@@ -83,7 +86,9 @@ func withResearch(reply Reply, id uint64) Reply {
 			return reply
 		}
 	}
-	reply.Buttons = append(slices.Clone(reply.Buttons), []Button{button})
+	rows := slices.Clone(reply.Buttons)
+	at := max(len(rows)-1, 0)
+	reply.Buttons = slices.Insert(rows, at, []Button{button})
 	return reply
 }
 

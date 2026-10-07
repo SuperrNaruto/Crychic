@@ -20,10 +20,13 @@ func (a *adapter) lockInput(ctx context.Context, msg *models.Message) (func(), b
 }
 
 func refused(user int64) flow.Reply {
-	return flow.Reply{Text: flow.Lines(flow.Line(
-		flow.Plain("🚫 抱歉，你还没有使用权限哦。把你的 Telegram ID 发给管理员吧："),
-		flow.Mono(strconv.FormatInt(user, decimal)),
-	))}
+	return flow.Reply{Text: flow.Lines(
+		flow.Heading(flow.Plain("🚫 没有权限")),
+		flow.Line(
+			flow.Plain("抱歉，你还没有使用权限哦。把你的 Telegram ID 发给管理员吧："),
+			flow.Mono(strconv.FormatInt(user, decimal)),
+		),
+	)}
 }
 
 // replyTo also remembers input requested by an initial response, not only

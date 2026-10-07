@@ -90,12 +90,12 @@ func (e *Engine) searchTorrents(sess session, run string) Reply {
 	sess.hunt, sess.torrents, sess.release = nil, h.found, nil
 	e.store.put(sess)
 	if h.err != nil {
-		rows := [][]Button{{{Label: "重试", Data: data(sess.id, actionTorrentRetry, 0)}, cancelButton(sess.id)}}
+		rows := [][]Button{{{Label: "重试", Data: data(sess.id, actionTorrentRetry, 0)}}, {cancelButton(sess.id)}}
 		return sess.picked.replyLines(e.failure("torrent search", h.err).Text, rows)
 	}
 	if len(h.found) == 0 {
 		text := Sentence(fmt.Sprintf("🔍 没搜到%s的资源 (｡•́︿•̀｡) 过段时间再来试试吧～", targetName(target)))
-		rows := [][]Button{{{Label: "重试", Data: data(sess.id, actionTorrentRetry, 0)}, cancelButton(sess.id)}}
+		rows := [][]Button{{{Label: "重试", Data: data(sess.id, actionTorrentRetry, 0)}}, {cancelButton(sess.id)}}
 		return sess.picked.replyLines(text, rows)
 	}
 	return e.listPages(sess, torrentList(sess, target))
@@ -114,7 +114,7 @@ func (e *Engine) pickTorrent(sess session, index int) Reply {
 		text = append(text, Line(Plain(msgHitAndRun)))
 	}
 	text = append(text, Line(Strong(msgTorrentAsk)))
-	rows := [][]Button{{{Label: msgDownloadLabel, Data: data(sess.id, actionTorrentGet, index)}, cancelButton(sess.id)}}
+	rows := [][]Button{{{Label: msgDownloadLabel, Data: data(sess.id, actionTorrentGet, index)}}, {cancelButton(sess.id)}}
 	return sess.picked.replyLines(text, rows)
 }
 

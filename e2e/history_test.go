@@ -43,11 +43,10 @@ func TestResubscribeFromHistory(t *testing.T) {
 	h.shows(1, "已经帮你重新订阅《颂乐人偶》第 1 季啦")
 	h.tapData(alice, 1, confirm)
 	h.arrives(alice, mujica.file("S01", "E01"))
-	h.tap(alice, 1, "返回订阅列表")
-	h.shows(1, "订阅清单 · 电视剧")
+	h.tap(alice, 1, "返回")
+	h.shows(1, "订阅历史 · 电视剧")
 
 	h.mp.setRoute(subscribePath, route{status: http.StatusServiceUnavailable, fixture: "server_error.json"})
-	h.tap(alice, 1, "订阅历史")
 	h.tap(alice, 1, "电影")
 	h.tap(alice, 1, "1")
 	h.tap(alice, 1, "确认重新订阅")

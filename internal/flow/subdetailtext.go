@@ -31,7 +31,7 @@ func (d subscriptionDetail) view() listView {
 	s := d.sub
 	rows, omitted, ambiguous := d.progressRows()
 	view := listView{
-		heading: Heading(Plain("订阅详情 · " + taskName(truncate(s.Title, listTitleRunes), s.Season))),
+		heading: Heading(Plain(msgSubDetailTitle + " · " + taskName(truncate(s.Title, listTitleRunes), s.Season))),
 		image:   s.Poster, pageItems: subDetailPageItems, note: d.progressNote(omitted, ambiguous),
 	}
 	if len(rows) == 0 {

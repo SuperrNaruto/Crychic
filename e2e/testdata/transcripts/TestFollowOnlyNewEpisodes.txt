@@ -34,7 +34,8 @@
    [1 | 1:m:0] [2 | 1:m:1] [3 | 1:m:2] [4 | 1:m:3]
    [5 | 1:m:4] [6 | 1:m:5] [7 | 1:m:6] [8 | 1:m:7]
    [下一页 › | 1:p:1]
-   [重新搜索 | 1:rs:0] [取消 | 1:x:0]
+   [重新搜索 | 1:rs:0]
+   [取消 | 1:x:0]
 >> user 1001 taps 1:m:0 on message 1
 -> MoviePilot GET /api/v1/media/30983?media_source=themoviedb&type_name=电视剧
 -> MoviePilot GET /api/v1/media/seasons?media_id=30983&media_source=themoviedb
@@ -65,7 +66,8 @@
    <hr/>
    <p><b>要订阅《名侦探柯南》第 1 季（共 1216 集）吗？</b></p>
    [从第 1 集开始 | 1:ok:0] [只追新集（第 1216 集起） | 1:ok:1216]
-   [指定起始集… | 1:e:0] [搜索资源 | 1:ts:0]
+   [指定起始集… | 1:e:0]
+   [搜索资源 | 1:ts:0] [相似推荐 | 1:r:0]
    [返回 | 1:bk:0] [取消 | 1:x:0]
 << answerCallbackQuery
 >> user 1001 taps 1:ok:1216 on message 1

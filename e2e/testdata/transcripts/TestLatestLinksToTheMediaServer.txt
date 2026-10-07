@@ -11,4 +11,4 @@
    <li value="4"><a href="https://emby.example.com/web/index.html#!/item?id=37&amp;context=home"><b>《再见菈菈》</b></a><br>
    <i>2026 · 电视剧</i></li>
    </ol>
-   [首页 | 1:o:0]
+   [首页 | 1:o:0] [关闭 | 1:c:0]

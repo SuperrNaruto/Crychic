@@ -72,7 +72,7 @@ func (e *Engine) tickBox(sess session) Reply {
 		ticks = append(ticks, Button{Label: label, Data: data(sess.id, actionTick, s.Number)})
 	}
 	subscribe := Button{Label: fmt.Sprintf("订阅所选 %d 季", len(sess.chosen)), Data: data(sess.id, actionSubscribed, 0)}
-	rows := append(grid(ticks, seasonColumns), []Button{subscribe, cancelButton(sess.id)})
+	rows := append(grid(ticks, seasonColumns), []Button{subscribe}, []Button{cancelButton(sess.id)})
 	return sess.picked.replyLines(sess.seasonChecklist(msgPickSeasons, seasons, sess.chosen), rows)
 }
 
@@ -88,7 +88,7 @@ type seasonOutcome struct {
 // skipping ones already subscribed, and reports every season's outcome.
 func (e *Engine) subscribeSeasons(ctx context.Context, sess session) Reply {
 	if _, ok := e.store.take(sess.id); !ok {
-		return Reply{Text: Sentence(msgExpired)}
+		return expiredText(msgExpired)
 	}
 	outcomes := make([]seasonOutcome, 0, len(sess.chosen))
 	for _, n := range sess.chosen {

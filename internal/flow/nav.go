@@ -104,16 +104,49 @@ func snapshot(sess session) *session {
 	return &sess
 }
 
-// withBack puts 返回 before 取消, or on a row of its own when there is none.
+// labelBack is the one name of every way back, whether it restores the
+// screen before (actionBack) or reads a list afresh (backTo).
+const labelBack = "返回"
+
+// backTo leads back to a list read afresh, e.g. tasks that moved on.
+func backTo(id uint64, action string, arg int) Button {
+	return Button{Label: labelBack, Data: data(id, action, arg)}
+}
+
+// closeButton ends a browsing screen; 取消 ends a request instead.
+func closeButton(id uint64) Button {
+	return Button{Label: "关闭", Data: data(id, actionClose, 0)}
+}
+
+// browseRow is the last row of a browsing screen: 首页 and 关闭, with 返回
+// put in front of them by navigate (or by the screen itself).
+func browseRow(id uint64) []Button {
+	return []Button{homeButton(id), closeButton(id)}
+}
+
+// titled opens a reply with heading unless it already has one.
+func titled(heading string, reply Reply) Reply {
+	if len(reply.Text) > 0 && reply.Text[0].Kind == Title {
+		return reply
+	}
+	reply.Text = append(Lines(Heading(Plain(heading))), reply.Text...)
+	return reply
+}
+
+// withBack puts 返回 at the front of the last row's 取消, 首页 or 关闭, or on
+// a row of its own; a reply with a 返回 of its own keeps that one.
 func withBack(id uint64, reply Reply) Reply {
-	back := Button{Label: "返回", Data: data(id, actionBack, 0)}
-	cancel := cancelButton(id)
+	back := Button{Label: labelBack, Data: data(id, actionBack, 0)}
+	if hasLabel(reply.Buttons, labelBack) {
+		return reply
+	}
+	ends := map[Button]bool{cancelButton(id): true, homeButton(id): true, closeButton(id): true}
 	rows := make([][]Button, 0, len(reply.Buttons)+1)
 	placed := false
 	for _, row := range reply.Buttons {
 		next := make([]Button, 0, len(row)+1)
 		for _, b := range row {
-			if b == cancel && !placed {
+			if ends[b] && !placed {
 				next, placed = append(next, back), true
 			}
 			next = append(next, b)
@@ -125,6 +158,17 @@ func withBack(id uint64, reply Reply) Reply {
 	}
 	reply.Buttons = rows
 	return reply
+}
+
+func hasLabel(rows [][]Button, label string) bool {
+	for _, row := range rows {
+		for _, b := range row {
+			if b.Label == label {
+				return true
+			}
+		}
+	}
+	return false
 }
 
 // grid lays buttons out columns to a row.

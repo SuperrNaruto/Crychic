@@ -15,10 +15,8 @@ func startChoices(sess session, season int) Reply {
 		label := fmt.Sprintf("只追新集（第 %d 集起）", next.Number)
 		rows[0] = append(rows[0], Button{Label: label, Data: data(sess.id, actionConfirm, next.Number)})
 	}
-	rows = append(rows,
-		[]Button{{Label: "指定起始集…", Data: data(sess.id, actionAskFrom, 0)}, torrentButton(sess.id)},
-		[]Button{cancelButton(sess.id)},
-	)
+	rows = append(rows, []Button{{Label: "指定起始集…", Data: data(sess.id, actionAskFrom, 0)}})
+	rows = append(rows, onward(sess)...)
 	var facts []string
 	if count := sess.episodeCount(season); count > 0 {
 		facts = append(facts, fmt.Sprintf("共 %d 集", count))

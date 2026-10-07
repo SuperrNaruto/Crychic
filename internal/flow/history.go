@@ -58,8 +58,8 @@ func (e *Engine) history(ctx context.Context, sess session, kind Kind) Reply {
 	view := listView{
 		heading: Heading(Plain(fmt.Sprintf("%s · %s", msgHistoryTitle, kind))),
 		note:    msgHistoryNote,
-		menu:    [][]Button{kindRow(sess.id, actionHistoryKind)},
-		footer:  []Button{homeButton(sess.id)},
+		menu:    [][]Button{kindRow(sess.id, actionHistoryKind, kind)},
+		footer:  append([]Button{backTo(sess.id, actionSubs, 0)}, browseRow(sess.id)...),
 	}
 	for i, ps := range past {
 		view.entries = append(view.entries, listEntry{
@@ -109,7 +109,7 @@ func (e *Engine) pickPast(ctx context.Context, sess session, index int) Reply {
 	sess.target = &target
 	e.store.put(sess)
 	question := Line(Strong(fmt.Sprintf("要重新订阅%s吗？", targetName(target))))
-	rows := [][]Button{{{Label: msgResubscribeLabel, Data: data(sess.id, actionResubscribe, index)}, cancelButton(sess.id)}}
+	rows := [][]Button{{{Label: msgResubscribeLabel, Data: data(sess.id, actionResubscribe, index)}}, {cancelButton(sess.id)}}
 	return card{Media: ps.Media}.replyLines(Lines(question, Line(Plain(msgResubscribeNote))), rows)
 }
 
@@ -126,7 +126,7 @@ func (e *Engine) resubscribe(ctx context.Context, sess session, index int) Reply
 	ps := sess.past[index]
 	target := pastTarget(ps)
 	id, err := e.written(target, func() (int, error) { return e.backend.Resubscribe(ctx, ps) })
-	rows := [][]Button{{{Label: "返回订阅列表", Data: data(sess.id, actionSubs, 0)}, homeButton(sess.id)}}
+	rows := [][]Button{append([]Button{backTo(sess.id, actionHistoryKind, int(sess.kind))}, browseRow(sess.id)...)}
 	if err != nil {
 		return card{Media: ps.Media}.replyLines(e.failure("resubscribe", err).Text, rows)
 	}

@@ -13,7 +13,8 @@
    李成与刑侦队长赵干哲、退休老刑警辛吉然联手重启尘封八年的悬案。小城之内人人藏有秘密，多方嫌疑人互相博弈。随着调查深入，层层揭开旧案背后交织的亲情、恩怨与人性抉择，在正义与私刑的边界之间，探寻深渊之下的残酷真相。</blockquote>
    <hr/>
    <p>⚠️ MoviePilot 好像打了个盹，稍后再来找我吧 (´-ω-`)</p>
-   [重试 | 1:rt:0] [重新搜索 | 1:rs:0] [取消 | 1:x:0]
+   [重试 | 1:rt:0] [重新搜索 | 1:rs:0]
+   [取消 | 1:x:0]
 >> user 1001 taps 1:rt:0 on message 1
 -> MoviePilot GET /api/v1/media/seasons?media_id=301489&media_source=themoviedb
 -> MoviePilot GET /api/v1/subscribe/media/301489?media_source=themoviedb&mtype=电视剧&season=1&title=深渊无间&year=2026
@@ -29,7 +30,8 @@
    <hr/>
    <p>暂时没法确认《深渊无间》第 1 季有没有订阅过…<br>
    ⚠️ MoviePilot 好像打了个盹，稍后再来找我吧 (´-ω-`)</p>
-   [重试 | 1:rt:0] [重新搜索 | 1:rs:0] [取消 | 1:x:0]
+   [重试 | 1:rt:0] [重新搜索 | 1:rs:0]
+   [取消 | 1:x:0]
 << answerCallbackQuery
 >> user 1001 taps 1:rt:0 on message 1
 -> MoviePilot GET /api/v1/subscribe/media/301489?media_source=themoviedb&mtype=电视剧&season=1&title=深渊无间&year=2026
@@ -45,9 +47,10 @@
    <hr/>
    <p><b>要订阅《深渊无间》第 1 季（共 16 集）吗？</b></p>
    [从第 1 集开始 | 1:ok:0]
-   [指定起始集… | 1:e:0] [搜索资源 | 1:ts:0]
-   [取消 | 1:x:0]
+   [指定起始集… | 1:e:0]
+   [搜索资源 | 1:ts:0] [相似推荐 | 1:r:0]
    [重新搜索 | 1:rs:0]
+   [取消 | 1:x:0]
 << answerCallbackQuery
 >> user 1001 taps 1:rs:0 on message 1
 << editMessageText chat=1001 message=1
@@ -68,7 +71,8 @@
    <hr/>
    <p><b>要订阅《深渊无间》第 1 季（共 16 集）吗？</b></p>
    [从第 1 集开始 | 1:ok:0]
-   [指定起始集… | 1:e:0] [搜索资源 | 1:ts:0]
-   [取消 | 1:x:0]
+   [指定起始集… | 1:e:0]
+   [搜索资源 | 1:ts:0] [相似推荐 | 1:r:0]
    [重新搜索 | 1:rs:0]
+   [取消 | 1:x:0]
 << answerCallbackQuery

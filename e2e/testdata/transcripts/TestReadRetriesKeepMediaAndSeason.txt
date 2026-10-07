@@ -34,7 +34,8 @@
    [1 | 1:m:0] [2 | 1:m:1] [3 | 1:m:2] [4 | 1:m:3]
    [5 | 1:m:4] [6 | 1:m:5] [7 | 1:m:6] [8 | 1:m:7]
    [下一页 › | 1:p:1]
-   [重新搜索 | 1:rs:0] [取消 | 1:x:0]
+   [重新搜索 | 1:rs:0]
+   [取消 | 1:x:0]
 >> user 1001 taps 1:m:0 on message 1
 -> MoviePilot GET /api/v1/media/30983?media_source=themoviedb&type_name=电视剧
 -> MoviePilot GET /api/v1/media/seasons?media_id=30983&media_source=themoviedb
@@ -45,7 +46,8 @@
    <blockquote expandable>高中生侦探工藤新一与毛利兰在游乐园游玩时发现两个行动诡异的黑衣男子，便跟踪他们，不料被灌下一种叫「APTX4869」的神秘毒药，然而因为药物副作用，新一的身体竟回到孩童状态。为不使周围的人受到牵连，他化名为「江户川柯南」，寄住在毛利兰家中，用阿笠博士发明的手表型麻醉枪让毛利小五郎睡着，接着用蝴蝶结变声器模仿他的声音来进行推理，解决了许多案件，并一直寻找着黑衣组织的人的下落，希望有朝一日将其绳之以法，并变回原来的样子。</blockquote>
    <hr/>
    <p>⚠️ MoviePilot 好像打了个盹，稍后再来找我吧 (´-ω-`)</p>
-   [重试 | 1:rt:0] [重新搜索 | 1:rs:0] [返回 | 1:bk:0] [取消 | 1:x:0]
+   [重试 | 1:rt:0] [重新搜索 | 1:rs:0]
+   [返回 | 1:bk:0] [取消 | 1:x:0]
 << answerCallbackQuery
 >> user 1001 taps 1:bk:0 on message 1
 << editMessageText chat=1001 message=1 reuses=url-7ca1018d reuses=url-a75f3db1 reuses=url-496032c6 reuses=url-55c23935 reuses=url-e0c74abd reuses=url-799a675a reuses=url-f4037a85 reuses=url-b2c2433a
@@ -82,7 +84,8 @@
    [1 | 1:m:0] [2 | 1:m:1] [3 | 1:m:2] [4 | 1:m:3]
    [5 | 1:m:4] [6 | 1:m:5] [7 | 1:m:6] [8 | 1:m:7]
    [下一页 › | 1:p:1]
-   [重新搜索 | 1:rs:0] [取消 | 1:x:0]
+   [重新搜索 | 1:rs:0]
+   [取消 | 1:x:0]
 << answerCallbackQuery
 >> user 1001 taps 1:m:0 on message 1
 -> MoviePilot GET /api/v1/media/30983?media_source=themoviedb&type_name=电视剧
@@ -94,7 +97,8 @@
    <blockquote expandable>高中生侦探工藤新一与毛利兰在游乐园游玩时发现两个行动诡异的黑衣男子，便跟踪他们，不料被灌下一种叫「APTX4869」的神秘毒药，然而因为药物副作用，新一的身体竟回到孩童状态。为不使周围的人受到牵连，他化名为「江户川柯南」，寄住在毛利兰家中，用阿笠博士发明的手表型麻醉枪让毛利小五郎睡着，接着用蝴蝶结变声器模仿他的声音来进行推理，解决了许多案件，并一直寻找着黑衣组织的人的下落，希望有朝一日将其绳之以法，并变回原来的样子。</blockquote>
    <hr/>
    <p>⚠️ MoviePilot 好像打了个盹，稍后再来找我吧 (´-ω-`)</p>
-   [重试 | 1:rt:0] [重新搜索 | 1:rs:0] [返回 | 1:bk:0] [取消 | 1:x:0]
+   [重试 | 1:rt:0] [重新搜索 | 1:rs:0]
+   [返回 | 1:bk:0] [取消 | 1:x:0]
 << answerCallbackQuery
 >> user 1001 taps 1:rt:0 on message 1
 -> MoviePilot GET /api/v1/media/seasons?media_id=30983&media_source=themoviedb
@@ -113,8 +117,8 @@
    [特别篇 | 1:s:0] [第 1 季 | 1:s:1]
    [多选季… | 1:a:0]
    [相似推荐 | 1:r:0]
-   [返回 | 1:bk:0] [取消 | 1:x:0]
    [重新搜索 | 1:rs:0]
+   [返回 | 1:bk:0] [取消 | 1:x:0]
 << answerCallbackQuery
 >> user 1001 taps 1:s:1 on message 1
 -> MoviePilot GET /api/v1/subscribe/media/30983?media_source=themoviedb&mtype=电视剧&season=1&title=名侦探柯南&year=1996
@@ -126,7 +130,8 @@
    <hr/>
    <p>暂时没法确认《名侦探柯南》第 1 季有没有订阅过…<br>
    ⚠️ MoviePilot 好像打了个盹，稍后再来找我吧 (´-ω-`)</p>
-   [重试 | 1:rt:0] [重新搜索 | 1:rs:0] [返回 | 1:bk:0] [取消 | 1:x:0]
+   [重试 | 1:rt:0] [重新搜索 | 1:rs:0]
+   [返回 | 1:bk:0] [取消 | 1:x:0]
 << answerCallbackQuery
 >> user 1001 taps 1:rt:0 on message 1
 -> MoviePilot GET /api/v1/subscribe/media/30983?media_source=themoviedb&mtype=电视剧&season=1&title=名侦探柯南&year=1996
@@ -138,9 +143,10 @@
    <hr/>
    <p><b>要订阅《名侦探柯南》第 1 季（共 1216 集）吗？</b></p>
    [从第 1 集开始 | 1:ok:0] [只追新集（第 1216 集起） | 1:ok:1216]
-   [指定起始集… | 1:e:0] [搜索资源 | 1:ts:0]
-   [返回 | 1:bk:0] [取消 | 1:x:0]
+   [指定起始集… | 1:e:0]
+   [搜索资源 | 1:ts:0] [相似推荐 | 1:r:0]
    [重新搜索 | 1:rs:0]
+   [返回 | 1:bk:0] [取消 | 1:x:0]
 << answerCallbackQuery
 >> user 1001 taps 1:ok:0 on message 1
 -> MoviePilot POST /api/v1/subscribe/

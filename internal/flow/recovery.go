@@ -26,10 +26,10 @@ func (e *Engine) readFailure(sess session, retry recovery, err error) Reply {
 	sess.retry, sess.target = retry, nil
 	e.store.put(sess)
 	failure := e.failure(string(retry.step), err)
-	rows := [][]Button{{
-		{Label: "重试", Data: data(sess.id, actionRetry, 0)},
-		researchButton(sess.id), cancelButton(sess.id),
-	}}
+	rows := [][]Button{
+		{{Label: "重试", Data: data(sess.id, actionRetry, 0)}, researchButton(sess.id)},
+		{cancelButton(sess.id)},
+	}
 	if retry.step != readSearch && sess.picked.Media.ID != "" {
 		if retry.step == readSubscription {
 			context := Line(Plain(fmt.Sprintf("暂时没法确认%s有没有订阅过…", targetName(retry.target))))

@@ -3,6 +3,7 @@ package flow
 import "fmt"
 
 const (
+	msgTasksTitle    = "📋 正在忙的任务"
 	msgNoTasks       = "现在没有在下载或整理的任务，大家都歇着呢～"
 	msgUnfollowed    = "好，不自动刷新啦～"
 	msgRefreshFailed = "⚠️ 暂时拿不到最新进度，我等下再自动试试～"
@@ -36,7 +37,7 @@ var fileHead = []string{"集", "状态"}
 
 // taskList numbers downloads, then transfer jobs, matching session tasks.
 func taskList(id uint64, downloads []Download, jobs []TransferJob) listView {
-	view := listView{heading: Heading(Plain("📋 正在忙的任务")), footer: []Button{{Label: "关闭", Data: data(id, actionClose, 0)}}}
+	view := listView{heading: Heading(Plain(msgTasksTitle)), footer: browseRow(id)}
 	section := "⬇️ 下载"
 	add := func(title string, season *int, line string) {
 		n := len(view.entries) + 1

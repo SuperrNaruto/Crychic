@@ -20,17 +20,17 @@ func (e *Engine) latest(ctx context.Context, sess session) Reply {
 	items, err := e.backend.Latest(ctx)
 	if err != nil {
 		e.store.take(sess.id)
-		return e.failure("latest", err)
+		return titled(msgLatestTitle, e.failure("latest", err))
 	}
 	if len(items) == 0 && sess.menu {
 		return Reply{Notice: msgNoLatest}
 	}
 	e.store.put(sess)
-	buttons := [][]Button{{homeButton(sess.id)}}
 	if len(items) == 0 {
-		return Reply{Text: Sentence(msgNoLatest), Buttons: buttons}
+		text := Lines(Heading(Plain(msgLatestTitle)), Line(Plain(msgNoLatest)))
+		return Reply{Text: text, Buttons: [][]Button{browseRow(sess.id)}}
 	}
-	view := listView{heading: Heading(Plain(msgLatestTitle)), footer: buttons[0]}
+	view := listView{heading: Heading(Plain(msgLatestTitle)), footer: browseRow(sess.id)}
 	for i, it := range items {
 		title := Linked(Strong(fmt.Sprintf("《%s》", truncate(it.Title, listTitleRunes))), it.Link)
 		view.entries = append(view.entries, listEntry{text: Lines(entry(i+1, title, it.Year, it.Kind))})
