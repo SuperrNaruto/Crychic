@@ -137,6 +137,9 @@ func (e *Engine) refresh(ctx context.Context, sess session, index int) Reply {
 	e.store.put(sess)
 	live := withWarning(view, msgFollowing)
 	live.Buttons = [][]Button{{{Label: "停止刷新", Data: data(sess.id, actionUnfollow, index)}, backButton(sess.id)}}
+	if sess.isDownload(index) {
+		live.Buttons = append(live.Buttons, []Button{deleteButton(sess.id, index)})
+	}
 	live.Follow = data(sess.id, actionFollow, index)
 	return live
 }
@@ -181,6 +184,9 @@ func ended(last, final Reply) Reply {
 func pausedView(sess session, index int, why string) Reply {
 	view := withWarning(sess.follow.last, why)
 	view.Buttons = [][]Button{{{Label: "继续刷新", Data: data(sess.id, actionTask, index)}, backButton(sess.id)}}
+	if sess.isDownload(index) {
+		view.Buttons = append(view.Buttons, []Button{deleteButton(sess.id, index)})
+	}
 	return view
 }
 
@@ -201,7 +207,7 @@ func expired(action string) Reply {
 	case actionSubs, actionSubsKind, actionCancelPick, actionHistory, actionHistoryKind,
 		actionHistoryPick, actionResubscribe, actionSubDetail, actionRefreshSubDetail:
 		return Reply{Text: Sentence("⌛ 这个订阅列表过期啦，重新 /subscribe 一下吧～")}
-	case actionTask, actionFollow, actionUnfollow, actionList, actionClose:
+	case actionTask, actionFollow, actionUnfollow, actionList, actionClose, actionAskDelete, actionDelete:
 		return Reply{Text: Sentence(msgTasksExpired)}
 	case actionMedia, actionSeason, actionConfirm, actionAskFrom, actionCancel, actionMulti, actionTick, actionSubscribed,
 		actionRelated, actionSeries, actionBack, actionResearch, actionRetry,

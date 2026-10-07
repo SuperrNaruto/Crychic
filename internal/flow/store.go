@@ -37,6 +37,7 @@ type session struct {
 	past     []PastSubscription
 	tasks    []taskRef
 	follow   following
+	doomed   string // id of the download asked to be deleted
 	pages    []Reply
 	screen   screen   // what the conversation message shows now
 	history  []screen // screens 返回 leads back to, latest last

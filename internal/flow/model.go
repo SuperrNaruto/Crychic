@@ -250,6 +250,8 @@ type Backend interface {
 	// Download adds a found release to the downloader and returns the
 	// download's id ("" when the backend did not say).
 	Download(ctx context.Context, torrent Torrent) (string, error)
+	// DeleteDownload removes a download together with its files.
+	DeleteDownload(ctx context.Context, id string) error
 }
 
 // Calendar lists the shows airing this season, each with its weekday.
@@ -278,6 +280,8 @@ type Watcher interface {
 	Requested(userID int64) []int
 	// Forget drops a subscription's requests, e.g. once it is cancelled.
 	Forget(ctx context.Context, subscriptionID int) error
+	// ForgetDownload drops a download's requests, e.g. once it is deleted.
+	ForgetDownload(ctx context.Context, id string) error
 }
 
 // Actor is the chat user driving a conversation, in platform terms.

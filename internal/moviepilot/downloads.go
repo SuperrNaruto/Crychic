@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"net/http"
+	"net/url"
 
 	"github.com/SuperrNaruto/Crychic/internal/flow"
 )
@@ -66,4 +67,11 @@ func (c *Client) Downloads(ctx context.Context) ([]flow.Download, error) {
 		})
 	}
 	return out, nil
+}
+
+// DeleteDownload removes a download from the downloader; MoviePilot always
+// deletes its files too, and answers success false when it could not.
+func (c *Client) DeleteDownload(ctx context.Context, id string) error {
+	var none json.RawMessage
+	return c.do(ctx, call{method: http.MethodDelete, path: "/api/v1/download/" + url.PathEscape(id)}, &none)
 }

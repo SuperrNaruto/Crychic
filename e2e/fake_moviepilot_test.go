@@ -33,7 +33,8 @@ const (
 	latestPath       = "GET /api/v1/mediaserver/latest"
 	recognizePath    = "GET /api/v1/media/recognize"
 
-	downloadPath = "POST /api/v1/download/"
+	downloadPath       = "POST /api/v1/download/"
+	downloadTaskPrefix = "/api/v1/download/"
 
 	// siteCookie is the indexer site cookie in the torrent search fixtures;
 	// it must come back in a download request and never reach a chat.
@@ -108,6 +109,7 @@ type fakeMoviePilot struct {
 	scanned    int  // transfers the media server shows while lagging
 	searches   map[string]string
 	recognized map[string]string
+	deleted    map[string]bool // downloads removed from the downloader, by hash
 }
 
 // reader waits for the notifier to finish a poll that read the transfer
@@ -121,7 +123,7 @@ type reader struct {
 func newFakeMoviePilot(t *testing.T, tr *transcript, routes map[string]route) *fakeMoviePilot {
 	all := maps.Clone(idleServer)
 	maps.Copy(all, routes)
-	f := &fakeMoviePilot{t: t, tr: tr, routes: all, polled: make(chan struct{})}
+	f := &fakeMoviePilot{t: t, tr: tr, routes: all, polled: make(chan struct{}), deleted: map[string]bool{}}
 	f.Server = httptest.NewServer(http.HandlerFunc(f.serve))
 	return f
 }
@@ -179,6 +181,7 @@ func (f *fakeMoviePilot) serve(w http.ResponseWriter, r *http.Request) {
 	case r.Method == http.MethodGet && isSubscriptionByID(r.URL.Path):
 		f.serveSubscription(w, r)
 	case f.servesLibrary(w, r):
+	case f.deletesDownload(w, r):
 	default:
 		f.serveRoute(w, r)
 	}
@@ -305,6 +308,9 @@ func (f *fakeMoviePilot) serveRoute(w http.ResponseWriter, r *http.Request) {
 	if rt.fixture == createdFixture {
 		body = f.numbered(body)
 	}
+	if key == downloadsPath {
+		body = f.undeleted(body)
+	}
 	writeEnvelope(w, rt.status, body)
 }
 
@@ -351,4 +357,45 @@ func writeEnvelope(w http.ResponseWriter, status int, body string) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(status)
 	_, _ = io.WriteString(w, body)
+}
+
+// deletesDownload answers DELETE /api/v1/download/{hash} like MoviePilot:
+// success when the downloader had the download, which then leaves the
+// download list. A scenario route for the exact path overrides it.
+func (f *fakeMoviePilot) deletesDownload(w http.ResponseWriter, r *http.Request) bool {
+	hash, found := strings.CutPrefix(r.URL.Path, downloadTaskPrefix)
+	f.mu.Lock()
+	_, routed := f.routes[r.Method+" "+r.URL.Path]
+	listed := f.routes[downloadsPath].fixture
+	f.mu.Unlock()
+	if r.Method != http.MethodDelete || !found || routed {
+		return false
+	}
+	data, _ := os.ReadFile(filepath.Join("testdata", "moviepilot", listed))
+	f.mu.Lock()
+	defer f.mu.Unlock()
+	if f.deleted[hash] || !strings.Contains(string(data), `"hash": "`+hash+`"`) {
+		writeEnvelope(w, http.StatusOK, `{"success":false,"message":null,"data":null}`)
+		return true
+	}
+	f.deleted[hash] = true
+	writeEnvelope(w, http.StatusOK, `{"success":true,"message":null,"data":null}`)
+	return true
+}
+
+// undeleted leaves the deleted downloads out of a download list.
+func (f *fakeMoviePilot) undeleted(body string) string {
+	var env struct {
+		Success bool             `json:"success"`
+		Message string           `json:"message"`
+		Data    []map[string]any `json:"data"`
+	}
+	if json.Unmarshal([]byte(body), &env) != nil {
+		return body
+	}
+	f.mu.Lock()
+	env.Data = slices.DeleteFunc(env.Data, func(d map[string]any) bool { return f.deleted[fmt.Sprint(d["hash"])] })
+	f.mu.Unlock()
+	out, _ := json.Marshal(env)
+	return string(out)
 }

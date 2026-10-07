@@ -253,6 +253,17 @@ func without(st state, subscriptionID int) state {
 	return next
 }
 
+// withoutDownload drops the watch of a download.
+func withoutDownload(st state, id string) state {
+	next := state{Baseline: st.Baseline, LastTransfer: st.LastTransfer}
+	for _, w := range st.Watches {
+		if w.Download == "" || w.Download != id {
+			next.Watches = append(next.Watches, w)
+		}
+	}
+	return next
+}
+
 // withActivity records which subscriptions (or downloads) MoviePilot no
 // longer has, by watch key, and drops watches that have been orphaned for
 // longer than orphanGrace. MoviePilot closes a subscription when downloads

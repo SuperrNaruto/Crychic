@@ -90,6 +90,11 @@ func (n *Notifier) Forget(_ context.Context, subscriptionID int) error {
 	return n.update(func(st state) state { return without(st, subscriptionID) })
 }
 
+// ForgetDownload implements flow.Watcher.
+func (n *Notifier) ForgetDownload(_ context.Context, id string) error {
+	return n.update(func(st state) state { return withoutDownload(st, id) })
+}
+
 // Run polls until ctx is cancelled, starting immediately.
 func (n *Notifier) Run(ctx context.Context) {
 	ticker := time.NewTicker(n.opts.Interval)

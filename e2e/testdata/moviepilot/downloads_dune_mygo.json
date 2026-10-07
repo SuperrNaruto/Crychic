@@ -1,0 +1,52 @@
+{
+  "success": true,
+  "message": "",
+  "data": [
+    {
+      "hash": "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b",
+      "downloader": "qBittorrent",
+      "year": "2021",
+      "season_episode": "",
+      "size": 15676630220.0,
+      "progress": 12.0,
+      "state": "downloading",
+      "upspeed": "0.0B",
+      "dlspeed": "8.2MB",
+      "left_time": "27分40秒",
+      "media": {
+        "type": "电影",
+        "title": "沙丘",
+        "season": null,
+        "episode": null,
+        "image": "https://image.tmdb.org/t/p/w500/6hsJknqlPceFxExOe87z5VGgNG9.jpg",
+        "poster": "https://image.tmdb.org/t/p/w500/6hsJknqlPceFxExOe87z5VGgNG9.jpg",
+        "backdrop": "https://image.tmdb.org/t/p/w500/6hsJknqlPceFxExOe87z5VGgNG9.jpg",
+        "media_source": "themoviedb",
+        "media_id": "438631"
+      }
+    },
+    {
+      "hash": "5c1d0a2e8f3b4c6d7e8f9a0b1c2d3e4f5a6b7c8d",
+      "downloader": "qBittorrent",
+      "year": "2023",
+      "season_episode": "S01",
+      "size": 18739321222.0,
+      "progress": 0.0,
+      "state": "downloading",
+      "upspeed": "0.0B",
+      "dlspeed": "0.0B",
+      "left_time": "",
+      "media": {
+        "type": "电视剧",
+        "title": "迷途之子!!!!!",
+        "season": "S01",
+        "episode": "E10-E12",
+        "image": "https://image.tmdb.org/t/p/w500/dDknWHLYaQB76QSViNdzXOC5v64.jpg",
+        "poster": "https://image.tmdb.org/t/p/w500/dDknWHLYaQB76QSViNdzXOC5v64.jpg",
+        "backdrop": "https://image.tmdb.org/t/p/w500/vAyv2W5gXyB4K9lX9vMEqdlfZGS.jpg",
+        "media_source": "themoviedb",
+        "media_id": "224207"
+      }
+    }
+  ]
+}

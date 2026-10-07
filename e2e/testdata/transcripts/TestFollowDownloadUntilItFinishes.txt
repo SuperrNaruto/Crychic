@@ -32,6 +32,7 @@
    </table>
    <footer>正在帮你盯着进度…</footer>
    [停止刷新 | 1:u:0] [返回任务列表 | 1:l:0]
+   [删除任务 | 1:kd:0]
 << answerCallbackQuery
 >> MoviePilot now answers GET /api/v1/download/ with downloads_mygo_later.json
 << editMessageText chat=1001 message=1 reuses=url-f1d1c3e9
@@ -43,6 +44,7 @@
    </table>
    <footer>正在帮你盯着进度…</footer>
    [停止刷新 | 1:u:0] [返回任务列表 | 1:l:0]
+   [删除任务 | 1:kd:0]
 >> user 1001 taps 1:u:0 on message 1
 << editMessageText chat=1001 message=1 reuses=url-f1d1c3e9
    <img src="tg://photo?id=p0"/>
@@ -53,6 +55,7 @@
    </table>
    <footer>好，不自动刷新啦～</footer>
    [继续刷新 | 1:k:0] [返回任务列表 | 1:l:0]
+   [删除任务 | 1:kd:0]
 << answerCallbackQuery
 >> user 1001 taps 1:l:0 on message 1
 << editMessageText chat=1001 message=1
@@ -80,6 +83,7 @@
    </table>
    <footer>正在帮你盯着进度…</footer>
    [停止刷新 | 1:u:0] [返回任务列表 | 1:l:0]
+   [删除任务 | 1:kd:0]
 << answerCallbackQuery
 >> MoviePilot now answers GET /api/v1/download/ with downloads_none.json
 << editMessageText chat=1001 message=1 reuses=url-f1d1c3e9

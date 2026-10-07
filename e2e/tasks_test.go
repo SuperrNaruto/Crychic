@@ -1,6 +1,9 @@
 package e2e
 
-import "testing"
+import (
+	"net/http"
+	"testing"
+)
 
 const (
 	mygoTask    = "1"
@@ -72,5 +75,49 @@ func TestClosedTaskListCannotResume(t *testing.T) {
 	h.shows(1, "已经关掉啦")
 	h.tapData(alice, 1, pick)
 	h.shows(1, "这个任务列表过期啦，重新 /tasks")
+	h.tr.verify(t)
+}
+
+// A download picked by hand can be deleted from its task view after a
+// warning about its files (and, when a subscription has it, that the
+// subscription will not fetch it again); once deleted it leaves the list,
+// its arrival is no longer announced and a second tap does nothing. A
+// deletion with an unknown result points back to /tasks.
+func TestDeleteDownloadTask(t *testing.T) {
+	h := start(t, scenario{routes: map[string]route{
+		searchPath:   ok("search_dune.json"),
+		duneDetails:  ok("detail_dune.json"),
+		duneLookup:   ok("subscription_none.json"),
+		duneTorrents: searchingSites("torrents_dune.json"),
+		downloadPath: ok("download_added.json"),
+		subsPath:     ok("subscriptions.json"),
+	}})
+	h.say(alice, alice, "/search 沙丘")
+	h.tap(alice, 1, duneMovie)
+	h.searchTorrents(alice, 1, searchResources)
+	h.tap(alice, 1, "2")
+	h.tap(alice, 1, downloadIt)
+
+	h.mp.setRoute(downloadsPath, ok("downloads_dune_mygo.json"))
+	h.say(alice, alice, "/tasks")
+	h.tap(alice, 2, "1")
+	h.tap(alice, 2, "删除任务")
+	h.shows(2, "会把已经下载的文件一起删掉")
+	h.shows(2, "如果这个任务是订阅下的")
+	confirm, _ := findButton(mustMessage(h, 2).rows, "确认删除")
+	h.tap(alice, 2, "确认删除")
+	h.shows(2, "已经删掉啦")
+	h.tapData(alice, 2, confirm)
+	file := duneFile()
+	file.Hash = addedHash
+	h.transfers(file)
+
+	h.tap(alice, 2, "返回任务列表")
+	h.tap(alice, 2, "1")
+	h.tap(alice, 2, "删除任务")
+	h.mp.setRoute("DELETE /api/v1/download/5c1d0a2e8f3b4c6d7e8f9a0b1c2d3e4f5a6b7c8d",
+		route{status: http.StatusServiceUnavailable, fixture: "server_error.json"})
+	h.tap(alice, 2, "确认删除")
+	h.shows(2, "没能确认有没有删掉")
 	h.tr.verify(t)
 }
