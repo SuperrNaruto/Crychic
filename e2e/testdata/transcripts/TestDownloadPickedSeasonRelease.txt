@@ -83,11 +83,13 @@
    <li value="8"><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 07 [WebRip 1080p HEVC-10bit AAC]</b><br>
    <i>站点丁 · 512.0 MiB · 做种 17 · E07</i></li>
    </ol>
-   <footer>按 MoviePilot 的优先级排好啦，点编号看详情～</footer>
+   <footer>共 14 个，按 MoviePilot 的优先级排好啦，点编号看详情～</footer>
    <footer>第 1/2 页</footer>
    [1 | 1:tp:0] [2 | 1:tp:1] [3 | 1:tp:2] [4 | 1:tp:3]
    [5 | 1:tp:4] [6 | 1:tp:5] [7 | 1:tp:6] [8 | 1:tp:7]
    [下一页 › | 1:p:1]
+   [·默认· | 1:to:0] [做种 | 1:to:1] [时间 | 1:to:2] [大小 | 1:to:3] [站点 | 1:to:4]
+   [筛选站点 | 1:tf:0]
    [返回 | 1:bk:0] [取消 | 1:x:0]
 >> user 1001 taps 1:p:1 on message 1
 << editMessageText chat=1001 message=1
@@ -106,11 +108,13 @@
    <li value="14"><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 13 [WebRip 1080p HEVC-10bit AAC]</b><br>
    <i>站点丁 · 512.0 MiB · 做种 23 · E13</i></li>
    </ol>
-   <footer>按 MoviePilot 的优先级排好啦，点编号看详情～</footer>
+   <footer>共 14 个，按 MoviePilot 的优先级排好啦，点编号看详情～</footer>
    <footer>第 2/2 页</footer>
    [9 | 1:tp:8] [10 | 1:tp:9] [11 | 1:tp:10] [12 | 1:tp:11]
    [13 | 1:tp:12] [14 | 1:tp:13]
    [‹ 上一页 | 1:p:0]
+   [·默认· | 1:to:0] [做种 | 1:to:1] [时间 | 1:to:2] [大小 | 1:to:3] [站点 | 1:to:4]
+   [筛选站点 | 1:tf:0]
    [返回 | 1:bk:0] [取消 | 1:x:0]
 << answerCallbackQuery
 >> user 1001 taps 1:tp:8 on message 1
@@ -152,11 +156,13 @@
    <li value="14"><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 13 [WebRip 1080p HEVC-10bit AAC]</b><br>
    <i>站点丁 · 512.0 MiB · 做种 23 · E13</i></li>
    </ol>
-   <footer>按 MoviePilot 的优先级排好啦，点编号看详情～</footer>
+   <footer>共 14 个，按 MoviePilot 的优先级排好啦，点编号看详情～</footer>
    <footer>第 2/2 页</footer>
    [9 | 1:tp:8] [10 | 1:tp:9] [11 | 1:tp:10] [12 | 1:tp:11]
    [13 | 1:tp:12] [14 | 1:tp:13]
    [‹ 上一页 | 1:p:0]
+   [·默认· | 1:to:0] [做种 | 1:to:1] [时间 | 1:to:2] [大小 | 1:to:3] [站点 | 1:to:4]
+   [筛选站点 | 1:tf:0]
    [返回 | 1:bk:0] [取消 | 1:x:0]
 << answerCallbackQuery
 >> user 1001 taps 1:p:0 on message 1
@@ -180,11 +186,13 @@
    <li value="8"><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 07 [WebRip 1080p HEVC-10bit AAC]</b><br>
    <i>站点丁 · 512.0 MiB · 做种 17 · E07</i></li>
    </ol>
-   <footer>按 MoviePilot 的优先级排好啦，点编号看详情～</footer>
+   <footer>共 14 个，按 MoviePilot 的优先级排好啦，点编号看详情～</footer>
    <footer>第 1/2 页</footer>
    [1 | 1:tp:0] [2 | 1:tp:1] [3 | 1:tp:2] [4 | 1:tp:3]
    [5 | 1:tp:4] [6 | 1:tp:5] [7 | 1:tp:6] [8 | 1:tp:7]
    [下一页 › | 1:p:1]
+   [·默认· | 1:to:0] [做种 | 1:to:1] [时间 | 1:to:2] [大小 | 1:to:3] [站点 | 1:to:4]
+   [筛选站点 | 1:tf:0]
    [返回 | 1:bk:0] [取消 | 1:x:0]
 << answerCallbackQuery
 >> user 1001 taps 1:tp:0 on message 1

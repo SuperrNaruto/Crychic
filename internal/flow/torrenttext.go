@@ -8,19 +8,26 @@ var (
 	qualityHead = []string{"分辨率", "版本", "编码", "制作组"}
 )
 
-// torrentList numbers the releases found for target in MoviePilot's order.
+// torrentList numbers the releases found for target as sorted and
+// filtered now; number buttons keep each release's own index.
 func torrentList(sess session, target Target) listView {
 	target.StartEpisode = 0
+	heading := fmt.Sprintf("🔍 %s的资源", targetName(target))
+	if sess.torrentSite != "" {
+		heading += " · " + sess.torrentSite
+	}
+	shown := sess.shownTorrents()
 	view := listView{
-		heading:   Heading(Plain(fmt.Sprintf("🔍 %s的资源", targetName(target)))),
-		note:      msgTorrentsNote,
+		heading:   Heading(Plain(heading)),
+		note:      fmt.Sprintf("共 %d 个，%s，点编号看详情～", len(shown), torrentSorts[sess.torrentSort].note),
 		pageItems: torrentPageItems,
+		menu:      [][]Button{sortRow(sess), {{Label: msgSiteFilter, Data: data(sess.id, actionTorrentSites, 0)}}},
 		footer:    []Button{cancelButton(sess.id)},
 	}
-	for i, t := range sess.torrents {
+	for n, i := range shown {
 		view.entries = append(view.entries, listEntry{
-			text:    Lines(torrentEntry(i+1, t)),
-			buttons: []Button{{Label: fmt.Sprint(i + 1), Data: data(sess.id, actionTorrentPick, i)}},
+			text:    Lines(torrentEntry(n+1, sess.torrents[i])),
+			buttons: []Button{{Label: fmt.Sprint(n + 1), Data: data(sess.id, actionTorrentPick, i)}},
 		})
 	}
 	return view

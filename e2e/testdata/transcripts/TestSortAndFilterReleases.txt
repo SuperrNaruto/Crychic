@@ -78,6 +78,70 @@
    [·默认· | 1:to:0] [做种 | 1:to:1] [时间 | 1:to:2] [大小 | 1:to:3] [站点 | 1:to:4]
    [筛选站点 | 1:tf:0]
    [返回 | 1:bk:0] [取消 | 1:x:0]
+>> user 1001 taps 1:to:1 on message 1
+<< editMessageText chat=1001 message=1
+   <h3>🔍 《沙丘》的资源</h3>
+   <ol start="1">
+   <li value="1"><b>Dune.2021.1080p.BluRay.x264.DTS-HD.MA.5.1-CHD</b><br>
+   <i>站点乙 · 14.6 GiB · 做种 132</i></li>
+   <li value="2"><b>Dune.2021.2160p.WEB-DL.H265.DDP5.1-ADWeb</b><br>
+   <i>站点丙 · 18.1 GiB · 做种 48 · 2X免费</i></li>
+   <li value="3"><b>Dune.2021.2160p.UHD.BluRay.REMUX.HDR.HEVC.DTS-HD.MA.5.1-FROGE</b><br>
+   <i>站点甲 · 58.2 GiB · 做种 25 · 免费 · H&amp;R</i></li>
+   <li value="4"><b>Dune.2021.720p.BluRay.x264-CHD</b><br>
+   <i>站点乙 · 6.0 GiB · 做种 8</i></li>
+   </ol>
+   <footer>共 4 个，做种人数从多到少，点编号看详情～</footer>
+   [1 | 1:tp:1] [2 | 1:tp:2] [3 | 1:tp:0] [4 | 1:tp:3]
+   [默认 | 1:to:0] [·做种· | 1:to:1] [时间 | 1:to:2] [大小 | 1:to:3] [站点 | 1:to:4]
+   [筛选站点 | 1:tf:0]
+   [返回 | 1:bk:0] [取消 | 1:x:0]
+<< answerCallbackQuery
+>> user 1001 taps 1:to:2 on message 1
+<< editMessageText chat=1001 message=1
+   <h3>🔍 《沙丘》的资源</h3>
+   <ol start="1">
+   <li value="1"><b>Dune.2021.2160p.UHD.BluRay.REMUX.HDR.HEVC.DTS-HD.MA.5.1-FROGE</b><br>
+   <i>站点甲 · 58.2 GiB · 做种 25 · 免费 · H&amp;R</i></li>
+   <li value="2"><b>Dune.2021.2160p.WEB-DL.H265.DDP5.1-ADWeb</b><br>
+   <i>站点丙 · 18.1 GiB · 做种 48 · 2X免费</i></li>
+   <li value="3"><b>Dune.2021.720p.BluRay.x264-CHD</b><br>
+   <i>站点乙 · 6.0 GiB · 做种 8</i></li>
+   <li value="4"><b>Dune.2021.1080p.BluRay.x264.DTS-HD.MA.5.1-CHD</b><br>
+   <i>站点乙 · 14.6 GiB · 做种 132</i></li>
+   </ol>
+   <footer>共 4 个，发布时间从新到旧，点编号看详情～</footer>
+   [1 | 1:tp:0] [2 | 1:tp:2] [3 | 1:tp:3] [4 | 1:tp:1]
+   [默认 | 1:to:0] [做种 | 1:to:1] [·时间· | 1:to:2] [大小 | 1:to:3] [站点 | 1:to:4]
+   [筛选站点 | 1:tf:0]
+   [返回 | 1:bk:0] [取消 | 1:x:0]
+<< answerCallbackQuery
+>> user 1001 taps 1:tf:0 on message 1
+<< editMessageText chat=1001 message=1
+   <h3>🔍 筛选站点</h3>
+   <p><b>只看哪个站点的资源呀？</b><br>
+   站点乙 · 2 个<br>
+   站点甲 · 1 个<br>
+   站点丙 · 1 个</p>
+   [·全部站点· | 1:tw:0] [站点乙 | 1:tw:1] [站点甲 | 1:tw:2]
+   [站点丙 | 1:tw:3]
+   [返回 | 1:to:2] [取消 | 1:x:0]
+<< answerCallbackQuery
+>> user 1001 taps 1:tw:1 on message 1
+<< editMessageText chat=1001 message=1
+   <h3>🔍 《沙丘》的资源 · 站点乙</h3>
+   <ol start="1">
+   <li value="1"><b>Dune.2021.720p.BluRay.x264-CHD</b><br>
+   <i>站点乙 · 6.0 GiB · 做种 8</i></li>
+   <li value="2"><b>Dune.2021.1080p.BluRay.x264.DTS-HD.MA.5.1-CHD</b><br>
+   <i>站点乙 · 14.6 GiB · 做种 132</i></li>
+   </ol>
+   <footer>共 2 个，发布时间从新到旧，点编号看详情～</footer>
+   [1 | 1:tp:3] [2 | 1:tp:1]
+   [默认 | 1:to:0] [做种 | 1:to:1] [·时间· | 1:to:2] [大小 | 1:to:3] [站点 | 1:to:4]
+   [筛选站点 | 1:tf:0]
+   [返回 | 1:bk:0] [取消 | 1:x:0]
+<< answerCallbackQuery
 >> user 1001 taps 1:tp:1 on message 1
 << editMessageText chat=1001 message=1 reuses=url-ae95e58e
    <img src="tg://photo?id=p0"/>
@@ -99,109 +163,74 @@
    [确认下载 | 1:td:1]
    [返回 | 1:bk:0] [取消 | 1:x:0]
 << answerCallbackQuery
->> user 1001 taps 1:td:1 on message 1
--> MoviePilot POST /api/v1/download/
-   media_in 沙丘, torrent_in Dune.2021.1080p.BluRay.x264.DTS-HD.MA.5.1-CHD with the search result's site credentials
-<< editMessageText chat=1001 message=1 reuses=url-ae95e58e
-   <img src="tg://photo?id=p0"/>
-   <h3>🎬 <a href="https://www.themoviedb.org/movie/438631">沙丘</a></h3>
-   <footer><i>Dune</i> · 2021 · 电影 · ⭐ 7.8 · 科幻 / 冒险 · 156 分钟 · 主演：提莫西·查拉梅、丽贝卡·弗格森、奥斯卡·伊萨克</footer>
-   <blockquote expandable>电影《沙丘》为观众呈现了一段神秘而感人至深的英雄之旅。天赋异禀的少年保罗·厄崔迪（提莫西·查拉梅 饰）被命运指引，为了保卫自己的家族和人民，决心前往浩瀚宇宙间最危险的星球，开启一场惊心动魄的冒险。与此同时，各路势力为了抢夺这颗星球上一种能够释放人类最大潜力的珍贵资源而纷纷加入战场。最终，唯有那些能够战胜内心恐惧的人才能生存下去。</blockquote>
-   <hr/>
-   <p>✅ 开始下载《沙丘》啦，入库了我第一时间叫你！ ヾ(≧▽≦*)o</p>
-<< answerCallbackQuery
->> user 1001 in chat 1001: /tasks
-<< sendRichMessage chat=1001 message=2
-   <h3>📋 正在忙的任务</h3>
-   <h4>⬇️ 下载</h4>
+>> user 1001 taps 1:bk:0 on message 1
+<< editMessageText chat=1001 message=1
+   <h3>🔍 《沙丘》的资源 · 站点乙</h3>
    <ol start="1">
-   <li value="1"><b>《沙丘》</b><br>
-   <i>14.6 GiB · 进度 12%</i></li>
-   <li value="2"><b>《迷途之子!!!!!》第 1 季</b><br>
-   <i>E10–E12 · 17.5 GiB · 进度 0%</i></li>
+   <li value="1"><b>Dune.2021.720p.BluRay.x264-CHD</b><br>
+   <i>站点乙 · 6.0 GiB · 做种 8</i></li>
+   <li value="2"><b>Dune.2021.1080p.BluRay.x264.DTS-HD.MA.5.1-CHD</b><br>
+   <i>站点乙 · 14.6 GiB · 做种 132</i></li>
    </ol>
-   [1 | 2:k:0] [2 | 2:k:1]
-   [首页 | 2:o:0] [关闭 | 2:c:0]
->> user 1001 taps 2:k:0 on message 2
-<< editMessageText chat=1001 message=2 reuses=url-ae95e58e
-   <img src="tg://photo?id=p0"/>
-   <h3>⬇️ 《沙丘》</h3>
-   <table bordered compact>
-   <tr><th>大小</th><th>进度</th><th>速度</th><th>剩余</th></tr>
-   <tr><td>14.6 GiB</td><td>12%</td><td>8.2MB/s</td><td>27分40秒</td></tr>
-   </table>
-   <footer>正在帮你盯着进度…</footer>
-   [停止刷新 | 2:u:0] [删除任务 | 2:kd:0]
-   [返回 | 2:l:0] [首页 | 2:o:0] [关闭 | 2:c:0]
+   <footer>共 2 个，发布时间从新到旧，点编号看详情～</footer>
+   [1 | 1:tp:3] [2 | 1:tp:1]
+   [默认 | 1:to:0] [做种 | 1:to:1] [·时间· | 1:to:2] [大小 | 1:to:3] [站点 | 1:to:4]
+   [筛选站点 | 1:tf:0]
+   [返回 | 1:bk:0] [取消 | 1:x:0]
 << answerCallbackQuery
->> user 1001 taps 2:kd:0 on message 2
--> MoviePilot GET /api/v1/subscribe/
-<< editMessageText chat=1001 message=2 reuses=url-ae95e58e
-   <img src="tg://photo?id=p0"/>
-   <h3>⬇️ 《沙丘》</h3>
-   <table bordered compact>
-   <tr><th>大小</th><th>进度</th><th>速度</th><th>剩余</th></tr>
-   <tr><td>14.6 GiB</td><td>12%</td><td>8.2MB/s</td><td>27分40秒</td></tr>
-   </table>
-   <hr/>
-   <p><b>⚠️ 要删除这个下载任务吗？</b><br>
-   会把已经下载的文件一起删掉，删了就找不回来啦。<br>
-   它还在订阅里：如果这个任务是订阅下的，MoviePilot 已经把它记成下好了，删掉后订阅不会自动重新下载哦。</p>
-   [确认删除 | 2:ky:0]
-   [返回 | 2:l:0]
+>> user 1001 taps 1:tf:0 on message 1
+<< editMessageText chat=1001 message=1
+   <h3>🔍 筛选站点</h3>
+   <p><b>只看哪个站点的资源呀？</b><br>
+   站点乙 · 2 个<br>
+   站点甲 · 1 个<br>
+   站点丙 · 1 个</p>
+   [全部站点 | 1:tw:0] [·站点乙· | 1:tw:1] [站点甲 | 1:tw:2]
+   [站点丙 | 1:tw:3]
+   [返回 | 1:to:2] [取消 | 1:x:0]
 << answerCallbackQuery
->> user 1001 taps 2:ky:0 on message 2
--> MoviePilot DELETE /api/v1/download/9f86d081884c7d659a2feaa0c55ad015a3bf4f1b
-<< editMessageText chat=1001 message=2
-   <h3>✅ 已删除</h3>
-   <p>已经删掉啦，下载的文件也一起清掉了～</p>
-   [返回 | 2:l:0] [首页 | 2:o:0] [关闭 | 2:c:0]
-<< answerCallbackQuery
->> user 1001 taps 2:ky:0 on message 2
-<< answerCallbackQuery notice="这个选项不太对哦～"
->> MoviePilot transfers 沙丘 (themoviedb/438631)
->> user 1001 taps 2:l:0 on message 2
-<< editMessageText chat=1001 message=2
-   <h3>📋 正在忙的任务</h3>
-   <h4>⬇️ 下载</h4>
+>> user 1001 taps 1:to:2 on message 1
+<< editMessageText chat=1001 message=1
+   <h3>🔍 《沙丘》的资源 · 站点乙</h3>
    <ol start="1">
-   <li value="1"><b>《迷途之子!!!!!》第 1 季</b><br>
-   <i>E10–E12 · 17.5 GiB · 进度 0%</i></li>
+   <li value="1"><b>Dune.2021.720p.BluRay.x264-CHD</b><br>
+   <i>站点乙 · 6.0 GiB · 做种 8</i></li>
+   <li value="2"><b>Dune.2021.1080p.BluRay.x264.DTS-HD.MA.5.1-CHD</b><br>
+   <i>站点乙 · 14.6 GiB · 做种 132</i></li>
    </ol>
-   [1 | 2:k:0]
-   [首页 | 2:o:0] [关闭 | 2:c:0]
+   <footer>共 2 个，发布时间从新到旧，点编号看详情～</footer>
+   [1 | 1:tp:3] [2 | 1:tp:1]
+   [默认 | 1:to:0] [做种 | 1:to:1] [·时间· | 1:to:2] [大小 | 1:to:3] [站点 | 1:to:4]
+   [筛选站点 | 1:tf:0]
+   [返回 | 1:bk:0] [取消 | 1:x:0]
 << answerCallbackQuery
->> user 1001 taps 2:k:0 on message 2
-<< editMessageText chat=1001 message=2
-   <img src="https://image.tmdb.org/t/p/w500/dDknWHLYaQB76QSViNdzXOC5v64.jpg"/>
-   <h3>⬇️ 《迷途之子!!!!!》第 1 季 E10–E12</h3>
-   <table bordered compact>
-   <tr><th>大小</th><th>进度</th></tr>
-   <tr><td>17.5 GiB</td><td>0%</td></tr>
-   </table>
-   <footer>正在帮你盯着进度…</footer>
-   [停止刷新 | 2:u:0] [删除任务 | 2:kd:0]
-   [返回 | 2:l:0] [首页 | 2:o:0] [关闭 | 2:c:0]
+>> user 1001 taps 1:tf:0 on message 1
+<< editMessageText chat=1001 message=1
+   <h3>🔍 筛选站点</h3>
+   <p><b>只看哪个站点的资源呀？</b><br>
+   站点乙 · 2 个<br>
+   站点甲 · 1 个<br>
+   站点丙 · 1 个</p>
+   [全部站点 | 1:tw:0] [·站点乙· | 1:tw:1] [站点甲 | 1:tw:2]
+   [站点丙 | 1:tw:3]
+   [返回 | 1:to:2] [取消 | 1:x:0]
 << answerCallbackQuery
->> user 1001 taps 2:kd:0 on message 2
--> MoviePilot GET /api/v1/subscribe/
-<< editMessageText chat=1001 message=2 reuses=url-f1d1c3e9
-   <img src="tg://photo?id=p0"/>
-   <h3>⬇️ 《迷途之子!!!!!》第 1 季 E10–E12</h3>
-   <table bordered compact>
-   <tr><th>大小</th><th>进度</th></tr>
-   <tr><td>17.5 GiB</td><td>0%</td></tr>
-   </table>
-   <hr/>
-   <p><b>⚠️ 要删除这个下载任务吗？</b><br>
-   会把已经下载的文件一起删掉，删了就找不回来啦。</p>
-   [确认删除 | 2:ky:0]
-   [返回 | 2:l:0]
-<< answerCallbackQuery
->> user 1001 taps 2:ky:0 on message 2
--> MoviePilot DELETE /api/v1/download/5c1d0a2e8f3b4c6d7e8f9a0b1c2d3e4f5a6b7c8d
-<< editMessageText chat=1001 message=2
-   <h3>删除下载任务</h3>
-   <p>呜，没能确认有没有删掉…用 /tasks 看一眼吧。</p>
-   [返回 | 2:l:0] [首页 | 2:o:0] [关闭 | 2:c:0]
+>> user 1001 taps 1:tw:0 on message 1
+<< editMessageText chat=1001 message=1
+   <h3>🔍 《沙丘》的资源</h3>
+   <ol start="1">
+   <li value="1"><b>Dune.2021.2160p.UHD.BluRay.REMUX.HDR.HEVC.DTS-HD.MA.5.1-FROGE</b><br>
+   <i>站点甲 · 58.2 GiB · 做种 25 · 免费 · H&amp;R</i></li>
+   <li value="2"><b>Dune.2021.2160p.WEB-DL.H265.DDP5.1-ADWeb</b><br>
+   <i>站点丙 · 18.1 GiB · 做种 48 · 2X免费</i></li>
+   <li value="3"><b>Dune.2021.720p.BluRay.x264-CHD</b><br>
+   <i>站点乙 · 6.0 GiB · 做种 8</i></li>
+   <li value="4"><b>Dune.2021.1080p.BluRay.x264.DTS-HD.MA.5.1-CHD</b><br>
+   <i>站点乙 · 14.6 GiB · 做种 132</i></li>
+   </ol>
+   <footer>共 4 个，发布时间从新到旧，点编号看详情～</footer>
+   [1 | 1:tp:0] [2 | 1:tp:2] [3 | 1:tp:3] [4 | 1:tp:1]
+   [默认 | 1:to:0] [做种 | 1:to:1] [·时间· | 1:to:2] [大小 | 1:to:3] [站点 | 1:to:4]
+   [筛选站点 | 1:tf:0]
+   [返回 | 1:bk:0] [取消 | 1:x:0]
 << answerCallbackQuery

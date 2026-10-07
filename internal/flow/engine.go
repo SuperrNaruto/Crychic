@@ -102,7 +102,7 @@ func (e *Engine) Choose(ctx context.Context, actor Actor, raw string) Reply {
 	case actionBack:
 		return e.back(ctx, sess)
 	}
-	for _, choose := range []chooser{e.chooseHome, e.chooseRequest, e.chooseSeasons, e.chooseTask, e.chooseChart, e.chooseSubs, e.chooseSubDetail, e.chooseHistory, e.chooseRelated, e.chooseTorrents, e.chooseDelete} {
+	for _, choose := range []chooser{e.chooseHome, e.chooseRequest, e.chooseSeasons, e.chooseTask, e.chooseChart, e.chooseSubs, e.chooseSubDetail, e.chooseHistory, e.chooseRelated, e.chooseTorrents, e.chooseTorrentView, e.chooseDelete} {
 		if reply, ok := choose(ctx, sess, p); ok {
 			return e.navigate(sess, p.action, reply)
 		}

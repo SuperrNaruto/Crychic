@@ -221,7 +221,8 @@ func expired(action string) Reply {
 		return expiredText(msgTasksExpired)
 	case actionMedia, actionSeason, actionConfirm, actionAskFrom, actionCancel, actionMulti, actionTick, actionSubscribed,
 		actionRelated, actionSeries, actionBack, actionResearch, actionRetry,
-		actionTorrents, actionTorrentRun, actionTorrentRetry, actionTorrentAgain, actionTorrentPick, actionTorrentGet:
+		actionTorrents, actionTorrentRun, actionTorrentRetry, actionTorrentAgain, actionTorrentPick, actionTorrentGet,
+		actionTorrentSort, actionTorrentSites, actionTorrentSite:
 		return expiredText(msgExpired)
 	}
 	return expiredText(msgHomeExpired)

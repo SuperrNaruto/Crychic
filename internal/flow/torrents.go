@@ -18,7 +18,6 @@ const (
 
 	msgTorrentsSearching = "🔍 正在各个站点搜索资源，要等一会儿哦…"
 	msgTorrentsSearched  = "🔍 正在各个站点搜索资源，已经搜了 %d 秒，再等等哦…"
-	msgTorrentsNote      = "按 MoviePilot 的优先级排好啦，点编号看详情～"
 	msgTorrentAsk        = "要下载这个资源吗？"
 	msgHitAndRun         = "⚠️ 这是 H&R 资源，下完要保种够时间，不然站点会记过哦。"
 	msgDownloadUnknown   = "呜，没能确认有没有开始下载…先用 /tasks 看一眼，确认没在下再来找我哦。"
@@ -88,6 +87,7 @@ func (e *Engine) searchTorrents(sess session, run string) Reply {
 	h.stop()
 	target := *sess.focus
 	sess.hunt, sess.torrents, sess.release = nil, h.found, nil
+	sess.torrentSort, sess.torrentSite = 0, ""
 	e.store.put(sess)
 	if h.err != nil {
 		rows := [][]Button{{{Label: "重试", Data: data(sess.id, actionTorrentRetry, 0)}}, {cancelButton(sess.id)}}

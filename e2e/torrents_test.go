@@ -165,3 +165,36 @@ func TestResourceSearchShowsElapsedAndCancels(t *testing.T) {
 	h.shows(1, "已经取消啦")
 	h.tr.verify(t)
 }
+
+// The releases can be shown in another order, as MoviePilot's WebUI sorts
+// them, and for one site only; a number still opens the release it lists.
+func TestSortAndFilterReleases(t *testing.T) {
+	h := start(t, scenario{routes: map[string]route{
+		searchPath:   ok("search_dune.json"),
+		duneDetails:  ok("detail_dune.json"),
+		duneLookup:   ok("subscription_none.json"),
+		duneTorrents: searchingSites("torrents_dune.json"),
+	}})
+	h.say(alice, alice, "/search 沙丘")
+	h.tap(alice, 1, duneMovie)
+	h.searchTorrents(alice, 1, searchResources)
+	h.tap(alice, 1, "做种")
+	h.shows(1, `<li value="1"><b>Dune.2021.1080p`)
+	h.tap(alice, 1, "时间")
+	h.shows(1, `<li value="1"><b>Dune.2021.2160p.UHD`)
+	h.tap(alice, 1, "筛选站点")
+	h.shows(1, "站点乙 · 2 个")
+	h.tap(alice, 1, "站点乙")
+	h.shows(1, "共 2 个")
+	h.tap(alice, 1, "2")
+	h.shows(1, "Dune.2021.1080p.BluRay.x264.DTS-HD.MA.5.1-CHD")
+	h.tap(alice, 1, "返回")
+	h.shows(1, "的资源 · 站点乙")
+	h.tap(alice, 1, "筛选站点")
+	h.tap(alice, 1, "返回")
+	h.shows(1, "共 2 个")
+	h.tap(alice, 1, "筛选站点")
+	h.tap(alice, 1, "全部站点")
+	h.shows(1, "共 4 个")
+	h.tr.verify(t)
+}

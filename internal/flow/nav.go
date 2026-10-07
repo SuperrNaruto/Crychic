@@ -37,7 +37,7 @@ var forward = map[string]bool{
 var sameLevel = map[string]bool{
 	actionTick: true, actionChartPage: true, actionWeekday: true, actionPage: true, answered: true,
 	actionRetry: true, actionSubsKind: true, actionHistoryKind: true, actionRefreshSubDetail: true,
-	actionTorrentAgain: true,
+	actionTorrentAgain: true, actionTorrentSort: true, actionTorrentSites: true, actionTorrentSite: true,
 }
 
 // answered stands for a typed start episode, which replaces its prompt.
