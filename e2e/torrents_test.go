@@ -198,3 +198,62 @@ func TestSortAndFilterReleases(t *testing.T) {
 	h.shows(1, "共 4 个")
 	h.tr.verify(t)
 }
+
+// Several releases can be ticked across pages and orders and downloaded
+// with one confirmation, each once; every download is watched on its own,
+// and a result MoviePilot leaves unknown points to /tasks.
+func TestDownloadTickedReleases(t *testing.T) {
+	h := start(t, scenario{routes: map[string]route{
+		searchPath:      ok("search_mygo.json"),
+		mygoDetails:     ok("detail_mygo.json"),
+		seasonsPath:     ok("seasons_mygo.json"),
+		libraryShowPath: ok("library_mygo.json"),
+		mygoLookup:      ok("subscription_none.json"),
+		mygoTorrents:    searchingSites("torrents_mygo_s1.json"),
+		downloadPath:    ok("download_added.json"),
+	}})
+	h.say(alice, alice, "/search 迷途之子")
+	h.tap(alice, 1, "1")
+	h.tap(alice, 1, "第 1 季")
+	h.searchTorrents(alice, 1, searchResources)
+	h.tap(alice, 1, "多选…")
+	h.tap(alice, 1, "2")
+	h.tap(alice, 1, "3")
+	h.tap(alice, 1, "下一页 ›")
+	h.tap(alice, 1, "9")
+	h.shows(1, "第 2/2 页")
+	h.tap(alice, 1, "做种")
+	h.tap(alice, 1, "默认")
+	h.tap(alice, 1, "✓ 3")
+	h.shows(1, "已选 2 个")
+	h.tap(alice, 1, "下载所选 2 个")
+	h.shows(1, "要下载这 2 个资源吗？")
+	h.tap(alice, 1, "返回")
+	h.tap(alice, 1, "下载所选 2 个")
+	confirm, _ := findButton(mustMessage(h, 1).rows, downloadIt)
+	h.tap(alice, 1, downloadIt)
+	h.shows(1, "开始下载 2 个资源啦")
+	h.tapData(alice, 1, confirm)
+	first := mygo.file("S01", "E01")
+	first.Hash = addedHash
+	h.arrives(alice, first)
+	eighth := mygo.file("S01", "E08")
+	eighth.Hash = addedHashN(2)
+	h.arrives(alice, eighth)
+
+	h.mp.setRoute(downloadPath, route{status: http.StatusServiceUnavailable, fixture: "server_error.json"})
+	h.say(alice, alice, "/search 迷途之子")
+	h.tap(alice, 4, "1")
+	h.tap(alice, 4, "第 1 季")
+	h.searchTorrents(alice, 4, searchResources)
+	h.tap(alice, 4, "多选…")
+	h.tap(alice, 4, "1")
+	h.tap(alice, 4, "下载所选 1 个")
+	h.tap(alice, 4, downloadIt)
+	h.shows(4, "/tasks")
+	if _, offered := findButton(mustMessage(h, 4).rows, downloadIt); offered {
+		t.Fatal("a download of unknown result is offered again")
+	}
+	h.neverShowsSiteCredentials()
+	h.tr.verify(t)
+}

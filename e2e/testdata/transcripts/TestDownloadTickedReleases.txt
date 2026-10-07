@@ -1,0 +1,624 @@
+>> user 1001 in chat 1001: /search 迷途之子
+-> MoviePilot GET /api/v1/media/search?count=10&title=迷途之子&type=media
+<< sendRichMessage chat=1001 message=1
+   <tg-slideshow>
+   <img src="https://image.tmdb.org/t/p/w500/dDknWHLYaQB76QSViNdzXOC5v64.jpg"/>
+   <img src="https://image.tmdb.org/t/p/w500/bMW0kwyK44LvDbQ3s0b3GCVOtLs.jpg"/>
+   <img src="https://image.tmdb.org/t/p/w500/bleKkUg0l8X4AAxqxgkmYlLO7bN.jpg"/>
+   </tg-slideshow>
+   <h3>🔍 帮你找到这些「迷途之子」啦</h3>
+   <ol start="1">
+   <li value="1"><b>迷途之子!!!!!</b><br>
+   <i>BanG Dream! It&#39;s MyGO!!!!! · 2023 · 电视剧 · ⭐ 8.0</i></li>
+   <li value="2"><b>迷途之子!!!!! 前篇：春暖向阳，迷星之猫</b><br>
+   <i>BanG Dream! It&#39;s MyGO!!!!! 前編：春の陽だまり、迷い猫 · 2024 · 电影 · ⭐ 7.7</i></li>
+   <li value="3"><b>迷途之子!!!!! 后篇：唱吧、成为我们羁绊的诗歌＆电影演唱会</b><br>
+   <i>BanG Dream! It&#39;s MyGO!!!!! 後編：うたう、僕らになれるうた &amp; FILM LIVE · 2024 · 电影 · ⭐ 7.0</i></li>
+   </ol>
+   [1 | 1:m:0] [2 | 1:m:1] [3 | 1:m:2]
+   [重新搜索 | 1:rs:0]
+   [取消 | 1:x:0]
+>> user 1001 taps 1:m:0 on message 1
+-> MoviePilot GET /api/v1/media/224207?media_source=themoviedb&type_name=电视剧
+-> MoviePilot GET /api/v1/media/seasons?media_id=224207&media_source=themoviedb
+<< editMessageText chat=1001 message=1 reuses=url-f1d1c3e9
+   <img src="tg://photo?id=p0"/>
+   <h3>📺 <a href="https://www.themoviedb.org/tv/224207">迷途之子!!!!!</a></h3>
+   <footer><i>BanG Dream! It&#39;s MyGO!!!!!</i> · 2023 · 电视剧 · ⭐ 8.0 · 动画 / 剧情 · 共 1 季 13 集 · 主演：羊宫妃那、立石凛、青木阳菜</footer>
+   <blockquote expandable>“你能，和我组一辈子乐队吗？”……高一的春末，羽丘女子学园的所有人都加入了乐队，晚入学的爱音为了尽快融入班级，急急忙忙地寻找着乐队成员。这时她得知，「羽丘的不可思议女孩」灯还没有加入乐队，于是爱音不由自主地向她打起了招呼，但是……这是遍体鳞伤又狼狈不堪的，我们的＜音乐呐喊＞。迷失方向也无所谓，在迷茫中前进吧！</blockquote>
+   <hr/>
+   <p><b>想订哪一季呀？</b></p>
+   <table bordered compact>
+   <tr><th>季</th><th>集数</th><th>入库</th></tr>
+   <tr><td><b>特别篇</b></td><td>3 集</td><td></td></tr>
+   <tr><td><b>第 1 季</b></td><td>13 集</td><td>已有 1 集</td></tr>
+   </table>
+   [特别篇 | 1:s:0] [第 1 季 | 1:s:1]
+   [多选季… | 1:a:0]
+   [相似推荐 | 1:r:0]
+   [返回 | 1:bk:0] [取消 | 1:x:0]
+<< answerCallbackQuery
+>> user 1001 taps 1:s:1 on message 1
+-> MoviePilot GET /api/v1/subscribe/media/224207?media_source=themoviedb&mtype=电视剧&season=1&title=迷途之子!!!!!&year=2023
+<< editMessageText chat=1001 message=1 reuses=url-f1d1c3e9
+   <img src="tg://photo?id=p0"/>
+   <h3>📺 <a href="https://www.themoviedb.org/tv/224207">迷途之子!!!!!</a></h3>
+   <footer><i>BanG Dream! It&#39;s MyGO!!!!!</i> · 2023 · 电视剧 · ⭐ 8.0 · 动画 / 剧情 · 共 1 季 13 集 · 主演：羊宫妃那、立石凛、青木阳菜</footer>
+   <blockquote expandable>“你能，和我组一辈子乐队吗？”……高一的春末，羽丘女子学园的所有人都加入了乐队，晚入学的爱音为了尽快融入班级，急急忙忙地寻找着乐队成员。这时她得知，「羽丘的不可思议女孩」灯还没有加入乐队，于是爱音不由自主地向她打起了招呼，但是……这是遍体鳞伤又狼狈不堪的，我们的＜音乐呐喊＞。迷失方向也无所谓，在迷茫中前进吧！</blockquote>
+   <hr/>
+   <p><b>要订阅《迷途之子!!!!!》第 1 季（共 13 集，媒体库已有 E13）吗？</b></p>
+   [从第 1 集开始 | 1:ok:0]
+   [指定起始集… | 1:e:0]
+   [搜索资源 | 1:ts:0] [相似推荐 | 1:r:0]
+   [返回 | 1:bk:0] [取消 | 1:x:0]
+<< answerCallbackQuery
+>> user 1001 taps 1:ts:0 on message 1
+<< editMessageText chat=1001 message=1 reuses=url-f1d1c3e9
+   <img src="tg://photo?id=p0"/>
+   <h3>📺 <a href="https://www.themoviedb.org/tv/224207">迷途之子!!!!!</a></h3>
+   <footer><i>BanG Dream! It&#39;s MyGO!!!!!</i> · 2023 · 电视剧 · ⭐ 8.0 · 动画 / 剧情 · 共 1 季 13 集 · 主演：羊宫妃那、立石凛、青木阳菜</footer>
+   <blockquote expandable>“你能，和我组一辈子乐队吗？”……高一的春末，羽丘女子学园的所有人都加入了乐队，晚入学的爱音为了尽快融入班级，急急忙忙地寻找着乐队成员。这时她得知，「羽丘的不可思议女孩」灯还没有加入乐队，于是爱音不由自主地向她打起了招呼，但是……这是遍体鳞伤又狼狈不堪的，我们的＜音乐呐喊＞。迷失方向也无所谓，在迷茫中前进吧！</blockquote>
+   <hr/>
+   <p>🔍 正在各个站点搜索资源，要等一会儿哦…</p>
+   [取消 | 1:x:0]
+<< answerCallbackQuery
+-> MoviePilot GET /api/v1/search/media/224207?media_source=themoviedb&mtype=电视剧&season=1
+<< editMessageText chat=1001 message=1
+   <h3>🔍 《迷途之子!!!!!》第 1 季的资源</h3>
+   <ol start="1">
+   <li value="1"><b>BanG.Dream.It&#39;s.MyGO.S01.2023.1080p.BluRay.x265.FLAC-VCB</b><br>
+   <i>站点甲 · 21.4 GiB · 做种 40 · 免费</i></li>
+   <li value="2"><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 01 [WebRip 1080p HEVC-10bit AAC]</b><br>
+   <i>站点丁 · 512.0 MiB · 做种 11 · E01</i></li>
+   <li value="3"><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 02 [WebRip 1080p HEVC-10bit AAC]</b><br>
+   <i>站点丁 · 512.0 MiB · 做种 12 · E02</i></li>
+   <li value="4"><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 03 [WebRip 1080p HEVC-10bit AAC]</b><br>
+   <i>站点丁 · 512.0 MiB · 做种 13 · E03</i></li>
+   <li value="5"><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 04 [WebRip 1080p HEVC-10bit AAC]</b><br>
+   <i>站点丁 · 512.0 MiB · 做种 14 · E04</i></li>
+   <li value="6"><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 05 [WebRip 1080p HEVC-10bit AAC]</b><br>
+   <i>站点丁 · 512.0 MiB · 做种 15 · E05</i></li>
+   <li value="7"><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 06 [WebRip 1080p HEVC-10bit AAC]</b><br>
+   <i>站点丁 · 512.0 MiB · 做种 16 · E06</i></li>
+   <li value="8"><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 07 [WebRip 1080p HEVC-10bit AAC]</b><br>
+   <i>站点丁 · 512.0 MiB · 做种 17 · E07</i></li>
+   </ol>
+   <footer>共 14 个，按 MoviePilot 的优先级排好啦，点编号看详情～</footer>
+   <footer>第 1/2 页</footer>
+   [1 | 1:tp:0] [2 | 1:tp:1] [3 | 1:tp:2] [4 | 1:tp:3]
+   [5 | 1:tp:4] [6 | 1:tp:5] [7 | 1:tp:6] [8 | 1:tp:7]
+   [下一页 › | 1:p:1]
+   [·默认· | 1:to:0] [做种 | 1:to:1] [时间 | 1:to:2] [大小 | 1:to:3] [站点 | 1:to:4]
+   [筛选站点 | 1:tf:0] [多选… | 1:tm:0]
+   [返回 | 1:bk:0] [取消 | 1:x:0]
+>> user 1001 taps 1:tm:0 on message 1
+<< editMessageText chat=1001 message=1
+   <h3>🔍 《迷途之子!!!!!》第 1 季的资源</h3>
+   <ol start="1">
+   <li value="1"><b>BanG.Dream.It&#39;s.MyGO.S01.2023.1080p.BluRay.x265.FLAC-VCB</b><br>
+   <i>站点甲 · 21.4 GiB · 做种 40 · 免费</i></li>
+   <li value="2"><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 01 [WebRip 1080p HEVC-10bit AAC]</b><br>
+   <i>站点丁 · 512.0 MiB · 做种 11 · E01</i></li>
+   <li value="3"><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 02 [WebRip 1080p HEVC-10bit AAC]</b><br>
+   <i>站点丁 · 512.0 MiB · 做种 12 · E02</i></li>
+   <li value="4"><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 03 [WebRip 1080p HEVC-10bit AAC]</b><br>
+   <i>站点丁 · 512.0 MiB · 做种 13 · E03</i></li>
+   <li value="5"><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 04 [WebRip 1080p HEVC-10bit AAC]</b><br>
+   <i>站点丁 · 512.0 MiB · 做种 14 · E04</i></li>
+   <li value="6"><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 05 [WebRip 1080p HEVC-10bit AAC]</b><br>
+   <i>站点丁 · 512.0 MiB · 做种 15 · E05</i></li>
+   <li value="7"><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 06 [WebRip 1080p HEVC-10bit AAC]</b><br>
+   <i>站点丁 · 512.0 MiB · 做种 16 · E06</i></li>
+   <li value="8"><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 07 [WebRip 1080p HEVC-10bit AAC]</b><br>
+   <i>站点丁 · 512.0 MiB · 做种 17 · E07</i></li>
+   </ol>
+   <footer>共 14 个，按 MoviePilot 的优先级排好啦，已选 0 个，点编号勾选，再点一次取消～</footer>
+   <footer>第 1/2 页</footer>
+   [1 | 1:tk:0] [2 | 1:tk:1] [3 | 1:tk:2] [4 | 1:tk:3]
+   [5 | 1:tk:4] [6 | 1:tk:5] [7 | 1:tk:6] [8 | 1:tk:7]
+   [下一页 › | 1:p:1]
+   [下载所选 0 个 | 1:tb:0]
+   [·默认· | 1:to:0] [做种 | 1:to:1] [时间 | 1:to:2] [大小 | 1:to:3] [站点 | 1:to:4]
+   [筛选站点 | 1:tf:0]
+   [返回 | 1:bk:0] [取消 | 1:x:0]
+<< answerCallbackQuery
+>> user 1001 taps 1:tk:1 on message 1
+<< editMessageText chat=1001 message=1
+   <h3>🔍 《迷途之子!!!!!》第 1 季的资源</h3>
+   <ol start="1">
+   <li value="1"><b>BanG.Dream.It&#39;s.MyGO.S01.2023.1080p.BluRay.x265.FLAC-VCB</b><br>
+   <i>站点甲 · 21.4 GiB · 做种 40 · 免费</i></li>
+   <li value="2"><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 01 [WebRip 1080p HEVC-10bit AAC]</b><br>
+   <i>站点丁 · 512.0 MiB · 做种 11 · E01 · <mark>已选</mark></i></li>
+   <li value="3"><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 02 [WebRip 1080p HEVC-10bit AAC]</b><br>
+   <i>站点丁 · 512.0 MiB · 做种 12 · E02</i></li>
+   <li value="4"><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 03 [WebRip 1080p HEVC-10bit AAC]</b><br>
+   <i>站点丁 · 512.0 MiB · 做种 13 · E03</i></li>
+   <li value="5"><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 04 [WebRip 1080p HEVC-10bit AAC]</b><br>
+   <i>站点丁 · 512.0 MiB · 做种 14 · E04</i></li>
+   <li value="6"><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 05 [WebRip 1080p HEVC-10bit AAC]</b><br>
+   <i>站点丁 · 512.0 MiB · 做种 15 · E05</i></li>
+   <li value="7"><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 06 [WebRip 1080p HEVC-10bit AAC]</b><br>
+   <i>站点丁 · 512.0 MiB · 做种 16 · E06</i></li>
+   <li value="8"><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 07 [WebRip 1080p HEVC-10bit AAC]</b><br>
+   <i>站点丁 · 512.0 MiB · 做种 17 · E07</i></li>
+   </ol>
+   <footer>共 14 个，按 MoviePilot 的优先级排好啦，已选 1 个，点编号勾选，再点一次取消～</footer>
+   <footer>第 1/2 页</footer>
+   [1 | 1:tk:0] [✓ 2 | 1:tk:1] [3 | 1:tk:2] [4 | 1:tk:3]
+   [5 | 1:tk:4] [6 | 1:tk:5] [7 | 1:tk:6] [8 | 1:tk:7]
+   [下一页 › | 1:p:1]
+   [下载所选 1 个 | 1:tb:0]
+   [·默认· | 1:to:0] [做种 | 1:to:1] [时间 | 1:to:2] [大小 | 1:to:3] [站点 | 1:to:4]
+   [筛选站点 | 1:tf:0]
+   [返回 | 1:bk:0] [取消 | 1:x:0]
+<< answerCallbackQuery
+>> user 1001 taps 1:tk:2 on message 1
+<< editMessageText chat=1001 message=1
+   <h3>🔍 《迷途之子!!!!!》第 1 季的资源</h3>
+   <ol start="1">
+   <li value="1"><b>BanG.Dream.It&#39;s.MyGO.S01.2023.1080p.BluRay.x265.FLAC-VCB</b><br>
+   <i>站点甲 · 21.4 GiB · 做种 40 · 免费</i></li>
+   <li value="2"><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 01 [WebRip 1080p HEVC-10bit AAC]</b><br>
+   <i>站点丁 · 512.0 MiB · 做种 11 · E01 · <mark>已选</mark></i></li>
+   <li value="3"><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 02 [WebRip 1080p HEVC-10bit AAC]</b><br>
+   <i>站点丁 · 512.0 MiB · 做种 12 · E02 · <mark>已选</mark></i></li>
+   <li value="4"><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 03 [WebRip 1080p HEVC-10bit AAC]</b><br>
+   <i>站点丁 · 512.0 MiB · 做种 13 · E03</i></li>
+   <li value="5"><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 04 [WebRip 1080p HEVC-10bit AAC]</b><br>
+   <i>站点丁 · 512.0 MiB · 做种 14 · E04</i></li>
+   <li value="6"><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 05 [WebRip 1080p HEVC-10bit AAC]</b><br>
+   <i>站点丁 · 512.0 MiB · 做种 15 · E05</i></li>
+   <li value="7"><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 06 [WebRip 1080p HEVC-10bit AAC]</b><br>
+   <i>站点丁 · 512.0 MiB · 做种 16 · E06</i></li>
+   <li value="8"><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 07 [WebRip 1080p HEVC-10bit AAC]</b><br>
+   <i>站点丁 · 512.0 MiB · 做种 17 · E07</i></li>
+   </ol>
+   <footer>共 14 个，按 MoviePilot 的优先级排好啦，已选 2 个，点编号勾选，再点一次取消～</footer>
+   <footer>第 1/2 页</footer>
+   [1 | 1:tk:0] [✓ 2 | 1:tk:1] [✓ 3 | 1:tk:2] [4 | 1:tk:3]
+   [5 | 1:tk:4] [6 | 1:tk:5] [7 | 1:tk:6] [8 | 1:tk:7]
+   [下一页 › | 1:p:1]
+   [下载所选 2 个 | 1:tb:0]
+   [·默认· | 1:to:0] [做种 | 1:to:1] [时间 | 1:to:2] [大小 | 1:to:3] [站点 | 1:to:4]
+   [筛选站点 | 1:tf:0]
+   [返回 | 1:bk:0] [取消 | 1:x:0]
+<< answerCallbackQuery
+>> user 1001 taps 1:p:1 on message 1
+<< editMessageText chat=1001 message=1
+   <h3>🔍 《迷途之子!!!!!》第 1 季的资源</h3>
+   <ol start="9">
+   <li value="9"><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 08 [WebRip 1080p HEVC-10bit AAC]</b><br>
+   <i>站点丁 · 512.0 MiB · 做种 18 · E08</i></li>
+   <li value="10"><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 09 [WebRip 1080p HEVC-10bit AAC]</b><br>
+   <i>站点丁 · 512.0 MiB · 做种 19 · E09</i></li>
+   <li value="11"><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 10 [WebRip 1080p HEVC-10bit AAC]</b><br>
+   <i>站点丁 · 512.0 MiB · 做种 20 · E10</i></li>
+   <li value="12"><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 11 [WebRip 1080p HEVC-10bit AAC]</b><br>
+   <i>站点丁 · 512.0 MiB · 做种 21 · E11</i></li>
+   <li value="13"><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 12 [WebRip 1080p HEVC-10bit AAC]</b><br>
+   <i>站点丁 · 512.0 MiB · 做种 22 · E12</i></li>
+   <li value="14"><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 13 [WebRip 1080p HEVC-10bit AAC]</b><br>
+   <i>站点丁 · 512.0 MiB · 做种 23 · E13</i></li>
+   </ol>
+   <footer>共 14 个，按 MoviePilot 的优先级排好啦，已选 2 个，点编号勾选，再点一次取消～</footer>
+   <footer>第 2/2 页</footer>
+   [9 | 1:tk:8] [10 | 1:tk:9] [11 | 1:tk:10] [12 | 1:tk:11]
+   [13 | 1:tk:12] [14 | 1:tk:13]
+   [‹ 上一页 | 1:p:0]
+   [下载所选 2 个 | 1:tb:0]
+   [·默认· | 1:to:0] [做种 | 1:to:1] [时间 | 1:to:2] [大小 | 1:to:3] [站点 | 1:to:4]
+   [筛选站点 | 1:tf:0]
+   [返回 | 1:bk:0] [取消 | 1:x:0]
+<< answerCallbackQuery
+>> user 1001 taps 1:tk:8 on message 1
+<< editMessageText chat=1001 message=1
+   <h3>🔍 《迷途之子!!!!!》第 1 季的资源</h3>
+   <ol start="9">
+   <li value="9"><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 08 [WebRip 1080p HEVC-10bit AAC]</b><br>
+   <i>站点丁 · 512.0 MiB · 做种 18 · E08 · <mark>已选</mark></i></li>
+   <li value="10"><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 09 [WebRip 1080p HEVC-10bit AAC]</b><br>
+   <i>站点丁 · 512.0 MiB · 做种 19 · E09</i></li>
+   <li value="11"><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 10 [WebRip 1080p HEVC-10bit AAC]</b><br>
+   <i>站点丁 · 512.0 MiB · 做种 20 · E10</i></li>
+   <li value="12"><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 11 [WebRip 1080p HEVC-10bit AAC]</b><br>
+   <i>站点丁 · 512.0 MiB · 做种 21 · E11</i></li>
+   <li value="13"><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 12 [WebRip 1080p HEVC-10bit AAC]</b><br>
+   <i>站点丁 · 512.0 MiB · 做种 22 · E12</i></li>
+   <li value="14"><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 13 [WebRip 1080p HEVC-10bit AAC]</b><br>
+   <i>站点丁 · 512.0 MiB · 做种 23 · E13</i></li>
+   </ol>
+   <footer>共 14 个，按 MoviePilot 的优先级排好啦，已选 3 个，点编号勾选，再点一次取消～</footer>
+   <footer>第 2/2 页</footer>
+   [✓ 9 | 1:tk:8] [10 | 1:tk:9] [11 | 1:tk:10] [12 | 1:tk:11]
+   [13 | 1:tk:12] [14 | 1:tk:13]
+   [‹ 上一页 | 1:p:0]
+   [下载所选 3 个 | 1:tb:0]
+   [·默认· | 1:to:0] [做种 | 1:to:1] [时间 | 1:to:2] [大小 | 1:to:3] [站点 | 1:to:4]
+   [筛选站点 | 1:tf:0]
+   [返回 | 1:bk:0] [取消 | 1:x:0]
+<< answerCallbackQuery
+>> user 1001 taps 1:to:1 on message 1
+<< editMessageText chat=1001 message=1
+   <h3>🔍 《迷途之子!!!!!》第 1 季的资源</h3>
+   <ol start="1">
+   <li value="1"><b>BanG.Dream.It&#39;s.MyGO.S01.2023.1080p.BluRay.x265.FLAC-VCB</b><br>
+   <i>站点甲 · 21.4 GiB · 做种 40 · 免费</i></li>
+   <li value="2"><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 13 [WebRip 1080p HEVC-10bit AAC]</b><br>
+   <i>站点丁 · 512.0 MiB · 做种 23 · E13</i></li>
+   <li value="3"><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 12 [WebRip 1080p HEVC-10bit AAC]</b><br>
+   <i>站点丁 · 512.0 MiB · 做种 22 · E12</i></li>
+   <li value="4"><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 11 [WebRip 1080p HEVC-10bit AAC]</b><br>
+   <i>站点丁 · 512.0 MiB · 做种 21 · E11</i></li>
+   <li value="5"><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 10 [WebRip 1080p HEVC-10bit AAC]</b><br>
+   <i>站点丁 · 512.0 MiB · 做种 20 · E10</i></li>
+   <li value="6"><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 09 [WebRip 1080p HEVC-10bit AAC]</b><br>
+   <i>站点丁 · 512.0 MiB · 做种 19 · E09</i></li>
+   <li value="7"><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 08 [WebRip 1080p HEVC-10bit AAC]</b><br>
+   <i>站点丁 · 512.0 MiB · 做种 18 · E08 · <mark>已选</mark></i></li>
+   <li value="8"><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 07 [WebRip 1080p HEVC-10bit AAC]</b><br>
+   <i>站点丁 · 512.0 MiB · 做种 17 · E07</i></li>
+   </ol>
+   <footer>共 14 个，做种人数从多到少，已选 3 个，点编号勾选，再点一次取消～</footer>
+   <footer>第 1/2 页</footer>
+   [1 | 1:tk:0] [2 | 1:tk:13] [3 | 1:tk:12] [4 | 1:tk:11]
+   [5 | 1:tk:10] [6 | 1:tk:9] [✓ 7 | 1:tk:8] [8 | 1:tk:7]
+   [下一页 › | 1:p:1]
+   [下载所选 3 个 | 1:tb:0]
+   [默认 | 1:to:0] [·做种· | 1:to:1] [时间 | 1:to:2] [大小 | 1:to:3] [站点 | 1:to:4]
+   [筛选站点 | 1:tf:0]
+   [返回 | 1:bk:0] [取消 | 1:x:0]
+<< answerCallbackQuery
+>> user 1001 taps 1:to:0 on message 1
+<< editMessageText chat=1001 message=1
+   <h3>🔍 《迷途之子!!!!!》第 1 季的资源</h3>
+   <ol start="1">
+   <li value="1"><b>BanG.Dream.It&#39;s.MyGO.S01.2023.1080p.BluRay.x265.FLAC-VCB</b><br>
+   <i>站点甲 · 21.4 GiB · 做种 40 · 免费</i></li>
+   <li value="2"><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 01 [WebRip 1080p HEVC-10bit AAC]</b><br>
+   <i>站点丁 · 512.0 MiB · 做种 11 · E01 · <mark>已选</mark></i></li>
+   <li value="3"><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 02 [WebRip 1080p HEVC-10bit AAC]</b><br>
+   <i>站点丁 · 512.0 MiB · 做种 12 · E02 · <mark>已选</mark></i></li>
+   <li value="4"><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 03 [WebRip 1080p HEVC-10bit AAC]</b><br>
+   <i>站点丁 · 512.0 MiB · 做种 13 · E03</i></li>
+   <li value="5"><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 04 [WebRip 1080p HEVC-10bit AAC]</b><br>
+   <i>站点丁 · 512.0 MiB · 做种 14 · E04</i></li>
+   <li value="6"><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 05 [WebRip 1080p HEVC-10bit AAC]</b><br>
+   <i>站点丁 · 512.0 MiB · 做种 15 · E05</i></li>
+   <li value="7"><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 06 [WebRip 1080p HEVC-10bit AAC]</b><br>
+   <i>站点丁 · 512.0 MiB · 做种 16 · E06</i></li>
+   <li value="8"><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 07 [WebRip 1080p HEVC-10bit AAC]</b><br>
+   <i>站点丁 · 512.0 MiB · 做种 17 · E07</i></li>
+   </ol>
+   <footer>共 14 个，按 MoviePilot 的优先级排好啦，已选 3 个，点编号勾选，再点一次取消～</footer>
+   <footer>第 1/2 页</footer>
+   [1 | 1:tk:0] [✓ 2 | 1:tk:1] [✓ 3 | 1:tk:2] [4 | 1:tk:3]
+   [5 | 1:tk:4] [6 | 1:tk:5] [7 | 1:tk:6] [8 | 1:tk:7]
+   [下一页 › | 1:p:1]
+   [下载所选 3 个 | 1:tb:0]
+   [·默认· | 1:to:0] [做种 | 1:to:1] [时间 | 1:to:2] [大小 | 1:to:3] [站点 | 1:to:4]
+   [筛选站点 | 1:tf:0]
+   [返回 | 1:bk:0] [取消 | 1:x:0]
+<< answerCallbackQuery
+>> user 1001 taps 1:tk:2 on message 1
+<< editMessageText chat=1001 message=1
+   <h3>🔍 《迷途之子!!!!!》第 1 季的资源</h3>
+   <ol start="1">
+   <li value="1"><b>BanG.Dream.It&#39;s.MyGO.S01.2023.1080p.BluRay.x265.FLAC-VCB</b><br>
+   <i>站点甲 · 21.4 GiB · 做种 40 · 免费</i></li>
+   <li value="2"><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 01 [WebRip 1080p HEVC-10bit AAC]</b><br>
+   <i>站点丁 · 512.0 MiB · 做种 11 · E01 · <mark>已选</mark></i></li>
+   <li value="3"><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 02 [WebRip 1080p HEVC-10bit AAC]</b><br>
+   <i>站点丁 · 512.0 MiB · 做种 12 · E02</i></li>
+   <li value="4"><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 03 [WebRip 1080p HEVC-10bit AAC]</b><br>
+   <i>站点丁 · 512.0 MiB · 做种 13 · E03</i></li>
+   <li value="5"><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 04 [WebRip 1080p HEVC-10bit AAC]</b><br>
+   <i>站点丁 · 512.0 MiB · 做种 14 · E04</i></li>
+   <li value="6"><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 05 [WebRip 1080p HEVC-10bit AAC]</b><br>
+   <i>站点丁 · 512.0 MiB · 做种 15 · E05</i></li>
+   <li value="7"><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 06 [WebRip 1080p HEVC-10bit AAC]</b><br>
+   <i>站点丁 · 512.0 MiB · 做种 16 · E06</i></li>
+   <li value="8"><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 07 [WebRip 1080p HEVC-10bit AAC]</b><br>
+   <i>站点丁 · 512.0 MiB · 做种 17 · E07</i></li>
+   </ol>
+   <footer>共 14 个，按 MoviePilot 的优先级排好啦，已选 2 个，点编号勾选，再点一次取消～</footer>
+   <footer>第 1/2 页</footer>
+   [1 | 1:tk:0] [✓ 2 | 1:tk:1] [3 | 1:tk:2] [4 | 1:tk:3]
+   [5 | 1:tk:4] [6 | 1:tk:5] [7 | 1:tk:6] [8 | 1:tk:7]
+   [下一页 › | 1:p:1]
+   [下载所选 2 个 | 1:tb:0]
+   [·默认· | 1:to:0] [做种 | 1:to:1] [时间 | 1:to:2] [大小 | 1:to:3] [站点 | 1:to:4]
+   [筛选站点 | 1:tf:0]
+   [返回 | 1:bk:0] [取消 | 1:x:0]
+<< answerCallbackQuery
+>> user 1001 taps 1:tb:0 on message 1
+<< editMessageText chat=1001 message=1 reuses=url-f1d1c3e9
+   <img src="tg://photo?id=p0"/>
+   <h3>📺 <a href="https://www.themoviedb.org/tv/224207">迷途之子!!!!!</a></h3>
+   <footer><i>BanG Dream! It&#39;s MyGO!!!!!</i> · 2023 · 电视剧 · ⭐ 8.0 · 动画 / 剧情 · 共 1 季 13 集 · 主演：羊宫妃那、立石凛、青木阳菜</footer>
+   <blockquote expandable>“你能，和我组一辈子乐队吗？”……高一的春末，羽丘女子学园的所有人都加入了乐队，晚入学的爱音为了尽快融入班级，急急忙忙地寻找着乐队成员。这时她得知，「羽丘的不可思议女孩」灯还没有加入乐队，于是爱音不由自主地向她打起了招呼，但是……这是遍体鳞伤又狼狈不堪的，我们的＜音乐呐喊＞。迷失方向也无所谓，在迷茫中前进吧！</blockquote>
+   <hr/>
+   <table bordered compact>
+   <tr><th>资源</th><th>集</th><th>站点</th><th>大小</th></tr>
+   <tr><td><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 01 [WebRip 1080p HEVC-10bit AAC]</b></td><td>E01</td><td>站点丁</td><td>512.0 MiB</td></tr>
+   <tr><td><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 08 [WebRip 1080p HEVC-10bit AAC]</b></td><td>E08</td><td>站点丁</td><td>512.0 MiB</td></tr>
+   </table>
+   <p>一共 1.0 GiB<br>
+   <b>要下载这 2 个资源吗？</b></p>
+   [确认下载 | 1:tz:0]
+   [返回 | 1:bk:0] [取消 | 1:x:0]
+<< answerCallbackQuery
+>> user 1001 taps 1:bk:0 on message 1
+<< editMessageText chat=1001 message=1
+   <h3>🔍 《迷途之子!!!!!》第 1 季的资源</h3>
+   <ol start="1">
+   <li value="1"><b>BanG.Dream.It&#39;s.MyGO.S01.2023.1080p.BluRay.x265.FLAC-VCB</b><br>
+   <i>站点甲 · 21.4 GiB · 做种 40 · 免费</i></li>
+   <li value="2"><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 01 [WebRip 1080p HEVC-10bit AAC]</b><br>
+   <i>站点丁 · 512.0 MiB · 做种 11 · E01 · <mark>已选</mark></i></li>
+   <li value="3"><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 02 [WebRip 1080p HEVC-10bit AAC]</b><br>
+   <i>站点丁 · 512.0 MiB · 做种 12 · E02</i></li>
+   <li value="4"><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 03 [WebRip 1080p HEVC-10bit AAC]</b><br>
+   <i>站点丁 · 512.0 MiB · 做种 13 · E03</i></li>
+   <li value="5"><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 04 [WebRip 1080p HEVC-10bit AAC]</b><br>
+   <i>站点丁 · 512.0 MiB · 做种 14 · E04</i></li>
+   <li value="6"><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 05 [WebRip 1080p HEVC-10bit AAC]</b><br>
+   <i>站点丁 · 512.0 MiB · 做种 15 · E05</i></li>
+   <li value="7"><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 06 [WebRip 1080p HEVC-10bit AAC]</b><br>
+   <i>站点丁 · 512.0 MiB · 做种 16 · E06</i></li>
+   <li value="8"><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 07 [WebRip 1080p HEVC-10bit AAC]</b><br>
+   <i>站点丁 · 512.0 MiB · 做种 17 · E07</i></li>
+   </ol>
+   <footer>共 14 个，按 MoviePilot 的优先级排好啦，已选 2 个，点编号勾选，再点一次取消～</footer>
+   <footer>第 1/2 页</footer>
+   [1 | 1:tk:0] [✓ 2 | 1:tk:1] [3 | 1:tk:2] [4 | 1:tk:3]
+   [5 | 1:tk:4] [6 | 1:tk:5] [7 | 1:tk:6] [8 | 1:tk:7]
+   [下一页 › | 1:p:1]
+   [下载所选 2 个 | 1:tb:0]
+   [·默认· | 1:to:0] [做种 | 1:to:1] [时间 | 1:to:2] [大小 | 1:to:3] [站点 | 1:to:4]
+   [筛选站点 | 1:tf:0]
+   [返回 | 1:bk:0] [取消 | 1:x:0]
+<< answerCallbackQuery
+>> user 1001 taps 1:tb:0 on message 1
+<< editMessageText chat=1001 message=1 reuses=url-f1d1c3e9
+   <img src="tg://photo?id=p0"/>
+   <h3>📺 <a href="https://www.themoviedb.org/tv/224207">迷途之子!!!!!</a></h3>
+   <footer><i>BanG Dream! It&#39;s MyGO!!!!!</i> · 2023 · 电视剧 · ⭐ 8.0 · 动画 / 剧情 · 共 1 季 13 集 · 主演：羊宫妃那、立石凛、青木阳菜</footer>
+   <blockquote expandable>“你能，和我组一辈子乐队吗？”……高一的春末，羽丘女子学园的所有人都加入了乐队，晚入学的爱音为了尽快融入班级，急急忙忙地寻找着乐队成员。这时她得知，「羽丘的不可思议女孩」灯还没有加入乐队，于是爱音不由自主地向她打起了招呼，但是……这是遍体鳞伤又狼狈不堪的，我们的＜音乐呐喊＞。迷失方向也无所谓，在迷茫中前进吧！</blockquote>
+   <hr/>
+   <table bordered compact>
+   <tr><th>资源</th><th>集</th><th>站点</th><th>大小</th></tr>
+   <tr><td><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 01 [WebRip 1080p HEVC-10bit AAC]</b></td><td>E01</td><td>站点丁</td><td>512.0 MiB</td></tr>
+   <tr><td><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 08 [WebRip 1080p HEVC-10bit AAC]</b></td><td>E08</td><td>站点丁</td><td>512.0 MiB</td></tr>
+   </table>
+   <p>一共 1.0 GiB<br>
+   <b>要下载这 2 个资源吗？</b></p>
+   [确认下载 | 1:tz:0]
+   [返回 | 1:bk:0] [取消 | 1:x:0]
+<< answerCallbackQuery
+>> user 1001 taps 1:tz:0 on message 1
+-> MoviePilot POST /api/v1/download/
+   media_in 迷途之子!!!!!, torrent_in [LoliHouse] BanG Dream! It's MyGO!!!!! - 01 [WebRip 1080p HEVC-10bit AAC] with the search result's site credentials
+-> MoviePilot POST /api/v1/download/
+   media_in 迷途之子!!!!!, torrent_in [LoliHouse] BanG Dream! It's MyGO!!!!! - 08 [WebRip 1080p HEVC-10bit AAC] with the search result's site credentials
+<< editMessageText chat=1001 message=1 reuses=url-f1d1c3e9
+   <img src="tg://photo?id=p0"/>
+   <h3>📺 <a href="https://www.themoviedb.org/tv/224207">迷途之子!!!!!</a></h3>
+   <footer><i>BanG Dream! It&#39;s MyGO!!!!!</i> · 2023 · 电视剧 · ⭐ 8.0 · 动画 / 剧情 · 共 1 季 13 集 · 主演：羊宫妃那、立石凛、青木阳菜</footer>
+   <blockquote expandable>“你能，和我组一辈子乐队吗？”……高一的春末，羽丘女子学园的所有人都加入了乐队，晚入学的爱音为了尽快融入班级，急急忙忙地寻找着乐队成员。这时她得知，「羽丘的不可思议女孩」灯还没有加入乐队，于是爱音不由自主地向她打起了招呼，但是……这是遍体鳞伤又狼狈不堪的，我们的＜音乐呐喊＞。迷失方向也无所谓，在迷茫中前进吧！</blockquote>
+   <hr/>
+   <p><b>《迷途之子!!!!!》第 1 季的下载结果来啦：</b></p>
+   <table bordered compact>
+   <tr><th>资源</th><th>结果</th></tr>
+   <tr><td><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 01 [WebRip 1080p HEVC-10bit AAC]</b></td><td>✅ 开始下载</td></tr>
+   <tr><td><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 08 [WebRip 1080p HEVC-10bit AAC]</b></td><td>✅ 开始下载</td></tr>
+   </table>
+   <p>✅ 开始下载 2 个资源啦，入库了我第一时间叫你！ ヾ(≧▽≦*)o</p>
+<< answerCallbackQuery
+>> user 1001 taps 1:tz:0 on message 1
+<< answerCallbackQuery notice="这个选项不太对哦～"
+>> MoviePilot transfers 迷途之子!!!!! (themoviedb/224207) S01E01
+<< sendRichMessage chat=1001 message=2 reuses=url-f1d1c3e9
+   <img src="tg://photo?id=p0"/>
+   <h3>📥 入库啦</h3>
+   <p>你想看的<b>《迷途之子!!!!!》第 1 季</b> E01 到家啦！<br>
+   这次下载的剧集全部到齐啦 ヾ(≧▽≦*)o</p>
+   <tg-button-row align="left">
+   <tg-button type="url" style="success" url="https://emby.example.com/web/index.html#!/item?id=224207">在 Emby 中观看</tg-button>
+   </tg-button-row>
+>> MoviePilot transfers 迷途之子!!!!! (themoviedb/224207) S01E08
+<< sendRichMessage chat=1001 message=3 reuses=url-f1d1c3e9
+   <img src="tg://photo?id=p0"/>
+   <h3>📥 入库啦</h3>
+   <p>你想看的<b>《迷途之子!!!!!》第 1 季</b> E08 到家啦！<br>
+   这次下载的剧集全部到齐啦 ヾ(≧▽≦*)o</p>
+   <tg-button-row align="left">
+   <tg-button type="url" style="success" url="https://emby.example.com/web/index.html#!/item?id=224207">在 Emby 中观看</tg-button>
+   </tg-button-row>
+>> user 1001 in chat 1001: /search 迷途之子
+-> MoviePilot GET /api/v1/media/search?count=10&title=迷途之子&type=media
+<< sendRichMessage chat=1001 message=4 reuses=url-f1d1c3e9 reuses=url-44a615cb reuses=url-0a63e69b
+   <tg-slideshow>
+   <img src="tg://photo?id=p0"/>
+   <img src="tg://photo?id=p1"/>
+   <img src="tg://photo?id=p2"/>
+   </tg-slideshow>
+   <h3>🔍 帮你找到这些「迷途之子」啦</h3>
+   <ol start="1">
+   <li value="1"><b>迷途之子!!!!!</b><br>
+   <i>BanG Dream! It&#39;s MyGO!!!!! · 2023 · 电视剧 · ⭐ 8.0</i></li>
+   <li value="2"><b>迷途之子!!!!! 前篇：春暖向阳，迷星之猫</b><br>
+   <i>BanG Dream! It&#39;s MyGO!!!!! 前編：春の陽だまり、迷い猫 · 2024 · 电影 · ⭐ 7.7</i></li>
+   <li value="3"><b>迷途之子!!!!! 后篇：唱吧、成为我们羁绊的诗歌＆电影演唱会</b><br>
+   <i>BanG Dream! It&#39;s MyGO!!!!! 後編：うたう、僕らになれるうた &amp; FILM LIVE · 2024 · 电影 · ⭐ 7.0</i></li>
+   </ol>
+   [1 | 2:m:0] [2 | 2:m:1] [3 | 2:m:2]
+   [重新搜索 | 2:rs:0]
+   [取消 | 2:x:0]
+>> user 1001 taps 2:m:0 on message 4
+-> MoviePilot GET /api/v1/media/224207?media_source=themoviedb&type_name=电视剧
+-> MoviePilot GET /api/v1/media/seasons?media_id=224207&media_source=themoviedb
+<< editMessageText chat=1001 message=4 reuses=url-f1d1c3e9
+   <img src="tg://photo?id=p0"/>
+   <h3>📺 <a href="https://www.themoviedb.org/tv/224207">迷途之子!!!!!</a></h3>
+   <footer><i>BanG Dream! It&#39;s MyGO!!!!!</i> · 2023 · 电视剧 · ⭐ 8.0 · 动画 / 剧情 · 共 1 季 13 集 · 主演：羊宫妃那、立石凛、青木阳菜</footer>
+   <blockquote expandable>“你能，和我组一辈子乐队吗？”……高一的春末，羽丘女子学园的所有人都加入了乐队，晚入学的爱音为了尽快融入班级，急急忙忙地寻找着乐队成员。这时她得知，「羽丘的不可思议女孩」灯还没有加入乐队，于是爱音不由自主地向她打起了招呼，但是……这是遍体鳞伤又狼狈不堪的，我们的＜音乐呐喊＞。迷失方向也无所谓，在迷茫中前进吧！</blockquote>
+   <hr/>
+   <p><b>想订哪一季呀？</b></p>
+   <table bordered compact>
+   <tr><th>季</th><th>集数</th><th>入库</th></tr>
+   <tr><td><b>特别篇</b></td><td>3 集</td><td></td></tr>
+   <tr><td><b>第 1 季</b></td><td>13 集</td><td>已有 3 集</td></tr>
+   </table>
+   [特别篇 | 2:s:0] [第 1 季 | 2:s:1]
+   [多选季… | 2:a:0]
+   [相似推荐 | 2:r:0]
+   [返回 | 2:bk:0] [取消 | 2:x:0]
+<< answerCallbackQuery
+>> user 1001 taps 2:s:1 on message 4
+-> MoviePilot GET /api/v1/subscribe/media/224207?media_source=themoviedb&mtype=电视剧&season=1&title=迷途之子!!!!!&year=2023
+<< editMessageText chat=1001 message=4 reuses=url-f1d1c3e9
+   <img src="tg://photo?id=p0"/>
+   <h3>📺 <a href="https://www.themoviedb.org/tv/224207">迷途之子!!!!!</a></h3>
+   <footer><i>BanG Dream! It&#39;s MyGO!!!!!</i> · 2023 · 电视剧 · ⭐ 8.0 · 动画 / 剧情 · 共 1 季 13 集 · 主演：羊宫妃那、立石凛、青木阳菜</footer>
+   <blockquote expandable>“你能，和我组一辈子乐队吗？”……高一的春末，羽丘女子学园的所有人都加入了乐队，晚入学的爱音为了尽快融入班级，急急忙忙地寻找着乐队成员。这时她得知，「羽丘的不可思议女孩」灯还没有加入乐队，于是爱音不由自主地向她打起了招呼，但是……这是遍体鳞伤又狼狈不堪的，我们的＜音乐呐喊＞。迷失方向也无所谓，在迷茫中前进吧！</blockquote>
+   <hr/>
+   <p><b>要订阅《迷途之子!!!!!》第 1 季（共 13 集，媒体库已有 E13、E08、E01）吗？</b></p>
+   [从第 1 集开始 | 2:ok:0]
+   [指定起始集… | 2:e:0]
+   [搜索资源 | 2:ts:0] [相似推荐 | 2:r:0]
+   [返回 | 2:bk:0] [取消 | 2:x:0]
+<< answerCallbackQuery
+>> user 1001 taps 2:ts:0 on message 4
+<< editMessageText chat=1001 message=4 reuses=url-f1d1c3e9
+   <img src="tg://photo?id=p0"/>
+   <h3>📺 <a href="https://www.themoviedb.org/tv/224207">迷途之子!!!!!</a></h3>
+   <footer><i>BanG Dream! It&#39;s MyGO!!!!!</i> · 2023 · 电视剧 · ⭐ 8.0 · 动画 / 剧情 · 共 1 季 13 集 · 主演：羊宫妃那、立石凛、青木阳菜</footer>
+   <blockquote expandable>“你能，和我组一辈子乐队吗？”……高一的春末，羽丘女子学园的所有人都加入了乐队，晚入学的爱音为了尽快融入班级，急急忙忙地寻找着乐队成员。这时她得知，「羽丘的不可思议女孩」灯还没有加入乐队，于是爱音不由自主地向她打起了招呼，但是……这是遍体鳞伤又狼狈不堪的，我们的＜音乐呐喊＞。迷失方向也无所谓，在迷茫中前进吧！</blockquote>
+   <hr/>
+   <p>🔍 正在各个站点搜索资源，要等一会儿哦…</p>
+   [取消 | 2:x:0]
+<< answerCallbackQuery
+-> MoviePilot GET /api/v1/search/media/224207?media_source=themoviedb&mtype=电视剧&season=1
+<< editMessageText chat=1001 message=4
+   <h3>🔍 《迷途之子!!!!!》第 1 季的资源</h3>
+   <ol start="1">
+   <li value="1"><b>BanG.Dream.It&#39;s.MyGO.S01.2023.1080p.BluRay.x265.FLAC-VCB</b><br>
+   <i>站点甲 · 21.4 GiB · 做种 40 · 免费</i></li>
+   <li value="2"><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 01 [WebRip 1080p HEVC-10bit AAC]</b><br>
+   <i>站点丁 · 512.0 MiB · 做种 11 · E01</i></li>
+   <li value="3"><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 02 [WebRip 1080p HEVC-10bit AAC]</b><br>
+   <i>站点丁 · 512.0 MiB · 做种 12 · E02</i></li>
+   <li value="4"><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 03 [WebRip 1080p HEVC-10bit AAC]</b><br>
+   <i>站点丁 · 512.0 MiB · 做种 13 · E03</i></li>
+   <li value="5"><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 04 [WebRip 1080p HEVC-10bit AAC]</b><br>
+   <i>站点丁 · 512.0 MiB · 做种 14 · E04</i></li>
+   <li value="6"><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 05 [WebRip 1080p HEVC-10bit AAC]</b><br>
+   <i>站点丁 · 512.0 MiB · 做种 15 · E05</i></li>
+   <li value="7"><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 06 [WebRip 1080p HEVC-10bit AAC]</b><br>
+   <i>站点丁 · 512.0 MiB · 做种 16 · E06</i></li>
+   <li value="8"><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 07 [WebRip 1080p HEVC-10bit AAC]</b><br>
+   <i>站点丁 · 512.0 MiB · 做种 17 · E07</i></li>
+   </ol>
+   <footer>共 14 个，按 MoviePilot 的优先级排好啦，点编号看详情～</footer>
+   <footer>第 1/2 页</footer>
+   [1 | 2:tp:0] [2 | 2:tp:1] [3 | 2:tp:2] [4 | 2:tp:3]
+   [5 | 2:tp:4] [6 | 2:tp:5] [7 | 2:tp:6] [8 | 2:tp:7]
+   [下一页 › | 2:p:1]
+   [·默认· | 2:to:0] [做种 | 2:to:1] [时间 | 2:to:2] [大小 | 2:to:3] [站点 | 2:to:4]
+   [筛选站点 | 2:tf:0] [多选… | 2:tm:0]
+   [返回 | 2:bk:0] [取消 | 2:x:0]
+>> user 1001 taps 2:tm:0 on message 4
+<< editMessageText chat=1001 message=4
+   <h3>🔍 《迷途之子!!!!!》第 1 季的资源</h3>
+   <ol start="1">
+   <li value="1"><b>BanG.Dream.It&#39;s.MyGO.S01.2023.1080p.BluRay.x265.FLAC-VCB</b><br>
+   <i>站点甲 · 21.4 GiB · 做种 40 · 免费</i></li>
+   <li value="2"><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 01 [WebRip 1080p HEVC-10bit AAC]</b><br>
+   <i>站点丁 · 512.0 MiB · 做种 11 · E01</i></li>
+   <li value="3"><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 02 [WebRip 1080p HEVC-10bit AAC]</b><br>
+   <i>站点丁 · 512.0 MiB · 做种 12 · E02</i></li>
+   <li value="4"><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 03 [WebRip 1080p HEVC-10bit AAC]</b><br>
+   <i>站点丁 · 512.0 MiB · 做种 13 · E03</i></li>
+   <li value="5"><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 04 [WebRip 1080p HEVC-10bit AAC]</b><br>
+   <i>站点丁 · 512.0 MiB · 做种 14 · E04</i></li>
+   <li value="6"><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 05 [WebRip 1080p HEVC-10bit AAC]</b><br>
+   <i>站点丁 · 512.0 MiB · 做种 15 · E05</i></li>
+   <li value="7"><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 06 [WebRip 1080p HEVC-10bit AAC]</b><br>
+   <i>站点丁 · 512.0 MiB · 做种 16 · E06</i></li>
+   <li value="8"><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 07 [WebRip 1080p HEVC-10bit AAC]</b><br>
+   <i>站点丁 · 512.0 MiB · 做种 17 · E07</i></li>
+   </ol>
+   <footer>共 14 个，按 MoviePilot 的优先级排好啦，已选 0 个，点编号勾选，再点一次取消～</footer>
+   <footer>第 1/2 页</footer>
+   [1 | 2:tk:0] [2 | 2:tk:1] [3 | 2:tk:2] [4 | 2:tk:3]
+   [5 | 2:tk:4] [6 | 2:tk:5] [7 | 2:tk:6] [8 | 2:tk:7]
+   [下一页 › | 2:p:1]
+   [下载所选 0 个 | 2:tb:0]
+   [·默认· | 2:to:0] [做种 | 2:to:1] [时间 | 2:to:2] [大小 | 2:to:3] [站点 | 2:to:4]
+   [筛选站点 | 2:tf:0]
+   [返回 | 2:bk:0] [取消 | 2:x:0]
+<< answerCallbackQuery
+>> user 1001 taps 2:tk:0 on message 4
+<< editMessageText chat=1001 message=4
+   <h3>🔍 《迷途之子!!!!!》第 1 季的资源</h3>
+   <ol start="1">
+   <li value="1"><b>BanG.Dream.It&#39;s.MyGO.S01.2023.1080p.BluRay.x265.FLAC-VCB</b><br>
+   <i>站点甲 · 21.4 GiB · 做种 40 · 免费 · <mark>已选</mark></i></li>
+   <li value="2"><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 01 [WebRip 1080p HEVC-10bit AAC]</b><br>
+   <i>站点丁 · 512.0 MiB · 做种 11 · E01</i></li>
+   <li value="3"><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 02 [WebRip 1080p HEVC-10bit AAC]</b><br>
+   <i>站点丁 · 512.0 MiB · 做种 12 · E02</i></li>
+   <li value="4"><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 03 [WebRip 1080p HEVC-10bit AAC]</b><br>
+   <i>站点丁 · 512.0 MiB · 做种 13 · E03</i></li>
+   <li value="5"><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 04 [WebRip 1080p HEVC-10bit AAC]</b><br>
+   <i>站点丁 · 512.0 MiB · 做种 14 · E04</i></li>
+   <li value="6"><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 05 [WebRip 1080p HEVC-10bit AAC]</b><br>
+   <i>站点丁 · 512.0 MiB · 做种 15 · E05</i></li>
+   <li value="7"><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 06 [WebRip 1080p HEVC-10bit AAC]</b><br>
+   <i>站点丁 · 512.0 MiB · 做种 16 · E06</i></li>
+   <li value="8"><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 07 [WebRip 1080p HEVC-10bit AAC]</b><br>
+   <i>站点丁 · 512.0 MiB · 做种 17 · E07</i></li>
+   </ol>
+   <footer>共 14 个，按 MoviePilot 的优先级排好啦，已选 1 个，点编号勾选，再点一次取消～</footer>
+   <footer>第 1/2 页</footer>
+   [✓ 1 | 2:tk:0] [2 | 2:tk:1] [3 | 2:tk:2] [4 | 2:tk:3]
+   [5 | 2:tk:4] [6 | 2:tk:5] [7 | 2:tk:6] [8 | 2:tk:7]
+   [下一页 › | 2:p:1]
+   [下载所选 1 个 | 2:tb:0]
+   [·默认· | 2:to:0] [做种 | 2:to:1] [时间 | 2:to:2] [大小 | 2:to:3] [站点 | 2:to:4]
+   [筛选站点 | 2:tf:0]
+   [返回 | 2:bk:0] [取消 | 2:x:0]
+<< answerCallbackQuery
+>> user 1001 taps 2:tb:0 on message 4
+<< editMessageText chat=1001 message=4 reuses=url-f1d1c3e9
+   <img src="tg://photo?id=p0"/>
+   <h3>📺 <a href="https://www.themoviedb.org/tv/224207">迷途之子!!!!!</a></h3>
+   <footer><i>BanG Dream! It&#39;s MyGO!!!!!</i> · 2023 · 电视剧 · ⭐ 8.0 · 动画 / 剧情 · 共 1 季 13 集 · 主演：羊宫妃那、立石凛、青木阳菜</footer>
+   <blockquote expandable>“你能，和我组一辈子乐队吗？”……高一的春末，羽丘女子学园的所有人都加入了乐队，晚入学的爱音为了尽快融入班级，急急忙忙地寻找着乐队成员。这时她得知，「羽丘的不可思议女孩」灯还没有加入乐队，于是爱音不由自主地向她打起了招呼，但是……这是遍体鳞伤又狼狈不堪的，我们的＜音乐呐喊＞。迷失方向也无所谓，在迷茫中前进吧！</blockquote>
+   <hr/>
+   <table bordered compact>
+   <tr><th>资源</th><th>站点</th><th>大小</th></tr>
+   <tr><td><b>BanG.Dream.It&#39;s.MyGO.S01.2023.1080p.BluRay.x265.FLAC-VCB</b></td><td>站点甲</td><td>21.4 GiB</td></tr>
+   </table>
+   <p>一共 21.4 GiB<br>
+   <b>要下载这 1 个资源吗？</b></p>
+   [确认下载 | 2:tz:0]
+   [返回 | 2:bk:0] [取消 | 2:x:0]
+<< answerCallbackQuery
+>> user 1001 taps 2:tz:0 on message 4
+-> MoviePilot POST /api/v1/download/
+   media_in 迷途之子!!!!!, torrent_in BanG.Dream.It's.MyGO.S01.2023.1080p.BluRay.x265.FLAC-VCB with the search result's site credentials
+<< editMessageText chat=1001 message=4 reuses=url-f1d1c3e9
+   <img src="tg://photo?id=p0"/>
+   <h3>📺 <a href="https://www.themoviedb.org/tv/224207">迷途之子!!!!!</a></h3>
+   <footer><i>BanG Dream! It&#39;s MyGO!!!!!</i> · 2023 · 电视剧 · ⭐ 8.0 · 动画 / 剧情 · 共 1 季 13 集 · 主演：羊宫妃那、立石凛、青木阳菜</footer>
+   <blockquote expandable>“你能，和我组一辈子乐队吗？”……高一的春末，羽丘女子学园的所有人都加入了乐队，晚入学的爱音为了尽快融入班级，急急忙忙地寻找着乐队成员。这时她得知，「羽丘的不可思议女孩」灯还没有加入乐队，于是爱音不由自主地向她打起了招呼，但是……这是遍体鳞伤又狼狈不堪的，我们的＜音乐呐喊＞。迷失方向也无所谓，在迷茫中前进吧！</blockquote>
+   <hr/>
+   <p><b>《迷途之子!!!!!》第 1 季的下载结果来啦：</b></p>
+   <table bordered compact>
+   <tr><th>资源</th><th>结果</th></tr>
+   <tr><td><b>BanG.Dream.It&#39;s.MyGO.S01.2023.1080p.BluRay.x265.FLAC-VCB</b></td><td>⚠️ 没能确认</td></tr>
+   </table>
+   <p>标着「没能确认」的资源不知道有没有开始下载…先用 /tasks 看一眼，确认没在下再来找我哦。</p>
+<< answerCallbackQuery

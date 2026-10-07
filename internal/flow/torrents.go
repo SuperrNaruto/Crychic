@@ -88,6 +88,7 @@ func (e *Engine) searchTorrents(sess session, run string) Reply {
 	target := *sess.focus
 	sess.hunt, sess.torrents, sess.release = nil, h.found, nil
 	sess.torrentSort, sess.torrentSite = 0, ""
+	sess.ticking, sess.ticked, sess.batch = false, nil, nil
 	e.store.put(sess)
 	if h.err != nil {
 		rows := [][]Button{{{Label: "重试", Data: data(sess.id, actionTorrentRetry, 0)}}, {cancelButton(sess.id)}}

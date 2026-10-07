@@ -1,6 +1,9 @@
 package flow
 
-import "fmt"
+import (
+	"fmt"
+	"slices"
+)
 
 // torrentHead and qualityHead name the release card's two tables.
 var (
@@ -19,21 +22,57 @@ func torrentList(sess session, target Target) listView {
 	shown := sess.shownTorrents()
 	view := listView{
 		heading:   Heading(Plain(heading)),
-		note:      fmt.Sprintf("共 %d 个，%s，点编号看详情～", len(shown), torrentSorts[sess.torrentSort].note),
+		note:      fmt.Sprintf("共 %d 个，%s，%s", len(shown), torrentSorts[sess.torrentSort].note, listHint(sess)),
 		pageItems: torrentPageItems,
-		menu:      [][]Button{sortRow(sess)},
 		footer:    []Button{cancelButton(sess.id)},
 	}
-	if sess.torrentSite != "" || len(torrentSites(sess.torrents)) > 1 {
-		view.menu = append(view.menu, []Button{{Label: msgSiteFilter, Data: data(sess.id, actionTorrentSites, 0)}})
+	if sess.ticking {
+		label := fmt.Sprintf("下载所选 %d 个", len(sess.ticked))
+		view.menu = append(view.menu, []Button{{Label: label, Data: data(sess.id, actionTorrentBatch, 0)}})
+	}
+	view.menu = append(view.menu, sortRow(sess))
+	if row := onwardRow(sess); len(row) > 0 {
+		view.menu = append(view.menu, row)
 	}
 	for n, i := range shown {
-		view.entries = append(view.entries, listEntry{
-			text:    Lines(torrentEntry(n+1, sess.torrents[i])),
-			buttons: []Button{{Label: fmt.Sprint(n + 1), Data: data(sess.id, actionTorrentPick, i)}},
-		})
+		view.entries = append(view.entries, releaseEntry(sess, n+1, i))
 	}
 	return view
+}
+
+// listHint says what a number button does on the release list.
+func listHint(sess session) string {
+	if sess.ticking {
+		return fmt.Sprintf("已选 %d 个，点编号勾选，再点一次取消～", len(sess.ticked))
+	}
+	return "点编号看详情～"
+}
+
+// onwardRow offers the site filter, when there is more than one site, and
+// ticking several releases, unless they are being ticked.
+func onwardRow(sess session) []Button {
+	var row []Button
+	if sess.torrentSite != "" || len(torrentSites(sess.torrents)) > 1 {
+		row = append(row, Button{Label: msgSiteFilter, Data: data(sess.id, actionTorrentSites, 0)})
+	}
+	if !sess.ticking && len(sess.torrents) > 1 {
+		row = append(row, Button{Label: msgTickReleases, Data: data(sess.id, actionTorrentMulti, 0)})
+	}
+	return row
+}
+
+// releaseEntry is release index listed as number n: its number button
+// opens it, or ticks it while releases are ticked.
+func releaseEntry(sess session, n, index int) listEntry {
+	item := torrentEntry(n, sess.torrents[index])
+	button := Button{Label: fmt.Sprint(n), Data: data(sess.id, actionTorrentPick, index)}
+	if sess.ticking {
+		button.Data = data(sess.id, actionTorrentTick, index)
+		if slices.Contains(sess.ticked, index) {
+			item.Tag, button.Label = msgTickedTag, "✓ "+button.Label
+		}
+	}
+	return listEntry{text: Lines(item), buttons: []Button{button}}
 }
 
 // torrentEntry is e.g. "1. **Dune.2021.2160p.UHD.BluRay…**" over

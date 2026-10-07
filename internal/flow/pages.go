@@ -26,8 +26,37 @@ type listView struct {
 }
 
 // listPages keeps text and its action buttons on the same bounded page,
-// the buttons gridColumns a row.
+// the buttons gridColumns a row, and shows the first page.
 func (e *Engine) listPages(sess session, view listView) Reply {
+	return e.listPageWith(sess, view, "")
+}
+
+// listPageWith pages view like listPages and shows the page holding the
+// button with data holds, or the first page.
+func (e *Engine) listPageWith(sess session, view listView, holds string) Reply {
+	sess.pages = paged(sess.id, view)
+	e.store.put(sess)
+	for _, page := range sess.pages {
+		if holds != "" && hasData(page.Buttons, holds) {
+			return page
+		}
+	}
+	return sess.pages[0]
+}
+
+func hasData(rows [][]Button, d string) bool {
+	for _, row := range rows {
+		for _, b := range row {
+			if b.Data == d {
+				return true
+			}
+		}
+	}
+	return false
+}
+
+// paged lays view out on bounded pages.
+func paged(id uint64, view listView) []Reply {
 	maxItems := view.pageItems
 	if maxItems <= 0 {
 		maxItems = listPageItems
@@ -56,13 +85,11 @@ func (e *Engine) listPages(sess session, view listView) Reply {
 		}
 		if len(pages) > 1 {
 			pages[i].Text = append(pages[i].Text, Remark(fmt.Sprintf("第 %d/%d 页", i+1, len(pages))))
-			pages[i].Buttons = append(pages[i].Buttons, listPager(sess.id, i, len(pages)))
+			pages[i].Buttons = append(pages[i].Buttons, listPager(id, i, len(pages)))
 		}
 		pages[i].Buttons = append(append(pages[i].Buttons, view.menu...), view.footer)
 	}
-	sess.pages = pages
-	e.store.put(sess)
-	return pages[0]
+	return pages
 }
 
 func textSize(text Text) int {

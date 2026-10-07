@@ -28,6 +28,9 @@ type session struct {
 	torrentSort int     // index into torrentSorts
 	torrentSite string  // the one site whose releases show; "" for all
 	release     *int    // index of the release shown to download
+	ticking     bool    // the release list ticks releases to download together
+	ticked      []int   // indices of the ticked releases, ascending
+	batch       []int   // indices of the ticked releases asked to download
 	chosen      []int   // seasons ticked in the multi-season picker
 	chart       int     // index into charts being browsed
 	page        int     // page of the chart last shown

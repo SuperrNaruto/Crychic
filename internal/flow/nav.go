@@ -31,13 +31,14 @@ var forward = map[string]bool{
 	actionMulti: true, actionAskFrom: true, actionChartPick: true, actionAskTitle: true,
 	actionResearch: true, actionAskCancel: true, actionCancelPick: true,
 	actionHistory: true, actionHistoryPick: true, actionSubDetail: true,
-	actionTorrentRun: true, actionTorrentPick: true,
+	actionTorrentRun: true, actionTorrentPick: true, actionTorrentMulti: true, actionTorrentBatch: true,
 }
 
 var sameLevel = map[string]bool{
 	actionTick: true, actionChartPage: true, actionWeekday: true, actionPage: true, answered: true,
 	actionRetry: true, actionSubsKind: true, actionHistoryKind: true, actionRefreshSubDetail: true,
 	actionTorrentAgain: true, actionTorrentSort: true, actionTorrentSites: true, actionTorrentSite: true,
+	actionTorrentTick: true,
 }
 
 // answered stands for a typed start episode, which replaces its prompt.

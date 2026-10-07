@@ -110,6 +110,7 @@ type fakeMoviePilot struct {
 	polled     chan struct{}
 	readers    []reader
 	created    int  // subscriptions created so far
+	added      int  // downloads added so far
 	lagging    bool // the media server has not scanned new transfers yet
 	scanned    int  // transfers the media server shows while lagging
 	searches   map[string]string
@@ -316,6 +317,9 @@ func (f *fakeMoviePilot) serveRoute(w http.ResponseWriter, r *http.Request) {
 	if key == downloadsPath {
 		body = f.undeleted(body)
 	}
+	if key == downloadPath && rt.status == http.StatusOK {
+		body = f.hashed(body)
+	}
 	writeEnvelope(w, rt.status, body)
 }
 
@@ -326,6 +330,24 @@ func (f *fakeMoviePilot) numbered(body string) string {
 	defer f.mu.Unlock()
 	f.created++
 	return strings.Replace(body, createdID, fmt.Sprintf(`"id": %d`, f.created), 1)
+}
+
+// hashed gives each added download its own torrent hash, as MoviePilot
+// does: the first keeps addedHash, later ones end in their number.
+func (f *fakeMoviePilot) hashed(body string) string {
+	f.mu.Lock()
+	defer f.mu.Unlock()
+	f.added++
+	if f.added == 1 {
+		return body
+	}
+	return strings.Replace(body, addedHash, addedHashN(f.added), 1)
+}
+
+// addedHashN is the hash of the nth download added in a scenario.
+func addedHashN(n int) string {
+	suffix := fmt.Sprintf("%02d", n)
+	return addedHash[:len(addedHash)-len(suffix)] + suffix
 }
 
 // serveTransfers pages the history the way MoviePilot does (newest first).
