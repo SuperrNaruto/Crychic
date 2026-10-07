@@ -77,7 +77,7 @@ func (e *Engine) subscribed(ctx context.Context, d Download) bool {
 
 // deleteDownload deletes download index once. Steps of a session run one
 // at a time and the download to confirm is cleared before the write, so a
-// second tap only flashes a notice; the session stays for 返回任务列表.
+// second tap only flashes a notice; the session stays for 返回 to the list.
 func (e *Engine) deleteDownload(ctx context.Context, sess session, index int) Reply {
 	if index < 0 || index >= len(sess.tasks) || sess.doomed == "" || sess.doomed != sess.tasks[index].id {
 		return Reply{Notice: msgInvalidChoice}

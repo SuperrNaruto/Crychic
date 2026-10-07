@@ -207,14 +207,16 @@ func askCancel(sess session, index int) Reply {
 // unsubscribe deletes s and forgets its requests, so nobody waits for an
 // arrival that will not come.
 func (e *Engine) unsubscribe(ctx context.Context, sess session, s Subscription) Reply {
+	nav := append([]Button{backTo(sess.id, actionSubs, 0)}, browseRow(sess.id)...)
 	if err := e.backend.Unsubscribe(ctx, s.ID); err != nil {
-		return titled(msgCancelTitle, e.failure("unsubscribe", err))
+		failed := titled(msgCancelTitle, e.failure("unsubscribe", err))
+		failed.Buttons = [][]Button{nav}
+		return failed
 	}
 	if err := e.watcher.Forget(ctx, s.ID); err != nil {
 		e.log.Error("cannot forget cancelled subscription", "subscription", s.ID, "err", err)
 	}
 	e.store.put(sess)
 	done := fmt.Sprintf("好哒，《%s》%s的订阅已经取消啦。", s.Title, seasonSuffix(s))
-	nav := append([]Button{backTo(sess.id, actionSubs, 0)}, browseRow(sess.id)...)
 	return Reply{Text: Lines(Heading(Plain("✅ 已取消订阅")), Line(Plain(done))), Buttons: [][]Button{nav}}
 }
