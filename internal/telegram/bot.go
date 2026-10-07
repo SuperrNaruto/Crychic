@@ -50,6 +50,14 @@ var help = flow.Lines(
 	flow.Line(flow.Mono("/tasks"), flow.Plain(" 看看下载和整理的进度，选一个我帮你实时盯着，不要的下载也能删掉～")),
 )
 
+// allowedUpdates are the update types the bot handles. Telegram keeps the
+// last list a poll sent, so leaving it out would keep whatever an earlier
+// program set on the token (the owner's only allowed messages and button
+// presses, which silenced inline queries).
+var allowedUpdates = bot.AllowedUpdates{
+	models.AllowedUpdateMessage, models.AllowedUpdateCallbackQuery, models.AllowedUpdateInlineQuery,
+}
+
 // commands is the menu Telegram shows when a user types "/".
 var commands = []models.BotCommand{
 	{Command: cmdStart, Description: "首页：所有功能入口"},
@@ -129,6 +137,7 @@ func New(cfg Config) (*Bot, error) {
 		bot.WithDefaultHandler(a.handle),
 		bot.WithErrorsHandler(func(err error) { cfg.Log.Error("telegram", "err", err) }),
 		bot.WithSkipGetMe(),
+		bot.WithAllowedUpdates(allowedUpdates),
 	)
 	if err != nil {
 		return nil, fmt.Errorf("telegram: %w", err)

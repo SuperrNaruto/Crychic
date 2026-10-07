@@ -54,6 +54,10 @@ type fakeTelegram struct {
 	stalled   chan struct{}
 	badImage  string          // an image URL Telegram fails to fetch
 	fileIDs   map[string]bool // file_ids handed out for uploaded photos
+	// allowed is the update types getUpdates delivers. Like Telegram it
+	// keeps the last allowed_updates a poll sent, and starts with what an
+	// earlier program left on a reused token (the owner's had this).
+	allowed []string
 }
 
 func newFakeTelegram(tr *transcript) *fakeTelegram {
@@ -61,6 +65,7 @@ func newFakeTelegram(tr *transcript) *fakeTelegram {
 		tr:       tr,
 		arrived:  make(chan struct{}),
 		messages: map[int]message{},
+		allowed:  []string{"message", "callback_query"},
 		fileIDs:  map[string]bool{},
 		commands: map[string]string{},
 		waiters:  map[string]chan struct{}{},
@@ -208,13 +213,23 @@ func (f *fakeTelegram) wait(r *http.Request, method string) bool {
 func (f *fakeTelegram) getUpdates(w http.ResponseWriter, r *http.Request) {
 	offset, _ := strconv.Atoi(r.FormValue("offset"))
 	timeout, _ := strconv.Atoi(r.FormValue("timeout"))
+	if raw := r.FormValue("allowed_updates"); raw != "" {
+		var allowed []string
+		if err := json.Unmarshal([]byte(raw), &allowed); err != nil {
+			reply(w, nil, fmt.Errorf("allowed_updates: %w", err))
+			return
+		}
+		f.mu.Lock()
+		f.allowed = allowed
+		f.mu.Unlock()
+	}
 	deadline := time.After(time.Duration(timeout) * time.Second)
 	for {
 		f.mu.Lock()
 		// Like Telegram, an offset confirms every earlier update for good,
 		// so a restarted bot never sees them again.
 		f.confirmed = max(f.confirmed, offset-1)
-		pending := f.updates[min(f.confirmed, len(f.updates)):]
+		pending := f.deliverable(f.updates[min(f.confirmed, len(f.updates)):])
 		arrived := f.arrived
 		f.mu.Unlock()
 		if len(pending) > 0 {
@@ -340,4 +355,22 @@ func resolveChat(raw string) (int64, error) {
 		return noticeChannel, nil
 	}
 	return strconv.ParseInt(raw, 10, 64)
+}
+
+// deliverable keeps the updates of an allowed type; Telegram never queues
+// the others. An empty list allows every type (chat_member aside).
+func (f *fakeTelegram) deliverable(updates []map[string]any) []map[string]any {
+	if len(f.allowed) == 0 {
+		return updates
+	}
+	var out []map[string]any
+	for _, u := range updates {
+		for _, kind := range f.allowed {
+			if _, ok := u[kind]; ok {
+				out = append(out, u)
+				break
+			}
+		}
+	}
+	return out
 }
