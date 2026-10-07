@@ -34,6 +34,12 @@ func refused(user int64) flow.Reply {
 func (a *adapter) replyTo(ctx context.Context, msg *models.Message, reply flow.Reply) {
 	sent, err := a.send(ctx, msg.Chat.ID, reply)
 	a.logFailure("send reply", err)
+	if err == nil && reply.Follow != "" {
+		a.follow(follower{
+			target: editTarget{chat: msg.Chat.ID, user: msg.From.ID, message: sent.ID}, actor: actorOf(*msg.From, msg.Chat.ID),
+			data: reply.Follow, shown: renderReply(reply),
+		})
+	}
 	if err == nil && reply.Input != "" {
 		a.mu.Lock()
 		a.pending[inputKey{chat: msg.Chat.ID, user: msg.From.ID}] = pendingInput{message: sent.ID, input: reply.Input}

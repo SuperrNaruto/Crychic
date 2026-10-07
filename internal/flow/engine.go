@@ -264,21 +264,33 @@ func (e *Engine) offerConfirm(ctx context.Context, sess session, target Target) 
 	return e.confirmation(ctx, sess, subscription{id: existing, target: target})
 }
 
+// confirmation shows the card for sub's target, or for a title searched
+// with 下载 starts searching its resources at once.
 func (e *Engine) confirmation(ctx context.Context, sess session, sub subscription) Reply {
+	sess, card := e.targetCard(ctx, sess, sub)
+	if sess.download {
+		return e.huntNow(sess, card)
+	}
+	return card
+}
+
+// targetCard says sub's target is already subscribed, or asks to confirm
+// it; the session returned is the one stored for the card.
+func (e *Engine) targetCard(ctx context.Context, sess session, sub subscription) (session, Reply) {
 	sess.retry, sess.target = recovery{}, nil
 	target := sub.target
 	sess.focus = &target
 	if sub.id != 0 {
 		e.store.put(sess)
 		status := fmt.Sprintf("ℹ️ %s早就订阅上啦%s", targetName(target), e.watch(ctx, sess, sub))
-		return sess.picked.reply(Line(Plain(status)), onward(sess))
+		return sess, sess.picked.reply(Line(Plain(status)), onward(sess))
 	}
 	sess.target = &target
 	e.store.put(sess)
 	if target.Season != nil {
-		return startChoices(sess, *target.Season)
+		return sess, startChoices(sess, *target.Season)
 	}
-	return confirmCard(sess, target)
+	return sess, confirmCard(sess, target)
 }
 
 // confirmCard asks for the final go-ahead on a fully specified target.

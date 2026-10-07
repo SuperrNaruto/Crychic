@@ -290,3 +290,40 @@ func TestDownloadTickedReleases(t *testing.T) {
 	h.neverShowsSiteCredentials()
 	h.tr.verify(t)
 }
+
+// A title searched with 下载 searches resources as soon as a target is
+// chosen, and 返回 leads from the releases to the card it skipped; 订阅
+// and 搜索 only search, as MoviePilot's own bot reads them.
+func TestSearchPrefixes(t *testing.T) {
+	h := start(t, scenario{routes: map[string]route{
+		searchPath:      ok("search_mygo.json"),
+		mygoDetails:     ok("detail_mygo.json"),
+		seasonsPath:     ok("seasons_mygo.json"),
+		libraryShowPath: ok("library_mygo.json"),
+		mygoLookup:      ok("subscription_none.json"),
+		mygoTorrents:    searchingSites("torrents_mygo_s1.json"),
+	}})
+	h.say(alice, alice, "下载 迷途之子")
+	h.tap(alice, 1, "1")
+	h.searchTorrents(alice, 1, "第 1 季")
+	h.shows(1, "《迷途之子!!!!!》第 1 季的资源")
+	h.tap(alice, 1, "返回")
+	h.shows(1, "要订阅《迷途之子!!!!!》第 1 季")
+	h.tap(alice, 1, "返回")
+	h.shows(1, "第 1 季")
+	h.say(alice, alice, "订阅：迷途之子")
+	h.tap(alice, 2, "1")
+	h.tap(alice, 2, "第 1 季")
+	h.shows(2, "要订阅《迷途之子!!!!!》第 1 季")
+
+	h.mp.setRoute(searchPath, ok("search_abyss.json"))
+	h.mp.setRoute(seasonsPath, ok("seasons_abyss.json"))
+	h.mp.setRoute(abyssDetails, ok("detail_abyss.json"))
+	h.mp.setRoute(abyssLookup, ok("subscription_none.json"))
+	h.mp.setRoute("GET /api/v1/search/media/301489", searchingSites("torrents_none.json"))
+	searched := h.tg.expect("edit:3")
+	h.say(alice, alice, "下载：深渊")
+	h.wait(searched, "a resource search from the first message")
+	h.shows(3, "未搜索到任何资源")
+	h.tr.verify(t)
+}

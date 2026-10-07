@@ -24,6 +24,7 @@ func (e *Engine) Start(ctx context.Context, actor Actor, term string) Reply {
 }
 
 func (e *Engine) search(ctx context.Context, sess session, term string) Reply {
+	term, sess.download = splitIntent(term)
 	sess.query = term
 	results, err := e.backend.Search(ctx, term)
 	if err != nil {
@@ -75,9 +76,10 @@ func researchButton(id uint64) Button {
 }
 
 // withResearch offers 重新搜索 on a row of its own above the last row, the
-// one ending the conversation.
+// one ending the conversation; not on a resource search under way, which
+// only 取消 stops.
 func withResearch(reply Reply, id uint64) Reply {
-	if reply.Input != "" || reply.Notice != "" {
+	if reply.Input != "" || reply.Notice != "" || reply.Follow != "" {
 		return reply
 	}
 	button := researchButton(id)

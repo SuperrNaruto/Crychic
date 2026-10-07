@@ -16,6 +16,7 @@ type session struct {
 	owner       Actor
 	menu        bool   // a home menu button is opening a feature; navigate clears it
 	query       string // the current ordinary title search
+	download    bool   // the search began with 下载: a chosen target searches resources at once
 	retry       recovery
 	results     []Media
 	picked      card

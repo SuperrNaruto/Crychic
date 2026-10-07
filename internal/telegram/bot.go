@@ -39,7 +39,7 @@ const (
 // help explains the commands.
 var help = flow.Lines(
 	flow.Heading(flow.Plain("我能帮你做这些～")),
-	flow.Line(flow.Plain("私聊直接发片名我就去搜；在等你回复起始集数的时候，先回答我，或者用 /search 换一部～")),
+	flow.Line(flow.Plain("私聊直接发片名我就去搜，片名前加「下载」我会选好后直接搜资源；在等你回复起始集数的时候，先回答我，或者用 /search 换一部～")),
 	flow.Line(flow.Mono("/start"), flow.Plain(" 回到首页，所有功能都在这儿～")),
 	flow.Line(flow.Mono("/search <片名>"), flow.Plain(" 帮你搜电影和剧集，顺手在 MoviePilot 里订上；也能点「搜索资源」挑种子直接下载，一次可以多选哦～")),
 	flow.Line(flow.Mono("/trending"), flow.Plain(" 逛逛热门榜单和新番，看中了一键订阅～")),
