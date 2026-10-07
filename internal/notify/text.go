@@ -24,9 +24,18 @@ func arrivalText(d delivery) flow.Text {
 	))
 	text = withQualities(text, d)
 	if d.complete {
-		text = append(text, flow.Line(flow.Plain("这一季你要的剧集全部到齐啦 ヾ(≧▽≦*)o")))
+		text = append(text, flow.Line(flow.Plain(completeWords(w)+" ヾ(≧▽≦*)o")))
 	}
 	return withWatchLink(text, d)
+}
+
+// completeWords says everything wanted arrived: a whole requested season,
+// or every episode a download brings, which may be a single one.
+func completeWords(w watch) string {
+	if w.Download != "" {
+		return "这次下载的剧集全部到齐啦"
+	}
+	return "这一季你要的剧集全部到齐啦"
 }
 
 // withQualities adds a line of small print per release quality, e.g.

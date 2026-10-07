@@ -66,7 +66,9 @@ func (e *Engine) searchTorrents(ctx context.Context, sess session) Reply {
 	target := *sess.focus
 	found, err := e.backend.SearchTorrents(ctx, target)
 	if ctx.Err() != nil {
-		return Reply{} // the owner pressed on; that press decides what shows
+		// The owner pressed on, which decides what shows; a notice leaves
+		// the screen and its 返回 history as they are.
+		return Reply{Notice: msgCancelled}
 	}
 	sess.torrents, sess.release = found, nil
 	e.store.put(sess)
