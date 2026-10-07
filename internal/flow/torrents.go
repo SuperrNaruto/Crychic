@@ -117,7 +117,7 @@ func (e *Engine) download(ctx context.Context, sess session, index int) Reply {
 		return sess.picked.replyLines(e.downloadFailure(t, id, err).Text, nil)
 	}
 	what := releaseName(*sess.focus, t)
-	done := fmt.Sprintf("✅ 开始下载%s啦%s ヾ(≧▽≦*)o", what, e.noticeEnding(e.rememberDownload(ctx, sess, id, t)))
+	done := fmt.Sprintf("✅ 开始下载%s啦%s ヾ(≧▽≦*)o", what, e.noticeEnding(e.rememberDownload(ctx, sess, added{id: id, release: t})))
 	return sess.picked.reply(Line(Plain(done)), nil)
 }
 
@@ -131,10 +131,16 @@ func (e *Engine) downloadFailure(t Torrent, id string, err error) Reply {
 	return Reply{Text: Sentence(msgDownloadUnknown)}
 }
 
-// rememberDownload registers the session owner for an arrival notice of
-// download id, which brings the release's episodes of the card's target.
-func (e *Engine) rememberDownload(ctx context.Context, sess session, id string, t Torrent) bool {
-	target := *sess.focus
+// added is a release the backend began downloading, under the download's id.
+type added struct {
+	id      string
+	release Torrent
+}
+
+// rememberDownload registers the session owner for an arrival notice of a
+// download, which brings the release's episodes of the card's target.
+func (e *Engine) rememberDownload(ctx context.Context, sess session, dl added) bool {
+	target, id, t := *sess.focus, dl.id, dl.release
 	req := Request{Download: id, Target: target, Requester: sess.owner}
 	if season := target.Season; season != nil {
 		req.Target.StartEpisode = 0
