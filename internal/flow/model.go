@@ -240,6 +240,8 @@ type Torrent struct {
 type Backend interface {
 	Search(ctx context.Context, term string) ([]Media, error)
 	Details(ctx context.Context, media Media) (Details, error)
+	// Lookup reads the media an identity (source, id, kind) names.
+	Lookup(ctx context.Context, identity Media) (Media, error)
 	Seasons(ctx context.Context, media Media) ([]Season, error)
 	Library(ctx context.Context, media Media) (Library, error)
 	Downloads(ctx context.Context) ([]Download, error)

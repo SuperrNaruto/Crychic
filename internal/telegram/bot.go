@@ -41,6 +41,7 @@ var help = flow.Lines(
 	flow.Heading(flow.Plain("我能帮你做这些～")),
 	flow.Line(flow.Plain("私聊直接发片名我就去搜，片名前加「下载」我会选好后直接搜资源；在等你回复起始集数的时候，先回答我，或者用 /search 换一部～")),
 	flow.Line(flow.Mono("/start"), flow.Plain(" 回到首页，所有功能都在这儿～")),
+	flow.Line(flow.Plain("在任意聊天输入 "), flow.Mono("@我的用户名 片名"), flow.Plain(" 可以把片子分享出去，点卡片上的按钮回到我这儿订阅～")),
 	flow.Line(flow.Mono("/search <片名>"), flow.Plain(" 帮你搜电影和剧集，顺手在 MoviePilot 里订上；也能点「搜索资源」挑种子直接下载，一次可以多选哦～")),
 	flow.Line(flow.Mono("/trending"), flow.Plain(" 逛逛热门榜单和新番，看中了一键订阅～")),
 	flow.Line(flow.Mono("/subscribe"), flow.Plain(" 按电视剧、电影看订阅，还能暂停或取消你请求的、从订阅历史重新订阅～")),
@@ -80,6 +81,8 @@ type adapter struct {
 	posters     *posters
 	runCtx      context.Context
 	api         *bot.Bot // set once connected, before any update arrives
+	username    string   // the bot's username, for deep links; "" when unknown
+	inline      inlineSearches
 
 	// work counts running handlers and followers: Telegram's library
 	// starts a goroutine per update and does not wait for them on stop.
@@ -118,17 +121,25 @@ func New(cfg Config) (*Bot, error) {
 	a := &adapter{
 		allowed: allowed, log: cfg.Log, followEvery: cfg.FollowEvery, posters: newPosters(cfg.ImageClient, cfg.Log),
 		pending: map[inputKey]pendingInput{}, followers: map[messageKey]*follower{}, lanes: map[messageKey]*messageLane{},
+		inline: inlineSearches{running: map[int64]context.CancelFunc{}},
 	}
 	api, err := bot.New(cfg.Token,
 		bot.WithServerURL(cfg.APIURL),
 		bot.WithHTTPClient(pollTimeout, deadlineClient{http: cfg.HTTPClient}),
 		bot.WithDefaultHandler(a.handle),
 		bot.WithErrorsHandler(func(err error) { cfg.Log.Error("telegram", "err", err) }),
+		bot.WithSkipGetMe(),
 	)
 	if err != nil {
 		return nil, fmt.Errorf("telegram: %w", err)
 	}
 	a.api = api
+	// getMe validates the token and names the bot for deep links.
+	me, err := api.GetMe(context.Background())
+	if err != nil {
+		return nil, fmt.Errorf("telegram: getMe: %w", err)
+	}
+	a.username = me.Username
 	return &Bot{adapter: a, api: api, log: cfg.Log}, nil
 }
 
@@ -230,6 +241,8 @@ func (a *adapter) handle(ctx context.Context, b *bot.Bot, upd *models.Update) {
 		a.onMessage(ctx, b, upd.Message)
 	case upd.CallbackQuery != nil:
 		a.onCallback(ctx, b, upd.CallbackQuery)
+	case upd.InlineQuery != nil && upd.InlineQuery.From != nil:
+		a.onInline(ctx, b, upd.InlineQuery)
 	}
 }
 
@@ -272,7 +285,7 @@ func (a *adapter) commands() map[string]command {
 		return func(ctx context.Context, actor flow.Actor, _ string) flow.Reply { return f(ctx, actor) }
 	}
 	return map[string]command{
-		cmdStart:      noArg(a.flow.Home),
+		cmdStart:      a.start,
 		cmdSearch:     a.flow.Start,
 		cmdTrending:   noArg(a.flow.Charts),
 		cmdSubscribe:  noArg(a.flow.Subscriptions),
@@ -281,6 +294,14 @@ func (a *adapter) commands() map[string]command {
 		cmdTasks:      noArg(a.flow.Tasks),
 		cmdHelp:       func(context.Context, flow.Actor, string) flow.Reply { return flow.Reply{Text: help} },
 	}
+}
+
+// start opens the home menu, or with a deep link's MediaRef that media.
+func (a *adapter) start(ctx context.Context, actor flow.Actor, arg string) flow.Reply {
+	if arg == "" {
+		return a.flow.Home(ctx, actor)
+	}
+	return a.flow.Open(ctx, actor, arg)
 }
 
 // onCallback answers the query last, so the client's spinner covers the

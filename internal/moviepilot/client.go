@@ -132,6 +132,23 @@ func names(items []named) []string {
 	return out
 }
 
+// Lookup reads media by its identity from the details endpoint, which
+// answers like a search result; MoviePilot answers an upstream failure
+// with an empty MediaInfo, which carries no identity.
+func (c *Client) Lookup(ctx context.Context, identity flow.Media) (flow.Media, error) {
+	q := url.Values{"media_source": {identity.Source}, "type_name": {kindType(identity.Kind)}}
+	var info mediaInfo
+	path := "/api/v1/media/" + url.PathEscape(identity.ID)
+	if err := c.do(ctx, call{method: http.MethodGet, path: path, query: q}, &info); err != nil {
+		return flow.Media{}, err
+	}
+	m, ok := info.toMedia()
+	if !ok {
+		return flow.Media{}, fmt.Errorf("moviepilot: no media %s/%s", identity.Source, identity.ID)
+	}
+	return m, nil
+}
+
 func (c *Client) Details(ctx context.Context, media flow.Media) (flow.Details, error) {
 	q := url.Values{"media_source": {media.Source}, "type_name": {kindType(media.Kind)}}
 	var raw struct {

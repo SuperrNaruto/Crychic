@@ -15,4 +15,8 @@ type Conversation interface {
 	Subscriptions(ctx context.Context, actor Actor) Reply
 	Latest(ctx context.Context, actor Actor) Reply
 	Upcoming(ctx context.Context, actor Actor) Reply
+	// Open shows the card of the media a MediaRef names (a deep link).
+	Open(ctx context.Context, actor Actor, ref string) Reply
+	// Find lists media for an inline query, outside any conversation.
+	Find(ctx context.Context, term string) ([]InlineResult, error)
 }

@@ -126,6 +126,8 @@ func (f *fakeTelegram) serve(w http.ResponseWriter, r *http.Request) {
 		f.getUpdates(w, r)
 	case "answerCallbackQuery":
 		f.answer(w, r)
+	case "answerInlineQuery":
+		f.answerInline(w, r)
 	case "setMyCommands":
 		f.setCommands(r)
 		reply(w, true, nil)
