@@ -5,22 +5,35 @@ import (
 	"errors"
 	"net/http"
 	"strconv"
+	"time"
 
 	"github.com/SuperrNaruto/Crychic/internal/flow"
 )
 
 type subscriptionRecord struct {
-	ID          int    `json:"id"`
-	Name        string `json:"name"`
-	Year        string `json:"year"`
-	Type        string `json:"type"`
-	MediaSource string `json:"media_source"`
-	MediaID     string `json:"media_id"`
-	Season      *int   `json:"season"`
-	State       string `json:"state"`
-	Lack        int    `json:"lack_episode"`
-	Total       int    `json:"total_episode"`
-	Poster      string `json:"poster"`
+	ID           int      `json:"id"`
+	Name         string   `json:"name"`
+	Year         string   `json:"year"`
+	Type         string   `json:"type"`
+	MediaSource  string   `json:"media_source"`
+	MediaID      string   `json:"media_id"`
+	Season       *int     `json:"season"`
+	State        string   `json:"state"`
+	Lack         int      `json:"lack_episode"`
+	Total        int      `json:"total_episode"`
+	StartEpisode int      `json:"start_episode"`
+	Poster       string   `json:"poster"`
+	Quality      string   `json:"quality"`
+	Resolution   string   `json:"resolution"`
+	Effect       string   `json:"effect"`
+	FilterGroups []string `json:"filter_groups"`
+	BestVersion  int      `json:"best_version"`
+	LastSearch   string   `json:"last_search"`
+	Execution    *struct {
+		State   string `json:"state"`
+		NextRun string `json:"next_run_at"`
+		Error   string `json:"error"`
+	} `json:"execution_status"`
 }
 
 // Subscriptions lists every subscription; the API key is the superuser,
@@ -32,16 +45,41 @@ func (c *Client) Subscriptions(ctx context.Context) ([]flow.Subscription, error)
 	}
 	subs := make([]flow.Subscription, 0, len(records))
 	for _, r := range records {
-		kind := flow.Movie
-		if r.Type == typeTV {
-			kind = flow.TV
-		}
-		subs = append(subs, flow.Subscription{
-			ID: r.ID, Title: r.Name, Year: r.Year, Kind: kind, Season: r.Season,
-			State: r.State, Lack: r.Lack, Total: r.Total, Poster: r.Poster,
-		})
+		subs = append(subs, r.subscription())
 	}
 	return subs, nil
+}
+
+func (r subscriptionRecord) subscription() flow.Subscription {
+	kind := flow.Movie
+	if r.Type == typeTV {
+		kind = flow.TV
+	}
+	s := flow.Subscription{
+		ID: r.ID, Source: r.MediaSource, MediaID: r.MediaID,
+		Title: r.Name, Year: r.Year, Kind: kind, Season: r.Season,
+		State: r.State, Lack: r.Lack, Total: r.Total, StartEpisode: r.StartEpisode, Poster: posterURL(r.Poster),
+		Quality: r.Quality, Resolution: r.Resolution, Effect: r.Effect,
+		FilterGroups: r.FilterGroups, BestVersion: r.BestVersion != 0, LastSearch: subscriptionTime(r.LastSearch),
+	}
+	if r.Execution != nil {
+		s.Execution = &flow.SubscriptionExecution{
+			State: r.Execution.State, NextRun: subscriptionTime(r.Execution.NextRun),
+			HasError: r.Execution.Error != "",
+		}
+	}
+	return s
+}
+
+// Search timestamps are UTC, with or without an explicit RFC3339 offset.
+// Missing or unrecognized optional timestamps do not break the subscription list.
+func subscriptionTime(raw string) time.Time {
+	for _, layout := range []string{time.RFC3339Nano, time.DateTime, "2006-01-02T15:04:05"} {
+		if parsed, err := time.Parse(layout, raw); err == nil {
+			return parsed
+		}
+	}
+	return time.Time{}
 }
 
 // Unsubscribe deletes a subscription; one already gone counts as deleted.

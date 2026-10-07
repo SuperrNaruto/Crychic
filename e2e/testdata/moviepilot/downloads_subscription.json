@@ -1,0 +1,42 @@
+{
+  "success": true,
+  "message": "",
+  "data": [
+    {
+      "hash": "same-season",
+      "progress": 37,
+      "state": "downloading",
+      "media": {"media_source": "themoviedb", "media_id": "1396", "type": "电视剧", "title": "绝命毒师", "season": "S02", "episode": "E02-E03"}
+    },
+    {
+      "hash": "other-season",
+      "progress": 88,
+      "state": "downloading",
+      "media": {"media_source": "themoviedb", "media_id": "1396", "type": "电视剧", "title": "绝命毒师", "season": "S03", "episode": "E04"}
+    },
+    {
+      "hash": "other-source",
+      "progress": 91,
+      "state": "downloading",
+      "media": {"media_source": "douban", "media_id": "1396", "type": "电视剧", "title": "绝命毒师", "season": "S02", "episode": "E08"}
+    },
+    {
+      "hash": "unknown-season",
+      "progress": 95,
+      "state": "downloading",
+      "media": {"media_source": "themoviedb", "media_id": "1396", "type": "电视剧", "title": "绝命毒师", "season": "", "episode": "E08"}
+    },
+    {
+      "hash": "movie",
+      "progress": 62,
+      "state": "paused",
+      "media": {"media_source": "themoviedb", "media_id": "438631", "type": "电影", "title": "沙丘", "season": "", "episode": ""}
+    },
+    {
+      "hash": "tv-special-with-colliding-id",
+      "progress": 98,
+      "state": "downloading",
+      "media": {"media_source": "themoviedb", "media_id": "438631", "type": "电视剧", "title": "另一个条目", "season": "S00", "episode": "E01"}
+    }
+  ]
+}

@@ -199,7 +199,7 @@ func backButton(id uint64) Button {
 func expired(action string) Reply {
 	switch action {
 	case actionSubs, actionSubsKind, actionCancelPick, actionHistory, actionHistoryKind,
-		actionHistoryPick, actionResubscribe:
+		actionHistoryPick, actionResubscribe, actionSubDetail, actionRefreshSubDetail:
 		return Reply{Text: Sentence("⌛ 这个订阅列表过期啦，重新 /subscribe 一下吧～")}
 	case actionTask, actionFollow, actionUnfollow, actionList, actionClose:
 		return Reply{Text: Sentence(msgTasksExpired)}

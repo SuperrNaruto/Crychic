@@ -1,0 +1,63 @@
+{
+  "success": true,
+  "message": "",
+  "data": [
+    {
+      "id": 1,
+      "name": "绝命毒师",
+      "year": "2008",
+      "type": "电视剧",
+      "media_source": "themoviedb",
+      "media_id": "1396",
+      "season": 2,
+      "poster": "https://image.tmdb.org/t/p/w500/rqliuvX7NdknSHu5qaSDfESplQi.jpg",
+      "state": "R",
+      "start_episode": 2,
+      "total_episode": 13,
+      "lack_episode": 9,
+      "quality": "WEB-DL",
+      "resolution": "1080p",
+      "effect": "HDR",
+      "filter_groups": ["动画 & 经典"],
+      "best_version": 0,
+      "last_search": "2026-10-05 02:30:00",
+      "execution_status": {
+        "state": "waiting_site_budget",
+        "phase": "waiting_site_budget",
+        "updated_at": "2026-10-05T02:31:00+00:00",
+        "next_run_at": "2026-10-05T05:30:00+00:00",
+        "error": "GET https://tracker.invalid/?passkey=do-not-show failed at /srv/private/private-release.mkv"
+      }
+    },
+    {
+      "id": 5,
+      "name": "颂乐人偶",
+      "year": "2025",
+      "type": "电视剧",
+      "media_source": "themoviedb",
+      "media_id": "274580",
+      "season": 1,
+      "poster": "https://image.tmdb.org/t/p/w500/xixekXvcCSZS1jXhFrYUzpCrLL6.jpg",
+      "state": "P",
+      "start_episode": 0,
+      "total_episode": 0,
+      "lack_episode": 0,
+      "execution_status": null
+    },
+    {
+      "id": 6,
+      "name": "沙丘",
+      "year": "2021",
+      "type": "电影",
+      "media_source": "themoviedb",
+      "media_id": "438631",
+      "season": null,
+      "poster": "https://image.tmdb.org/t/p/w500/6hsJknqlPceFxExOe87z5VGgNG9.jpg",
+      "state": "N",
+      "start_episode": 0,
+      "total_episode": 0,
+      "lack_episode": 0,
+      "execution_status": null
+    }
+  ]
+}

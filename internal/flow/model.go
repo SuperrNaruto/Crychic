@@ -6,6 +6,7 @@ package flow
 import (
 	"context"
 	"errors"
+	"time"
 )
 
 // Kind is the media category a subscription is made for.
@@ -96,6 +97,7 @@ type Download struct {
 	ID       string // stable while the task exists
 	Source   string
 	MediaID  string
+	Kind     Kind // zero when the backend did not identify its media type
 	Title    string
 	Image    string
 	Season   *int    // nil for movies or when unknown
@@ -126,11 +128,14 @@ type TransferFile struct {
 // TransferJob is a batch of files of one title (and season) the backend is
 // moving into the library.
 type TransferJob struct {
-	ID     string // stable while the job exists
-	Title  string
-	Image  string
-	Season *int
-	Files  []TransferFile
+	ID      string // stable while the job exists
+	Source  string
+	MediaID string
+	Kind    Kind // zero when the backend did not identify its media type
+	Title   string
+	Image   string
+	Season  *int
+	Files   []TransferFile
 }
 
 // LibraryItem is a recent addition to a media server.
@@ -144,15 +149,34 @@ type LibraryItem struct {
 
 // Subscription is one of the backend's subscriptions.
 type Subscription struct {
-	ID     int
-	Title  string
-	Year   string
-	Kind   Kind
-	Season *int
-	State  string // backend state code, e.g. "R" while subscribed
-	Lack   int    // episodes still missing
-	Total  int    // episodes in the season, 0 when unknown
-	Poster string
+	ID           int
+	Source       string
+	MediaID      string
+	Title        string
+	Year         string
+	Kind         Kind
+	Season       *int
+	State        string // backend state code, e.g. "R" while subscribed
+	Lack         int    // episodes still missing from the subscription, not library
+	Total        int    // episodes in the season, 0 when unknown
+	StartEpisode int
+	Poster       string
+	Quality      string
+	Resolution   string
+	Effect       string
+	FilterGroups []string
+	BestVersion  bool
+	LastSearch   time.Time
+	Execution    *SubscriptionExecution
+}
+
+// SubscriptionExecution describes the last search, not download completion.
+// Backend errors may contain server paths or credentials; only their presence
+// crosses this boundary, never their original text.
+type SubscriptionExecution struct {
+	State    string
+	NextRun  time.Time
+	HasError bool
 }
 
 // PastSubscription is a finished or cancelled subscription in the backend's

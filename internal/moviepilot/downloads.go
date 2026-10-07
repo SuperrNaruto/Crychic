@@ -10,6 +10,10 @@ import (
 
 const statePaused = "paused"
 
+// Numeric metadata IDs are scoped by media type, so movies and TV specials
+// can share both a provider ID and season zero.
+var mediaKinds = map[string]flow.Kind{typeMovie: flow.Movie, typeTV: flow.TV}
+
 type downloadTask struct {
 	Hash     string  `json:"hash"`
 	Size     float64 `json:"size"`     // bytes of the files being downloaded
@@ -22,6 +26,7 @@ type downloadTask struct {
 	Media *struct {
 		MediaSource string `json:"media_source"`
 		MediaID     string `json:"media_id"`
+		Type        string `json:"type"`
 		Title       string `json:"title"`
 		Season      label  `json:"season"`
 		Episode     label  `json:"episode"`
@@ -54,7 +59,7 @@ func (c *Client) Downloads(ctx context.Context) ([]flow.Download, error) {
 			continue
 		}
 		out = append(out, flow.Download{
-			ID: t.Hash, Source: t.Media.MediaSource, MediaID: t.Media.MediaID,
+			ID: t.Hash, Source: t.Media.MediaSource, MediaID: t.Media.MediaID, Kind: mediaKinds[t.Media.Type],
 			Title: t.Media.Title, Image: t.Media.Image,
 			Season: parseSeason(string(t.Media.Season)), Episodes: parseEpisodes(string(t.Media.Episode)),
 			Size: t.Size, Progress: t.Progress, Paused: t.State == statePaused, Speed: t.Speed, Left: t.LeftTime,

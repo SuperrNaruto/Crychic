@@ -1,0 +1,37 @@
+{
+  "success": true,
+  "message": "",
+  "data": [
+    {
+      "media": {"media_source": "themoviedb", "media_id": "1396", "title": "绝命毒师", "type": "电视剧"},
+      "season": 2,
+      "tasks": [
+        {"state": "running", "meta": {"begin_episode": 4}},
+        {"state": "waiting", "meta": {"begin_episode": 5}},
+        {"state": "completed", "meta": {"begin_episode": 6}},
+        {"state": "failed", "meta": {"begin_episode": 7}},
+        {"state": "waiting", "meta": null}
+      ]
+    },
+    {
+      "media": {"media_source": "themoviedb", "media_id": "1396", "title": "绝命毒师", "type": "电视剧"},
+      "season": 3,
+      "tasks": [{"state": "running", "meta": {"begin_episode": 8}}]
+    },
+    {
+      "media": {"media_source": "douban", "media_id": "1396", "title": "绝命毒师", "type": "电视剧"},
+      "season": 2,
+      "tasks": [{"state": "running", "meta": {"begin_episode": 9}}]
+    },
+    {
+      "media": {"media_source": "themoviedb", "media_id": "438631", "title": "另一个条目", "type": "电视剧"},
+      "season": 0,
+      "tasks": [{"state": "failed", "meta": {"begin_episode": 1}}]
+    },
+    {
+      "media": {"media_source": "themoviedb", "media_id": "438631", "title": "沙丘", "type": "电影"},
+      "season": 0,
+      "tasks": [{"state": "running", "meta": null}]
+    }
+  ]
+}

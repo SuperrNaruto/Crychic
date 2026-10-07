@@ -49,6 +49,9 @@ func (f *fakeMoviePilot) shown() []transfer {
 }
 
 func (f *fakeMoviePilot) serveEpisodes(w http.ResponseWriter, r *http.Request) {
+	if f.serveLibraryFailure(w, libraryShowPath) {
+		return
+	}
 	var q libraryQuery
 	_ = json.NewDecoder(r.Body).Decode(&q)
 	held := map[string][]int{}
@@ -64,6 +67,26 @@ func (f *fakeMoviePilot) serveEpisodes(w http.ResponseWriter, r *http.Request) {
 	}
 	data, _ := json.Marshal(held)
 	writeEnvelope(w, http.StatusOK, `{"success":true,"message":"","data":`+string(data)+`}`)
+}
+
+// Preserve service errors instead of converting an unavailable server into
+// a successful empty library while merging the scenario's transfer history.
+func (f *fakeMoviePilot) serveLibraryFailure(w http.ResponseWriter, key string) bool {
+	f.mu.Lock()
+	rt, found := f.routes[key]
+	f.mu.Unlock()
+	if !found {
+		return false
+	}
+	raw := fixture(f, rt.fixture)
+	var env struct {
+		Success bool `json:"success"`
+	}
+	if err := json.Unmarshal(raw, &env); err == nil && env.Success && rt.status == http.StatusOK {
+		return false
+	}
+	writeEnvelope(w, rt.status, string(raw))
+	return true
 }
 
 func (f *fakeMoviePilot) serveMovie(w http.ResponseWriter, r *http.Request) {

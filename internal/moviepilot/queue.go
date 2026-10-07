@@ -20,6 +20,7 @@ type queueJob struct {
 	Media *struct {
 		MediaSource string `json:"media_source"`
 		MediaID     string `json:"media_id"`
+		Type        string `json:"type"`
 		Title       string `json:"title"`
 		PosterPath  string `json:"poster_path"`
 	} `json:"media"`
@@ -46,8 +47,8 @@ func (c *Client) Transfers(ctx context.Context) ([]flow.TransferJob, error) {
 		}
 		job := flow.TransferJob{
 			ID:    fmt.Sprintf("%s:%s:%d", j.Media.MediaSource, j.Media.MediaID, deref(j.Season)),
-			Title: j.Media.Title, Season: j.Season,
-			Image: posterURL(j.Media.PosterPath),
+			Title: j.Media.Title, Season: j.Season, Kind: mediaKinds[j.Media.Type],
+			Image: posterURL(j.Media.PosterPath), Source: j.Media.MediaSource, MediaID: j.Media.MediaID,
 		}
 		for _, t := range j.Tasks {
 			file := flow.TransferFile{State: fileStates[t.State]}

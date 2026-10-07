@@ -17,6 +17,7 @@ type listEntry struct {
 
 type listView struct {
 	heading   Block
+	image     string // one poster shared by the pages of a detail view
 	entries   []listEntry
 	menu      [][]Button // rows above the footer on every page
 	footer    []Button
@@ -31,13 +32,13 @@ func (e *Engine) listPages(sess session, view listView) Reply {
 	if maxItems <= 0 {
 		maxItems = listPageItems
 	}
-	pages := []Reply{{Text: Lines(view.heading)}}
+	pages := []Reply{{Text: Lines(view.heading), Image: view.image}}
 	buttons := [][]Button{nil}
 	used, items := 0, 0
 	for _, entry := range view.entries {
 		size := textSize(entry.text)
 		if items > 0 && (items >= maxItems || used+size > listPageRunes) {
-			pages, buttons = append(pages, Reply{Text: Lines(view.heading)}), append(buttons, nil)
+			pages, buttons = append(pages, Reply{Text: Lines(view.heading), Image: view.image}), append(buttons, nil)
 			used, items = 0, 0
 		}
 		last := len(pages) - 1

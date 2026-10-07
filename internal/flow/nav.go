@@ -30,12 +30,12 @@ var forward = map[string]bool{
 	actionMedia: true, actionSeason: true, actionRelated: true, actionSeries: true,
 	actionMulti: true, actionAskFrom: true, actionChartPick: true, actionAskTitle: true,
 	actionResearch: true, actionAskCancel: true, actionCancelPick: true,
-	actionHistory: true, actionHistoryPick: true,
+	actionHistory: true, actionHistoryPick: true, actionSubDetail: true,
 }
 
 var sameLevel = map[string]bool{
 	actionTick: true, actionChartPage: true, actionWeekday: true, actionPage: true, answered: true,
-	actionRetry: true, actionSubsKind: true, actionHistoryKind: true,
+	actionRetry: true, actionSubsKind: true, actionHistoryKind: true, actionRefreshSubDetail: true,
 }
 
 // answered stands for a typed start episode, which replaces its prompt.

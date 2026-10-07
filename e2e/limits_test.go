@@ -16,7 +16,11 @@ import (
 // Larger real-shaped lists must remain accessible, including the last item,
 // without ever exceeding Telegram's text limit.
 func TestSubscriptionListPagesWithinTelegramLimit(t *testing.T) {
-	const subscriptions = 150
+	const (
+		subscriptions = 150
+		episodes      = 1_000_000
+		shownEpisodes = 100
+	)
 	h := start(t, scenario{routes: map[string]route{
 		subsPath: ok(manySubscriptions(t, subscriptions)),
 	}})
@@ -29,6 +33,30 @@ func TestSubscriptionListPagesWithinTelegramLimit(t *testing.T) {
 		}
 		h.tap(alice, 1, "下一页 ›")
 	}
+	h.shows(1, `<li value="150">`)
+	h.mp.setRoute(subsPath, ok(writeFixture(t, []map[string]any{{
+		"id": subscriptions, "name": "最后一条订阅", "type": "电视剧", "season": 2, "state": "R",
+		"media_source": "themoviedb", "media_id": "1396", "total_episode": episodes, "lack_episode": episodes,
+	}})))
+	var held []int
+	const alternate = 2
+	for ep := 1; ep <= shownEpisodes; ep += alternate {
+		held = append(held, ep)
+	}
+	h.mp.setRoute(libraryShowPath, ok(writeFixture(t, map[string][]int{"2": held})))
+	h.tap(alice, 1, "150")
+	h.shows(1, "最后一条订阅")
+	for {
+		msg := mustMessage(h, 1)
+		checkTextBudget(t, msg.text)
+		if _, more := findButton(msg.rows, "下一页 ›"); !more {
+			break
+		}
+		h.tap(alice, 1, "下一页 ›")
+	}
+	h.shows(1, "E100")
+	h.shows(1, "999900")
+	h.tap(alice, 1, "返回")
 	h.shows(1, `<li value="150">`)
 	h.tap(alice, 1, "‹ 上一页")
 	h.tr.verify(t)
