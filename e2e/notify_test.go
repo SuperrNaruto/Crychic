@@ -205,3 +205,40 @@ func TestStalledDownloadIsToldOnce(t *testing.T) {
 	h.transfers()
 	h.tr.verify(t)
 }
+
+// A download picked for a season that is also subscribed brings files both
+// requests wait for: a stuck download and its arrival are each told once.
+func TestDownloadOfSubscribedSeasonIsToldOnce(t *testing.T) {
+	h := start(t, scenario{stall: "1h", routes: map[string]route{
+		searchPath:      ok("search_mygo.json"),
+		mygoDetails:     ok("detail_mygo.json"),
+		seasonsPath:     ok("seasons_mygo.json"),
+		libraryShowPath: ok("library_mygo.json"),
+		mygoLookup:      ok("subscription_none.json"),
+		mygoTorrents:    searchingSites("torrents_mygo_s1.json"),
+		downloadPath:    ok("download_added.json"),
+		subscribePath:   ok("subscribe_created.json"),
+	}})
+	h.say(alice, alice, "/search 迷途之子")
+	h.tap(alice, 1, "1")
+	h.tap(alice, 1, "第 1 季")
+	h.searchTorrents(alice, 1, searchResources)
+	h.tap(alice, 1, "1")
+	h.tap(alice, 1, downloadIt)
+	h.say(alice, alice, "/search 迷途之子")
+	h.tap(alice, 2, "1")
+	h.tap(alice, 2, "第 1 季")
+	h.tap(alice, 2, "从第 1 集开始")
+	h.mp.setRoute(downloadsPath, ok("downloads_mygo_added.json"))
+	h.transfers()
+	told := h.tg.expect(fmt.Sprintf("send:%d", alice))
+	h.advance(2 * time.Hour)
+	h.wait(told, "a stalled download notice")
+	h.shows(3, "下载好像卡住了")
+	pack := mygo.file("S01", "E01-E13")
+	pack.Hash = addedHash
+	h.arrives(alice, pack)
+	h.shows(4, "E01–E13 到家啦")
+	h.transfers()
+	h.tr.verify(t)
+}

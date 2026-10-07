@@ -80,19 +80,26 @@ func (n *Notifier) unmoved(downloads []flow.Download, now time.Time) []flow.Down
 }
 
 // withStalls records the stuck downloads not yet told about against the
-// watches waiting for them, and returns those to tell.
+// watches waiting for them, and returns those to tell: one per download,
+// to the requesters of every watch waiting for it.
 func withStalls(st state, stuck []flow.Download) (state, []stall) {
 	next := st.emptied()
+	next.Watches = slices.Clone(st.Watches)
 	var out []stall
-	for _, w := range st.Watches {
-		for _, d := range stuck {
+	for _, d := range stuck {
+		told := -1
+		for i, w := range next.Watches {
 			if !w.awaits(d) || slices.Contains(w.Stalled, d.ID) {
 				continue
 			}
 			w.Stalled = append(slices.Clone(w.Stalled), d.ID)
-			out = append(out, stall{watch: w, download: d})
+			next.Watches[i] = w
+			if told < 0 {
+				told = len(out)
+				out = append(out, stall{watch: w, download: d})
+			}
+			out[told].watch.Requesters = withActors(out[told].watch.Requesters, w.Requesters)
 		}
-		next.Watches = append(next.Watches, w)
 	}
 	return next, out
 }

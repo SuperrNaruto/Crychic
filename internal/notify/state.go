@@ -142,15 +142,24 @@ func (w watch) collect(transfers []Transfer, now time.Time) watch {
 
 // withRelease adds t's download unless one of its files is known already.
 func (w watch) withRelease(t Transfer) []release {
-	if t.File == "" || len(w.Releases) >= maxReleases {
+	if t.File == "" {
 		return w.Releases
 	}
-	for _, r := range w.Releases {
-		if r.File == t.File || (t.Download != "" && r.Download == t.Download) {
-			return w.Releases
+	return withRelease(w.Releases, release{Download: t.Download, File: t.File})
+}
+
+// withRelease adds r to releases unless its file or download is there
+// already, keeping at most maxReleases.
+func withRelease(releases []release, r release) []release {
+	if len(releases) >= maxReleases {
+		return releases
+	}
+	for _, known := range releases {
+		if known.File == r.File || (r.Download != "" && known.Download == r.Download) {
+			return releases
 		}
 	}
-	return append(slices.Clone(w.Releases), release{Download: t.Download, File: t.File})
+	return append(slices.Clone(releases), r)
 }
 
 // settled reports whether w's pending arrivals are ready to announce:
@@ -171,25 +180,86 @@ func due(st state, now time.Time, quiet time.Duration) []watch {
 	return out
 }
 
-// flush announces the settled watches except those held back (by
-// subscription id) until the media server shows them. A complete watch ends
-// with its notice.
+// flush announces the settled watches except those held back (by key)
+// until the media server shows them. A complete watch ends with its notice.
+// Watches of the same media (and season) share their arrivals: a
+// subscription and a download bringing the same files are told in one
+// notice, to everyone who asked for either.
 func flush(st state, now time.Time, settle settling) (state, []delivery) {
-	next := st.emptied()
+	watches := slices.Clone(st.Watches)
+	ended := make([]bool, len(watches))
 	var out []delivery
-	for _, w := range st.Watches {
-		complete := w.complete()
-		if !w.settled(now, settle.quiet) || settle.held[w.key()] {
-			next.Watches = append(next.Watches, w)
+	for i, w := range watches {
+		if ended[i] || !w.settled(now, settle.quiet) || settle.held[w.key()] {
 			continue
 		}
-		out = append(out, delivery{watch: w, episodes: w.Pending, complete: complete, image: w.Image, releases: w.Releases})
-		if !complete {
-			w.Pending, w.Image, w.ArrivedAt, w.Releases = nil, "", nil, nil
+		d := delivery{watch: w, complete: w.complete(), image: w.Image}
+		d.watch.Requesters = nil
+		for j, other := range watches {
+			if ended[j] || other.ArrivedAt == nil || !other.sameMedia(w) {
+				continue
+			}
+			d = d.with(other)
+			watches[j], ended[j] = other.announced()
+		}
+		out = append(out, d)
+	}
+	next := st.emptied()
+	for i, w := range watches {
+		if !ended[i] {
 			next.Watches = append(next.Watches, w)
 		}
 	}
 	return next, out
+}
+
+// with adds another watch's pending arrivals and requesters to d.
+func (d delivery) with(w watch) delivery {
+	episodes := slices.Clone(d.episodes)
+	for _, ep := range w.Pending {
+		if !slices.Contains(episodes, ep) {
+			episodes = append(episodes, ep)
+		}
+	}
+	slices.Sort(episodes)
+	d.episodes = episodes
+	d.watch.Requesters = withActors(d.watch.Requesters, w.Requesters)
+	for _, r := range w.Releases {
+		d.releases = withRelease(d.releases, r)
+	}
+	return d
+}
+
+// announced is w after its pending arrivals were told; ended when nothing
+// more is wanted.
+func (w watch) announced() (watch, bool) {
+	if w.complete() {
+		return w, true
+	}
+	w.Pending, w.Image, w.ArrivedAt, w.Releases = nil, "", nil, nil
+	return w, false
+}
+
+// sameMedia reports whether w and o watch the same media and season.
+func (w watch) sameMedia(o watch) bool {
+	if w.Source != o.Source || w.MediaID != o.MediaID {
+		return false
+	}
+	if w.Season == nil || o.Season == nil {
+		return w.Season == o.Season
+	}
+	return *w.Season == *o.Season
+}
+
+// withActors adds the actors of more not in actors yet.
+func withActors(actors, more []flow.Actor) []flow.Actor {
+	out := slices.Clone(actors)
+	for _, a := range more {
+		if !slices.Contains(out, a) {
+			out = append(out, a)
+		}
+	}
+	return out
 }
 
 // settling is how flush decides a watch is ready.
