@@ -87,7 +87,7 @@ type seasonOutcome struct {
 // subscribeSeasons subscribes each ticked season from its first episode,
 // skipping ones already subscribed, and reports every season's outcome.
 func (e *Engine) subscribeSeasons(ctx context.Context, sess session) Reply {
-	if _, ok := e.store.take(sess.id); !ok {
+	if !e.settle(sess) {
 		return expiredText(msgExpired)
 	}
 	outcomes := make([]seasonOutcome, 0, len(sess.chosen))

@@ -424,6 +424,7 @@
    <tr><td><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 08 [WebRip 1080p HEVC-10bit AAC]</b></td><td>✅ 开始下载</td></tr>
    </table>
    <p>✅ 开始下载 2 个资源啦，入库了我第一时间叫你！ ヾ(≧▽≦*)o</p>
+   [返回 | 1:bk:0] [首页 | 1:o:0] [关闭 | 1:c:0]
 << answerCallbackQuery
 >> user 1001 taps 1:tz:0 on message 1
 << answerCallbackQuery notice="这个选项不太对哦～"
@@ -634,4 +635,5 @@
    <tr><td><b>BanG.Dream.It&#39;s.MyGO.S01.2023.1080p.BluRay.x265.FLAC-VCB</b></td><td>⚠️ 没能确认</td></tr>
    </table>
    <p>标着「没能确认」的资源不知道有没有开始下载…先用 /tasks 看一眼，确认没在下再来找我哦。</p>
+   [返回 | 2:bk:0] [首页 | 2:o:0] [关闭 | 2:c:0]
 << answerCallbackQuery

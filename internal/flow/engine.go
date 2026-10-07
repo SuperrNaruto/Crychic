@@ -301,16 +301,13 @@ func confirmCard(sess session, target Target) Reply {
 }
 
 // confirm subscribes from episode from (0 for movies or the season start).
-// The session is taken only after validation, so a forged or stale start
+// The request is settled only after validation, so a forged or stale start
 // cannot consume it.
 func (e *Engine) confirm(ctx context.Context, sess session, from int) Reply {
-	if sess.target == nil {
-		return expiredText(msgExpired)
-	}
-	if !sess.validStart(from) {
+	if sess.target == nil || !sess.validStart(from) {
 		return Reply{Notice: msgInvalidChoice}
 	}
-	if _, ok := e.store.take(sess.id); !ok {
+	if !e.settle(sess) {
 		return expiredText(msgExpired)
 	}
 	target := *sess.target

@@ -110,7 +110,7 @@ func TestUncertainSubscriptionIsNotRetried(t *testing.T) {
 	h.shows(1, "没能确认订阅有没有成功")
 	h.shows(1, "/subscribe")
 	h.tapData(alice, 1, old)
-	h.shows(1, "过期啦")
+	h.shows(1, "没能确认订阅有没有成功")
 	h.mp.setRoute(subscribePath, ok("subscription_none.json"))
 	h.say(alice, alice, "沙丘")
 	h.tap(alice, 2, duneMovie)

@@ -18,6 +18,7 @@ type screen struct {
 	state *session
 	reply Reply
 	chart bool // a chart page, shown afresh so its missing synopses are retried
+	list  bool // a list a pick was made from, which a finished request leads back to
 }
 
 // chartViews are the steps that show a chart page.
@@ -42,6 +43,15 @@ var sameLevel = map[string]bool{
 	actionTorrentTick: true, actionTorrentMissing: true,
 }
 
+// listPicks are the forward steps that pick from a list.
+var listPicks = map[string]bool{actionMedia: true, actionChartPick: true}
+
+// finishing are the steps that write a request; one picked from a list
+// leads back to that list afterwards, so browsing goes on from there.
+var finishing = map[string]bool{
+	actionConfirm: true, actionSubscribed: true, actionTorrentGet: true, actionTorrentBatchGet: true,
+}
+
 // answered stands for a typed start episode, which replaces its prompt.
 const answered = "typed"
 
@@ -57,11 +67,9 @@ func (e *Engine) navigate(prev session, action string, reply Reply) Reply {
 	if !ok {
 		return reply
 	}
-	switch {
-	case forward[action] && prev.screen.state != nil:
-		next.history = pushed(prev.history, prev.screen)
-	case !forward[action] && !sameLevel[action]:
-		next.history = nil
+	next.history = moved(prev, action, next.history)
+	if finishing[action] && len(next.history) > 0 {
+		reply.Buttons = append(reply.Buttons, browseRow(next.id))
 	}
 	if len(next.history) > 0 {
 		reply = withBack(next.id, reply)
@@ -70,6 +78,47 @@ func (e *Engine) navigate(prev session, action string, reply Reply) Reply {
 	next.screen = screen{state: snapshot(next), reply: reply, chart: chartViews[action]}
 	e.store.put(next)
 	return reply
+}
+
+// moved is the history once action led on from prev; kept is the history
+// the step itself left.
+func moved(prev session, action string, kept []screen) []screen {
+	switch {
+	case forward[action] && prev.screen.state != nil:
+		s := prev.screen
+		s.list = listPicks[action]
+		return pushed(prev.history, s)
+	case finishing[action]:
+		return toList(prev.history)
+	case !forward[action] && !sameLevel[action]:
+		return nil
+	}
+	return kept
+}
+
+// toList is history up to the latest list a pick was made from; nil when
+// the request never came from one.
+func toList(history []screen) []screen {
+	for i := len(history) - 1; i >= 0; i-- {
+		if history[i].list {
+			return history[:i+1]
+		}
+	}
+	return nil
+}
+
+// settle ends a request's confirmable step before its write, so a second
+// tap only flashes a notice: a request picked from a list keeps its session
+// for 返回 to lead back there, any other ends with the write. ok is false
+// when a tap got there first.
+func (e *Engine) settle(sess session) bool {
+	if toList(sess.history) == nil {
+		_, ok := e.store.take(sess.id)
+		return ok
+	}
+	sess.target, sess.chosen = nil, nil
+	e.store.put(sess)
+	return true
 }
 
 // shown records the first screen of a conversation.

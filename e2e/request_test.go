@@ -176,7 +176,7 @@ func TestConfirmTwiceSubscribesOnce(t *testing.T) {
 	confirm, _ := findButton(mustMessage(h, 1).rows, "确认订阅")
 	h.tap(alice, 1, "确认订阅")
 	h.tapData(alice, 1, confirm)
-	h.shows(1, "过期啦")
+	h.shows(1, "帮你订好《沙丘》")
 	h.tr.verify(t)
 }
 

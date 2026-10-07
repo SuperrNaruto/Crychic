@@ -16,18 +16,25 @@ const (
 )
 
 // A trending TMDB pick is found again by search and goes straight to its
-// card, ready to subscribe; 返回 leads back to the chart.
+// card, ready to subscribe; 返回 leads back to the chart, and so does the
+// subscription's success, so browsing goes on without opening it again.
 func TestTrendingPickGoesStraightToSubscribe(t *testing.T) {
 	h := start(t, scenario{routes: map[string]route{
 		trendingPath:  ok("chart_trending.json"),
 		searchPath:    ok("search_digger.json"),
 		diggerDetails: ok("detail_digger.json"),
 		diggerLookup:  ok("subscription_none.json"),
+		subscribePath: ok("subscribe_created.json"),
 	}})
 	h.say(alice, alice, "/trending")
 	h.tap(alice, 1, "TMDB 流行趋势")
 	h.tap(alice, 1, "1")
 	h.shows(1, "要订阅《挖掘者》")
+	h.tap(alice, 1, "返回")
+	h.shows(1, "第 1/2 页")
+	h.tap(alice, 1, "1")
+	h.tap(alice, 1, "确认订阅")
+	h.shows(1, "帮你订好《挖掘者》")
 	h.tap(alice, 1, "返回")
 	h.shows(1, "第 1/2 页")
 	h.tr.verify(t)
