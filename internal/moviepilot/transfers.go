@@ -22,7 +22,7 @@ const (
 
 var (
 	seasonPattern  = regexp.MustCompile(`^S(\d+)`)
-	episodePattern = regexp.MustCompile(`^E(\d+)(?:-E(\d+))?`)
+	episodePattern = regexp.MustCompile(`^E(\d+)(?:-E(\d+))?$`)
 )
 
 type transferRecord struct {
@@ -106,20 +106,38 @@ func parseSeason(label string) *int {
 	return &season
 }
 
-// parseEpisodes reads "E01" or "E01-E03" as episode numbers.
+// parseEpisodes reads MoviePilot's "E01-E03、E05" labels without filling gaps.
 func parseEpisodes(label string) []int {
-	m := episodePattern.FindStringSubmatch(label)
-	if m == nil {
+	var episodes []int
+	for _, part := range strings.Split(label, "、") {
+		m := episodePattern.FindStringSubmatch(strings.TrimSpace(part))
+		if m == nil {
+			continue
+		}
+		first, err := strconv.Atoi(m[1])
+		if err != nil {
+			continue
+		}
+		last := first
+		if m[2] != "" {
+			last, err = strconv.Atoi(m[2])
+		}
+		if err == nil {
+			episodes = append(episodes, episodeRange(first, last)...)
+		}
+	}
+	slices.Sort(episodes)
+	return slices.Compact(episodes)
+}
+
+// episodeRange expands an inclusive range; invalid or unknown bounds stay empty.
+func episodeRange(first, last int) []int {
+	if first <= 0 || last < first {
 		return nil
 	}
-	first, _ := strconv.Atoi(m[1])
-	last := first
-	if m[2] != "" {
-		last, _ = strconv.Atoi(m[2])
-	}
-	var episodes []int
-	for ep := first; ep <= last; ep++ {
-		episodes = append(episodes, ep)
+	episodes := make([]int, last-first+1)
+	for i := range episodes {
+		episodes[i] = first + i
 	}
 	return episodes
 }

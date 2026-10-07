@@ -162,15 +162,15 @@ func (d subscriptionDetail) addTransfer(p *subTaskProgress, job TransferJob) {
 		return
 	}
 	for _, file := range job.Files {
-		if d.sub.Kind == TV && file.Episode <= 0 {
+		episodes := file.Episodes
+		if d.sub.Kind == Movie {
+			episodes = []int{0}
+		}
+		if len(episodes) == 0 {
 			p.ambiguous = true
 			continue
 		}
-		ep := file.Episode
-		if d.sub.Kind == Movie {
-			ep = 0
-		}
-		p.add([]int{ep}, cmp.Or(subTransferText[file.State], "整理状态未知"))
+		p.add(episodes, cmp.Or(subTransferText[file.State], "整理状态未知"))
 	}
 }
 

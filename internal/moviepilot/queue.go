@@ -26,11 +26,26 @@ type queueJob struct {
 	} `json:"media"`
 	Season *int `json:"season"`
 	Tasks  []struct {
-		State string `json:"state"`
-		Meta  *struct {
-			BeginEpisode *int `json:"begin_episode"`
-		} `json:"meta"`
+		State string     `json:"state"`
+		Meta  *queueMeta `json:"meta"`
 	} `json:"tasks"`
+}
+
+type queueMeta struct {
+	BeginEpisode *int `json:"begin_episode"`
+	EndEpisode   *int `json:"end_episode"`
+}
+
+func (m *queueMeta) episodes() []int {
+	if m == nil {
+		return nil
+	}
+	first := deref(m.BeginEpisode)
+	last := first
+	if m.EndEpisode != nil {
+		last = *m.EndEpisode
+	}
+	return episodeRange(first, last)
 }
 
 // Transfers lists the jobs in MoviePilot's transfer (整理) queue. Byte
@@ -51,10 +66,7 @@ func (c *Client) Transfers(ctx context.Context) ([]flow.TransferJob, error) {
 			Image: posterURL(j.Media.PosterPath), Source: j.Media.MediaSource, MediaID: j.Media.MediaID,
 		}
 		for _, t := range j.Tasks {
-			file := flow.TransferFile{State: fileStates[t.State]}
-			if t.Meta != nil {
-				file.Episode = deref(t.Meta.BeginEpisode)
-			}
+			file := flow.TransferFile{Episodes: t.Meta.episodes(), State: fileStates[t.State]}
 			job.Files = append(job.Files, file)
 		}
 		out = append(out, job)

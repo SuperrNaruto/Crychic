@@ -121,8 +121,8 @@ const (
 
 // TransferFile is one file being moved into the library.
 type TransferFile struct {
-	Episode int // 0 when not an episode
-	State   FileState
+	Episodes []int // all episodes in the file; empty for movies or when unknown
+	State    FileState
 }
 
 // TransferJob is a batch of files of one title (and season) the backend is

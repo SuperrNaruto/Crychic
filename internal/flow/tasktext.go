@@ -84,8 +84,8 @@ func transferView(j TransferJob) Reply {
 	rows := make([][]Span, 0, len(shown))
 	for i, f := range shown {
 		name := fmt.Sprintf("文件 %d", i+1)
-		if f.Episode > 0 {
-			name = fmt.Sprintf("E%02d", f.Episode)
+		if len(f.Episodes) > 0 {
+			name = EpisodeRanges(f.Episodes)
 		}
 		rows = append(rows, []Span{Plain(name), Plain(fileStateText[f.State])})
 	}
