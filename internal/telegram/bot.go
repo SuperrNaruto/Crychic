@@ -280,17 +280,21 @@ func (a *adapter) commands() map[string]command {
 }
 
 // onCallback answers the query last, so the client's spinner covers the
-// backend round trip and the answer can carry a notice.
+// backend round trip and the answer can carry a notice. The owner's press
+// stops the message's follower before waiting for the message: a refresh
+// may be a long backend call (a resource search) holding it.
 func (a *adapter) onCallback(ctx context.Context, b *bot.Bot, cq *models.CallbackQuery) {
+	actor := actorOf(cq.From, callbackChat(cq))
+	if a.allowed[cq.From.ID] {
+		a.stopOwnedFollower(callbackKey(cq), actor.UserID)
+	}
 	unlock, ok := a.lockMessage(ctx, callbackKey(cq))
 	if !ok {
 		return
 	}
 	defer unlock()
 	reply := flow.Reply{Notice: "抱歉，你还没有使用权限哦～"}
-	actor := actorOf(cq.From, callbackChat(cq))
 	if a.allowed[cq.From.ID] {
-		a.stopOwnedFollower(callbackKey(cq), actor.UserID)
 		reply = a.flow.Choose(ctx, actor, cq.Data)
 	}
 	if reply.Notice == "" && cq.Message.Message != nil {

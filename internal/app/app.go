@@ -19,8 +19,8 @@ import (
 )
 
 const (
-	// backendTimeout bounds every MoviePilot and Bangumi call; searches hit
-	// TMDB upstream.
+	// backendTimeout bounds every Bangumi call; MoviePilot calls are
+	// bounded per call by its client, since resource searches take longer.
 	backendTimeout  = 30 * time.Second
 	telegramTimeout = 70 * time.Second // longer than Telegram's one-minute long poll
 	imageTimeout    = 10 * time.Second
@@ -45,7 +45,7 @@ func Run(ctx context.Context, cfg config.Config, deps Deps) error {
 	if images == nil {
 		images = &http.Client{Timeout: imageTimeout, Transport: transport}
 	}
-	backend := moviepilot.New(cfg.MoviePilotURL, cfg.MoviePilotAPIKey, &http.Client{Timeout: backendTimeout, Transport: transport})
+	backend := moviepilot.New(cfg.MoviePilotURL, cfg.MoviePilotAPIKey, &http.Client{Transport: transport})
 	tg, err := telegram.New(telegram.Config{
 		Token:        cfg.TelegramToken,
 		APIURL:       cfg.TelegramAPIURL,

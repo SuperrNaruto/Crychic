@@ -5,6 +5,7 @@ package moviepilot
 
 import (
 	"bytes"
+	"cmp"
 	"context"
 	"encoding/json"
 	"fmt"
@@ -13,6 +14,7 @@ import (
 	"net/url"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/SuperrNaruto/Crychic/internal/flow"
 )
@@ -20,6 +22,9 @@ import (
 const (
 	searchCount  = 10
 	maxErrorBody = 512
+	// callTimeout bounds a call that sets no timeout of its own; searches
+	// hit TMDB upstream.
+	callTimeout = 30 * time.Second
 
 	typeMovie = "电影"
 	typeTV    = "电视剧"
@@ -42,6 +47,8 @@ type Client struct {
 	http    *http.Client
 }
 
+// New talks to MoviePilot through httpClient, which must not set its own
+// Timeout: each call is bounded by callTimeout or its call.timeout.
 func New(baseURL, apiKey string, httpClient *http.Client) *Client {
 	return &Client{baseURL: strings.TrimRight(baseURL, "/"), apiKey: apiKey, http: httpClient}
 }
@@ -258,15 +265,21 @@ func (e *statusError) Error() string {
 	return fmt.Sprintf("moviepilot %s: status %d: %s", e.call, e.code, e.body)
 }
 
-// call is one MoviePilot API request.
+// call is one MoviePilot API request. secret marks a body carrying
+// credentials: an error answer is not quoted, since MoviePilot's validation
+// errors echo the request.
 type call struct {
-	method string
-	path   string
-	query  url.Values
-	body   any
+	method  string
+	path    string
+	query   url.Values
+	body    any
+	timeout time.Duration // 0 uses callTimeout
+	secret  bool
 }
 
 func (c *Client) do(ctx context.Context, cl call, out any) error {
+	ctx, cancel := context.WithTimeout(ctx, cmp.Or(cl.timeout, callTimeout))
+	defer cancel()
 	req, err := c.newRequest(ctx, cl)
 	if err != nil {
 		return err
@@ -281,6 +294,9 @@ func (c *Client) do(ctx context.Context, cl call, out any) error {
 	}
 	if resp.StatusCode < http.StatusOK || resp.StatusCode >= http.StatusMultipleChoices {
 		snippet, _ := io.ReadAll(io.LimitReader(resp.Body, maxErrorBody))
+		if cl.secret {
+			snippet = nil
+		}
 		return &statusError{call: cl.method + " " + cl.path, code: resp.StatusCode, body: string(snippet)}
 	}
 	var env struct {

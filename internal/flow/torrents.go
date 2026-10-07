@@ -65,6 +65,9 @@ func (e *Engine) searchTorrents(ctx context.Context, sess session) Reply {
 	}
 	target := *sess.focus
 	found, err := e.backend.SearchTorrents(ctx, target)
+	if ctx.Err() != nil {
+		return Reply{} // the owner pressed on; that press decides what shows
+	}
 	sess.torrents, sess.release = found, nil
 	e.store.put(sess)
 	if err != nil {

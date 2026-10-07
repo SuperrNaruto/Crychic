@@ -52,15 +52,13 @@ type downloadBody struct {
 // the WebUI's 搜索资源 does. MoviePilot answers no result with success false
 // and 未搜索到任何资源, which reaches the user verbatim.
 func (c *Client) SearchTorrents(ctx context.Context, t flow.Target) ([]flow.Torrent, error) {
-	ctx, cancel := context.WithTimeout(ctx, torrentSearchTimeout)
-	defer cancel()
 	q := url.Values{"media_source": {t.Media.Source}, "mtype": {kindType(t.Media.Kind)}}
 	if t.Season != nil {
 		q.Set("season", strconv.Itoa(*t.Season))
 	}
 	var raw []torrentContext
 	path := "/api/v1/search/media/" + url.PathEscape(t.Media.ID)
-	if err := c.do(ctx, call{method: http.MethodGet, path: path, query: q}, &raw); err != nil {
+	if err := c.do(ctx, call{method: http.MethodGet, path: path, query: q, timeout: torrentSearchTimeout}, &raw); err != nil {
 		return nil, err
 	}
 	out := make([]flow.Torrent, 0, len(raw))
@@ -113,7 +111,7 @@ func (c *Client) Download(ctx context.Context, t flow.Torrent) (string, error) {
 		ID string `json:"download_id"`
 	}
 	body := json.RawMessage(t.Record)
-	if err := c.do(ctx, call{method: http.MethodPost, path: "/api/v1/download/", body: body}, &added); err != nil {
+	if err := c.do(ctx, call{method: http.MethodPost, path: "/api/v1/download/", body: body, secret: true}, &added); err != nil {
 		return "", err
 	}
 	return added.ID, nil
