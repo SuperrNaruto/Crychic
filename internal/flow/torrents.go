@@ -156,16 +156,15 @@ type added struct {
 }
 
 // rememberDownload registers the session owner for an arrival notice of a
-// download, which brings the release's episodes of the card's target.
+// download of the card's target. The watch waits for the whole season, not
+// the release's episodes: MoviePilot reads those from the description too,
+// where 「第9集章节」 makes a 25-episode pack E09.
 func (e *Engine) rememberDownload(ctx context.Context, sess session, dl added) bool {
-	target, id, t := *sess.focus, dl.id, dl.release
+	target, id := *sess.focus, dl.id
 	req := Request{Download: id, Target: target, Requester: sess.owner}
 	if season := target.Season; season != nil {
 		req.Target.StartEpisode = 0
 		req.SeasonEpisodes = sess.episodeCount(*season)
-		if len(t.Episodes) > 0 {
-			req.Target.StartEpisode, req.SeasonEpisodes = t.Episodes[0], t.Episodes[len(t.Episodes)-1]
-		}
 	}
 	if err := e.watcher.Watch(ctx, req); err != nil {
 		e.log.Error("cannot remember download for notification", "download", id, "err", err)

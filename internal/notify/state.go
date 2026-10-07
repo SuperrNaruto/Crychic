@@ -221,7 +221,15 @@ func (w watch) complete() bool {
 	if w.Season == nil {
 		return w.ArrivedAt != nil
 	}
-	return w.Total > 0 && len(w.Delivered) >= w.Total-w.Start+1
+	if w.Total == 0 {
+		return false
+	}
+	for ep := w.Start; ep <= w.Total; ep++ {
+		if !slices.Contains(w.Delivered, ep) {
+			return false
+		}
+	}
+	return true
 }
 
 // matches reports whether t is this watch's media (and season, for shows);
@@ -250,7 +258,12 @@ func (w watch) fresh(episodes []int) []int {
 	return out
 }
 
+// wants reports whether ep is asked for. Every file of a download is: the
+// download is what was asked for, whatever its season's episode count says.
 func (w watch) wants(ep int) bool {
+	if w.Download != "" {
+		return true
+	}
 	return ep >= w.Start && (w.Total == 0 || ep <= w.Total)
 }
 

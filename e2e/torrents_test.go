@@ -108,6 +108,33 @@ func TestDownloadPickedSeasonRelease(t *testing.T) {
 	h.tr.verify(t)
 }
 
+// MoviePilot reads a release's episodes from its description too, so a
+// whole-season pack mentioning 「修复第9集章节」 is listed as E09; every file
+// the download brings is still announced, and the season is complete.
+func TestDownloadMisreadSeasonPack(t *testing.T) {
+	h := start(t, scenario{routes: map[string]route{
+		searchPath:      ok("search_mygo.json"),
+		mygoDetails:     ok("detail_mygo.json"),
+		seasonsPath:     ok("seasons_mygo.json"),
+		libraryShowPath: ok("library_mygo.json"),
+		mygoLookup:      ok("subscription_none.json"),
+		mygoTorrents:    searchingSites("torrents_mygo_misread.json"),
+		downloadPath:    ok("download_added.json"),
+	}})
+	h.say(alice, alice, "/search 迷途之子")
+	h.tap(alice, 1, "1")
+	h.tap(alice, 1, "第 1 季")
+	h.searchTorrents(alice, 1, searchResources)
+	h.tap(alice, 1, "1")
+	h.tap(alice, 1, downloadIt)
+	h.shows(1, "开始下载《迷途之子!!!!!》第 1 季 E09啦")
+	pack := mygo.file("S01", "E01-E13")
+	pack.Hash = addedHash
+	h.arrives(alice, pack)
+	h.shows(2, "E01–E13 到家啦")
+	h.tr.verify(t)
+}
+
 // A failed search keeps the card and can be repeated; MoviePilot's own
 // words for nothing found and for a refused download reach the user, and a
 // download is never offered again, only checked for with /tasks.
