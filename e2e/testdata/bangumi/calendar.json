@@ -190,6 +190,38 @@
         "images": {
           "large": "http://lain.bgm.tv/pic/cover/l/3e/fc/536270_51P45.jpg"
         }
+      },
+      {
+        "id": 548156,
+        "url": "http://bgm.tv/subject/548156",
+        "type": 2,
+        "name": "アオのハコ Season 2",
+        "name_cn": "青之箱 第二季",
+        "summary": "",
+        "air_date": "2026-10-04",
+        "air_weekday": 7,
+        "rating": {
+          "score": 6.5
+        },
+        "images": {
+          "large": "http://lain.bgm.tv/pic/cover/l/f1/6c/548156_L3fC6.jpg"
+        }
+      },
+      {
+        "id": 555605,
+        "url": "http://bgm.tv/subject/555605",
+        "type": 2,
+        "name": "アオアシ Season 2",
+        "name_cn": "青之芦苇 第二季",
+        "summary": "",
+        "air_date": "2026-10-04",
+        "air_weekday": 7,
+        "rating": {
+          "score": 7.1
+        },
+        "images": {
+          "large": "http://lain.bgm.tv/pic/cover/l/67/5a/555605_cLCw5.jpg"
+        }
       }
     ]
   }

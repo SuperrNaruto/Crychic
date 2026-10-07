@@ -106,8 +106,19 @@ func tmdbTwin(m Media, results []Media) (Media, bool) {
 }
 
 func (r Media) twinOf(m Media) bool {
-	if r.Source != tmdbSource || r.Year != m.Year || r.Kind != m.Kind {
+	if r.Source != tmdbSource || r.Kind != m.Kind || !r.sameRun(m) {
 		return false
 	}
 	return r.Title == m.Title || r.Title == m.OriginalTitle || (m.OriginalTitle != "" && r.OriginalTitle == m.OriginalTitle)
+}
+
+// sameRun tells whether a TMDB result r can be calendar pick m by its year.
+// TMDB dates a show by its first season, while the calendar lists a later
+// season (青之箱 第二季) as its own show of the year it airs; a result
+// for a later season named in the search term may therefore start earlier.
+func (r Media) sameRun(m Media) bool {
+	if r.Year == m.Year {
+		return true
+	}
+	return r.Season > 1 && r.Year != "" && r.Year < m.Year
 }

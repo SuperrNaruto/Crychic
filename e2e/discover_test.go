@@ -13,6 +13,8 @@ const (
 	trendingPath  = "GET /api/v1/recommend/tmdb_trending"
 	doubanTVPath  = "GET /api/v1/recommend/douban_tv_hot"
 	nuwaID        = "390200"
+	aonohako      = "207347"
+	ashi          = "126437"
 )
 
 // A trending TMDB pick is found again by search and goes straight to its
@@ -37,6 +39,43 @@ func TestTrendingPickGoesStraightToSubscribe(t *testing.T) {
 	h.shows(1, "帮你订好《挖掘者》")
 	h.tap(alice, 1, "返回")
 	h.shows(1, "第 1/2 页")
+	h.tr.verify(t)
+}
+
+// A calendar sequel airs years after its show began, and TMDB dates a show
+// by its first season; the sequel is still that TMDB show, so its card has
+// TMDB's synopsis and its subscription is one transfers are matched with.
+// It opens on the season its name names (青之芦苇 第二季), else on the
+// show's only one, where TMDB numbers 青之箱's sequel on from episode 26.
+func TestCalendarSequelIsItsTMDBShow(t *testing.T) {
+	h := start(t, scenario{
+		routes: map[string]route{
+			searchPath:                      ok("empty.json"),
+			seasonsPath:                     ok("seasons_aonohako.json"),
+			"GET /api/v1/media/" + aonohako: ok("detail_aonohako.json"),
+			"GET /api/v1/subscribe/media/" + aonohako: ok("subscription_none.json"),
+			"GET /api/v1/media/" + ashi:               ok("detail_ashi.json"),
+			"GET /api/v1/subscribe/media/" + ashi:     ok("subscription_none.json"),
+			subscribePath:                             ok("subscribe_created.json"),
+		},
+		searches: map[string]string{
+			"青之箱 第二季":  "search_calendar_aonohako.json",
+			"青之芦苇 第二季": "search_calendar_ashi.json",
+		},
+	})
+	h.say(alice, alice, "/trending")
+	h.tap(alice, 1, "新番放送")
+	h.tap(alice, 1, "日")
+	h.shows(1, "themoviedb.org/tv/"+aonohako)
+	h.shows(1, "themoviedb.org/tv/"+ashi)
+	h.tap(alice, 1, "2")
+	h.shows(1, "每天早晨在晨练时")
+	h.tap(alice, 1, "只追新集（第 27 集起）")
+	h.shows(1, "帮你订好")
+	h.tap(alice, 1, "返回")
+	h.mp.setRoute(seasonsPath, ok("seasons_ashi.json"))
+	h.tap(alice, 1, "3")
+	h.shows(1, "要订阅《青之芦苇 第二季》第 2 季")
 	h.tr.verify(t)
 }
 

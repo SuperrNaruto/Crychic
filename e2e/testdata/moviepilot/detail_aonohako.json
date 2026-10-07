@@ -1,0 +1,63 @@
+{
+  "success": true,
+  "message": "",
+  "data": {
+    "media_source": "themoviedb",
+    "type": "电视剧",
+    "title": "青之箱",
+    "year": "2024",
+    "media_id": "207347",
+    "original_title": "アオのハコ",
+    "poster_path": "https://image.tmdb.org/t/p/original/fTt9CEgDgxP8tNiQisNBTnRRpEk.jpg",
+    "vote_average": 7.8,
+    "overview": "进入中高一贯制体育强校──荣明高校男子羽毛球部的一年级生猪股大喜，每天早晨在晨练时都会遇到比他大一岁的的鹿野千夏学姐，并对她产生了爱慕之情。千夏是女子篮球队的王牌，无论在校内还是校外都是备受瞩目的高岭之花。就这样，忙于社团活动、恋爱和学习的高中生活就这样开始了，而在某一天……",
+    "actors": [
+      {
+        "id": 1429141,
+        "name": "千叶翔也",
+        "character": "Taiki Inomata (voice)"
+      },
+      {
+        "id": 1452028,
+        "name": "上田丽奈",
+        "character": "Chinatsu Kano (voice)"
+      },
+      {
+        "id": 1563442,
+        "name": "鬼头明里",
+        "character": "Hina Chono (voice)"
+      }
+    ],
+    "genres": [
+      {
+        "id": 16,
+        "name": "动画"
+      },
+      {
+        "id": 18,
+        "name": "剧情"
+      }
+    ],
+    "number_of_episodes": 37,
+    "number_of_seasons": 1,
+    "status": "Returning Series",
+    "runtime": null,
+    "next_episode_to_air": {
+      "id": 7906158,
+      "air_date": "2026-10-11",
+      "episode_number": 27,
+      "episode_type": "standard",
+      "name": "第 27 集",
+      "overview": "",
+      "production_code": "",
+      "runtime": null,
+      "season_number": 1,
+      "show_id": 207347,
+      "still_path": null,
+      "vote_average": 0.0,
+      "vote_count": 0
+    },
+    "detail_link": "https://www.themoviedb.org/tv/207347",
+    "release_date": "2024-10-03"
+  }
+}

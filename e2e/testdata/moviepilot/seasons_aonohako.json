@@ -1,0 +1,19 @@
+{
+  "success": true,
+  "message": "",
+  "data": [
+    {
+      "id": null,
+      "air_date": "2024-10-03",
+      "episode_count": 37,
+      "name": "第 1 季",
+      "overview": "在《周刊少年JUMP》好评连载的三浦糀创作的人气漫画《青之箱》。作品描写了个性丰满的角色们各怀心绪投身于社团活动的样子，以及“喜欢上某人时”的纤细心理活动。自2021年4月开始连载以来，吸引了众多读者。以青涩感触动人心的青春社团恋爱故事终于动画化！",
+      "poster_path": "/fTt9CEgDgxP8tNiQisNBTnRRpEk.jpg",
+      "season_number": 1,
+      "vote_average": 7.3,
+      "order": null,
+      "locked": null,
+      "episodes": []
+    }
+  ]
+}

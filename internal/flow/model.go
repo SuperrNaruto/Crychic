@@ -40,6 +40,7 @@ type Media struct {
 	Released      string // first release or air date, YYYY-MM-DD, when known
 	Weekday       int    // calendar picks: 1 Monday … 7 Sunday it airs on
 	CalendarID    string // calendar picks: the calendar's own id, kept by a TMDB twin
+	Season        int    // search results: the season the search term named (第二季), 0 when none
 }
 
 // Chart is a list of picks to discover media from.

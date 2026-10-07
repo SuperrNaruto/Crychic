@@ -1,0 +1,34 @@
+{
+  "success": true,
+  "message": "",
+  "data": [
+    {
+      "media_source": "themoviedb",
+      "media_id": "207347",
+      "type": "电视剧",
+      "title": "青之箱 第二季",
+      "year": "2024",
+      "original_title": "アオのハコ",
+      "release_date": "2024-10-03",
+      "poster_path": "https://image.tmdb.org/t/p/original/fTt9CEgDgxP8tNiQisNBTnRRpEk.jpg",
+      "vote_average": 7.8,
+      "detail_link": "https://www.themoviedb.org/tv/207347",
+      "overview": "进入中高一贯制体育强校──荣明高校男子羽毛球部的一年级生猪股大喜，每天早晨在晨练时都会遇到比他大一岁的的鹿野千夏学姐，并对她产生了爱慕之情。千夏是女子篮球队的王牌，无论在校内还是校外都是备受瞩目的高岭之花。就这样，忙于社团活动、恋爱和学习的高中生活就这样开始了，而在某一天……",
+      "season": 2
+    },
+    {
+      "media_source": "bangumi",
+      "media_id": "548156",
+      "type": "电视剧",
+      "title": "青之箱 第二季",
+      "year": null,
+      "original_title": "アオのハコ Season 2",
+      "release_date": "",
+      "poster_path": "http://lain.bgm.tv/pic/cover/l/f1/6c/548156_L3fC6.jpg",
+      "vote_average": 0.0,
+      "detail_link": "https://bgm.tv/subject/548156",
+      "overview": "",
+      "season": 2
+    }
+  ]
+}

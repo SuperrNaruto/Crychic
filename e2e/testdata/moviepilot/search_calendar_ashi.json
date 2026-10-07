@@ -1,0 +1,34 @@
+{
+  "success": true,
+  "message": "",
+  "data": [
+    {
+      "media_source": "themoviedb",
+      "media_id": "126437",
+      "type": "电视剧",
+      "title": "青之芦苇 第二季",
+      "year": "2022",
+      "original_title": "アオアシ",
+      "release_date": "2022-04-09",
+      "poster_path": "https://image.tmdb.org/t/p/original/hHAieX1kcUIMi7KmOT3RtGQdBK8.jpg",
+      "vote_average": 7.8,
+      "detail_link": "https://www.themoviedb.org/tv/126437",
+      "overview": "“我来带你走向世界。”\n\n生活在爱媛县的中学生青井苇人是弱小足球部的王牌。\n\n在中学最后一场比赛中输了的那一天，青井在海边奔跑发泄他的不满。此时，青井遇到了一名来观看比赛的男人。\n\n那个男人——福田达也，来自J联赛屈指可数的俱乐部「Esperion FC」，是培育高中时期的「青年队」的主教练。\n\n福田在拥有某种特殊才能的青井身上发现了无限的可能性，开始讲述自己的野心。\n\n“我的野心。是我建立的俱乐部，掌握世界。不是走向世界的垫脚石。我认为我的俱乐部才是世界。这就是肩负着所有野心的培养“青年军”。\n\n接受福田的邀请，青井决定去东京参加选拔考试。",
+      "season": 2
+    },
+    {
+      "media_source": "bangumi",
+      "media_id": "555605",
+      "type": "电视剧",
+      "title": "青之芦苇 第二季",
+      "year": null,
+      "original_title": "アオアシ Season 2",
+      "release_date": "",
+      "poster_path": "http://lain.bgm.tv/pic/cover/l/67/5a/555605_cLCw5.jpg",
+      "vote_average": 0.0,
+      "detail_link": "https://bgm.tv/subject/555605",
+      "overview": "",
+      "season": 2
+    }
+  ]
+}

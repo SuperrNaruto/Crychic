@@ -65,6 +65,7 @@ type mediaInfo struct {
 	DetailLink    string  `json:"detail_link"`
 	Overview      string  `json:"overview"`
 	ReleaseDate   string  `json:"release_date"`
+	Season        int     `json:"season"`
 }
 
 func (c *Client) Search(ctx context.Context, term string) ([]flow.Media, error) {
@@ -94,6 +95,7 @@ func (i mediaInfo) toMedia() (flow.Media, bool) {
 		Year: i.Year, Kind: kind, Rating: i.VoteAverage,
 		PosterURL: posterURL(i.PosterPath),
 		Link:      i.DetailLink, Overview: unixLines(i.Overview), Released: i.ReleaseDate,
+		Season: i.Season,
 	}, true
 }
 

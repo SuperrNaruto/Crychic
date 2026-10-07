@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log/slog"
+	"slices"
 	"strconv"
 	"strings"
 	"sync"
@@ -177,8 +178,8 @@ func (e *Engine) showSeasons(ctx context.Context, sess session, seasons []Season
 	}
 	sess.seasons, sess.retry = seasons, recovery{}
 	e.store.put(sess)
-	if len(seasons) == 1 && seasons[0].Number > 0 {
-		return e.pickSeason(ctx, sess, seasons[0].Number)
+	if n, ok := impliedSeason(sess.picked.Media, seasons); ok {
+		return e.pickSeason(ctx, sess, n)
 	}
 	picks := make([]Button, 0, len(seasons))
 	for _, s := range seasons {
@@ -190,6 +191,19 @@ func (e *Engine) showSeasons(ctx context.Context, sess session, seasons []Season
 	}
 	rows = append(rows, relatedRow(sess), []Button{cancelButton(sess.id)})
 	return sess.picked.replyLines(sess.seasonTable(msgPickSeason, seasons), rows)
+}
+
+// impliedSeason is the season a show's pick already names: the one its
+// search term named (第二季) when the show has it, else its sole season
+// unless that is the specials. The confirmation still follows.
+func impliedSeason(media Media, seasons []Season) (int, bool) {
+	if media.Season > 0 && slices.ContainsFunc(seasons, func(s Season) bool { return s.Number == media.Season }) {
+		return media.Season, true
+	}
+	if len(seasons) == 1 && seasons[0].Number > 0 {
+		return seasons[0].Number, true
+	}
+	return 0, false
 }
 
 // details enriches the card; it is cosmetic, so a failure is logged and the
