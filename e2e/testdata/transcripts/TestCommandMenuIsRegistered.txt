@@ -3,6 +3,7 @@
    /search – 搜索电影或剧集，订阅或下载
    /trending – 发现热门和新番
    /subscribe – 查看、暂停和取消订阅
+   /upcoming – 追剧日历：订阅的剧这周播哪集
    /newly_added – 最新入库
    /tasks – 查看进度，删除下载任务
    /help – 使用说明
@@ -11,6 +12,7 @@
    /search – 搜索电影或剧集，订阅或下载
    /trending – 发现热门和新番
    /subscribe – 查看、暂停和取消订阅
+   /upcoming – 追剧日历：订阅的剧这周播哪集
    /newly_added – 最新入库
    /tasks – 查看进度，删除下载任务
    /help – 使用说明
@@ -19,6 +21,7 @@
    /search – 搜索电影或剧集，订阅或下载
    /trending – 发现热门和新番
    /subscribe – 查看、暂停和取消订阅
+   /upcoming – 追剧日历：订阅的剧这周播哪集
    /newly_added – 最新入库
    /tasks – 查看进度，删除下载任务
    /help – 使用说明

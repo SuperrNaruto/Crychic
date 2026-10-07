@@ -1,0 +1,78 @@
+{
+  "success": true,
+  "message": "",
+  "data": [
+    {
+      "air_date": "2026-10-07",
+      "episode_number": 1,
+      "name": "试着使用了互联网！",
+      "season_number": 1
+    },
+    {
+      "air_date": "2026-10-14",
+      "episode_number": 2,
+      "name": "第 2 集",
+      "season_number": 1
+    },
+    {
+      "air_date": "2026-10-21",
+      "episode_number": 3,
+      "name": "第 3 集",
+      "season_number": 1
+    },
+    {
+      "air_date": "2026-10-28",
+      "episode_number": 4,
+      "name": "第 4 集",
+      "season_number": 1
+    },
+    {
+      "air_date": "2026-11-04",
+      "episode_number": 5,
+      "name": "第 5 集",
+      "season_number": 1
+    },
+    {
+      "air_date": "2026-11-11",
+      "episode_number": 6,
+      "name": "第 6 集",
+      "season_number": 1
+    },
+    {
+      "air_date": "2026-11-18",
+      "episode_number": 7,
+      "name": "第 7 集",
+      "season_number": 1
+    },
+    {
+      "air_date": "2026-11-25",
+      "episode_number": 8,
+      "name": "第 8 集",
+      "season_number": 1
+    },
+    {
+      "air_date": "2026-12-02",
+      "episode_number": 9,
+      "name": "第 9 集",
+      "season_number": 1
+    },
+    {
+      "air_date": "2026-12-09",
+      "episode_number": 10,
+      "name": "第 10 集",
+      "season_number": 1
+    },
+    {
+      "air_date": "2026-12-16",
+      "episode_number": 11,
+      "name": "第 11 集",
+      "season_number": 1
+    },
+    {
+      "air_date": "2026-12-23",
+      "episode_number": 12,
+      "name": "第 12 集",
+      "season_number": 1
+    }
+  ]
+}

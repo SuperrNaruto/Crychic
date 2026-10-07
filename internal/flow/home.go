@@ -27,6 +27,7 @@ func (e *Engine) features() []feature {
 		{"我的订阅", e.listSubs},
 		{"最新入库", e.latest},
 		{"任务进度", e.listTasks},
+		{"追剧日历", e.upcoming},
 	}
 }
 

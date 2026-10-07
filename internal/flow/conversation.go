@@ -14,4 +14,5 @@ type Conversation interface {
 	Charts(ctx context.Context, actor Actor) Reply
 	Subscriptions(ctx context.Context, actor Actor) Reply
 	Latest(ctx context.Context, actor Actor) Reply
+	Upcoming(ctx context.Context, actor Actor) Reply
 }

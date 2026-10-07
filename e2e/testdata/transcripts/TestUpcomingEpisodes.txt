@@ -1,0 +1,109 @@
+>> user 1001 in chat 1001: /start
+<< sendRichMessage chat=1001 message=1 photo=home.jpg 1280x720 sha256=d620fc3c5f168f03372b7fd77d4572d577b95fa1f410d95e2b60e5799f0d2315
+   <img src="tg://photo?id=p0"/>
+   <h3>🎬 Crychic</h3>
+   <p>想看什么告诉我呀～我帮你找片、订阅，入库了第一时间喊你！私聊直接发片名就能搜哦 (๑•̀ㅂ•́)و✧</p>
+   [搜索 | 1:h:0] [发现 | 1:h:1]
+   [我的订阅 | 1:h:2] [最新入库 | 1:h:3]
+   [任务进度 | 1:h:4] [追剧日历 | 1:h:5]
+>> user 1001 taps 1:h:5 on message 1
+-> MoviePilot GET /api/v1/subscribe/
+-> MoviePilot GET /api/v1/tmdb/283938/1
+-> MoviePilot GET /api/v1/tmdb/321518/1
+-> MoviePilot GET /api/v1/tmdb/326695/1
+<< editMessageText chat=1001 message=1
+   <h3>📅 追剧日历</h3>
+   <h4>10月7日 周三</h4>
+   <ol start="1">
+   <li value="1"><b>世界最强魔女，始动</b><br>
+   <i>第 1 季 第 1 集 · 试着使用了互联网！</i></li>
+   </ol>
+   <h4>10月10日 周六</h4>
+   <ol start="2">
+   <li value="2"><b>择日飞升</b><br>
+   <i>第 1 季 第 15 集</i></li>
+   </ol>
+   <h4>10月11日 周日</h4>
+   <ol start="3">
+   <li value="3"><b>学生会也有洞！</b><br>
+   <i>第 1 季 第 2 集 · 《救世主绽》《七大不可思议和夜晚的工作》《驹絽现身！！》</i></li>
+   </ol>
+   <footer>接下来 7 天（北京时间），点编号看订阅详情～</footer>
+   [1 | 1:sd:2] [2 | 1:sd:0] [3 | 1:sd:1]
+   [首页 | 1:o:0] [关闭 | 1:c:0]
+<< answerCallbackQuery
+>> user 1001 taps 1:sd:0 on message 1
+-> MoviePilot GET /api/v1/subscribe/
+-> MoviePilot GET /api/v1/system/setting/SubscribeFilterRuleGroups
+-> MoviePilot GET /api/v1/dashboard/schedule
+<< editMessageText chat=1001 message=1
+   <img src="https://image.tmdb.org/t/p/w500/5NKojVuw2Jf0dT9nSgGPlLiBQV5.jpg"/>
+   <h3>📚 订阅详情 · 《择日飞升》第 1 季</h3>
+   <footer>2026 · 电视剧 · 订阅中</footer>
+   <h4>订阅设置</h4>
+   <p>普通订阅 · 从第 15 集开始 · 共 30 集 · MoviePilot 待获取 16 集<br>
+   <b>规格 </b>不限（未单独设置）<br>
+   <b>规则组 </b>沿用全局 14 组：前置过滤 · 动画电影 · 华语电影 · 欧美电影 · 日番 · 国漫 · 纪录片 · 综艺 · 国产剧 · 港台剧 · 欧美剧 · 日韩剧 · 其他 · 未分类</p>
+   <h4>最近一次搜索</h4>
+   <p><b>最近搜索 </b>2026-10-07 17:02（北京时间）<br>
+   <b>执行状态 </b>暂无执行记录</p>
+   <h4>自动查找</h4>
+   <p><b>订阅刷新 </b>约 19分钟后（浏览站点最新种子）<br>
+   <b>定时搜索 </b>未开启</p>
+   <h4>入库与任务</h4>
+   <table bordered compact>
+   <tr><th>集数</th><th>媒体库</th><th>下载与整理</th></tr>
+   <tr><td>E15–E30</td><td>未入库</td><td>暂无任务记录</td></tr>
+   </table>
+   <footer>仅查询，不会触发搜索或下载；点击刷新查看最新状态哦～</footer>
+   [刷新 | 1:su:0]
+   [返回 | 1:bk:0] [首页 | 1:o:0] [关闭 | 1:c:0]
+<< answerCallbackQuery
+>> user 1001 taps 1:bk:0 on message 1
+<< editMessageText chat=1001 message=1
+   <h3>📅 追剧日历</h3>
+   <h4>10月7日 周三</h4>
+   <ol start="1">
+   <li value="1"><b>世界最强魔女，始动</b><br>
+   <i>第 1 季 第 1 集 · 试着使用了互联网！</i></li>
+   </ol>
+   <h4>10月10日 周六</h4>
+   <ol start="2">
+   <li value="2"><b>择日飞升</b><br>
+   <i>第 1 季 第 15 集</i></li>
+   </ol>
+   <h4>10月11日 周日</h4>
+   <ol start="3">
+   <li value="3"><b>学生会也有洞！</b><br>
+   <i>第 1 季 第 2 集 · 《救世主绽》《七大不可思议和夜晚的工作》《驹絽现身！！》</i></li>
+   </ol>
+   <footer>接下来 7 天（北京时间），点编号看订阅详情～</footer>
+   [1 | 1:sd:2] [2 | 1:sd:0] [3 | 1:sd:1]
+   [首页 | 1:o:0] [关闭 | 1:c:0]
+<< answerCallbackQuery
+>> user 1001 in chat 1001: /upcoming
+-> MoviePilot GET /api/v1/subscribe/
+-> MoviePilot GET /api/v1/tmdb/283938/1
+-> MoviePilot GET /api/v1/tmdb/321518/1
+-> MoviePilot GET /api/v1/tmdb/326695/1
+<< sendRichMessage chat=1001 message=2
+   <h3>📅 追剧日历</h3>
+   <h4>10月7日 周三</h4>
+   <ol start="1">
+   <li value="1"><b>世界最强魔女，始动</b><br>
+   <i>第 1 季 第 1 集 · 试着使用了互联网！</i></li>
+   </ol>
+   <h4>10月10日 周六</h4>
+   <ol start="2">
+   <li value="2"><b>择日飞升</b><br>
+   <i>第 1 季 第 15 集</i></li>
+   </ol>
+   <footer>接下来 7 天（北京时间），点编号看订阅详情；有 1 部剧暂时没读到播出时间～</footer>
+   [1 | 2:sd:2] [2 | 2:sd:0]
+   [首页 | 2:o:0] [关闭 | 2:c:0]
+>> user 1001 in chat 1001: /upcoming
+-> MoviePilot GET /api/v1/subscribe/
+<< sendRichMessage chat=1001 message=3
+   <h3>📅 追剧日历</h3>
+   <p>接下来 7 天你订阅的剧都没有新集播出哦 (´-ω-`)</p>
+   [首页 | 3:o:0] [关闭 | 3:c:0]

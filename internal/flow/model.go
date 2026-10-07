@@ -70,6 +70,13 @@ type Episode struct {
 	Number int
 }
 
+// EpisodeAir is when one episode of a season airs.
+type EpisodeAir struct {
+	Number int
+	Name   string // TMDB fills unknown names with 第 N 集
+	Date   string // civil date "2006-01-02", "" when unknown
+}
+
 // Season is one subscribable season of a TV show.
 type Season struct {
 	Number       int
@@ -256,6 +263,9 @@ type Backend interface {
 	Resubscribe(ctx context.Context, past PastSubscription) (int, error)
 	// Latest lists the newest additions to the media servers.
 	Latest(ctx context.Context) ([]LibraryItem, error)
+	// SeasonEpisodes lists the episodes of a show's season with their air
+	// dates; TMDB shows only.
+	SeasonEpisodes(ctx context.Context, media Media, season int) ([]EpisodeAir, error)
 	// SetSubscriptionPaused pauses a subscription, or resumes searching for it.
 	SetSubscriptionPaused(ctx context.Context, id int, paused bool) error
 	// Unsubscribe deletes a subscription; deleting one already gone is fine.

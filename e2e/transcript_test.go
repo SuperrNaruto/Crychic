@@ -77,6 +77,9 @@ const (
 	lookups = "lookups"
 )
 
+// tmdbSeason is a TMDB season's episode list, /api/v1/tmdb/{tmdbid}/{season}.
+var tmdbSeason = regexp.MustCompile(`^/api/v1/tmdb/\d+/\d+$`)
+
 // readRoute is a read's service and path without its query and trailing
 // id, or "" for any other line.
 func readRoute(line string) string {
@@ -91,6 +94,10 @@ func readRoute(line string) string {
 		return service + " collections"
 	}
 	route := strings.TrimRight(path, "0123456789")
+	if tmdbSeason.MatchString(path) {
+		// the calendar reads every subscribed season at once
+		return service + " tmdb seasons"
+	}
 	if route == mediaRoute || path == mediaRoute+"search" || path == mediaRoute+"seasons" || route == subjectsPath {
 		return lookups
 	}
