@@ -33,6 +33,12 @@ const (
 	latestPath       = "GET /api/v1/mediaserver/latest"
 	recognizePath    = "GET /api/v1/media/recognize"
 
+	downloadPath = "POST /api/v1/download/"
+
+	// siteCookie is the indexer site cookie in the torrent search fixtures;
+	// it must come back in a download request and never reach a chat.
+	siteCookie = "uid=10001; pass=fake-cookie-never-shown"
+
 	createdFixture = "subscribe_created.json"
 	createdID      = `"id": 1`
 )
@@ -221,11 +227,38 @@ func (f *fakeMoviePilot) record(r *http.Request) {
 		head += "?" + query
 	}
 	body, _ := io.ReadAll(r.Body)
+	if r.Method+" "+r.URL.Path == downloadPath {
+		f.tr.add(head, downloadSummary(body))
+		return
+	}
 	if len(body) > 0 {
 		f.tr.add(head, string(body))
 		return
 	}
 	f.tr.add(head)
+}
+
+// downloadSummary records a download request by the release it names and
+// whether it carries the search result back with its site credentials, as
+// MoviePilot needs to fetch the torrent; the credentials stay out of the
+// transcript.
+func downloadSummary(body []byte) string {
+	var sent struct {
+		Media   *struct{ Title string } `json:"media_in"`
+		Torrent *struct {
+			Title     string `json:"title"`
+			Cookie    string `json:"site_cookie"`
+			Enclosure string `json:"enclosure"`
+		} `json:"torrent_in"`
+	}
+	if json.Unmarshal(body, &sent) != nil || sent.Media == nil || sent.Torrent == nil {
+		return "malformed download request: " + string(body)
+	}
+	handed := "without the search result's site credentials"
+	if sent.Torrent.Cookie == siteCookie && sent.Torrent.Enclosure != "" {
+		handed = "with the search result's site credentials"
+	}
+	return fmt.Sprintf("media_in %s, torrent_in %s %s", sent.Media.Title, sent.Torrent.Title, handed)
 }
 
 // collectionSearch is the route key of a search for collections named

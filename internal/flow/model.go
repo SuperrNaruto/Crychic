@@ -191,6 +191,29 @@ type PastSubscription struct {
 	Record       []byte
 }
 
+// Torrent is one release a resource search found on the indexer sites,
+// with the facts shown to pick it. Record is the backend's own copy of it,
+// handed back unchanged to Download; it carries site credentials, so it is
+// never shown, logged or persisted.
+type Torrent struct {
+	Title       string
+	Description string
+	Site        string
+	Size        float64 // bytes, 0 when unknown
+	Seeders     int
+	Promotion   string // e.g. 免费, 2X免费; "" for none
+	HitAndRun   bool
+	Season      *int  // nil for movies or when unknown
+	Episodes    []int // empty for movies or a whole season
+	Resolution  string
+	Edition     string
+	Video       string
+	Group       string
+	Published   string
+	Media       Media // what the backend recognized the release as
+	Record      []byte
+}
+
 // Backend is the media server the bot subscribes through.
 type Backend interface {
 	Search(ctx context.Context, term string) ([]Media, error)
@@ -222,6 +245,11 @@ type Backend interface {
 	FindSubscription(ctx context.Context, target Target) (int, error)
 	// Subscribe creates a subscription and returns its id.
 	Subscribe(ctx context.Context, target Target) (int, error)
+	// SearchTorrents searches the indexer sites for releases of target.
+	SearchTorrents(ctx context.Context, target Target) ([]Torrent, error)
+	// Download adds a found release to the downloader and returns the
+	// download's id ("" when the backend did not say).
+	Download(ctx context.Context, torrent Torrent) (string, error)
 }
 
 // Calendar lists the shows airing this season, each with its weekday.
@@ -231,9 +259,12 @@ type Calendar interface {
 	Summary(ctx context.Context, id string) (string, error)
 }
 
-// Request is a subscription someone asked for, to be told when it arrives.
+// Request is a subscription or a download someone asked for, to be told
+// when it arrives. Download, when set, is the download's id and
+// SubscriptionID is 0.
 type Request struct {
 	SubscriptionID int
+	Download       string
 	Target         Target
 	SeasonEpisodes int   // episodes in the requested season, 0 if unknown or a movie
 	Held           []int // episodes of the season already in the library

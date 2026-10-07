@@ -98,8 +98,12 @@ func withStalls(st state, stuck []flow.Download) (state, []stall) {
 }
 
 // awaits reports whether d downloads something w still waits for: its
-// media and season, and (when known) an episode that has not arrived.
+// media and season, and (when known) an episode that has not arrived; a
+// download's watch waits for that download alone.
 func (w watch) awaits(d flow.Download) bool {
+	if w.Download != "" {
+		return d.ID == w.Download
+	}
 	if d.Source != w.Source || d.MediaID != w.MediaID {
 		return false
 	}

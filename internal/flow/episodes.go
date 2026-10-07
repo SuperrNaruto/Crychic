@@ -16,7 +16,7 @@ func startChoices(sess session, season int) Reply {
 		rows[0] = append(rows[0], Button{Label: label, Data: data(sess.id, actionConfirm, next.Number)})
 	}
 	rows = append(rows,
-		[]Button{{Label: "指定起始集…", Data: data(sess.id, actionAskFrom, 0)}},
+		[]Button{{Label: "指定起始集…", Data: data(sess.id, actionAskFrom, 0)}, torrentButton(sess.id)},
 		[]Button{cancelButton(sess.id)},
 	)
 	var facts []string

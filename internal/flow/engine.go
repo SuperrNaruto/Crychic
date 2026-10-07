@@ -102,7 +102,7 @@ func (e *Engine) Choose(ctx context.Context, actor Actor, raw string) Reply {
 	case actionBack:
 		return e.back(ctx, sess)
 	}
-	for _, choose := range []chooser{e.chooseHome, e.chooseRequest, e.chooseSeasons, e.chooseTask, e.chooseChart, e.chooseSubs, e.chooseSubDetail, e.chooseHistory, e.chooseRelated} {
+	for _, choose := range []chooser{e.chooseHome, e.chooseRequest, e.chooseSeasons, e.chooseTask, e.chooseChart, e.chooseSubs, e.chooseSubDetail, e.chooseHistory, e.chooseRelated, e.chooseTorrents} {
 		if reply, ok := choose(ctx, sess, p); ok {
 			return e.navigate(sess, p.action, reply)
 		}
@@ -142,7 +142,7 @@ func (e *Engine) pickMedia(ctx context.Context, sess session, index int) Reply {
 		return Reply{Notice: msgInvalidChoice}
 	}
 	media := sess.results[index]
-	sess.target, sess.seasons, sess.chosen, sess.retry = nil, nil, nil, recovery{}
+	sess.target, sess.seasons, sess.chosen, sess.retry, sess.focus = nil, nil, nil, recovery{}, nil
 	if media.Kind == Movie {
 		e.enrich(ctx, &sess, media)
 		if sess.library.Movie {
@@ -230,6 +230,7 @@ func (e *Engine) downloads(ctx context.Context, target Target) []Download {
 // held ends the request: what was asked for is already watchable. The
 // session stays only to browse on from it.
 func (e *Engine) held(sess session, target Target) Reply {
+	sess.focus = &target
 	e.store.put(sess)
 	what := "已经在媒体库里啦"
 	if target.Season != nil {
@@ -265,6 +266,7 @@ func (e *Engine) offerConfirm(ctx context.Context, sess session, target Target) 
 func (e *Engine) confirmation(ctx context.Context, sess session, sub subscription) Reply {
 	sess.retry, sess.target = recovery{}, nil
 	target := sub.target
+	sess.focus = &target
 	if sub.id != 0 {
 		e.store.put(sess)
 		status := fmt.Sprintf("ℹ️ %s早就订阅上啦%s", targetName(target), e.watch(ctx, sess, sub))
@@ -321,7 +323,13 @@ type subscription struct {
 // watch registers the session owner for an arrival notice and returns the
 // sentence ending that tells them whether they will get one.
 func (e *Engine) watch(ctx context.Context, sess session, sub subscription) string {
-	if !e.remember(ctx, sess, sub) {
+	return e.noticeEnding(e.remember(ctx, sess, sub))
+}
+
+// noticeEnding tells whether an arrival notice will follow: remembered is
+// whether the request was registered for one.
+func (e *Engine) noticeEnding(remembered bool) string {
+	if !remembered {
 		return "，" + msgNoNotice
 	}
 	if e.noticeInChannel {

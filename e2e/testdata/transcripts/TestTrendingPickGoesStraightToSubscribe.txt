@@ -81,7 +81,7 @@
    <hr/>
    <p><b>要订阅《挖掘者》吗？</b></p>
    [确认订阅 | 1:ok:0] [返回 | 1:bk:0] [取消 | 1:x:0]
-   [相似推荐 | 1:r:0] [同系列 | 1:n:0]
+   [搜索资源 | 1:ts:0] [相似推荐 | 1:r:0] [同系列 | 1:n:0]
 << answerCallbackQuery
 >> user 1001 taps 1:bk:0 on message 1
 << editMessageText chat=1001 message=1 reuses=url-9dcf3aee reuses=url-dcad966d reuses=url-06abdbfb reuses=url-2b85c6da reuses=url-6699a89a reuses=url-6565e988 reuses=url-d511ae90 reuses=url-ae96557e

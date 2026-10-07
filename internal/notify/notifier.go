@@ -72,6 +72,9 @@ func (n *Notifier) Watch(_ context.Context, req flow.Request) error {
 func (n *Notifier) Requested(userID int64) []int {
 	var ids []int
 	for _, w := range n.snapshot().Watches {
+		if w.Download != "" {
+			continue
+		}
 		for _, r := range w.Requesters {
 			if r.UserID == userID {
 				ids = append(ids, w.SubscriptionID)
@@ -148,8 +151,8 @@ func (n *Notifier) poll(ctx context.Context) error {
 
 // unseen picks the ready watches to hold back: the media server does not
 // show their arrivals yet and they have waited less than LibraryWait.
-func (n *Notifier) unseen(ctx context.Context, ready []watch, now time.Time) map[int]bool {
-	held := map[int]bool{}
+func (n *Notifier) unseen(ctx context.Context, ready []watch, now time.Time) map[string]bool {
+	held := map[string]bool{}
 	if n.opts.LibraryWait <= 0 {
 		return held
 	}
@@ -170,7 +173,7 @@ func (n *Notifier) unseen(ctx context.Context, ready []watch, now time.Time) map
 			defer func() { <-slots }()
 			if !n.visible(ctx, w) {
 				mu.Lock()
-				held[w.SubscriptionID] = true
+				held[w.key()] = true
 				mu.Unlock()
 			}
 		})
@@ -194,7 +197,7 @@ func (n *Notifier) visible(ctx context.Context, w watch) bool {
 	defer cancel()
 	lib, err := n.opts.Feed.Library(ctx, w.media())
 	if err != nil {
-		n.opts.Log.Warn("library check failed", "subscription", w.SubscriptionID, "err", err)
+		n.opts.Log.Warn("library check failed", "watch", w.key(), "err", err)
 		return true
 	}
 	if w.Season == nil {
@@ -233,22 +236,49 @@ func (n *Notifier) withLinks(ctx context.Context, deliveries []delivery) []deliv
 }
 
 // checkActivity asks MoviePilot, at most once per activityEvery, which
-// watched subscriptions still exist.
+// watched subscriptions still exist and which watched downloads are still
+// unfinished.
 func (n *Notifier) checkActivity(ctx context.Context) error {
 	now := n.opts.Now()
 	if now.Sub(n.lastActivity) < activityEvery {
 		return nil
 	}
-	active := map[int]bool{}
-	for _, w := range n.snapshot().Watches {
+	watches := n.snapshot().Watches
+	active, err := n.downloading(ctx, watches)
+	if err != nil {
+		return err
+	}
+	for _, w := range watches {
+		if w.Download != "" {
+			continue
+		}
 		ok, err := n.opts.Feed.SubscriptionActive(ctx, w.SubscriptionID)
 		if err != nil {
 			return err
 		}
-		active[w.SubscriptionID] = ok
+		active[w.key()] = ok
 	}
 	n.lastActivity = now
 	return n.update(func(st state) state { return withActivity(st, active, now) })
+}
+
+// downloading tells, by watch key, which watched downloads are unfinished;
+// the downloader is only asked when some watch is for a download.
+func (n *Notifier) downloading(ctx context.Context, watches []watch) (map[string]bool, error) {
+	active := map[string]bool{}
+	if !slices.ContainsFunc(watches, func(w watch) bool { return w.Download != "" }) {
+		return active, nil
+	}
+	downloads, err := n.opts.Feed.Downloads(ctx)
+	if err != nil {
+		return nil, err
+	}
+	for _, w := range watches {
+		if w.Download != "" {
+			active[w.key()] = slices.ContainsFunc(downloads, func(d flow.Download) bool { return d.ID == w.Download })
+		}
+	}
+	return active, nil
 }
 
 func (n *Notifier) send(ctx context.Context, deliveries []delivery) {

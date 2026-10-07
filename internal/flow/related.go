@@ -27,10 +27,14 @@ func (e *Engine) chooseRelated(ctx context.Context, sess session, p press) (Repl
 	return Reply{}, false
 }
 
-// relatedRow offers to browse on from the picked media: similar media, and
-// for a movie its series.
+// relatedRow offers to browse on from the picked media: its releases once a
+// target is chosen, similar media, and for a movie its series.
 func relatedRow(sess session) []Button {
-	row := []Button{{Label: "相似推荐", Data: data(sess.id, actionRelated, 0)}}
+	var row []Button
+	if sess.focus != nil {
+		row = append(row, torrentButton(sess.id))
+	}
+	row = append(row, Button{Label: "相似推荐", Data: data(sess.id, actionRelated, 0)})
 	if sess.picked.Media.Kind == Movie {
 		row = append(row, Button{Label: "同系列", Data: data(sess.id, actionSeries, 0)})
 	}
@@ -59,7 +63,7 @@ func (e *Engine) browse(ctx context.Context, sess session, series bool) Reply {
 		return Reply{Notice: empty}
 	}
 	sess.results = found[:min(len(found), limit)]
-	sess.seasons, sess.library, sess.target, sess.chosen = nil, Library{}, nil, nil
+	sess.seasons, sess.library, sess.target, sess.chosen, sess.focus = nil, Library{}, nil, nil, nil
 	return e.listPages(sess, relatedView(sess, heading))
 }
 

@@ -25,9 +25,11 @@ type state struct {
 	Watches      []watch `json:"watches"`
 }
 
-// watch is one subscription and the people waiting for it.
+// watch is one subscription, or one download added by hand, and the people
+// waiting for it.
 type watch struct {
 	SubscriptionID int        `json:"subscription_id"`
+	Download       string     `json:"download,omitempty"` // set for a download, then SubscriptionID is 0
 	Source         string     `json:"source"`
 	MediaID        string     `json:"media_id"`
 	Title          string     `json:"title"`
@@ -67,12 +69,12 @@ type delivery struct {
 }
 
 // withRequest adds req to st, joining an existing watch of the same
-// subscription so a late requester is notified too.
+// subscription or download so a late requester is notified too.
 func withRequest(st state, req flow.Request) state {
 	next := st
 	next.Watches = slices.Clone(st.Watches)
 	for i, w := range next.Watches {
-		if w.SubscriptionID != req.SubscriptionID {
+		if w.SubscriptionID != req.SubscriptionID || w.Download != req.Download {
 			continue
 		}
 		if !slices.Contains(w.Requesters, req.Requester) {
@@ -83,8 +85,8 @@ func withRequest(st state, req flow.Request) state {
 	}
 	t := req.Target
 	w := watch{
-		SubscriptionID: req.SubscriptionID,
-		Source:         t.Media.Source, MediaID: t.Media.ID, Title: t.Media.Title, Year: t.Media.Year,
+		SubscriptionID: req.SubscriptionID, Download: req.Download,
+		Source: t.Media.Source, MediaID: t.Media.ID, Title: t.Media.Title, Year: t.Media.Year,
 		Season: t.Season, Start: max(t.StartEpisode, 1), Total: req.SeasonEpisodes,
 		Requesters: []flow.Actor{req.Requester},
 	}
@@ -165,7 +167,7 @@ func flush(st state, now time.Time, settle settling) (state, []delivery) {
 	var out []delivery
 	for _, w := range st.Watches {
 		complete := w.complete()
-		if !w.settled(now, settle.quiet) || settle.held[w.SubscriptionID] {
+		if !w.settled(now, settle.quiet) || settle.held[w.key()] {
 			next.Watches = append(next.Watches, w)
 			continue
 		}
@@ -181,7 +183,15 @@ func flush(st state, now time.Time, settle settling) (state, []delivery) {
 // settling is how flush decides a watch is ready.
 type settling struct {
 	quiet time.Duration
-	held  map[int]bool // subscriptions the media server does not show yet
+	held  map[string]bool // watches (by key) the media server does not show yet
+}
+
+// key identifies a watch: its subscription, or its download.
+func (w watch) key() string {
+	if w.Download != "" {
+		return "download:" + w.Download
+	}
+	return fmt.Sprintf("subscription:%d", w.SubscriptionID)
 }
 
 // media is the watched title as the media server checks know it.
@@ -202,9 +212,13 @@ func (w watch) complete() bool {
 	return w.Total > 0 && len(w.Delivered) >= w.Total-w.Start+1
 }
 
-// matches reports whether t is this watch's media (and season, for shows).
+// matches reports whether t is this watch's media (and season, for shows);
+// a download's watch only takes files of that download.
 func (w watch) matches(t Transfer) bool {
-	if t.Source != w.Source || t.MediaID != w.MediaID {
+	if w.Download != "" && t.Download != w.Download {
+		return false
+	}
+	if w.Download == "" && (t.Source != w.Source || t.MediaID != w.MediaID) {
 		return false
 	}
 	if w.Season == nil {
@@ -232,21 +246,22 @@ func (w watch) wants(ep int) bool {
 func without(st state, subscriptionID int) state {
 	next := state{Baseline: st.Baseline, LastTransfer: st.LastTransfer}
 	for _, w := range st.Watches {
-		if w.SubscriptionID != subscriptionID {
+		if w.Download != "" || w.SubscriptionID != subscriptionID {
 			next.Watches = append(next.Watches, w)
 		}
 	}
 	return next
 }
 
-// withActivity records which subscriptions MoviePilot no longer has and
-// drops watches that have been orphaned for longer than orphanGrace. MoviePilot
-// closes a subscription when downloads finish, before files are transferred,
-// so a closed subscription alone must not end a watch.
-func withActivity(st state, active map[int]bool, now time.Time) state {
+// withActivity records which subscriptions (or downloads) MoviePilot no
+// longer has, by watch key, and drops watches that have been orphaned for
+// longer than orphanGrace. MoviePilot closes a subscription when downloads
+// finish, and a download leaves the list once it finishes, both before
+// files are transferred, so neither alone may end a watch.
+func withActivity(st state, active map[string]bool, now time.Time) state {
 	next := state{Baseline: st.Baseline, LastTransfer: st.LastTransfer}
 	for _, w := range st.Watches {
-		isActive, checked := active[w.SubscriptionID]
+		isActive, checked := active[w.key()]
 		switch {
 		case !checked:
 		case isActive:
