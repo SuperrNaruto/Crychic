@@ -87,7 +87,7 @@ func (e *Engine) searchTorrents(sess session, run string) Reply {
 	h.stop()
 	target := *sess.focus
 	sess.hunt, sess.torrents, sess.release = nil, h.found, nil
-	sess.torrentSort, sess.torrentSite = 0, ""
+	sess.torrentSort, sess.torrentSite, sess.missingOnly = 0, "", false
 	sess.ticking, sess.ticked, sess.batch = false, nil, nil
 	e.store.put(sess)
 	if h.err != nil {

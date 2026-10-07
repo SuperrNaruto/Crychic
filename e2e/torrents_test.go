@@ -13,6 +13,7 @@ const (
 	mygoTorrents = "GET /api/v1/search/media/224207"
 
 	searchResources = "搜索资源"
+	missingOnly     = "只看缺集"
 	downloadIt      = "确认下载"
 	// addedHash is the download id download_added.json answers with.
 	addedHash = "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b"
@@ -196,6 +197,38 @@ func TestSortAndFilterReleases(t *testing.T) {
 	h.tap(alice, 1, "筛选站点")
 	h.tap(alice, 1, "全部站点")
 	h.shows(1, "共 4 个")
+	if _, offered := findButton(mustMessage(h, 1).rows, missingOnly); offered {
+		t.Fatal("a movie's releases offer to show only missing episodes")
+	}
+	h.tr.verify(t)
+}
+
+// A season partly in the library marks what each release adds to it, and
+// can list only the releases bringing missing episodes, kept across order
+// changes until switched off.
+func TestShowReleasesFillingMissingEpisodes(t *testing.T) {
+	h := start(t, scenario{routes: map[string]route{
+		searchPath:      ok("search_mygo.json"),
+		mygoDetails:     ok("detail_mygo.json"),
+		seasonsPath:     ok("seasons_mygo.json"),
+		libraryShowPath: ok("library_mygo.json"),
+		mygoLookup:      ok("subscription_none.json"),
+		mygoTorrents:    searchingSites("torrents_mygo_s1.json"),
+	}})
+	h.say(alice, alice, "/search 迷途之子")
+	h.tap(alice, 1, "1")
+	h.tap(alice, 1, "第 1 季")
+	h.searchTorrents(alice, 1, searchResources)
+	h.shows(1, "补 E01–E12")
+	h.tap(alice, 1, "下一页 ›")
+	h.shows(1, "已都有")
+	h.tap(alice, 1, missingOnly)
+	h.shows(1, "的资源 · 缺集")
+	h.shows(1, "共 13 个")
+	h.tap(alice, 1, "做种")
+	h.shows(1, "共 13 个")
+	h.tap(alice, 1, "·"+missingOnly+"·")
+	h.shows(1, "共 14 个")
 	h.tr.verify(t)
 }
 

@@ -19,6 +19,9 @@ func torrentList(sess session, target Target) listView {
 	if sess.torrentSite != "" {
 		heading += " · " + sess.torrentSite
 	}
+	if sess.missingOnly {
+		heading += " · 缺集"
+	}
 	shown := sess.shownTorrents()
 	view := listView{
 		heading:   Heading(Plain(heading)),
@@ -31,6 +34,9 @@ func torrentList(sess session, target Target) listView {
 		view.menu = append(view.menu, []Button{{Label: label, Data: data(sess.id, actionTorrentBatch, 0)}})
 	}
 	view.menu = append(view.menu, sortRow(sess))
+	if row := missingSwitch(sess); len(row) > 0 {
+		view.menu = append(view.menu, row)
+	}
 	if row := onwardRow(sess); len(row) > 0 {
 		view.menu = append(view.menu, row)
 	}
@@ -64,7 +70,7 @@ func onwardRow(sess session) []Button {
 // releaseEntry is release index listed as number n: its number button
 // opens it, or ticks it while releases are ticked.
 func releaseEntry(sess session, n, index int) listEntry {
-	item := torrentEntry(n, sess.torrents[index])
+	item := torrentEntry(n, sess.torrents[index], sess.fillNote(sess.torrents[index]))
 	button := Button{Label: fmt.Sprint(n), Data: data(sess.id, actionTorrentPick, index)}
 	if sess.ticking {
 		button.Data = data(sess.id, actionTorrentTick, index)
@@ -76,10 +82,11 @@ func releaseEntry(sess session, n, index int) listEntry {
 }
 
 // torrentEntry is e.g. "1. **Dune.2021.2160p.UHD.BluRay…**" over
-// "_站点A · 58.2 GiB · 做种 25 · 免费 · H&R_".
-func torrentEntry(n int, t Torrent) Block {
+// "_站点A · 58.2 GiB · 做种 25 · 免费 · H&R_", then what it adds to the
+// library (fill).
+func torrentEntry(n int, t Torrent, fill string) Block {
 	return entry(n, Strong(truncate(t.Title, listTitleRunes)),
-		t.Site, size(t.Size), seeders(t), t.Promotion, hitAndRun(t), EpisodeRanges(t.Episodes))
+		t.Site, size(t.Size), seeders(t), t.Promotion, hitAndRun(t), EpisodeRanges(t.Episodes), fill)
 }
 
 // torrentCard is a release's title, its subtitle in small print, and its

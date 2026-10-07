@@ -57,7 +57,7 @@ func newerFirst(a, b Torrent) int {
 	return cmp.Compare(b.Published, a.Published)
 }
 
-// chooseTorrentView applies the sort and site filter of the release list;
+// chooseTorrentView applies the sort and filters of the release list;
 // ok is false for other actions.
 func (e *Engine) chooseTorrentView(_ context.Context, sess session, p press) (Reply, bool) {
 	switch p.action {
@@ -79,6 +79,9 @@ func (e *Engine) chooseTorrentView(_ context.Context, sess session, p press) (Re
 			sess.torrentSite = sites[p.arg-1].name
 		}
 		return e.releases(sess), true
+	case actionTorrentMissing:
+		sess.missingOnly = p.arg == 1
+		return e.releases(sess), true
 	}
 	return Reply{}, false
 }
@@ -93,11 +96,12 @@ func (e *Engine) releases(sess session) Reply {
 }
 
 // shownTorrents are the indices into the session's releases to list: those
-// of the chosen site, in the chosen order.
+// of the chosen site, bringing missing episodes if asked, in the chosen
+// order.
 func (sess session) shownTorrents() []int {
 	var shown []int
 	for i, t := range sess.torrents {
-		if sess.torrentSite == "" || siteOf(t) == sess.torrentSite {
+		if (sess.torrentSite == "" || siteOf(t) == sess.torrentSite) && (!sess.missingOnly || sess.fillsMissing(t)) {
 			shown = append(shown, i)
 		}
 	}

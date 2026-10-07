@@ -27,6 +27,7 @@ type session struct {
 	torrents    []Torrent
 	torrentSort int     // index into torrentSorts
 	torrentSite string  // the one site whose releases show; "" for all
+	missingOnly bool    // only releases bringing missing episodes show
 	release     *int    // index of the release shown to download
 	ticking     bool    // the release list ticks releases to download together
 	ticked      []int   // indices of the ticked releases, ascending
