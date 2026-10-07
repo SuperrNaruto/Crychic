@@ -153,15 +153,20 @@ func upcomingView(sess session, found airings) listView {
 	return view
 }
 
-// airingEntry is e.g. "3. **择日飞升**" over "_第 1 季 第 15 集_".
+// airingEntry is e.g. "3. **择日飞升**" over "_第 1 季 第 15 集_", marked
+// 已暂停 when its subscription will not fetch it.
 func airingEntry(sess session, n int, a airing) Block {
 	s := sess.subs[a.sub]
 	name := a.ep.Name
 	if name == fmt.Sprintf("第 %d 集", a.ep.Number) {
 		name = ""
 	}
+	paused := ""
+	if s.State == statePaused {
+		paused = stateText[statePaused]
+	}
 	item := entry(n, Strong(truncate(s.Title, listTitleRunes)),
-		fmt.Sprintf("%s 第 %d 集", seasonName(*s.Season), a.ep.Number), name)
+		fmt.Sprintf("%s 第 %d 集", seasonName(*s.Season), a.ep.Number), name, paused)
 	if slices.Contains(sess.mine, s.ID) {
 		item.Tag = msgRequestedTag
 	}

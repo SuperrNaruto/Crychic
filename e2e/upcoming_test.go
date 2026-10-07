@@ -1,6 +1,7 @@
 package e2e
 
 import (
+	"encoding/json"
 	"net/http"
 	"testing"
 )
@@ -24,7 +25,7 @@ func upcomingRoutes() map[string]route {
 // The calendar lists the subscribed seasons' episodes airing this week,
 // one day after another from today; a number opens the subscription and
 // 返回 shows the calendar again. A season that cannot be read is named,
-// and a week with nothing airing says so.
+// a paused subscription is marked, and a week with nothing airing says so.
 func TestUpcomingEpisodes(t *testing.T) {
 	h := start(t, scenario{routes: upcomingRoutes()})
 	h.say(alice, alice, "/start")
@@ -36,11 +37,26 @@ func TestUpcomingEpisodes(t *testing.T) {
 	h.shows(1, "订阅详情")
 	h.tap(alice, 1, "返回")
 	h.shows(1, "追剧日历")
+	h.mp.setRoute(subsPath, ok(writeFixture(t, airingWithFirstPaused(h))))
 	h.mp.setRoute(airingSeasonB, route{status: http.StatusServiceUnavailable, fixture: "server_error.json"})
 	h.say(alice, alice, "/upcoming")
+	h.shows(2, "第 1 季 第 15 集 · 已暂停")
 	h.shows(2, "有 1 部剧暂时没读到播出时间")
 	h.mp.setRoute(subsPath, ok("subscriptions_none.json"))
 	h.say(alice, alice, "/upcoming")
 	h.shows(3, "都没有新集播出")
 	h.tr.verify(t)
+}
+
+// airingWithFirstPaused is subscriptions_airing.json with 择日飞升 paused.
+func airingWithFirstPaused(h *harness) []map[string]any {
+	h.t.Helper()
+	var env struct {
+		Data []map[string]any `json:"data"`
+	}
+	if err := json.Unmarshal(fixture(h.mp, "subscriptions_airing.json"), &env); err != nil {
+		h.t.Fatal(err)
+	}
+	env.Data[0]["state"] = "S"
+	return env.Data
 }
