@@ -217,7 +217,7 @@ func (e *Engine) unsubscribe(ctx context.Context, sess session, s Subscription) 
 		failed.Buttons = [][]Button{nav}
 		return failed
 	}
-	if err := e.watcher.Forget(ctx, s.ID); err != nil {
+	if err := e.watcher.Forget(ctx, s); err != nil {
 		e.log.Error("cannot forget cancelled subscription", "subscription", s.ID, "err", err)
 	}
 	e.store.put(sess)

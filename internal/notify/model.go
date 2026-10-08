@@ -41,7 +41,9 @@ type Feed interface {
 	LatestTransfer(ctx context.Context) (int, error)
 	// TransfersAfter lists successful transfers newer than id, oldest first.
 	TransfersAfter(ctx context.Context, id int) ([]Transfer, error)
-	SubscriptionActive(ctx context.Context, id int) (bool, error)
+	// Subscription reads the current row, whose target may differ from the
+	// watched one after id reuse; an empty subscription when it is gone.
+	Subscription(ctx context.Context, id int) (flow.Subscription, error)
 	// Library and Latest ask the media server what it shows.
 	Library(ctx context.Context, media flow.Media) (flow.Library, error)
 	Latest(ctx context.Context) ([]flow.LibraryItem, error)

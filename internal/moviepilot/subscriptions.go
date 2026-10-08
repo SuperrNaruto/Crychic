@@ -53,6 +53,18 @@ func (c *Client) Subscriptions(ctx context.Context) ([]flow.Subscription, error)
 	return subs, nil
 }
 
+// Subscription reads the current row's identity, not just its existence:
+// SQLite may reuse its id for another title before the old files arrive.
+// MoviePilot answers an unknown id with an empty subscription.
+func (c *Client) Subscription(ctx context.Context, id int) (flow.Subscription, error) {
+	var record subscriptionRecord
+	path := "/api/v1/subscribe/" + strconv.Itoa(id)
+	if err := c.do(ctx, call{method: http.MethodGet, path: path}, &record); err != nil {
+		return flow.Subscription{}, err
+	}
+	return record.subscription(), nil
+}
+
 func (r subscriptionRecord) subscription() flow.Subscription {
 	kind := flow.Movie
 	if r.Type == typeTV {

@@ -96,8 +96,8 @@ func (w watch) subscribed(sub flow.Subscription) bool {
 }
 
 // Forget implements flow.Watcher.
-func (n *Notifier) Forget(_ context.Context, subscriptionID int) error {
-	return n.update(func(st state) state { return without(st, subscriptionID) })
+func (n *Notifier) Forget(_ context.Context, sub flow.Subscription) error {
+	return n.update(func(st state) state { return without(st, sub) })
 }
 
 // ForgetDownload implements flow.Watcher.
@@ -260,7 +260,8 @@ func (n *Notifier) withLinks(ctx context.Context, deliveries []delivery) []deliv
 
 // checkActivity asks MoviePilot, at most once per activityEvery, which
 // watched subscriptions still exist and which watched downloads are still
-// unfinished.
+// unfinished. The returned subscription must match the watched target:
+// an unrelated row reusing its id cannot keep an old watch alive.
 func (n *Notifier) checkActivity(ctx context.Context) error {
 	now := n.opts.Now()
 	if now.Sub(n.lastActivity) < activityEvery {
@@ -275,11 +276,11 @@ func (n *Notifier) checkActivity(ctx context.Context) error {
 		if w.Download != "" {
 			continue
 		}
-		ok, err := n.opts.Feed.SubscriptionActive(ctx, w.SubscriptionID)
+		sub, err := n.opts.Feed.Subscription(ctx, w.SubscriptionID)
 		if err != nil {
 			return err
 		}
-		active[w.key()] = ok
+		active[w.key()] = w.subscribed(sub)
 	}
 	n.lastActivity = now
 	return n.update(func(st state) state { return withActivity(st, active, now) })

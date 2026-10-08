@@ -82,26 +82,25 @@ type delivery struct {
 }
 
 // withRequest adds req to st, joining an existing watch of the same
-// subscription or download so a late requester is notified too.
+// subscription target or download so a late requester is notified too.
+// A reused subscription id keeps the older target's watch alongside it.
 func withRequest(st state, req flow.Request) state {
-	next := st
-	next.Watches = slices.Clone(st.Watches)
-	for i, w := range next.Watches {
-		if w.SubscriptionID != req.SubscriptionID || w.Download != req.Download {
-			continue
-		}
-		if !slices.Contains(w.Requesters, req.Requester) {
-			w.Requesters = append(slices.Clone(w.Requesters), req.Requester)
-		}
-		next.Watches[i] = w
-		return next
-	}
 	t := req.Target
 	w := watch{
 		SubscriptionID: req.SubscriptionID, Download: req.Download,
 		Source: t.Media.Source, MediaID: t.Media.ID, Title: t.Media.Title, Year: t.Media.Year,
 		Season: t.Season, Start: max(t.StartEpisode, 1), Total: req.SeasonEpisodes,
 		Requesters: []flow.Actor{req.Requester},
+	}
+	next := st
+	next.Watches = slices.Clone(st.Watches)
+	for i, current := range next.Watches {
+		if !current.same(w) {
+			continue
+		}
+		current.Requesters = withActors(current.Requesters, w.Requesters)
+		next.Watches[i] = current
+		return next
 	}
 	// Episodes already in the library never pass through transfer history,
 	// yet count towards the season being complete.
@@ -294,12 +293,18 @@ type settling struct {
 	held  map[string]bool // watches (by key) the media server does not show yet
 }
 
-// key identifies a watch: its subscription, or its download.
+// key identifies a watch: its subscription id AND target, or its download.
+// Subscription ids are reusable while older files may still be arriving.
+// Keys are derived, not persisted, so existing state needs no migration.
 func (w watch) key() string {
 	if w.Download != "" {
 		return "download:" + w.Download
 	}
-	return fmt.Sprintf("subscription:%d", w.SubscriptionID)
+	season := "movie"
+	if w.Season != nil {
+		season = fmt.Sprint(*w.Season)
+	}
+	return fmt.Sprintf("subscription:%d:%q:%q:%s", w.SubscriptionID, w.Source, w.MediaID, season)
 }
 
 // media is the watched title as the media server checks know it.
@@ -363,11 +368,12 @@ func (w watch) wants(ep int) bool {
 	return ep >= w.Start && (w.Total == 0 || ep <= w.Total)
 }
 
-// without drops the watch of a subscription.
-func without(st state, subscriptionID int) state {
+// without drops only this subscription's target, not an older watch whose
+// row id the backend reused for it.
+func without(st state, sub flow.Subscription) state {
 	next := st.emptied()
 	for _, w := range st.Watches {
-		if w.Download != "" || w.SubscriptionID != subscriptionID {
+		if w.Download != "" || !w.subscribed(sub) {
 			next.Watches = append(next.Watches, w)
 		}
 	}

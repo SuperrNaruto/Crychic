@@ -231,19 +231,6 @@ func (c *Client) FindSubscription(ctx context.Context, t flow.Target) (int, erro
 	return deref(sub.ID), nil
 }
 
-// SubscriptionActive reports whether subscription id still exists; MoviePilot
-// answers an unknown id with an empty subscription.
-func (c *Client) SubscriptionActive(ctx context.Context, id int) (bool, error) {
-	var sub struct {
-		ID *int `json:"id"`
-	}
-	path := "/api/v1/subscribe/" + strconv.Itoa(id)
-	if err := c.do(ctx, call{method: http.MethodGet, path: path}, &sub); err != nil {
-		return false, err
-	}
-	return sub.ID != nil, nil
-}
-
 func deref(p *int) int {
 	if p == nil {
 		return 0

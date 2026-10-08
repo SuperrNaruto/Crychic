@@ -115,8 +115,9 @@ type fakeMoviePilot struct {
 	scanned    int  // transfers the media server shows while lagging
 	searches   map[string]string
 	recognized map[string]string
-	deleted    map[string]bool // downloads removed from the downloader, by hash
-	states     map[int]string  // subscription states set, by id
+	deleted    map[string]bool        // downloads removed from the downloader, by hash
+	states     map[int]string         // subscription states set, by id
+	subscribed map[int]map[string]any // subscriptions created or found, for reads by id
 }
 
 // reader waits for the notifier to finish a poll that read the transfer
@@ -238,6 +239,7 @@ func (f *fakeMoviePilot) record(r *http.Request) {
 		head += "?" + query
 	}
 	body, _ := io.ReadAll(r.Body)
+	r.Body = io.NopCloser(strings.NewReader(string(body)))
 	if r.Method+" "+r.URL.Path == downloadPath {
 		f.tr.add(head, downloadSummary(body))
 		return
@@ -318,10 +320,17 @@ func (f *fakeMoviePilot) serveRoute(w http.ResponseWriter, r *http.Request) {
 		writeEnvelope(w, http.StatusNotFound, `{"success":false,"message":"Not Found","data":null}`)
 		return
 	}
+	writeEnvelope(w, rt.status, f.routeBody(r, rt))
+}
+
+// routeBody applies the fake's successful state changes before returning
+// the response, so subsequent reads observe what the request just did.
+func (f *fakeMoviePilot) routeBody(r *http.Request, rt route) string {
 	data, err := os.ReadFile(filepath.Join("testdata", "moviepilot", rt.fixture))
 	if err != nil {
 		f.t.Errorf("fixture: %v", err)
 	}
+	key := r.Method + " " + r.URL.Path
 	body := string(data)
 	if rt.fixture == createdFixture {
 		body = f.numbered(body)
@@ -335,7 +344,8 @@ func (f *fakeMoviePilot) serveRoute(w http.ResponseWriter, r *http.Request) {
 	if key == downloadPath && rt.status == http.StatusOK {
 		body = f.hashed(body)
 	}
-	writeEnvelope(w, rt.status, body)
+	f.rememberSubscription(r, body)
+	return body
 }
 
 // numbered gives each created subscription its own id, as MoviePilot does;
@@ -383,11 +393,24 @@ func (f *fakeMoviePilot) serveTransfers(w http.ResponseWriter, r *http.Request) 
 	writeEnvelope(w, http.StatusOK, `{"success":true,"message":"","data":`+string(data)+`}`)
 }
 
-// serveSubscription answers GET /api/v1/subscribe/{id}: every subscription
-// a scenario creates stays active.
+// serveSubscription reads the subscription currently using this id, or
+// MoviePilot's empty record when none does. An explicit route can model
+// its completion or replacement independently of the original request.
 func (f *fakeMoviePilot) serveSubscription(w http.ResponseWriter, r *http.Request) {
-	id := strings.TrimPrefix(r.URL.Path, subscriptionPath)
-	writeEnvelope(w, http.StatusOK, `{"success":true,"message":"","data":{"id":`+id+`}}`)
+	f.mu.Lock()
+	_, routed := f.routes[r.Method+" "+r.URL.Path]
+	id, _ := strconv.Atoi(strings.TrimPrefix(r.URL.Path, subscriptionPath))
+	sub := f.subscribed[id]
+	f.mu.Unlock()
+	if routed {
+		f.serveRoute(w, r)
+		return
+	}
+	if sub == nil {
+		sub = map[string]any{"id": nil}
+	}
+	data, _ := json.Marshal(sub)
+	writeEnvelope(w, http.StatusOK, `{"success":true,"message":"","data":`+string(data)+`}`)
 }
 
 func isSubscriptionByID(path string) bool {

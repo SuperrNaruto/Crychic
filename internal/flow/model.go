@@ -326,8 +326,9 @@ type Watcher interface {
 	// Requested lists ids from subs whose media and season userID asked for;
 	// a backend may reuse a removed subscription's row id for another target.
 	Requested(userID int64, subs []Subscription) []int
-	// Forget drops a subscription's requests, e.g. once it is cancelled.
-	Forget(ctx context.Context, subscriptionID int) error
+	// Forget drops requests for the cancelled subscription's id and target,
+	// keeping older targets whose row id it reused.
+	Forget(ctx context.Context, sub Subscription) error
 	// ForgetDownload drops a download's requests, e.g. once it is deleted.
 	ForgetDownload(ctx context.Context, id string) error
 }
