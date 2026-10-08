@@ -379,8 +379,14 @@ func (e *Engine) remember(ctx context.Context, sess session, sub subscription) b
 		req.SeasonEpisodes = sess.episodeCount(*season)
 		req.Held = sess.library.Episodes[*season]
 	}
+	return e.rememberRequest(ctx, req)
+}
+
+// rememberRequest persists a request with only observations of its own
+// target; callers without a current media card leave those unknown.
+func (e *Engine) rememberRequest(ctx context.Context, req Request) bool {
 	if err := e.watcher.Watch(ctx, req); err != nil {
-		e.log.Error("cannot remember request for notification", "subscription", sub.id, "err", err)
+		e.log.Error("cannot remember request for notification", "subscription", req.SubscriptionID, "err", err)
 		return false
 	}
 	return true
