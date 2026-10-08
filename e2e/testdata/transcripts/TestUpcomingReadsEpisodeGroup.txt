@@ -1,0 +1,13 @@
+>> user 1001 in chat 1001: /upcoming
+-> MoviePilot GET /api/v1/subscribe/
+-> MoviePilot GET /api/v1/tmdb/326695/1?episode_group=64a1f0c2
+<< sendRichMessage chat=1001 message=1
+   <h3>📅 追剧日历</h3>
+   <h4>10月10日 周六</h4>
+   <ol start="1">
+   <li value="1"><b>择日飞升</b><br>
+   <i>第 1 季 第 3 集 · 元会之争</i></li>
+   </ol>
+   <footer>接下来 7 天（北京时间），点编号看订阅详情～</footer>
+   [1 | 1:sd:0]
+   [首页 | 1:o:0] [关闭 | 1:c:0]

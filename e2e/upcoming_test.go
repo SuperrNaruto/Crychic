@@ -3,6 +3,7 @@ package e2e
 import (
 	"encoding/json"
 	"net/http"
+	"strings"
 	"testing"
 )
 
@@ -64,4 +65,29 @@ func airingWithFirstPaused(h *harness) []map[string]any {
 	}
 	env.Data[0]["state"] = "S"
 	return env.Data
+}
+
+// A subscription counting its episodes in a TMDB episode group has its
+// season read in that group, as MoviePilot itself does: there 择日飞升's
+// season 1 airs episode 3 this Saturday, not the show's own episode 15.
+func TestUpcomingReadsEpisodeGroup(t *testing.T) {
+	sub := map[string]any{
+		"id": 1, "name": "择日飞升", "year": "2026", "type": "电视剧",
+		"media_source": "themoviedb", "media_id": "326695", "season": 1,
+		"state": "R", "total_episode": 12, "lack_episode": 10, "episode_group": "64a1f0c2",
+	}
+	grouped := []map[string]any{
+		{"air_date": "2026-09-26", "episode_number": 2, "name": "弑神者许应", "season_number": 1},
+		{"air_date": "2026-10-10", "episode_number": 3, "name": "元会之争", "season_number": 1},
+	}
+	routes := upcomingRoutes()
+	routes[subsPath] = ok(writeFixture(t, []map[string]any{sub}))
+	routes[episodeGroupSeason(airingSeasonA, "64a1f0c2")] = ok(writeFixture(t, grouped))
+	h := start(t, scenario{routes: routes})
+	h.say(alice, alice, "/upcoming")
+	h.shows(1, "第 1 季 第 3 集")
+	if strings.Contains(mustMessage(h, 1).text, "第 15 集") {
+		t.Error("the calendar read the show's own season, not the subscription's episode group")
+	}
+	h.tr.verify(t)
 }

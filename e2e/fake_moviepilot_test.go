@@ -286,9 +286,19 @@ func (f *fakeMoviePilot) setRoute(key string, rt route) {
 	f.routes[key] = rt
 }
 
+// episodeGroupSeason is the route of season (a TMDB season route) as an
+// episode group numbers it.
+func episodeGroupSeason(season, group string) string {
+	return season + "?episode_group=" + group
+}
+
 func (f *fakeMoviePilot) serveRoute(w http.ResponseWriter, r *http.Request) {
 	path, _ := url.PathUnescape(r.URL.EscapedPath())
 	key, title := r.Method+" "+path, r.URL.Query().Get("title")
+	if group := r.URL.Query().Get("episode_group"); group != "" {
+		// MoviePilot reads a season of the episode group instead.
+		key = episodeGroupSeason(key, group)
+	}
 	f.mu.Lock()
 	rt, found := f.routes[key]
 	if fixture, ok := f.searches[title]; ok && key == searchPath {

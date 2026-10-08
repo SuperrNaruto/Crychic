@@ -176,6 +176,17 @@ type Subscription struct {
 	BestVersion  bool
 	LastSearch   time.Time
 	Execution    *SubscriptionExecution
+	// EpisodeGroup is the TMDB episode group whose seasons the subscription
+	// counts in, "" for the show's own seasons.
+	EpisodeGroup string
+}
+
+// ShowSeason is a season of a show, numbered in EpisodeGroup's seasons when
+// one is set (a subscription's custom 剧集组), else the show's own.
+type ShowSeason struct {
+	Media        Media
+	Number       int
+	EpisodeGroup string
 }
 
 // SubscriptionExecution describes the last search, not download completion.
@@ -271,7 +282,7 @@ type Backend interface {
 	Latest(ctx context.Context) ([]LibraryItem, error)
 	// SeasonEpisodes lists the episodes of a show's season with their air
 	// dates; TMDB shows only.
-	SeasonEpisodes(ctx context.Context, media Media, season int) ([]EpisodeAir, error)
+	SeasonEpisodes(ctx context.Context, season ShowSeason) ([]EpisodeAir, error)
 	// SetSubscriptionPaused pauses a subscription, or resumes searching for it.
 	SetSubscriptionPaused(ctx context.Context, id int, paused bool) error
 	// Unsubscribe deletes a subscription; deleting one already gone is fine.

@@ -30,6 +30,7 @@ type subscriptionRecord struct {
 	FilterGroups []string `json:"filter_groups"`
 	BestVersion  int      `json:"best_version"`
 	LastSearch   string   `json:"last_search"`
+	EpisodeGroup string   `json:"episode_group"`
 	Execution    *struct {
 		State   string `json:"state"`
 		NextRun string `json:"next_run_at"`
@@ -62,6 +63,7 @@ func (r subscriptionRecord) subscription() flow.Subscription {
 		State: r.State, Lack: r.Lack, Total: r.Total, StartEpisode: r.StartEpisode, Poster: posterURL(r.Poster),
 		Quality: r.Quality, Resolution: r.Resolution, Effect: r.Effect,
 		FilterGroups: r.FilterGroups, BestVersion: r.BestVersion != 0, LastSearch: subscriptionTime(r.LastSearch),
+		EpisodeGroup: r.EpisodeGroup,
 	}
 	if r.Execution != nil {
 		s.Execution = &flow.SubscriptionExecution{

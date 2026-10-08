@@ -83,11 +83,14 @@ func (e *Engine) readAirings(ctx context.Context, subs []Subscription, now time.
 			found.skipped++
 			continue
 		}
-		media := Media{Source: s.Source, ID: s.MediaID, Title: s.Title, Year: s.Year, Kind: TV}
+		season := ShowSeason{
+			Media:  Media{Source: s.Source, ID: s.MediaID, Title: s.Title, Year: s.Year, Kind: TV},
+			Number: *s.Season, EpisodeGroup: s.EpisodeGroup,
+		}
 		wg.Go(func() {
 			slots <- struct{}{}
 			defer func() { <-slots }()
-			seasons[i], errs[i] = e.backend.SeasonEpisodes(ctx, media, *s.Season)
+			seasons[i], errs[i] = e.backend.SeasonEpisodes(ctx, season)
 		})
 	}
 	wg.Wait()
