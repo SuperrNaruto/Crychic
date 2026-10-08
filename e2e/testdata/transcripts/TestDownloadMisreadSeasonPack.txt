@@ -31,7 +31,7 @@
    <table bordered compact>
    <tr><th>季</th><th>集数</th><th>入库</th></tr>
    <tr><td><b>特别篇</b></td><td>3 集</td><td></td></tr>
-   <tr><td><b>第 1 季</b></td><td>13 集</td><td>已有 1 集</td></tr>
+   <tr><td><b>第 1 季</b></td><td>13 集</td><td>已有 2 集</td></tr>
    </table>
    [特别篇 | 1:s:0] [第 1 季 | 1:s:1]
    [多选季… | 1:a:0]
@@ -46,7 +46,7 @@
    <footer><i>BanG Dream! It&#39;s MyGO!!!!!</i> · 2023 · 电视剧 · ⭐ 8.0 · 动画 / 剧情 · 共 1 季 13 集 · 主演：羊宫妃那、立石凛、青木阳菜</footer>
    <blockquote expandable>“你能，和我组一辈子乐队吗？”……高一的春末，羽丘女子学园的所有人都加入了乐队，晚入学的爱音为了尽快融入班级，急急忙忙地寻找着乐队成员。这时她得知，「羽丘的不可思议女孩」灯还没有加入乐队，于是爱音不由自主地向她打起了招呼，但是……这是遍体鳞伤又狼狈不堪的，我们的＜音乐呐喊＞。迷失方向也无所谓，在迷茫中前进吧！</blockquote>
    <hr/>
-   <p><b>要订阅《迷途之子!!!!!》第 1 季（共 13 集，媒体库已有 E09）吗？</b></p>
+   <p><b>要订阅《迷途之子!!!!!》第 1 季（共 13 集，媒体库已有 E01、E09）吗？</b></p>
    [从第 1 集开始 | 1:ok:0]
    [指定起始集… | 1:e:0]
    [搜索资源 | 1:ts:0] [相似推荐 | 1:r:0]
@@ -68,10 +68,13 @@
    <ol start="1">
    <li value="1"><b>BanG.Dream.It&#39;s.MyGO.S01.2023.1080p.BluRay.x265.FLAC-VCB</b><br>
    <i>站点甲 · 21.4 GiB · 做种 40 · 免费 · E09</i></li>
+   <li value="2"><b>BanG.Dream.It&#39;s.MyGO.S01.2023.1080p.B-Global.WEB-DL.DDP5.1.H.264-GRP</b><br>
+   <i>站点甲 · 15.0 GiB · 做种 12 · 免费 · E01</i></li>
    </ol>
-   <footer>共 1 个，按 MoviePilot 的优先级排好啦，点编号看详情～</footer>
-   [1 | 1:tp:0]
+   <footer>共 2 个，按 MoviePilot 的优先级排好啦，点编号看详情～</footer>
+   [1 | 1:tp:0] [2 | 1:tp:1]
    [·默认· | 1:to:0] [做种 | 1:to:1] [时间 | 1:to:2] [大小 | 1:to:3] [站点 | 1:to:4]
+   [多选… | 1:tm:0]
    [返回 | 1:bk:0] [取消 | 1:x:0]
 >> user 1001 taps 1:tp:0 on message 1
 << editMessageText chat=1001 message=1 reuses=url-f1d1c3e9
