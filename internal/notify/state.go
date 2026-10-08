@@ -74,6 +74,7 @@ type delivery struct {
 	watch     watch
 	episodes  []int
 	complete  bool
+	downloads bool // every watch told is a download's
 	image     string
 	releases  []release
 	qualities []string         // the releases' qualities as worded for the notice
@@ -206,7 +207,7 @@ func flush(st state, now time.Time, settle settling) (state, []delivery) {
 		if ended[i] || !w.settled(now, settle.quiet) || settle.holds(watches, w) {
 			continue
 		}
-		d := delivery{watch: w, complete: true, image: w.Image}
+		d := delivery{watch: w, complete: true, downloads: true, image: w.Image}
 		d.watch.Requesters = nil
 		for j, other := range watches {
 			if ended[j] || other.ArrivedAt == nil || !other.sameMedia(w) {
@@ -247,6 +248,7 @@ func (d delivery) with(w watch) delivery {
 	slices.Sort(episodes)
 	d.episodes = episodes
 	d.complete = d.complete && w.complete()
+	d.downloads = d.downloads && w.Download != ""
 	d.watch.Requesters = withActors(d.watch.Requesters, w.Requesters)
 	for _, r := range w.Releases {
 		d.releases = withRelease(d.releases, r)

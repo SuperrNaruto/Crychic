@@ -24,15 +24,16 @@ func arrivalText(d delivery) flow.Text {
 	))
 	text = withQualities(text, d)
 	if d.complete {
-		text = append(text, flow.Line(flow.Plain(completeWords(w)+" ヾ(≧▽≦*)o")))
+		text = append(text, flow.Line(flow.Plain(completeWords(d)+" ヾ(≧▽≦*)o")))
 	}
 	return withWatchLink(text, d)
 }
 
-// completeWords says everything wanted arrived: a whole requested season,
-// or every episode a download brings, which may be a single one.
-func completeWords(w watch) string {
-	if w.Download != "" {
+// completeWords says everything wanted arrived: every episode the
+// downloads told bring, which may be a single one, or else the whole
+// requested season, which a download of it brings as well.
+func completeWords(d delivery) string {
+	if d.downloads {
 		return "这次下载的剧集全部到齐啦"
 	}
 	return "这一季你要的剧集全部到齐啦"

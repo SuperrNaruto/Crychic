@@ -277,7 +277,8 @@ func TestStalledDownloadIsToldOnce(t *testing.T) {
 }
 
 // A download picked for a season that is also subscribed brings files both
-// requests wait for: a stuck download and its arrival are each told once.
+// requests wait for: a stuck download and its arrival are each told once,
+// the arrival in words that fit the subscription as much as the download.
 func TestDownloadOfSubscribedSeasonIsToldOnce(t *testing.T) {
 	h := start(t, scenario{stall: "1h", routes: map[string]route{
 		searchPath:      ok("search_mygo.json"),

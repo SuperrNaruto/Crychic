@@ -202,7 +202,7 @@
    <img src="tg://photo?id=p0"/>
    <h3>📥 入库啦</h3>
    <p>你想看的<b>《迷途之子!!!!!》第 1 季</b> E01–E13 到家啦！<br>
-   这次下载的剧集全部到齐啦 ヾ(≧▽≦*)o</p>
+   这一季你要的剧集全部到齐啦 ヾ(≧▽≦*)o</p>
    <tg-button-row align="left">
    <tg-button type="url" style="success" url="https://emby.example.com/web/index.html#!/item?id=224207">在 Emby 中观看</tg-button>
    </tg-button-row>
