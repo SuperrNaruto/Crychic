@@ -84,6 +84,8 @@ func TestGroupChatterIsNotAnAnswer(t *testing.T) {
 	h.tr.verify(t)
 }
 
+// Telegram can display the search results before its send response reaches
+// the bot. Picking immediately must still show the card and subscribe once.
 func TestSubscribeMovie(t *testing.T) {
 	h := start(t, scenario{routes: map[string]route{
 		searchPath:    ok("search_dune.json"),
@@ -91,8 +93,11 @@ func TestSubscribeMovie(t *testing.T) {
 		duneLookup:    ok("subscription_none.json"),
 		subscribePath: ok("subscribe_created.json"),
 	}})
+	release := h.tg.holdNextResponse("sendRichMessage")
+	defer release()
 	h.say(alice, alice, "沙丘")
 	h.tap(alice, 1, duneMovie)
+	release()
 	h.tap(alice, 1, "确认订阅")
 	h.shows(1, "帮你订好《沙丘》")
 	h.tr.verify(t)

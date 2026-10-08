@@ -55,6 +55,7 @@ type fakeTelegram struct {
 	commands  map[string]string // setMyCommands menus by scope, as sent
 	forums    map[int64]bool
 	failure   *editFailure
+	response  *responseHold
 	stall     string
 	stalled   chan struct{}
 	badImage  string          // an image URL Telegram fails to fetch
@@ -155,6 +156,7 @@ func (f *fakeTelegram) serveMessage(w http.ResponseWriter, r *http.Request, meth
 	switch method {
 	case "sendRichMessage", "editMessageText":
 		result, err := f.store(r, method)
+		f.waitResponse(r.Context(), method)
 		reply(w, result, err)
 	case "deleteMessage":
 		err := f.deleteMessage(r)

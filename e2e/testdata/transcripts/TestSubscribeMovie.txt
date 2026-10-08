@@ -1,3 +1,4 @@
+>> Telegram delays the next sendRichMessage response after displaying the message
 >> user 1001 in chat 1001: 沙丘
 -> MoviePilot GET /api/v1/media/search?count=10&title=沙丘&type=media
 << sendRichMessage chat=1001 message=1
@@ -51,6 +52,7 @@
    [搜索资源 | 1:ts:0] [相似推荐 | 1:r:0] [同系列 | 1:n:0]
    [返回 | 1:bk:0] [取消 | 1:x:0]
 << answerCallbackQuery
+>> Telegram releases the delayed sendRichMessage response
 >> user 1001 taps 1:ok:0 on message 1
 -> MoviePilot POST /api/v1/subscribe/
    {"name":"沙丘","year":"2021","type":"电影","media_source":"themoviedb","media_id":"438631"}
