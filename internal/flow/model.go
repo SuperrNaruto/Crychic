@@ -228,6 +228,9 @@ type Torrent struct {
 	HitAndRun   bool
 	Season      *int  // nil for movies or when unknown
 	Episodes    []int // empty for movies or a whole season
+	// EpisodesUnsure: the release's title does not name Episodes, so MoviePilot
+	// may have read them from the description (修复第9集章节 of a whole pack).
+	EpisodesUnsure bool
 	Resolution  string
 	Edition     string
 	Video       string

@@ -55,7 +55,7 @@ func fills(t Torrent, season int, missing []int) []int {
 // (its own episodes already say so) or nothing is known.
 func (sess session) fillNote(t Torrent) string {
 	missing, ok := sess.missingEpisodes()
-	if !ok {
+	if !ok || t.EpisodesUnsure {
 		return ""
 	}
 	filled := fills(t, *sess.focus.Season, missing)
@@ -69,10 +69,11 @@ func (sess session) fillNote(t Torrent) string {
 }
 
 // fillsMissing reports whether a release brings any missing episode; true
-// for every release while that is unknown.
+// for every release while that is unknown, as it is for episodes its title
+// does not name.
 func (sess session) fillsMissing(t Torrent) bool {
 	missing, ok := sess.missingEpisodes()
-	return !ok || len(fills(t, *sess.focus.Season, missing)) > 0
+	return !ok || t.EpisodesUnsure || len(fills(t, *sess.focus.Season, missing)) > 0
 }
 
 // missingSwitch is the 只看缺集 switch, offered while some release brings

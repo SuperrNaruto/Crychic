@@ -109,14 +109,16 @@ func TestDownloadPickedSeasonRelease(t *testing.T) {
 }
 
 // MoviePilot reads a release's episodes from its description too, so a
-// whole-season pack mentioning 「修复第9集章节」 is listed as E09; every file
-// the download brings is still announced, and the season is complete.
+// whole-season pack mentioning 「修复第9集章节」 is listed as E09. With only
+// E09 in the library it is not called 已都有 nor hidden by 只看缺集, since
+// its title names no episode; every file the download brings is still
+// announced, and the season is complete.
 func TestDownloadMisreadSeasonPack(t *testing.T) {
 	h := start(t, scenario{routes: map[string]route{
 		searchPath:      ok("search_mygo.json"),
 		mygoDetails:     ok("detail_mygo.json"),
 		seasonsPath:     ok("seasons_mygo.json"),
-		libraryShowPath: ok("library_mygo.json"),
+		libraryShowPath: ok(writeFixture(t, map[string][]int{"1": {9}})),
 		mygoLookup:      ok("subscription_none.json"),
 		mygoTorrents:    searchingSites("torrents_mygo_misread.json"),
 		downloadPath:    ok("download_added.json"),
@@ -125,6 +127,10 @@ func TestDownloadMisreadSeasonPack(t *testing.T) {
 	h.tap(alice, 1, "1")
 	h.tap(alice, 1, "第 1 季")
 	h.searchTorrents(alice, 1, searchResources)
+	releases := mustMessage(h, 1)
+	if _, filter := findButton(releases.rows, missingOnly); filter || strings.Contains(releases.text, "已都有") {
+		t.Error("a whole-season pack misread as E09 counts as bringing nothing missing")
+	}
 	h.tap(alice, 1, "1")
 	h.tap(alice, 1, downloadIt)
 	h.shows(1, "开始下载《迷途之子!!!!!》第 1 季 E09啦")

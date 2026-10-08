@@ -92,6 +92,7 @@ func (rc torrentContext) toTorrent() (flow.Torrent, bool) {
 	}
 	if m := rc.Meta; m != nil {
 		found.Season, found.Episodes = m.Season, m.Episodes
+		found.EpisodesUnsure = len(m.Episodes) > 0 && !namesEpisodes(facts.Title, m.Episodes)
 		found.Resolution, found.Video, found.Group = m.Resolution, m.Video, m.Group
 		found.Edition = m.Edition
 		if found.Edition == "" {
@@ -99,7 +100,7 @@ func (rc torrentContext) toTorrent() (flow.Torrent, bool) {
 		}
 	}
 	if media.Kind == flow.Movie {
-		found.Season, found.Episodes = nil, nil
+		found.Season, found.Episodes, found.EpisodesUnsure = nil, nil, false
 	}
 	return found, true
 }
