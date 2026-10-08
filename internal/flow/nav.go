@@ -56,6 +56,12 @@ var finishing = map[string]bool{
 	actionConfirm: true, actionSubscribed: true, actionTorrentGet: true, actionTorrentBatchGet: true,
 }
 
+// needsTicket also binds subscription mutations to the currently shown
+// screen; those writes do not finish a media request.
+func needsTicket(action string) bool {
+	return finishing[action] || action == actionPauseSub || action == actionResumeSub || action == actionUnsubscribe
+}
+
 // answered stands for a typed start episode, which replaces its prompt.
 const answered = "typed"
 
@@ -163,7 +169,7 @@ func (e *Engine) back(ctx context.Context, sess session) Reply {
 	return last.reply
 }
 
-// ticketed gives the write buttons (finishing) of the screen sess now shows
+// ticketed gives the guarded write buttons of the screen sess now shows
 // a fresh ticket, and only a press carrying the shown screen's ticket
 // writes. A request picked from a list keeps its session past the write, so
 // without one a stale 确认订阅 from before would confirm whatever was picked
@@ -175,7 +181,7 @@ func ticketed(sess *session, reply Reply) Reply {
 		next := slices.Clone(row)
 		for i, b := range next {
 			id, p, ok := parseData(b.Data)
-			if !ok || id != sess.id || !finishing[p.action] {
+			if !ok || id != sess.id || !needsTicket(p.action) {
 				continue
 			}
 			if sess.ticket == 0 {

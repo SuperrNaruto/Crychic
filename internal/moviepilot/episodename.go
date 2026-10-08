@@ -14,7 +14,7 @@ var (
 	cnEpisode = regexp.MustCompile(`第\s*(\d{1,4})(?:\s*-\s*(\d{1,4}))?\s*[集话話]`)
 	// technical are numbers a title carries that name no episode: audio
 	// channels (DDP5.1, AAC2.0, TrueHD.7.1.4) and H.264 / H.265.
-	technical = regexp.MustCompile(`(?i)h\.26[45]|(^|\D)[1-9]\.[0-2](?:\.[0-4])?(\D|$)`)
+	technical = regexp.MustCompile(`(?i)h\.26[45]|[1-9]\.[0-2](?:\.[0-4])?`)
 	// titleToken is a run of a title between separators.
 	titleToken = regexp.MustCompile(`[^.\s_\[\]()【】\-+]+`)
 )
@@ -25,7 +25,7 @@ var (
 // description says 修复第9集章节 as E09.
 func namesEpisodes(title string, episodes []int) bool {
 	var named []string
-	title = technical.ReplaceAllString(title, "$1 $2")
+	title = withoutTechnical(title)
 	for _, token := range titleToken.FindAllString(title, -1) {
 		if m := tokenEpisode.FindStringSubmatch(token); m != nil {
 			named = append(named, m[1]+m[2])
@@ -41,4 +41,24 @@ func namesEpisodes(title string, episodes []int) bool {
 		}
 	}
 	return false
+}
+
+// withoutTechnical masks only the technical number itself. Boundaries are
+// checked but never consumed, so adjacent tracks such as FLAC.2.0+5.1 are
+// both removed without turning a fragment of 2023.1080p into a channel.
+func withoutTechnical(title string) string {
+	masked := []byte(title)
+	for _, at := range technical.FindAllStringIndex(title, -1) {
+		if digitAt(title, at[0]) && (digitAt(title, at[0]-1) || digitAt(title, at[1])) {
+			continue
+		}
+		for i := at[0]; i < at[1]; i++ {
+			masked[i] = ' '
+		}
+	}
+	return string(masked)
+}
+
+func digitAt(text string, at int) bool {
+	return at >= 0 && at < len(text) && text[at] >= '0' && text[at] <= '9'
 }

@@ -66,7 +66,11 @@ func manySubscriptions(t *testing.T, count int) string {
 	t.Helper()
 	var subs []map[string]any
 	for i := range count {
-		subs = append(subs, map[string]any{"id": i + 1, "name": "绝命毒师", "type": "电视剧", "season": 2, "state": "R", "lack_episode": 13, "total_episode": 13})
+		subs = append(subs, map[string]any{
+			"id": i + 1, "name": "绝命毒师", "type": "电视剧", "season": 2,
+			"media_source": "themoviedb", "media_id": "1396",
+			"state": "R", "lack_episode": 13, "total_episode": 13,
+		})
 	}
 	return writeFixture(t, subs)
 }

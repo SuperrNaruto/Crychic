@@ -73,20 +73,26 @@ func (n *Notifier) Watch(_ context.Context, req flow.Request) error {
 }
 
 // Requested implements flow.Watcher.
-func (n *Notifier) Requested(userID int64) []int {
+func (n *Notifier) Requested(userID int64, subs []flow.Subscription) []int {
 	var ids []int
 	for _, w := range n.snapshot().Watches {
-		if w.Download != "" {
+		if w.Download != "" || !slices.ContainsFunc(w.Requesters, func(r flow.Actor) bool { return r.UserID == userID }) {
 			continue
 		}
-		for _, r := range w.Requesters {
-			if r.UserID == userID {
-				ids = append(ids, w.SubscriptionID)
-				break
+		for _, sub := range subs {
+			if w.subscribed(sub) {
+				ids = append(ids, sub.ID)
 			}
 		}
 	}
 	return ids
+}
+
+// subscribed matches both the row id and its target: SQLite can reuse a
+// deleted row's id while its old arrival watch is still waiting for files.
+func (w watch) subscribed(sub flow.Subscription) bool {
+	return w.SubscriptionID == sub.ID && w.media().Kind == sub.Kind &&
+		w.sameMedia(watch{Source: sub.Source, MediaID: sub.MediaID, Season: sub.Season})
 }
 
 // Forget implements flow.Watcher.

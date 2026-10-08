@@ -158,6 +158,7 @@ type LibraryItem struct {
 // Subscription is one of the backend's subscriptions.
 type Subscription struct {
 	ID           int
+	Created      string // backend creation timestamp; distinguishes a reused id
 	Source       string
 	MediaID      string
 	Title        string
@@ -322,8 +323,9 @@ type Request struct {
 // Watcher remembers requests so requesters hear about arrivals.
 type Watcher interface {
 	Watch(ctx context.Context, req Request) error
-	// Requested lists the subscriptions userID asked for.
-	Requested(userID int64) []int
+	// Requested lists ids from subs whose media and season userID asked for;
+	// a backend may reuse a removed subscription's row id for another target.
+	Requested(userID int64, subs []Subscription) []int
 	// Forget drops a subscription's requests, e.g. once it is cancelled.
 	Forget(ctx context.Context, subscriptionID int) error
 	// ForgetDownload drops a download's requests, e.g. once it is deleted.

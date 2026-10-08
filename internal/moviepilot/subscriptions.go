@@ -13,6 +13,7 @@ import (
 
 type subscriptionRecord struct {
 	ID           int      `json:"id"`
+	Date         string   `json:"date"`
 	Name         string   `json:"name"`
 	Year         string   `json:"year"`
 	Type         string   `json:"type"`
@@ -58,7 +59,7 @@ func (r subscriptionRecord) subscription() flow.Subscription {
 		kind = flow.TV
 	}
 	s := flow.Subscription{
-		ID: r.ID, Source: r.MediaSource, MediaID: r.MediaID,
+		ID: r.ID, Created: r.Date, Source: r.MediaSource, MediaID: r.MediaID,
 		Title: r.Name, Year: r.Year, Kind: kind, Season: r.Season,
 		State: r.State, Lack: r.Lack, Total: r.Total, StartEpisode: r.StartEpisode, Poster: posterURL(r.Poster),
 		Quality: r.Quality, Resolution: r.Resolution, Effect: r.Effect,

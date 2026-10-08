@@ -112,8 +112,8 @@ func TestDownloadPickedSeasonRelease(t *testing.T) {
 // whole-season pack mentioning 「修复第9集章节」 is listed as E09, and one
 // mentioning 「修复第1集字幕」 as E01. With only E01 and E09 in the library
 // neither is called 已都有 nor hidden by 只看缺集, since their titles name no
-// episode (DDP5.1 is audio); every file the download brings is still
-// announced, and the season is complete.
+// episode (FLAC.2.0+5.1 and DDP5.1 are audio); every file the download
+// brings is still announced, and the season is complete.
 func TestDownloadMisreadSeasonPack(t *testing.T) {
 	h := start(t, scenario{routes: map[string]route{
 		searchPath:      ok("search_mygo.json"),

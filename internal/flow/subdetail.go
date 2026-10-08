@@ -52,7 +52,7 @@ func (e *Engine) subDetail(ctx context.Context, sess session, index int) Reply {
 		}
 		return Reply{Notice: msgSubDetailFailed}
 	}
-	i := slices.IndexFunc(subs, func(s Subscription) bool { return s.ID == sess.subs[index].ID })
+	i := slices.IndexFunc(subs, sess.subs[index].same)
 	if i < 0 {
 		e.store.put(sess)
 		return subDetailGone(sess, sess.subs[index].Kind)

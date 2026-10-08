@@ -260,3 +260,97 @@
 << answerCallbackQuery notice="这个选项不太对哦～"
 >> user 1001 taps 3:z:1 on message 3
 << answerCallbackQuery notice="这个选项不太对哦～"
+>> user 1001 taps 3:sd:2 on message 3
+-> MoviePilot GET /api/v1/subscribe/
+-> MoviePilot GET /api/v1/system/setting/SubscribeFilterRuleGroups
+-> MoviePilot GET /api/v1/dashboard/schedule
+<< editMessageText chat=1001 message=3
+   <h3>📚 订阅详情 · 《绝命毒师》第 3 季</h3>
+   <footer>2008 · 电视剧 · 订阅中</footer>
+   <h4>订阅设置</h4>
+   <p>普通订阅 · 从第 1 集开始 · 共 13 集 · MoviePilot 待获取 13 集<br>
+   <b>规格 </b>不限（未单独设置）<br>
+   <b>规则组 </b>沿用全局 14 组：前置过滤 · 动画电影 · 华语电影 · 欧美电影 · 日番 · 国漫 · 纪录片 · 综艺 · 国产剧 · 港台剧 · 欧美剧 · 日韩剧 · 其他 · 未分类</p>
+   <h4>最近一次搜索</h4>
+   <p><b>最近搜索 </b>还没有记录<br>
+   <b>执行状态 </b>暂无执行记录</p>
+   <h4>自动查找</h4>
+   <p><b>订阅刷新 </b>约 19分钟后（浏览站点最新种子）<br>
+   <b>定时搜索 </b>未开启</p>
+   <h4>入库与任务</h4>
+   <table bordered compact>
+   <tr><th>集数</th><th>媒体库</th><th>下载与整理</th></tr>
+   <tr><td>E01–E13</td><td>未入库</td><td>暂无任务记录</td></tr>
+   </table>
+   <footer>仅查询，不会触发搜索或下载；点击刷新查看最新状态哦～</footer>
+   [刷新 | 3:su:2] [暂停订阅 | 3:sp:2]
+   [返回 | 3:bk:0] [首页 | 3:o:0] [关闭 | 3:c:0]
+<< answerCallbackQuery
+>> user 1001 taps 3:bk:0 on message 3
+<< editMessageText chat=1001 message=3
+   <h3>📚 订阅清单 · 电视剧（1）</h3>
+   <ol start="1">
+   <li value="1"><b>《绝命毒师》第 3 季</b><br>
+   <i>订阅中 · 缺 13/13 集 · <mark>你请求的</mark></i></li>
+   </ol>
+   [1 | 3:sd:2]
+   [·电视剧· | 3:sf:2] [电影 | 3:sf:1]
+   [取消订阅 | 3:sc:0] [订阅历史 | 3:hs:2]
+   [首页 | 3:o:0] [关闭 | 3:c:0]
+<< answerCallbackQuery
+>> user 1001 taps 3:sc:0 on message 3
+<< editMessageText chat=1001 message=3
+   <h3>📚 取消订阅</h3>
+   <ol start="1">
+   <li value="1"><b>《绝命毒师》第 3 季</b><br>
+   <i>订阅中 · 缺 13/13 集</i></li>
+   </ol>
+   <footer>只能取消你请求的订阅哦，点编号选一个吧。</footer>
+   [1 | 3:v:2]
+   [返回 | 3:bk:0] [首页 | 3:o:0] [关闭 | 3:c:0]
+<< answerCallbackQuery
+>> user 1001 taps 3:v:2 on message 3
+<< editMessageText chat=1001 message=3
+   <h3>📚 取消订阅</h3>
+   <p><b>真的要取消订阅《绝命毒师》第 3 季吗？</b><br>
+   取消后 MoviePilot 就不会再帮它搜索下载了哦。</p>
+   [确认取消 | 3:z:2]
+   [返回 | 3:bk:0]
+<< answerCallbackQuery
+>> user 1001 taps 3:bk:0 on message 3
+<< editMessageText chat=1001 message=3
+   <h3>📚 取消订阅</h3>
+   <ol start="1">
+   <li value="1"><b>《绝命毒师》第 3 季</b><br>
+   <i>订阅中 · 缺 13/13 集</i></li>
+   </ol>
+   <footer>只能取消你请求的订阅哦，点编号选一个吧。</footer>
+   [1 | 3:v:2]
+   [返回 | 3:bk:0] [首页 | 3:o:0] [关闭 | 3:c:0]
+<< answerCallbackQuery
+>> user 1001 taps 3:o:0 on message 3
+<< editMessageText chat=1001 message=3 reuses=file-d620fc3c5f16
+   <img src="tg://photo?id=p0"/>
+   <h3>🎬 Crychic</h3>
+   <p>想看什么告诉我呀～我帮你找片、订阅，入库了第一时间喊你！私聊直接发片名就能搜哦 (๑•̀ㅂ•́)و✧</p>
+   [搜索 | 3:h:0] [发现 | 3:h:1]
+   [我的订阅 | 3:h:2] [最新入库 | 3:h:3]
+   [任务进度 | 3:h:4] [追剧日历 | 3:h:5]
+<< answerCallbackQuery
+>> user 1001 taps 3:h:2 on message 3
+-> MoviePilot GET /api/v1/subscribe/
+<< editMessageText chat=1001 message=3
+   <h3>📚 订阅清单 · 电视剧（1）</h3>
+   <ol start="1">
+   <li value="1"><b>《绝命毒师》第 4 季</b><br>
+   <i>订阅中 · 缺 13/13 集</i></li>
+   </ol>
+   [1 | 3:sd:2]
+   [·电视剧· | 3:sf:2] [电影 | 3:sf:1]
+   [订阅历史 | 3:hs:2]
+   [首页 | 3:o:0] [关闭 | 3:c:0]
+<< answerCallbackQuery
+>> user 1001 taps 3:sp:2 on message 3
+<< answerCallbackQuery notice="这个选项不太对哦～"
+>> user 1001 taps 3:z:2 on message 3
+<< answerCallbackQuery notice="这个选项不太对哦～"

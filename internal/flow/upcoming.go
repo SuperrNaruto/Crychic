@@ -50,7 +50,7 @@ func (e *Engine) upcoming(ctx context.Context, sess session) Reply {
 		e.store.take(sess.id)
 		return titled(msgUpcomingTitle, e.failure("subscriptions", err))
 	}
-	sess.subs, sess.mine = subs, e.watcher.Requested(sess.owner.UserID)
+	sess.subs, sess.mine = subs, e.watcher.Requested(sess.owner.UserID, subs)
 	found := e.readAirings(ctx, subs, e.now().In(calendarZone))
 	if len(found.list) == 0 && found.failed == 0 && sess.menu {
 		return Reply{Notice: msgNoUpcomingTip}

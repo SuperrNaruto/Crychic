@@ -460,51 +460,32 @@ func TestPauseOwnSubscription(t *testing.T) {
 }
 
 // Subscription buttons name their subscription, not its place in the list:
-// once a later read dropped season 2, its stale 暂停订阅 and 确认取消 neither
-// pause nor cancel anything, never season 3 in its place.
+// once a later read dropped season 2, or reused season 3's id for season 4,
+// its stale 暂停订阅 and 确认取消 never reach the replacement.
 func TestStaleButtonsNeverReachAnotherSubscription(t *testing.T) {
-	season := func(id, n int) map[string]any {
-		return map[string]any{
-			"id": id, "name": "绝命毒师", "year": "2008", "type": "电视剧",
-			"media_source": "themoviedb", "media_id": "1396", "season": n,
-			"state": "R", "total_episode": 13, "lack_episode": 13,
-		}
-	}
-	subs := []map[string]any{season(1, 2), season(2, 3)}
-	h := start(t, scenario{routes: map[string]route{
-		searchPath:    ok("search_breaking_bad.json"),
-		breakDetails:  ok("detail_breaking_bad.json"),
-		seasonsPath:   ok("seasons_breaking_bad.json"),
-		breakingQuery: ok("subscription_none.json"),
-		subscribePath: ok("subscribe_created.json"),
-		subsPath:      ok(writeFixture(t, subs)),
-	}})
-	for i, n := range []int{2, 3} {
-		h.say(alice, alice, "/search 绝命毒师")
-		h.tap(alice, i+1, "1")
-		h.tap(alice, i+1, fmt.Sprintf("第 %d 季", n))
-		h.tap(alice, i+1, "从第 1 集开始")
-	}
+	h := requestedBreakingSeasons(t)
 	h.say(alice, alice, "/subscribe")
-	h.tap(alice, 3, "1")
-	h.shows(3, "第 2 季")
-	pause, _ := findButton(mustMessage(h, 3).rows, "暂停订阅")
-	h.tap(alice, 3, "返回")
-	h.tap(alice, 3, "取消订阅")
-	h.tap(alice, 3, "1")
-	h.shows(3, "真的要取消订阅《绝命毒师》第 2 季吗")
-	cancel, _ := findButton(mustMessage(h, 3).rows, "确认取消")
+	pause, cancel := subscriptionButtons(h, 3, "1")
 	h.tap(alice, 3, "返回")
 	h.tap(alice, 3, "首页")
-	h.mp.setRoute(subsPath, ok(writeFixture(t, subs[1:])))
+	h.mp.setRoute(subsPath, ok(writeFixture(t, []map[string]any{breakingSeason(2, 3)})))
 	h.tap(alice, 3, "我的订阅")
 	h.shows(3, "第 3 季")
 	h.tapData(alice, 3, pause)
 	h.tapData(alice, 3, cancel)
-	for _, write := range []string{"PUT /api/v1/subscribe/status/", "DELETE /api/v1/subscribe/"} {
-		if strings.Contains(h.tr.String(), write) {
-			t.Errorf("a stale button of season 2 reached another subscription: %s", write)
-		}
+	pause, cancel = subscriptionButtons(h, 3, "1")
+	h.tap(alice, 3, "返回")
+	h.tap(alice, 3, "首页")
+	h.mp.setRoute(subsPath, ok(writeFixture(t, []map[string]any{breakingSeason(2, 4)})))
+	h.tap(alice, 3, "我的订阅")
+	h.shows(3, "第 4 季")
+	if strings.Contains(mustMessage(h, 3).text, "你请求的") {
+		t.Error("a reused id grants ownership of another subscription")
+	}
+	h.tapData(alice, 3, pause)
+	h.tapData(alice, 3, cancel)
+	if subscriptionWrites(h) != 0 {
+		t.Error("a stale button reached a replacement subscription")
 	}
 	h.tr.verify(t)
 }

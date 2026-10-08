@@ -98,9 +98,14 @@ func (e *Engine) Choose(ctx context.Context, actor Actor, raw string) Reply {
 	if sess.owner.UserID != actor.UserID || sess.owner.Address != actor.Address {
 		return Reply{Notice: msgNotYours}
 	}
-	if finishing[p.action] && (p.ticket == 0 || p.ticket != sess.ticket) {
+	if needsTicket(p.action) && (p.ticket == 0 || p.ticket != sess.ticket) {
 		return Reply{Notice: msgInvalidChoice}
 	}
+	return e.choose(ctx, sess, p)
+}
+
+// choose dispatches a press only after Choose has checked its owner and ticket.
+func (e *Engine) choose(ctx context.Context, sess session, p press) Reply {
 	switch p.action {
 	case actionPage:
 		return e.page(sess, p.arg)

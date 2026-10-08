@@ -30,6 +30,9 @@ func (e *Engine) chooseSubPause(ctx context.Context, sess session, p press) (Rep
 	if !slices.Contains(sess.mine, p.arg) {
 		return Reply{Notice: msgPauseOwn}, true
 	}
+	if notice := e.checkSubscription(ctx, sess, sess.subs[index]); notice != "" {
+		return Reply{Notice: notice}, true
+	}
 	paused := p.action == actionPauseSub
 	if err := e.backend.SetSubscriptionPaused(ctx, p.arg, paused); err != nil {
 		if message, safe := UserMessage(err); safe {

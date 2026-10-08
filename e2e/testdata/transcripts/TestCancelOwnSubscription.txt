@@ -152,6 +152,7 @@
    [返回 | 2:bk:0]
 << answerCallbackQuery
 >> user 1001 taps 2:z:1 on message 2
+-> MoviePilot GET /api/v1/subscribe/
 -> MoviePilot DELETE /api/v1/subscribe/1
 << editMessageText chat=1001 message=2
    <h3>✅ 已取消订阅</h3>

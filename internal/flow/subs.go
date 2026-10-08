@@ -77,7 +77,7 @@ func (e *Engine) listSubs(ctx context.Context, sess session) Reply {
 	if len(subs) == 0 && sess.menu {
 		return Reply{Notice: msgNoSubs}
 	}
-	sess.subs, sess.mine = subs, e.watcher.Requested(sess.owner.UserID)
+	sess.subs, sess.mine = subs, e.watcher.Requested(sess.owner.UserID, subs)
 	if len(subs) == 0 {
 		e.store.put(sess)
 		history := Button{Label: "订阅历史", Data: data(sess.id, actionHistory, int(TV))}
@@ -208,6 +208,9 @@ func askCancel(sess session, index int) Reply {
 // unsubscribe deletes s and forgets its requests, so nobody waits for an
 // arrival that will not come.
 func (e *Engine) unsubscribe(ctx context.Context, sess session, s Subscription) Reply {
+	if notice := e.checkSubscription(ctx, sess, s); notice != "" {
+		return Reply{Notice: notice}
+	}
 	nav := append([]Button{backTo(sess.id, actionSubs, 0)}, browseRow(sess.id)...)
 	if err := e.backend.Unsubscribe(ctx, s.ID); err != nil {
 		failed := titled(msgCancelTitle, e.failure("unsubscribe", err))
