@@ -226,7 +226,7 @@ func expired(action string) Reply {
 		actionRelated, actionSeries, actionBack, actionResearch, actionRetry,
 		actionTorrents, actionTorrentRun, actionTorrentRetry, actionTorrentAgain, actionTorrentPick, actionTorrentGet,
 		actionTorrentSort, actionTorrentSites, actionTorrentSite, actionTorrentMissing,
-		actionTorrentMulti, actionTorrentTick, actionTorrentBatch, actionTorrentBatchGet:
+		actionTorrentMulti, actionTorrentTick, actionTorrentBatch, actionTorrentBatchGet, actionUpgrade, actionUpgradeConfirm:
 		return expiredText(msgExpired)
 	}
 	return expiredText(msgHomeExpired)

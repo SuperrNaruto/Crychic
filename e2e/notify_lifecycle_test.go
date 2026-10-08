@@ -117,3 +117,59 @@ func TestUpgradeSubscriptionKeepsControlsAndNotifiesNewVersions(t *testing.T) {
 	}
 	h.tr.verify(t)
 }
+
+// A delivered movie whose subscription closed waits for nothing more: a
+// stuck download of the same movie is not its requester's, and a new
+// upgrade subscription reusing the closed row's id belongs to its new
+// requester alone.
+func TestDeliveredMovieStaysQuietAfterItsSubscription(t *testing.T) {
+	const aliceNotice, bobRequest, bobNotice = 2, 3, 4
+	const step = 40 * time.Minute
+	h := start(t, scenario{quiet: "0s", stall: "1h", routes: map[string]route{
+		searchPath: ok("search_dune.json"), duneDetails: ok("detail_dune.json"),
+		duneLookup:    ok("subscription_none.json"),
+		subscribePath: ok(writeFixture(t, map[string]any{"id": reusedSubscriptionID})),
+		downloadsPath: ok("downloads_dune_mygo.json"),
+	}})
+	h.say(alice, alice, "/search 沙丘")
+	h.tap(alice, 1, duneMovie)
+	h.tap(alice, 1, "确认订阅")
+	h.tr.add(">> MoviePilot closes the subscription once its download is added")
+	h.mp.setRoute(notifySubscription, ok("subscription_none.json"))
+	h.arrives(alice, duneFile())
+	noticeAt(h, arrivalCheck{message: aliceNotice, chat: alice, title: "沙丘"})
+	for range 3 {
+		h.advance(step)
+		h.transfers()
+	}
+	if strings.Contains(h.tr.String(), "下载好像卡住了") {
+		t.Error("a delivered movie's requester was told about another download")
+	}
+	h.tr.add(">> Bob subscribes the held movie as an upgrade; MoviePilot reuses the closed row's id")
+	h.mp.setRoute(notifySubscription, ok(writeFixture(t, map[string]any{
+		"id": reusedSubscriptionID, "name": "沙丘", "year": "2021", "type": "电影",
+		"media_source": "themoviedb", "media_id": "438631", "state": "R", "best_version": 1,
+	})))
+	h.say(bob, bob, "/search 沙丘")
+	h.tap(bob, bobRequest, duneMovie)
+	h.tap(bob, bobRequest, "洗版订阅")
+	h.tap(bob, bobRequest, "确认洗版")
+	h.arrives(bob, duneFile())
+	noticeAt(h, arrivalCheck{message: bobNotice, chat: bob, title: "沙丘"})
+	noticeCount(h, 2)
+	h.tr.verify(t)
+}
+
+// A season told complete stays complete once its subscription closed: a
+// stray later episode numbered past its total is not announced again.
+func TestCompleteSeasonIgnoresLaterStrayEpisode(t *testing.T) {
+	h := start(t, scenario{quiet: "0s", stall: "0s", routes: mygoSubscriptionRoutes()})
+	requestMygo(h)
+	h.tr.add(">> MoviePilot closes the subscription once its downloads are added")
+	h.mp.setRoute(notifySubscription, ok("subscription_none.json"))
+	h.arrives(alice, mygo.file("S01", "E01-E13"))
+	h.shows(2, "全部到齐")
+	h.transfers(mygo.file("S01", "E14"))
+	noticeCount(h, 1)
+	h.tr.verify(t)
+}

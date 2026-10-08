@@ -41,15 +41,21 @@ func (n *Notifier) readSubscriptions(ctx context.Context, watches []watch) (map[
 	return subs, nil
 }
 
-// withSubscriptions refreshes only matching live targets. A completed or
-// replaced row cannot erase the last known scope or upgrade mode of files
-// still on their way, and concurrent new requests are retained.
+// withSubscriptions refreshes only matching live targets and marks the
+// others closed. A completed or replaced row cannot erase the last known
+// scope or upgrade mode of files still on their way, and concurrent new
+// requests are retained.
 func withSubscriptions(st state, subs map[int]flow.Subscription) state {
 	next := st
 	next.Watches = slices.Clone(st.Watches)
 	for i, w := range next.Watches {
 		sub, read := subs[w.SubscriptionID]
-		if w.Download != "" || !read || !w.subscribed(sub) {
+		if w.Download != "" || !read {
+			continue
+		}
+		w.Closed = !w.subscribed(sub)
+		next.Watches[i] = w
+		if w.Closed {
 			continue
 		}
 		if sub.Total > 0 {

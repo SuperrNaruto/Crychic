@@ -53,6 +53,7 @@ type watch struct {
 	Total          int        `json:"total,omitempty"`           // latest known last episode, 0 if unknown
 	BestVersion    bool       `json:"best_version,omitempty"`    // later versions can deliver the same episode again
 	MovieDelivered bool       `json:"movie_delivered,omitempty"` // ordinary movie requests announce once
+	Closed         bool       `json:"closed,omitempty"`          // its subscription row was last read gone
 	Delivered      []int      `json:"delivered,omitempty"`       // episodes arrived so far
 	Pending        []int      `json:"pending,omitempty"`         // arrived, not yet announced
 	Image          string     `json:"image,omitempty"`           // poster of the latest pending arrival
@@ -103,6 +104,9 @@ func withRequest(st state, req flow.Request) state {
 		if !current.same(w) {
 			continue
 		}
+		if current.Closed && current.ArrivedAt == nil {
+			break // a new row reusing a finished subscription's id
+		}
 		current.Requesters = withActors(current.Requesters, w.Requesters)
 		current.Total = max(current.Total, w.Total)
 		current.BestVersion = current.BestVersion || w.BestVersion
@@ -112,6 +116,9 @@ func withRequest(st state, req flow.Request) state {
 	// Episodes already in the library never pass through transfer history,
 	// yet count towards the season being complete.
 	w.Delivered = slices.Sorted(slices.Values(w.fresh(req.Held)))
+	next.Watches = slices.DeleteFunc(next.Watches, func(o watch) bool {
+		return o.same(w) && o.Closed && o.ArrivedAt == nil
+	})
 	next.Watches = append(next.Watches, w)
 	return next
 }
@@ -383,13 +390,14 @@ func (w watch) fresh(episodes []int) []int {
 
 // wants reports whether ep is asked for. Every file of a download is: the
 // download is what was asked for, whatever its season's episode count says.
-// A subscription's current total is not a permanent upper bound: ongoing
-// seasons gain episodes after the first request.
+// A live subscription's total is not a permanent upper bound: ongoing
+// seasons gain episodes after the first request. Once its row is gone, the
+// last total read bounds it again, so a stray later episode is not announced.
 func (w watch) wants(ep int) bool {
 	if w.Download != "" {
 		return true
 	}
-	return ep >= w.Start
+	return ep >= w.Start && (!w.Closed || w.Total == 0 || ep <= w.Total)
 }
 
 // without drops only this subscription's target, not an older watch whose

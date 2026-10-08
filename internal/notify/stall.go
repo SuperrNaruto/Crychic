@@ -115,12 +115,16 @@ func (w watch) awaits(d flow.Download) bool {
 		return false
 	}
 	if w.Season == nil {
-		return d.Season == nil
+		// A delivered movie waits for nothing more, unless it is upgrading.
+		return d.Season == nil && (!w.MovieDelivered || w.BestVersion)
 	}
 	if d.Season == nil || *d.Season != *w.Season {
 		return false
 	}
-	return len(d.Episodes) == 0 || len(w.fresh(d.Episodes)) > 0
+	if len(d.Episodes) == 0 {
+		return !w.complete()
+	}
+	return len(w.fresh(d.Episodes)) > 0
 }
 
 // stallText is e.g. "⚠️ 下载好像卡住了" over "你想看的《颂乐人偶》第 1 季
