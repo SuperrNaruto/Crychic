@@ -18,11 +18,13 @@ const stateFileMode = 0o600
 // state is everything the notifier persists. It is treated as a value:
 // transitions return a new state and never modify their input.
 type state struct {
-	// Baseline is set once the transfer history has been read for the first
-	// time, so history that predates Crychic is never announced.
-	Baseline     bool    `json:"baseline"`
-	LastTransfer int     `json:"last_transfer"`
-	Watches      []watch `json:"watches"`
+	// Baseline excludes history from before Crychic started. LastTransfer
+	// is the old id-only checkpoint, used only when Cursor is still nil.
+	// A non-nil empty cursor means initialization found no successful files.
+	Baseline     bool            `json:"baseline"`
+	LastTransfer int             `json:"last_transfer"`
+	Cursor       *TransferCursor `json:"transfer_cursor,omitempty"`
+	Watches      []watch         `json:"watches"`
 	// Digest is every arrival since the last weekly digest; LastDigest is
 	// when that went out, or when digests began.
 	Digest     []digestEntry `json:"digest,omitempty"`

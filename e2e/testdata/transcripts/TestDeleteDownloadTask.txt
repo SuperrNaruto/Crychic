@@ -152,7 +152,7 @@
    [返回 | 2:l:0]
 << answerCallbackQuery
 >> user 1001 taps 2:ky:0 on message 2
--> MoviePilot DELETE /api/v1/download/9f86d081884c7d659a2feaa0c55ad015a3bf4f1b
+-> MoviePilot DELETE /api/v1/download/9f86d081884c7d659a2feaa0c55ad015a3bf4f1b?name=qBittorrent
 << editMessageText chat=1001 message=2
    <h3>✅ 已删除</h3>
    <p>已经删掉啦，下载的文件也一起清掉了～</p>
@@ -200,7 +200,7 @@
    [返回 | 2:l:0]
 << answerCallbackQuery
 >> user 1001 taps 2:ky:0 on message 2
--> MoviePilot DELETE /api/v1/download/5c1d0a2e8f3b4c6d7e8f9a0b1c2d3e4f5a6b7c8d
+-> MoviePilot DELETE /api/v1/download/5c1d0a2e8f3b4c6d7e8f9a0b1c2d3e4f5a6b7c8d?name=qBittorrent
 << editMessageText chat=1001 message=2
    <h3>删除下载任务</h3>
    <p>呜，没能确认有没有删掉…用 /tasks 看一眼吧。</p>

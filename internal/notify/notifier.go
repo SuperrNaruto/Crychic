@@ -127,33 +127,13 @@ func (n *Notifier) Run(ctx context.Context) {
 func (n *Notifier) poll(ctx context.Context) error {
 	snapshot := n.snapshot()
 	if !snapshot.Baseline {
-		latest, err := n.opts.Feed.LatestTransfer(ctx)
-		if err != nil {
-			return err
-		}
-		return n.update(func(st state) state {
-			st.Baseline, st.LastTransfer = true, latest
-			return st
-		})
+		return n.baseline(ctx)
 	}
-	transfers, err := n.opts.Feed.TransfersAfter(ctx, snapshot.LastTransfer)
+	ready, err := n.arrivals(ctx, snapshot)
 	if err != nil {
 		return err
 	}
 	now := n.opts.Now()
-	var ready []watch
-	err = n.update(func(st state) state {
-		fresh := newerThan(transfers, st.LastTransfer)
-		next := arrive(st, fresh, now)
-		if n.opts.Digest.Zone != nil {
-			next = withDigest(next, fresh, now)
-		}
-		ready = due(next, now, n.opts.Quiet)
-		return next
-	})
-	if err != nil {
-		return err
-	}
 	settle := settling{quiet: n.opts.Quiet, held: n.unseen(ctx, ready, now)}
 	var deliveries []delivery
 	err = n.update(func(st state) state {
@@ -170,6 +150,45 @@ func (n *Notifier) poll(ctx context.Context) error {
 		return err
 	}
 	return n.checkActivity(ctx)
+}
+
+func (n *Notifier) baseline(ctx context.Context) error {
+	cursor, err := n.opts.Feed.LatestTransfer(ctx)
+	if err != nil {
+		return err
+	}
+	return n.update(func(st state) state {
+		st.Baseline, st.Cursor = true, &cursor
+		for _, id := range cursor.IDs {
+			st.LastTransfer = max(st.LastTransfer, id)
+		}
+		return st
+	})
+}
+
+// arrivals reads outside the state lock, then saves newly observed files,
+// their digest entries and the success-time cursor as one transition.
+func (n *Notifier) arrivals(ctx context.Context, snapshot state) ([]watch, error) {
+	since := ""
+	if snapshot.Cursor != nil {
+		since = snapshot.Cursor.Date
+	}
+	transfers, err := n.opts.Feed.TransfersSince(ctx, since)
+	if err != nil {
+		return nil, err
+	}
+	now := n.opts.Now()
+	var ready []watch
+	err = n.update(func(st state) state {
+		next, fresh := st.trackTransfers(transfers)
+		next = arrive(next, fresh, now)
+		if n.opts.Digest.Zone != nil {
+			next = withDigest(next, fresh, now)
+		}
+		ready = due(next, now, n.opts.Quiet)
+		return next
+	})
+	return ready, err
 }
 
 // unseen picks the ready watches to hold back: the media server does not
@@ -345,14 +364,4 @@ func (n *Notifier) update(transition func(state) state) error {
 	}
 	n.st = next
 	return nil
-}
-
-func newerThan(transfers []Transfer, id int) []Transfer {
-	var out []Transfer
-	for _, t := range transfers {
-		if t.ID > id {
-			out = append(out, t)
-		}
-	}
-	return out
 }

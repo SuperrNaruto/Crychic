@@ -37,23 +37,27 @@ func TestHeldSeasonIsNotSubscribedAgain(t *testing.T) {
 	h.tr.verify(t)
 }
 
-// A season partly in the library names what is there, and its requester is
-// told the season is complete once the missing episodes arrive.
+// A retained second version of E01 is not another episode: E13 is still
+// missing, so the season stays selectable and is complete only on its arrival.
 func TestPartlyHeldSeasonCompletesWithLibrary(t *testing.T) {
 	h := start(t, scenario{routes: map[string]route{
 		searchPath:      ok("search_mygo.json"),
 		mygoDetails:     ok("detail_mygo.json"),
 		seasonsPath:     ok("seasons_mygo.json"),
-		libraryShowPath: ok("library_mygo.json"),
+		libraryShowPath: ok("library_mygo_versions.json"),
 		mygoLookup:      ok("subscription_none.json"),
 		subscribePath:   ok("subscribe_created.json"),
 	}})
 	h.say(alice, alice, "/search 迷途之子")
 	h.tap(alice, 1, "1")
+	h.tap(alice, 1, "多选季…")
 	h.tap(alice, 1, "第 1 季")
-	h.shows(1, "媒体库已有 E13")
+	h.shows(1, "13 集 · 已有 12 集")
+	h.tap(alice, 1, "返回")
+	h.tap(alice, 1, "第 1 季")
+	h.shows(1, "媒体库已有 E01–E12")
 	h.tap(alice, 1, "从第 1 集开始")
-	h.arrives(alice, mygo.file("S01", "E01-E12"))
+	h.arrives(alice, mygo.file("S01", "E13"))
 	h.shows(2, "这一季你要的剧集全部到齐啦")
 	h.tr.verify(t)
 }

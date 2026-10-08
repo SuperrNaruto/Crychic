@@ -37,6 +37,7 @@ const (
 
 	downloadPath       = "POST /api/v1/download/"
 	downloadTaskPrefix = "/api/v1/download/"
+	defaultDownloader  = "qBittorrent"
 
 	// siteCookie is the indexer site cookie in the torrent search fixtures;
 	// it must come back in a download request and never reach a chat.
@@ -91,6 +92,7 @@ type transfer struct {
 	Image       string `json:"image"`
 	Year        string `json:"year"`
 	Status      bool   `json:"status"`
+	Date        string `json:"date"`
 	Src         string `json:"src,omitempty"`
 	Hash        string `json:"download_hash,omitempty"`
 }
@@ -115,15 +117,14 @@ type fakeMoviePilot struct {
 	scanned    int  // transfers the media server shows while lagging
 	searches   map[string]string
 	recognized map[string]string
-	deleted    map[string]bool        // downloads removed from the downloader, by hash
+	deleted    map[downloadKey]bool   // downloads removed from each downloader
 	states     map[int]string         // subscription states set, by id
 	subscribed map[int]map[string]any // subscriptions created or found, for reads by id
 }
 
-// reader waits for the notifier to finish a poll that read the transfer
-// history up to id.
+// reader waits for a complete poll after it was registered. Only page one
+// advances it, so reading later pages cannot finish the wait too early.
 type reader struct {
-	id   int
 	seen bool
 	done chan struct{}
 }
@@ -131,7 +132,7 @@ type reader struct {
 func newFakeMoviePilot(t *testing.T, tr *transcript, routes map[string]route) *fakeMoviePilot {
 	all := maps.Clone(idleServer)
 	maps.Copy(all, routes)
-	f := &fakeMoviePilot{t: t, tr: tr, routes: all, polled: make(chan struct{}), deleted: map[string]bool{}, states: map[int]string{}}
+	f := &fakeMoviePilot{t: t, tr: tr, routes: all, polled: make(chan struct{}), deleted: map[downloadKey]bool{}, states: map[int]string{}}
 	f.Server = httptest.NewServer(http.HandlerFunc(f.serve))
 	return f
 }
@@ -142,27 +143,25 @@ func (f *fakeMoviePilot) add(records ...transfer) <-chan struct{} {
 	f.mu.Lock()
 	defer f.mu.Unlock()
 	for _, r := range records {
-		r.ID = len(f.transfers) + 1
+		r = numberTransfer(r, len(f.transfers)+1)
 		r.Status = true
 		f.transfers = append([]transfer{r}, f.transfers...)
 	}
-	rd := reader{id: len(f.transfers), done: make(chan struct{})}
+	rd := reader{done: make(chan struct{})}
 	f.readers = append(f.readers, rd)
 	return rd.done
 }
 
-// markRead is called on every history read with the newest id served; f.mu
-// held. Polls run one after another and a poll's handful of records fits on
-// one page, so the read after the one that saw a reader's records means
-// that poll, including its notices, is done.
-func (f *fakeMoviePilot) markRead(newest int) {
+// markRead is called on page one with f.mu held. The next poll starts only
+// after the preceding poll finished reading every page and sending notices.
+func (f *fakeMoviePilot) markRead() {
 	waiting := f.readers[:0]
 	for _, rd := range f.readers {
 		if rd.seen {
 			close(rd.done)
 			continue
 		}
-		rd.seen = rd.id <= newest
+		rd.seen = true
 		waiting = append(waiting, rd)
 	}
 	f.readers = waiting
@@ -375,19 +374,18 @@ func addedHashN(n int) string {
 	return addedHash[:len(addedHash)-len(suffix)] + suffix
 }
 
-// serveTransfers pages the history the way MoviePilot does (newest first).
+// serveTransfers filters by status and pages by date, not by increasing id.
 func (f *fakeMoviePilot) serveTransfers(w http.ResponseWriter, r *http.Request) {
 	page, _ := strconv.Atoi(r.URL.Query().Get("page"))
 	count, _ := strconv.Atoi(r.URL.Query().Get("count"))
 	f.mu.Lock()
-	from := min(max(page-1, 0)*count, len(f.transfers))
-	list := slices.Clone(f.transfers[from:min(from+count, len(f.transfers))])
-	total := len(f.transfers)
-	newest := 0
-	if len(list) > 0 {
-		newest = list[0].ID
+	records := transferHistory(f.transfers, r.URL.Query().Get("status"))
+	from := min(max(page-1, 0)*count, len(records))
+	list := slices.Clone(records[from:min(from+count, len(records))])
+	total := len(records)
+	if page == 1 {
+		f.markRead()
 	}
-	f.markRead(newest)
 	f.mu.Unlock()
 	data, _ := json.Marshal(map[string]any{"list": list, "total": total})
 	writeEnvelope(w, http.StatusOK, `{"success":true,"message":"","data":`+string(data)+`}`)
@@ -424,26 +422,27 @@ func writeEnvelope(w http.ResponseWriter, status int, body string) {
 	_, _ = io.WriteString(w, body)
 }
 
-// deletesDownload answers DELETE /api/v1/download/{hash} like MoviePilot:
-// success when the downloader had the download, which then leaves the
-// download list. A scenario route for the exact path overrides it.
+// downloadKey identifies a torrent within the downloader that holds it.
+type downloadKey struct {
+	downloader string
+	hash       string
+}
+
+// deletesDownload answers DELETE /api/v1/download/{hash} like MoviePilot's
+// qBittorrent backend: name selects the instance, omission uses the default,
+// and an absent hash still succeeds. An exact scenario route overrides it.
 func (f *fakeMoviePilot) deletesDownload(w http.ResponseWriter, r *http.Request) bool {
 	hash, found := strings.CutPrefix(r.URL.Path, downloadTaskPrefix)
 	f.mu.Lock()
 	_, routed := f.routes[r.Method+" "+r.URL.Path]
-	listed := f.routes[downloadsPath].fixture
 	f.mu.Unlock()
 	if r.Method != http.MethodDelete || !found || routed {
 		return false
 	}
-	data, _ := os.ReadFile(filepath.Join("testdata", "moviepilot", listed))
+	key := downloadKey{downloader: cmp.Or(r.URL.Query().Get("name"), defaultDownloader), hash: hash}
 	f.mu.Lock()
 	defer f.mu.Unlock()
-	if f.deleted[hash] || !strings.Contains(string(data), `"hash": "`+hash+`"`) {
-		writeEnvelope(w, http.StatusOK, `{"success":false,"message":null,"data":null}`)
-		return true
-	}
-	f.deleted[hash] = true
+	f.deleted[key] = true
 	writeEnvelope(w, http.StatusOK, `{"success":true,"message":null,"data":null}`)
 	return true
 }
@@ -459,8 +458,13 @@ func (f *fakeMoviePilot) undeleted(body string) string {
 		return body
 	}
 	f.mu.Lock()
-	env.Data = slices.DeleteFunc(env.Data, func(d map[string]any) bool { return f.deleted[fmt.Sprint(d["hash"])] })
+	env.Data = slices.DeleteFunc(env.Data, func(d map[string]any) bool { return f.deleted[keyOfDownload(d)] })
 	f.mu.Unlock()
 	out, _ := json.Marshal(env)
 	return string(out)
+}
+
+func keyOfDownload(d map[string]any) downloadKey {
+	name, _ := d["downloader"].(string)
+	return downloadKey{downloader: cmp.Or(name, defaultDownloader), hash: fmt.Sprint(d["hash"])}
 }

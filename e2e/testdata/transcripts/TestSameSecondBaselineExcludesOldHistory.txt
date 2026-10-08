@@ -1,0 +1,19 @@
+>> Crychic starts after 51 successful files in one second
+>> MoviePilot transfers 沙丘 (themoviedb/438631)
+>> clock advances 9h0m0s
+<< sendRichMessage chat=1001 message=1
+   <h3>📥 本周入库</h3>
+   <p>这周有 1 部新到媒体库啦 ヾ(≧▽≦*)o</p>
+   <ol start="1">
+   <li value="1"><a href="https://emby.example.com/web/index.html#!/item?id=438631"><b>《沙丘》</b></a><br>
+   <i>电影</i></li>
+   </ol>
+   <footer>统计上次汇总以来 MoviePilot 整理进媒体库的内容</footer>
+<< sendRichMessage chat=1002 message=2
+   <h3>📥 本周入库</h3>
+   <p>这周有 1 部新到媒体库啦 ヾ(≧▽≦*)o</p>
+   <ol start="1">
+   <li value="1"><a href="https://emby.example.com/web/index.html#!/item?id=438631"><b>《沙丘》</b></a><br>
+   <i>电影</i></li>
+   </ol>
+   <footer>统计上次汇总以来 MoviePilot 整理进媒体库的内容</footer>

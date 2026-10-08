@@ -1,7 +1,11 @@
 package e2e
 
 import (
+	"encoding/json"
 	"net/http"
+	"os"
+	"path/filepath"
+	"strings"
 	"testing"
 )
 
@@ -120,4 +124,40 @@ func TestDeleteDownloadTask(t *testing.T) {
 	h.tap(alice, 2, "确认删除")
 	h.shows(2, "没能确认有没有删掉")
 	h.tr.verify(t)
+}
+
+// A task from a nondefault downloader is deleted from that instance, not
+// from the default one, whose response succeeds even for an absent hash.
+func TestDeleteFromNondefaultDownloader(t *testing.T) {
+	const title = "迷途之子!!!!!"
+	h := start(t, scenario{routes: map[string]route{
+		downloadsPath: ok(twoDownloaders(t)),
+		subsPath:      ok("subscriptions_none.json"),
+	}})
+	h.say(alice, alice, "/tasks")
+	h.tap(alice, 1, "2")
+	h.shows(1, title)
+	h.tap(alice, 1, "删除任务")
+	h.tap(alice, 1, "确认删除")
+	h.shows(1, "已经删掉啦")
+	h.tap(alice, 1, "返回")
+	h.shows(1, "《沙丘》")
+	if strings.Contains(mustMessage(h, 1).text, title) {
+		t.Error("the nondefault downloader's task remains after a successful deletion")
+	}
+	h.tr.verify(t)
+}
+
+func twoDownloaders(t *testing.T) string {
+	t.Helper()
+	raw, err := os.ReadFile(filepath.Join("testdata", "moviepilot", "downloads_dune_mygo.json"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	var env struct{ Data []map[string]any }
+	if err := json.Unmarshal(raw, &env); err != nil {
+		t.Fatal(err)
+	}
+	env.Data[1]["downloader"] = "qBittorrent-secondary"
+	return writeFixture(t, env.Data)
 }

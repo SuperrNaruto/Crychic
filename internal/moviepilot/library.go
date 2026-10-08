@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	"slices"
 	"strconv"
 
 	"github.com/SuperrNaruto/Crychic/internal/flow"
@@ -33,7 +34,8 @@ func (c *Client) Library(ctx context.Context, media flow.Media) (flow.Library, e
 }
 
 // heldEpisodes reads exists_remote, which maps season numbers to the episodes
-// on the server and answers {} for a show it doesn't have.
+// on the server and answers {} for a show it doesn't have. Each episode
+// counts once even when the server lists several versions of it.
 func (c *Client) heldEpisodes(ctx context.Context, q libraryQuery) (flow.Library, error) {
 	var raw map[string][]int
 	if err := c.do(ctx, call{method: http.MethodPost, path: "/api/v1/mediaserver/exists_remote", body: q}, &raw); err != nil {
@@ -45,7 +47,8 @@ func (c *Client) heldEpisodes(ctx context.Context, q libraryQuery) (flow.Library
 		if err != nil {
 			return flow.Library{}, fmt.Errorf("moviepilot: season %q in library answer", season)
 		}
-		held[n] = episodes
+		slices.Sort(episodes)
+		held[n] = slices.Compact(episodes)
 	}
 	return flow.Library{Episodes: held}, nil
 }

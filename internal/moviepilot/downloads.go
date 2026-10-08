@@ -16,12 +16,13 @@ const statePaused = "paused"
 var mediaKinds = map[string]flow.Kind{typeMovie: flow.Movie, typeTV: flow.TV}
 
 type downloadTask struct {
-	Hash     string  `json:"hash"`
-	Size     float64 `json:"size"`     // bytes of the files being downloaded
-	Progress float64 `json:"progress"` // percent
-	State    string  `json:"state"`    // downloading, paused
-	Speed    string  `json:"dlspeed"`  // e.g. "3.1MB"
-	LeftTime string  `json:"left_time"`
+	Hash       string  `json:"hash"`
+	Downloader string  `json:"downloader"`
+	Size       float64 `json:"size"`     // bytes of the files being downloaded
+	Progress   float64 `json:"progress"` // percent
+	State      string  `json:"state"`    // downloading, paused
+	Speed      string  `json:"dlspeed"`  // e.g. "3.1MB"
+	LeftTime   string  `json:"left_time"`
 	// Media is filled from MoviePilot's download history; tasks added to the
 	// downloader by hand have none.
 	Media *struct {
@@ -60,7 +61,8 @@ func (c *Client) Downloads(ctx context.Context) ([]flow.Download, error) {
 			continue
 		}
 		out = append(out, flow.Download{
-			ID: t.Hash, Source: t.Media.MediaSource, MediaID: t.Media.MediaID, Kind: mediaKinds[t.Media.Type],
+			DownloadRef: flow.DownloadRef{ID: t.Hash, Downloader: t.Downloader},
+			Source:      t.Media.MediaSource, MediaID: t.Media.MediaID, Kind: mediaKinds[t.Media.Type],
 			Title: t.Media.Title, Image: t.Media.Image,
 			Season: parseSeason(string(t.Media.Season)), Episodes: parseEpisodes(string(t.Media.Episode)),
 			Size: t.Size, Progress: t.Progress, Paused: t.State == statePaused, Speed: t.Speed, Left: t.LeftTime,
@@ -69,9 +71,10 @@ func (c *Client) Downloads(ctx context.Context) ([]flow.Download, error) {
 	return out, nil
 }
 
-// DeleteDownload removes a download from the downloader; MoviePilot always
-// deletes its files too, and answers success false when it could not.
-func (c *Client) DeleteDownload(ctx context.Context, id string) error {
+// DeleteDownload removes a download from its own instance, with its files.
+// Omitting name would address the default downloader, not the task's owner.
+func (c *Client) DeleteDownload(ctx context.Context, download flow.DownloadRef) error {
 	var none json.RawMessage
-	return c.do(ctx, call{method: http.MethodDelete, path: "/api/v1/download/" + url.PathEscape(id)}, &none)
+	q := url.Values{"name": {download.Downloader}}
+	return c.do(ctx, call{method: http.MethodDelete, path: "/api/v1/download/" + url.PathEscape(download.ID), query: q}, &none)
 }

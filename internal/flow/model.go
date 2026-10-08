@@ -100,9 +100,16 @@ type Library struct {
 	Episodes map[int][]int // season number → episodes in the library
 }
 
+// DownloadRef identifies a torrent within the downloader that holds it.
+// Downloader is an instance name for backend calls, never user-facing copy.
+type DownloadRef struct {
+	ID         string
+	Downloader string
+}
+
 // Download is an unfinished task in the backend's downloader.
 type Download struct {
-	ID       string // stable while the task exists
+	DownloadRef
 	Source   string
 	MediaID  string
 	Kind     Kind // zero when the backend did not identify its media type
@@ -298,7 +305,7 @@ type Backend interface {
 	// download's id ("" when the backend did not say).
 	Download(ctx context.Context, torrent Torrent) (string, error)
 	// DeleteDownload removes a download together with its files.
-	DeleteDownload(ctx context.Context, id string) error
+	DeleteDownload(ctx context.Context, download DownloadRef) error
 }
 
 // Calendar lists the shows airing this season, each with its weekday.

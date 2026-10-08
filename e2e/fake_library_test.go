@@ -7,6 +7,7 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
+	"slices"
 	"strconv"
 )
 
@@ -43,9 +44,9 @@ func (f *fakeMoviePilot) shown() []transfer {
 	f.mu.Lock()
 	defer f.mu.Unlock()
 	if !f.lagging {
-		return append([]transfer(nil), f.transfers...)
+		return slices.DeleteFunc(slices.Clone(f.transfers), func(t transfer) bool { return !t.Status })
 	}
-	return append([]transfer(nil), f.transfers[len(f.transfers)-f.scanned:]...)
+	return slices.DeleteFunc(slices.Clone(f.transfers[len(f.transfers)-f.scanned:]), func(t transfer) bool { return !t.Status })
 }
 
 func (f *fakeMoviePilot) serveEpisodes(w http.ResponseWriter, r *http.Request) {

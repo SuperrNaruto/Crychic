@@ -29,59 +29,9 @@
    <hr/>
    <p><b>想订哪一季呀？</b></p>
    <table bordered compact>
-   <tr><th>季</th><th>集数</th><th>入库</th></tr>
-   <tr><td><b>特别篇</b></td><td>3 集</td><td></td></tr>
-   <tr><td><b>第 1 季</b></td><td>13 集</td><td>已有 12 集</td></tr>
-   </table>
-   [特别篇 | 1:s:0] [第 1 季 | 1:s:1]
-   [多选季… | 1:a:0]
-   [相似推荐 | 1:r:0]
-   [返回 | 1:bk:0] [取消 | 1:x:0]
-<< answerCallbackQuery
->> user 1001 taps 1:a:0 on message 1
-<< editMessageText chat=1001 message=1 reuses=url-f1d1c3e9
-   <img src="tg://photo?id=p0"/>
-   <h3>📺 <a href="https://www.themoviedb.org/tv/224207">迷途之子!!!!!</a></h3>
-   <footer><i>BanG Dream! It&#39;s MyGO!!!!!</i> · 2023 · 电视剧 · ⭐ 8.0 · 动画 / 剧情 · 共 1 季 13 集 · 主演：羊宫妃那、立石凛、青木阳菜</footer>
-   <blockquote expandable>“你能，和我组一辈子乐队吗？”……高一的春末，羽丘女子学园的所有人都加入了乐队，晚入学的爱音为了尽快融入班级，急急忙忙地寻找着乐队成员。这时她得知，「羽丘的不可思议女孩」灯还没有加入乐队，于是爱音不由自主地向她打起了招呼，但是……这是遍体鳞伤又狼狈不堪的，我们的＜音乐呐喊＞。迷失方向也无所谓，在迷茫中前进吧！</blockquote>
-   <hr/>
-   <p><b>想订哪几季呀？可以多选，每季都从第 1 集开始～</b></p>
-   <ul>
-   <li><input type="checkbox"><b>特别篇</b> · 3 集</li>
-   <li><input type="checkbox"><b>第 1 季</b> · 13 集 · 已有 12 集</li>
-   </ul>
-   [特别篇 | 1:t:0] [第 1 季 | 1:t:1]
-   [订阅所选 0 季 | 1:y:0]
-   [返回 | 1:bk:0] [取消 | 1:x:0]
-<< answerCallbackQuery
->> user 1001 taps 1:t:1 on message 1
-<< editMessageText chat=1001 message=1 reuses=url-f1d1c3e9
-   <img src="tg://photo?id=p0"/>
-   <h3>📺 <a href="https://www.themoviedb.org/tv/224207">迷途之子!!!!!</a></h3>
-   <footer><i>BanG Dream! It&#39;s MyGO!!!!!</i> · 2023 · 电视剧 · ⭐ 8.0 · 动画 / 剧情 · 共 1 季 13 集 · 主演：羊宫妃那、立石凛、青木阳菜</footer>
-   <blockquote expandable>“你能，和我组一辈子乐队吗？”……高一的春末，羽丘女子学园的所有人都加入了乐队，晚入学的爱音为了尽快融入班级，急急忙忙地寻找着乐队成员。这时她得知，「羽丘的不可思议女孩」灯还没有加入乐队，于是爱音不由自主地向她打起了招呼，但是……这是遍体鳞伤又狼狈不堪的，我们的＜音乐呐喊＞。迷失方向也无所谓，在迷茫中前进吧！</blockquote>
-   <hr/>
-   <p><b>想订哪几季呀？可以多选，每季都从第 1 集开始～</b></p>
-   <ul>
-   <li><input type="checkbox"><b>特别篇</b> · 3 集</li>
-   <li><input type="checkbox" checked><b>第 1 季</b> · 13 集 · 已有 12 集</li>
-   </ul>
-   [特别篇 | 1:t:0] [✓ 第 1 季 | 1:t:1]
-   [订阅所选 1 季 | 1:y:0]
-   [返回 | 1:bk:0] [取消 | 1:x:0]
-<< answerCallbackQuery
->> user 1001 taps 1:bk:0 on message 1
-<< editMessageText chat=1001 message=1 reuses=url-f1d1c3e9
-   <img src="tg://photo?id=p0"/>
-   <h3>📺 <a href="https://www.themoviedb.org/tv/224207">迷途之子!!!!!</a></h3>
-   <footer><i>BanG Dream! It&#39;s MyGO!!!!!</i> · 2023 · 电视剧 · ⭐ 8.0 · 动画 / 剧情 · 共 1 季 13 集 · 主演：羊宫妃那、立石凛、青木阳菜</footer>
-   <blockquote expandable>“你能，和我组一辈子乐队吗？”……高一的春末，羽丘女子学园的所有人都加入了乐队，晚入学的爱音为了尽快融入班级，急急忙忙地寻找着乐队成员。这时她得知，「羽丘的不可思议女孩」灯还没有加入乐队，于是爱音不由自主地向她打起了招呼，但是……这是遍体鳞伤又狼狈不堪的，我们的＜音乐呐喊＞。迷失方向也无所谓，在迷茫中前进吧！</blockquote>
-   <hr/>
-   <p><b>想订哪一季呀？</b></p>
-   <table bordered compact>
-   <tr><th>季</th><th>集数</th><th>入库</th></tr>
-   <tr><td><b>特别篇</b></td><td>3 集</td><td></td></tr>
-   <tr><td><b>第 1 季</b></td><td>13 集</td><td>已有 12 集</td></tr>
+   <tr><th>季</th><th>集数</th></tr>
+   <tr><td><b>特别篇</b></td><td>3 集</td></tr>
+   <tr><td><b>第 1 季</b></td><td>13 集</td></tr>
    </table>
    [特别篇 | 1:s:0] [第 1 季 | 1:s:1]
    [多选季… | 1:a:0]
@@ -96,7 +46,7 @@
    <footer><i>BanG Dream! It&#39;s MyGO!!!!!</i> · 2023 · 电视剧 · ⭐ 8.0 · 动画 / 剧情 · 共 1 季 13 集 · 主演：羊宫妃那、立石凛、青木阳菜</footer>
    <blockquote expandable>“你能，和我组一辈子乐队吗？”……高一的春末，羽丘女子学园的所有人都加入了乐队，晚入学的爱音为了尽快融入班级，急急忙忙地寻找着乐队成员。这时她得知，「羽丘的不可思议女孩」灯还没有加入乐队，于是爱音不由自主地向她打起了招呼，但是……这是遍体鳞伤又狼狈不堪的，我们的＜音乐呐喊＞。迷失方向也无所谓，在迷茫中前进吧！</blockquote>
    <hr/>
-   <p><b>要订阅《迷途之子!!!!!》第 1 季（共 13 集，媒体库已有 E01–E12）吗？</b></p>
+   <p><b>要订阅《迷途之子!!!!!》第 1 季（共 13 集）吗？</b></p>
    [从第 1 集开始 | 1:ok:0]
    [指定起始集… | 1:e:0]
    [搜索资源 | 1:ts:0] [相似推荐 | 1:r:0]
@@ -114,8 +64,76 @@
    <p>✅ 帮你订好《迷途之子!!!!!》第 1 季啦，入库了我第一时间叫你！ ヾ(≧▽≦*)o</p>
    [返回 | 1:bk:0] [首页 | 1:o:0] [关闭 | 1:c:0]
 << answerCallbackQuery
->> MoviePilot transfers 迷途之子!!!!! (themoviedb/224207) S01E13
+>> MoviePilot records failed E01 as id=1
+>> MoviePilot transfers 迷途之子!!!!! (themoviedb/224207) S01E02
+>> MoviePilot transfers 迷途之子!!!!! (themoviedb/224207) S01E03
+>> MoviePilot transfers 迷途之子!!!!! (themoviedb/224207) S01E04
+>> MoviePilot transfers 迷途之子!!!!! (themoviedb/224207) S01E05
+>> MoviePilot transfers 迷途之子!!!!! (themoviedb/224207) S01E06
+>> MoviePilot transfers 迷途之子!!!!! (themoviedb/224207) S01E07
+>> MoviePilot transfers 迷途之子!!!!! (themoviedb/224207) S01E08
+>> MoviePilot transfers 迷途之子!!!!! (themoviedb/224207) S01E09
+>> MoviePilot transfers 迷途之子!!!!! (themoviedb/224207) S01E10
+>> MoviePilot transfers 迷途之子!!!!! (themoviedb/224207) S01E11
+>> MoviePilot transfers 迷途之子!!!!! (themoviedb/224207) S01E12
+>> MoviePilot transfers 名侦探柯南 (themoviedb/30983) S01E01
+>> MoviePilot transfers 名侦探柯南 (themoviedb/30983) S01E02
+>> MoviePilot transfers 名侦探柯南 (themoviedb/30983) S01E03
+>> MoviePilot transfers 名侦探柯南 (themoviedb/30983) S01E04
+>> MoviePilot transfers 名侦探柯南 (themoviedb/30983) S01E05
+>> MoviePilot transfers 名侦探柯南 (themoviedb/30983) S01E06
+>> MoviePilot transfers 名侦探柯南 (themoviedb/30983) S01E07
+>> MoviePilot transfers 名侦探柯南 (themoviedb/30983) S01E08
+>> MoviePilot transfers 名侦探柯南 (themoviedb/30983) S01E09
+>> MoviePilot transfers 名侦探柯南 (themoviedb/30983) S01E10
+>> MoviePilot transfers 名侦探柯南 (themoviedb/30983) S01E11
+>> MoviePilot transfers 名侦探柯南 (themoviedb/30983) S01E12
+>> MoviePilot transfers 名侦探柯南 (themoviedb/30983) S01E13
+>> MoviePilot transfers 名侦探柯南 (themoviedb/30983) S01E14
+>> MoviePilot transfers 名侦探柯南 (themoviedb/30983) S01E15
+>> MoviePilot transfers 名侦探柯南 (themoviedb/30983) S01E16
+>> MoviePilot transfers 名侦探柯南 (themoviedb/30983) S01E17
+>> MoviePilot transfers 名侦探柯南 (themoviedb/30983) S01E18
+>> MoviePilot transfers 名侦探柯南 (themoviedb/30983) S01E19
+>> MoviePilot transfers 名侦探柯南 (themoviedb/30983) S01E20
+>> MoviePilot transfers 名侦探柯南 (themoviedb/30983) S01E21
+>> MoviePilot transfers 名侦探柯南 (themoviedb/30983) S01E22
+>> MoviePilot transfers 名侦探柯南 (themoviedb/30983) S01E23
+>> MoviePilot transfers 名侦探柯南 (themoviedb/30983) S01E24
+>> MoviePilot transfers 名侦探柯南 (themoviedb/30983) S01E25
+>> MoviePilot transfers 名侦探柯南 (themoviedb/30983) S01E26
+>> MoviePilot transfers 名侦探柯南 (themoviedb/30983) S01E27
+>> MoviePilot transfers 名侦探柯南 (themoviedb/30983) S01E28
+>> MoviePilot transfers 名侦探柯南 (themoviedb/30983) S01E29
+>> MoviePilot transfers 名侦探柯南 (themoviedb/30983) S01E30
+>> MoviePilot transfers 名侦探柯南 (themoviedb/30983) S01E31
+>> MoviePilot transfers 名侦探柯南 (themoviedb/30983) S01E32
+>> MoviePilot transfers 名侦探柯南 (themoviedb/30983) S01E33
+>> MoviePilot transfers 名侦探柯南 (themoviedb/30983) S01E34
+>> MoviePilot transfers 名侦探柯南 (themoviedb/30983) S01E35
+>> MoviePilot transfers 名侦探柯南 (themoviedb/30983) S01E36
+>> MoviePilot transfers 名侦探柯南 (themoviedb/30983) S01E37
+>> MoviePilot transfers 名侦探柯南 (themoviedb/30983) S01E38
+>> MoviePilot transfers 名侦探柯南 (themoviedb/30983) S01E39
+>> MoviePilot transfers 名侦探柯南 (themoviedb/30983) S01E40
 << sendRichMessage chat=1001 message=2 reuses=url-f1d1c3e9
+   <img src="tg://photo?id=p0"/>
+   <h3>📥 入库啦</h3>
+   <p>你想看的<b>《迷途之子!!!!!》第 1 季</b> E02–E12 到家啦！</p>
+   <tg-button-row align="left">
+   <tg-button type="url" style="success" url="https://emby.example.com/web/index.html#!/item?id=224207">在 Emby 中观看</tg-button>
+   </tg-button-row>
+>> Crychic restarts
+>> MoviePilot retries id=1 successfully in the same second, on page two
+<< sendRichMessage chat=1001 message=3
+   <img src="https://image.tmdb.org/t/p/w500/dDknWHLYaQB76QSViNdzXOC5v64.jpg"/>
+   <h3>📥 入库啦</h3>
+   <p>你想看的<b>《迷途之子!!!!!》第 1 季</b> E01 到家啦！</p>
+   <tg-button-row align="left">
+   <tg-button type="url" style="success" url="https://emby.example.com/web/index.html#!/item?id=224207">在 Emby 中观看</tg-button>
+   </tg-button-row>
+>> MoviePilot transfers 迷途之子!!!!! (themoviedb/224207) S01E13
+<< sendRichMessage chat=1001 message=4 reuses=url-f1d1c3e9
    <img src="tg://photo?id=p0"/>
    <h3>📥 入库啦</h3>
    <p>你想看的<b>《迷途之子!!!!!》第 1 季</b> E13 到家啦！<br>

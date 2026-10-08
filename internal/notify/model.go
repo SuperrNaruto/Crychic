@@ -13,6 +13,7 @@ import (
 // Transfer is one file MoviePilot moved into the library.
 type Transfer struct {
 	ID       int
+	Date     string // MoviePilot's completion time, YYYY-MM-DD HH:MM:SS in its local time
 	Source   string
 	MediaID  string
 	Title    string
@@ -37,10 +38,12 @@ type Quality struct {
 
 // Feed is where arrivals are read from.
 type Feed interface {
-	// LatestTransfer is the newest transfer id, 0 if there are none.
-	LatestTransfer(ctx context.Context) (int, error)
-	// TransfersAfter lists successful transfers newer than id, oldest first.
-	TransfersAfter(ctx context.Context, id int) ([]Transfer, error)
+	// LatestTransfer includes every successful id in the newest completion
+	// second; its date is empty when there are no successful transfers.
+	LatestTransfer(ctx context.Context) (TransferCursor, error)
+	// TransfersSince includes date's whole second, oldest first. An empty
+	// date reads the bounded catch-up window when migrating an old state.
+	TransfersSince(ctx context.Context, date string) ([]Transfer, error)
 	// Subscription reads the current row, whose target may differ from the
 	// watched one after id reuse; an empty subscription when it is gone.
 	Subscription(ctx context.Context, id int) (flow.Subscription, error)

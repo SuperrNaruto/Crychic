@@ -24,8 +24,13 @@ const (
 
 // taskRef identifies a listed task across refreshes.
 type taskRef struct {
-	download bool
-	id       string
+	download   bool
+	id         string
+	downloader string
+}
+
+func (ref taskRef) downloadRef() DownloadRef {
+	return DownloadRef{ID: ref.id, Downloader: ref.downloader}
 }
 
 // following is the live view of one task in a session.
@@ -56,7 +61,7 @@ func (e *Engine) listTasks(ctx context.Context, sess session) Reply {
 	}
 	sess.tasks, sess.follow = nil, following{}
 	for _, d := range downloads {
-		sess.tasks = append(sess.tasks, taskRef{download: true, id: d.ID})
+		sess.tasks = append(sess.tasks, taskRef{download: true, id: d.ID, downloader: d.Downloader})
 	}
 	for _, j := range jobs {
 		sess.tasks = append(sess.tasks, taskRef{id: j.ID})
@@ -145,10 +150,8 @@ func (e *Engine) taskView(ctx context.Context, ref taskRef) (view Reply, gone bo
 		if err != nil {
 			return Reply{}, false, err
 		}
-		for _, d := range downloads {
-			if d.ID == ref.id {
-				return downloadView(d), false, nil
-			}
+		if d, found := findDownload(downloads, ref.downloadRef()); found {
+			return downloadView(d), false, nil
 		}
 		return Reply{Text: Sentence(msgDownloadGone)}, true, nil
 	}

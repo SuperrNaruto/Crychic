@@ -38,18 +38,18 @@ func (e *Engine) askDelete(ctx context.Context, sess session, index int) Reply {
 	if !sess.isDownload(index) {
 		return Reply{Notice: msgInvalidChoice}
 	}
-	sess.follow.on, sess.doomed = false, ""
+	sess.follow.on, sess.doomed = false, nil
 	downloads, err := e.backend.Downloads(ctx)
 	if err != nil {
 		e.store.put(sess)
 		return withTaskButtons(titled(msgTasksTitle, e.failure("downloads", err)), sess)
 	}
-	d, found := findDownload(downloads, sess.tasks[index].id)
+	d, found := findDownload(downloads, sess.tasks[index].downloadRef())
 	if !found {
 		e.store.put(sess)
 		return withTaskButtons(titled(msgTasksTitle, Reply{Text: Sentence(msgDownloadGone)}), sess)
 	}
-	sess.doomed = d.ID
+	sess.doomed = &d.DownloadRef
 	e.store.put(sess)
 	view := downloadView(d)
 	view.Text = append(view.Text, Divider(), Line(Strong(msgDeleteAsk)), Line(Plain(msgDeleteFiles)))
@@ -79,17 +79,17 @@ func (e *Engine) subscribed(ctx context.Context, d Download) bool {
 // at a time and the download to confirm is cleared before the write, so a
 // second tap only flashes a notice; the session stays for 返回 to the list.
 func (e *Engine) deleteDownload(ctx context.Context, sess session, index int) Reply {
-	if index < 0 || index >= len(sess.tasks) || sess.doomed == "" || sess.doomed != sess.tasks[index].id {
+	if !sess.isDownload(index) || sess.doomed == nil || *sess.doomed != sess.tasks[index].downloadRef() {
 		return Reply{Notice: msgInvalidChoice}
 	}
-	id := sess.doomed
-	sess.doomed = ""
+	ref := *sess.doomed
+	sess.doomed = nil
 	e.store.put(sess)
-	if err := e.backend.DeleteDownload(ctx, id); err != nil {
-		return withTaskButtons(titled(msgDeleteTitle, e.deleteFailure(id, err)), sess)
+	if err := e.backend.DeleteDownload(ctx, ref); err != nil {
+		return withTaskButtons(titled(msgDeleteTitle, e.deleteFailure(ref.ID, err)), sess)
 	}
-	if err := e.watcher.ForgetDownload(ctx, id); err != nil {
-		e.log.Error("cannot forget deleted download", "download", id, "err", err)
+	if err := e.watcher.ForgetDownload(ctx, ref.ID); err != nil {
+		e.log.Error("cannot forget deleted download", "download", ref.ID, "err", err)
 	}
 	done := Lines(Heading(Plain("✅ 已删除")), Line(Plain("已经删掉啦，下载的文件也一起清掉了～")))
 	return withTaskButtons(Reply{Text: done}, sess)
@@ -110,9 +110,9 @@ func (sess session) isDownload(index int) bool {
 	return index >= 0 && index < len(sess.tasks) && sess.tasks[index].download
 }
 
-func findDownload(downloads []Download, id string) (Download, bool) {
+func findDownload(downloads []Download, ref DownloadRef) (Download, bool) {
 	for _, d := range downloads {
-		if d.ID == id {
+		if d.DownloadRef == ref {
 			return d, true
 		}
 	}

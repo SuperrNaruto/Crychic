@@ -1,0 +1,57 @@
+>> user 1001 in chat 1001: /tasks
+<< sendRichMessage chat=1001 message=1
+   <h3>📋 正在忙的任务</h3>
+   <h4>⬇️ 下载</h4>
+   <ol start="1">
+   <li value="1"><b>《沙丘》</b><br>
+   <i>14.6 GiB · 进度 12%</i></li>
+   <li value="2"><b>《迷途之子!!!!!》第 1 季</b><br>
+   <i>E10–E12 · 17.5 GiB · 进度 0%</i></li>
+   </ol>
+   [1 | 1:k:0] [2 | 1:k:1]
+   [首页 | 1:o:0] [关闭 | 1:c:0]
+>> user 1001 taps 1:k:1 on message 1
+<< editMessageText chat=1001 message=1
+   <img src="https://image.tmdb.org/t/p/w500/dDknWHLYaQB76QSViNdzXOC5v64.jpg"/>
+   <h3>⬇️ 《迷途之子!!!!!》第 1 季 E10–E12</h3>
+   <table bordered compact>
+   <tr><th>大小</th><th>进度</th></tr>
+   <tr><td>17.5 GiB</td><td>0%</td></tr>
+   </table>
+   <footer>正在帮你盯着进度…</footer>
+   [停止刷新 | 1:u:1] [删除任务 | 1:kd:1]
+   [返回 | 1:l:0] [首页 | 1:o:0] [关闭 | 1:c:0]
+<< answerCallbackQuery
+>> user 1001 taps 1:kd:1 on message 1
+-> MoviePilot GET /api/v1/subscribe/
+<< editMessageText chat=1001 message=1 reuses=url-f1d1c3e9
+   <img src="tg://photo?id=p0"/>
+   <h3>⬇️ 《迷途之子!!!!!》第 1 季 E10–E12</h3>
+   <table bordered compact>
+   <tr><th>大小</th><th>进度</th></tr>
+   <tr><td>17.5 GiB</td><td>0%</td></tr>
+   </table>
+   <hr/>
+   <p><b>⚠️ 要删除这个下载任务吗？</b><br>
+   会把已经下载的文件一起删掉，删了就找不回来啦。</p>
+   [确认删除 | 1:ky:1]
+   [返回 | 1:l:0]
+<< answerCallbackQuery
+>> user 1001 taps 1:ky:1 on message 1
+-> MoviePilot DELETE /api/v1/download/5c1d0a2e8f3b4c6d7e8f9a0b1c2d3e4f5a6b7c8d?name=qBittorrent-secondary
+<< editMessageText chat=1001 message=1
+   <h3>✅ 已删除</h3>
+   <p>已经删掉啦，下载的文件也一起清掉了～</p>
+   [返回 | 1:l:0] [首页 | 1:o:0] [关闭 | 1:c:0]
+<< answerCallbackQuery
+>> user 1001 taps 1:l:0 on message 1
+<< editMessageText chat=1001 message=1
+   <h3>📋 正在忙的任务</h3>
+   <h4>⬇️ 下载</h4>
+   <ol start="1">
+   <li value="1"><b>《沙丘》</b><br>
+   <i>14.6 GiB · 进度 12%</i></li>
+   </ol>
+   [1 | 1:k:0]
+   [首页 | 1:o:0] [关闭 | 1:c:0]
+<< answerCallbackQuery
