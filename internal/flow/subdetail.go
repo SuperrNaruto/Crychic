@@ -54,21 +54,23 @@ func (e *Engine) subDetail(ctx context.Context, sess session, index int) Reply {
 	i := slices.IndexFunc(subs, func(s Subscription) bool { return s.ID == sess.subs[index].ID })
 	if i < 0 {
 		e.store.put(sess)
-		return subDetailGone(sess)
+		return subDetailGone(sess, sess.subs[index].Kind)
 	}
 	detail := e.readSubDetail(ctx, subs[i])
 	view := detail.view()
 	refresh := Button{Label: "刷新", Data: data(sess.id, actionRefreshSubDetail, index)}
-	view.menu = [][]Button{append([]Button{refresh}, pauseButton(sess, subs[i], index)...)}
+	view.menu = [][]Button{append([]Button{refresh}, pauseButton(sess, subs[i])...)}
 	view.footer = browseRow(sess.id)
 	return e.listPages(sess, view)
 }
 
-func subDetailGone(sess session) Reply {
+// subDetailGone says the subscription ended and offers the history of its
+// kind, which a list opened from the calendar never chose.
+func subDetailGone(sess session, kind Kind) Reply {
 	return Reply{
 		Text: Lines(Heading(Plain(msgSubDetailTitle)), Line(Plain(msgSubDetailGone))),
 		Buttons: [][]Button{
-			{{Label: "订阅历史", Data: data(sess.id, actionHistory, int(sess.kind))}},
+			{{Label: "订阅历史", Data: data(sess.id, actionHistory, int(kind))}},
 			append([]Button{backTo(sess.id, actionSubs, 0)}, browseRow(sess.id)...),
 		},
 	}
