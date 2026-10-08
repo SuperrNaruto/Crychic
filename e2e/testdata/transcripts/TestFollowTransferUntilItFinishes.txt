@@ -15,7 +15,7 @@
    [首页 | 1:o:0] [关闭 | 1:c:0]
 >> user 1001 taps 1:k:1 on message 1
 << editMessageText chat=1001 message=1
-   <img src="https://image.tmdb.org/t/p/w500/xixekXvcCSZS1jXhFrYUzpCrLL6.jpg"/>
+   <img src="url-caf3370aa7811b8d87c23685c80c5562086c41f07bc889d8304e5f09cb366cfd"/>
    <h3>📦 《颂乐人偶》第 1 季</h3>
    <p>已整理 0/2 个文件</p>
    <table bordered compact>
@@ -28,8 +28,8 @@
    [返回 | 1:l:0] [首页 | 1:o:0] [关闭 | 1:c:0]
 << answerCallbackQuery
 >> MoviePilot now answers GET /api/v1/transfer/queue with queue_mujica_later.json
-<< editMessageText chat=1001 message=1 reuses=url-caf3370a
-   <img src="tg://photo?id=p0"/>
+<< editMessageText chat=1001 message=1
+   <img src="url-caf3370aa7811b8d87c23685c80c5562086c41f07bc889d8304e5f09cb366cfd"/>
    <h3>📦 《颂乐人偶》第 1 季</h3>
    <p>已整理 1/2 个文件</p>
    <table bordered compact>
@@ -41,8 +41,8 @@
    [停止刷新 | 1:u:1]
    [返回 | 1:l:0] [首页 | 1:o:0] [关闭 | 1:c:0]
 >> MoviePilot now answers GET /api/v1/transfer/queue with queue_none.json
-<< editMessageText chat=1001 message=1 reuses=url-caf3370a
-   <img src="tg://photo?id=p0"/>
+<< editMessageText chat=1001 message=1
+   <img src="url-caf3370aa7811b8d87c23685c80c5562086c41f07bc889d8304e5f09cb366cfd"/>
    <h3>📦 《颂乐人偶》第 1 季</h3>
    <p>整理任务结束啦，入库情况看入库通知，或者去 MoviePilot 的整理历史瞧瞧～</p>
    [返回 | 1:l:0] [首页 | 1:o:0] [关闭 | 1:c:0]

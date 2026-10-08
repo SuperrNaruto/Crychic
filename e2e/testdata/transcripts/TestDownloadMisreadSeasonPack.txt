@@ -2,9 +2,9 @@
 -> MoviePilot GET /api/v1/media/search?count=10&title=迷途之子&type=media
 << sendRichMessage chat=1001 message=1
    <tg-slideshow>
-   <img src="https://image.tmdb.org/t/p/w500/dDknWHLYaQB76QSViNdzXOC5v64.jpg"/>
-   <img src="https://image.tmdb.org/t/p/w500/bMW0kwyK44LvDbQ3s0b3GCVOtLs.jpg"/>
-   <img src="https://image.tmdb.org/t/p/w500/bleKkUg0l8X4AAxqxgkmYlLO7bN.jpg"/>
+   <img src="url-f1d1c3e9142d5b6cb0aec97f314112cb1cfcf5cab28cbc83476b0d4bf25e1175"/>
+   <img src="url-44a615cb1b3392e18000efaa5466a08a1de0492229bb298c2282bef3ea8229c5"/>
+   <img src="url-0a63e69bacb326890000e11c26f5f27bb907de22c0b7522f5de59851ace7f2c6"/>
    </tg-slideshow>
    <h3>🔍 帮你找到这些「迷途之子」啦</h3>
    <ol start="1">
@@ -21,8 +21,8 @@
 >> user 1001 taps 1:m:0 on message 1
 -> MoviePilot GET /api/v1/media/224207?media_source=themoviedb&type_name=电视剧
 -> MoviePilot GET /api/v1/media/seasons?media_id=224207&media_source=themoviedb
-<< editMessageText chat=1001 message=1 reuses=url-f1d1c3e9
-   <img src="tg://photo?id=p0"/>
+<< editMessageText chat=1001 message=1
+   <img src="url-f1d1c3e9142d5b6cb0aec97f314112cb1cfcf5cab28cbc83476b0d4bf25e1175"/>
    <h3>📺 <a href="https://www.themoviedb.org/tv/224207">迷途之子!!!!!</a></h3>
    <footer><i>BanG Dream! It&#39;s MyGO!!!!!</i> · 2023 · 电视剧 · ⭐ 8.0 · 动画 / 剧情 · 共 1 季 13 集 · 主演：羊宫妃那、立石凛、青木阳菜</footer>
    <blockquote expandable>“你能，和我组一辈子乐队吗？”……高一的春末，羽丘女子学园的所有人都加入了乐队，晚入学的爱音为了尽快融入班级，急急忙忙地寻找着乐队成员。这时她得知，「羽丘的不可思议女孩」灯还没有加入乐队，于是爱音不由自主地向她打起了招呼，但是……这是遍体鳞伤又狼狈不堪的，我们的＜音乐呐喊＞。迷失方向也无所谓，在迷茫中前进吧！</blockquote>
@@ -40,8 +40,8 @@
 << answerCallbackQuery
 >> user 1001 taps 1:s:1 on message 1
 -> MoviePilot GET /api/v1/subscribe/media/224207?media_source=themoviedb&mtype=电视剧&season=1&title=迷途之子!!!!!&year=2023
-<< editMessageText chat=1001 message=1 reuses=url-f1d1c3e9
-   <img src="tg://photo?id=p0"/>
+<< editMessageText chat=1001 message=1
+   <img src="url-f1d1c3e9142d5b6cb0aec97f314112cb1cfcf5cab28cbc83476b0d4bf25e1175"/>
    <h3>📺 <a href="https://www.themoviedb.org/tv/224207">迷途之子!!!!!</a></h3>
    <footer><i>BanG Dream! It&#39;s MyGO!!!!!</i> · 2023 · 电视剧 · ⭐ 8.0 · 动画 / 剧情 · 共 1 季 13 集 · 主演：羊宫妃那、立石凛、青木阳菜</footer>
    <blockquote expandable>“你能，和我组一辈子乐队吗？”……高一的春末，羽丘女子学园的所有人都加入了乐队，晚入学的爱音为了尽快融入班级，急急忙忙地寻找着乐队成员。这时她得知，「羽丘的不可思议女孩」灯还没有加入乐队，于是爱音不由自主地向她打起了招呼，但是……这是遍体鳞伤又狼狈不堪的，我们的＜音乐呐喊＞。迷失方向也无所谓，在迷茫中前进吧！</blockquote>
@@ -54,8 +54,8 @@
    [返回 | 1:bk:0] [取消 | 1:x:0]
 << answerCallbackQuery
 >> user 1001 taps 1:ts:0 on message 1
-<< editMessageText chat=1001 message=1 reuses=url-f1d1c3e9
-   <img src="tg://photo?id=p0"/>
+<< editMessageText chat=1001 message=1
+   <img src="url-f1d1c3e9142d5b6cb0aec97f314112cb1cfcf5cab28cbc83476b0d4bf25e1175"/>
    <h3>📺 <a href="https://www.themoviedb.org/tv/224207">迷途之子!!!!!</a></h3>
    <footer><i>BanG Dream! It&#39;s MyGO!!!!!</i> · 2023 · 电视剧 · ⭐ 8.0 · 动画 / 剧情 · 共 1 季 13 集 · 主演：羊宫妃那、立石凛、青木阳菜</footer>
    <blockquote expandable>“你能，和我组一辈子乐队吗？”……高一的春末，羽丘女子学园的所有人都加入了乐队，晚入学的爱音为了尽快融入班级，急急忙忙地寻找着乐队成员。这时她得知，「羽丘的不可思议女孩」灯还没有加入乐队，于是爱音不由自主地向她打起了招呼，但是……这是遍体鳞伤又狼狈不堪的，我们的＜音乐呐喊＞。迷失方向也无所谓，在迷茫中前进吧！</blockquote>
@@ -68,9 +68,9 @@
    <h3>🔍 《迷途之子!!!!!》第 1 季的资源</h3>
    <ol start="1">
    <li value="1"><b>BanG.Dream.It&#39;s.MyGO.S01.2023.1080p.BluRay.x265.FLAC-VCB</b><br>
-   <i>站点甲 · 21.4 GiB · 做种 40 · 免费 · E09</i></li>
+   <i>站点甲 · 21.4 GiB · 做种 40 · 免费 · 集数识别不确定</i></li>
    <li value="2"><b>BanG.Dream.It&#39;s.MyGO.S01.2023.1080p.B-Global.WEB-DL.FLAC.2.0+5.1.DDP5.1.H.264-GRP</b><br>
-   <i>站点甲 · 15.0 GiB · 做种 12 · 免费 · E01</i></li>
+   <i>站点甲 · 15.0 GiB · 做种 12 · 免费 · 集数识别不确定</i></li>
    </ol>
    <footer>共 2 个，按 MoviePilot 的优先级排好啦，点编号看详情～</footer>
    [1 | 1:tp:0] [2 | 1:tp:1]
@@ -78,8 +78,8 @@
    [多选… | 1:tm:0]
    [返回 | 1:bk:0] [取消 | 1:x:0]
 >> user 1001 taps 1:tp:0 on message 1
-<< editMessageText chat=1001 message=1 reuses=url-f1d1c3e9
-   <img src="tg://photo?id=p0"/>
+<< editMessageText chat=1001 message=1
+   <img src="url-f1d1c3e9142d5b6cb0aec97f314112cb1cfcf5cab28cbc83476b0d4bf25e1175"/>
    <h3>📺 <a href="https://www.themoviedb.org/tv/224207">迷途之子!!!!!</a></h3>
    <footer><i>BanG Dream! It&#39;s MyGO!!!!!</i> · 2023 · 电视剧 · ⭐ 8.0 · 动画 / 剧情 · 共 1 季 13 集 · 主演：羊宫妃那、立石凛、青木阳菜</footer>
    <blockquote expandable>“你能，和我组一辈子乐队吗？”……高一的春末，羽丘女子学园的所有人都加入了乐队，晚入学的爱音为了尽快融入班级，急急忙忙地寻找着乐队成员。这时她得知，「羽丘的不可思议女孩」灯还没有加入乐队，于是爱音不由自主地向她打起了招呼，但是……这是遍体鳞伤又狼狈不堪的，我们的＜音乐呐喊＞。迷失方向也无所谓，在迷茫中前进吧！</blockquote>
@@ -94,7 +94,7 @@
    <tr><th>分辨率</th><th>版本</th><th>编码</th><th>制作组</th></tr>
    <tr><td>1080p</td><td>BluRay</td><td>x265</td><td>VCB</td></tr>
    </table>
-   <p>包含 E09<br>
+   <p>集数识别不确定<br>
    <b>要下载这个资源吗？</b></p>
    [确认下载 | 1:td:0]
    [返回 | 1:bk:0] [取消 | 1:x:0]
@@ -102,21 +102,34 @@
 >> user 1001 taps 1:td:0 on message 1
 -> MoviePilot POST /api/v1/download/
    media_in 迷途之子!!!!!, torrent_in BanG.Dream.It's.MyGO.S01.2023.1080p.BluRay.x265.FLAC-VCB with the search result's site credentials
-<< editMessageText chat=1001 message=1 reuses=url-f1d1c3e9
-   <img src="tg://photo?id=p0"/>
+<< editMessageText chat=1001 message=1
+   <img src="url-f1d1c3e9142d5b6cb0aec97f314112cb1cfcf5cab28cbc83476b0d4bf25e1175"/>
    <h3>📺 <a href="https://www.themoviedb.org/tv/224207">迷途之子!!!!!</a></h3>
    <footer><i>BanG Dream! It&#39;s MyGO!!!!!</i> · 2023 · 电视剧 · ⭐ 8.0 · 动画 / 剧情 · 共 1 季 13 集 · 主演：羊宫妃那、立石凛、青木阳菜</footer>
    <blockquote expandable>“你能，和我组一辈子乐队吗？”……高一的春末，羽丘女子学园的所有人都加入了乐队，晚入学的爱音为了尽快融入班级，急急忙忙地寻找着乐队成员。这时她得知，「羽丘的不可思议女孩」灯还没有加入乐队，于是爱音不由自主地向她打起了招呼，但是……这是遍体鳞伤又狼狈不堪的，我们的＜音乐呐喊＞。迷失方向也无所谓，在迷茫中前进吧！</blockquote>
    <hr/>
-   <p>✅ 开始下载《迷途之子!!!!!》第 1 季 E09啦，入库了我第一时间叫你！ ヾ(≧▽≦*)o</p>
+   <p>✅ 开始下载《迷途之子!!!!!》第 1 季啦，入库了我第一时间叫你！ ヾ(≧▽≦*)o</p>
    [返回 | 1:bk:0] [首页 | 1:o:0] [关闭 | 1:c:0]
 << answerCallbackQuery
->> MoviePilot transfers 迷途之子!!!!! (themoviedb/224207) S01E01-E13
-<< sendRichMessage chat=1001 message=2 reuses=url-f1d1c3e9
-   <img src="tg://photo?id=p0"/>
+>> Crychic restarts
+>> MoviePilot transfers 迷途之子!!!!! (themoviedb/224207) S01E02-E08
+>> MoviePilot transfers 迷途之子!!!!! (themoviedb/224207) S01E10-E13
+<< sendRichMessage chat=1001 message=2
+   <img src="url-f1d1c3e9142d5b6cb0aec97f314112cb1cfcf5cab28cbc83476b0d4bf25e1175"/>
    <h3>📥 入库啦</h3>
-   <p>你想看的<b>《迷途之子!!!!!》第 1 季</b> E01–E13 到家啦！<br>
-   这次下载的剧集全部到齐啦 ヾ(≧▽≦*)o</p>
+   <p>你想看的<b>《迷途之子!!!!!》第 1 季</b> E02–E08、E10–E13 到家啦！<br>
+   加上媒体库已有的，这一季的剧集全部到齐啦 ヾ(≧▽≦*)o</p>
+   <tg-button-row align="left">
+   <tg-button type="url" style="success" url="https://emby.example.com/web/index.html#!/item?id=224207">在 Emby 中观看</tg-button>
+   </tg-button-row>
+>> Crychic restarts
+>> MoviePilot transfers 迷途之子!!!!! (themoviedb/224207) S01E01
+>> MoviePilot transfers 迷途之子!!!!! (themoviedb/224207) S01E09
+<< sendRichMessage chat=1001 message=3
+   <img src="url-f1d1c3e9142d5b6cb0aec97f314112cb1cfcf5cab28cbc83476b0d4bf25e1175"/>
+   <h3>📥 入库啦</h3>
+   <p>你想看的<b>《迷途之子!!!!!》第 1 季</b> E01、E09 到家啦！<br>
+   加上媒体库已有的，这一季的剧集全部到齐啦 ヾ(≧▽≦*)o</p>
    <tg-button-row align="left">
    <tg-button type="url" style="success" url="https://emby.example.com/web/index.html#!/item?id=224207">在 Emby 中观看</tg-button>
    </tg-button-row>

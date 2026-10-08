@@ -6,8 +6,8 @@ import (
 	"time"
 )
 
-// An expired episode prompt consumes the answer only to report expiry;
-// the following plain title can start a new search.
+// An unquoted private title after an episode prompt expires starts its
+// search immediately. An explicit answer to the expired prompt does not.
 func TestExpiredPrivateInputReleasesThePrompt(t *testing.T) {
 	const beyondSessionLifetime = 11 * time.Minute
 	h := start(t, scenario{routes: conanRoutes(), searches: map[string]string{
@@ -19,10 +19,17 @@ func TestExpiredPrivateInputReleasesThePrompt(t *testing.T) {
 	h.tap(alice, 1, conanFirst)
 	h.tap(alice, 1, "指定起始集…")
 	h.advance(beyondSessionLifetime)
-	h.answer(alice, 1, "500")
-	h.shows(1, "过期啦")
 	h.say(alice, alice, "沙丘")
 	h.shows(2, "这些「沙丘」啦")
+	h.say(alice, alice, "名侦探柯南")
+	h.tap(alice, 3, conanShow)
+	h.tap(alice, 3, conanFirst)
+	h.tap(alice, 3, "指定起始集…")
+	h.advance(beyondSessionLifetime)
+	h.answerQuoting(alice, 3, "500")
+	h.shows(3, "过期啦")
+	h.say(alice, alice, "沙丘")
+	h.shows(4, "这些「沙丘」啦")
 	h.tr.verify(t)
 }
 

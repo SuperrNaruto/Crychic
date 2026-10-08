@@ -12,7 +12,7 @@
    [首页 | 1:o:0] [关闭 | 1:c:0]
 >> user 1001 taps 1:k:1 on message 1
 << editMessageText chat=1001 message=1
-   <img src="https://image.tmdb.org/t/p/w500/dDknWHLYaQB76QSViNdzXOC5v64.jpg"/>
+   <img src="url-f1d1c3e9142d5b6cb0aec97f314112cb1cfcf5cab28cbc83476b0d4bf25e1175"/>
    <h3>⬇️ 《迷途之子!!!!!》第 1 季 E10–E12</h3>
    <table bordered compact>
    <tr><th>大小</th><th>进度</th></tr>
@@ -24,8 +24,8 @@
 << answerCallbackQuery
 >> user 1001 taps 1:kd:1 on message 1
 -> MoviePilot GET /api/v1/subscribe/
-<< editMessageText chat=1001 message=1 reuses=url-f1d1c3e9
-   <img src="tg://photo?id=p0"/>
+<< editMessageText chat=1001 message=1
+   <img src="url-f1d1c3e9142d5b6cb0aec97f314112cb1cfcf5cab28cbc83476b0d4bf25e1175"/>
    <h3>⬇️ 《迷途之子!!!!!》第 1 季 E10–E12</h3>
    <table bordered compact>
    <tr><th>大小</th><th>进度</th></tr>

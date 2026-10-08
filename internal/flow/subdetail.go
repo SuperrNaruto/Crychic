@@ -57,6 +57,7 @@ func (e *Engine) subDetail(ctx context.Context, sess session, index int) Reply {
 		e.store.put(sess)
 		return subDetailGone(sess, sess.subs[index].Kind)
 	}
+	sess = refreshedSubscriptionState(sess, subs[i])
 	detail := e.readSubDetail(ctx, subs[i])
 	view := detail.view()
 	refresh := Button{Label: "刷新", Data: data(sess.id, actionRefreshSubDetail, sess.subs[index].ID)}
@@ -65,16 +66,40 @@ func (e *Engine) subDetail(ctx context.Context, sess session, index int) Reply {
 	return e.listPages(sess, view)
 }
 
+// A successful refresh resolves an uncertain state write too. Mark only
+// source subscription lists whose state is now known to be out of date.
+func refreshedSubscriptionState(sess session, sub Subscription) session {
+	sess.history = slices.Clone(sess.history)
+	for i, old := range sess.history {
+		if old.state.listing != subscriptionList {
+			continue
+		}
+		index := slices.IndexFunc(old.state.subs, sub.same)
+		if index >= 0 && old.state.subs[index].State != sub.State {
+			sess.history[i].reload = true
+		}
+	}
+	return sess
+}
+
 // subDetailGone says the subscription ended and offers the history of its
 // kind, which a list opened from the calendar never chose.
 func subDetailGone(sess session, kind Kind) Reply {
+	nav := append([]Button{backTo(sess.id, actionSubs, 0)}, browseRow(sess.id)...)
+	if sess.listing == upcomingList || cameFromUpcoming(sess) {
+		nav = browseRow(sess.id)
+	}
 	return Reply{
 		Text: Lines(Heading(Plain(msgSubDetailTitle)), Line(Plain(msgSubDetailGone))),
 		Buttons: [][]Button{
 			{{Label: "订阅历史", Data: data(sess.id, actionHistory, int(kind))}},
-			append([]Button{backTo(sess.id, actionSubs, 0)}, browseRow(sess.id)...),
+			nav,
 		},
 	}
+}
+
+func cameFromUpcoming(sess session) bool {
+	return len(sess.history) > 0 && sess.history[len(sess.history)-1].state.listing == upcomingList
 }
 
 func (e *Engine) readSubDetail(ctx context.Context, sub Subscription) subscriptionDetail {

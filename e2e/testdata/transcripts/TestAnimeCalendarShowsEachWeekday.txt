@@ -1,6 +1,6 @@
 >> user 1001 in chat 1001: /start
-<< sendRichMessage chat=1001 message=1 photo=home.jpg 1280x720 sha256=d620fc3c5f168f03372b7fd77d4572d577b95fa1f410d95e2b60e5799f0d2315
-   <img src="tg://photo?id=p0"/>
+<< sendRichMessage chat=1001 message=1
+   <img src="file-d620fc3c5f168f03372b7fd77d4572d577b95fa1f410d95e2b60e5799f0d2315"/>
    <h3>🎬 Crychic</h3>
    <p>想看什么告诉我呀～我帮你找片、订阅，入库了第一时间喊你！私聊直接发片名就能搜哦 (๑•̀ㅂ•́)و✧</p>
    [搜索 | 1:h:0] [发现 | 1:h:1]
@@ -33,11 +33,11 @@
 -> Bangumi GET /v0/subjects/624923
 << editMessageText chat=1001 message=1
    <tg-slideshow>
-   <img src="http://lain.bgm.tv/pic/cover/l/1c/b4/390200_1IA55.jpg"/>
-   <img src="https://image.tmdb.org/t/p/w500/yFRVyWWmNMJ72CqxRc2dZqW9TAE.jpg"/>
-   <img src="https://image.tmdb.org/t/p/w500/2wqyITVWs1wZMih2VraylRjqzCo.jpg"/>
-   <img src="https://image.tmdb.org/t/p/w500/EQNjH4oeCm9pD58fi2s4WZyjgA.jpg"/>
-   <img src="https://image.tmdb.org/t/p/w500/7VjZRZD5sHjsIaoNiUiXzO0qC10.jpg"/>
+   <img src="url-9e933bf5741fa03634fce27465541914f4e0cf39e7fcf8d057c5ec37f440e44e"/>
+   <img src="url-e54f60dafc463cf39be895d02c2d003720f0636900d4c5b548f7c8dea808d074"/>
+   <img src="url-eacdb63f605b90a6b191dd321490c3c11046c62de5d355e56053ffb1275970a7"/>
+   <img src="url-139e382bfa62d729b4b36e24e842156a23d9f12944db4328f33a8cb99a993845"/>
+   <img src="url-20eb4a9f9606accab0f605c87e3287e7313136d2ca20b9b1338132912fb8636e"/>
    </tg-slideshow>
    <h3>🎌 新番放送 · 星期一（今天）</h3>
    <h4>2026-10-05 首播</h4>
@@ -79,8 +79,8 @@
 -> MoviePilot GET /api/v1/media/search?count=10&title=魔法少女育成计划 restart&type=media
 -> MoviePilot GET /api/v1/media/337277?media_source=themoviedb&type_name=电视剧
 -> MoviePilot GET /api/v1/media/seasons?media_id=337277&media_source=themoviedb
-<< editMessageText chat=1001 message=1 reuses=url-e54f60da
-   <img src="tg://photo?id=p0"/>
+<< editMessageText chat=1001 message=1
+   <img src="url-e54f60dafc463cf39be895d02c2d003720f0636900d4c5b548f7c8dea808d074"/>
    <h3>📺 <a href="https://www.themoviedb.org/tv/337277">魔法少女育成计划 restart</a></h3>
    <footer><i>魔法少女育成計画 restart</i> · 2026 · 电视剧</footer>
    <blockquote expandable>获得「魔法王国」所赐之魔力、每日勤奋奔走于助人的魔法少女们——她们收到了来自神秘寄信人所寄出，名为『魔法少女育成计划』的游戏邀请函。受到隐藏着死亡风险、毫无逻辑可言的游戏所囚禁的十六位魔法少女，在幕后黑手策划的诡计玩弄下，开始为了存活下来而绞尽脑汁苦思对策……</blockquote>
@@ -99,13 +99,13 @@
 >> user 1001 taps 1:bk:0 on message 1
 -> MoviePilot GET /api/v1/media/search?count=10&title=列女战纪：女娲石记&type=media
 -> Bangumi GET /v0/subjects/390200
-<< editMessageText chat=1001 message=1 reuses=url-9e933bf5 reuses=url-e54f60da reuses=url-eacdb63f reuses=url-139e382b reuses=url-20eb4a9f
+<< editMessageText chat=1001 message=1
    <tg-slideshow>
-   <img src="tg://photo?id=p0"/>
-   <img src="tg://photo?id=p1"/>
-   <img src="tg://photo?id=p2"/>
-   <img src="tg://photo?id=p3"/>
-   <img src="tg://photo?id=p4"/>
+   <img src="url-9e933bf5741fa03634fce27465541914f4e0cf39e7fcf8d057c5ec37f440e44e"/>
+   <img src="url-e54f60dafc463cf39be895d02c2d003720f0636900d4c5b548f7c8dea808d074"/>
+   <img src="url-eacdb63f605b90a6b191dd321490c3c11046c62de5d355e56053ffb1275970a7"/>
+   <img src="url-139e382bfa62d729b4b36e24e842156a23d9f12944db4328f33a8cb99a993845"/>
+   <img src="url-20eb4a9f9606accab0f605c87e3287e7313136d2ca20b9b1338132912fb8636e"/>
    </tg-slideshow>
    <h3>🎌 新番放送 · 星期一（今天）</h3>
    <h4>2026-10-05 首播</h4>
@@ -155,8 +155,8 @@
 -> Bangumi GET /v0/subjects/513878
 << editMessageText chat=1001 message=1
    <tg-slideshow>
-   <img src="http://lain.bgm.tv/pic/cover/l/84/86/505550_OLQmz.jpg"/>
-   <img src="http://lain.bgm.tv/pic/cover/l/db/94/513878_54i56.jpg"/>
+   <img src="url-8def3b7e6fd1181d51547e04d7f97d8858a1b401b37afadb3643b466a139a43c"/>
+   <img src="url-f1718de658ea2860ae099a307356c73c78500691dbb9abe4a874207666a69830"/>
    </tg-slideshow>
    <h3>🎌 新番放送 · 星期二</h3>
    <h4>2026-10-13 首播</h4>

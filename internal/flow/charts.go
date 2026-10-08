@@ -331,12 +331,15 @@ func pager(id uint64, page, pages int) []Button {
 func (e *Engine) pickFromChart(ctx context.Context, sess session, pick Media) Reply {
 	results, err := e.chartSearch(ctx, pick)
 	if err != nil {
-		e.store.take(sess.id)
-		return titled("🔍 搜索", e.failure("search", err))
+		reply := titled("🔍 搜索", e.failure("search", err))
+		reply.Buttons = [][]Button{browseRow(sess.id)}
+		return reply
 	}
 	if len(results) == 0 {
-		e.store.take(sess.id)
-		return Reply{Text: Lines(Heading(Plain("🔍 没找到")), Line(Plain(fmt.Sprintf("没找到「%s」能订阅的条目 (｡•́︿•̀｡) 用 /search 换个名字搜搜吧～", pick.Title))))}
+		return Reply{
+			Text:    Lines(Heading(Plain("🔍 没找到")), Line(Plain(fmt.Sprintf("没找到「%s」能订阅的条目 (｡•́︿•̀｡) 用 /search 换个名字搜搜吧～", pick.Title)))),
+			Buttons: [][]Button{browseRow(sess.id)},
+		}
 	}
 	sess.results = results[:min(len(results), MaxResults)]
 	if i, ok := sameMedia(sess.results, pick); ok {

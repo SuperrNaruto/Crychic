@@ -303,14 +303,11 @@ func (f *fakeTelegram) store(r *http.Request, method string) (map[string]any, er
 	if m.forum {
 		head += fmt.Sprintf(" topic=%d", m.thread)
 	}
-	for _, p := range m.media {
-		head += p.description()
-	}
 	doneKey := fmt.Sprintf("edit:%d", id)
 	if strings.HasPrefix(method, "send") {
 		doneKey = fmt.Sprintf("send:%d", m.chat)
 	}
-	body := richLines(m.text)
+	body := richLines(m.seen())
 	if len(m.rows) > 0 {
 		body = append(body, buttonLines(m.rows))
 	}

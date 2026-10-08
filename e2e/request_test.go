@@ -59,7 +59,12 @@ func TestStartFromTypedEpisode(t *testing.T) {
 	h.shows(1, "「沙丘」好像不是有效的集数")
 	h.answer(alice, 1, "1300")
 	h.shows(1, "「1300」好像不是有效的集数")
-	h.answer(alice, 1, "500")
+	h.answer(alice, 1, "第５集")
+	h.shows(1, "从第 5 集开始")
+	h.tap(alice, 1, "返回")
+	h.tap(alice, 1, "指定起始集…")
+	h.answer(alice, 1, "５００")
+	h.shows(1, "从第 500 集开始")
 	h.tap(alice, 1, "确认订阅")
 	h.shows(1, "帮你订好《名侦探柯南》第 1 季（从第 500 集开始）")
 	h.tr.verify(t)
@@ -107,8 +112,8 @@ func TestUnreachablePosterKeepsTheCard(t *testing.T) {
 	h.tr.verify(t)
 }
 
-// A poster shown before goes by its file_id; when Telegram refuses that,
-// the card is sent with the poster's URL again instead of without it.
+// After a callback completes, Telegram can refuse its cached poster. The
+// gallery then retries by URL, and the next card reuses the recovered file_id.
 func TestRefusedPosterFileIsSentAfresh(t *testing.T) {
 	h := start(t, scenario{routes: map[string]route{
 		searchPath:  ok("search_dune.json"),
@@ -116,10 +121,16 @@ func TestRefusedPosterFileIsSentAfresh(t *testing.T) {
 		duneLookup:  ok("subscription_none.json"),
 	}})
 	h.say(alice, alice, "/search 沙丘")
-	h.tg.forgetFiles()
 	h.tap(alice, 1, duneMovie)
+	h.tg.forgetFiles()
+	h.tap(alice, 1, "返回")
 	h.shows(1, `<img src="`+dunePoster+`"/>`)
+	h.tap(alice, 1, duneMovie)
 	h.shows(1, "要订阅《沙丘》")
+	media := mustMessage(h, 1).media
+	if len(media) != 1 || !media[0].reused {
+		t.Fatal("the recovered poster must be reused by file_id")
+	}
 	h.tr.verify(t)
 }
 
@@ -162,6 +173,15 @@ func TestAlreadySubscribedEndsEarly(t *testing.T) {
 	h.say(alice, alice, "/search 沙丘")
 	h.tap(alice, 1, duneMovie)
 	h.shows(1, "早就订阅上啦")
+	h.mp.setRoute(duneLookup, ok(writeFixture(t, map[string]any{
+		"id": 1, "state": "S",
+	})))
+	h.say(alice, alice, "/search 沙丘")
+	h.tap(alice, 2, duneMovie)
+	h.shows(2, "目前已暂停")
+	if _, offered := findButton(mustMessage(h, 2).rows, "确认订阅"); offered {
+		t.Fatal("a paused existing subscription must not be recreated")
+	}
 	h.tr.verify(t)
 }
 
@@ -213,8 +233,8 @@ func TestStrangerIsRefused(t *testing.T) {
 	h.tr.verify(t)
 }
 
-// A new private request or home command releases an older episode prompt,
-// so later titles are not mistaken for answers to that abandoned prompt.
+// Every recognized private command releases an older episode prompt, so
+// later titles are not mistaken for answers to the abandoned conversation.
 func TestPrivateCommandsReplacePendingAnswer(t *testing.T) {
 	h := start(t, scenario{
 		routes: conanRoutes(),
@@ -235,6 +255,11 @@ func TestPrivateCommandsReplacePendingAnswer(t *testing.T) {
 	h.say(alice, alice, "/search 沙丘")
 	h.say(alice, alice, "沙丘")
 	h.shows(5, "这些「沙丘」啦")
+	h.tap(alice, 1, "返回")
+	h.tap(alice, 1, "指定起始集…")
+	h.say(alice, alice, "/trending")
+	h.say(alice, alice, "沙丘")
+	h.shows(7, "这些「沙丘」啦")
 	h.tr.verify(t)
 }
 
@@ -344,7 +369,7 @@ func mustMessage(h *harness, id int) message {
 // Several seasons are subscribed in one go, each from its first episode,
 // and each is watched for arrivals.
 func TestSubscribeSeveralSeasons(t *testing.T) {
-	h := start(t, scenario{routes: map[string]route{
+	h := start(t, scenario{notifyChat: channelName, routes: map[string]route{
 		searchPath:    ok("search_breaking_bad.json"),
 		breakDetails:  ok("detail_breaking_bad.json"),
 		seasonsPath:   ok("seasons_breaking_bad.json"),
@@ -361,7 +386,8 @@ func TestSubscribeSeveralSeasons(t *testing.T) {
 	h.tap(alice, 1, "订阅所选 2 季")
 	h.shows(1, "<td><b>第 2 季</b></td><td>✅ 已订阅</td>")
 	h.shows(1, "<td><b>第 3 季</b></td><td>✅ 已订阅</td>")
-	h.arrives(alice, breakingBad.file("S03", "E01"))
+	h.shows(1, "通知频道")
+	h.arrives(noticeChannel, breakingBad.file("S03", "E01"))
 	h.shows(2, "第 3 季")
 	h.tr.verify(t)
 }

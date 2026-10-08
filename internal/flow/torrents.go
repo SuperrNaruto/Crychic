@@ -165,6 +165,11 @@ func (e *Engine) rememberDownload(ctx context.Context, sess session, dl added) b
 	if season := target.Season; season != nil {
 		req.Target.StartEpisode = 0
 		req.SeasonEpisodes = sess.episodeCount(*season)
+		// Existing full seasons cannot complete a replacement download; its
+		// own files must arrive. Partial holdings only fill the known gaps.
+		if !sess.wholeSeasonHeld(Season{Number: *season, EpisodeCount: req.SeasonEpisodes}) {
+			req.Held = sess.library.Episodes[*season]
+		}
 	}
 	if err := e.watcher.Watch(ctx, req); err != nil {
 		e.log.Error("cannot remember download for notification", "download", id, "err", err)

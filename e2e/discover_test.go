@@ -1,6 +1,7 @@
 package e2e
 
 import (
+	"net/http"
 	"strings"
 	"testing"
 	"time"
@@ -30,7 +31,20 @@ func TestTrendingPickGoesStraightToSubscribe(t *testing.T) {
 	}})
 	h.say(alice, alice, "/trending")
 	h.tap(alice, 1, "TMDB 流行趋势")
+	h.mp.setRoute(searchPath, ok("empty.json"))
 	h.tap(alice, 1, "1")
+	h.shows(1, "没找到")
+	h.tap(alice, 1, "返回")
+	h.shows(1, "第 1/2 页")
+	h.mp.setRoute(searchPath, route{status: http.StatusServiceUnavailable, fixture: "server_error.json"})
+	h.tap(alice, 1, "1")
+	h.shows(1, "MoviePilot 好像打了个盹")
+	h.tap(alice, 1, "返回")
+	h.shows(1, "第 1/2 页")
+	h.mp.setRoute(searchPath, ok("search_digger.json"))
+	pick, _ := findButton(mustMessage(h, 1).rows, "1")
+	h.tap(alice, 1, "1")
+	h.tapData(alice, 1, pick)
 	h.shows(1, "要订阅《挖掘者》")
 	h.tap(alice, 1, "返回")
 	h.shows(1, "第 1/2 页")

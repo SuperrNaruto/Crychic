@@ -65,11 +65,13 @@ func TestResourceSearchRecoversItsFinalReply(t *testing.T) {
 		duneLookup: ok("subscription_none.json"), duneTorrents: searchingSites("torrents_dune.json"),
 	}})
 	h.say(alice, alice, "/search 沙丘")
+	other, _ := findButton(mustMessage(h, 1).rows, "2")
 	h.tap(alice, 1, duneMovie)
 	h.tap(alice, 1, searchResources)
 	failed := h.tg.failNextEdit(1)
 	recovered := h.tg.expect("edit:1")
 	h.wait(failed, "Telegram rejecting the completed search")
+	h.tapData(alice, 1, other)
 	select {
 	case <-recovered:
 		h.shows(1, "Dune.2021.2160p.UHD.BluRay.REMUX")
@@ -89,4 +91,42 @@ func TestResourceSearchRecoversItsFinalReply(t *testing.T) {
 		t.Errorf("delivery recovery repeated a resource search: got %d, want %d", got, oneSearchEach)
 	}
 	h.tr.verify(t)
+}
+
+// A duplicate list pick is rejected without abandoning the resource
+// search the first pick started, or searching/downloading a second time.
+func TestDuplicateDownloadPickKeepsFollowing(t *testing.T) {
+	h := start(t, scenario{routes: map[string]route{
+		searchPath: ok("search_dune.json"), duneDetails: ok("detail_dune.json"),
+		duneLookup: ok("subscription_none.json"), duneTorrents: searchingSites("torrents_dune.json"),
+	}})
+	h.say(alice, alice, "下载 沙丘")
+	pick, _ := findButton(mustMessage(h, 1).rows, duneMovie)
+	other, _ := findButton(mustMessage(h, 1).rows, "2")
+	h.tap(alice, 1, duneMovie)
+	h.shows(1, "搜索资源")
+	h.tapData(alice, 1, pick)
+	h.tapData(alice, 1, other)
+	waitResourceResult(h)
+	h.shows(1, "Dune.2021.2160p.UHD.BluRay.REMUX")
+	if strings.Count(h.tr.String(), duneTorrents) != 1 || strings.Contains(h.tr.String(), downloadPath) {
+		t.Fatal("a duplicate pick repeated the resource search or started a download")
+	}
+	h.tap(alice, 1, "取消")
+	h.tr.verify(t)
+}
+
+func waitResourceResult(h *harness) {
+	h.t.Helper()
+	const checkEvery = time.Millisecond
+	tick := time.NewTicker(checkEvery)
+	defer tick.Stop()
+	deadline := time.After(actionTimeout)
+	for !strings.Contains(h.tr.String(), "<h3>🔍 《沙丘》的资源</h3>") {
+		select {
+		case <-tick.C:
+		case <-deadline:
+			h.t.Fatal("the resource search stopped following after a rejected callback")
+		}
+	}
 }

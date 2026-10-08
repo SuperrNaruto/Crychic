@@ -265,7 +265,7 @@ func (a *adapter) onMessage(ctx context.Context, b *bot.Bot, msg *models.Message
 	}
 	reply := refused(msg.From.ID)
 	if a.allowed[msg.From.ID] {
-		if msg.Chat.Type == models.ChatTypePrivate && (cmd == cmdStart || cmd == cmdSearch) {
+		if msg.Chat.Type == models.ChatTypePrivate {
 			a.mu.Lock()
 			delete(a.pending, inputOf(msg))
 			a.mu.Unlock()
@@ -309,11 +309,13 @@ func (a *adapter) start(ctx context.Context, actor flow.Actor, arg string) flow.
 // may be a long backend call (a resource search) holding it.
 func (a *adapter) onCallback(ctx context.Context, b *bot.Bot, cq *models.CallbackQuery) {
 	actor := actorOf(cq.From, callbackDestination(cq))
+	var stopped *follower
 	if a.allowed[cq.From.ID] {
-		a.stopOwnedFollower(callbackKey(cq), actor.UserID)
+		stopped = a.stopOwnedFollower(callbackKey(cq), actor.UserID)
 	}
 	unlock, ok := a.lockMessage(ctx, callbackKey(cq))
 	if !ok {
+		a.discardFollower(stopped)
 		return
 	}
 	defer unlock()
@@ -323,6 +325,8 @@ func (a *adapter) onCallback(ctx context.Context, b *bot.Bot, cq *models.Callbac
 	}
 	if reply.Notice == "" && cq.Message.Message != nil {
 		a.showCallback(ctx, cq, reply)
+	} else if reply.Notice != "" {
+		a.resumeFollower(stopped)
 	}
 	_, err := b.AnswerCallbackQuery(ctx, &bot.AnswerCallbackQueryParams{
 		CallbackQueryID: cq.ID,

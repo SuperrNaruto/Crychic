@@ -45,7 +45,7 @@ func (e *Engine) askUpgrade(ctx context.Context, sess session) Reply {
 		e.log.Warn("subscription check for upgrade failed", "media", target.Media.ID, "err", err)
 		return Reply{Notice: msgUpgradeUnchecked}
 	}
-	if existing != 0 {
+	if existing.ID != 0 {
 		return Reply{Notice: msgUpgradeSubscribed}
 	}
 	sess.target = &target
@@ -60,9 +60,7 @@ func (e *Engine) confirmUpgrade(ctx context.Context, sess session) Reply {
 	if sess.target == nil || !sess.target.BestVersion {
 		return Reply{Notice: msgInvalidChoice}
 	}
-	if !e.settle(sess) {
-		return expiredText(msgExpired)
-	}
+	e.settle(sess)
 	target := *sess.target
 	id, err := e.submit(ctx, target)
 	if err != nil {

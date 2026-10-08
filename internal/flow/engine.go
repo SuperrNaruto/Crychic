@@ -98,10 +98,50 @@ func (e *Engine) Choose(ctx context.Context, actor Actor, raw string) Reply {
 	if sess.owner.UserID != actor.UserID || sess.owner.Address != actor.Address {
 		return Reply{Notice: msgNotYours}
 	}
+	if sess.lastChoice == raw {
+		return sess.lastReply
+	}
+	if !availableChoice(sess, raw, p.action) {
+		return Reply{Notice: msgInvalidChoice}
+	}
 	if needsTicket(p.action) && (p.ticket == 0 || p.ticket != sess.ticket) {
 		return Reply{Notice: msgInvalidChoice}
 	}
-	return e.choose(ctx, sess, p)
+	reply := e.choose(ctx, sess, p)
+	e.rememberChoice(sess.id, raw, reply)
+	return reply
+}
+
+// Keep only the latest accepted read's rendered result. A repeat can
+// recover an undelivered edit without repeating backend calls or history.
+// Any later transition invalidates it; writes are never replayed here.
+func (e *Engine) rememberChoice(id uint64, raw string, reply Reply) {
+	if reply.Notice != "" {
+		return
+	}
+	sess, ok := e.store.get(id)
+	if !ok {
+		return
+	}
+	sess.lastChoice, sess.lastReply = "", Reply{}
+	_, p, _ := parseData(raw)
+	if forward[p.action] && p.action != actionTorrentRun && !needsTicket(p.action) {
+		sess.lastChoice, sess.lastReply = raw, reply
+	}
+	e.store.put(sess)
+}
+
+// A terminal receipt is immutable. Forward choices must still belong to
+// the shown screen, so an already accepted list pick cannot run twice.
+func availableChoice(sess session, raw, action string) bool {
+	shown := sess.screen.reply
+	if sess.screen.state != nil && len(shown.Buttons) == 0 && shown.Follow == "" {
+		return false
+	}
+	if forward[action] && action != actionTorrentRun {
+		return hasData(shown.Buttons, raw)
+	}
+	return true
 }
 
 // choose dispatches a press only after Choose has checked its owner and ticket.
@@ -290,7 +330,7 @@ func (e *Engine) offerConfirm(ctx context.Context, sess session, target Target) 
 	if err != nil {
 		return e.readFailure(sess, recovery{step: readSubscription, target: target}, err)
 	}
-	return e.confirmation(ctx, sess, subscription{id: existing, target: target})
+	return e.confirmation(ctx, sess, subscription{id: existing.ID, state: existing.State, target: target})
 }
 
 // confirmation shows the card for sub's target, or for a title searched
@@ -311,7 +351,11 @@ func (e *Engine) targetCard(ctx context.Context, sess session, sub subscription)
 	sess.focus = &target
 	if sub.id != 0 {
 		e.store.put(sess)
-		status := fmt.Sprintf("ℹ️ %s早就订阅上啦%s", targetName(target), e.watch(ctx, sess, sub))
+		state := "早就订阅上啦"
+		if sub.state == statePaused {
+			state = "已订阅，目前已暂停哦"
+		}
+		status := fmt.Sprintf("ℹ️ %s%s%s", targetName(target), state, e.watch(ctx, sess, sub))
 		return sess, sess.picked.reply(Line(Plain(status)), onward(sess))
 	}
 	sess.target = &target
@@ -340,9 +384,7 @@ func (e *Engine) confirm(ctx context.Context, sess session, from int) Reply {
 	if sess.target == nil || sess.target.BestVersion || !sess.validStart(from) {
 		return Reply{Notice: msgInvalidChoice}
 	}
-	if !e.settle(sess) {
-		return expiredText(msgExpired)
-	}
+	e.settle(sess)
 	target := *sess.target
 	target.StartEpisode = from
 	id, err := e.submit(ctx, target)
@@ -356,6 +398,7 @@ func (e *Engine) confirm(ctx context.Context, sess session, from int) Reply {
 // subscription is a MoviePilot subscription and what it was made for.
 type subscription struct {
 	id     int
+	state  string
 	target Target
 }
 
@@ -371,10 +414,14 @@ func (e *Engine) noticeEnding(remembered bool) string {
 	if !remembered {
 		return "，" + msgNoNotice
 	}
+	return "，" + e.noticePromise()
+}
+
+func (e *Engine) noticePromise() string {
 	if e.noticeInChannel {
-		return "，" + msgWillPost
+		return msgWillPost
 	}
-	return "，" + msgWillNotify
+	return msgWillNotify
 }
 
 // remember registers the session owner for an arrival notice of sub.

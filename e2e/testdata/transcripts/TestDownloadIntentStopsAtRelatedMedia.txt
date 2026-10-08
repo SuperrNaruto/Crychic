@@ -1,0 +1,383 @@
+>> user 1001 in chat 1001: 下载 沙丘
+-> MoviePilot GET /api/v1/media/search?count=10&title=沙丘&type=media
+<< sendRichMessage chat=1001 message=1
+   <tg-slideshow>
+   <img src="url-ae95e58ec03e202c035279fd7b770ee9063e24e22f246ec568120ac5a90252ea"/>
+   <img src="url-7ea76e3b74f0f1bba01161bd2446775a7fe7657b009df91fca57cb760c60208f"/>
+   <img src="url-e887bdb9df0034573d9e03f6507d8e8b7862bda8362f968e4349554493678ff8"/>
+   <img src="url-0603bc04eba9f23ccb0da918da40cefdcc9533bb920a16af3d7323b8954288fe"/>
+   <img src="url-f3924e4dafb7c35392e3de6d3fbfd5e540d3fcfe78dd69b758e7319101e217fe"/>
+   <img src="url-cfc61103a56e8781300f998571c8194d0958754710eb781ed3beae7e5eae3dc2"/>
+   <img src="url-d03384b6cc307585edcd449cb20296ce3fa11071866b554add8f77be947e6c17"/>
+   <img src="url-f6bf48e37249a47a3abcd09ca8c92f0ab0f5d0f1d21a40918902154571cda459"/>
+   </tg-slideshow>
+   <h3>🔍 帮你找到这些「沙丘」啦</h3>
+   <ol start="1">
+   <li value="1"><b>沙丘</b><br>
+   <i>Dune · 2021 · 电影 · ⭐ 7.8</i></li>
+   <li value="2"><b>沙丘：预言</b><br>
+   <i>Dune: Prophecy · 2024 · 电视剧 · ⭐ 7.2</i></li>
+   <li value="3"><b>沙丘</b><br>
+   <i>Dune · 1984 · 电影 · ⭐ 6.2</i></li>
+   <li value="4"><b>沙丘2</b><br>
+   <i>Dune: Part Two · 2024 · 电影 · ⭐ 8.1</i></li>
+   <li value="5"><b>沙丘3</b><br>
+   <i>Dune: Part Three · 2026 · 电影</i></li>
+   <li value="6"><b>沙丘之子</b><br>
+   <i>Frank Herbert&#39;s Children of Dune · 2003 · 电视剧 · ⭐ 6.9</i></li>
+   <li value="7"><b>沙丘魔堡2000</b><br>
+   <i>Frank Herbert&#39;s Dune · 2000 · 电视剧 · ⭐ 6.8</i></li>
+   <li value="8"><b>沙丘虫暴</b><br>
+   <i>2021 · 电影 · ⭐ 6.7</i></li>
+   </ol>
+   <footer>第 1/2 页</footer>
+   [1 | 1:m:0] [2 | 1:m:1] [3 | 1:m:2] [4 | 1:m:3]
+   [5 | 1:m:4] [6 | 1:m:5] [7 | 1:m:6] [8 | 1:m:7]
+   [下一页 › | 1:p:1]
+   [重新搜索 | 1:rs:0]
+   [取消 | 1:x:0]
+>> user 1001 taps 1:m:0 on message 1
+-> MoviePilot GET /api/v1/media/438631?media_source=themoviedb&type_name=电影
+-> MoviePilot GET /api/v1/subscribe/media/438631?media_source=themoviedb&mtype=电影&title=沙丘&year=2021
+<< editMessageText chat=1001 message=1
+   <img src="url-ae95e58ec03e202c035279fd7b770ee9063e24e22f246ec568120ac5a90252ea"/>
+   <h3>🎬 <a href="https://www.themoviedb.org/movie/438631">沙丘</a></h3>
+   <footer><i>Dune</i> · 2021 · 电影 · ⭐ 7.8 · 科幻 / 冒险 · 156 分钟 · 主演：提莫西·查拉梅、丽贝卡·弗格森、奥斯卡·伊萨克</footer>
+   <blockquote expandable>电影《沙丘》为观众呈现了一段神秘而感人至深的英雄之旅。天赋异禀的少年保罗·厄崔迪（提莫西·查拉梅 饰）被命运指引，为了保卫自己的家族和人民，决心前往浩瀚宇宙间最危险的星球，开启一场惊心动魄的冒险。与此同时，各路势力为了抢夺这颗星球上一种能够释放人类最大潜力的珍贵资源而纷纷加入战场。最终，唯有那些能够战胜内心恐惧的人才能生存下去。</blockquote>
+   <hr/>
+   <p>🔍 正在各个站点搜索资源，要等一会儿哦…</p>
+   [取消 | 1:x:0]
+<< answerCallbackQuery
+-> MoviePilot GET /api/v1/search/media/438631?media_source=themoviedb&mtype=电影
+<< editMessageText chat=1001 message=1
+   <h3>🔍 《沙丘》的资源</h3>
+   <ol start="1">
+   <li value="1"><b>Dune.2021.2160p.UHD.BluRay.REMUX.HDR.HEVC.DTS-HD.MA.5.1-FROGE</b><br>
+   <i>站点甲 · 58.2 GiB · 做种 25 · 免费 · H&amp;R</i></li>
+   <li value="2"><b>Dune.2021.1080p.BluRay.x264.DTS-HD.MA.5.1-CHD</b><br>
+   <i>站点乙 · 14.6 GiB · 做种 132</i></li>
+   <li value="3"><b>Dune.2021.2160p.WEB-DL.H265.DDP5.1-ADWeb</b><br>
+   <i>站点丙 · 18.1 GiB · 做种 48 · 2X免费</i></li>
+   <li value="4"><b>Dune.2021.720p.BluRay.x264-CHD</b><br>
+   <i>站点乙 · 6.0 GiB · 做种 8</i></li>
+   </ol>
+   <footer>共 4 个，按 MoviePilot 的优先级排好啦，点编号看详情～</footer>
+   [1 | 1:tp:0] [2 | 1:tp:1] [3 | 1:tp:2] [4 | 1:tp:3]
+   [·默认· | 1:to:0] [做种 | 1:to:1] [时间 | 1:to:2] [大小 | 1:to:3] [站点 | 1:to:4]
+   [筛选站点 | 1:tf:0] [多选… | 1:tm:0]
+   [返回 | 1:bk:0] [取消 | 1:x:0]
+>> user 1001 taps 1:bk:0 on message 1
+<< editMessageText chat=1001 message=1
+   <img src="url-ae95e58ec03e202c035279fd7b770ee9063e24e22f246ec568120ac5a90252ea"/>
+   <h3>🎬 <a href="https://www.themoviedb.org/movie/438631">沙丘</a></h3>
+   <footer><i>Dune</i> · 2021 · 电影 · ⭐ 7.8 · 科幻 / 冒险 · 156 分钟 · 主演：提莫西·查拉梅、丽贝卡·弗格森、奥斯卡·伊萨克</footer>
+   <blockquote expandable>电影《沙丘》为观众呈现了一段神秘而感人至深的英雄之旅。天赋异禀的少年保罗·厄崔迪（提莫西·查拉梅 饰）被命运指引，为了保卫自己的家族和人民，决心前往浩瀚宇宙间最危险的星球，开启一场惊心动魄的冒险。与此同时，各路势力为了抢夺这颗星球上一种能够释放人类最大潜力的珍贵资源而纷纷加入战场。最终，唯有那些能够战胜内心恐惧的人才能生存下去。</blockquote>
+   <hr/>
+   <p><b>要订阅《沙丘》吗？</b></p>
+   [确认订阅 | 1:ok:0]
+   [洗版订阅 | 1:bv:0]
+   [搜索资源 | 1:ts:0] [相似推荐 | 1:r:0] [同系列 | 1:n:0]
+   [返回 | 1:bk:0] [取消 | 1:x:0]
+<< answerCallbackQuery
+>> user 1001 taps 1:r:0 on message 1
+-> MoviePilot GET /api/v1/tmdb/recommend/438631/电影
+<< editMessageText chat=1001 message=1
+   <tg-slideshow>
+   <img src="url-0603bc04eba9f23ccb0da918da40cefdcc9533bb920a16af3d7323b8954288fe"/>
+   <img src="url-b4b827777ebf2b197a226717546dab1ae67b8264f532a0489906c02a38569c78"/>
+   <img src="url-dcbd9b8b695b4e242ae3afb3228eba9e52fad3efcdcaae6e35701f0b062034ce"/>
+   <img src="url-edaed72a99c176d794ca4c19d49fc4c438cf38ecba30539e50b9a54ae489b007"/>
+   <img src="url-0b1574863c8b04694311bcd33209b9d7eb6c2f2bca5bfc96a8a712bcbaedeb9f"/>
+   <img src="url-d1ac6684cf65c91dbd409ffb742c06dca48f3ffadd71ac340ef330bab8dbc616"/>
+   <img src="url-e6564ed59314a1b66799f6a3ea13be56d9832b20725c6eb720a3ea7efd6a0079"/>
+   <img src="url-5484d9eebaef1bdb1ee80b9e97cbe8d94e5dd752dafd0d98a404bb67a13aa91a"/>
+   </tg-slideshow>
+   <h3>🔍 喜欢「沙丘」的话，也许会喜欢这些～</h3>
+   <ol start="1">
+   <li value="1"><details><summary><b>沙丘2</b> · <i>2024 · ⭐ 8.1</i></summary>
+   <p>《沙丘2》承接第一部剧情，讲述保罗·厄崔迪（提莫西·查拉梅 Timothée Chalamet 饰）被帕迪沙皇帝和哈克南人联手灭族后，在厄拉科斯星球遇到弗雷曼女战士契妮（赞达亚 Zendaya 饰）以及加入弗雷曼人后展开的传奇旅程。保罗与让他家破人亡的阴谋家们开战，同时面临着一生所爱与已知宇宙命运的两难选择。</p>
+   <p><a href="https://www.themoviedb.org/movie/693134">查看详情页</a></p>
+   </details>
+   </li>
+   <li value="2"><details><summary><b>混沌行走</b> · <i>2021 · ⭐ 6.5</i></summary>
+   <p>人类在与地球相似的遥远外星建立了新家园，但这个星球上却有一种病毒，男人感染后可以听到其他人和动物的心声，每个男人脑子里的想法都能被他人听到，人与人之间不存在隐私，新星球上的普伦提司镇的男人们就不堪忍受自己的想法被人听见。托德·赫维特（汤姆·赫兰德 饰）是出生于这座小镇的 男孩，他的认知中小镇没有女人是因为该星球的土著居民蓝光兽在家园被人类侵犯时故意让人类感染了噪音病毒，他们还杀光了所有女性。托德对此深信不疑，直到他在小镇附近的森林里遇到了一个叫维奥拉（黛西·雷德利 饰）的女孩，她来自遥远的地球，她的飞船因故坠毁在森林里。普伦提司镇的镇长在得知这个消息后立刻展开对他俩的追杀，托德为了保护女孩维奥…</p>
+   <p><a href="https://www.themoviedb.org/movie/412656">查看详情页</a></p>
+   </details>
+   </li>
+   <li value="3"><details><summary><b>星际特工：千星之城</b> · <i>2017 · ⭐ 6.7</i></summary>
+   <p>28世纪，人类发现了如何进行时空旅行。韦勒瑞恩和洛瑞琳是“时空服务”的特工，负责保护地球帝国的行星。他们像往常一样执行着星际任务，但在执行一次任务时，他们偶然发现了一个秘密，而他们也被卷入其中，越陷越深……</p>
+   <p><a href="https://www.themoviedb.org/movie/339964">查看详情页</a></p>
+   </details>
+   </li>
+   <li value="4"><details><summary><b>掠食城市</b> · <i>2018 · ⭐ 6.3</i></summary>
+   <p>一次灾难性事件毁灭了文明，数千年后，人类已经适应，并进化出了新的生存方式。如今，巨大的移动城市在地球上漫步，无情地吞噬着小牵引城镇。汤姆·纳茨沃西（罗伯特·席安饰），来自大牵引城市伦敦的底层，在遭遇了危险逃犯海特·肖（海拉·希尔莫饰）后，不得不开始为生存而奋战。两个截然相反，本不该相遇的人，却意外结盟，他们注定将改变未来。</p>
+   <p><a href="https://www.themoviedb.org/movie/428078">查看详情页</a></p>
+   </details>
+   </li>
+   <li value="5"><details><summary><b>饥饿游戏：鸣鸟与蛇之歌</b> · <i>2023 · ⭐ 7.0</i></summary>
+   <p>18岁的科里奥兰纳斯·斯诺被选为第十届饥饿游戏的导师，与来自第十二区的贫困女孩露西·格雷·贝尔德成为了“生死相依”的命运共同体。竞技场上，这是一场关乎自由、食物，甚至是尊重与权利的生死角逐；竞技场外，不忍与善意使斯诺决定不顾一切帮助露西在这场游戏中赢得胜利......当活下去的欲望与所遵守的规则背道而驰，命运的齿轮紧抓入自己手中时，他又该如何抉择？</p>
+   <p><a href="https://www.themoviedb.org/movie/695721">查看详情页</a></p>
+   </details>
+   </li>
+   <li value="6"><details><summary><b>黑客帝国</b> · <i>1999 · ⭐ 8.3</i></summary>
+   <p>不久的将来，网络黑客尼奥对这个看似正常的现实世界产生了怀疑。他结识了黑客崔妮蒂，并见到了黑客组织的首领墨菲斯。墨菲斯告诉他，现实世界其实是由一个名叫“母体”的计算机人工智能系统控制，人们就像他们饲养的动物，没有自由和思想，而尼奥就是能够拯救人类的救世主。可是，救赎之路从来都不会一帆风顺，到底哪里才是真实的世界？如何才能打败那些超人一样的特勤？尼奥是不是人类的希望？这是黑客的帝国，程序和代码欢迎大家的到来。</p>
+   <p><a href="https://www.themoviedb.org/movie/603">查看详情页</a></p>
+   </details>
+   </li>
+   <li value="7"><details><summary><b>星球大战3：西斯的复仇</b> · <i>2005 · ⭐ 7.5</i></summary>
+   <p>克隆战争已经进行了三年，绝地武士团率领的共和国军团与独立星系邦联陷入了一场席卷整个银河的苦战。分裂联盟的格非特将军和杜库伯爵（克里斯托弗·李 Christopher Lee 饰）劫持议会首相帕尔帕庭（伊恩·迈克蒂安米德 Ian McDiarmid 饰）潜逃，绝地武士欧比旺·克诺比（伊万·麦克格雷格 Ewan McGregor 饰）和阿纳金（海登·克里斯滕森 Hayden Christensen 饰）奉长老院命前去营救，阿纳金杀死杜库伯爵救出帕尔帕庭，但格非特将军逃匿。阿纳金梦见妻子阿米达拉（娜塔丽·波特曼 Natalie Portman 饰）将死于难产，困惑中求助于帕尔帕庭，后者趁此机会离间阿…</p>
+   <p><a href="https://www.themoviedb.org/movie/1895">查看详情页</a></p>
+   </details>
+   </li>
+   <li value="8"><details><summary><b>宿主</b> · <i>2013 · ⭐ 6.3</i></summary>
+   <p>未来的某个时间，神秘外星人大举入侵地球。没有毁灭，没有战火，他们以特殊的方式占据人类的身体，将这颗早已被人类文明折磨得疲惫不堪的地球改造成一片看似和平幸福的乐土。然而，依旧有少数人不愿放弃自主的人格和丰富的情感与回忆，他们为此做着最后的抵抗。美丽女孩梅兰妮·斯特德抵死顽抗，仍不免被侵蚀的命运。新生的漫游者占据了她的身体，然而梅兰妮的意识并未就此消失。漫游者按照探索者的命令搜索梅兰妮的记忆，得知她的弟弟吉米以及深爱的男孩杰莱德·霍华的存在。在这一过程中，原本对立的漫游者和梅兰妮渐渐变得融洽，突如其来的事件迫使她们携手奔上拯救所爱之人的征途……</p>
+   <p><a href="https://www.themoviedb.org/movie/72710">查看详情页</a></p>
+   </details>
+   </li>
+   </ol>
+   [1 | 1:m:0] [2 | 1:m:1] [3 | 1:m:2] [4 | 1:m:3]
+   [5 | 1:m:4] [6 | 1:m:5] [7 | 1:m:6] [8 | 1:m:7]
+   [返回 | 1:bk:0] [取消 | 1:x:0]
+<< answerCallbackQuery
+>> user 1001 taps 1:m:0 on message 1
+-> MoviePilot GET /api/v1/media/693134?media_source=themoviedb&type_name=电影
+-> MoviePilot GET /api/v1/subscribe/media/693134?media_source=themoviedb&mtype=电影&title=沙丘2&year=2024
+<< editMessageText chat=1001 message=1
+   <img src="url-0603bc04eba9f23ccb0da918da40cefdcc9533bb920a16af3d7323b8954288fe"/>
+   <h3>🎬 <a href="https://www.themoviedb.org/movie/693134">沙丘2</a></h3>
+   <footer><i>Dune: Part Two</i> · 2024 · 电影 · ⭐ 8.1 · 科幻 / 冒险 · 166 分钟 · 主演：提莫西·查拉梅、赞达亚·科尔曼、丽贝卡·弗格森</footer>
+   <blockquote expandable>《沙丘2》承接第一部剧情，讲述保罗·厄崔迪（提莫西·查拉梅 Timothée Chalamet 饰）被帕迪沙皇帝和哈克南人联手灭族后，在厄拉科斯星球遇到弗雷曼女战士契妮（赞达亚 Zendaya 饰）以及加入弗雷曼人后展开的传奇旅程。保罗与让他家破人亡的阴谋家们开战，同时面临着一生所爱与已知宇宙命运的两难选择。</blockquote>
+   <hr/>
+   <p><b>要订阅《沙丘2》吗？</b></p>
+   [确认订阅 | 1:ok:0]
+   [洗版订阅 | 1:bv:0]
+   [搜索资源 | 1:ts:0] [相似推荐 | 1:r:0] [同系列 | 1:n:0]
+   [返回 | 1:bk:0] [取消 | 1:x:0]
+<< answerCallbackQuery
+>> user 1001 taps 1:bk:0 on message 1
+<< editMessageText chat=1001 message=1
+   <tg-slideshow>
+   <img src="url-0603bc04eba9f23ccb0da918da40cefdcc9533bb920a16af3d7323b8954288fe"/>
+   <img src="url-b4b827777ebf2b197a226717546dab1ae67b8264f532a0489906c02a38569c78"/>
+   <img src="url-dcbd9b8b695b4e242ae3afb3228eba9e52fad3efcdcaae6e35701f0b062034ce"/>
+   <img src="url-edaed72a99c176d794ca4c19d49fc4c438cf38ecba30539e50b9a54ae489b007"/>
+   <img src="url-0b1574863c8b04694311bcd33209b9d7eb6c2f2bca5bfc96a8a712bcbaedeb9f"/>
+   <img src="url-d1ac6684cf65c91dbd409ffb742c06dca48f3ffadd71ac340ef330bab8dbc616"/>
+   <img src="url-e6564ed59314a1b66799f6a3ea13be56d9832b20725c6eb720a3ea7efd6a0079"/>
+   <img src="url-5484d9eebaef1bdb1ee80b9e97cbe8d94e5dd752dafd0d98a404bb67a13aa91a"/>
+   </tg-slideshow>
+   <h3>🔍 喜欢「沙丘」的话，也许会喜欢这些～</h3>
+   <ol start="1">
+   <li value="1"><details><summary><b>沙丘2</b> · <i>2024 · ⭐ 8.1</i></summary>
+   <p>《沙丘2》承接第一部剧情，讲述保罗·厄崔迪（提莫西·查拉梅 Timothée Chalamet 饰）被帕迪沙皇帝和哈克南人联手灭族后，在厄拉科斯星球遇到弗雷曼女战士契妮（赞达亚 Zendaya 饰）以及加入弗雷曼人后展开的传奇旅程。保罗与让他家破人亡的阴谋家们开战，同时面临着一生所爱与已知宇宙命运的两难选择。</p>
+   <p><a href="https://www.themoviedb.org/movie/693134">查看详情页</a></p>
+   </details>
+   </li>
+   <li value="2"><details><summary><b>混沌行走</b> · <i>2021 · ⭐ 6.5</i></summary>
+   <p>人类在与地球相似的遥远外星建立了新家园，但这个星球上却有一种病毒，男人感染后可以听到其他人和动物的心声，每个男人脑子里的想法都能被他人听到，人与人之间不存在隐私，新星球上的普伦提司镇的男人们就不堪忍受自己的想法被人听见。托德·赫维特（汤姆·赫兰德 饰）是出生于这座小镇的 男孩，他的认知中小镇没有女人是因为该星球的土著居民蓝光兽在家园被人类侵犯时故意让人类感染了噪音病毒，他们还杀光了所有女性。托德对此深信不疑，直到他在小镇附近的森林里遇到了一个叫维奥拉（黛西·雷德利 饰）的女孩，她来自遥远的地球，她的飞船因故坠毁在森林里。普伦提司镇的镇长在得知这个消息后立刻展开对他俩的追杀，托德为了保护女孩维奥…</p>
+   <p><a href="https://www.themoviedb.org/movie/412656">查看详情页</a></p>
+   </details>
+   </li>
+   <li value="3"><details><summary><b>星际特工：千星之城</b> · <i>2017 · ⭐ 6.7</i></summary>
+   <p>28世纪，人类发现了如何进行时空旅行。韦勒瑞恩和洛瑞琳是“时空服务”的特工，负责保护地球帝国的行星。他们像往常一样执行着星际任务，但在执行一次任务时，他们偶然发现了一个秘密，而他们也被卷入其中，越陷越深……</p>
+   <p><a href="https://www.themoviedb.org/movie/339964">查看详情页</a></p>
+   </details>
+   </li>
+   <li value="4"><details><summary><b>掠食城市</b> · <i>2018 · ⭐ 6.3</i></summary>
+   <p>一次灾难性事件毁灭了文明，数千年后，人类已经适应，并进化出了新的生存方式。如今，巨大的移动城市在地球上漫步，无情地吞噬着小牵引城镇。汤姆·纳茨沃西（罗伯特·席安饰），来自大牵引城市伦敦的底层，在遭遇了危险逃犯海特·肖（海拉·希尔莫饰）后，不得不开始为生存而奋战。两个截然相反，本不该相遇的人，却意外结盟，他们注定将改变未来。</p>
+   <p><a href="https://www.themoviedb.org/movie/428078">查看详情页</a></p>
+   </details>
+   </li>
+   <li value="5"><details><summary><b>饥饿游戏：鸣鸟与蛇之歌</b> · <i>2023 · ⭐ 7.0</i></summary>
+   <p>18岁的科里奥兰纳斯·斯诺被选为第十届饥饿游戏的导师，与来自第十二区的贫困女孩露西·格雷·贝尔德成为了“生死相依”的命运共同体。竞技场上，这是一场关乎自由、食物，甚至是尊重与权利的生死角逐；竞技场外，不忍与善意使斯诺决定不顾一切帮助露西在这场游戏中赢得胜利......当活下去的欲望与所遵守的规则背道而驰，命运的齿轮紧抓入自己手中时，他又该如何抉择？</p>
+   <p><a href="https://www.themoviedb.org/movie/695721">查看详情页</a></p>
+   </details>
+   </li>
+   <li value="6"><details><summary><b>黑客帝国</b> · <i>1999 · ⭐ 8.3</i></summary>
+   <p>不久的将来，网络黑客尼奥对这个看似正常的现实世界产生了怀疑。他结识了黑客崔妮蒂，并见到了黑客组织的首领墨菲斯。墨菲斯告诉他，现实世界其实是由一个名叫“母体”的计算机人工智能系统控制，人们就像他们饲养的动物，没有自由和思想，而尼奥就是能够拯救人类的救世主。可是，救赎之路从来都不会一帆风顺，到底哪里才是真实的世界？如何才能打败那些超人一样的特勤？尼奥是不是人类的希望？这是黑客的帝国，程序和代码欢迎大家的到来。</p>
+   <p><a href="https://www.themoviedb.org/movie/603">查看详情页</a></p>
+   </details>
+   </li>
+   <li value="7"><details><summary><b>星球大战3：西斯的复仇</b> · <i>2005 · ⭐ 7.5</i></summary>
+   <p>克隆战争已经进行了三年，绝地武士团率领的共和国军团与独立星系邦联陷入了一场席卷整个银河的苦战。分裂联盟的格非特将军和杜库伯爵（克里斯托弗·李 Christopher Lee 饰）劫持议会首相帕尔帕庭（伊恩·迈克蒂安米德 Ian McDiarmid 饰）潜逃，绝地武士欧比旺·克诺比（伊万·麦克格雷格 Ewan McGregor 饰）和阿纳金（海登·克里斯滕森 Hayden Christensen 饰）奉长老院命前去营救，阿纳金杀死杜库伯爵救出帕尔帕庭，但格非特将军逃匿。阿纳金梦见妻子阿米达拉（娜塔丽·波特曼 Natalie Portman 饰）将死于难产，困惑中求助于帕尔帕庭，后者趁此机会离间阿…</p>
+   <p><a href="https://www.themoviedb.org/movie/1895">查看详情页</a></p>
+   </details>
+   </li>
+   <li value="8"><details><summary><b>宿主</b> · <i>2013 · ⭐ 6.3</i></summary>
+   <p>未来的某个时间，神秘外星人大举入侵地球。没有毁灭，没有战火，他们以特殊的方式占据人类的身体，将这颗早已被人类文明折磨得疲惫不堪的地球改造成一片看似和平幸福的乐土。然而，依旧有少数人不愿放弃自主的人格和丰富的情感与回忆，他们为此做着最后的抵抗。美丽女孩梅兰妮·斯特德抵死顽抗，仍不免被侵蚀的命运。新生的漫游者占据了她的身体，然而梅兰妮的意识并未就此消失。漫游者按照探索者的命令搜索梅兰妮的记忆，得知她的弟弟吉米以及深爱的男孩杰莱德·霍华的存在。在这一过程中，原本对立的漫游者和梅兰妮渐渐变得融洽，突如其来的事件迫使她们携手奔上拯救所爱之人的征途……</p>
+   <p><a href="https://www.themoviedb.org/movie/72710">查看详情页</a></p>
+   </details>
+   </li>
+   </ol>
+   [1 | 1:m:0] [2 | 1:m:1] [3 | 1:m:2] [4 | 1:m:3]
+   [5 | 1:m:4] [6 | 1:m:5] [7 | 1:m:6] [8 | 1:m:7]
+   [返回 | 1:bk:0] [取消 | 1:x:0]
+<< answerCallbackQuery
+>> user 1001 taps 1:bk:0 on message 1
+<< editMessageText chat=1001 message=1
+   <img src="url-ae95e58ec03e202c035279fd7b770ee9063e24e22f246ec568120ac5a90252ea"/>
+   <h3>🎬 <a href="https://www.themoviedb.org/movie/438631">沙丘</a></h3>
+   <footer><i>Dune</i> · 2021 · 电影 · ⭐ 7.8 · 科幻 / 冒险 · 156 分钟 · 主演：提莫西·查拉梅、丽贝卡·弗格森、奥斯卡·伊萨克</footer>
+   <blockquote expandable>电影《沙丘》为观众呈现了一段神秘而感人至深的英雄之旅。天赋异禀的少年保罗·厄崔迪（提莫西·查拉梅 饰）被命运指引，为了保卫自己的家族和人民，决心前往浩瀚宇宙间最危险的星球，开启一场惊心动魄的冒险。与此同时，各路势力为了抢夺这颗星球上一种能够释放人类最大潜力的珍贵资源而纷纷加入战场。最终，唯有那些能够战胜内心恐惧的人才能生存下去。</blockquote>
+   <hr/>
+   <p><b>要订阅《沙丘》吗？</b></p>
+   [确认订阅 | 1:ok:0]
+   [洗版订阅 | 1:bv:0]
+   [搜索资源 | 1:ts:0] [相似推荐 | 1:r:0] [同系列 | 1:n:0]
+   [返回 | 1:bk:0] [取消 | 1:x:0]
+<< answerCallbackQuery
+>> user 1001 taps 1:n:0 on message 1
+-> MoviePilot GET /api/v1/media/search?count=10&title=Dune&type=collection
+-> MoviePilot GET /api/v1/media/search?count=10&title=沙丘&type=collection
+-> MoviePilot GET /api/v1/tmdb/collection/726871
+<< editMessageText chat=1001 message=1
+   <tg-slideshow>
+   <img src="url-ae95e58ec03e202c035279fd7b770ee9063e24e22f246ec568120ac5a90252ea"/>
+   <img src="url-0603bc04eba9f23ccb0da918da40cefdcc9533bb920a16af3d7323b8954288fe"/>
+   <img src="url-f3924e4dafb7c35392e3de6d3fbfd5e540d3fcfe78dd69b758e7319101e217fe"/>
+   </tg-slideshow>
+   <h3>🎬「沙丘」的同系列作品</h3>
+   <ol start="1">
+   <li value="1"><details><summary><b>沙丘</b> · <i>2021 · ⭐ 7.8</i></summary>
+   <p>电影《沙丘》为观众呈现了一段神秘而感人至深的英雄之旅。天赋异禀的少年保罗·厄崔迪（提莫西·查拉梅 饰）被命运指引，为了保卫自己的家族和人民，决心前往浩瀚宇宙间最危险的星球，开启一场惊心动魄的冒险。与此同时，各路势力为了抢夺这颗星球上一种能够释放人类最大潜力的珍贵资源而纷纷加入战场。最终，唯有那些能够战胜内心恐惧的人才能生存下去。</p>
+   <p><a href="https://www.themoviedb.org/movie/438631">查看详情页</a></p>
+   </details>
+   </li>
+   <li value="2"><details><summary><b>沙丘2</b> · <i>2024 · ⭐ 8.1</i></summary>
+   <p>《沙丘2》承接第一部剧情，讲述保罗·厄崔迪（提莫西·查拉梅 Timothée Chalamet 饰）被帕迪沙皇帝和哈克南人联手灭族后，在厄拉科斯星球遇到弗雷曼女战士契妮（赞达亚 Zendaya 饰）以及加入弗雷曼人后展开的传奇旅程。保罗与让他家破人亡的阴谋家们开战，同时面临着一生所爱与已知宇宙命运的两难选择。</p>
+   <p><a href="https://www.themoviedb.org/movie/693134">查看详情页</a></p>
+   </details>
+   </li>
+   <li value="3"><details><summary><b>沙丘3</b> · <i>2026</i></summary>
+   <p>保罗·厄崔迪成为宇宙皇帝后，虽拥有预知未来的能力，却无法阻止以他之名发动的圣战席卷星系。在权力、信仰与个人命运的夹缝中，他逐渐走向无法回头的抉择与代价。</p>
+   <p><a href="https://www.themoviedb.org/movie/1170608">查看详情页</a></p>
+   </details>
+   </li>
+   </ol>
+   [1 | 1:m:0] [2 | 1:m:1] [3 | 1:m:2]
+   [返回 | 1:bk:0] [取消 | 1:x:0]
+<< answerCallbackQuery
+>> user 1001 taps 1:m:1 on message 1
+-> MoviePilot GET /api/v1/media/693134?media_source=themoviedb&type_name=电影
+-> MoviePilot GET /api/v1/subscribe/media/693134?media_source=themoviedb&mtype=电影&title=沙丘2&year=2024
+<< editMessageText chat=1001 message=1
+   <img src="url-0603bc04eba9f23ccb0da918da40cefdcc9533bb920a16af3d7323b8954288fe"/>
+   <h3>🎬 <a href="https://www.themoviedb.org/movie/693134">沙丘2</a></h3>
+   <footer><i>Dune: Part Two</i> · 2024 · 电影 · ⭐ 8.1 · 科幻 / 冒险 · 166 分钟 · 主演：提莫西·查拉梅、赞达亚·科尔曼、丽贝卡·弗格森</footer>
+   <blockquote expandable>《沙丘2》承接第一部剧情，讲述保罗·厄崔迪（提莫西·查拉梅 Timothée Chalamet 饰）被帕迪沙皇帝和哈克南人联手灭族后，在厄拉科斯星球遇到弗雷曼女战士契妮（赞达亚 Zendaya 饰）以及加入弗雷曼人后展开的传奇旅程。保罗与让他家破人亡的阴谋家们开战，同时面临着一生所爱与已知宇宙命运的两难选择。</blockquote>
+   <hr/>
+   <p><b>要订阅《沙丘2》吗？</b></p>
+   [确认订阅 | 1:ok:0]
+   [洗版订阅 | 1:bv:0]
+   [搜索资源 | 1:ts:0] [相似推荐 | 1:r:0] [同系列 | 1:n:0]
+   [返回 | 1:bk:0] [取消 | 1:x:0]
+<< answerCallbackQuery
+>> user 1001 taps 1:bk:0 on message 1
+<< editMessageText chat=1001 message=1
+   <tg-slideshow>
+   <img src="url-ae95e58ec03e202c035279fd7b770ee9063e24e22f246ec568120ac5a90252ea"/>
+   <img src="url-0603bc04eba9f23ccb0da918da40cefdcc9533bb920a16af3d7323b8954288fe"/>
+   <img src="url-f3924e4dafb7c35392e3de6d3fbfd5e540d3fcfe78dd69b758e7319101e217fe"/>
+   </tg-slideshow>
+   <h3>🎬「沙丘」的同系列作品</h3>
+   <ol start="1">
+   <li value="1"><details><summary><b>沙丘</b> · <i>2021 · ⭐ 7.8</i></summary>
+   <p>电影《沙丘》为观众呈现了一段神秘而感人至深的英雄之旅。天赋异禀的少年保罗·厄崔迪（提莫西·查拉梅 饰）被命运指引，为了保卫自己的家族和人民，决心前往浩瀚宇宙间最危险的星球，开启一场惊心动魄的冒险。与此同时，各路势力为了抢夺这颗星球上一种能够释放人类最大潜力的珍贵资源而纷纷加入战场。最终，唯有那些能够战胜内心恐惧的人才能生存下去。</p>
+   <p><a href="https://www.themoviedb.org/movie/438631">查看详情页</a></p>
+   </details>
+   </li>
+   <li value="2"><details><summary><b>沙丘2</b> · <i>2024 · ⭐ 8.1</i></summary>
+   <p>《沙丘2》承接第一部剧情，讲述保罗·厄崔迪（提莫西·查拉梅 Timothée Chalamet 饰）被帕迪沙皇帝和哈克南人联手灭族后，在厄拉科斯星球遇到弗雷曼女战士契妮（赞达亚 Zendaya 饰）以及加入弗雷曼人后展开的传奇旅程。保罗与让他家破人亡的阴谋家们开战，同时面临着一生所爱与已知宇宙命运的两难选择。</p>
+   <p><a href="https://www.themoviedb.org/movie/693134">查看详情页</a></p>
+   </details>
+   </li>
+   <li value="3"><details><summary><b>沙丘3</b> · <i>2026</i></summary>
+   <p>保罗·厄崔迪成为宇宙皇帝后，虽拥有预知未来的能力，却无法阻止以他之名发动的圣战席卷星系。在权力、信仰与个人命运的夹缝中，他逐渐走向无法回头的抉择与代价。</p>
+   <p><a href="https://www.themoviedb.org/movie/1170608">查看详情页</a></p>
+   </details>
+   </li>
+   </ol>
+   [1 | 1:m:0] [2 | 1:m:1] [3 | 1:m:2]
+   [返回 | 1:bk:0] [取消 | 1:x:0]
+<< answerCallbackQuery
+>> user 1001 taps 1:bk:0 on message 1
+<< editMessageText chat=1001 message=1
+   <img src="url-ae95e58ec03e202c035279fd7b770ee9063e24e22f246ec568120ac5a90252ea"/>
+   <h3>🎬 <a href="https://www.themoviedb.org/movie/438631">沙丘</a></h3>
+   <footer><i>Dune</i> · 2021 · 电影 · ⭐ 7.8 · 科幻 / 冒险 · 156 分钟 · 主演：提莫西·查拉梅、丽贝卡·弗格森、奥斯卡·伊萨克</footer>
+   <blockquote expandable>电影《沙丘》为观众呈现了一段神秘而感人至深的英雄之旅。天赋异禀的少年保罗·厄崔迪（提莫西·查拉梅 饰）被命运指引，为了保卫自己的家族和人民，决心前往浩瀚宇宙间最危险的星球，开启一场惊心动魄的冒险。与此同时，各路势力为了抢夺这颗星球上一种能够释放人类最大潜力的珍贵资源而纷纷加入战场。最终，唯有那些能够战胜内心恐惧的人才能生存下去。</blockquote>
+   <hr/>
+   <p><b>要订阅《沙丘》吗？</b></p>
+   [确认订阅 | 1:ok:0]
+   [洗版订阅 | 1:bv:0]
+   [搜索资源 | 1:ts:0] [相似推荐 | 1:r:0] [同系列 | 1:n:0]
+   [返回 | 1:bk:0] [取消 | 1:x:0]
+<< answerCallbackQuery
+>> user 1001 taps 1:bk:0 on message 1
+<< editMessageText chat=1001 message=1
+   <tg-slideshow>
+   <img src="url-ae95e58ec03e202c035279fd7b770ee9063e24e22f246ec568120ac5a90252ea"/>
+   <img src="url-7ea76e3b74f0f1bba01161bd2446775a7fe7657b009df91fca57cb760c60208f"/>
+   <img src="url-e887bdb9df0034573d9e03f6507d8e8b7862bda8362f968e4349554493678ff8"/>
+   <img src="url-0603bc04eba9f23ccb0da918da40cefdcc9533bb920a16af3d7323b8954288fe"/>
+   <img src="url-f3924e4dafb7c35392e3de6d3fbfd5e540d3fcfe78dd69b758e7319101e217fe"/>
+   <img src="url-cfc61103a56e8781300f998571c8194d0958754710eb781ed3beae7e5eae3dc2"/>
+   <img src="url-d03384b6cc307585edcd449cb20296ce3fa11071866b554add8f77be947e6c17"/>
+   <img src="url-f6bf48e37249a47a3abcd09ca8c92f0ab0f5d0f1d21a40918902154571cda459"/>
+   </tg-slideshow>
+   <h3>🔍 帮你找到这些「沙丘」啦</h3>
+   <ol start="1">
+   <li value="1"><b>沙丘</b><br>
+   <i>Dune · 2021 · 电影 · ⭐ 7.8</i></li>
+   <li value="2"><b>沙丘：预言</b><br>
+   <i>Dune: Prophecy · 2024 · 电视剧 · ⭐ 7.2</i></li>
+   <li value="3"><b>沙丘</b><br>
+   <i>Dune · 1984 · 电影 · ⭐ 6.2</i></li>
+   <li value="4"><b>沙丘2</b><br>
+   <i>Dune: Part Two · 2024 · 电影 · ⭐ 8.1</i></li>
+   <li value="5"><b>沙丘3</b><br>
+   <i>Dune: Part Three · 2026 · 电影</i></li>
+   <li value="6"><b>沙丘之子</b><br>
+   <i>Frank Herbert&#39;s Children of Dune · 2003 · 电视剧 · ⭐ 6.9</i></li>
+   <li value="7"><b>沙丘魔堡2000</b><br>
+   <i>Frank Herbert&#39;s Dune · 2000 · 电视剧 · ⭐ 6.8</i></li>
+   <li value="8"><b>沙丘虫暴</b><br>
+   <i>2021 · 电影 · ⭐ 6.7</i></li>
+   </ol>
+   <footer>第 1/2 页</footer>
+   [1 | 1:m:0] [2 | 1:m:1] [3 | 1:m:2] [4 | 1:m:3]
+   [5 | 1:m:4] [6 | 1:m:5] [7 | 1:m:6] [8 | 1:m:7]
+   [下一页 › | 1:p:1]
+   [重新搜索 | 1:rs:0]
+   [取消 | 1:x:0]
+<< answerCallbackQuery
+>> user 1001 taps 1:m:0 on message 1
+-> MoviePilot GET /api/v1/media/438631?media_source=themoviedb&type_name=电影
+-> MoviePilot GET /api/v1/subscribe/media/438631?media_source=themoviedb&mtype=电影&title=沙丘&year=2021
+<< editMessageText chat=1001 message=1
+   <img src="url-ae95e58ec03e202c035279fd7b770ee9063e24e22f246ec568120ac5a90252ea"/>
+   <h3>🎬 <a href="https://www.themoviedb.org/movie/438631">沙丘</a></h3>
+   <footer><i>Dune</i> · 2021 · 电影 · ⭐ 7.8 · 科幻 / 冒险 · 156 分钟 · 主演：提莫西·查拉梅、丽贝卡·弗格森、奥斯卡·伊萨克</footer>
+   <blockquote expandable>电影《沙丘》为观众呈现了一段神秘而感人至深的英雄之旅。天赋异禀的少年保罗·厄崔迪（提莫西·查拉梅 饰）被命运指引，为了保卫自己的家族和人民，决心前往浩瀚宇宙间最危险的星球，开启一场惊心动魄的冒险。与此同时，各路势力为了抢夺这颗星球上一种能够释放人类最大潜力的珍贵资源而纷纷加入战场。最终，唯有那些能够战胜内心恐惧的人才能生存下去。</blockquote>
+   <hr/>
+   <p>🔍 正在各个站点搜索资源，要等一会儿哦…</p>
+   [取消 | 1:x:0]
+<< answerCallbackQuery
+-> MoviePilot GET /api/v1/search/media/438631?media_source=themoviedb&mtype=电影
+<< editMessageText chat=1001 message=1
+   <h3>🔍 《沙丘》的资源</h3>
+   <ol start="1">
+   <li value="1"><b>Dune.2021.2160p.UHD.BluRay.REMUX.HDR.HEVC.DTS-HD.MA.5.1-FROGE</b><br>
+   <i>站点甲 · 58.2 GiB · 做种 25 · 免费 · H&amp;R</i></li>
+   <li value="2"><b>Dune.2021.1080p.BluRay.x264.DTS-HD.MA.5.1-CHD</b><br>
+   <i>站点乙 · 14.6 GiB · 做种 132</i></li>
+   <li value="3"><b>Dune.2021.2160p.WEB-DL.H265.DDP5.1-ADWeb</b><br>
+   <i>站点丙 · 18.1 GiB · 做种 48 · 2X免费</i></li>
+   <li value="4"><b>Dune.2021.720p.BluRay.x264-CHD</b><br>
+   <i>站点乙 · 6.0 GiB · 做种 8</i></li>
+   </ol>
+   <footer>共 4 个，按 MoviePilot 的优先级排好啦，点编号看详情～</footer>
+   [1 | 1:tp:0] [2 | 1:tp:1] [3 | 1:tp:2] [4 | 1:tp:3]
+   [·默认· | 1:to:0] [做种 | 1:to:1] [时间 | 1:to:2] [大小 | 1:to:3] [站点 | 1:to:4]
+   [筛选站点 | 1:tf:0] [多选… | 1:tm:0]
+   [返回 | 1:bk:0] [取消 | 1:x:0]

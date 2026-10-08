@@ -1,0 +1,31 @@
+>> user 1001 in chat 1001: /subscribe
+-> MoviePilot GET /api/v1/subscribe/
+<< sendRichMessage chat=1001 message=1
+   <h3>📚 订阅清单 · 电视剧（1）</h3>
+   <ol start="1">
+   <li value="1"><b>《迷途之子!!!!!》第 1 季</b><br>
+   <i>订阅中</i></li>
+   </ol>
+   [1 | 1:sd:73]
+   [·电视剧· | 1:sf:2] [电影 | 1:sf:1]
+   [订阅历史 | 1:hs:2]
+   [首页 | 1:o:0] [关闭 | 1:c:0]
+>> user 1001 taps 1:sf:1 on message 1
+<< editMessageText chat=1001 message=1
+   <h3>📚 订阅清单 · 电影（1）</h3>
+   <ol start="1">
+   <li value="1"><b>《沙丘》</b><br>
+   <i>订阅中</i></li>
+   </ol>
+   [1 | 1:sd:72]
+   [电视剧 | 1:sf:2] [·电影· | 1:sf:1]
+   [订阅历史 | 1:hs:1]
+   [首页 | 1:o:0] [关闭 | 1:c:0]
+<< answerCallbackQuery
+>> user 1001 in chat 1001: /subscribe
+-> MoviePilot GET /api/v1/subscribe/
+<< sendRichMessage chat=1001 message=2
+   <h3>📚 订阅清单</h3>
+   <p>现在还没有订阅哦～</p>
+   [订阅历史 | 2:hs:2]
+   [首页 | 2:o:0] [关闭 | 2:c:0]

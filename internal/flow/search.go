@@ -27,7 +27,7 @@ func (e *Engine) Start(ctx context.Context, actor Actor, term string) Reply {
 // retry repeats the search alone and keeps that intent.
 func (e *Engine) searchTyped(ctx context.Context, sess session, typed string) Reply {
 	var term string
-	term, sess.download = splitIntent(typed)
+	term, sess.download = splitIntent(typed, sess.download)
 	return e.search(ctx, sess, term)
 }
 
@@ -109,12 +109,15 @@ func askResearch(sess session) Reply {
 	}
 }
 
-// A replacement search uses a fresh session, so buttons from the previous
-// title cannot select or submit a different title by their old index.
+// A replacement search keeps intent but uses a fresh session, so buttons
+// from the previous title cannot submit another title by their old index.
+// An explicit prefix in the corrected title overrides the inherited intent.
 func (e *Engine) research(ctx context.Context, sess session, text string) Reply {
 	if text == "" {
 		return e.navigate(sess, answered, askResearch(sess))
 	}
 	e.store.take(sess.id)
-	return e.Start(ctx, sess.owner, text)
+	next := e.store.create(sess.owner, nil)
+	next.download = sess.download
+	return e.shown(next.id, e.searchTyped(ctx, next, text))
 }

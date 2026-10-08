@@ -1,6 +1,6 @@
 >> user 1001 in chat 1001: /start
-<< sendRichMessage chat=1001 message=1 photo=home.jpg 1280x720 sha256=d620fc3c5f168f03372b7fd77d4572d577b95fa1f410d95e2b60e5799f0d2315
-   <img src="tg://photo?id=p0"/>
+<< sendRichMessage chat=1001 message=1
+   <img src="file-d620fc3c5f168f03372b7fd77d4572d577b95fa1f410d95e2b60e5799f0d2315"/>
    <h3>🎬 Crychic</h3>
    <p>想看什么告诉我呀～我帮你找片、订阅，入库了第一时间喊你！私聊直接发片名就能搜哦 (๑•̀ㅂ•́)و✧</p>
    [搜索 | 1:h:0] [发现 | 1:h:1]
@@ -24,7 +24,7 @@
 << answerCallbackQuery
 >> user 1001 taps 1:k:0 on message 1
 << editMessageText chat=1001 message=1
-   <img src="https://image.tmdb.org/t/p/w500/dDknWHLYaQB76QSViNdzXOC5v64.jpg"/>
+   <img src="url-f1d1c3e9142d5b6cb0aec97f314112cb1cfcf5cab28cbc83476b0d4bf25e1175"/>
    <h3>⬇️ 《迷途之子!!!!!》第 1 季 E10–E12</h3>
    <table bordered compact>
    <tr><th>大小</th><th>进度</th></tr>
@@ -35,8 +35,8 @@
    [返回 | 1:l:0] [首页 | 1:o:0] [关闭 | 1:c:0]
 << answerCallbackQuery
 >> MoviePilot now answers GET /api/v1/download/ with downloads_mygo_later.json
-<< editMessageText chat=1001 message=1 reuses=url-f1d1c3e9
-   <img src="tg://photo?id=p0"/>
+<< editMessageText chat=1001 message=1
+   <img src="url-f1d1c3e9142d5b6cb0aec97f314112cb1cfcf5cab28cbc83476b0d4bf25e1175"/>
    <h3>⬇️ 《迷途之子!!!!!》第 1 季 E10–E12</h3>
    <table bordered compact>
    <tr><th>大小</th><th>进度</th><th>速度</th><th>剩余</th></tr>
@@ -46,8 +46,8 @@
    [停止刷新 | 1:u:0] [删除任务 | 1:kd:0]
    [返回 | 1:l:0] [首页 | 1:o:0] [关闭 | 1:c:0]
 >> user 1001 taps 1:u:0 on message 1
-<< editMessageText chat=1001 message=1 reuses=url-f1d1c3e9
-   <img src="tg://photo?id=p0"/>
+<< editMessageText chat=1001 message=1
+   <img src="url-f1d1c3e9142d5b6cb0aec97f314112cb1cfcf5cab28cbc83476b0d4bf25e1175"/>
    <h3>⬇️ 《迷途之子!!!!!》第 1 季 E10–E12</h3>
    <table bordered compact>
    <tr><th>大小</th><th>进度</th><th>速度</th><th>剩余</th></tr>
@@ -74,8 +74,8 @@
    [首页 | 1:o:0] [关闭 | 1:c:0]
 << answerCallbackQuery
 >> user 1001 taps 1:k:0 on message 1
-<< editMessageText chat=1001 message=1 reuses=url-f1d1c3e9
-   <img src="tg://photo?id=p0"/>
+<< editMessageText chat=1001 message=1
+   <img src="url-f1d1c3e9142d5b6cb0aec97f314112cb1cfcf5cab28cbc83476b0d4bf25e1175"/>
    <h3>⬇️ 《迷途之子!!!!!》第 1 季 E10–E12</h3>
    <table bordered compact>
    <tr><th>大小</th><th>进度</th><th>速度</th><th>剩余</th></tr>
@@ -86,8 +86,23 @@
    [返回 | 1:l:0] [首页 | 1:o:0] [关闭 | 1:c:0]
 << answerCallbackQuery
 >> MoviePilot now answers GET /api/v1/download/ with downloads_none.json
-<< editMessageText chat=1001 message=1 reuses=url-f1d1c3e9
-   <img src="tg://photo?id=p0"/>
+<< editMessageText chat=1001 message=1
+   <img src="url-f1d1c3e9142d5b6cb0aec97f314112cb1cfcf5cab28cbc83476b0d4bf25e1175"/>
    <h3>⬇️ 《迷途之子!!!!!》第 1 季 E10–E12</h3>
    <p>下载任务结束啦（下完了或者被移除了）。</p>
    [返回 | 1:l:0] [首页 | 1:o:0] [关闭 | 1:c:0]
+>> user 1001 taps 1:l:0 on message 1
+<< editMessageText chat=1001 message=1
+   <h3>📋 正在忙的任务</h3>
+   <p>现在没有在下载或整理的任务，大家都歇着呢～</p>
+   [首页 | 1:o:0] [关闭 | 1:c:0]
+<< answerCallbackQuery
+>> user 1001 taps 1:o:0 on message 1
+<< editMessageText chat=1001 message=1
+   <img src="file-d620fc3c5f168f03372b7fd77d4572d577b95fa1f410d95e2b60e5799f0d2315"/>
+   <h3>🎬 Crychic</h3>
+   <p>想看什么告诉我呀～我帮你找片、订阅，入库了第一时间喊你！私聊直接发片名就能搜哦 (๑•̀ㅂ•́)و✧</p>
+   [搜索 | 1:h:0] [发现 | 1:h:1]
+   [我的订阅 | 1:h:2] [最新入库 | 1:h:3]
+   [任务进度 | 1:h:4] [追剧日历 | 1:h:5]
+<< answerCallbackQuery

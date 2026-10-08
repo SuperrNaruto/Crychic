@@ -19,10 +19,11 @@ const (
 // screen is a reply once shown and the session state behind it, so 返回
 // can show it again exactly as it was.
 type screen struct {
-	state *session
-	reply Reply
-	chart bool // a chart page, shown afresh so its missing synopses are retried
-	list  bool // a list a pick was made from, which a finished request leads back to
+	state  *session
+	reply  Reply
+	chart  bool // a chart page, shown afresh so its missing synopses are retried
+	list   bool // a list a pick was made from, which a finished request leads back to
+	reload bool // this subscription list precedes a successful state mutation
 }
 
 // chartViews are the steps that show a chart page.
@@ -82,18 +83,24 @@ func (e *Engine) navigate(prev session, action string, reply Reply) Reply {
 		return reply
 	}
 	if reply.Follow == "" {
-		return e.record(prev, action, next, reply)
+		return e.record(transition{prev: prev, next: next, action: action}, reply)
 	}
 	if skipped := next.skipped; skipped != nil {
 		next.skipped = nil
-		e.record(prev, action, next, *skipped)
+		e.record(transition{prev: prev, next: next, action: action}, *skipped)
 	}
 	return reply
 }
 
+type transition struct {
+	prev, next session
+	action     string
+}
+
 // record makes reply next's current screen once action led on from prev,
 // and returns it with the buttons its place in the history adds.
-func (e *Engine) record(prev session, action string, next session, reply Reply) Reply {
+func (e *Engine) record(step transition, reply Reply) Reply {
+	prev, next, action := step.prev, step.next, step.action
 	next.history = moved(prev, action, next.history)
 	if finishing[action] && len(next.history) > 0 {
 		reply.Buttons = append(reply.Buttons, browseRow(next.id))
@@ -136,17 +143,11 @@ func toList(history []screen) []screen {
 }
 
 // settle ends a request's confirmable step before its write, so a second
-// tap only flashes a notice: a request picked from a list keeps its session
-// for 返回 to lead back there, any other ends with the write. ok is false
-// when a tap got there first.
-func (e *Engine) settle(sess session) bool {
-	if toList(sess.history) == nil {
-		_, ok := e.store.take(sess.id)
-		return ok
-	}
+// tap only flashes a notice. Direct requests retain their receipt without
+// navigation; requests picked from a list retain 返回 to that list.
+func (e *Engine) settle(sess session) {
 	sess.target, sess.chosen = nil, nil
 	e.store.put(sess)
-	return true
 }
 
 // shown records the first screen of a conversation.
@@ -168,7 +169,23 @@ func (e *Engine) back(ctx context.Context, sess session) Reply {
 	if last.chart {
 		return e.navigate(restored, actionChartPage, e.chartPage(ctx, restored, restored.page))
 	}
+	if last.reload {
+		return e.refreshSubsScreen(ctx, restored)
+	}
 	return last.reply
+}
+
+// refreshSubsScreen keeps the original kind and page after changing a
+// subscription; a shrinking list clamps to its last remaining page.
+func (e *Engine) refreshSubsScreen(ctx context.Context, sess session) Reply {
+	reply := e.listSubs(ctx, sess)
+	next, ok := e.store.get(sess.id)
+	if ok && len(next.pages) > 0 {
+		next.pageIndex = min(sess.pageIndex, len(next.pages)-1)
+		reply = next.pages[next.pageIndex]
+		e.store.put(next)
+	}
+	return e.navigate(sess, actionPage, reply)
 }
 
 // ticketed gives the guarded write buttons of the screen sess now shows
@@ -210,6 +227,7 @@ func pushed(history []screen, s screen) []screen {
 // snapshot is sess without its own navigation, which would nest.
 func snapshot(sess session) *session {
 	sess.history, sess.screen = nil, screen{}
+	sess.lastChoice, sess.lastReply = "", Reply{}
 	return &sess
 }
 

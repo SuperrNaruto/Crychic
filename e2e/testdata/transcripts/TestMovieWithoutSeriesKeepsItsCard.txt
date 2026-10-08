@@ -2,14 +2,14 @@
 -> MoviePilot GET /api/v1/media/search?count=10&title=沙丘&type=media
 << sendRichMessage chat=1001 message=1
    <tg-slideshow>
-   <img src="https://image.tmdb.org/t/p/w500/6hsJknqlPceFxExOe87z5VGgNG9.jpg"/>
-   <img src="https://image.tmdb.org/t/p/w500/7KFlApfTLNMNh0y5Zp1ufsgfN0J.jpg"/>
-   <img src="https://image.tmdb.org/t/p/w500/tiWTNR4f6oMYB09059YH8nDke5K.jpg"/>
-   <img src="https://image.tmdb.org/t/p/w500/9uaCR4HEZqxUqgORq0uZqTNm43G.jpg"/>
-   <img src="https://image.tmdb.org/t/p/w500/nRFhjS20RmhuLGEpQxewDyxlhmJ.jpg"/>
-   <img src="https://image.tmdb.org/t/p/w500/yCP8lKXBMtcG1CU9K3NsWlu1RgF.jpg"/>
-   <img src="https://image.tmdb.org/t/p/w500/iIf5XeuuBKPtG6H7MfWLirbJGrQ.jpg"/>
-   <img src="https://image.tmdb.org/t/p/w500/nQLdzYYB71sUugtSR7e7YdjF6Vx.jpg"/>
+   <img src="url-ae95e58ec03e202c035279fd7b770ee9063e24e22f246ec568120ac5a90252ea"/>
+   <img src="url-7ea76e3b74f0f1bba01161bd2446775a7fe7657b009df91fca57cb760c60208f"/>
+   <img src="url-e887bdb9df0034573d9e03f6507d8e8b7862bda8362f968e4349554493678ff8"/>
+   <img src="url-0603bc04eba9f23ccb0da918da40cefdcc9533bb920a16af3d7323b8954288fe"/>
+   <img src="url-f3924e4dafb7c35392e3de6d3fbfd5e540d3fcfe78dd69b758e7319101e217fe"/>
+   <img src="url-cfc61103a56e8781300f998571c8194d0958754710eb781ed3beae7e5eae3dc2"/>
+   <img src="url-d03384b6cc307585edcd449cb20296ce3fa11071866b554add8f77be947e6c17"/>
+   <img src="url-f6bf48e37249a47a3abcd09ca8c92f0ab0f5d0f1d21a40918902154571cda459"/>
    </tg-slideshow>
    <h3>🔍 帮你找到这些「沙丘」啦</h3>
    <ol start="1">
@@ -39,8 +39,8 @@
 >> user 1001 taps 1:m:7 on message 1
 -> MoviePilot GET /api/v1/media/911972?media_source=themoviedb&type_name=电影
 -> MoviePilot GET /api/v1/subscribe/media/911972?media_source=themoviedb&mtype=电影&title=沙丘虫暴&year=2021
-<< editMessageText chat=1001 message=1 reuses=url-f6bf48e3
-   <img src="tg://photo?id=p0"/>
+<< editMessageText chat=1001 message=1
+   <img src="url-f6bf48e37249a47a3abcd09ca8c92f0ab0f5d0f1d21a40918902154571cda459"/>
    <h3>🎬 <a href="https://www.themoviedb.org/movie/911972">沙丘虫暴</a></h3>
    <footer>2021 · 电影 · ⭐ 6.7</footer>
    <blockquote expandable>在不远的未来，人类大量排放废气制造垃圾，远远超出地球的承载能力，地球迎来无法逆转的沙化期。动植物变异产生地球新主人“沙虫”，它们屠城略地将人类逼到灭绝边缘，幸存者只能孤注一掷，寻找大漠深处仅存的避难所“绿洲”。一支由富商、科学家、保安队长、机械师一家以及混混组成的流亡小队乘着特制装甲车踏上寻找“绿洲”的冒险旅程，但嗜血虫族却尾随在后紧追不舍。为了生存，众人不仅要躲避暴走沙虫的追击，还要应对同伴间的背叛和选择，死伤惨烈，希望渺茫。等待人类的将会是怎样的命运？</blockquote>
@@ -57,8 +57,8 @@
 >> user 1001 taps 1:ok:0 on message 1
 -> MoviePilot POST /api/v1/subscribe/
    {"name":"沙丘虫暴","year":"2021","type":"电影","media_source":"themoviedb","media_id":"911972"}
-<< editMessageText chat=1001 message=1 reuses=url-f6bf48e3
-   <img src="tg://photo?id=p0"/>
+<< editMessageText chat=1001 message=1
+   <img src="url-f6bf48e37249a47a3abcd09ca8c92f0ab0f5d0f1d21a40918902154571cda459"/>
    <h3>🎬 <a href="https://www.themoviedb.org/movie/911972">沙丘虫暴</a></h3>
    <footer>2021 · 电影 · ⭐ 6.7</footer>
    <blockquote expandable>在不远的未来，人类大量排放废气制造垃圾，远远超出地球的承载能力，地球迎来无法逆转的沙化期。动植物变异产生地球新主人“沙虫”，它们屠城略地将人类逼到灭绝边缘，幸存者只能孤注一掷，寻找大漠深处仅存的避难所“绿洲”。一支由富商、科学家、保安队长、机械师一家以及混混组成的流亡小队乘着特制装甲车踏上寻找“绿洲”的冒险旅程，但嗜血虫族却尾随在后紧追不舍。为了生存，众人不仅要躲避暴走沙虫的追击，还要应对同伴间的背叛和选择，死伤惨烈，希望渺茫。等待人类的将会是怎样的命运？</blockquote>

@@ -102,7 +102,7 @@ func downloadLine(d Download) Block {
 // has reports whether download d is for this target: same media and, for a
 // season, the same season when the download names one.
 func (t Target) has(d Download) bool {
-	if d.Source != t.Media.Source || d.MediaID != t.Media.ID {
+	if d.Kind != t.Media.Kind || d.Source != t.Media.Source || d.MediaID != t.Media.ID {
 		return false
 	}
 	return t.Season == nil || d.Season == nil || *d.Season == *t.Season

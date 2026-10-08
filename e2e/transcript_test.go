@@ -15,8 +15,10 @@ import (
 var update = flag.Bool("update", false, "rewrite golden transcripts")
 
 // transcript is the ordered record of everything crossing the bot's
-// boundaries: user actions, MoviePilot calls and Telegram calls. Each
-// scenario's transcript is committed under testdata/transcripts and is the
+// boundaries: user actions, MoviePilot calls and Telegram calls. Images are
+// recorded by the file Telegram displays, not their URL/upload/file_id transport:
+// a button can be pressed before an earlier response teaches the bot its file_id.
+// Each scenario's transcript is committed under testdata/transcripts and is the
 // reviewable, repeatable artifact of the run.
 type transcript struct {
 	mu       sync.Mutex

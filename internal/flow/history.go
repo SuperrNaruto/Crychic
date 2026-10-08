@@ -99,11 +99,11 @@ func (e *Engine) pickPast(ctx context.Context, sess session, index int) Reply {
 	}
 	ps := sess.past[index]
 	target := pastTarget(ps)
-	id, err := e.backend.FindSubscription(ctx, target)
+	sub, err := e.backend.FindSubscription(ctx, target)
 	if err != nil {
 		e.log.Warn("subscription lookup failed", "media", ps.Media.ID, "err", err)
 	}
-	if err == nil && id != 0 {
+	if err == nil && sub.ID != 0 {
 		return Reply{Notice: msgAlreadyAgain}
 	}
 	sess.target = &target

@@ -47,7 +47,11 @@ type session struct {
 	follow      following
 	doomed      *DownloadRef // the download and instance asked to be deleted
 	pages       []Reply
+	listing     string   // source of this list screen, empty on cards and detail pages
+	pageIndex   int      // current generic list page, preserved by 返回
 	screen      screen   // what the conversation message shows now
+	lastChoice  string   // the last accepted forward read, replayable after a failed edit
+	lastReply   Reply    // its generated reply, including background-follow information
 	history     []screen // screens 返回 leads back to, latest last
 	skipped     *Reply   // a card a resource search started at once went past (huntNow)
 	ticket      uint64   // carried by the shown screen's write buttons; 0 when it has none

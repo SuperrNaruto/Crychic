@@ -33,6 +33,9 @@ func arrivalText(d delivery) flow.Text {
 // downloads told bring, which may be a single one, or else the whole
 // requested season, which a download of it brings as well.
 func completeWords(d delivery) string {
+	if d.downloads && d.held {
+		return "加上媒体库已有的，这一季的剧集全部到齐啦"
+	}
 	if d.downloads {
 		return "这次下载的剧集全部到齐啦"
 	}

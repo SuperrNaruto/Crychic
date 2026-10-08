@@ -79,8 +79,13 @@ func (e *Engine) listSubs(ctx context.Context, sess session) Reply {
 	}
 	sess.subs, sess.mine = subs, e.watcher.Requested(sess.owner.UserID, subs)
 	if len(subs) == 0 {
+		sess.pages, sess.listing, sess.pageIndex = nil, subscriptionList, 0
 		e.store.put(sess)
-		history := Button{Label: "订阅历史", Data: data(sess.id, actionHistory, int(TV))}
+		kind := sess.kind
+		if kind == 0 {
+			kind = TV
+		}
+		history := Button{Label: "订阅历史", Data: data(sess.id, actionHistory, int(kind))}
 		text := Lines(Heading(Plain(msgSubsTitle)), Line(Plain(msgNoSubs)))
 		return Reply{Text: text, Buttons: [][]Button{{history}, browseRow(sess.id)}}
 	}
@@ -102,7 +107,7 @@ func firstKind(subs []Subscription) Kind {
 // subsPage lists the session's subscriptions of its kind; number buttons
 // open read-only details, and one shared button cancels.
 func (e *Engine) subsPage(sess session) Reply {
-	var view listView
+	view := listView{source: subscriptionList}
 	mine := false
 	for _, s := range sess.subs {
 		if s.Kind != sess.kind {

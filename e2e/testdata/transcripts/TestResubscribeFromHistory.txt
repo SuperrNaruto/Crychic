@@ -83,7 +83,7 @@
 >> user 1001 taps 1:hp:0 on message 1
 -> MoviePilot GET /api/v1/subscribe/media/274580?media_source=themoviedb&mtype=电视剧&season=1&title=颂乐人偶&year=2025
 << editMessageText chat=1001 message=1
-   <img src="https://image.tmdb.org/t/p/w500/xixekXvcCSZS1jXhFrYUzpCrLL6.jpg"/>
+   <img src="url-caf3370aa7811b8d87c23685c80c5562086c41f07bc889d8304e5f09cb366cfd"/>
    <h3>📺 颂乐人偶</h3>
    <footer>2025 · 电视剧</footer>
    <hr/>
@@ -119,8 +119,8 @@
 << answerCallbackQuery
 >> user 1001 taps 1:hp:0 on message 1
 -> MoviePilot GET /api/v1/subscribe/media/274580?media_source=themoviedb&mtype=电视剧&season=1&title=颂乐人偶&year=2025
-<< editMessageText chat=1001 message=1 reuses=url-caf3370a
-   <img src="tg://photo?id=p0"/>
+<< editMessageText chat=1001 message=1
+   <img src="url-caf3370aa7811b8d87c23685c80c5562086c41f07bc889d8304e5f09cb366cfd"/>
    <h3>📺 颂乐人偶</h3>
    <footer>2025 · 电视剧</footer>
    <hr/>
@@ -132,8 +132,8 @@
 >> user 1001 taps 1:ho:0 on message 1
 -> MoviePilot POST /api/v1/subscribe/
    {"id":8,"name":"颂乐人偶","year":"2025","type":"电视剧","season":1,"media_source":"themoviedb","media_id":"274580","poster":"https://image.tmdb.org/t/p/w500/xixekXvcCSZS1jXhFrYUzpCrLL6.jpg","date":"2026-10-06 22:36:35","start_episode":0,"total_episode":0,"best_version":0,"sites":[1],"quality":null,"resolution":null,"effect":null}
-<< editMessageText chat=1001 message=1 reuses=url-caf3370a
-   <img src="tg://photo?id=p0"/>
+<< editMessageText chat=1001 message=1
+   <img src="url-caf3370aa7811b8d87c23685c80c5562086c41f07bc889d8304e5f09cb366cfd"/>
    <h3>📺 颂乐人偶</h3>
    <footer>2025 · 电视剧</footer>
    <hr/>
@@ -143,8 +143,8 @@
 >> user 1001 taps 1:ho:0 on message 1
 << answerCallbackQuery notice="这个选项不太对哦～"
 >> MoviePilot transfers 颂乐人偶 (themoviedb/274580) S01E01
-<< sendRichMessage chat=1001 message=2 reuses=url-caf3370a
-   <img src="tg://photo?id=p0"/>
+<< sendRichMessage chat=1001 message=2
+   <img src="url-caf3370aa7811b8d87c23685c80c5562086c41f07bc889d8304e5f09cb366cfd"/>
    <h3>📥 入库啦</h3>
    <p>你想看的<b>《颂乐人偶》第 1 季</b> E01 到家啦！</p>
    <tg-button-row align="left">
@@ -192,7 +192,7 @@
 >> user 1001 taps 1:hp:0 on message 1
 -> MoviePilot GET /api/v1/subscribe/media/438631?media_source=themoviedb&mtype=电影&title=沙丘&year=2021
 << editMessageText chat=1001 message=1
-   <img src="https://image.tmdb.org/t/p/w500/6hsJknqlPceFxExOe87z5VGgNG9.jpg"/>
+   <img src="url-ae95e58ec03e202c035279fd7b770ee9063e24e22f246ec568120ac5a90252ea"/>
    <h3>🎬 沙丘</h3>
    <footer>2021 · 电影</footer>
    <hr/>
@@ -204,8 +204,8 @@
 >> user 1001 taps 1:ho:0 on message 1
 -> MoviePilot POST /api/v1/subscribe/
    {"id":1,"name":"沙丘","year":"2021","type":"电影","season":null,"media_source":"themoviedb","media_id":"438631","poster":"https://image.tmdb.org/t/p/w500/6hsJknqlPceFxExOe87z5VGgNG9.jpg","date":"2026-10-05 11:18:33","start_episode":0,"total_episode":0,"best_version":0,"sites":null,"quality":null,"resolution":null,"effect":null}
-<< editMessageText chat=1001 message=1 reuses=url-ae95e58e
-   <img src="tg://photo?id=p0"/>
+<< editMessageText chat=1001 message=1
+   <img src="url-ae95e58ec03e202c035279fd7b770ee9063e24e22f246ec568120ac5a90252ea"/>
    <h3>🎬 沙丘</h3>
    <footer>2021 · 电影</footer>
    <hr/>

@@ -87,20 +87,19 @@ type seasonOutcome struct {
 // subscribeSeasons subscribes each ticked season from its first episode,
 // skipping ones already subscribed, and reports every season's outcome.
 func (e *Engine) subscribeSeasons(ctx context.Context, sess session) Reply {
-	if !e.settle(sess) {
-		return expiredText(msgExpired)
-	}
+	e.settle(sess)
 	outcomes := make([]seasonOutcome, 0, len(sess.chosen))
 	for _, n := range sess.chosen {
 		outcomes = append(outcomes, e.subscribeSeason(ctx, sess, n))
 	}
-	return sess.picked.replyLines(outcomeLines(sess.picked.Media, outcomes), nil)
+	return sess.picked.replyLines(e.outcomeLines(sess.picked.Media, outcomes), nil)
 }
 
 func (e *Engine) subscribeSeason(ctx context.Context, sess session, season int) seasonOutcome {
 	target := Target{Media: sess.picked.Media, Season: &season}
 	out := seasonOutcome{season: season}
-	id, err := e.backend.FindSubscription(ctx, target)
+	sub, err := e.backend.FindSubscription(ctx, target)
+	id := sub.ID
 	if err == nil && id != 0 {
 		out.existing = true
 	}
@@ -117,7 +116,7 @@ func (e *Engine) subscribeSeason(ctx context.Context, sess session, season int) 
 }
 
 // outcomeLines tables each season's outcome, e.g. 第 2 季 | ✅ 已订阅.
-func outcomeLines(m Media, outcomes []seasonOutcome) Text {
+func (e *Engine) outcomeLines(m Media, outcomes []seasonOutcome) Text {
 	rows := make([][]Span, 0, len(outcomes))
 	notified := false
 	for _, o := range outcomes {
@@ -133,7 +132,7 @@ func outcomeLines(m Media, outcomes []seasonOutcome) Text {
 	}
 	text := Lines(Line(Strong(fmt.Sprintf("《%s》的订阅结果来啦：", m.Title))), Table(outcomeHead, rows...))
 	if notified {
-		text = append(text, Line(Plain(msgWillNotify)))
+		text = append(text, Line(Plain(e.noticePromise())))
 	}
 	return text
 }

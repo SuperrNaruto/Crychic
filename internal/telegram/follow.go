@@ -28,12 +28,13 @@ type follower struct {
 	pending    *flow.Reply // a flow transition already read but not delivered
 	retryAt    time.Time
 	retryUntil time.Time
+	suspended  bool // protected by adapter.mu; a callback may resume a rejected choice
 }
 
 // follow starts refreshing f's message, replacing any earlier follower of it.
 func (a *adapter) follow(f follower) {
 	ctx, cancel := context.WithCancel(a.runCtx)
-	f.cancel = cancel
+	f.cancel, f.suspended = cancel, false
 	key := f.target.key()
 	a.mu.Lock()
 	if old := a.followers[key]; old != nil {
@@ -92,10 +93,13 @@ func (a *adapter) refreshOnce(ctx context.Context, f *follower) bool {
 	}
 	if f.pending == nil {
 		reply := a.flow.Choose(ctx, f.actor, f.data)
-		if ctx.Err() != nil || reply.Notice != "" {
+		if reply.Notice != "" {
 			return false
 		}
 		f.pending = &reply
+	}
+	if ctx.Err() != nil {
+		return false
 	}
 	return a.deliverFollow(ctx, f)
 }
@@ -133,6 +137,33 @@ func (f *follower) deferRetry(err error) {
 // forget drops f from the followers unless a newer one replaced it.
 func (a *adapter) forget(f *follower) {
 	f.cancel()
+	a.mu.Lock()
+	defer a.mu.Unlock()
+	if a.followers[f.target.key()] == f && !f.suspended {
+		delete(a.followers, f.target.key())
+	}
+}
+
+// resumeFollower runs under the message lane, after the cancelled refresh
+// stopped mutating f. A newer navigation/follower invalidates its identity;
+// otherwise its unsent reply survives without repeating the transition.
+func (a *adapter) resumeFollower(f *follower) {
+	if f == nil {
+		return
+	}
+	a.mu.Lock()
+	current := a.followers[f.target.key()] == f
+	copy := *f
+	a.mu.Unlock()
+	if current {
+		a.follow(copy)
+	}
+}
+
+func (a *adapter) discardFollower(f *follower) {
+	if f == nil {
+		return
+	}
 	a.mu.Lock()
 	defer a.mu.Unlock()
 	if a.followers[f.target.key()] == f {

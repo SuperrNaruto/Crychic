@@ -22,11 +22,11 @@ func (e *Engine) enrich(ctx context.Context, sess *session, media Media) {
 	sess.library = library
 }
 
-func (e *Engine) confirmationInfo(ctx context.Context, sess *session, target Target) (int, error) {
+func (e *Engine) confirmationInfo(ctx context.Context, sess *session, target Target) (Subscription, error) {
 	cosmetic, cancel := context.WithTimeout(ctx, cosmeticTimeout)
 	defer cancel()
 	var downloads []Download
-	var existing int
+	var existing Subscription
 	var err error
 	var wg sync.WaitGroup
 	wg.Go(func() { downloads = e.downloads(cosmetic, target) })

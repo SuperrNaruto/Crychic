@@ -209,7 +209,7 @@ func (c *Client) Seasons(ctx context.Context, media flow.Media) ([]flow.Season, 
 
 // FindSubscription asks MoviePilot for an existing subscription; it answers
 // with an empty subscription (null id) when there is none.
-func (c *Client) FindSubscription(ctx context.Context, t flow.Target) (int, error) {
+func (c *Client) FindSubscription(ctx context.Context, t flow.Target) (flow.Subscription, error) {
 	q := url.Values{
 		"media_source": {t.Media.Source},
 		"title":        {t.Media.Title},
@@ -221,14 +221,12 @@ func (c *Client) FindSubscription(ctx context.Context, t flow.Target) (int, erro
 	if t.Season != nil {
 		q.Set("season", strconv.Itoa(*t.Season))
 	}
-	var sub struct {
-		ID *int `json:"id"`
-	}
+	var sub subscriptionRecord
 	path := "/api/v1/subscribe/media/" + url.PathEscape(t.Media.ID)
 	if err := c.do(ctx, call{method: http.MethodGet, path: path, query: q}, &sub); err != nil {
-		return 0, err
+		return flow.Subscription{}, err
 	}
-	return deref(sub.ID), nil
+	return sub.subscription(), nil
 }
 
 func deref(p *int) int {

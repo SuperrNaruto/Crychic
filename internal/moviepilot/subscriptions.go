@@ -48,6 +48,9 @@ func (c *Client) Subscriptions(ctx context.Context) ([]flow.Subscription, error)
 	}
 	subs := make([]flow.Subscription, 0, len(records))
 	for _, r := range records {
+		if _, supported := mediaKinds[r.Type]; !supported {
+			continue
+		}
 		subs = append(subs, r.subscription())
 	}
 	return subs, nil
@@ -66,10 +69,7 @@ func (c *Client) Subscription(ctx context.Context, id int) (flow.Subscription, e
 }
 
 func (r subscriptionRecord) subscription() flow.Subscription {
-	kind := flow.Movie
-	if r.Type == typeTV {
-		kind = flow.TV
-	}
+	kind := mediaKinds[r.Type]
 	s := flow.Subscription{
 		ID: r.ID, Created: r.Date, Source: r.MediaSource, MediaID: r.MediaID,
 		Title: r.Name, Year: r.Year, Kind: kind, Season: r.Season,

@@ -36,8 +36,13 @@ func TestFollowDownloadUntilItFinishes(t *testing.T) {
 	h.shows(1, "不自动刷新啦")
 	h.tap(alice, 1, "返回")
 	h.tap(alice, 1, mygoTask)
+	h.mp.setRoute(queuePath, ok("queue_none.json"))
 	h.reports(1, downloadsPath, "downloads_none.json")
 	h.shows(1, "下载任务结束啦")
+	h.tap(alice, 1, "返回")
+	h.shows(1, "现在没有在下载或整理的任务")
+	h.tap(alice, 1, "首页")
+	h.shows(1, "Crychic")
 	h.tr.verify(t)
 }
 

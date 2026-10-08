@@ -2,10 +2,10 @@
 -> MoviePilot GET /api/v1/media/search?count=10&title=绝命毒师&type=media
 << sendRichMessage chat=1001 message=1
    <tg-slideshow>
-   <img src="https://image.tmdb.org/t/p/w500/rqliuvX7NdknSHu5qaSDfESplQi.jpg"/>
-   <img src="https://image.tmdb.org/t/p/w500/xTozsIhV01a5w8n4bprFNAX8NE0.jpg"/>
-   <img src="https://image.tmdb.org/t/p/w500/uI6dU5hbhskkgA7TQL0qq74ALjR.jpg"/>
-   <img src="https://image.tmdb.org/t/p/w500/2BcQ0ZScTBj3sihSQkV1SXYHqdU.jpg"/>
+   <img src="url-1bc43c78f90216151f38c5364e20d05ed84bcd8927d87d91cbd1c655434f0dd9"/>
+   <img src="url-28c93f139490e6c84cfe65e9822bfbe8cc45ac79bdfb688c2e137815b0b7ecfb"/>
+   <img src="url-e155c85f351d7c82c1155073e6634f9d4b6459f65bee451e4e0e0dc5f9c75e44"/>
+   <img src="url-d920f8c03ea5e84a555e0ef29619d9cc70e0724c154e427ef51d015e575b42bb"/>
    </tg-slideshow>
    <h3>🔍 帮你找到这些「绝命毒师」啦</h3>
    <ol start="1">
@@ -24,8 +24,8 @@
 >> user 1001 taps 1:m:0 on message 1
 -> MoviePilot GET /api/v1/media/1396?media_source=themoviedb&type_name=电视剧
 -> MoviePilot GET /api/v1/media/seasons?media_id=1396&media_source=themoviedb
-<< editMessageText chat=1001 message=1 reuses=url-1bc43c78
-   <img src="tg://photo?id=p0"/>
+<< editMessageText chat=1001 message=1
+   <img src="url-1bc43c78f90216151f38c5364e20d05ed84bcd8927d87d91cbd1c655434f0dd9"/>
    <h3>📺 <a href="https://www.themoviedb.org/tv/1396">绝命毒师</a></h3>
    <footer><i>Breaking Bad</i> · 2008 · 电视剧 · ⭐ 9.0 · 剧情 / 犯罪 · 共 5 季 62 集 · 主演：布莱恩·克兰斯顿、亚伦·保尔、安娜·冈</footer>
    <blockquote expandable>高中化学教师沃尔特·怀特被诊断患有晚期癌症，为保障家人经济生活，他与学生杰西制毒贩毒，并逐渐坠落至万劫不复的深渊。</blockquote>
@@ -48,8 +48,8 @@
 << answerCallbackQuery
 >> user 1001 taps 1:s:2 on message 1
 -> MoviePilot GET /api/v1/subscribe/media/1396?media_source=themoviedb&mtype=电视剧&season=2&title=绝命毒师&year=2008
-<< editMessageText chat=1001 message=1 reuses=url-1bc43c78
-   <img src="tg://photo?id=p0"/>
+<< editMessageText chat=1001 message=1
+   <img src="url-1bc43c78f90216151f38c5364e20d05ed84bcd8927d87d91cbd1c655434f0dd9"/>
    <h3>📺 <a href="https://www.themoviedb.org/tv/1396">绝命毒师</a></h3>
    <footer><i>Breaking Bad</i> · 2008 · 电视剧 · ⭐ 9.0 · 剧情 / 犯罪 · 共 5 季 62 集 · 主演：布莱恩·克兰斯顿、亚伦·保尔、安娜·冈</footer>
    <blockquote expandable>高中化学教师沃尔特·怀特被诊断患有晚期癌症，为保障家人经济生活，他与学生杰西制毒贩毒，并逐渐坠落至万劫不复的深渊。</blockquote>
@@ -64,8 +64,8 @@
 >> user 1001 taps 1:ok:0 on message 1
 -> MoviePilot POST /api/v1/subscribe/
    {"name":"绝命毒师","year":"2008","type":"电视剧","media_source":"themoviedb","media_id":"1396","season":2}
-<< editMessageText chat=1001 message=1 reuses=url-1bc43c78
-   <img src="tg://photo?id=p0"/>
+<< editMessageText chat=1001 message=1
+   <img src="url-1bc43c78f90216151f38c5364e20d05ed84bcd8927d87d91cbd1c655434f0dd9"/>
    <h3>📺 <a href="https://www.themoviedb.org/tv/1396">绝命毒师</a></h3>
    <footer><i>Breaking Bad</i> · 2008 · 电视剧 · ⭐ 9.0 · 剧情 / 犯罪 · 共 5 季 62 集 · 主演：布莱恩·克兰斯顿、亚伦·保尔、安娜·冈</footer>
    <blockquote expandable>高中化学教师沃尔特·怀特被诊断患有晚期癌症，为保障家人经济生活，他与学生杰西制毒贩毒，并逐渐坠落至万劫不复的深渊。</blockquote>
@@ -74,8 +74,8 @@
    [返回 | 1:bk:0] [首页 | 1:o:0] [关闭 | 1:c:0]
 << answerCallbackQuery
 >> user 1001 taps 1:o:0 on message 1
-<< editMessageText chat=1001 message=1 photo=home.jpg 1280x720 sha256=d620fc3c5f168f03372b7fd77d4572d577b95fa1f410d95e2b60e5799f0d2315
-   <img src="tg://photo?id=p0"/>
+<< editMessageText chat=1001 message=1
+   <img src="file-d620fc3c5f168f03372b7fd77d4572d577b95fa1f410d95e2b60e5799f0d2315"/>
    <h3>🎬 Crychic</h3>
    <p>想看什么告诉我呀～我帮你找片、订阅，入库了第一时间喊你！私聊直接发片名就能搜哦 (๑•̀ㅂ•́)و✧</p>
    [搜索 | 1:h:0] [发现 | 1:h:1]
@@ -124,7 +124,7 @@
 >> user 1001 taps 1:hp:0 on message 1
 -> MoviePilot GET /api/v1/subscribe/media/274580?media_source=themoviedb&mtype=电视剧&season=1&title=颂乐人偶&year=2025
 << editMessageText chat=1001 message=1
-   <img src="https://image.tmdb.org/t/p/w500/xixekXvcCSZS1jXhFrYUzpCrLL6.jpg"/>
+   <img src="url-caf3370aa7811b8d87c23685c80c5562086c41f07bc889d8304e5f09cb366cfd"/>
    <h3>📺 颂乐人偶</h3>
    <footer>2025 · 电视剧</footer>
    <hr/>
@@ -136,8 +136,8 @@
 >> user 1001 taps 1:ho:0 on message 1
 -> MoviePilot POST /api/v1/subscribe/
    {"id":8,"name":"颂乐人偶","year":"2025","type":"电视剧","season":1,"media_source":"themoviedb","media_id":"274580","poster":"https://image.tmdb.org/t/p/w500/xixekXvcCSZS1jXhFrYUzpCrLL6.jpg","date":"2026-10-06 22:36:35","start_episode":0,"total_episode":0,"best_version":0,"sites":[1],"quality":null,"resolution":null,"effect":null}
-<< editMessageText chat=1001 message=1 reuses=url-caf3370a
-   <img src="tg://photo?id=p0"/>
+<< editMessageText chat=1001 message=1
+   <img src="url-caf3370aa7811b8d87c23685c80c5562086c41f07bc889d8304e5f09cb366cfd"/>
    <h3>📺 颂乐人偶</h3>
    <footer>2025 · 电视剧</footer>
    <hr/>
@@ -145,8 +145,8 @@
    [返回 | 1:hf:2] [首页 | 1:o:0] [关闭 | 1:c:0]
 << answerCallbackQuery
 >> MoviePilot transfers 颂乐人偶 (themoviedb/274580) S01E01-E07
-<< sendRichMessage chat=1001 message=2 reuses=url-caf3370a
-   <img src="tg://photo?id=p0"/>
+<< sendRichMessage chat=1001 message=2
+   <img src="url-caf3370aa7811b8d87c23685c80c5562086c41f07bc889d8304e5f09cb366cfd"/>
    <h3>📥 入库啦</h3>
    <p>你想看的<b>《颂乐人偶》第 1 季</b> E01–E07 到家啦！</p>
    <tg-button-row align="left">
@@ -155,7 +155,7 @@
 >> Crychic restarts
 >> MoviePilot transfers 颂乐人偶 (themoviedb/274580) S01E08-E13
 << sendRichMessage chat=1001 message=3
-   <img src="https://image.tmdb.org/t/p/w500/xixekXvcCSZS1jXhFrYUzpCrLL6.jpg"/>
+   <img src="url-caf3370aa7811b8d87c23685c80c5562086c41f07bc889d8304e5f09cb366cfd"/>
    <h3>📥 入库啦</h3>
    <p>你想看的<b>《颂乐人偶》第 1 季</b> E08–E13 到家啦！</p>
    <tg-button-row align="left">

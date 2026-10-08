@@ -12,8 +12,8 @@ var intentWords = map[string]bool{"订阅": false, "搜索": false, "下载": tr
 
 // splitIntent strips a leading 订阅, 搜索 or 下载 (with any colon or space
 // after it) from term and tells whether it asked to download; a word with
-// nothing after it is the title itself.
-func splitIntent(term string) (title string, download bool) {
+// nothing after it is the title itself. Without a prefix, keep download.
+func splitIntent(term string, download bool) (title string, wantsDownload bool) {
 	for word, wantsDownload := range intentWords {
 		rest, found := strings.CutPrefix(term, word)
 		rest = strings.TrimLeftFunc(rest, func(r rune) bool { return r == ':' || r == '：' || unicode.IsSpace(r) })
@@ -21,7 +21,7 @@ func splitIntent(term string) (title string, download bool) {
 			return rest, wantsDownload
 		}
 	}
-	return term, false
+	return term, download
 }
 
 // huntNow searches the resources of the card's target at once, for a title

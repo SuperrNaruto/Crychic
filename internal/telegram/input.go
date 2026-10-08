@@ -84,30 +84,41 @@ func (a *adapter) answerText(ctx context.Context, msg *models.Message, p pending
 	a.mu.Lock()
 	current := a.pending[key]
 	a.mu.Unlock()
-	if current != p {
+	if current != p || !a.acceptsAnswer(ctx, msg, p) {
 		return
-	}
-	isReply := msg.ReplyToMessage != nil && msg.ReplyToMessage.ID == p.message
-	if !isReply {
-		if msg.Chat.Type != models.ChatTypePrivate {
-			return
-		}
-		// Only unquoted private text defaults to the newest prompt. An
-		// explicit reply cannot change another conversation or its input.
-		if msg.ReplyToMessage != nil {
-			a.replyTo(ctx, msg, flow.Reply{Text: flow.Lines(
-				flow.Heading(flow.Plain("⚠️ 请回复当前提问")),
-				flow.Line(flow.Plain("你回复的不是我正在等的那条提问哦。请回复最新的提问，或者重新打开想回答的提问～")),
-			)})
-			return
-		}
 	}
 	actor := actorOf(*msg.From, destinationOf(msg))
 	reply := a.flow.Answer(ctx, actor, flow.Typed{Input: p.input, Text: msg.Text})
+	if reply.Expired && msg.Chat.Type == models.ChatTypePrivate && msg.ReplyToMessage == nil {
+		a.mu.Lock()
+		delete(a.pending, key)
+		a.mu.Unlock()
+		a.replyTo(ctx, msg, a.flow.Start(ctx, actor, msg.Text))
+		return
+	}
 	if reply.Notice != "" {
 		a.log.Warn("typed answer refused", "notice", reply.Notice)
 		return
 	}
 	target := editTarget{chat: key.chat, user: key.user, message: p.message, thread: key.thread}
 	a.show(ctx, follower{target: target, actor: actor}, reply)
+}
+
+// Only unquoted private text defaults to the newest prompt. An explicit
+// reply cannot change another conversation or its pending input.
+func (a *adapter) acceptsAnswer(ctx context.Context, msg *models.Message, p pendingInput) bool {
+	if msg.ReplyToMessage != nil && msg.ReplyToMessage.ID == p.message {
+		return true
+	}
+	if msg.Chat.Type != models.ChatTypePrivate {
+		return false
+	}
+	if msg.ReplyToMessage == nil {
+		return true
+	}
+	a.replyTo(ctx, msg, flow.Reply{Text: flow.Lines(
+		flow.Heading(flow.Plain("⚠️ 请回复当前提问")),
+		flow.Line(flow.Plain("你回复的不是我正在等的那条提问哦。请回复最新的提问，或者重新打开想回答的提问～")),
+	)})
+	return false
 }

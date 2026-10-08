@@ -15,21 +15,11 @@ import (
 )
 
 type photo struct {
-	name, digest  string
+	digest        string
 	width, height int
 	fileID        string
 	reused        bool // sent by file_id instead of uploaded
 }
-
-func (p photo) description() string {
-	if p.reused {
-		return " reuses=" + p.fileID
-	}
-	return fmt.Sprintf(" photo=%s %dx%d sha256=%s", p.name, p.width, p.height, p.digest)
-}
-
-// fileIDLength is how much of a digest the fake's file_ids keep.
-const fileIDLength = 12
 
 var (
 	imageSrc  = regexp.MustCompile(`<img src="([^"]*)"/>`)
@@ -68,11 +58,12 @@ func (m message) fileOf(src string) string {
 	if id, ok := strings.CutPrefix(src, "tg://photo?id="); ok {
 		return m.files[id]
 	}
-	return fmt.Sprintf("url-%x", sha256.Sum256([]byte(src)))[:fileIDLength]
+	return fmt.Sprintf("url-%x", sha256.Sum256([]byte(src)))
 }
 
 // seen is the message as its reader sees it: each image as the file
-// Telegram shows, whether sent by URL, upload or file_id.
+// Telegram shows, whether sent by URL, upload or file_id. Full digests keep
+// distinct URLs and uploaded bytes distinct, including image order and count.
 func (m message) seen() string {
 	return imageSrc.ReplaceAllStringFunc(m.text, func(img string) string {
 		return `<img src="` + m.fileOf(imageSrc.FindStringSubmatch(img)[1]) + `"/>`
@@ -110,7 +101,7 @@ func (f *fakeTelegram) seedPhoto(chat int64, caption string, rows [][]button) in
 	f.mu.Lock()
 	defer f.mu.Unlock()
 	f.lastMsg++
-	f.messages[f.lastMsg] = message{chat: chat, text: caption, rows: rows, photo: &photo{name: "home.jpg", digest: "legacy"}}
+	f.messages[f.lastMsg] = message{chat: chat, text: caption, rows: rows, photo: &photo{digest: "legacy"}}
 	return f.lastMsg
 }
 
@@ -221,7 +212,7 @@ func mediaPhoto(r *http.Request, media string, known map[string]bool) (photo, er
 	if err != nil {
 		return p, err
 	}
-	p.fileID = "file-" + p.digest[:fileIDLength]
+	p.fileID = "file-" + p.digest
 	return p, nil
 }
 
@@ -272,7 +263,7 @@ func richLines(markup string) []string {
 }
 
 func readPhoto(r *http.Request, field string) (photo, error) {
-	file, header, err := r.FormFile(field)
+	file, _, err := r.FormFile(field)
 	if err != nil {
 		return photo{}, err
 	}
@@ -286,8 +277,8 @@ func readPhoto(r *http.Request, field string) (photo, error) {
 		return photo{}, err
 	}
 	return photo{
-		name: header.Filename, digest: fmt.Sprintf("%x", sha256.Sum256(data)),
-		width: img.Bounds().Dx(), height: img.Bounds().Dy(),
+		digest: fmt.Sprintf("%x", sha256.Sum256(data)),
+		width:  img.Bounds().Dx(), height: img.Bounds().Dy(),
 	}, nil
 }
 

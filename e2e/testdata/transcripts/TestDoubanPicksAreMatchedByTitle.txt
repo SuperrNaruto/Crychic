@@ -8,15 +8,15 @@
    [首页 | 1:o:0] [关闭 | 1:c:0]
 >> user 1001 taps 1:d:2 on message 1
 -> MoviePilot GET /api/v1/recommend/douban_tv_hot
-<< editMessageText chat=1001 message=1 photo=p0-p2931762705.webp 2x3 sha256=f5f6d5b17cb11ee11cf44ed25dc5348adfece286572dcdf0710170dad1dbc6e7 photo=p2-p2932319485.webp 2x3 sha256=66a056afde763621e3149ad5de08f246d87c04694be04a641f06cef4c60a88b2 photo=p3-p2934748119.webp 2x3 sha256=83960d583ad829fd76e9b053d6d6856cb254bf022cb264fe5e433730a1dbc897 photo=p4-p2931558074.webp 2x3 sha256=be1494efdb6f9510421bf70153fb72d24808f6a29197435abae9cc29f71b8013 photo=p5-p2935819627.webp 2x3 sha256=9d36627e87010d1801261bb8c7fba9c783ecfdc4bfa161ac25c6a804e7e47bbb photo=p6-p2935615919.webp 2x3 sha256=e3b7ec8154b63bc06c1d29034d9405de2d5e86d5189a55cdf4c4c6ee41d290ea photo=p7-p2933773245.webp 2x3 sha256=35170920dd0a9b2d107b55aed682088b1b42f8d3a92029659eb76f73c591ed81
+<< editMessageText chat=1001 message=1
    <tg-slideshow>
-   <img src="tg://photo?id=p0"/>
-   <img src="tg://photo?id=p2"/>
-   <img src="tg://photo?id=p3"/>
-   <img src="tg://photo?id=p4"/>
-   <img src="tg://photo?id=p5"/>
-   <img src="tg://photo?id=p6"/>
-   <img src="tg://photo?id=p7"/>
+   <img src="file-f5f6d5b17cb11ee11cf44ed25dc5348adfece286572dcdf0710170dad1dbc6e7"/>
+   <img src="file-66a056afde763621e3149ad5de08f246d87c04694be04a641f06cef4c60a88b2"/>
+   <img src="file-83960d583ad829fd76e9b053d6d6856cb254bf022cb264fe5e433730a1dbc897"/>
+   <img src="file-be1494efdb6f9510421bf70153fb72d24808f6a29197435abae9cc29f71b8013"/>
+   <img src="file-9d36627e87010d1801261bb8c7fba9c783ecfdc4bfa161ac25c6a804e7e47bbb"/>
+   <img src="file-e3b7ec8154b63bc06c1d29034d9405de2d5e86d5189a55cdf4c4c6ee41d290ea"/>
+   <img src="file-35170920dd0a9b2d107b55aed682088b1b42f8d3a92029659eb76f73c591ed81"/>
    </tg-slideshow>
    <h3>📺 豆瓣热门剧集</h3>
    <ol start="1">
@@ -73,7 +73,7 @@
 -> MoviePilot GET /api/v1/media/seasons?media_id=301489&media_source=themoviedb
 -> MoviePilot GET /api/v1/subscribe/media/301489?media_source=themoviedb&mtype=电视剧&season=1&title=深渊无间&year=2026
 << editMessageText chat=1001 message=1
-   <img src="https://image.tmdb.org/t/p/w500/b9ngtGNgaHBbLihRrT0MsPRY0GW.jpg"/>
+   <img src="url-0e877991e89f96e869fc23915b46aa7b8cc2c3b8ece9f4109ee50677841933f4"/>
    <h3>📺 <a href="https://www.themoviedb.org/tv/301489">深渊无间</a></h3>
    <footer>2026 · 电视剧 · ⭐ 8.0 · 悬疑 / 剧情 / 犯罪 · 共 1 季 16 集 · 主演：任嘉伦、秦俊杰、王砚辉</footer>
    <blockquote expandable>深渊无间（别名：深渊），2026年刑侦悬疑剧，共16集，刘海波执导，改编自深蓝小说《深渊》。<br>
@@ -99,15 +99,15 @@
    [首页 | 2:o:0] [关闭 | 2:c:0]
 >> user 1001 taps 2:d:2 on message 2
 -> MoviePilot GET /api/v1/recommend/douban_tv_hot
-<< editMessageText chat=1001 message=2 reuses=file-f5f6d5b17cb1 reuses=file-66a056afde76 reuses=file-83960d583ad8 reuses=file-be1494efdb6f reuses=file-9d36627e8701 reuses=file-e3b7ec8154b6 reuses=file-35170920dd0a
+<< editMessageText chat=1001 message=2
    <tg-slideshow>
-   <img src="tg://photo?id=p0"/>
-   <img src="tg://photo?id=p2"/>
-   <img src="tg://photo?id=p3"/>
-   <img src="tg://photo?id=p4"/>
-   <img src="tg://photo?id=p5"/>
-   <img src="tg://photo?id=p6"/>
-   <img src="tg://photo?id=p7"/>
+   <img src="file-f5f6d5b17cb11ee11cf44ed25dc5348adfece286572dcdf0710170dad1dbc6e7"/>
+   <img src="file-66a056afde763621e3149ad5de08f246d87c04694be04a641f06cef4c60a88b2"/>
+   <img src="file-83960d583ad829fd76e9b053d6d6856cb254bf022cb264fe5e433730a1dbc897"/>
+   <img src="file-be1494efdb6f9510421bf70153fb72d24808f6a29197435abae9cc29f71b8013"/>
+   <img src="file-9d36627e87010d1801261bb8c7fba9c783ecfdc4bfa161ac25c6a804e7e47bbb"/>
+   <img src="file-e3b7ec8154b63bc06c1d29034d9405de2d5e86d5189a55cdf4c4c6ee41d290ea"/>
+   <img src="file-35170920dd0a9b2d107b55aed682088b1b42f8d3a92029659eb76f73c591ed81"/>
    </tg-slideshow>
    <h3>📺 豆瓣热门剧集</h3>
    <ol start="1">
@@ -159,10 +159,10 @@
    [返回 | 2:b:0] [首页 | 2:o:0] [关闭 | 2:c:0]
 << answerCallbackQuery
 >> user 1001 taps 2:g:1 on message 2
-<< editMessageText chat=1001 message=2 photo=p0-p2934718593.webp 2x3 sha256=8017ebda8598e1032e565261282ac7abd17dfdc2cf03fe24f6bee829a74392e5 photo=p1-p2935061677.webp 2x3 sha256=88b4ebcd93c9d427fd2d2e305fd1c644074ebd6c9902bade203ee14c20701c5b
+<< editMessageText chat=1001 message=2
    <tg-slideshow>
-   <img src="tg://photo?id=p0"/>
-   <img src="tg://photo?id=p1"/>
+   <img src="file-8017ebda8598e1032e565261282ac7abd17dfdc2cf03fe24f6bee829a74392e5"/>
+   <img src="file-88b4ebcd93c9d427fd2d2e305fd1c644074ebd6c9902bade203ee14c20701c5b"/>
    </tg-slideshow>
    <h3>📺 豆瓣热门剧集</h3>
    <ol start="9">
@@ -186,9 +186,9 @@
 -> MoviePilot GET /api/v1/media/search?count=10&title=流人 第六季&type=media
 << editMessageText chat=1001 message=2
    <tg-slideshow>
-   <img src="https://image.tmdb.org/t/p/w500/3ZaOwdTWDOiyuq1b05TvpI8QjSn.jpg"/>
-   <img src="https://image.tmdb.org/t/p/w500/3tNyVcX8OeWDet65PZVIjltuueX.jpg"/>
-   <img src="https://image.tmdb.org/t/p/w500/5YLfhrU4RLk0GgadMAb4jFu1JGc.jpg"/>
+   <img src="url-959368f77a7ef2c3853985206a7eafcd65b99bf5ad3cefeec9df8803c0e73046"/>
+   <img src="url-c328594399b9e623a899bad10856442b05f1061ef50aa5c93ac0e3bda41949cf"/>
+   <img src="url-d8d099a297da9f4558414a78829e5c5acd8cee001ab0453949da4b6afbf0d86a"/>
    </tg-slideshow>
    <h3>🔍 帮你找到这些「流人 第六季」啦</h3>
    <ol start="1">
@@ -205,10 +205,10 @@
    [返回 | 2:bk:0] [取消 | 2:x:0]
 << answerCallbackQuery
 >> user 1001 taps 2:bk:0 on message 2
-<< editMessageText chat=1001 message=2 reuses=file-8017ebda8598 reuses=file-88b4ebcd93c9
+<< editMessageText chat=1001 message=2
    <tg-slideshow>
-   <img src="tg://photo?id=p0"/>
-   <img src="tg://photo?id=p1"/>
+   <img src="file-8017ebda8598e1032e565261282ac7abd17dfdc2cf03fe24f6bee829a74392e5"/>
+   <img src="file-88b4ebcd93c9d427fd2d2e305fd1c644074ebd6c9902bade203ee14c20701c5b"/>
    </tg-slideshow>
    <h3>📺 豆瓣热门剧集</h3>
    <ol start="9">
@@ -232,7 +232,7 @@
 -> MoviePilot GET /api/v1/media/search?count=10&title=流人 第六季&type=media
 << editMessageText chat=1001 message=2
    <tg-slideshow>
-   <img src="https://image.tmdb.org/t/p/w500/2UEK62PY887kyB3ly5YIkyH1M1y.jpg"/>
+   <img src="url-394c3e6e5785558b58d3a3e03d76702aba30187e5af79721162569dab1b71e1b"/>
    </tg-slideshow>
    <h3>🔍 帮你找到这些「流人 第六季」啦</h3>
    <ol start="1">

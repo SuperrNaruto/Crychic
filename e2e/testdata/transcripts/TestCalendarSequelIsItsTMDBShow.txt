@@ -24,11 +24,11 @@
 -> Bangumi GET /v0/subjects/624923
 << editMessageText chat=1001 message=1
    <tg-slideshow>
-   <img src="http://lain.bgm.tv/pic/cover/l/1c/b4/390200_1IA55.jpg"/>
-   <img src="http://lain.bgm.tv/pic/cover/l/52/fe/418229_gcFij.jpg"/>
-   <img src="http://lain.bgm.tv/pic/cover/l/dc/f7/511936_XDkXO.jpg"/>
-   <img src="http://lain.bgm.tv/pic/cover/l/1b/1e/614640_ESMLl.jpg"/>
-   <img src="http://lain.bgm.tv/pic/cover/l/73/99/624923_4u99L.jpg"/>
+   <img src="url-9e933bf5741fa03634fce27465541914f4e0cf39e7fcf8d057c5ec37f440e44e"/>
+   <img src="url-f53af7615ce6819bbdd59697dd9b649bdcc352865663df144eeb3671fd53bcbf"/>
+   <img src="url-8b4da0bfb9bef543c926e6becb55dbe1f6486c5500e33bf11b6a5e765fdcc79a"/>
+   <img src="url-1e587b41d0d73fe6cc2b07531bd80e9249742d8ec1f424b0a52bc6c4798e507f"/>
+   <img src="url-2b4fc794a6be040a03bec7b01b69c10df760cde0840d66da010be9f15a1c2c26"/>
    </tg-slideshow>
    <h3>🎌 新番放送 · 星期一（今天）</h3>
    <h4>2026-10-05 首播</h4>
@@ -102,9 +102,9 @@
 -> Bangumi GET /v0/subjects/555605
 << editMessageText chat=1001 message=1
    <tg-slideshow>
-   <img src="http://lain.bgm.tv/pic/cover/l/3e/fc/536270_51P45.jpg"/>
-   <img src="https://image.tmdb.org/t/p/w500/fTt9CEgDgxP8tNiQisNBTnRRpEk.jpg"/>
-   <img src="https://image.tmdb.org/t/p/w500/hHAieX1kcUIMi7KmOT3RtGQdBK8.jpg"/>
+   <img src="url-405878f6dad0081343c216620a25b8d9d48c3d9e09ca3f35b9d7d796d6c7d7bf"/>
+   <img src="url-856963c99d6a40fd069802f30781c2376d9bf54aa29d635ee179b973e2c697f9"/>
+   <img src="url-9cb26c37c1a7bea29d6758a4c4b219278fcce26efff58fa9ee0450ab986e4096"/>
    </tg-slideshow>
    <h3>🎌 新番放送 · 星期日</h3>
    <h4>2026-10-04 首播</h4>
@@ -150,8 +150,8 @@
 -> MoviePilot GET /api/v1/media/207347?media_source=themoviedb&type_name=电视剧
 -> MoviePilot GET /api/v1/media/seasons?media_id=207347&media_source=themoviedb
 -> MoviePilot GET /api/v1/subscribe/media/207347?media_source=themoviedb&mtype=电视剧&season=1&title=青之箱&year=2024
-<< editMessageText chat=1001 message=1 reuses=url-856963c9
-   <img src="tg://photo?id=p0"/>
+<< editMessageText chat=1001 message=1
+   <img src="url-856963c99d6a40fd069802f30781c2376d9bf54aa29d635ee179b973e2c697f9"/>
    <h3>📺 <a href="https://www.themoviedb.org/tv/207347">青之箱</a></h3>
    <footer><i>アオのハコ</i> · 2024 · 电视剧 · ⭐ 7.8 · 动画 / 剧情 · 共 1 季 37 集 · 主演：千叶翔也、上田丽奈、鬼头明里</footer>
    <blockquote expandable>进入中高一贯制体育强校──荣明高校男子羽毛球部的一年级生猪股大喜，每天早晨在晨练时都会遇到比他大一岁的的鹿野千夏学姐，并对她产生了爱慕之情。千夏是女子篮球队的王牌，无论在校内还是校外都是备受瞩目的高岭之花。就这样，忙于社团活动、恋爱和学习的高中生活就这样开始了，而在某一天……</blockquote>
@@ -166,8 +166,8 @@
 >> user 1001 taps 1:ok:27 on message 1
 -> MoviePilot POST /api/v1/subscribe/
    {"name":"青之箱","year":"2024","type":"电视剧","media_source":"themoviedb","media_id":"207347","season":1,"start_episode":27}
-<< editMessageText chat=1001 message=1 reuses=url-856963c9
-   <img src="tg://photo?id=p0"/>
+<< editMessageText chat=1001 message=1
+   <img src="url-856963c99d6a40fd069802f30781c2376d9bf54aa29d635ee179b973e2c697f9"/>
    <h3>📺 <a href="https://www.themoviedb.org/tv/207347">青之箱</a></h3>
    <footer><i>アオのハコ</i> · 2024 · 电视剧 · ⭐ 7.8 · 动画 / 剧情 · 共 1 季 37 集 · 主演：千叶翔也、上田丽奈、鬼头明里</footer>
    <blockquote expandable>进入中高一贯制体育强校──荣明高校男子羽毛球部的一年级生猪股大喜，每天早晨在晨练时都会遇到比他大一岁的的鹿野千夏学姐，并对她产生了爱慕之情。千夏是女子篮球队的王牌，无论在校内还是校外都是备受瞩目的高岭之花。就这样，忙于社团活动、恋爱和学习的高中生活就这样开始了，而在某一天……</blockquote>
@@ -176,11 +176,11 @@
    [返回 | 1:bk:0] [首页 | 1:o:0] [关闭 | 1:c:0]
 << answerCallbackQuery
 >> user 1001 taps 1:bk:0 on message 1
-<< editMessageText chat=1001 message=1 reuses=url-405878f6 reuses=url-856963c9 reuses=url-9cb26c37
+<< editMessageText chat=1001 message=1
    <tg-slideshow>
-   <img src="tg://photo?id=p0"/>
-   <img src="tg://photo?id=p1"/>
-   <img src="tg://photo?id=p2"/>
+   <img src="url-405878f6dad0081343c216620a25b8d9d48c3d9e09ca3f35b9d7d796d6c7d7bf"/>
+   <img src="url-856963c99d6a40fd069802f30781c2376d9bf54aa29d635ee179b973e2c697f9"/>
+   <img src="url-9cb26c37c1a7bea29d6758a4c4b219278fcce26efff58fa9ee0450ab986e4096"/>
    </tg-slideshow>
    <h3>🎌 新番放送 · 星期日</h3>
    <h4>2026-10-04 首播</h4>
@@ -226,8 +226,8 @@
 -> MoviePilot GET /api/v1/media/126437?media_source=themoviedb&type_name=电视剧
 -> MoviePilot GET /api/v1/media/seasons?media_id=126437&media_source=themoviedb
 -> MoviePilot GET /api/v1/subscribe/media/126437?media_source=themoviedb&mtype=电视剧&season=2&title=青之芦苇&year=2022
-<< editMessageText chat=1001 message=1 reuses=url-9cb26c37
-   <img src="tg://photo?id=p0"/>
+<< editMessageText chat=1001 message=1
+   <img src="url-9cb26c37c1a7bea29d6758a4c4b219278fcce26efff58fa9ee0450ab986e4096"/>
    <h3>📺 <a href="https://www.themoviedb.org/tv/126437">青之芦苇</a></h3>
    <footer><i>アオアシ</i> · 2022 · 电视剧 · ⭐ 7.8 · 动画 · 共 2 季 48 集 · 主演：大铃功起</footer>
    <blockquote expandable>“我来带你走向世界。”<br>

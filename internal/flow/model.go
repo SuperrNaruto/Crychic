@@ -296,8 +296,9 @@ type Backend interface {
 	SetSubscriptionPaused(ctx context.Context, id int, paused bool) error
 	// Unsubscribe deletes a subscription; deleting one already gone is fine.
 	Unsubscribe(ctx context.Context, id int) error
-	// FindSubscription returns the id of an existing subscription, 0 if none.
-	FindSubscription(ctx context.Context, target Target) (int, error)
+	// FindSubscription returns an existing subscription with its state;
+	// ID is zero when none exists.
+	FindSubscription(ctx context.Context, target Target) (Subscription, error)
 	// Subscribe creates a subscription and returns its id.
 	Subscribe(ctx context.Context, target Target) (int, error)
 	// SearchTorrents searches the indexer sites for releases of target.
@@ -389,6 +390,7 @@ type Reply struct {
 	Banner  Banner // show the named built-in banner above the home menu
 	Buttons [][]Button
 	Notice  string
+	Expired bool // the input or page no longer belongs to a live conversation
 	Input   string
 	Follow  string
 }

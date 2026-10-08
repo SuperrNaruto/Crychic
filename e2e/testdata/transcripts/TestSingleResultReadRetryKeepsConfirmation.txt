@@ -3,7 +3,7 @@
 -> MoviePilot GET /api/v1/media/301489?media_source=themoviedb&type_name=电视剧
 -> MoviePilot GET /api/v1/media/seasons?media_id=301489&media_source=themoviedb
 << sendRichMessage chat=1001 message=1
-   <img src="https://image.tmdb.org/t/p/w500/b9ngtGNgaHBbLihRrT0MsPRY0GW.jpg"/>
+   <img src="url-0e877991e89f96e869fc23915b46aa7b8cc2c3b8ece9f4109ee50677841933f4"/>
    <h3>📺 <a href="https://www.themoviedb.org/tv/301489">深渊无间</a></h3>
    <footer>2026 · 电视剧 · ⭐ 8.0 · 悬疑 / 剧情 / 犯罪 · 共 1 季 16 集 · 主演：任嘉伦、秦俊杰、王砚辉</footer>
    <blockquote expandable>深渊无间（别名：深渊），2026年刑侦悬疑剧，共16集，刘海波执导，改编自深蓝小说《深渊》。<br>
@@ -18,8 +18,8 @@
 >> user 1001 taps 1:rt:0 on message 1
 -> MoviePilot GET /api/v1/media/seasons?media_id=301489&media_source=themoviedb
 -> MoviePilot GET /api/v1/subscribe/media/301489?media_source=themoviedb&mtype=电视剧&season=1&title=深渊无间&year=2026
-<< editMessageText chat=1001 message=1 reuses=url-0e877991
-   <img src="tg://photo?id=p0"/>
+<< editMessageText chat=1001 message=1
+   <img src="url-0e877991e89f96e869fc23915b46aa7b8cc2c3b8ece9f4109ee50677841933f4"/>
    <h3>📺 <a href="https://www.themoviedb.org/tv/301489">深渊无间</a></h3>
    <footer>2026 · 电视剧 · ⭐ 8.0 · 悬疑 / 剧情 / 犯罪 · 共 1 季 16 集 · 主演：任嘉伦、秦俊杰、王砚辉</footer>
    <blockquote expandable>深渊无间（别名：深渊），2026年刑侦悬疑剧，共16集，刘海波执导，改编自深蓝小说《深渊》。<br>
@@ -35,8 +35,8 @@
 << answerCallbackQuery
 >> user 1001 taps 1:rt:0 on message 1
 -> MoviePilot GET /api/v1/subscribe/media/301489?media_source=themoviedb&mtype=电视剧&season=1&title=深渊无间&year=2026
-<< editMessageText chat=1001 message=1 reuses=url-0e877991
-   <img src="tg://photo?id=p0"/>
+<< editMessageText chat=1001 message=1
+   <img src="url-0e877991e89f96e869fc23915b46aa7b8cc2c3b8ece9f4109ee50677841933f4"/>
    <h3>📺 <a href="https://www.themoviedb.org/tv/301489">深渊无间</a></h3>
    <footer>2026 · 电视剧 · ⭐ 8.0 · 悬疑 / 剧情 / 犯罪 · 共 1 季 16 集 · 主演：任嘉伦、秦俊杰、王砚辉</footer>
    <blockquote expandable>深渊无间（别名：深渊），2026年刑侦悬疑剧，共16集，刘海波执导，改编自深蓝小说《深渊》。<br>
@@ -60,8 +60,8 @@
    [返回 | 1:bk:0] [取消 | 1:x:0]
 << answerCallbackQuery
 >> user 1001 taps 1:bk:0 on message 1
-<< editMessageText chat=1001 message=1 reuses=url-0e877991
-   <img src="tg://photo?id=p0"/>
+<< editMessageText chat=1001 message=1
+   <img src="url-0e877991e89f96e869fc23915b46aa7b8cc2c3b8ece9f4109ee50677841933f4"/>
    <h3>📺 <a href="https://www.themoviedb.org/tv/301489">深渊无间</a></h3>
    <footer>2026 · 电视剧 · ⭐ 8.0 · 悬疑 / 剧情 / 犯罪 · 共 1 季 16 集 · 主演：任嘉伦、秦俊杰、王砚辉</footer>
    <blockquote expandable>深渊无间（别名：深渊），2026年刑侦悬疑剧，共16集，刘海波执导，改编自深蓝小说《深渊》。<br>

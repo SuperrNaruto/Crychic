@@ -86,7 +86,7 @@ func releaseEntry(sess session, n, index int) listEntry {
 // library (fill).
 func torrentEntry(n int, t Torrent, fill string) Block {
 	return entry(n, Strong(truncate(t.Title, listTitleRunes)),
-		t.Site, size(t.Size), seeders(t), t.Promotion, hitAndRun(t), EpisodeRanges(t.Episodes), fill)
+		t.Site, size(t.Size), seeders(t), t.Promotion, hitAndRun(t), releaseEpisodes(t), fill)
 }
 
 // torrentCard is a release's title, its subtitle in small print, and its
@@ -100,7 +100,9 @@ func torrentCard(t Torrent) Text {
 		Table(torrentHead, []Span{Plain(t.Site), Plain(size(t.Size)), Plain(fmt.Sprint(t.Seeders)), Plain(t.Promotion)}),
 		Table(qualityHead, []Span{Plain(t.Resolution), Plain(t.Edition), Plain(t.Video), Plain(t.Group)}),
 	)
-	if eps := EpisodeRanges(t.Episodes); eps != "" {
+	if t.EpisodesUnsure {
+		text = append(text, Line(Plain(releaseEpisodes(t))))
+	} else if eps := releaseEpisodes(t); eps != "" {
 		text = append(text, Line(Plain("包含 "+eps)))
 	}
 	return text
@@ -109,7 +111,10 @@ func torrentCard(t Torrent) Text {
 // releaseName is what a download brings, e.g. 《迷途之子!!!!!》第 1 季 E01–E03.
 func releaseName(target Target, t Torrent) string {
 	target.StartEpisode = 0
-	return joinNonEmpty(" ", targetName(target), EpisodeRanges(t.Episodes))
+	if t.EpisodesUnsure {
+		return targetName(target)
+	}
+	return joinNonEmpty(" ", targetName(target), releaseEpisodes(t))
 }
 
 func seeders(t Torrent) string {
@@ -121,4 +126,13 @@ func hitAndRun(t Torrent) string {
 		return "H&R"
 	}
 	return ""
+}
+
+// releaseEpisodes never turns uncertain description-derived metadata into a
+// promise about the files in a torrent, or guesses that it is a whole season.
+func releaseEpisodes(t Torrent) string {
+	if t.EpisodesUnsure {
+		return "集数识别不确定"
+	}
+	return EpisodeRanges(t.Episodes)
 }

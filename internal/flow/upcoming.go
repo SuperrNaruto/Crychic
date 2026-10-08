@@ -137,6 +137,7 @@ func (a airings) gaps() string {
 // across pages, numbered across days.
 func upcomingView(sess session, found airings) listView {
 	view := listView{
+		source:  upcomingList,
 		heading: Heading(Plain(msgUpcomingTitle)),
 		note:    joinNonEmpty("；", msgUpcomingNote, found.gaps()) + "～",
 		footer:  browseRow(sess.id),

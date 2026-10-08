@@ -67,6 +67,8 @@ func (e *Engine) Answer(ctx context.Context, actor Actor, typed Typed) Reply {
 	if sess.owner.UserID != actor.UserID || sess.owner.Address != actor.Address {
 		return Reply{Notice: msgNotYours}
 	}
+	sess.lastChoice, sess.lastReply = "", Reply{}
+	e.store.put(sess)
 	text := strings.TrimSpace(typed.Text)
 	if p.action == actionResearch {
 		return e.research(ctx, sess, text)
@@ -79,13 +81,28 @@ func (e *Engine) Answer(ctx context.Context, actor Actor, typed Typed) Reply {
 
 // startFrom takes a typed start episode, asking again when it is invalid.
 func startFrom(sess session, text string) Reply {
-	from, err := strconv.Atoi(text)
+	from, err := strconv.Atoi(episodeNumber(text))
 	if err != nil || from < 1 || !sess.validStart(from) {
 		return askStart(sess, fmt.Sprintf("⚠️「%s」好像不是有效的集数哦～", text))
 	}
 	target := *sess.target
 	target.StartEpisode = from
 	return confirmCard(sess, target)
+}
+
+// episodeNumber accepts common Chinese input without weakening numeric
+// range validation: full-width decimal digits and an optional 第...集 wrapper.
+func episodeNumber(text string) string {
+	text = strings.Map(func(r rune) rune {
+		if r >= '０' && r <= '９' {
+			return r - '０' + '0'
+		}
+		return r
+	}, text)
+	if strings.HasPrefix(text, "第") && strings.HasSuffix(text, "集") {
+		text = strings.TrimSuffix(strings.TrimPrefix(text, "第"), "集")
+	}
+	return strings.TrimSpace(text)
 }
 
 // validStart reports whether from is an acceptable start episode for the

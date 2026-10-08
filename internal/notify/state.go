@@ -54,6 +54,7 @@ type watch struct {
 	BestVersion    bool       `json:"best_version,omitempty"`    // later versions can deliver the same episode again
 	MovieDelivered bool       `json:"movie_delivered,omitempty"` // ordinary movie requests announce once
 	Closed         bool       `json:"closed,omitempty"`          // its subscription row was last read gone
+	Held           []int      `json:"held,omitempty"`            // existing library episodes, only for downloads
 	Delivered      []int      `json:"delivered,omitempty"`       // episodes arrived so far
 	Pending        []int      `json:"pending,omitempty"`         // arrived, not yet announced
 	Image          string     `json:"image,omitempty"`           // poster of the latest pending arrival
@@ -80,6 +81,7 @@ type delivery struct {
 	episodes  []int
 	complete  bool
 	downloads bool // every watch told is a download's
+	held      bool // at least one download counts earlier library episodes
 	image     string
 	releases  []release
 	qualities []string         // the releases' qualities as worded for the notice
@@ -114,8 +116,13 @@ func withRequest(st state, req flow.Request) state {
 		return next
 	}
 	// Episodes already in the library never pass through transfer history,
-	// yet count towards the season being complete.
-	w.Delivered = slices.Sorted(slices.Values(w.fresh(req.Held)))
+	// yet count towards the season being complete. Downloads keep them
+	// separate so replacing an existing episode still produces a notice.
+	if req.Download != "" {
+		w.Held = slices.Sorted(slices.Values(w.fresh(req.Held)))
+	} else {
+		w.Delivered = slices.Sorted(slices.Values(w.fresh(req.Held)))
+	}
 	next.Watches = slices.DeleteFunc(next.Watches, func(o watch) bool {
 		return o.same(w) && o.Closed && o.ArrivedAt == nil
 	})
@@ -274,6 +281,7 @@ func (d delivery) with(w watch) delivery {
 	d.episodes = episodes
 	d.complete = d.complete && w.complete()
 	d.downloads = d.downloads && w.Download != ""
+	d.held = d.held || len(w.Held) > 0
 	d.watch.Requesters = withActors(d.watch.Requesters, w.Requesters)
 	for _, r := range w.Releases {
 		d.releases = withRelease(d.releases, r)
@@ -281,10 +289,15 @@ func (d delivery) with(w watch) delivery {
 	return d
 }
 
-// announced clears pending arrivals. A completed download ends; subscription
-// requests retain ownership and can receive added episodes or better versions.
+// announced clears pending arrivals. A download ends only after its own
+// files complete the season: library copies may complete coverage earlier,
+// but replacement files from that download can still arrive. Downloads that
+// transfer only missing files are later removed by the normal orphan grace.
+// Subscription requests retain ownership and can receive future arrivals.
 func (w watch) announced() (watch, bool) {
-	if w.Download != "" && w.complete() {
+	download := w
+	download.Held = nil
+	if w.Download != "" && download.complete() {
 		return w, true
 	}
 	w.MovieDelivered = w.MovieDelivered || w.Season == nil
@@ -354,7 +367,7 @@ func (w watch) complete() bool {
 		return false
 	}
 	for ep := w.Start; ep <= w.Total; ep++ {
-		if !slices.Contains(w.Delivered, ep) {
+		if !slices.Contains(w.Delivered, ep) && !slices.Contains(w.Held, ep) {
 			return false
 		}
 	}

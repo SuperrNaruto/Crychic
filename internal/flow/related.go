@@ -62,7 +62,7 @@ func (e *Engine) browse(ctx context.Context, sess session, series bool) Reply {
 	if len(found) == 0 {
 		return Reply{Notice: empty}
 	}
-	sess.results = found[:min(len(found), limit)]
+	sess.results, sess.download = found[:min(len(found), limit)], false
 	sess.seasons, sess.library, sess.target, sess.chosen, sess.focus = nil, Library{}, nil, nil, nil
 	return e.listPages(sess, relatedView(sess, heading))
 }

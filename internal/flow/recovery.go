@@ -60,11 +60,11 @@ func (e *Engine) retryRead(ctx context.Context, sess session) Reply {
 // lookup, then resume the normal confirmation path.
 func (e *Engine) retryConfirmation(ctx context.Context, sess session) Reply {
 	target := sess.retry.target
-	id, err := e.backend.FindSubscription(ctx, target)
+	sub, err := e.backend.FindSubscription(ctx, target)
 	if err != nil {
 		return e.readFailure(sess, sess.retry, err)
 	}
-	return e.confirmation(ctx, sess, subscription{id: id, target: target})
+	return e.confirmation(ctx, sess, subscription{id: sub.ID, state: sub.State, target: target})
 }
 
 const msgSubmitUnknown = "呜，没能确认订阅有没有成功…先用 /subscribe 看一眼，确认没订上再来找我哦。"

@@ -3,10 +3,12 @@ package flow
 import "fmt"
 
 const (
-	actionPage     = "p"
-	listPageItems  = 20
-	listPageRunes  = 3000 // room for headings and navigation within Telegram's limit
-	listTitleRunes = 100
+	actionPage       = "p"
+	listPageItems    = 20
+	listPageRunes    = 3000 // room for headings and navigation within Telegram's limit
+	listTitleRunes   = 100
+	subscriptionList = "subscriptions"
+	upcomingList     = "upcoming"
 )
 
 type listEntry struct {
@@ -22,7 +24,8 @@ type listView struct {
 	menu      [][]Button // rows above the footer on every page
 	footer    []Button
 	note      string
-	pageItems int // zero uses the default; search pages use fewer entries
+	pageItems int    // zero uses the default; search pages use fewer entries
+	source    string // list provenance for navigation across subscription details
 }
 
 // listPages keeps text and its action buttons on the same bounded page,
@@ -35,12 +38,15 @@ func (e *Engine) listPages(sess session, view listView) Reply {
 // button with data holds, or the first page.
 func (e *Engine) listPageWith(sess session, view listView, holds string) Reply {
 	sess.pages = paged(sess.id, view)
-	e.store.put(sess)
-	for _, page := range sess.pages {
+	sess.listing, sess.pageIndex = view.source, 0
+	for index, page := range sess.pages {
 		if holds != "" && hasData(page.Buttons, holds) {
+			sess.pageIndex = index
+			e.store.put(sess)
 			return page
 		}
 	}
+	e.store.put(sess)
 	return sess.pages[0]
 }
 
@@ -126,5 +132,7 @@ func (e *Engine) page(sess session, index int) Reply {
 	if index < 0 || index >= len(sess.pages) {
 		return Reply{Notice: msgInvalidChoice}
 	}
+	sess.pageIndex = index
+	e.store.put(sess)
 	return e.navigate(sess, actionPage, sess.pages[index])
 }

@@ -1,6 +1,6 @@
 >> user 1001 in chat 1001: /start
-<< sendRichMessage chat=1001 message=1 photo=home.jpg 1280x720 sha256=d620fc3c5f168f03372b7fd77d4572d577b95fa1f410d95e2b60e5799f0d2315
-   <img src="tg://photo?id=p0"/>
+<< sendRichMessage chat=1001 message=1
+   <img src="file-d620fc3c5f168f03372b7fd77d4572d577b95fa1f410d95e2b60e5799f0d2315"/>
    <h3>🎬 Crychic</h3>
    <p>想看什么告诉我呀～我帮你找片、订阅，入库了第一时间喊你！私聊直接发片名就能搜哦 (๑•̀ㅂ•́)و✧</p>
    [搜索 | 1:h:0] [发现 | 1:h:1]
@@ -37,7 +37,7 @@
 -> MoviePilot GET /api/v1/system/setting/SubscribeFilterRuleGroups
 -> MoviePilot GET /api/v1/dashboard/schedule
 << editMessageText chat=1001 message=1
-   <img src="https://image.tmdb.org/t/p/w500/5NKojVuw2Jf0dT9nSgGPlLiBQV5.jpg"/>
+   <img src="url-a100cce8173885c23616cbbac30f0fde10a50d47fc88497ce15f3b3c096bab80"/>
    <h3>📚 订阅详情 · 《择日飞升》第 1 季</h3>
    <footer>2026 · 电视剧 · 订阅中</footer>
    <h4>订阅设置</h4>
@@ -107,7 +107,32 @@
    <h3>📚 订阅详情</h3>
    <p>这条订阅已经结束或被取消啦，可以回订阅列表或查看订阅历史哦～</p>
    [订阅历史 | 2:hs:2]
-   [返回 | 2:j:0] [首页 | 2:o:0] [关闭 | 2:c:0]
+   [返回 | 2:bk:0] [首页 | 2:o:0] [关闭 | 2:c:0]
+<< answerCallbackQuery
+>> user 1001 taps 2:bk:0 on message 2
+<< editMessageText chat=1001 message=2
+   <h3>📅 追剧日历</h3>
+   <h4>10月7日 周三</h4>
+   <ol start="1">
+   <li value="1"><b>世界最强魔女，始动</b><br>
+   <i>第 1 季 第 1 集 · 试着使用了互联网！</i></li>
+   </ol>
+   <h4>10月10日 周六</h4>
+   <ol start="2">
+   <li value="2"><b>择日飞升</b><br>
+   <i>第 1 季 第 15 集 · 已暂停</i></li>
+   </ol>
+   <footer>接下来 7 天（北京时间），点编号看订阅详情；有 1 部剧暂时没读到播出时间～</footer>
+   [1 | 2:sd:3] [2 | 2:sd:1]
+   [首页 | 2:o:0] [关闭 | 2:c:0]
+<< answerCallbackQuery
+>> user 1001 taps 2:sd:3 on message 2
+-> MoviePilot GET /api/v1/subscribe/
+<< editMessageText chat=1001 message=2
+   <h3>📚 订阅详情</h3>
+   <p>这条订阅已经结束或被取消啦，可以回订阅列表或查看订阅历史哦～</p>
+   [订阅历史 | 2:hs:2]
+   [返回 | 2:bk:0] [首页 | 2:o:0] [关闭 | 2:c:0]
 << answerCallbackQuery
 >> user 1001 taps 2:hs:2 on message 2
 -> MoviePilot GET /api/v1/subscribe/history/电视剧?count=10&page=1

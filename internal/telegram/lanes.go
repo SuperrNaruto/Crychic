@@ -48,11 +48,13 @@ func callbackKey(cq *models.CallbackQuery) messageKey {
 	return key
 }
 
-func (a *adapter) stopOwnedFollower(key messageKey, user int64) {
+func (a *adapter) stopOwnedFollower(key messageKey, user int64) *follower {
 	a.mu.Lock()
 	defer a.mu.Unlock()
 	if f := a.followers[key]; f != nil && f.actor.UserID == user {
+		f.suspended = true
 		f.cancel()
-		delete(a.followers, key)
+		return f
 	}
+	return nil
 }

@@ -271,7 +271,8 @@ func TestStalledDownloadIsToldOnce(t *testing.T) {
 	told := h.tg.expect(fmt.Sprintf("send:%d", alice))
 	h.advance(step)
 	h.wait(told, "a stalled download notice")
-	h.shows(2, "下载好像卡住了")
+	h.shows(2, "下载长时间没有进展")
+	h.shows(2, "排队")
 	h.shows(2, "一直停在 43%")
 	h.restart()
 	h.transfers()
@@ -309,11 +310,42 @@ func TestDownloadOfSubscribedSeasonIsToldOnce(t *testing.T) {
 	told := h.tg.expect(fmt.Sprintf("send:%d", alice))
 	h.advance(2 * time.Hour)
 	h.wait(told, "a stalled download notice")
-	h.shows(3, "下载好像卡住了")
+	h.shows(3, "下载长时间没有进展")
 	pack := mygo.file("S01", "E01-E13")
 	pack.Hash = addedHash
 	h.arrives(alice, pack)
 	h.shows(4, "E01–E13 到家啦")
 	h.transfers()
+	h.tr.verify(t)
+}
+
+// A merged notice accounts for each download's own library snapshot: Alice
+// requested a full season, then Bob requested its final missing episode.
+func TestSharedDownloadCompletionCountsExistingLibrary(t *testing.T) {
+	h := start(t, scenario{quiet: "2s", libraryWait: "0s", routes: map[string]route{
+		searchPath: ok("search_mygo.json"), mygoDetails: ok("detail_mygo.json"),
+		seasonsPath: ok("seasons_mygo.json"), mygoLookup: ok("subscription_none.json"),
+		mygoTorrents: searchingSites("torrents_mygo_s1.json"), downloadPath: ok("download_added.json"),
+	}})
+	h.say(alice, alice, "/search 迷途之子")
+	h.tap(alice, 1, "1")
+	h.tap(alice, 1, "第 1 季")
+	h.searchTorrents(alice, 1, searchResources)
+	h.tap(alice, 1, "1")
+	h.tap(alice, 1, downloadIt)
+	h.mp.setRoute(libraryShowPath, ok("library_mygo_versions.json"))
+	h.say(bob, bob, "/search 迷途之子")
+	h.tap(bob, 2, "1")
+	h.tap(bob, 2, "第 1 季")
+	h.searchTorrents(bob, 2, searchResources)
+	h.tap(bob, 2, "下一页 ›")
+	h.tap(bob, 2, "14")
+	h.tap(bob, 2, downloadIt)
+	pack, final := mygo.file("S01", "E01-E13"), mygo.file("S01", "E13")
+	pack.Hash, final.Hash = addedHash, addedHashN(2)
+	told := h.tg.expect(fmt.Sprintf("send:%d", bob))
+	h.arrives(alice, pack, final)
+	h.wait(told, "Bob's share of the completion notice")
+	h.shows(4, "加上媒体库已有的，这一季的剧集全部到齐啦")
 	h.tr.verify(t)
 }

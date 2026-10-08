@@ -2,14 +2,14 @@
 -> MoviePilot GET /api/v1/media/search?count=10&title=名侦探柯南&type=media
 << sendRichMessage chat=-500 message=1
    <tg-slideshow>
-   <img src="https://image.tmdb.org/t/p/w500/7qBrY88hNwMrMb75PkBZjhFolbL.jpg"/>
-   <img src="https://image.tmdb.org/t/p/w500/ytXNhqKBlqGRmj0Iq95K1LJyWVm.jpg"/>
-   <img src="https://image.tmdb.org/t/p/w500/xEMs8q1GgOiwigsNPsfESr9FCzh.jpg"/>
-   <img src="https://image.tmdb.org/t/p/w500/vsre1rnZ9mA8Tb4Lejp1UbZ6ca9.jpg"/>
-   <img src="https://image.tmdb.org/t/p/w500/rDqNggjA9G6oK1RIwoVzEwTuanJ.jpg"/>
-   <img src="https://image.tmdb.org/t/p/w500/f9C4lFUTOqc5RtWpzlrdbeoJMI7.jpg"/>
-   <img src="https://image.tmdb.org/t/p/w500/kvqzHlTfPuSunPeT9sP27acV6aX.jpg"/>
-   <img src="https://image.tmdb.org/t/p/w500/h2ZJJ0pSiPOvyP5Zoo52JREWCeP.jpg"/>
+   <img src="url-7ca1018dcbd7e9db2629bc08168d35247b2cf8ab2703868e1e1423650f00c642"/>
+   <img src="url-a75f3db1874d7b349a22247c4af78ef42fd919964d472df98a8f2129023c4889"/>
+   <img src="url-496032c688752600dc90312f473a62c226a9bfbb9ddd3295050168cb5e2a8fe1"/>
+   <img src="url-55c239354e7ca97d9c22f7d8420902e1613b2da4cb077ebb8e1db8a6b1e88348"/>
+   <img src="url-e0c74abd89db53f9cd57f2054bd45368851fbe4055b9b9416c7b4116e009c71a"/>
+   <img src="url-799a675a8c6fb8f785ca49347a3a2cb137d7d783967df65c749542f78881814f"/>
+   <img src="url-f4037a8511671265a82b5521be06f233c07d8a33cc3ef5ab2d6c1c4b9109bffc"/>
+   <img src="url-b2c2433aada3a77dcaf4706365bb5a306f9c2b6348ca07539bcd43273d303781"/>
    </tg-slideshow>
    <h3>🔍 帮你找到这些「名侦探柯南」啦</h3>
    <ol start="1">
@@ -39,8 +39,8 @@
 >> user 1001 taps 1:m:0 on message 1
 -> MoviePilot GET /api/v1/media/30983?media_source=themoviedb&type_name=电视剧
 -> MoviePilot GET /api/v1/media/seasons?media_id=30983&media_source=themoviedb
-<< editMessageText chat=-500 message=1 reuses=url-7ca1018d
-   <img src="tg://photo?id=p0"/>
+<< editMessageText chat=-500 message=1
+   <img src="url-7ca1018dcbd7e9db2629bc08168d35247b2cf8ab2703868e1e1423650f00c642"/>
    <h3>📺 <a href="https://www.themoviedb.org/tv/30983">名侦探柯南</a></h3>
    <footer><i>名探偵コナン</i> · 1996 · 电视剧 · ⭐ 8.0 · 动画 / 犯罪 / 悬疑 / 喜剧 · 共 1 季 1216 集 · 主演：高山南、山口胜平、山崎和佳奈</footer>
    <blockquote expandable>高中生侦探工藤新一与毛利兰在游乐园游玩时发现两个行动诡异的黑衣男子，便跟踪他们，不料被灌下一种叫「APTX4869」的神秘毒药，然而因为药物副作用，新一的身体竟回到孩童状态。为不使周围的人受到牵连，他化名为「江户川柯南」，寄住在毛利兰家中，用阿笠博士发明的手表型麻醉枪让毛利小五郎睡着，接着用蝴蝶结变声器模仿他的声音来进行推理，解决了许多案件，并一直寻找着黑衣组织的人的下落，希望有朝一日将其绳之以法，并变回原来的样子。</blockquote>
@@ -58,8 +58,8 @@
 << answerCallbackQuery
 >> user 1001 taps 1:s:1 on message 1
 -> MoviePilot GET /api/v1/subscribe/media/30983?media_source=themoviedb&mtype=电视剧&season=1&title=名侦探柯南&year=1996
-<< editMessageText chat=-500 message=1 reuses=url-7ca1018d
-   <img src="tg://photo?id=p0"/>
+<< editMessageText chat=-500 message=1
+   <img src="url-7ca1018dcbd7e9db2629bc08168d35247b2cf8ab2703868e1e1423650f00c642"/>
    <h3>📺 <a href="https://www.themoviedb.org/tv/30983">名侦探柯南</a></h3>
    <footer><i>名探偵コナン</i> · 1996 · 电视剧 · ⭐ 8.0 · 动画 / 犯罪 / 悬疑 / 喜剧 · 共 1 季 1216 集 · 主演：高山南、山口胜平、山崎和佳奈</footer>
    <blockquote expandable>高中生侦探工藤新一与毛利兰在游乐园游玩时发现两个行动诡异的黑衣男子，便跟踪他们，不料被灌下一种叫「APTX4869」的神秘毒药，然而因为药物副作用，新一的身体竟回到孩童状态。为不使周围的人受到牵连，他化名为「江户川柯南」，寄住在毛利兰家中，用阿笠博士发明的手表型麻醉枪让毛利小五郎睡着，接着用蝴蝶结变声器模仿他的声音来进行推理，解决了许多案件，并一直寻找着黑衣组织的人的下落，希望有朝一日将其绳之以法，并变回原来的样子。</blockquote>
@@ -72,8 +72,8 @@
    [返回 | 1:bk:0] [取消 | 1:x:0]
 << answerCallbackQuery
 >> user 1001 taps 1:e:0 on message 1
-<< editMessageText chat=-500 message=1 reuses=url-7ca1018d
-   <img src="tg://photo?id=p0"/>
+<< editMessageText chat=-500 message=1
+   <img src="url-7ca1018dcbd7e9db2629bc08168d35247b2cf8ab2703868e1e1423650f00c642"/>
    <h3>📺 <a href="https://www.themoviedb.org/tv/30983">名侦探柯南</a></h3>
    <footer><i>名探偵コナン</i> · 1996 · 电视剧 · ⭐ 8.0 · 动画 / 犯罪 / 悬疑 / 喜剧 · 共 1 季 1216 集 · 主演：高山南、山口胜平、山崎和佳奈</footer>
    <blockquote expandable>高中生侦探工藤新一与毛利兰在游乐园游玩时发现两个行动诡异的黑衣男子，便跟踪他们，不料被灌下一种叫「APTX4869」的神秘毒药，然而因为药物副作用，新一的身体竟回到孩童状态。为不使周围的人受到牵连，他化名为「江户川柯南」，寄住在毛利兰家中，用阿笠博士发明的手表型麻醉枪让毛利小五郎睡着，接着用蝴蝶结变声器模仿他的声音来进行推理，解决了许多案件，并一直寻找着黑衣组织的人的下落，希望有朝一日将其绳之以法，并变回原来的样子。</blockquote>
@@ -84,8 +84,8 @@
 >> user 1001 in chat -500: 500
 >> user 1002 in chat -500: 600
 >> user 1001 in chat -500 quoting message 1: 700
-<< editMessageText chat=-500 message=1 reuses=url-7ca1018d
-   <img src="tg://photo?id=p0"/>
+<< editMessageText chat=-500 message=1
+   <img src="url-7ca1018dcbd7e9db2629bc08168d35247b2cf8ab2703868e1e1423650f00c642"/>
    <h3>📺 <a href="https://www.themoviedb.org/tv/30983">名侦探柯南</a></h3>
    <footer><i>名探偵コナン</i> · 1996 · 电视剧 · ⭐ 8.0 · 动画 / 犯罪 / 悬疑 / 喜剧 · 共 1 季 1216 集 · 主演：高山南、山口胜平、山崎和佳奈</footer>
    <blockquote expandable>高中生侦探工藤新一与毛利兰在游乐园游玩时发现两个行动诡异的黑衣男子，便跟踪他们，不料被灌下一种叫「APTX4869」的神秘毒药，然而因为药物副作用，新一的身体竟回到孩童状态。为不使周围的人受到牵连，他化名为「江户川柯南」，寄住在毛利兰家中，用阿笠博士发明的手表型麻醉枪让毛利小五郎睡着，接着用蝴蝶结变声器模仿他的声音来进行推理，解决了许多案件，并一直寻找着黑衣组织的人的下落，希望有朝一日将其绳之以法，并变回原来的样子。</blockquote>

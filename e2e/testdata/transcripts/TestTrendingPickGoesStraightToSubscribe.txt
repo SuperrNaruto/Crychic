@@ -10,14 +10,152 @@
 -> MoviePilot GET /api/v1/recommend/tmdb_trending
 << editMessageText chat=1001 message=1
    <tg-slideshow>
-   <img src="https://image.tmdb.org/t/p/w500/c8UJ50GM0jiVIk6YO9hEiqEe0dP.jpg"/>
-   <img src="https://image.tmdb.org/t/p/w500/5ZmOP60VIEfM2cnt7CpAK1j9mEv.jpg"/>
-   <img src="https://image.tmdb.org/t/p/w500/uLI9v21yjlFcrL0qdBPHpNk1Gmu.jpg"/>
-   <img src="https://image.tmdb.org/t/p/w500/bou3s9jCvcZ1iGPiYilD7C0LdLo.jpg"/>
-   <img src="https://image.tmdb.org/t/p/w500/fD6hgmReIOGiFv3l22eVSQLxqFX.jpg"/>
-   <img src="https://image.tmdb.org/t/p/w500/qMvRqzzDVfQpLi5ZoKwttTQdaJe.jpg"/>
-   <img src="https://image.tmdb.org/t/p/w500/slYjlpkFnaCSZJICqj2G158Eoqg.jpg"/>
-   <img src="https://image.tmdb.org/t/p/w500/xONOMna5Z102bw0jMPBM4H73B9m.jpg"/>
+   <img src="url-9dcf3aeeac8a98b1293ba6367ee4f3cd4e8245d6977d04b01f16ba84a90b2192"/>
+   <img src="url-dcad966dbca57c5ddbfd7d685e5aa39e97272d57f0fac264e890e4fca7cefce3"/>
+   <img src="url-06abdbfb48bc97e564c24d0bd760fdf89689edbe3b0b6547723d81f82665a7a4"/>
+   <img src="url-2b85c6da0a26b04a8f1d39d3f6bd2615e76c5298432c5a1fa03f57e3e0a04696"/>
+   <img src="url-6699a89aa92f54efa7fcd1b444da5532900bcbe696d98fb4e886ec861f45e61b"/>
+   <img src="url-6565e988e134eafbda92eae419d92dde4f5e8ce5651bddb5137bf5a1cd07cc2d"/>
+   <img src="url-d511ae90fd303db4dea76257fa64b8752df754c2bcea7c8290ce68117e24bd58"/>
+   <img src="url-ae96557eefddf17644431620427f3ce7632a64a7a76c3f63ee32bfcd13d5beca"/>
+   </tg-slideshow>
+   <h3>🔥 TMDB 流行趋势</h3>
+   <ol start="1">
+   <li value="1"><details><summary><b>挖掘者</b> · <i>2026 · 电影 · ⭐ 7.5</i></summary>
+   <p>世界上最有权势的男子极力证明自己其实是人类的救世主，结果等来了他酝酿的灾难要摧毁万物。</p>
+   <p><a href="https://www.themoviedb.org/movie/1248832">查看详情页</a></p>
+   </details>
+   </li>
+   <li value="2"><details><summary><b>绿灯军团</b> · <i>2026 · 电视剧 · ⭐ 8.4</i></summary>
+   <p>绿灯侠哈尔·乔丹与新晋成员约翰·斯图尔特奉命调查美国小镇的一起神秘命案，却意外发现案件背后隐藏着与外星势力有关的阴谋，两人也在追查真相的过程中面对各自的信念与考验。</p>
+   <p><a href="https://www.themoviedb.org/tv/95350">查看详情页</a></p>
+   </details>
+   </li>
+   <li value="3"><details><summary><b>起义</b> · <i>2026 · 电影 · ⭐ 7.9</i></summary>
+   <p>在中世纪的英格兰，一位无畏的勇士召集平民发动了一场激烈的起义，反抗国王理查德二世的高压统治。随着国家陷入混乱，他的起义军与王室军队展开了一场绝望的自由之战。</p>
+   <p><a href="https://www.themoviedb.org/movie/977942">查看详情页</a></p>
+   </details>
+   </li>
+   <li value="4"><details><summary><b>护肝人</b> · <i>2026 · 电影 · ⭐ 8.3</i></summary>
+   <p>高端特种押运员汉克·马龙必须在三小时内，将一颗肝脏从洛杉矶国际机场运往圣巴巴拉的一家医院，用于一台紧急移植手术。受赠者是一名濒危的七岁女孩，她拥有全球极为罕见的血型。偏偏南加州最危险犯罪集团的头目，也急需这颗器官。</p>
+   <p><a href="https://www.themoviedb.org/movie/1377237">查看详情页</a></p>
+   </details>
+   </li>
+   <li value="5"><details><summary><b>不存在的罪人</b> · <i>2026 · 电影 · ⭐ 6.7</i></summary>
+   <p>影片改编自柯琳·胡佛的同名畅销小说。知名作家维莉蒂因故无法完成新作，潦倒作家洛温受邀前往其偏远庄园代笔，却意外发现维莉蒂诡异的自传手稿。面对其中关于丈夫杰里米的扭曲告白，洛温逐渐难辨虚实、操控与诱惑。</p>
+   <p><a href="https://www.themoviedb.org/movie/1283515">查看详情页</a></p>
+   </details>
+   </li>
+   <li value="6"><details><summary><b>生化危机：爆发夜</b> · <i>2026 · 电影 · ⭐ 7.3</i></summary>
+   <p>奉命奔赴浣熊市的医疗速递员布莱恩，意外深陷全城失控的病毒浩劫。浣熊市彻底沦陷，异变怪物横行肆虐、嗜血猎捕，身陷末日绝境的他，能否在这场惊魂噩梦中突围求生，搏出一线生机？</p>
+   <p><a href="https://www.themoviedb.org/movie/1423191">查看详情页</a></p>
+   </details>
+   </li>
+   <li value="7"><details><summary><b>伊甸之东</b> · <i>2026 · 电视剧 · ⭐ 7.9</i></summary>
+   <p>这部剧集对史坦贝克的经典之作进行了全新诠释，讲述特拉斯克家族跨越数代的传奇故事，特别聚焦于那个难以磨灭的反英雄人物——凯茜·埃姆斯。</p>
+   <p><a href="https://www.themoviedb.org/tv/258165">查看详情页</a></p>
+   </details>
+   </li>
+   <li value="8"><details><summary><b>歪心狼对阵ACME</b> · <i>2026 · 电影 · ⭐ 7.5</i></summary>
+   <p>故事讲述了乐一通经典角色歪心狼（Wile E. Coyote）在长期使用Acme公司的产品追捕BB鸟（Road Runner）失败并遭受身心创伤后，决定不再忍受。他聘请了一位倒霉的人类律师，向Acme公司提起诉讼，要求巨额赔偿。而Acme公司的首席律师则试图捍卫公司利益，双方在法庭上展开了一场荒诞又爆笑的对决。  影片改编自1990年《纽约客》的一篇同名文章。</p>
+   <p><a href="https://www.themoviedb.org/movie/1204680">查看详情页</a></p>
+   </details>
+   </li>
+   </ol>
+   <footer>第 1/2 页</footer>
+   [1 | 1:i:0] [2 | 1:i:1] [3 | 1:i:2] [4 | 1:i:3]
+   [5 | 1:i:4] [6 | 1:i:5] [7 | 1:i:6] [8 | 1:i:7]
+   [下一页 › | 1:g:1]
+   [返回 | 1:b:0] [首页 | 1:o:0] [关闭 | 1:c:0]
+<< answerCallbackQuery
+>> user 1001 taps 1:i:0 on message 1
+-> MoviePilot GET /api/v1/media/search?count=10&title=Digger&type=media
+-> MoviePilot GET /api/v1/media/search?count=10&title=挖掘者&type=media
+<< editMessageText chat=1001 message=1
+   <h3>🔍 没找到</h3>
+   <p>没找到「挖掘者」能订阅的条目 (｡•́︿•̀｡) 用 /search 换个名字搜搜吧～</p>
+   [返回 | 1:bk:0] [首页 | 1:o:0] [关闭 | 1:c:0]
+<< answerCallbackQuery
+>> user 1001 taps 1:bk:0 on message 1
+<< editMessageText chat=1001 message=1
+   <tg-slideshow>
+   <img src="url-9dcf3aeeac8a98b1293ba6367ee4f3cd4e8245d6977d04b01f16ba84a90b2192"/>
+   <img src="url-dcad966dbca57c5ddbfd7d685e5aa39e97272d57f0fac264e890e4fca7cefce3"/>
+   <img src="url-06abdbfb48bc97e564c24d0bd760fdf89689edbe3b0b6547723d81f82665a7a4"/>
+   <img src="url-2b85c6da0a26b04a8f1d39d3f6bd2615e76c5298432c5a1fa03f57e3e0a04696"/>
+   <img src="url-6699a89aa92f54efa7fcd1b444da5532900bcbe696d98fb4e886ec861f45e61b"/>
+   <img src="url-6565e988e134eafbda92eae419d92dde4f5e8ce5651bddb5137bf5a1cd07cc2d"/>
+   <img src="url-d511ae90fd303db4dea76257fa64b8752df754c2bcea7c8290ce68117e24bd58"/>
+   <img src="url-ae96557eefddf17644431620427f3ce7632a64a7a76c3f63ee32bfcd13d5beca"/>
+   </tg-slideshow>
+   <h3>🔥 TMDB 流行趋势</h3>
+   <ol start="1">
+   <li value="1"><details><summary><b>挖掘者</b> · <i>2026 · 电影 · ⭐ 7.5</i></summary>
+   <p>世界上最有权势的男子极力证明自己其实是人类的救世主，结果等来了他酝酿的灾难要摧毁万物。</p>
+   <p><a href="https://www.themoviedb.org/movie/1248832">查看详情页</a></p>
+   </details>
+   </li>
+   <li value="2"><details><summary><b>绿灯军团</b> · <i>2026 · 电视剧 · ⭐ 8.4</i></summary>
+   <p>绿灯侠哈尔·乔丹与新晋成员约翰·斯图尔特奉命调查美国小镇的一起神秘命案，却意外发现案件背后隐藏着与外星势力有关的阴谋，两人也在追查真相的过程中面对各自的信念与考验。</p>
+   <p><a href="https://www.themoviedb.org/tv/95350">查看详情页</a></p>
+   </details>
+   </li>
+   <li value="3"><details><summary><b>起义</b> · <i>2026 · 电影 · ⭐ 7.9</i></summary>
+   <p>在中世纪的英格兰，一位无畏的勇士召集平民发动了一场激烈的起义，反抗国王理查德二世的高压统治。随着国家陷入混乱，他的起义军与王室军队展开了一场绝望的自由之战。</p>
+   <p><a href="https://www.themoviedb.org/movie/977942">查看详情页</a></p>
+   </details>
+   </li>
+   <li value="4"><details><summary><b>护肝人</b> · <i>2026 · 电影 · ⭐ 8.3</i></summary>
+   <p>高端特种押运员汉克·马龙必须在三小时内，将一颗肝脏从洛杉矶国际机场运往圣巴巴拉的一家医院，用于一台紧急移植手术。受赠者是一名濒危的七岁女孩，她拥有全球极为罕见的血型。偏偏南加州最危险犯罪集团的头目，也急需这颗器官。</p>
+   <p><a href="https://www.themoviedb.org/movie/1377237">查看详情页</a></p>
+   </details>
+   </li>
+   <li value="5"><details><summary><b>不存在的罪人</b> · <i>2026 · 电影 · ⭐ 6.7</i></summary>
+   <p>影片改编自柯琳·胡佛的同名畅销小说。知名作家维莉蒂因故无法完成新作，潦倒作家洛温受邀前往其偏远庄园代笔，却意外发现维莉蒂诡异的自传手稿。面对其中关于丈夫杰里米的扭曲告白，洛温逐渐难辨虚实、操控与诱惑。</p>
+   <p><a href="https://www.themoviedb.org/movie/1283515">查看详情页</a></p>
+   </details>
+   </li>
+   <li value="6"><details><summary><b>生化危机：爆发夜</b> · <i>2026 · 电影 · ⭐ 7.3</i></summary>
+   <p>奉命奔赴浣熊市的医疗速递员布莱恩，意外深陷全城失控的病毒浩劫。浣熊市彻底沦陷，异变怪物横行肆虐、嗜血猎捕，身陷末日绝境的他，能否在这场惊魂噩梦中突围求生，搏出一线生机？</p>
+   <p><a href="https://www.themoviedb.org/movie/1423191">查看详情页</a></p>
+   </details>
+   </li>
+   <li value="7"><details><summary><b>伊甸之东</b> · <i>2026 · 电视剧 · ⭐ 7.9</i></summary>
+   <p>这部剧集对史坦贝克的经典之作进行了全新诠释，讲述特拉斯克家族跨越数代的传奇故事，特别聚焦于那个难以磨灭的反英雄人物——凯茜·埃姆斯。</p>
+   <p><a href="https://www.themoviedb.org/tv/258165">查看详情页</a></p>
+   </details>
+   </li>
+   <li value="8"><details><summary><b>歪心狼对阵ACME</b> · <i>2026 · 电影 · ⭐ 7.5</i></summary>
+   <p>故事讲述了乐一通经典角色歪心狼（Wile E. Coyote）在长期使用Acme公司的产品追捕BB鸟（Road Runner）失败并遭受身心创伤后，决定不再忍受。他聘请了一位倒霉的人类律师，向Acme公司提起诉讼，要求巨额赔偿。而Acme公司的首席律师则试图捍卫公司利益，双方在法庭上展开了一场荒诞又爆笑的对决。  影片改编自1990年《纽约客》的一篇同名文章。</p>
+   <p><a href="https://www.themoviedb.org/movie/1204680">查看详情页</a></p>
+   </details>
+   </li>
+   </ol>
+   <footer>第 1/2 页</footer>
+   [1 | 1:i:0] [2 | 1:i:1] [3 | 1:i:2] [4 | 1:i:3]
+   [5 | 1:i:4] [6 | 1:i:5] [7 | 1:i:6] [8 | 1:i:7]
+   [下一页 › | 1:g:1]
+   [返回 | 1:b:0] [首页 | 1:o:0] [关闭 | 1:c:0]
+<< answerCallbackQuery
+>> user 1001 taps 1:i:0 on message 1
+-> MoviePilot GET /api/v1/media/search?count=10&title=Digger&type=media
+-> MoviePilot GET /api/v1/media/search?count=10&title=挖掘者&type=media
+<< editMessageText chat=1001 message=1
+   <h3>🔍 搜索</h3>
+   <p>⚠️ MoviePilot 好像打了个盹，稍后再来找我吧 (´-ω-`)</p>
+   [返回 | 1:bk:0] [首页 | 1:o:0] [关闭 | 1:c:0]
+<< answerCallbackQuery
+>> user 1001 taps 1:bk:0 on message 1
+<< editMessageText chat=1001 message=1
+   <tg-slideshow>
+   <img src="url-9dcf3aeeac8a98b1293ba6367ee4f3cd4e8245d6977d04b01f16ba84a90b2192"/>
+   <img src="url-dcad966dbca57c5ddbfd7d685e5aa39e97272d57f0fac264e890e4fca7cefce3"/>
+   <img src="url-06abdbfb48bc97e564c24d0bd760fdf89689edbe3b0b6547723d81f82665a7a4"/>
+   <img src="url-2b85c6da0a26b04a8f1d39d3f6bd2615e76c5298432c5a1fa03f57e3e0a04696"/>
+   <img src="url-6699a89aa92f54efa7fcd1b444da5532900bcbe696d98fb4e886ec861f45e61b"/>
+   <img src="url-6565e988e134eafbda92eae419d92dde4f5e8ce5651bddb5137bf5a1cd07cc2d"/>
+   <img src="url-d511ae90fd303db4dea76257fa64b8752df754c2bcea7c8290ce68117e24bd58"/>
+   <img src="url-ae96557eefddf17644431620427f3ce7632a64a7a76c3f63ee32bfcd13d5beca"/>
    </tg-slideshow>
    <h3>🔥 TMDB 流行趋势</h3>
    <ol start="1">
@@ -73,8 +211,21 @@
 -> MoviePilot GET /api/v1/media/search?count=10&title=挖掘者&type=media
 -> MoviePilot GET /api/v1/media/1248832?media_source=themoviedb&type_name=电影
 -> MoviePilot GET /api/v1/subscribe/media/1248832?media_source=themoviedb&mtype=电影&title=挖掘者&year=2026
-<< editMessageText chat=1001 message=1 reuses=url-9dcf3aee
-   <img src="tg://photo?id=p0"/>
+<< editMessageText chat=1001 message=1
+   <img src="url-9dcf3aeeac8a98b1293ba6367ee4f3cd4e8245d6977d04b01f16ba84a90b2192"/>
+   <h3>🎬 <a href="https://www.themoviedb.org/movie/1248832">挖掘者</a></h3>
+   <footer><i>Digger</i> · 2026 · 电影 · ⭐ 7.5 · 喜剧 / 剧情 · 129 分钟 · 主演：汤姆·克鲁斯、里兹·阿迈德、约翰·古德曼</footer>
+   <blockquote expandable>世界上最有权势的男子极力证明自己其实是人类的救世主，结果等来了他酝酿的灾难要摧毁万物。</blockquote>
+   <hr/>
+   <p><b>要订阅《挖掘者》吗？</b></p>
+   [确认订阅 | 1:ok:0]
+   [洗版订阅 | 1:bv:0]
+   [搜索资源 | 1:ts:0] [相似推荐 | 1:r:0] [同系列 | 1:n:0]
+   [返回 | 1:bk:0] [取消 | 1:x:0]
+<< answerCallbackQuery
+>> user 1001 taps 1:i:0 on message 1
+<< editMessageText chat=1001 message=1
+   <img src="url-9dcf3aeeac8a98b1293ba6367ee4f3cd4e8245d6977d04b01f16ba84a90b2192"/>
    <h3>🎬 <a href="https://www.themoviedb.org/movie/1248832">挖掘者</a></h3>
    <footer><i>Digger</i> · 2026 · 电影 · ⭐ 7.5 · 喜剧 / 剧情 · 129 分钟 · 主演：汤姆·克鲁斯、里兹·阿迈德、约翰·古德曼</footer>
    <blockquote expandable>世界上最有权势的男子极力证明自己其实是人类的救世主，结果等来了他酝酿的灾难要摧毁万物。</blockquote>
@@ -86,16 +237,16 @@
    [返回 | 1:bk:0] [取消 | 1:x:0]
 << answerCallbackQuery
 >> user 1001 taps 1:bk:0 on message 1
-<< editMessageText chat=1001 message=1 reuses=url-9dcf3aee reuses=url-dcad966d reuses=url-06abdbfb reuses=url-2b85c6da reuses=url-6699a89a reuses=url-6565e988 reuses=url-d511ae90 reuses=url-ae96557e
+<< editMessageText chat=1001 message=1
    <tg-slideshow>
-   <img src="tg://photo?id=p0"/>
-   <img src="tg://photo?id=p1"/>
-   <img src="tg://photo?id=p2"/>
-   <img src="tg://photo?id=p3"/>
-   <img src="tg://photo?id=p4"/>
-   <img src="tg://photo?id=p5"/>
-   <img src="tg://photo?id=p6"/>
-   <img src="tg://photo?id=p7"/>
+   <img src="url-9dcf3aeeac8a98b1293ba6367ee4f3cd4e8245d6977d04b01f16ba84a90b2192"/>
+   <img src="url-dcad966dbca57c5ddbfd7d685e5aa39e97272d57f0fac264e890e4fca7cefce3"/>
+   <img src="url-06abdbfb48bc97e564c24d0bd760fdf89689edbe3b0b6547723d81f82665a7a4"/>
+   <img src="url-2b85c6da0a26b04a8f1d39d3f6bd2615e76c5298432c5a1fa03f57e3e0a04696"/>
+   <img src="url-6699a89aa92f54efa7fcd1b444da5532900bcbe696d98fb4e886ec861f45e61b"/>
+   <img src="url-6565e988e134eafbda92eae419d92dde4f5e8ce5651bddb5137bf5a1cd07cc2d"/>
+   <img src="url-d511ae90fd303db4dea76257fa64b8752df754c2bcea7c8290ce68117e24bd58"/>
+   <img src="url-ae96557eefddf17644431620427f3ce7632a64a7a76c3f63ee32bfcd13d5beca"/>
    </tg-slideshow>
    <h3>🔥 TMDB 流行趋势</h3>
    <ol start="1">
@@ -151,8 +302,8 @@
 -> MoviePilot GET /api/v1/media/search?count=10&title=挖掘者&type=media
 -> MoviePilot GET /api/v1/media/1248832?media_source=themoviedb&type_name=电影
 -> MoviePilot GET /api/v1/subscribe/media/1248832?media_source=themoviedb&mtype=电影&title=挖掘者&year=2026
-<< editMessageText chat=1001 message=1 reuses=url-9dcf3aee
-   <img src="tg://photo?id=p0"/>
+<< editMessageText chat=1001 message=1
+   <img src="url-9dcf3aeeac8a98b1293ba6367ee4f3cd4e8245d6977d04b01f16ba84a90b2192"/>
    <h3>🎬 <a href="https://www.themoviedb.org/movie/1248832">挖掘者</a></h3>
    <footer><i>Digger</i> · 2026 · 电影 · ⭐ 7.5 · 喜剧 / 剧情 · 129 分钟 · 主演：汤姆·克鲁斯、里兹·阿迈德、约翰·古德曼</footer>
    <blockquote expandable>世界上最有权势的男子极力证明自己其实是人类的救世主，结果等来了他酝酿的灾难要摧毁万物。</blockquote>
@@ -166,8 +317,8 @@
 >> user 1001 taps 1:ok:0 on message 1
 -> MoviePilot POST /api/v1/subscribe/
    {"name":"挖掘者","year":"2026","type":"电影","media_source":"themoviedb","media_id":"1248832"}
-<< editMessageText chat=1001 message=1 reuses=url-9dcf3aee
-   <img src="tg://photo?id=p0"/>
+<< editMessageText chat=1001 message=1
+   <img src="url-9dcf3aeeac8a98b1293ba6367ee4f3cd4e8245d6977d04b01f16ba84a90b2192"/>
    <h3>🎬 <a href="https://www.themoviedb.org/movie/1248832">挖掘者</a></h3>
    <footer><i>Digger</i> · 2026 · 电影 · ⭐ 7.5 · 喜剧 / 剧情 · 129 分钟 · 主演：汤姆·克鲁斯、里兹·阿迈德、约翰·古德曼</footer>
    <blockquote expandable>世界上最有权势的男子极力证明自己其实是人类的救世主，结果等来了他酝酿的灾难要摧毁万物。</blockquote>
@@ -176,16 +327,16 @@
    [返回 | 1:bk:0] [首页 | 1:o:0] [关闭 | 1:c:0]
 << answerCallbackQuery
 >> user 1001 taps 1:bk:0 on message 1
-<< editMessageText chat=1001 message=1 reuses=url-9dcf3aee reuses=url-dcad966d reuses=url-06abdbfb reuses=url-2b85c6da reuses=url-6699a89a reuses=url-6565e988 reuses=url-d511ae90 reuses=url-ae96557e
+<< editMessageText chat=1001 message=1
    <tg-slideshow>
-   <img src="tg://photo?id=p0"/>
-   <img src="tg://photo?id=p1"/>
-   <img src="tg://photo?id=p2"/>
-   <img src="tg://photo?id=p3"/>
-   <img src="tg://photo?id=p4"/>
-   <img src="tg://photo?id=p5"/>
-   <img src="tg://photo?id=p6"/>
-   <img src="tg://photo?id=p7"/>
+   <img src="url-9dcf3aeeac8a98b1293ba6367ee4f3cd4e8245d6977d04b01f16ba84a90b2192"/>
+   <img src="url-dcad966dbca57c5ddbfd7d685e5aa39e97272d57f0fac264e890e4fca7cefce3"/>
+   <img src="url-06abdbfb48bc97e564c24d0bd760fdf89689edbe3b0b6547723d81f82665a7a4"/>
+   <img src="url-2b85c6da0a26b04a8f1d39d3f6bd2615e76c5298432c5a1fa03f57e3e0a04696"/>
+   <img src="url-6699a89aa92f54efa7fcd1b444da5532900bcbe696d98fb4e886ec861f45e61b"/>
+   <img src="url-6565e988e134eafbda92eae419d92dde4f5e8ce5651bddb5137bf5a1cd07cc2d"/>
+   <img src="url-d511ae90fd303db4dea76257fa64b8752df754c2bcea7c8290ce68117e24bd58"/>
+   <img src="url-ae96557eefddf17644431620427f3ce7632a64a7a76c3f63ee32bfcd13d5beca"/>
    </tg-slideshow>
    <h3>🔥 TMDB 流行趋势</h3>
    <ol start="1">

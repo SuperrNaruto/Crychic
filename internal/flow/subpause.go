@@ -41,6 +41,13 @@ func (e *Engine) chooseSubPause(ctx context.Context, sess session, p press) (Rep
 		e.log.Error("backend call failed", "step", "pause subscription", "err", err)
 		return Reply{Notice: msgPauseCheck}, true
 	}
+	sess.history = slices.Clone(sess.history)
+	for i := range sess.history {
+		if sess.history[i].state.listing == subscriptionList {
+			sess.history[i].reload = true
+		}
+	}
+	e.store.put(sess)
 	return e.subDetail(ctx, sess, index), true
 }
 

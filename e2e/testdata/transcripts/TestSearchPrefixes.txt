@@ -2,9 +2,9 @@
 -> MoviePilot GET /api/v1/media/search?count=10&title=迷途之子&type=media
 << sendRichMessage chat=1001 message=1
    <tg-slideshow>
-   <img src="https://image.tmdb.org/t/p/w500/dDknWHLYaQB76QSViNdzXOC5v64.jpg"/>
-   <img src="https://image.tmdb.org/t/p/w500/bMW0kwyK44LvDbQ3s0b3GCVOtLs.jpg"/>
-   <img src="https://image.tmdb.org/t/p/w500/bleKkUg0l8X4AAxqxgkmYlLO7bN.jpg"/>
+   <img src="url-f1d1c3e9142d5b6cb0aec97f314112cb1cfcf5cab28cbc83476b0d4bf25e1175"/>
+   <img src="url-44a615cb1b3392e18000efaa5466a08a1de0492229bb298c2282bef3ea8229c5"/>
+   <img src="url-0a63e69bacb326890000e11c26f5f27bb907de22c0b7522f5de59851ace7f2c6"/>
    </tg-slideshow>
    <h3>🔍 帮你找到这些「迷途之子」啦</h3>
    <ol start="1">
@@ -21,8 +21,8 @@
 >> user 1001 taps 1:m:0 on message 1
 -> MoviePilot GET /api/v1/media/224207?media_source=themoviedb&type_name=电视剧
 -> MoviePilot GET /api/v1/media/seasons?media_id=224207&media_source=themoviedb
-<< editMessageText chat=1001 message=1 reuses=url-f1d1c3e9
-   <img src="tg://photo?id=p0"/>
+<< editMessageText chat=1001 message=1
+   <img src="url-f1d1c3e9142d5b6cb0aec97f314112cb1cfcf5cab28cbc83476b0d4bf25e1175"/>
    <h3>📺 <a href="https://www.themoviedb.org/tv/224207">迷途之子!!!!!</a></h3>
    <footer><i>BanG Dream! It&#39;s MyGO!!!!!</i> · 2023 · 电视剧 · ⭐ 8.0 · 动画 / 剧情 · 共 1 季 13 集 · 主演：羊宫妃那、立石凛、青木阳菜</footer>
    <blockquote expandable>“你能，和我组一辈子乐队吗？”……高一的春末，羽丘女子学园的所有人都加入了乐队，晚入学的爱音为了尽快融入班级，急急忙忙地寻找着乐队成员。这时她得知，「羽丘的不可思议女孩」灯还没有加入乐队，于是爱音不由自主地向她打起了招呼，但是……这是遍体鳞伤又狼狈不堪的，我们的＜音乐呐喊＞。迷失方向也无所谓，在迷茫中前进吧！</blockquote>
@@ -40,8 +40,8 @@
 << answerCallbackQuery
 >> user 1001 taps 1:s:1 on message 1
 -> MoviePilot GET /api/v1/subscribe/media/224207?media_source=themoviedb&mtype=电视剧&season=1&title=迷途之子!!!!!&year=2023
-<< editMessageText chat=1001 message=1 reuses=url-f1d1c3e9
-   <img src="tg://photo?id=p0"/>
+<< editMessageText chat=1001 message=1
+   <img src="url-f1d1c3e9142d5b6cb0aec97f314112cb1cfcf5cab28cbc83476b0d4bf25e1175"/>
    <h3>📺 <a href="https://www.themoviedb.org/tv/224207">迷途之子!!!!!</a></h3>
    <footer><i>BanG Dream! It&#39;s MyGO!!!!!</i> · 2023 · 电视剧 · ⭐ 8.0 · 动画 / 剧情 · 共 1 季 13 集 · 主演：羊宫妃那、立石凛、青木阳菜</footer>
    <blockquote expandable>“你能，和我组一辈子乐队吗？”……高一的春末，羽丘女子学园的所有人都加入了乐队，晚入学的爱音为了尽快融入班级，急急忙忙地寻找着乐队成员。这时她得知，「羽丘的不可思议女孩」灯还没有加入乐队，于是爱音不由自主地向她打起了招呼，但是……这是遍体鳞伤又狼狈不堪的，我们的＜音乐呐喊＞。迷失方向也无所谓，在迷茫中前进吧！</blockquote>
@@ -80,8 +80,8 @@
    [筛选站点 | 1:tf:0] [多选… | 1:tm:0]
    [返回 | 1:bk:0] [取消 | 1:x:0]
 >> user 1001 taps 1:bk:0 on message 1
-<< editMessageText chat=1001 message=1 reuses=url-f1d1c3e9
-   <img src="tg://photo?id=p0"/>
+<< editMessageText chat=1001 message=1
+   <img src="url-f1d1c3e9142d5b6cb0aec97f314112cb1cfcf5cab28cbc83476b0d4bf25e1175"/>
    <h3>📺 <a href="https://www.themoviedb.org/tv/224207">迷途之子!!!!!</a></h3>
    <footer><i>BanG Dream! It&#39;s MyGO!!!!!</i> · 2023 · 电视剧 · ⭐ 8.0 · 动画 / 剧情 · 共 1 季 13 集 · 主演：羊宫妃那、立石凛、青木阳菜</footer>
    <blockquote expandable>“你能，和我组一辈子乐队吗？”……高一的春末，羽丘女子学园的所有人都加入了乐队，晚入学的爱音为了尽快融入班级，急急忙忙地寻找着乐队成员。这时她得知，「羽丘的不可思议女孩」灯还没有加入乐队，于是爱音不由自主地向她打起了招呼，但是……这是遍体鳞伤又狼狈不堪的，我们的＜音乐呐喊＞。迷失方向也无所谓，在迷茫中前进吧！</blockquote>
@@ -94,8 +94,8 @@
    [返回 | 1:bk:0] [取消 | 1:x:0]
 << answerCallbackQuery
 >> user 1001 taps 1:bk:0 on message 1
-<< editMessageText chat=1001 message=1 reuses=url-f1d1c3e9
-   <img src="tg://photo?id=p0"/>
+<< editMessageText chat=1001 message=1
+   <img src="url-f1d1c3e9142d5b6cb0aec97f314112cb1cfcf5cab28cbc83476b0d4bf25e1175"/>
    <h3>📺 <a href="https://www.themoviedb.org/tv/224207">迷途之子!!!!!</a></h3>
    <footer><i>BanG Dream! It&#39;s MyGO!!!!!</i> · 2023 · 电视剧 · ⭐ 8.0 · 动画 / 剧情 · 共 1 季 13 集 · 主演：羊宫妃那、立石凛、青木阳菜</footer>
    <blockquote expandable>“你能，和我组一辈子乐队吗？”……高一的春末，羽丘女子学园的所有人都加入了乐队，晚入学的爱音为了尽快融入班级，急急忙忙地寻找着乐队成员。这时她得知，「羽丘的不可思议女孩」灯还没有加入乐队，于是爱音不由自主地向她打起了招呼，但是……这是遍体鳞伤又狼狈不堪的，我们的＜音乐呐喊＞。迷失方向也无所谓，在迷茫中前进吧！</blockquote>
@@ -113,11 +113,11 @@
 << answerCallbackQuery
 >> user 1001 in chat 1001: 订阅：迷途之子
 -> MoviePilot GET /api/v1/media/search?count=10&title=迷途之子&type=media
-<< sendRichMessage chat=1001 message=2 reuses=url-f1d1c3e9 reuses=url-44a615cb reuses=url-0a63e69b
+<< sendRichMessage chat=1001 message=2
    <tg-slideshow>
-   <img src="tg://photo?id=p0"/>
-   <img src="tg://photo?id=p1"/>
-   <img src="tg://photo?id=p2"/>
+   <img src="url-f1d1c3e9142d5b6cb0aec97f314112cb1cfcf5cab28cbc83476b0d4bf25e1175"/>
+   <img src="url-44a615cb1b3392e18000efaa5466a08a1de0492229bb298c2282bef3ea8229c5"/>
+   <img src="url-0a63e69bacb326890000e11c26f5f27bb907de22c0b7522f5de59851ace7f2c6"/>
    </tg-slideshow>
    <h3>🔍 帮你找到这些「迷途之子」啦</h3>
    <ol start="1">
@@ -134,8 +134,8 @@
 >> user 1001 taps 2:m:0 on message 2
 -> MoviePilot GET /api/v1/media/224207?media_source=themoviedb&type_name=电视剧
 -> MoviePilot GET /api/v1/media/seasons?media_id=224207&media_source=themoviedb
-<< editMessageText chat=1001 message=2 reuses=url-f1d1c3e9
-   <img src="tg://photo?id=p0"/>
+<< editMessageText chat=1001 message=2
+   <img src="url-f1d1c3e9142d5b6cb0aec97f314112cb1cfcf5cab28cbc83476b0d4bf25e1175"/>
    <h3>📺 <a href="https://www.themoviedb.org/tv/224207">迷途之子!!!!!</a></h3>
    <footer><i>BanG Dream! It&#39;s MyGO!!!!!</i> · 2023 · 电视剧 · ⭐ 8.0 · 动画 / 剧情 · 共 1 季 13 集 · 主演：羊宫妃那、立石凛、青木阳菜</footer>
    <blockquote expandable>“你能，和我组一辈子乐队吗？”……高一的春末，羽丘女子学园的所有人都加入了乐队，晚入学的爱音为了尽快融入班级，急急忙忙地寻找着乐队成员。这时她得知，「羽丘的不可思议女孩」灯还没有加入乐队，于是爱音不由自主地向她打起了招呼，但是……这是遍体鳞伤又狼狈不堪的，我们的＜音乐呐喊＞。迷失方向也无所谓，在迷茫中前进吧！</blockquote>
@@ -153,8 +153,8 @@
 << answerCallbackQuery
 >> user 1001 taps 2:s:1 on message 2
 -> MoviePilot GET /api/v1/subscribe/media/224207?media_source=themoviedb&mtype=电视剧&season=1&title=迷途之子!!!!!&year=2023
-<< editMessageText chat=1001 message=2 reuses=url-f1d1c3e9
-   <img src="tg://photo?id=p0"/>
+<< editMessageText chat=1001 message=2
+   <img src="url-f1d1c3e9142d5b6cb0aec97f314112cb1cfcf5cab28cbc83476b0d4bf25e1175"/>
    <h3>📺 <a href="https://www.themoviedb.org/tv/224207">迷途之子!!!!!</a></h3>
    <footer><i>BanG Dream! It&#39;s MyGO!!!!!</i> · 2023 · 电视剧 · ⭐ 8.0 · 动画 / 剧情 · 共 1 季 13 集 · 主演：羊宫妃那、立石凛、青木阳菜</footer>
    <blockquote expandable>“你能，和我组一辈子乐队吗？”……高一的春末，羽丘女子学园的所有人都加入了乐队，晚入学的爱音为了尽快融入班级，急急忙忙地寻找着乐队成员。这时她得知，「羽丘的不可思议女孩」灯还没有加入乐队，于是爱音不由自主地向她打起了招呼，但是……这是遍体鳞伤又狼狈不堪的，我们的＜音乐呐喊＞。迷失方向也无所谓，在迷茫中前进吧！</blockquote>
@@ -172,7 +172,7 @@
 -> MoviePilot GET /api/v1/media/seasons?media_id=301489&media_source=themoviedb
 -> MoviePilot GET /api/v1/subscribe/media/301489?media_source=themoviedb&mtype=电视剧&season=1&title=深渊无间&year=2026
 << sendRichMessage chat=1001 message=3
-   <img src="https://image.tmdb.org/t/p/w500/b9ngtGNgaHBbLihRrT0MsPRY0GW.jpg"/>
+   <img src="url-0e877991e89f96e869fc23915b46aa7b8cc2c3b8ece9f4109ee50677841933f4"/>
    <h3>📺 <a href="https://www.themoviedb.org/tv/301489">深渊无间</a></h3>
    <footer>2026 · 电视剧 · ⭐ 8.0 · 悬疑 / 剧情 / 犯罪 · 共 1 季 16 集 · 主演：任嘉伦、秦俊杰、王砚辉</footer>
    <blockquote expandable>深渊无间（别名：深渊），2026年刑侦悬疑剧，共16集，刘海波执导，改编自深蓝小说《深渊》。<br>
@@ -184,8 +184,8 @@
    <p>🔍 正在各个站点搜索资源，要等一会儿哦…</p>
    [取消 | 3:x:0]
 -> MoviePilot GET /api/v1/search/media/301489?media_source=themoviedb&mtype=电视剧&season=1
-<< editMessageText chat=1001 message=3 reuses=url-0e877991
-   <img src="tg://photo?id=p0"/>
+<< editMessageText chat=1001 message=3
+   <img src="url-0e877991e89f96e869fc23915b46aa7b8cc2c3b8ece9f4109ee50677841933f4"/>
    <h3>📺 <a href="https://www.themoviedb.org/tv/301489">深渊无间</a></h3>
    <footer>2026 · 电视剧 · ⭐ 8.0 · 悬疑 / 剧情 / 犯罪 · 共 1 季 16 集 · 主演：任嘉伦、秦俊杰、王砚辉</footer>
    <blockquote expandable>深渊无间（别名：深渊），2026年刑侦悬疑剧，共16集，刘海波执导，改编自深蓝小说《深渊》。<br>
@@ -198,8 +198,8 @@
    [重试 | 3:tr:0]
    [返回 | 3:bk:0] [取消 | 3:x:0]
 >> user 1001 in chat 1001: /start
-<< sendRichMessage chat=1001 message=4 photo=home.jpg 1280x720 sha256=d620fc3c5f168f03372b7fd77d4572d577b95fa1f410d95e2b60e5799f0d2315
-   <img src="tg://photo?id=p0"/>
+<< sendRichMessage chat=1001 message=4
+   <img src="file-d620fc3c5f168f03372b7fd77d4572d577b95fa1f410d95e2b60e5799f0d2315"/>
    <h3>🎬 Crychic</h3>
    <p>想看什么告诉我呀～我帮你找片、订阅，入库了第一时间喊你！私聊直接发片名就能搜哦 (๑•̀ㅂ•́)و✧</p>
    [搜索 | 4:h:0] [发现 | 4:h:1]
@@ -216,8 +216,8 @@
 -> MoviePilot GET /api/v1/media/301489?media_source=themoviedb&type_name=电视剧
 -> MoviePilot GET /api/v1/media/seasons?media_id=301489&media_source=themoviedb
 -> MoviePilot GET /api/v1/subscribe/media/301489?media_source=themoviedb&mtype=电视剧&season=1&title=深渊无间&year=2026
-<< editMessageText chat=1001 message=4 reuses=url-0e877991
-   <img src="tg://photo?id=p0"/>
+<< editMessageText chat=1001 message=4
+   <img src="url-0e877991e89f96e869fc23915b46aa7b8cc2c3b8ece9f4109ee50677841933f4"/>
    <h3>📺 <a href="https://www.themoviedb.org/tv/301489">深渊无间</a></h3>
    <footer>2026 · 电视剧 · ⭐ 8.0 · 悬疑 / 剧情 / 犯罪 · 共 1 季 16 集 · 主演：任嘉伦、秦俊杰、王砚辉</footer>
    <blockquote expandable>深渊无间（别名：深渊），2026年刑侦悬疑剧，共16集，刘海波执导，改编自深蓝小说《深渊》。<br>
@@ -229,8 +229,8 @@
    <p>🔍 正在各个站点搜索资源，要等一会儿哦…</p>
    [取消 | 4:x:0]
 -> MoviePilot GET /api/v1/search/media/301489?media_source=themoviedb&mtype=电视剧&season=1
-<< editMessageText chat=1001 message=4 reuses=url-0e877991
-   <img src="tg://photo?id=p0"/>
+<< editMessageText chat=1001 message=4
+   <img src="url-0e877991e89f96e869fc23915b46aa7b8cc2c3b8ece9f4109ee50677841933f4"/>
    <h3>📺 <a href="https://www.themoviedb.org/tv/301489">深渊无间</a></h3>
    <footer>2026 · 电视剧 · ⭐ 8.0 · 悬疑 / 剧情 / 犯罪 · 共 1 季 16 集 · 主演：任嘉伦、秦俊杰、王砚辉</footer>
    <blockquote expandable>深渊无间（别名：深渊），2026年刑侦悬疑剧，共16集，刘海波执导，改编自深蓝小说《深渊》。<br>

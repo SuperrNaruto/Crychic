@@ -56,8 +56,9 @@ func (e *Engine) listTasks(ctx context.Context, sess session) Reply {
 		return Reply{Notice: msgNoTasks}
 	}
 	if len(downloads)+len(jobs) == 0 {
-		e.store.take(sess.id)
-		return Reply{Text: Lines(Heading(Plain(msgTasksTitle)), Line(Plain(msgNoTasks)))}
+		sess.tasks, sess.follow, sess.pages = nil, following{}, nil
+		e.store.put(sess)
+		return Reply{Text: Lines(Heading(Plain(msgTasksTitle)), Line(Plain(msgNoTasks))), Buttons: [][]Button{browseRow(sess.id)}}
 	}
 	sess.tasks, sess.follow = nil, following{}
 	for _, d := range downloads {
@@ -217,13 +218,15 @@ func tasksBack(id uint64) Button {
 // back to /tasks, all others to /search.
 func expired(action string) Reply {
 	switch action {
+	case actionBack, actionPage:
+		return expiredText("⌛ 这个页面过期啦，发 /start 重新打开相应功能吧～")
 	case actionSubs, actionSubsKind, actionCancelPick, actionHistory, actionHistoryKind,
 		actionHistoryPick, actionResubscribe, actionSubDetail, actionRefreshSubDetail, actionPauseSub, actionResumeSub:
 		return expiredText("⌛ 这个订阅列表过期啦，重新 /subscribe 一下吧～")
 	case actionTask, actionFollow, actionUnfollow, actionList, actionAskDelete, actionDelete:
 		return expiredText(msgTasksExpired)
 	case actionMedia, actionSeason, actionConfirm, actionAskFrom, actionCancel, actionMulti, actionTick, actionSubscribed,
-		actionRelated, actionSeries, actionBack, actionResearch, actionRetry,
+		actionRelated, actionSeries, actionResearch, actionRetry,
 		actionTorrents, actionTorrentRun, actionTorrentRetry, actionTorrentAgain, actionTorrentPick, actionTorrentGet,
 		actionTorrentSort, actionTorrentSites, actionTorrentSite, actionTorrentMissing,
 		actionTorrentMulti, actionTorrentTick, actionTorrentBatch, actionTorrentBatchGet, actionUpgrade, actionUpgradeConfirm:
@@ -235,5 +238,5 @@ func expired(action string) Reply {
 // expiredText is an expiry message under its heading, e.g. "⌛ 过期啦"
 // over "这个请求过期啦，重新 /search 一下吧～".
 func expiredText(message string) Reply {
-	return Reply{Text: Lines(Heading(Plain("⌛ 过期啦")), Line(Plain(strings.TrimPrefix(message, "⌛ "))))}
+	return Reply{Text: Lines(Heading(Plain("⌛ 过期啦")), Line(Plain(strings.TrimPrefix(message, "⌛ ")))), Expired: true}
 }

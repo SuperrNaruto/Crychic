@@ -2,16 +2,17 @@
 << sendRichMessage chat=1001 message=1
    <h3>📋 正在忙的任务</h3>
    <p>现在没有在下载或整理的任务，大家都歇着呢～</p>
+   [首页 | 1:o:0] [关闭 | 1:c:0]
 >> user 1001 in chat 1001: /start
-<< sendRichMessage chat=1001 message=2 photo=home.jpg 1280x720 sha256=d620fc3c5f168f03372b7fd77d4572d577b95fa1f410d95e2b60e5799f0d2315
-   <img src="tg://photo?id=p0"/>
+<< sendRichMessage chat=1001 message=2
+   <img src="file-d620fc3c5f168f03372b7fd77d4572d577b95fa1f410d95e2b60e5799f0d2315"/>
    <h3>🎬 Crychic</h3>
    <p>想看什么告诉我呀～我帮你找片、订阅，入库了第一时间喊你！私聊直接发片名就能搜哦 (๑•̀ㅂ•́)و✧</p>
-   [搜索 | 1:h:0] [发现 | 1:h:1]
-   [我的订阅 | 1:h:2] [最新入库 | 1:h:3]
-   [任务进度 | 1:h:4] [追剧日历 | 1:h:5]
->> user 1001 taps 1:h:4 on message 2
+   [搜索 | 2:h:0] [发现 | 2:h:1]
+   [我的订阅 | 2:h:2] [最新入库 | 2:h:3]
+   [任务进度 | 2:h:4] [追剧日历 | 2:h:5]
+>> user 1001 taps 2:h:4 on message 2
 << answerCallbackQuery notice="现在没有在下载或整理的任务，大家都歇着呢～"
->> user 1001 taps 1:h:2 on message 2
+>> user 1001 taps 2:h:2 on message 2
 -> MoviePilot GET /api/v1/subscribe/
 << answerCallbackQuery notice="现在还没有订阅哦～"

@@ -1,6 +1,9 @@
 package e2e
 
-import "testing"
+import (
+	"strings"
+	"testing"
+)
 
 const (
 	grandBlueDetails = "GET /api/v1/media/79166"
@@ -70,12 +73,27 @@ func TestDownloadInProgressIsShown(t *testing.T) {
 		seasonsPath:     ok("seasons_mygo.json"),
 		libraryShowPath: ok("library_mygo.json"),
 		mygoLookup:      ok("subscription_existing.json"),
-		downloadsPath:   ok("downloads_mygo.json"),
+		downloadsPath:   ok(writeFixture(t, cardDownloads())),
 	}})
 	h.say(alice, alice, "/search 迷途之子")
 	h.tap(alice, 1, "1")
 	h.tap(alice, 1, "第 1 季")
 	h.shows(1, "⬇️ 正在努力下载 E10–E12 · 0%")
 	h.shows(1, "早就订阅上啦")
+	if strings.Contains(mustMessage(h, 1).text, "87%") {
+		t.Error("a movie sharing the show's numeric ID supplies its card progress")
+	}
 	h.tr.verify(t)
+}
+
+// cardDownloads includes a movie whose provider ID collides with MyGO.
+func cardDownloads() []map[string]any {
+	return []map[string]any{
+		{"hash": "mygo-progress", "progress": 0, "state": "downloading", "media": map[string]any{
+			"media_source": "themoviedb", "media_id": mygo.id, "type": "电视剧", "title": mygo.title, "season": "S01", "episode": "E10-E12",
+		}},
+		{"hash": "other-movie-progress", "progress": 87, "state": "downloading", "media": map[string]any{
+			"media_source": "themoviedb", "media_id": mygo.id, "type": "电影", "title": "另一部电影",
+		}},
+	}
 }

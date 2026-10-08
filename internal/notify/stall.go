@@ -127,7 +127,7 @@ func (w watch) awaits(d flow.Download) bool {
 	return len(w.fresh(d.Episodes)) > 0
 }
 
-// stallText is e.g. "⚠️ 下载好像卡住了" over "你想看的《颂乐人偶》第 1 季
+// stallText is e.g. "⚠️ 下载长时间没有进展" over "你想看的《颂乐人偶》第 1 季
 // E01–E02 已经 6 小时没有进展啦，一直停在 0%。".
 func stallText(s stall, after time.Duration) flow.Text {
 	name := fmt.Sprintf("《%s》", s.watch.Title)
@@ -139,9 +139,9 @@ func stallText(s stall, after time.Duration) flow.Text {
 	}
 	still := fmt.Sprintf(" 已经 %s没有进展啦，一直停在 %.0f%%。", wordDuration(after), s.download.Progress)
 	return flow.Lines(
-		flow.Heading(flow.Plain("⚠️ 下载好像卡住了")),
+		flow.Heading(flow.Plain("⚠️ 下载长时间没有进展")),
 		flow.Line(flow.Plain("你想看的"), flow.Strong(name), flow.Plain(still)),
-		flow.Line(flow.Plain("可能是没人做种了，去 /tasks 看看，或者到 MoviePilot 里换个资源吧 (｡•́︿•̀｡)")),
+		flow.Line(flow.Plain("可能还在下载器里排队，也可能做种不足，去 /tasks 或 MoviePilot 看看任务状态吧 (｡•́︿•̀｡)")),
 	)
 }
 

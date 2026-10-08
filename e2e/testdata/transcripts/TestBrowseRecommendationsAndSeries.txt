@@ -2,14 +2,14 @@
 -> MoviePilot GET /api/v1/media/search?count=10&title=沙丘&type=media
 << sendRichMessage chat=1001 message=1
    <tg-slideshow>
-   <img src="https://image.tmdb.org/t/p/w500/6hsJknqlPceFxExOe87z5VGgNG9.jpg"/>
-   <img src="https://image.tmdb.org/t/p/w500/7KFlApfTLNMNh0y5Zp1ufsgfN0J.jpg"/>
-   <img src="https://image.tmdb.org/t/p/w500/tiWTNR4f6oMYB09059YH8nDke5K.jpg"/>
-   <img src="https://image.tmdb.org/t/p/w500/9uaCR4HEZqxUqgORq0uZqTNm43G.jpg"/>
-   <img src="https://image.tmdb.org/t/p/w500/nRFhjS20RmhuLGEpQxewDyxlhmJ.jpg"/>
-   <img src="https://image.tmdb.org/t/p/w500/yCP8lKXBMtcG1CU9K3NsWlu1RgF.jpg"/>
-   <img src="https://image.tmdb.org/t/p/w500/iIf5XeuuBKPtG6H7MfWLirbJGrQ.jpg"/>
-   <img src="https://image.tmdb.org/t/p/w500/nQLdzYYB71sUugtSR7e7YdjF6Vx.jpg"/>
+   <img src="url-ae95e58ec03e202c035279fd7b770ee9063e24e22f246ec568120ac5a90252ea"/>
+   <img src="url-7ea76e3b74f0f1bba01161bd2446775a7fe7657b009df91fca57cb760c60208f"/>
+   <img src="url-e887bdb9df0034573d9e03f6507d8e8b7862bda8362f968e4349554493678ff8"/>
+   <img src="url-0603bc04eba9f23ccb0da918da40cefdcc9533bb920a16af3d7323b8954288fe"/>
+   <img src="url-f3924e4dafb7c35392e3de6d3fbfd5e540d3fcfe78dd69b758e7319101e217fe"/>
+   <img src="url-cfc61103a56e8781300f998571c8194d0958754710eb781ed3beae7e5eae3dc2"/>
+   <img src="url-d03384b6cc307585edcd449cb20296ce3fa11071866b554add8f77be947e6c17"/>
+   <img src="url-f6bf48e37249a47a3abcd09ca8c92f0ab0f5d0f1d21a40918902154571cda459"/>
    </tg-slideshow>
    <h3>🔍 帮你找到这些「沙丘」啦</h3>
    <ol start="1">
@@ -39,8 +39,8 @@
 >> user 1001 taps 1:m:0 on message 1
 -> MoviePilot GET /api/v1/media/438631?media_source=themoviedb&type_name=电影
 -> MoviePilot GET /api/v1/subscribe/media/438631?media_source=themoviedb&mtype=电影&title=沙丘&year=2021
-<< editMessageText chat=1001 message=1 reuses=url-ae95e58e
-   <img src="tg://photo?id=p0"/>
+<< editMessageText chat=1001 message=1
+   <img src="url-ae95e58ec03e202c035279fd7b770ee9063e24e22f246ec568120ac5a90252ea"/>
    <h3>🎬 <a href="https://www.themoviedb.org/movie/438631">沙丘</a></h3>
    <footer><i>Dune</i> · 2021 · 电影 · ⭐ 7.8 · 科幻 / 冒险 · 156 分钟 · 主演：提莫西·查拉梅、丽贝卡·弗格森、奥斯卡·伊萨克</footer>
    <blockquote expandable>电影《沙丘》为观众呈现了一段神秘而感人至深的英雄之旅。天赋异禀的少年保罗·厄崔迪（提莫西·查拉梅 饰）被命运指引，为了保卫自己的家族和人民，决心前往浩瀚宇宙间最危险的星球，开启一场惊心动魄的冒险。与此同时，各路势力为了抢夺这颗星球上一种能够释放人类最大潜力的珍贵资源而纷纷加入战场。最终，唯有那些能够战胜内心恐惧的人才能生存下去。</blockquote>
@@ -53,16 +53,16 @@
 << answerCallbackQuery
 >> user 1001 taps 1:r:0 on message 1
 -> MoviePilot GET /api/v1/tmdb/recommend/438631/电影
-<< editMessageText chat=1001 message=1 reuses=url-0603bc04
+<< editMessageText chat=1001 message=1
    <tg-slideshow>
-   <img src="tg://photo?id=p0"/>
-   <img src="https://image.tmdb.org/t/p/w500/pZAccLiOCovJTcCkPVPAm5DMVLq.jpg"/>
-   <img src="https://image.tmdb.org/t/p/w500/trQSF86blNByPcegz8xcnHpHra1.jpg"/>
-   <img src="https://image.tmdb.org/t/p/w500/omdw2LyKwq1Yu7OAN45lyGrQKKa.jpg"/>
-   <img src="https://image.tmdb.org/t/p/w500/oH4Rg40MbgDE4KlbrhSFmKp3RNg.jpg"/>
-   <img src="https://image.tmdb.org/t/p/w500/eMurN09rDC2qeEv3npkUbcJfIXN.jpg"/>
-   <img src="https://image.tmdb.org/t/p/w500/z2ljlghKN3wnBmGO15j4VEpwfqq.jpg"/>
-   <img src="https://image.tmdb.org/t/p/w500/1QEtbyjl7f4z2mLe88Oms4AoVDl.jpg"/>
+   <img src="url-0603bc04eba9f23ccb0da918da40cefdcc9533bb920a16af3d7323b8954288fe"/>
+   <img src="url-b4b827777ebf2b197a226717546dab1ae67b8264f532a0489906c02a38569c78"/>
+   <img src="url-dcbd9b8b695b4e242ae3afb3228eba9e52fad3efcdcaae6e35701f0b062034ce"/>
+   <img src="url-edaed72a99c176d794ca4c19d49fc4c438cf38ecba30539e50b9a54ae489b007"/>
+   <img src="url-0b1574863c8b04694311bcd33209b9d7eb6c2f2bca5bfc96a8a712bcbaedeb9f"/>
+   <img src="url-d1ac6684cf65c91dbd409ffb742c06dca48f3ffadd71ac340ef330bab8dbc616"/>
+   <img src="url-e6564ed59314a1b66799f6a3ea13be56d9832b20725c6eb720a3ea7efd6a0079"/>
+   <img src="url-5484d9eebaef1bdb1ee80b9e97cbe8d94e5dd752dafd0d98a404bb67a13aa91a"/>
    </tg-slideshow>
    <h3>🔍 喜欢「沙丘」的话，也许会喜欢这些～</h3>
    <ol start="1">
@@ -114,8 +114,8 @@
 >> user 1001 taps 1:m:0 on message 1
 -> MoviePilot GET /api/v1/media/693134?media_source=themoviedb&type_name=电影
 -> MoviePilot GET /api/v1/subscribe/media/693134?media_source=themoviedb&mtype=电影&title=沙丘2&year=2024
-<< editMessageText chat=1001 message=1 reuses=url-0603bc04
-   <img src="tg://photo?id=p0"/>
+<< editMessageText chat=1001 message=1
+   <img src="url-0603bc04eba9f23ccb0da918da40cefdcc9533bb920a16af3d7323b8954288fe"/>
    <h3>🎬 <a href="https://www.themoviedb.org/movie/693134">沙丘2</a></h3>
    <footer><i>Dune: Part Two</i> · 2024 · 电影 · ⭐ 8.1 · 科幻 / 冒险 · 166 分钟 · 主演：提莫西·查拉梅、赞达亚·科尔曼、丽贝卡·弗格森</footer>
    <blockquote expandable>《沙丘2》承接第一部剧情，讲述保罗·厄崔迪（提莫西·查拉梅 Timothée Chalamet 饰）被帕迪沙皇帝和哈克南人联手灭族后，在厄拉科斯星球遇到弗雷曼女战士契妮（赞达亚 Zendaya 饰）以及加入弗雷曼人后展开的传奇旅程。保罗与让他家破人亡的阴谋家们开战，同时面临着一生所爱与已知宇宙命运的两难选择。</blockquote>
@@ -132,11 +132,11 @@
 -> MoviePilot GET /api/v1/media/search?count=10&title=沙丘&type=collection
 -> MoviePilot GET /api/v1/media/search?count=10&title=沙丘2&type=collection
 -> MoviePilot GET /api/v1/tmdb/collection/726871
-<< editMessageText chat=1001 message=1 reuses=url-ae95e58e reuses=url-0603bc04 reuses=url-f3924e4d
+<< editMessageText chat=1001 message=1
    <tg-slideshow>
-   <img src="tg://photo?id=p0"/>
-   <img src="tg://photo?id=p1"/>
-   <img src="tg://photo?id=p2"/>
+   <img src="url-ae95e58ec03e202c035279fd7b770ee9063e24e22f246ec568120ac5a90252ea"/>
+   <img src="url-0603bc04eba9f23ccb0da918da40cefdcc9533bb920a16af3d7323b8954288fe"/>
+   <img src="url-f3924e4dafb7c35392e3de6d3fbfd5e540d3fcfe78dd69b758e7319101e217fe"/>
    </tg-slideshow>
    <h3>🎬「沙丘2」的同系列作品</h3>
    <ol start="1">
@@ -162,8 +162,8 @@
 >> user 1001 taps 1:m:0 on message 1
 -> MoviePilot GET /api/v1/media/438631?media_source=themoviedb&type_name=电影
 -> MoviePilot GET /api/v1/subscribe/media/438631?media_source=themoviedb&mtype=电影&title=沙丘&year=2021
-<< editMessageText chat=1001 message=1 reuses=url-ae95e58e
-   <img src="tg://photo?id=p0"/>
+<< editMessageText chat=1001 message=1
+   <img src="url-ae95e58ec03e202c035279fd7b770ee9063e24e22f246ec568120ac5a90252ea"/>
    <h3>🎬 <a href="https://www.themoviedb.org/movie/438631">沙丘</a></h3>
    <footer><i>Dune</i> · 2021 · 电影 · ⭐ 7.8 · 科幻 / 冒险 · 156 分钟 · 主演：提莫西·查拉梅、丽贝卡·弗格森、奥斯卡·伊萨克</footer>
    <blockquote expandable>电影《沙丘》为观众呈现了一段神秘而感人至深的英雄之旅。天赋异禀的少年保罗·厄崔迪（提莫西·查拉梅 饰）被命运指引，为了保卫自己的家族和人民，决心前往浩瀚宇宙间最危险的星球，开启一场惊心动魄的冒险。与此同时，各路势力为了抢夺这颗星球上一种能够释放人类最大潜力的珍贵资源而纷纷加入战场。最终，唯有那些能够战胜内心恐惧的人才能生存下去。</blockquote>
@@ -177,8 +177,8 @@
 >> user 1001 taps 1:ok:0 on message 1
 -> MoviePilot POST /api/v1/subscribe/
    {"name":"沙丘","year":"2021","type":"电影","media_source":"themoviedb","media_id":"438631"}
-<< editMessageText chat=1001 message=1 reuses=url-ae95e58e
-   <img src="tg://photo?id=p0"/>
+<< editMessageText chat=1001 message=1
+   <img src="url-ae95e58ec03e202c035279fd7b770ee9063e24e22f246ec568120ac5a90252ea"/>
    <h3>🎬 <a href="https://www.themoviedb.org/movie/438631">沙丘</a></h3>
    <footer><i>Dune</i> · 2021 · 电影 · ⭐ 7.8 · 科幻 / 冒险 · 156 分钟 · 主演：提莫西·查拉梅、丽贝卡·弗格森、奥斯卡·伊萨克</footer>
    <blockquote expandable>电影《沙丘》为观众呈现了一段神秘而感人至深的英雄之旅。天赋异禀的少年保罗·厄崔迪（提莫西·查拉梅 饰）被命运指引，为了保卫自己的家族和人民，决心前往浩瀚宇宙间最危险的星球，开启一场惊心动魄的冒险。与此同时，各路势力为了抢夺这颗星球上一种能够释放人类最大潜力的珍贵资源而纷纷加入战场。最终，唯有那些能够战胜内心恐惧的人才能生存下去。</blockquote>

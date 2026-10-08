@@ -74,13 +74,13 @@ func TestDownloadPickedMovieRelease(t *testing.T) {
 
 // A season's releases page like other lists and 返回 leads back to the page
 // picked from; a double tap downloads once, and a whole-season release is
-// announced when its files arrive.
+// announced when its new files arrive, even if the library held older copies.
 func TestDownloadPickedSeasonRelease(t *testing.T) {
 	h := start(t, scenario{routes: map[string]route{
 		searchPath:      ok("search_mygo.json"),
 		mygoDetails:     ok("detail_mygo.json"),
 		seasonsPath:     ok("seasons_mygo.json"),
-		libraryShowPath: ok("library_mygo.json"),
+		libraryShowPath: ok(writeFixture(t, map[string][]int{"1": {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13}})),
 		mygoLookup:      ok("subscription_none.json"),
 		mygoTorrents:    searchingSites("torrents_mygo_s1.json"),
 		downloadPath:    ok("download_added.json"),
@@ -101,19 +101,27 @@ func TestDownloadPickedSeasonRelease(t *testing.T) {
 	h.tap(alice, 1, downloadIt)
 	h.shows(1, "开始下载《迷途之子!!!!!》第 1 季啦")
 	h.tapData(alice, 1, confirm)
-	pack := mygo.file("S01", "E01-E13")
-	pack.Hash = addedHash
-	h.arrives(alice, pack)
+	first, rest := mygo.file("S01", "E01"), mygo.file("S01", "E02-E13")
+	first.Hash, rest.Hash = addedHash, addedHash
+	h.arrives(alice, first)
+	h.shows(2, "E01 到家啦")
+	if strings.Contains(mustMessage(h, 2).text, "全部到齐") {
+		t.Error("existing library copies complete a new whole-season download before it arrives")
+	}
+	h.arrives(alice, rest)
+	h.shows(3, "E02–E13 到家啦")
+	h.shows(3, "这次下载的剧集全部到齐啦")
 	h.neverShowsSiteCredentials()
 	h.tr.verify(t)
 }
 
 // MoviePilot reads a release's episodes from its description too, so a
-// whole-season pack mentioning 「修复第9集章节」 is listed as E09, and one
-// mentioning 「修复第1集字幕」 as E01. With only E01 and E09 in the library
+// whole-season pack mentioning 「修复第9集章节」 or 「修复第1集字幕」 has
+// uncertain episode metadata. With only E01 and E09 in the library
 // neither is called 已都有 nor hidden by 只看缺集, since their titles name no
-// episode (FLAC.2.0+5.1 and DDP5.1 are audio); every file the download
-// brings is still announced, and the season is complete.
+// episode (FLAC.2.0+5.1 and DDP5.1 are audio). Uncertain metadata is never
+// presented as a definite range. Missing files complete library coverage,
+// but later replacement files from the same download must still be announced.
 func TestDownloadMisreadSeasonPack(t *testing.T) {
 	h := start(t, scenario{routes: map[string]route{
 		searchPath:      ok("search_mygo.json"),
@@ -132,13 +140,28 @@ func TestDownloadMisreadSeasonPack(t *testing.T) {
 	if _, filter := findButton(releases.rows, missingOnly); filter || strings.Contains(releases.text, "已都有") {
 		t.Error("a whole-season pack misread from its description counts as bringing nothing missing")
 	}
+	if !strings.Contains(releases.text, "集数识别不确定") || strings.Contains(releases.text, " · E09") {
+		t.Error("uncertain episode metadata is presented as a definite release range")
+	}
 	h.tap(alice, 1, "1")
+	if card := mustMessage(h, 1).text; !strings.Contains(card, "集数识别不确定") || strings.Contains(card, "包含 E09") {
+		t.Error("uncertain episode metadata is presented as a definite card range")
+	}
 	h.tap(alice, 1, downloadIt)
-	h.shows(1, "开始下载《迷途之子!!!!!》第 1 季 E09啦")
-	pack := mygo.file("S01", "E01-E13")
-	pack.Hash = addedHash
-	h.arrives(alice, pack)
-	h.shows(2, "E01–E13 到家啦")
+	if strings.Contains(mustMessage(h, 1).text, "第 1 季 E09啦") {
+		t.Error("the download receipt promises the incorrectly recognized episode")
+	}
+	h.restart()
+	first, last := mygo.file("S01", "E02-E08"), mygo.file("S01", "E10-E13")
+	first.Hash, last.Hash = addedHash, addedHash
+	h.arrives(alice, first, last)
+	h.shows(2, "E02–E08、E10–E13 到家啦")
+	h.shows(2, "加上媒体库已有的，这一季的剧集全部到齐啦")
+	h.restart()
+	firstHeld, ninthHeld := mygo.file("S01", "E01"), mygo.file("S01", "E09")
+	firstHeld.Hash, ninthHeld.Hash = addedHash, addedHash
+	h.arrives(alice, firstHeld, ninthHeld)
+	h.shows(3, "E01、E09 到家啦")
 	h.tr.verify(t)
 }
 

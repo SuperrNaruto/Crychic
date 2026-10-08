@@ -2,8 +2,8 @@
 -> MoviePilot GET /api/v1/media/search?count=10&title=沙丘&type=media
 << sendRichMessage chat=1001 message=1
    <tg-slideshow>
-   <img src="https://image.tmdb.org/t/p/w500/6hsJknqlPceFxExOe87z5VGgNG9.jpg"/>
-   <img src="https://image.tmdb.org/t/p/w500/9uaCR4HEZqxUqgORq0uZqTNm43G.jpg"/>
+   <img src="url-ae95e58ec03e202c035279fd7b770ee9063e24e22f246ec568120ac5a90252ea"/>
+   <img src="url-0603bc04eba9f23ccb0da918da40cefdcc9533bb920a16af3d7323b8954288fe"/>
    </tg-slideshow>
    <h3>🔍 帮你找到这些「沙丘」啦</h3>
    <ol start="1">
@@ -18,8 +18,8 @@
 >> user 1001 taps 1:m:0 on message 1
 -> MoviePilot GET /api/v1/media/438631?media_source=themoviedb&type_name=电影
 -> MoviePilot GET /api/v1/subscribe/media/438631?media_source=themoviedb&mtype=电影&title=沙丘&year=2021
-<< editMessageText chat=1001 message=1 reuses=url-ae95e58e
-   <img src="tg://photo?id=p0"/>
+<< editMessageText chat=1001 message=1
+   <img src="url-ae95e58ec03e202c035279fd7b770ee9063e24e22f246ec568120ac5a90252ea"/>
    <h3>🎬 <a href="https://www.themoviedb.org/movie/438631">沙丘</a></h3>
    <footer><i>Dune</i> · 2021 · 电影 · ⭐ 7.8 · 科幻 / 冒险 · 156 分钟 · 主演：提莫西·查拉梅、丽贝卡·弗格森、奥斯卡·伊萨克</footer>
    <blockquote expandable>电影《沙丘》为观众呈现了一段神秘而感人至深的英雄之旅。天赋异禀的少年保罗·厄崔迪（提莫西·查拉梅 饰）被命运指引，为了保卫自己的家族和人民，决心前往浩瀚宇宙间最危险的星球，开启一场惊心动魄的冒险。与此同时，各路势力为了抢夺这颗星球上一种能够释放人类最大潜力的珍贵资源而纷纷加入战场。最终，唯有那些能够战胜内心恐惧的人才能生存下去。</blockquote>
@@ -46,8 +46,8 @@
    [筛选站点 | 1:tf:0] [多选… | 1:tm:0]
    [返回 | 1:bk:0] [取消 | 1:x:0]
 >> user 1001 taps 1:tp:0 on message 1
-<< editMessageText chat=1001 message=1 reuses=url-ae95e58e
-   <img src="tg://photo?id=p0"/>
+<< editMessageText chat=1001 message=1
+   <img src="url-ae95e58ec03e202c035279fd7b770ee9063e24e22f246ec568120ac5a90252ea"/>
    <h3>🎬 <a href="https://www.themoviedb.org/movie/438631">沙丘</a></h3>
    <footer><i>Dune</i> · 2021 · 电影 · ⭐ 7.8 · 科幻 / 冒险 · 156 分钟 · 主演：提莫西·查拉梅、丽贝卡·弗格森、奥斯卡·伊萨克</footer>
    <blockquote expandable>电影《沙丘》为观众呈现了一段神秘而感人至深的英雄之旅。天赋异禀的少年保罗·厄崔迪（提莫西·查拉梅 饰）被命运指引，为了保卫自己的家族和人民，决心前往浩瀚宇宙间最危险的星球，开启一场惊心动魄的冒险。与此同时，各路势力为了抢夺这颗星球上一种能够释放人类最大潜力的珍贵资源而纷纷加入战场。最终，唯有那些能够战胜内心恐惧的人才能生存下去。</blockquote>
@@ -70,8 +70,8 @@
 >> user 1001 taps 1:td:0 on message 1
 -> MoviePilot POST /api/v1/download/
    media_in 沙丘, torrent_in Dune.2021.2160p.UHD.BluRay.REMUX.HDR.HEVC.DTS-HD.MA.5.1-FROGE with the search result's site credentials
-<< editMessageText chat=1001 message=1 reuses=url-ae95e58e
-   <img src="tg://photo?id=p0"/>
+<< editMessageText chat=1001 message=1
+   <img src="url-ae95e58ec03e202c035279fd7b770ee9063e24e22f246ec568120ac5a90252ea"/>
    <h3>🎬 <a href="https://www.themoviedb.org/movie/438631">沙丘</a></h3>
    <footer><i>Dune</i> · 2021 · 电影 · ⭐ 7.8 · 科幻 / 冒险 · 156 分钟 · 主演：提莫西·查拉梅、丽贝卡·弗格森、奥斯卡·伊萨克</footer>
    <blockquote expandable>电影《沙丘》为观众呈现了一段神秘而感人至深的英雄之旅。天赋异禀的少年保罗·厄崔迪（提莫西·查拉梅 饰）被命运指引，为了保卫自己的家族和人民，决心前往浩瀚宇宙间最危险的星球，开启一场惊心动魄的冒险。与此同时，各路势力为了抢夺这颗星球上一种能够释放人类最大潜力的珍贵资源而纷纷加入战场。最终，唯有那些能够战胜内心恐惧的人才能生存下去。</blockquote>
@@ -80,8 +80,8 @@
    [返回 | 1:bk:0] [首页 | 1:o:0] [关闭 | 1:c:0]
 << answerCallbackQuery
 >> user 1001 taps 1:o:0 on message 1
-<< editMessageText chat=1001 message=1 photo=home.jpg 1280x720 sha256=d620fc3c5f168f03372b7fd77d4572d577b95fa1f410d95e2b60e5799f0d2315
-   <img src="tg://photo?id=p0"/>
+<< editMessageText chat=1001 message=1
+   <img src="file-d620fc3c5f168f03372b7fd77d4572d577b95fa1f410d95e2b60e5799f0d2315"/>
    <h3>🎬 Crychic</h3>
    <p>想看什么告诉我呀～我帮你找片、订阅，入库了第一时间喊你！私聊直接发片名就能搜哦 (๑•̀ㅂ•́)و✧</p>
    [搜索 | 1:h:0] [发现 | 1:h:1]
@@ -101,7 +101,7 @@
 -> MoviePilot GET /api/v1/recommend/tmdb_trending
 << editMessageText chat=1001 message=1
    <tg-slideshow>
-   <img src="https://image.tmdb.org/t/p/w500/c8UJ50GM0jiVIk6YO9hEiqEe0dP.jpg"/>
+   <img src="url-9dcf3aeeac8a98b1293ba6367ee4f3cd4e8245d6977d04b01f16ba84a90b2192"/>
    </tg-slideshow>
    <h3>🔥 TMDB 流行趋势</h3>
    <ol start="1">
@@ -119,8 +119,8 @@
 -> MoviePilot GET /api/v1/media/search?count=10&title=挖掘者&type=media
 -> MoviePilot GET /api/v1/media/1248832?media_source=themoviedb&type_name=电影
 -> MoviePilot GET /api/v1/subscribe/media/1248832?media_source=themoviedb&mtype=电影&title=挖掘者&year=2026
-<< editMessageText chat=1001 message=1 reuses=url-9dcf3aee
-   <img src="tg://photo?id=p0"/>
+<< editMessageText chat=1001 message=1
+   <img src="url-9dcf3aeeac8a98b1293ba6367ee4f3cd4e8245d6977d04b01f16ba84a90b2192"/>
    <h3>🎬 <a href="https://www.themoviedb.org/movie/1248832">挖掘者</a></h3>
    <footer><i>Digger</i> · 2026 · 电影 · ⭐ 7.5 · 喜剧 / 剧情 · 129 分钟 · 主演：汤姆·克鲁斯、里兹·阿迈德、约翰·古德曼</footer>
    <blockquote expandable>世界上最有权势的男子极力证明自己其实是人类的救世主，结果等来了他酝酿的灾难要摧毁万物。</blockquote>
@@ -134,8 +134,8 @@
 >> user 1001 taps 1:ok:0 on message 1
 -> MoviePilot POST /api/v1/subscribe/
    {"name":"挖掘者","year":"2026","type":"电影","media_source":"themoviedb","media_id":"1248832"}
-<< editMessageText chat=1001 message=1 reuses=url-9dcf3aee
-   <img src="tg://photo?id=p0"/>
+<< editMessageText chat=1001 message=1
+   <img src="url-9dcf3aeeac8a98b1293ba6367ee4f3cd4e8245d6977d04b01f16ba84a90b2192"/>
    <h3>🎬 <a href="https://www.themoviedb.org/movie/1248832">挖掘者</a></h3>
    <footer><i>Digger</i> · 2026 · 电影 · ⭐ 7.5 · 喜剧 / 剧情 · 129 分钟 · 主演：汤姆·克鲁斯、里兹·阿迈德、约翰·古德曼</footer>
    <blockquote expandable>世界上最有权势的男子极力证明自己其实是人类的救世主，结果等来了他酝酿的灾难要摧毁万物。</blockquote>

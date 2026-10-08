@@ -17,7 +17,7 @@
 -> MoviePilot GET /api/v1/system/setting/SubscribeFilterRuleGroups
 -> MoviePilot GET /api/v1/dashboard/schedule
 << editMessageText chat=1001 message=1
-   <img src="https://image.tmdb.org/t/p/w500/rqliuvX7NdknSHu5qaSDfESplQi.jpg"/>
+   <img src="url-1bc43c78f90216151f38c5364e20d05ed84bcd8927d87d91cbd1c655434f0dd9"/>
    <h3>📚 订阅详情 · 《绝命毒师》第 2 季</h3>
    <footer>2008 · 电视剧 · 订阅中</footer>
    <h4>订阅设置</h4>

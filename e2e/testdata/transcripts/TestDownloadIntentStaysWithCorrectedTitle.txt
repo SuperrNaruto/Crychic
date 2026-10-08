@@ -1,0 +1,144 @@
+>> user 1001 in chat 1001: 下载 沙邱
+-> MoviePilot GET /api/v1/media/search?count=10&title=沙邱&type=media
+<< sendRichMessage chat=1001 message=1
+   <h3>🔍 呜…什么都没找到</h3>
+   <p>翻遍了也没找到「沙邱」(｡•́︿•̀｡) 换个名字直接回复我，再搜搜看呀？</p>
+   [取消 | 1:x:0]
+>> user 1001 in chat 1001: 沙球
+-> MoviePilot GET /api/v1/media/search?count=10&title=沙球&type=media
+<< editMessageText chat=1001 message=1
+   <h3>🔍 呜…什么都没找到</h3>
+   <p>翻遍了也没找到「沙球」(｡•́︿•̀｡) 换个名字直接回复我，再搜搜看呀？</p>
+   [取消 | 2:x:0]
+>> user 1001 in chat 1001: 沙丘
+-> MoviePilot GET /api/v1/media/search?count=10&title=沙丘&type=media
+<< editMessageText chat=1001 message=1
+   <tg-slideshow>
+   <img src="url-ae95e58ec03e202c035279fd7b770ee9063e24e22f246ec568120ac5a90252ea"/>
+   <img src="url-7ea76e3b74f0f1bba01161bd2446775a7fe7657b009df91fca57cb760c60208f"/>
+   <img src="url-e887bdb9df0034573d9e03f6507d8e8b7862bda8362f968e4349554493678ff8"/>
+   <img src="url-0603bc04eba9f23ccb0da918da40cefdcc9533bb920a16af3d7323b8954288fe"/>
+   <img src="url-f3924e4dafb7c35392e3de6d3fbfd5e540d3fcfe78dd69b758e7319101e217fe"/>
+   <img src="url-cfc61103a56e8781300f998571c8194d0958754710eb781ed3beae7e5eae3dc2"/>
+   <img src="url-d03384b6cc307585edcd449cb20296ce3fa11071866b554add8f77be947e6c17"/>
+   <img src="url-f6bf48e37249a47a3abcd09ca8c92f0ab0f5d0f1d21a40918902154571cda459"/>
+   </tg-slideshow>
+   <h3>🔍 帮你找到这些「沙丘」啦</h3>
+   <ol start="1">
+   <li value="1"><b>沙丘</b><br>
+   <i>Dune · 2021 · 电影 · ⭐ 7.8</i></li>
+   <li value="2"><b>沙丘：预言</b><br>
+   <i>Dune: Prophecy · 2024 · 电视剧 · ⭐ 7.2</i></li>
+   <li value="3"><b>沙丘</b><br>
+   <i>Dune · 1984 · 电影 · ⭐ 6.2</i></li>
+   <li value="4"><b>沙丘2</b><br>
+   <i>Dune: Part Two · 2024 · 电影 · ⭐ 8.1</i></li>
+   <li value="5"><b>沙丘3</b><br>
+   <i>Dune: Part Three · 2026 · 电影</i></li>
+   <li value="6"><b>沙丘之子</b><br>
+   <i>Frank Herbert&#39;s Children of Dune · 2003 · 电视剧 · ⭐ 6.9</i></li>
+   <li value="7"><b>沙丘魔堡2000</b><br>
+   <i>Frank Herbert&#39;s Dune · 2000 · 电视剧 · ⭐ 6.8</i></li>
+   <li value="8"><b>沙丘虫暴</b><br>
+   <i>2021 · 电影 · ⭐ 6.7</i></li>
+   </ol>
+   <footer>第 1/2 页</footer>
+   [1 | 3:m:0] [2 | 3:m:1] [3 | 3:m:2] [4 | 3:m:3]
+   [5 | 3:m:4] [6 | 3:m:5] [7 | 3:m:6] [8 | 3:m:7]
+   [下一页 › | 3:p:1]
+   [重新搜索 | 3:rs:0]
+   [取消 | 3:x:0]
+>> user 1001 taps 3:m:0 on message 1
+-> MoviePilot GET /api/v1/media/438631?media_source=themoviedb&type_name=电影
+-> MoviePilot GET /api/v1/subscribe/media/438631?media_source=themoviedb&mtype=电影&title=沙丘&year=2021
+<< editMessageText chat=1001 message=1
+   <img src="url-ae95e58ec03e202c035279fd7b770ee9063e24e22f246ec568120ac5a90252ea"/>
+   <h3>🎬 <a href="https://www.themoviedb.org/movie/438631">沙丘</a></h3>
+   <footer><i>Dune</i> · 2021 · 电影 · ⭐ 7.8 · 科幻 / 冒险 · 156 分钟 · 主演：提莫西·查拉梅、丽贝卡·弗格森、奥斯卡·伊萨克</footer>
+   <blockquote expandable>电影《沙丘》为观众呈现了一段神秘而感人至深的英雄之旅。天赋异禀的少年保罗·厄崔迪（提莫西·查拉梅 饰）被命运指引，为了保卫自己的家族和人民，决心前往浩瀚宇宙间最危险的星球，开启一场惊心动魄的冒险。与此同时，各路势力为了抢夺这颗星球上一种能够释放人类最大潜力的珍贵资源而纷纷加入战场。最终，唯有那些能够战胜内心恐惧的人才能生存下去。</blockquote>
+   <hr/>
+   <p>🔍 正在各个站点搜索资源，要等一会儿哦…</p>
+   [取消 | 3:x:0]
+<< answerCallbackQuery
+-> MoviePilot GET /api/v1/search/media/438631?media_source=themoviedb&mtype=电影
+<< editMessageText chat=1001 message=1
+   <h3>🔍 《沙丘》的资源</h3>
+   <ol start="1">
+   <li value="1"><b>Dune.2021.2160p.UHD.BluRay.REMUX.HDR.HEVC.DTS-HD.MA.5.1-FROGE</b><br>
+   <i>站点甲 · 58.2 GiB · 做种 25 · 免费 · H&amp;R</i></li>
+   <li value="2"><b>Dune.2021.1080p.BluRay.x264.DTS-HD.MA.5.1-CHD</b><br>
+   <i>站点乙 · 14.6 GiB · 做种 132</i></li>
+   <li value="3"><b>Dune.2021.2160p.WEB-DL.H265.DDP5.1-ADWeb</b><br>
+   <i>站点丙 · 18.1 GiB · 做种 48 · 2X免费</i></li>
+   <li value="4"><b>Dune.2021.720p.BluRay.x264-CHD</b><br>
+   <i>站点乙 · 6.0 GiB · 做种 8</i></li>
+   </ol>
+   <footer>共 4 个，按 MoviePilot 的优先级排好啦，点编号看详情～</footer>
+   [1 | 3:tp:0] [2 | 3:tp:1] [3 | 3:tp:2] [4 | 3:tp:3]
+   [·默认· | 3:to:0] [做种 | 3:to:1] [时间 | 3:to:2] [大小 | 3:to:3] [站点 | 3:to:4]
+   [筛选站点 | 3:tf:0] [多选… | 3:tm:0]
+   [返回 | 3:bk:0] [取消 | 3:x:0]
+>> user 1001 taps 3:x:0 on message 1
+<< editMessageText chat=1001 message=1
+   <h3>已取消</h3>
+   <p>好哒，已经取消啦～</p>
+<< answerCallbackQuery
+>> user 1001 in chat 1001: 下载 沙邱
+-> MoviePilot GET /api/v1/media/search?count=10&title=沙邱&type=media
+<< sendRichMessage chat=1001 message=2
+   <h3>🔍 呜…什么都没找到</h3>
+   <p>翻遍了也没找到「沙邱」(｡•́︿•̀｡) 换个名字直接回复我，再搜搜看呀？</p>
+   [取消 | 4:x:0]
+>> user 1001 in chat 1001: 搜索 沙丘
+-> MoviePilot GET /api/v1/media/search?count=10&title=沙丘&type=media
+<< editMessageText chat=1001 message=2
+   <tg-slideshow>
+   <img src="url-ae95e58ec03e202c035279fd7b770ee9063e24e22f246ec568120ac5a90252ea"/>
+   <img src="url-7ea76e3b74f0f1bba01161bd2446775a7fe7657b009df91fca57cb760c60208f"/>
+   <img src="url-e887bdb9df0034573d9e03f6507d8e8b7862bda8362f968e4349554493678ff8"/>
+   <img src="url-0603bc04eba9f23ccb0da918da40cefdcc9533bb920a16af3d7323b8954288fe"/>
+   <img src="url-f3924e4dafb7c35392e3de6d3fbfd5e540d3fcfe78dd69b758e7319101e217fe"/>
+   <img src="url-cfc61103a56e8781300f998571c8194d0958754710eb781ed3beae7e5eae3dc2"/>
+   <img src="url-d03384b6cc307585edcd449cb20296ce3fa11071866b554add8f77be947e6c17"/>
+   <img src="url-f6bf48e37249a47a3abcd09ca8c92f0ab0f5d0f1d21a40918902154571cda459"/>
+   </tg-slideshow>
+   <h3>🔍 帮你找到这些「沙丘」啦</h3>
+   <ol start="1">
+   <li value="1"><b>沙丘</b><br>
+   <i>Dune · 2021 · 电影 · ⭐ 7.8</i></li>
+   <li value="2"><b>沙丘：预言</b><br>
+   <i>Dune: Prophecy · 2024 · 电视剧 · ⭐ 7.2</i></li>
+   <li value="3"><b>沙丘</b><br>
+   <i>Dune · 1984 · 电影 · ⭐ 6.2</i></li>
+   <li value="4"><b>沙丘2</b><br>
+   <i>Dune: Part Two · 2024 · 电影 · ⭐ 8.1</i></li>
+   <li value="5"><b>沙丘3</b><br>
+   <i>Dune: Part Three · 2026 · 电影</i></li>
+   <li value="6"><b>沙丘之子</b><br>
+   <i>Frank Herbert&#39;s Children of Dune · 2003 · 电视剧 · ⭐ 6.9</i></li>
+   <li value="7"><b>沙丘魔堡2000</b><br>
+   <i>Frank Herbert&#39;s Dune · 2000 · 电视剧 · ⭐ 6.8</i></li>
+   <li value="8"><b>沙丘虫暴</b><br>
+   <i>2021 · 电影 · ⭐ 6.7</i></li>
+   </ol>
+   <footer>第 1/2 页</footer>
+   [1 | 5:m:0] [2 | 5:m:1] [3 | 5:m:2] [4 | 5:m:3]
+   [5 | 5:m:4] [6 | 5:m:5] [7 | 5:m:6] [8 | 5:m:7]
+   [下一页 › | 5:p:1]
+   [重新搜索 | 5:rs:0]
+   [取消 | 5:x:0]
+>> user 1001 taps 5:m:0 on message 2
+-> MoviePilot GET /api/v1/media/438631?media_source=themoviedb&type_name=电影
+-> MoviePilot GET /api/v1/subscribe/media/438631?media_source=themoviedb&mtype=电影&title=沙丘&year=2021
+<< editMessageText chat=1001 message=2
+   <img src="url-ae95e58ec03e202c035279fd7b770ee9063e24e22f246ec568120ac5a90252ea"/>
+   <h3>🎬 <a href="https://www.themoviedb.org/movie/438631">沙丘</a></h3>
+   <footer><i>Dune</i> · 2021 · 电影 · ⭐ 7.8 · 科幻 / 冒险 · 156 分钟 · 主演：提莫西·查拉梅、丽贝卡·弗格森、奥斯卡·伊萨克</footer>
+   <blockquote expandable>电影《沙丘》为观众呈现了一段神秘而感人至深的英雄之旅。天赋异禀的少年保罗·厄崔迪（提莫西·查拉梅 饰）被命运指引，为了保卫自己的家族和人民，决心前往浩瀚宇宙间最危险的星球，开启一场惊心动魄的冒险。与此同时，各路势力为了抢夺这颗星球上一种能够释放人类最大潜力的珍贵资源而纷纷加入战场。最终，唯有那些能够战胜内心恐惧的人才能生存下去。</blockquote>
+   <hr/>
+   <p><b>要订阅《沙丘》吗？</b></p>
+   [确认订阅 | 5:ok:0]
+   [洗版订阅 | 5:bv:0]
+   [搜索资源 | 5:ts:0] [相似推荐 | 5:r:0] [同系列 | 5:n:0]
+   [返回 | 5:bk:0] [取消 | 5:x:0]
+<< answerCallbackQuery
