@@ -395,3 +395,36 @@ func TestDownloadPrefixSurvivesRetryAndLeadsBackToResults(t *testing.T) {
 	h.shows(1, "帮你找到这些「沙丘」啦")
 	h.tr.verify(t)
 }
+
+// 首页 ends a completed title search's download intent: a subsequent
+// discovery pick asks to subscribe, without searching its resources.
+func TestHomeAfterDownloadReturnsToBrowsing(t *testing.T) {
+	const diggerTorrents = "GET /api/v1/search/media/1248832"
+	h := start(t, scenario{routes: map[string]route{
+		searchPath:    ok(selectedFixture(t, "search_dune.json", 0, 3)),
+		duneDetails:   ok("detail_dune.json"),
+		duneLookup:    ok("subscription_none.json"),
+		duneTorrents:  searchingSites("torrents_dune.json"),
+		downloadPath:  ok("download_added.json"),
+		trendingPath:  ok(selectedFixture(t, "chart_trending.json", 0)),
+		diggerDetails: ok("detail_digger.json"),
+		diggerLookup:  ok("subscription_none.json"),
+		subscribePath: ok("subscribe_created.json"),
+	}})
+	h.say(alice, alice, "下载 沙丘")
+	h.searchTorrents(alice, 1, duneMovie)
+	h.tap(alice, 1, "1")
+	h.tap(alice, 1, downloadIt)
+	h.tap(alice, 1, "首页")
+	h.tap(alice, 1, "发现")
+	h.mp.setRoute(searchPath, ok("search_digger.json"))
+	h.tap(alice, 1, "TMDB 流行趋势")
+	h.tap(alice, 1, "1")
+	h.shows(1, "要订阅《挖掘者》")
+	h.tap(alice, 1, "确认订阅")
+	h.shows(1, "帮你订好《挖掘者》")
+	if strings.Contains(h.tr.String(), diggerTorrents) {
+		t.Error("a discovery pick searched resources without being asked")
+	}
+	h.tr.verify(t)
+}

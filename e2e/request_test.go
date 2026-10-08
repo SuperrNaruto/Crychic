@@ -238,6 +238,36 @@ func TestPrivateCommandsReplacePendingAnswer(t *testing.T) {
 	h.tr.verify(t)
 }
 
+// An explicit reply to an older prompt cannot answer the newest private
+// prompt. The warning preserves both, and replying to the current one works.
+func TestPrivateQuotedAnswerKeepsCurrentPrompt(t *testing.T) {
+	routes := conanRoutes()
+	routes[abyssDetails] = ok("detail_abyss.json")
+	routes[abyssLookup] = ok("subscription_none.json")
+	h := start(t, scenario{routes: routes})
+	h.say(alice, alice, "/search 名侦探柯南")
+	h.tap(alice, 1, conanShow)
+	h.tap(alice, 1, conanFirst)
+	h.tap(alice, 1, "指定起始集…")
+	h.mp.setRoute(searchPath, ok("search_abyss.json"))
+	h.mp.setRoute(seasonsPath, ok("seasons_abyss.json"))
+	h.say(alice, alice, "/search 深渊无间")
+	h.tap(alice, 2, "指定起始集…")
+	older, current := mustMessage(h, 1).seen(), mustMessage(h, 2).seen()
+	h.tr.add(fmt.Sprintf(">> user %d in chat %d quoting message 1: 5", alice, alice))
+	wrong := chatMessage{user: alice, chat: alice, text: "5", replyTo: 1}
+	h.wait(h.tg.push(wrong.update(), fmt.Sprintf("send:%d", alice)), "a mismatched reply warning")
+	h.shows(3, "你回复的不是我正在等的那条提问")
+	if mustMessage(h, 1).seen() != older || mustMessage(h, 2).seen() != current {
+		t.Error("a mismatched reply changed a conversation")
+	}
+	h.answerQuoting(alice, 2, "7")
+	h.shows(2, "要订阅《深渊无间》第 1 季（从第 7 集开始）")
+	h.tap(alice, 2, "确认订阅")
+	h.shows(2, "帮你订好《深渊无间》第 1 季（从第 7 集开始）")
+	h.tr.verify(t)
+}
+
 // In a group, another whitelisted member cannot hijack someone's request.
 func TestOnlyRequesterCanChoose(t *testing.T) {
 	h := start(t, scenario{routes: map[string]route{

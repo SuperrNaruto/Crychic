@@ -37,7 +37,10 @@ func (e *Engine) Home(_ context.Context, actor Actor) Reply {
 	return e.shown(sess.id, e.home(sess))
 }
 
+// home leaves the previous title's download intent behind; discovering a
+// new title from here asks to subscribe unless resources are requested.
 func (e *Engine) home(sess session) Reply {
+	sess.download = false
 	e.store.put(sess)
 	var buttons []Button
 	for i, f := range e.features() {

@@ -1,0 +1,151 @@
+>> user 1001 in chat 1001: /search 名侦探柯南
+-> MoviePilot GET /api/v1/media/search?count=10&title=名侦探柯南&type=media
+<< sendRichMessage chat=1001 message=1
+   <tg-slideshow>
+   <img src="https://image.tmdb.org/t/p/w500/7qBrY88hNwMrMb75PkBZjhFolbL.jpg"/>
+   <img src="https://image.tmdb.org/t/p/w500/ytXNhqKBlqGRmj0Iq95K1LJyWVm.jpg"/>
+   <img src="https://image.tmdb.org/t/p/w500/xEMs8q1GgOiwigsNPsfESr9FCzh.jpg"/>
+   <img src="https://image.tmdb.org/t/p/w500/vsre1rnZ9mA8Tb4Lejp1UbZ6ca9.jpg"/>
+   <img src="https://image.tmdb.org/t/p/w500/rDqNggjA9G6oK1RIwoVzEwTuanJ.jpg"/>
+   <img src="https://image.tmdb.org/t/p/w500/f9C4lFUTOqc5RtWpzlrdbeoJMI7.jpg"/>
+   <img src="https://image.tmdb.org/t/p/w500/kvqzHlTfPuSunPeT9sP27acV6aX.jpg"/>
+   <img src="https://image.tmdb.org/t/p/w500/h2ZJJ0pSiPOvyP5Zoo52JREWCeP.jpg"/>
+   </tg-slideshow>
+   <h3>🔍 帮你找到这些「名侦探柯南」啦</h3>
+   <ol start="1">
+   <li value="1"><b>名侦探柯南</b><br>
+   <i>名探偵コナン · 1996 · 电视剧 · ⭐ 8.0</i></li>
+   <li value="2"><b>名侦探柯南粤语版</b><br>
+   <i>1998 · 电视剧</i></li>
+   <li value="3"><b>名侦探柯南（中配）</b><br>
+   <i>1996 · 电视剧 · ⭐ 9.3</i></li>
+   <li value="4"><b>名侦探柯南：高速公路的堕天使</b><br>
+   <i>名探偵コナン ハイウェイの堕天使 · 2026 · 电影 · ⭐ 7.4</i></li>
+   <li value="5"><b>名侦探柯南：独眼的残像</b><br>
+   <i>名探偵コナン 隻眼の残像 · 2025 · 电影 · ⭐ 7.2</i></li>
+   <li value="6"><b>名侦探柯南：绝海的侦探</b><br>
+   <i>名探偵コナン・絶海の探偵 · 2013 · 电影 · ⭐ 6.6</i></li>
+   <li value="7"><b>名侦探柯南：零的日常</b><br>
+   <i>名探偵コナン ゼロの日常 · 2022 · 电视剧 · ⭐ 6.7</i></li>
+   <li value="8"><b>名侦探柯南：黑铁的鱼影</b><br>
+   <i>名探偵コナン 黒鉄の魚影（サブマリン） · 2023 · 电影 · ⭐ 7.0</i></li>
+   </ol>
+   <footer>第 1/2 页</footer>
+   [1 | 1:m:0] [2 | 1:m:1] [3 | 1:m:2] [4 | 1:m:3]
+   [5 | 1:m:4] [6 | 1:m:5] [7 | 1:m:6] [8 | 1:m:7]
+   [下一页 › | 1:p:1]
+   [重新搜索 | 1:rs:0]
+   [取消 | 1:x:0]
+>> user 1001 taps 1:m:0 on message 1
+-> MoviePilot GET /api/v1/media/30983?media_source=themoviedb&type_name=电视剧
+-> MoviePilot GET /api/v1/media/seasons?media_id=30983&media_source=themoviedb
+<< editMessageText chat=1001 message=1 reuses=url-7ca1018d
+   <img src="tg://photo?id=p0"/>
+   <h3>📺 <a href="https://www.themoviedb.org/tv/30983">名侦探柯南</a></h3>
+   <footer><i>名探偵コナン</i> · 1996 · 电视剧 · ⭐ 8.0 · 动画 / 犯罪 / 悬疑 / 喜剧 · 共 1 季 1216 集 · 主演：高山南、山口胜平、山崎和佳奈</footer>
+   <blockquote expandable>高中生侦探工藤新一与毛利兰在游乐园游玩时发现两个行动诡异的黑衣男子，便跟踪他们，不料被灌下一种叫「APTX4869」的神秘毒药，然而因为药物副作用，新一的身体竟回到孩童状态。为不使周围的人受到牵连，他化名为「江户川柯南」，寄住在毛利兰家中，用阿笠博士发明的手表型麻醉枪让毛利小五郎睡着，接着用蝴蝶结变声器模仿他的声音来进行推理，解决了许多案件，并一直寻找着黑衣组织的人的下落，希望有朝一日将其绳之以法，并变回原来的样子。</blockquote>
+   <hr/>
+   <p><b>想订哪一季呀？</b></p>
+   <table bordered compact>
+   <tr><th>季</th><th>集数</th></tr>
+   <tr><td><b>特别篇</b></td><td>35 集</td></tr>
+   <tr><td><b>第 1 季</b></td><td>1216 集</td></tr>
+   </table>
+   [特别篇 | 1:s:0] [第 1 季 | 1:s:1]
+   [多选季… | 1:a:0]
+   [相似推荐 | 1:r:0]
+   [返回 | 1:bk:0] [取消 | 1:x:0]
+<< answerCallbackQuery
+>> user 1001 taps 1:s:1 on message 1
+-> MoviePilot GET /api/v1/subscribe/media/30983?media_source=themoviedb&mtype=电视剧&season=1&title=名侦探柯南&year=1996
+<< editMessageText chat=1001 message=1 reuses=url-7ca1018d
+   <img src="tg://photo?id=p0"/>
+   <h3>📺 <a href="https://www.themoviedb.org/tv/30983">名侦探柯南</a></h3>
+   <footer><i>名探偵コナン</i> · 1996 · 电视剧 · ⭐ 8.0 · 动画 / 犯罪 / 悬疑 / 喜剧 · 共 1 季 1216 集 · 主演：高山南、山口胜平、山崎和佳奈</footer>
+   <blockquote expandable>高中生侦探工藤新一与毛利兰在游乐园游玩时发现两个行动诡异的黑衣男子，便跟踪他们，不料被灌下一种叫「APTX4869」的神秘毒药，然而因为药物副作用，新一的身体竟回到孩童状态。为不使周围的人受到牵连，他化名为「江户川柯南」，寄住在毛利兰家中，用阿笠博士发明的手表型麻醉枪让毛利小五郎睡着，接着用蝴蝶结变声器模仿他的声音来进行推理，解决了许多案件，并一直寻找着黑衣组织的人的下落，希望有朝一日将其绳之以法，并变回原来的样子。</blockquote>
+   <hr/>
+   <p><b>要订阅《名侦探柯南》第 1 季（共 1216 集）吗？</b></p>
+   [从第 1 集开始 | 1:ok:0] [只追新集（第 1216 集起） | 1:ok:1216]
+   [指定起始集… | 1:e:0]
+   [搜索资源 | 1:ts:0] [相似推荐 | 1:r:0]
+   [返回 | 1:bk:0] [取消 | 1:x:0]
+<< answerCallbackQuery
+>> user 1001 taps 1:e:0 on message 1
+<< editMessageText chat=1001 message=1 reuses=url-7ca1018d
+   <img src="tg://photo?id=p0"/>
+   <h3>📺 <a href="https://www.themoviedb.org/tv/30983">名侦探柯南</a></h3>
+   <footer><i>名探偵コナン</i> · 1996 · 电视剧 · ⭐ 8.0 · 动画 / 犯罪 / 悬疑 / 喜剧 · 共 1 季 1216 集 · 主演：高山南、山口胜平、山崎和佳奈</footer>
+   <blockquote expandable>高中生侦探工藤新一与毛利兰在游乐园游玩时发现两个行动诡异的黑衣男子，便跟踪他们，不料被灌下一种叫「APTX4869」的神秘毒药，然而因为药物副作用，新一的身体竟回到孩童状态。为不使周围的人受到牵连，他化名为「江户川柯南」，寄住在毛利兰家中，用阿笠博士发明的手表型麻醉枪让毛利小五郎睡着，接着用蝴蝶结变声器模仿他的声音来进行推理，解决了许多案件，并一直寻找着黑衣组织的人的下落，希望有朝一日将其绳之以法，并变回原来的样子。</blockquote>
+   <hr/>
+   <p>想从第几集开始追呀？直接回复集数就好（1–1216）～</p>
+   [返回 | 1:bk:0] [取消 | 1:x:0]
+<< answerCallbackQuery
+>> user 1001 in chat 1001: /search 深渊无间
+-> MoviePilot GET /api/v1/media/search?count=10&title=深渊无间&type=media
+-> MoviePilot GET /api/v1/media/301489?media_source=themoviedb&type_name=电视剧
+-> MoviePilot GET /api/v1/media/seasons?media_id=301489&media_source=themoviedb
+-> MoviePilot GET /api/v1/subscribe/media/301489?media_source=themoviedb&mtype=电视剧&season=1&title=深渊无间&year=2026
+<< sendRichMessage chat=1001 message=2
+   <img src="https://image.tmdb.org/t/p/w500/b9ngtGNgaHBbLihRrT0MsPRY0GW.jpg"/>
+   <h3>📺 <a href="https://www.themoviedb.org/tv/301489">深渊无间</a></h3>
+   <footer>2026 · 电视剧 · ⭐ 8.0 · 悬疑 / 剧情 / 犯罪 · 共 1 季 16 集 · 主演：任嘉伦、秦俊杰、王砚辉</footer>
+   <blockquote expandable>深渊无间（别名：深渊），2026年刑侦悬疑剧，共16集，刘海波执导，改编自深蓝小说《深渊》。<br>
+   <br>
+   一篇名为《深渊》的推理网文突然上线，小说里的作案细节，竟然和多年前警方封存的“312悬案”高度吻合，包含只有凶手与办案警察才知晓的隐秘线索。新人刑警李成潜入当地网吧卧底调查，结识了网吧老板韩品木。韩品木气质温和，身份却充满谜团，正是这篇悬疑小说的幕后发布者，也是当年旧案受害者家属，身患绝症，多年暗中追查真凶。<br>
+   <br>
+   李成与刑侦队长赵干哲、退休老刑警辛吉然联手重启尘封八年的悬案。小城之内人人藏有秘密，多方嫌疑人互相博弈。随着调查深入，层层揭开旧案背后交织的亲情、恩怨与人性抉择，在正义与私刑的边界之间，探寻深渊之下的残酷真相。</blockquote>
+   <hr/>
+   <p><b>要订阅《深渊无间》第 1 季（共 16 集）吗？</b></p>
+   [从第 1 集开始 | 2:ok:0]
+   [指定起始集… | 2:e:0]
+   [搜索资源 | 2:ts:0] [相似推荐 | 2:r:0]
+   [重新搜索 | 2:rs:0]
+   [取消 | 2:x:0]
+>> user 1001 taps 2:e:0 on message 2
+<< editMessageText chat=1001 message=2 reuses=url-0e877991
+   <img src="tg://photo?id=p0"/>
+   <h3>📺 <a href="https://www.themoviedb.org/tv/301489">深渊无间</a></h3>
+   <footer>2026 · 电视剧 · ⭐ 8.0 · 悬疑 / 剧情 / 犯罪 · 共 1 季 16 集 · 主演：任嘉伦、秦俊杰、王砚辉</footer>
+   <blockquote expandable>深渊无间（别名：深渊），2026年刑侦悬疑剧，共16集，刘海波执导，改编自深蓝小说《深渊》。<br>
+   <br>
+   一篇名为《深渊》的推理网文突然上线，小说里的作案细节，竟然和多年前警方封存的“312悬案”高度吻合，包含只有凶手与办案警察才知晓的隐秘线索。新人刑警李成潜入当地网吧卧底调查，结识了网吧老板韩品木。韩品木气质温和，身份却充满谜团，正是这篇悬疑小说的幕后发布者，也是当年旧案受害者家属，身患绝症，多年暗中追查真凶。<br>
+   <br>
+   李成与刑侦队长赵干哲、退休老刑警辛吉然联手重启尘封八年的悬案。小城之内人人藏有秘密，多方嫌疑人互相博弈。随着调查深入，层层揭开旧案背后交织的亲情、恩怨与人性抉择，在正义与私刑的边界之间，探寻深渊之下的残酷真相。</blockquote>
+   <hr/>
+   <p>想从第几集开始追呀？直接回复集数就好（1–16）～</p>
+   [返回 | 2:bk:0] [取消 | 2:x:0]
+<< answerCallbackQuery
+>> user 1001 in chat 1001 quoting message 1: 5
+<< sendRichMessage chat=1001 message=3
+   <h3>⚠️ 请回复当前提问</h3>
+   <p>你回复的不是我正在等的那条提问哦。请回复最新的提问，或者重新打开想回答的提问～</p>
+>> user 1001 in chat 1001 quoting message 2: 7
+<< editMessageText chat=1001 message=2 reuses=url-0e877991
+   <img src="tg://photo?id=p0"/>
+   <h3>📺 <a href="https://www.themoviedb.org/tv/301489">深渊无间</a></h3>
+   <footer>2026 · 电视剧 · ⭐ 8.0 · 悬疑 / 剧情 / 犯罪 · 共 1 季 16 集 · 主演：任嘉伦、秦俊杰、王砚辉</footer>
+   <blockquote expandable>深渊无间（别名：深渊），2026年刑侦悬疑剧，共16集，刘海波执导，改编自深蓝小说《深渊》。<br>
+   <br>
+   一篇名为《深渊》的推理网文突然上线，小说里的作案细节，竟然和多年前警方封存的“312悬案”高度吻合，包含只有凶手与办案警察才知晓的隐秘线索。新人刑警李成潜入当地网吧卧底调查，结识了网吧老板韩品木。韩品木气质温和，身份却充满谜团，正是这篇悬疑小说的幕后发布者，也是当年旧案受害者家属，身患绝症，多年暗中追查真凶。<br>
+   <br>
+   李成与刑侦队长赵干哲、退休老刑警辛吉然联手重启尘封八年的悬案。小城之内人人藏有秘密，多方嫌疑人互相博弈。随着调查深入，层层揭开旧案背后交织的亲情、恩怨与人性抉择，在正义与私刑的边界之间，探寻深渊之下的残酷真相。</blockquote>
+   <hr/>
+   <p><b>要订阅《深渊无间》第 1 季（从第 7 集开始）吗？</b></p>
+   [确认订阅 | 2:ok:7]
+   [搜索资源 | 2:ts:0] [相似推荐 | 2:r:0]
+   [返回 | 2:bk:0] [取消 | 2:x:0]
+>> user 1001 taps 2:ok:7 on message 2
+-> MoviePilot POST /api/v1/subscribe/
+   {"name":"深渊无间","year":"2026","type":"电视剧","media_source":"themoviedb","media_id":"301489","season":1,"start_episode":7}
+<< editMessageText chat=1001 message=2 reuses=url-0e877991
+   <img src="tg://photo?id=p0"/>
+   <h3>📺 <a href="https://www.themoviedb.org/tv/301489">深渊无间</a></h3>
+   <footer>2026 · 电视剧 · ⭐ 8.0 · 悬疑 / 剧情 / 犯罪 · 共 1 季 16 集 · 主演：任嘉伦、秦俊杰、王砚辉</footer>
+   <blockquote expandable>深渊无间（别名：深渊），2026年刑侦悬疑剧，共16集，刘海波执导，改编自深蓝小说《深渊》。<br>
+   <br>
+   一篇名为《深渊》的推理网文突然上线，小说里的作案细节，竟然和多年前警方封存的“312悬案”高度吻合，包含只有凶手与办案警察才知晓的隐秘线索。新人刑警李成潜入当地网吧卧底调查，结识了网吧老板韩品木。韩品木气质温和，身份却充满谜团，正是这篇悬疑小说的幕后发布者，也是当年旧案受害者家属，身患绝症，多年暗中追查真凶。<br>
+   <br>
+   李成与刑侦队长赵干哲、退休老刑警辛吉然联手重启尘封八年的悬案。小城之内人人藏有秘密，多方嫌疑人互相博弈。随着调查深入，层层揭开旧案背后交织的亲情、恩怨与人性抉择，在正义与私刑的边界之间，探寻深渊之下的残酷真相。</blockquote>
+   <hr/>
+   <p>✅ 帮你订好《深渊无间》第 1 季（从第 7 集开始）啦，入库了我第一时间叫你！ ヾ(≧▽≦*)o</p>
+<< answerCallbackQuery

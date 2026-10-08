@@ -87,8 +87,19 @@ func (a *adapter) answerText(ctx context.Context, msg *models.Message, p pending
 		return
 	}
 	isReply := msg.ReplyToMessage != nil && msg.ReplyToMessage.ID == p.message
-	if msg.Chat.Type != models.ChatTypePrivate && !isReply {
-		return
+	if !isReply {
+		if msg.Chat.Type != models.ChatTypePrivate {
+			return
+		}
+		// Only unquoted private text defaults to the newest prompt. An
+		// explicit reply cannot change another conversation or its input.
+		if msg.ReplyToMessage != nil {
+			a.replyTo(ctx, msg, flow.Reply{Text: flow.Lines(
+				flow.Heading(flow.Plain("⚠️ 请回复当前提问")),
+				flow.Line(flow.Plain("你回复的不是我正在等的那条提问哦。请回复最新的提问，或者重新打开想回答的提问～")),
+			)})
+			return
+		}
 	}
 	actor := actorOf(*msg.From, msg.Chat.ID)
 	reply := a.flow.Answer(ctx, actor, flow.Typed{Input: p.input, Text: msg.Text})
