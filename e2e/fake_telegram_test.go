@@ -45,6 +45,7 @@ type fakeTelegram struct {
 	mu        sync.Mutex
 	updates   []map[string]any
 	confirmed int
+	idDrop    int // how far update ids fell back after idleWeek
 	arrived   chan struct{}
 	messages  map[int]message
 	lastMsg   int
@@ -84,7 +85,7 @@ func (f *fakeTelegram) push(upd map[string]any, doneKey string) <-chan struct{} 
 	if doneKey != "" {
 		f.waiters[doneKey] = done
 	}
-	upd["update_id"] = len(f.updates) + 1
+	upd["update_id"] = len(f.updates) + 1 - f.idDrop
 	f.updates = append(f.updates, upd)
 	close(f.arrived)
 	f.arrived = make(chan struct{})
@@ -208,6 +209,25 @@ func (f *fakeTelegram) wait(r *http.Request, method string) bool {
 	return true
 }
 
+// confirm marks every update up to the one offset follows as received.
+// Update ids are not positions: after a week without updates they start
+// over (idleWeek), so the latest update carrying the id counts.
+func (f *fakeTelegram) confirm(offset int) {
+	for i, u := range f.updates {
+		if u["update_id"] == offset-1 {
+			f.confirmed = max(f.confirmed, i+1)
+		}
+	}
+}
+
+// idleWeek models Telegram after a week without updates: the next update
+// id is chosen at random instead of sequentially, here the lowest there is.
+func (f *fakeTelegram) idleWeek() {
+	f.mu.Lock()
+	defer f.mu.Unlock()
+	f.idDrop = len(f.updates)
+}
+
 // getUpdates long-polls like Telegram: it returns unconfirmed updates, or
 // waits for one until the poll timeout or disconnect.
 func (f *fakeTelegram) getUpdates(w http.ResponseWriter, r *http.Request) {
@@ -228,7 +248,7 @@ func (f *fakeTelegram) getUpdates(w http.ResponseWriter, r *http.Request) {
 		f.mu.Lock()
 		// Like Telegram, an offset confirms every earlier update for good,
 		// so a restarted bot never sees them again.
-		f.confirmed = max(f.confirmed, offset-1)
+		f.confirm(offset)
 		pending := f.deliverable(f.updates[min(f.confirmed, len(f.updates)):])
 		arrived := f.arrived
 		f.mu.Unlock()

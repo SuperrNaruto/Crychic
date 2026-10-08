@@ -20,6 +20,24 @@
 << answerInlineQuery personal=true cache=10 results=0
 >> user 2002 types @crychic_bot 迷途之子
 << answerInlineQuery personal=true cache=10 results=0
+>> user 1001 types @crychic_bot 迷途之子
+-> MoviePilot GET /api/v1/media/search?count=10&title=迷途之子&type=media
+<< answerInlineQuery personal=true cache=10 results=3
+   [m_tv_t_224207] 迷途之子!!!!! — 2023 · 电视剧 · ⭐ 8.0 | thumb=https://image.tmdb.org/t/p/w500/dDknWHLYaQB76QSViNdzXOC5v64.jpg | HTML
+     <b>迷途之子!!!!!</b>
+     2023 · 电视剧 · ⭐ 8.0
+     <a href="https://www.themoviedb.org/tv/224207">查看详情页</a>
+     [在机器人里打开 | https://t.me/crychic_bot?start=m_tv_t_224207]
+   [m_mv_t_1231799] 迷途之子!!!!! 前篇：春暖向阳，迷星之猫 — 2024 · 电影 · ⭐ 7.7 | thumb=https://image.tmdb.org/t/p/w500/bMW0kwyK44LvDbQ3s0b3GCVOtLs.jpg | HTML
+     <b>迷途之子!!!!! 前篇：春暖向阳，迷星之猫</b>
+     2024 · 电影 · ⭐ 7.7
+     <a href="https://www.themoviedb.org/movie/1231799">查看详情页</a>
+     [在机器人里打开 | https://t.me/crychic_bot?start=m_mv_t_1231799]
+   [m_mv_t_1233186] 迷途之子!!!!! 后篇：唱吧、成为我们羁绊的诗歌＆电影演唱会 — 2024 · 电影 · ⭐ 7.0 | thumb=https://image.tmdb.org/t/p/w500/bleKkUg0l8X4AAxqxgkmYlLO7bN.jpg | HTML
+     <b>迷途之子!!!!! 后篇：唱吧、成为我们羁绊的诗歌＆电影演唱会</b>
+     2024 · 电影 · ⭐ 7.0
+     <a href="https://www.themoviedb.org/movie/1233186">查看详情页</a>
+     [在机器人里打开 | https://t.me/crychic_bot?start=m_mv_t_1233186]
 >> user 1001 in chat 1001: /start m_tv_t_224207
 -> MoviePilot GET /api/v1/media/224207?media_source=themoviedb&type_name=电视剧
 -> MoviePilot GET /api/v1/media/224207?media_source=themoviedb&type_name=电视剧

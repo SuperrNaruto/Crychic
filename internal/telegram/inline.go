@@ -28,15 +28,19 @@ type inlineSearches struct {
 	running map[int64]inlineSearch
 }
 
-// inlineSearch is the newest inline search of a user.
+// inlineSearch is a user's inline search under way.
 type inlineSearch struct {
 	update int64
 	cancel context.CancelFunc
 }
 
 // begin starts user's search from update, cancelling an older one; ok is
-// false when a newer one began already, which this one must leave alone.
-func (s *inlineSearches) begin(ctx context.Context, user, update int64) (context.Context, func(), bool) {
+// false when a newer one is under way, which this one must leave alone.
+// Only searches under way are compared: after a week without updates
+// Telegram picks the next update id at random, possibly lower than any
+// before, so a finished search's id must not outrank it. done cancels the
+// search and forgets it.
+func (s *inlineSearches) begin(ctx context.Context, user, update int64) (_ context.Context, done func(), ok bool) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 	prev, found := s.running[user]
@@ -48,7 +52,18 @@ func (s *inlineSearches) begin(ctx context.Context, user, update int64) (context
 	}
 	ctx, cancel := context.WithCancel(ctx)
 	s.running[user] = inlineSearch{update: update, cancel: cancel}
-	return ctx, cancel, true
+	return ctx, func() { s.end(user, update, cancel) }, true
+}
+
+// end cancels user's search from update and forgets it, unless a newer one
+// took its place.
+func (s *inlineSearches) end(user, update int64, cancel context.CancelFunc) {
+	cancel()
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	if s.running[user].update == update {
+		delete(s.running, user)
+	}
 }
 
 // onInline answers an inline query with media from a search, each shared as
@@ -59,8 +74,8 @@ func (a *adapter) onInline(ctx context.Context, b *bot.Bot, upd *models.Update) 
 	q := upd.InlineQuery
 	results := []models.InlineQueryResult{}
 	if a.allowed[q.From.ID] {
-		ctx, cancel, newest := a.inline.begin(ctx, q.From.ID, upd.ID)
-		defer cancel()
+		ctx, done, newest := a.inline.begin(ctx, q.From.ID, upd.ID)
+		defer done()
 		if !newest {
 			return
 		}
