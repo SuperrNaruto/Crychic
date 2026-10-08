@@ -64,3 +64,57 @@
 << answerCallbackQuery
 >> user 1001 taps 1:ok:0 on message 1
 << answerCallbackQuery notice="这个选项不太对哦～"
+>> user 1001 taps 1:bk:0 on message 1
+<< editMessageText chat=1001 message=1 reuses=url-ae95e58e reuses=url-7ea76e3b reuses=url-e887bdb9 reuses=url-0603bc04 reuses=url-f3924e4d reuses=url-cfc61103 reuses=url-d03384b6 reuses=url-f6bf48e3
+   <tg-slideshow>
+   <img src="tg://photo?id=p0"/>
+   <img src="tg://photo?id=p1"/>
+   <img src="tg://photo?id=p2"/>
+   <img src="tg://photo?id=p3"/>
+   <img src="tg://photo?id=p4"/>
+   <img src="tg://photo?id=p5"/>
+   <img src="tg://photo?id=p6"/>
+   <img src="tg://photo?id=p7"/>
+   </tg-slideshow>
+   <h3>🔍 帮你找到这些「沙丘」啦</h3>
+   <ol start="1">
+   <li value="1"><b>沙丘</b><br>
+   <i>Dune · 2021 · 电影 · ⭐ 7.8</i></li>
+   <li value="2"><b>沙丘：预言</b><br>
+   <i>Dune: Prophecy · 2024 · 电视剧 · ⭐ 7.2</i></li>
+   <li value="3"><b>沙丘</b><br>
+   <i>Dune · 1984 · 电影 · ⭐ 6.2</i></li>
+   <li value="4"><b>沙丘2</b><br>
+   <i>Dune: Part Two · 2024 · 电影 · ⭐ 8.1</i></li>
+   <li value="5"><b>沙丘3</b><br>
+   <i>Dune: Part Three · 2026 · 电影</i></li>
+   <li value="6"><b>沙丘之子</b><br>
+   <i>Frank Herbert&#39;s Children of Dune · 2003 · 电视剧 · ⭐ 6.9</i></li>
+   <li value="7"><b>沙丘魔堡2000</b><br>
+   <i>Frank Herbert&#39;s Dune · 2000 · 电视剧 · ⭐ 6.8</i></li>
+   <li value="8"><b>沙丘虫暴</b><br>
+   <i>2021 · 电影 · ⭐ 6.7</i></li>
+   </ol>
+   <footer>第 1/2 页</footer>
+   [1 | 1:m:0] [2 | 1:m:1] [3 | 1:m:2] [4 | 1:m:3]
+   [5 | 1:m:4] [6 | 1:m:5] [7 | 1:m:6] [8 | 1:m:7]
+   [下一页 › | 1:p:1]
+   [重新搜索 | 1:rs:0]
+   [取消 | 1:x:0]
+<< answerCallbackQuery
+>> user 1001 taps 1:m:3 on message 1
+-> MoviePilot GET /api/v1/media/693134?media_source=themoviedb&type_name=电影
+-> MoviePilot GET /api/v1/subscribe/media/693134?media_source=themoviedb&mtype=电影&title=沙丘2&year=2024
+<< editMessageText chat=1001 message=1 reuses=url-0603bc04
+   <img src="tg://photo?id=p0"/>
+   <h3>🎬 <a href="https://www.themoviedb.org/movie/693134">沙丘2</a></h3>
+   <footer><i>Dune: Part Two</i> · 2024 · 电影 · ⭐ 8.1 · 科幻 / 冒险 · 156 分钟 · 主演：提莫西·查拉梅、丽贝卡·弗格森、奥斯卡·伊萨克</footer>
+   <blockquote expandable>《沙丘2》承接第一部剧情，讲述保罗·厄崔迪（提莫西·查拉梅 Timothée Chalamet 饰）被帕迪沙皇帝和哈克南人联手灭族后，在厄拉科斯星球遇到弗雷曼女战士契妮（赞达亚 Zendaya 饰）以及加入弗雷曼人后展开的传奇旅程。保罗与让他家破人亡的阴谋家们开战，同时面临着一生所爱与已知宇宙命运的两难选择。</blockquote>
+   <hr/>
+   <p><b>要订阅《沙丘2》吗？</b></p>
+   [确认订阅 | 1:ok:0]
+   [搜索资源 | 1:ts:0] [相似推荐 | 1:r:0] [同系列 | 1:n:0]
+   [返回 | 1:bk:0] [取消 | 1:x:0]
+<< answerCallbackQuery
+>> user 1001 taps 1:ok:0 on message 1
+<< answerCallbackQuery notice="这个选项不太对哦～"

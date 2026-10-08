@@ -2,6 +2,7 @@ package flow
 
 import (
 	"context"
+	"fmt"
 	"slices"
 )
 
@@ -10,6 +11,9 @@ const (
 
 	// maxHistory bounds how many screens 返回 can walk back through.
 	maxHistory = 20
+
+	// ticketedParts is button data with a ticket: session, action, arg, ticket.
+	ticketedParts = 4
 )
 
 // screen is a reply once shown and the session state behind it, so 返回
@@ -75,6 +79,7 @@ func (e *Engine) navigate(prev session, action string, reply Reply) Reply {
 		reply = withBack(next.id, reply)
 	}
 	next.menu = false
+	reply = ticketed(&next, reply)
 	next.screen = screen{state: snapshot(next), reply: reply, chart: chartViews[action]}
 	e.store.put(next)
 	return reply
@@ -135,11 +140,41 @@ func (e *Engine) back(ctx context.Context, sess session) Reply {
 	last := sess.history[len(sess.history)-1]
 	restored := *last.state
 	restored.history, restored.screen = sess.history[:len(sess.history)-1], last
+	restored.tickets = sess.tickets
 	e.store.put(restored)
 	if last.chart {
 		return e.navigate(restored, actionChartPage, e.chartPage(ctx, restored, restored.page))
 	}
 	return last.reply
+}
+
+// ticketed gives the write buttons (finishing) of the screen sess now shows
+// a fresh ticket, and only a press carrying the shown screen's ticket
+// writes. A request picked from a list keeps its session past the write, so
+// without one a stale 确认订阅 from before would confirm whatever was picked
+// next; 返回 restores a screen with the ticket its buttons carry.
+func ticketed(sess *session, reply Reply) Reply {
+	sess.ticket = 0
+	rows := make([][]Button, 0, len(reply.Buttons))
+	for _, row := range reply.Buttons {
+		next := slices.Clone(row)
+		for i, b := range next {
+			id, p, ok := parseData(b.Data)
+			if !ok || id != sess.id || !finishing[p.action] {
+				continue
+			}
+			if sess.ticket == 0 {
+				sess.tickets++
+				sess.ticket = sess.tickets
+			}
+			next[i].Data = fmt.Sprintf("%s:%d", b.Data, sess.ticket)
+		}
+		rows = append(rows, next)
+	}
+	if sess.ticket != 0 {
+		reply.Buttons = rows
+	}
+	return reply
 }
 
 // pushed is history with s on top, the oldest dropped beyond maxHistory;

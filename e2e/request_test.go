@@ -3,6 +3,7 @@ package e2e
 import (
 	"fmt"
 	"net/http"
+	"strings"
 	"testing"
 )
 
@@ -19,6 +20,7 @@ const (
 	conanDetails = "GET /api/v1/media/30983"
 
 	duneMovie  = "1"
+	dune2Movie = "4"
 	conanShow  = "1"
 	conanFirst = "第 1 季"
 )
@@ -163,13 +165,17 @@ func TestAlreadySubscribedEndsEarly(t *testing.T) {
 	h.tr.verify(t)
 }
 
-// A double tap on confirm, or a stale button, must not subscribe twice.
+// A double tap on confirm, or a stale button, must not subscribe twice; a
+// confirmation from a pick before cannot subscribe the next pick from the
+// same list, whose own 确认订阅 looks the same but was never pressed.
 func TestConfirmTwiceSubscribesOnce(t *testing.T) {
 	h := start(t, scenario{routes: map[string]route{
-		searchPath:    ok("search_dune.json"),
-		duneDetails:   ok("detail_dune.json"),
-		duneLookup:    ok("subscription_none.json"),
-		subscribePath: ok("subscribe_created.json"),
+		searchPath:         ok("search_dune.json"),
+		duneDetails:        ok("detail_dune.json"),
+		duneLookup:         ok("subscription_none.json"),
+		dunePartTwoDetails: ok("detail_dune.json"),
+		dunePartTwoLookup:  ok("subscription_none.json"),
+		subscribePath:      ok("subscribe_created.json"),
 	}})
 	h.say(alice, alice, "/search 沙丘")
 	h.tap(alice, 1, duneMovie)
@@ -177,6 +183,13 @@ func TestConfirmTwiceSubscribesOnce(t *testing.T) {
 	h.tap(alice, 1, "确认订阅")
 	h.tapData(alice, 1, confirm)
 	h.shows(1, "帮你订好《沙丘》")
+	h.tap(alice, 1, "返回")
+	h.tap(alice, 1, dune2Movie)
+	h.shows(1, "要订阅《沙丘2》")
+	h.tapData(alice, 1, confirm)
+	if writes := strings.Count(h.tr.String(), subscribePath); writes != 1 {
+		t.Errorf("subscription writes = %d, want 1: a stale confirmation subscribed the next pick", writes)
+	}
 	h.tr.verify(t)
 }
 

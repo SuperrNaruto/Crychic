@@ -38,7 +38,8 @@ func (tr *transcript) add(head string, body ...string) {
 	}
 }
 
-var callbackToken = regexp.MustCompile(`\b[0-9]+:[a-z]+:-?[0-9]+\b`)
+// callbackToken is button data, with the ticket a write button carries.
+var callbackToken = regexp.MustCompile(`\b([0-9]+):([a-z]+:-?[0-9]+)(?::[0-9]+)?\b`)
 
 // Session identities are random in production. Normalize only the transcript,
 // never the updates sent to the app, preserving identity across restarts.
@@ -47,7 +48,8 @@ func (tr *transcript) normalize(text string) string {
 		tr.sessions = map[string]string{}
 	}
 	return callbackToken.ReplaceAllStringFunc(text, func(token string) string {
-		id, action, _ := strings.Cut(token, ":")
+		parts := callbackToken.FindStringSubmatch(token)
+		id, action := parts[1], parts[2]
 		if tr.sessions[id] == "" {
 			tr.sessions[id] = strconv.Itoa(len(tr.sessions) + 1)
 		}

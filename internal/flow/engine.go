@@ -78,6 +78,7 @@ func New(opts Options) *Engine {
 type press struct {
 	action string
 	arg    int
+	ticket uint64 // a write button's ticket (ticketed); 0 on other buttons
 }
 
 // chooser applies the presses it knows; ok is false for any other.
@@ -96,6 +97,9 @@ func (e *Engine) Choose(ctx context.Context, actor Actor, raw string) Reply {
 	}
 	if sess.owner.UserID != actor.UserID || sess.owner.Address != actor.Address {
 		return Reply{Notice: msgNotYours}
+	}
+	if finishing[p.action] && (p.ticket == 0 || p.ticket != sess.ticket) {
+		return Reply{Notice: msgInvalidChoice}
 	}
 	switch p.action {
 	case actionPage:
@@ -386,12 +390,20 @@ func data(id uint64, action string, arg int) string {
 
 func parseData(raw string) (id uint64, p press, ok bool) {
 	parts := strings.Split(raw, ":")
+	if len(parts) == ticketedParts {
+		ticket, err := strconv.ParseUint(parts[3], 10, 64)
+		p.ticket, parts = ticket, parts[:3]
+		if err != nil {
+			return 0, press{}, false
+		}
+	}
 	if len(parts) != 3 {
 		return 0, press{}, false
 	}
 	id, errID := strconv.ParseUint(parts[0], 10, 64)
 	arg, errArg := strconv.Atoi(parts[2])
-	return id, press{action: parts[1], arg: arg}, errID == nil && errArg == nil
+	p.action, p.arg = parts[1], arg
+	return id, p, errID == nil && errArg == nil
 }
 
 // onward are a card's last rows: browse on from it (搜索资源, 相似推荐,
