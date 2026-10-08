@@ -20,32 +20,50 @@ const (
 )
 
 // inlineSearches cancels a user's previous inline search when they type on:
-// Telegram sends a query per keystroke.
+// Telegram sends a query per keystroke. The library runs handlers at once,
+// so the newest query is the one with the highest update id, not the one
+// whose handler got here last.
 type inlineSearches struct {
 	mu      sync.Mutex
-	running map[int64]context.CancelFunc
+	running map[int64]inlineSearch
 }
 
-// begin starts user's search, cancelling the one before it.
-func (s *inlineSearches) begin(ctx context.Context, user int64) (context.Context, func()) {
-	ctx, cancel := context.WithCancel(ctx)
+// inlineSearch is the newest inline search of a user.
+type inlineSearch struct {
+	update int64
+	cancel context.CancelFunc
+}
+
+// begin starts user's search from update, cancelling an older one; ok is
+// false when a newer one began already, which this one must leave alone.
+func (s *inlineSearches) begin(ctx context.Context, user, update int64) (context.Context, func(), bool) {
 	s.mu.Lock()
-	if prev := s.running[user]; prev != nil {
-		prev()
+	defer s.mu.Unlock()
+	prev, found := s.running[user]
+	if found && prev.update > update {
+		return ctx, func() {}, false
 	}
-	s.running[user] = cancel
-	s.mu.Unlock()
-	return ctx, cancel
+	if found {
+		prev.cancel()
+	}
+	ctx, cancel := context.WithCancel(ctx)
+	s.running[user] = inlineSearch{update: update, cancel: cancel}
+	return ctx, cancel, true
 }
 
 // onInline answers an inline query with media from a search, each shared as
 // a short card whose button opens it in a private chat with the bot. Users
-// off the whitelist get no results.
-func (a *adapter) onInline(ctx context.Context, b *bot.Bot, q *models.InlineQuery) {
+// off the whitelist get no results; a query older than one already begun
+// gets no answer, like one cancelled.
+func (a *adapter) onInline(ctx context.Context, b *bot.Bot, upd *models.Update) {
+	q := upd.InlineQuery
 	results := []models.InlineQueryResult{}
 	if a.allowed[q.From.ID] {
-		ctx, cancel := a.inline.begin(ctx, q.From.ID)
+		ctx, cancel, newest := a.inline.begin(ctx, q.From.ID, upd.ID)
 		defer cancel()
+		if !newest {
+			return
+		}
 		found, err := a.flow.Find(ctx, q.Query)
 		if ctx.Err() != nil {
 			return

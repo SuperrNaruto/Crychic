@@ -129,7 +129,7 @@ func New(cfg Config) (*Bot, error) {
 	a := &adapter{
 		allowed: allowed, log: cfg.Log, followEvery: cfg.FollowEvery, posters: newPosters(cfg.ImageClient, cfg.Log),
 		pending: map[inputKey]pendingInput{}, followers: map[messageKey]*follower{}, lanes: map[messageKey]*messageLane{},
-		inline: inlineSearches{running: map[int64]context.CancelFunc{}},
+		inline: inlineSearches{running: map[int64]inlineSearch{}},
 	}
 	api, err := bot.New(cfg.Token,
 		bot.WithServerURL(cfg.APIURL),
@@ -251,7 +251,7 @@ func (a *adapter) handle(ctx context.Context, b *bot.Bot, upd *models.Update) {
 	case upd.CallbackQuery != nil:
 		a.onCallback(ctx, b, upd.CallbackQuery)
 	case upd.InlineQuery != nil && upd.InlineQuery.From != nil:
-		a.onInline(ctx, b, upd.InlineQuery)
+		a.onInline(ctx, b, upd)
 	}
 }
 
