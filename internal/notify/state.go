@@ -49,12 +49,14 @@ type watch struct {
 	Title          string     `json:"title"`
 	Year           string     `json:"year,omitempty"`
 	Season         *int       `json:"season,omitempty"`
-	Start          int        `json:"start,omitempty"`     // first wanted episode
-	Total          int        `json:"total,omitempty"`     // last wanted episode, 0 if unknown
-	Delivered      []int      `json:"delivered,omitempty"` // episodes arrived so far
-	Pending        []int      `json:"pending,omitempty"`   // arrived, not yet announced
-	Image          string     `json:"image,omitempty"`     // poster of the latest pending arrival
-	Releases       []release  `json:"releases,omitempty"`  // one file per download among pending arrivals
+	Start          int        `json:"start,omitempty"`           // first wanted episode
+	Total          int        `json:"total,omitempty"`           // latest known last episode, 0 if unknown
+	BestVersion    bool       `json:"best_version,omitempty"`    // later versions can deliver the same episode again
+	MovieDelivered bool       `json:"movie_delivered,omitempty"` // ordinary movie requests announce once
+	Delivered      []int      `json:"delivered,omitempty"`       // episodes arrived so far
+	Pending        []int      `json:"pending,omitempty"`         // arrived, not yet announced
+	Image          string     `json:"image,omitempty"`           // poster of the latest pending arrival
+	Releases       []release  `json:"releases,omitempty"`        // one file per download among pending arrivals
 	ArrivedAt      *time.Time `json:"arrived_at,omitempty"`
 	InactiveSince  *time.Time `json:"inactive_since,omitempty"`
 	Stalled        []string   `json:"stalled,omitempty"` // downloads whose stall was told
@@ -92,7 +94,8 @@ func withRequest(st state, req flow.Request) state {
 		SubscriptionID: req.SubscriptionID, Download: req.Download,
 		Source: t.Media.Source, MediaID: t.Media.ID, Title: t.Media.Title, Year: t.Media.Year,
 		Season: t.Season, Start: max(t.StartEpisode, 1), Total: req.SeasonEpisodes,
-		Requesters: []flow.Actor{req.Requester},
+		BestVersion: req.Download == "" && t.BestVersion,
+		Requesters:  []flow.Actor{req.Requester},
 	}
 	next := st
 	next.Watches = slices.Clone(st.Watches)
@@ -101,6 +104,8 @@ func withRequest(st state, req flow.Request) state {
 			continue
 		}
 		current.Requesters = withActors(current.Requesters, w.Requesters)
+		current.Total = max(current.Total, w.Total)
+		current.BestVersion = current.BestVersion || w.BestVersion
 		next.Watches[i] = current
 		return next
 	}
@@ -127,19 +132,26 @@ func arrive(st state, transfers []Transfer, now time.Time) state {
 // collect adds this watch's new arrivals among transfers to its pending ones.
 func (w watch) collect(transfers []Transfer, now time.Time) watch {
 	for _, t := range transfers {
-		if !w.matches(t) {
+		if !w.matches(t) || (w.Season == nil && w.MovieDelivered && !w.BestVersion) {
 			continue
 		}
 		fresh := w.fresh(t.Episodes)
 		if w.Season != nil && len(fresh) == 0 {
 			continue
 		}
-		w.Delivered = slices.Sorted(slices.Values(append(slices.Clone(w.Delivered), fresh...)))
-		w.Pending = slices.Sorted(slices.Values(append(slices.Clone(w.Pending), fresh...)))
+		w.Delivered = withEpisodes(w.Delivered, fresh)
+		w.Pending = withEpisodes(w.Pending, fresh)
+		w.MovieDelivered = w.MovieDelivered || w.Season == nil
 		w.Image, w.ArrivedAt = t.Image, &now
 		w.Releases = w.withRelease(t)
 	}
 	return w
+}
+
+func withEpisodes(episodes, more []int) []int {
+	all := append(slices.Clone(episodes), more...)
+	slices.Sort(all)
+	return slices.Compact(all)
 }
 
 // withRelease adds t's download unless one of its files is known already.
@@ -181,7 +193,7 @@ func due(st state, now time.Time, quiet time.Duration) []watch {
 			continue
 		}
 		for _, other := range st.Watches {
-			if other.ArrivedAt != nil && other.sameMedia(w) && !slices.ContainsFunc(out, other.same) {
+			if other.pendingFor(w) && !slices.ContainsFunc(out, other.same) {
 				out = append(out, other)
 			}
 		}
@@ -195,7 +207,8 @@ func (w watch) same(o watch) bool {
 }
 
 // flush announces the settled watches except those held back (by key)
-// until the media server shows them. A complete watch ends with its notice.
+// until the media server shows them. A complete download ends with its notice;
+// subscription requests remain while their subscription is still relevant.
 // Watches of the same media (and season) share their arrivals: a
 // subscription and a download bringing the same files are told in one
 // notice, to everyone who asked for either, once the media server shows
@@ -211,7 +224,7 @@ func flush(st state, now time.Time, settle settling) (state, []delivery) {
 		d := delivery{watch: w, complete: true, downloads: true, image: w.Image}
 		d.watch.Requesters = nil
 		for j, other := range watches {
-			if ended[j] || other.ArrivedAt == nil || !other.sameMedia(w) {
+			if ended[j] || !other.pendingFor(w) {
 				continue
 			}
 			d = d.with(other)
@@ -232,8 +245,12 @@ func flush(st state, now time.Time, settle settling) (state, []delivery) {
 // the pending arrivals of w or of another watch of the same media yet.
 func (s settling) holds(watches []watch, w watch) bool {
 	return slices.ContainsFunc(watches, func(o watch) bool {
-		return o.ArrivedAt != nil && o.sameMedia(w) && s.held[o.key()]
+		return o.pendingFor(w) && s.held[o.key()]
 	})
+}
+
+func (w watch) pendingFor(other watch) bool {
+	return w.ArrivedAt != nil && w.sameMedia(other)
 }
 
 // with adds another watch's pending arrivals and requesters to d; the
@@ -257,12 +274,13 @@ func (d delivery) with(w watch) delivery {
 	return d
 }
 
-// announced is w after its pending arrivals were told; ended when nothing
-// more is wanted.
+// announced clears pending arrivals. A completed download ends; subscription
+// requests retain ownership and can receive added episodes or better versions.
 func (w watch) announced() (watch, bool) {
-	if w.complete() {
+	if w.Download != "" && w.complete() {
 		return w, true
 	}
+	w.MovieDelivered = w.MovieDelivered || w.Season == nil
 	w.Pending, w.Image, w.ArrivedAt, w.Releases = nil, "", nil, nil
 	return w, false
 }
@@ -319,12 +337,13 @@ func (w watch) media() flow.Media {
 }
 
 // complete reports whether everything requested has arrived: a movie with
-// its first file, a season once every wanted episode is in.
+// its first file, a season once every wanted episode is in. Previously held
+// episodes do not prove that a whole season's upgrade has finished.
 func (w watch) complete() bool {
 	if w.Season == nil {
 		return w.ArrivedAt != nil
 	}
-	if w.Total == 0 {
+	if w.Total == 0 || w.BestVersion {
 		return false
 	}
 	for ep := w.Start; ep <= w.Total; ep++ {
@@ -350,11 +369,12 @@ func (w watch) matches(t Transfer) bool {
 	return t.Season != nil && *t.Season == *w.Season
 }
 
-// fresh filters episodes to wanted ones that have not arrived before.
+// fresh filters wanted episodes. Upgrades accept a new transfer of an episode
+// delivered before; the transfer cursor already excludes repeated records.
 func (w watch) fresh(episodes []int) []int {
 	var out []int
 	for _, ep := range episodes {
-		if w.wants(ep) && !slices.Contains(w.Delivered, ep) && !slices.Contains(out, ep) {
+		if w.wants(ep) && (w.BestVersion || !slices.Contains(w.Delivered, ep)) && !slices.Contains(out, ep) {
 			out = append(out, ep)
 		}
 	}
@@ -363,11 +383,13 @@ func (w watch) fresh(episodes []int) []int {
 
 // wants reports whether ep is asked for. Every file of a download is: the
 // download is what was asked for, whatever its season's episode count says.
+// A subscription's current total is not a permanent upper bound: ongoing
+// seasons gain episodes after the first request.
 func (w watch) wants(ep int) bool {
 	if w.Download != "" {
 		return true
 	}
-	return ep >= w.Start && (w.Total == 0 || ep <= w.Total)
+	return ep >= w.Start
 }
 
 // without drops only this subscription's target, not an older watch whose

@@ -92,6 +92,7 @@ type Target struct {
 	Media        Media
 	Season       *int
 	StartEpisode int
+	BestVersion  bool // explicitly requests MoviePilot's upgrade subscription
 }
 
 // Library is what the media server already holds of one title.

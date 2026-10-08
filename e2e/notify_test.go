@@ -45,6 +45,10 @@ func TestRequesterHearsWhenMovieArrives(t *testing.T) {
 	h.shows(1, "入库了我第一时间叫你")
 	h.arrives(alice, duneFile())
 	h.shows(2, "入库啦")
+	h.transfers()
+	h.restart()
+	h.transfers(duneFile())
+	noticeCount(h, 1)
 	h.tr.verify(t)
 }
 

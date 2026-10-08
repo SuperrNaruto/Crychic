@@ -177,10 +177,17 @@ func (n *Notifier) arrivals(ctx context.Context, snapshot state) ([]watch, error
 	if err != nil {
 		return nil, err
 	}
+	snapshot = n.snapshot()
+	_, fresh := snapshot.trackTransfers(transfers)
+	subs, err := n.readSubscriptions(ctx, arrivingSubscriptions(snapshot.Watches, fresh))
+	if err != nil {
+		return nil, err
+	}
 	now := n.opts.Now()
 	var ready []watch
 	err = n.update(func(st state) state {
 		next, fresh := st.trackTransfers(transfers)
+		next = withSubscriptions(next, subs)
 		next = arrive(next, fresh, now)
 		if n.opts.Digest.Zone != nil {
 			next = withDigest(next, fresh, now)
@@ -291,18 +298,20 @@ func (n *Notifier) checkActivity(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
+	subs, err := n.readSubscriptions(ctx, watches)
+	if err != nil {
+		return err
+	}
 	for _, w := range watches {
 		if w.Download != "" {
 			continue
 		}
-		sub, err := n.opts.Feed.Subscription(ctx, w.SubscriptionID)
-		if err != nil {
-			return err
-		}
-		active[w.key()] = w.subscribed(sub)
+		active[w.key()] = w.subscribed(subs[w.SubscriptionID])
 	}
 	n.lastActivity = now
-	return n.update(func(st state) state { return withActivity(st, active, now) })
+	return n.update(func(st state) state {
+		return withActivity(withSubscriptions(st, subs), active, now)
+	})
 }
 
 // downloading tells, by watch key, which watched downloads are unfinished;
