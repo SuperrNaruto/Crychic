@@ -247,7 +247,8 @@ func (e *Engine) downloads(ctx context.Context, target Target) []Download {
 }
 
 // held ends the request: what was asked for is already watchable. The
-// session stays only to browse on from it.
+// session stays only to browse on from it, or for a title searched with
+// 下载 searches its resources at once all the same.
 func (e *Engine) held(sess session, target Target) Reply {
 	sess.focus = &target
 	e.store.put(sess)
@@ -255,7 +256,11 @@ func (e *Engine) held(sess session, target Target) Reply {
 	if target.Season != nil {
 		what = "已经全部在媒体库里啦"
 	}
-	return sess.picked.reply(Line(Plain(fmt.Sprintf("✅ %s%s，直接去看吧～", targetName(target), what))), onward(sess))
+	card := sess.picked.reply(Line(Plain(fmt.Sprintf("✅ %s%s，直接去看吧～", targetName(target), what))), onward(sess))
+	if sess.download {
+		return e.huntNow(sess, card)
+	}
+	return card
 }
 
 func (e *Engine) pickSeason(ctx context.Context, sess session, number int) Reply {

@@ -49,6 +49,7 @@ type session struct {
 	pages       []Reply
 	screen      screen   // what the conversation message shows now
 	history     []screen // screens 返回 leads back to, latest last
+	skipped     *Reply   // a card a resource search started at once went past (huntNow)
 	ticket      uint64   // carried by the shown screen's write buttons; 0 when it has none
 	tickets     uint64   // tickets handed out so far, never restored by 返回
 	expires     time.Time

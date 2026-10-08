@@ -62,15 +62,30 @@ const answered = "typed"
 // navigate records reply as the session's current screen after a step,
 // pushing the screen it replaced when the step led forward, and offers 返回
 // while there is somewhere to go back to. Notices leave the screen as it
-// was, and so do steps that ended the conversation.
+// was, and so do steps that ended the conversation. A reply that follows
+// a resource search is not a screen to go back to; the card it skipped
+// (huntNow) is recorded in its place.
 func (e *Engine) navigate(prev session, action string, reply Reply) Reply {
-	if reply.Notice != "" || reply.Follow != "" {
+	if reply.Notice != "" {
 		return reply
 	}
 	next, ok := e.store.get(prev.id)
 	if !ok {
 		return reply
 	}
+	if reply.Follow == "" {
+		return e.record(prev, action, next, reply)
+	}
+	if skipped := next.skipped; skipped != nil {
+		next.skipped = nil
+		e.record(prev, action, next, *skipped)
+	}
+	return reply
+}
+
+// record makes reply next's current screen once action led on from prev,
+// and returns it with the buttons its place in the history adds.
+func (e *Engine) record(prev session, action string, next session, reply Reply) Reply {
 	next.history = moved(prev, action, next.history)
 	if finishing[action] && len(next.history) > 0 {
 		reply.Buttons = append(reply.Buttons, browseRow(next.id))

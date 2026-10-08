@@ -20,11 +20,18 @@ func (e *Engine) Start(ctx context.Context, actor Actor, term string) Reply {
 		return Reply{Text: Lines(Heading(Plain("🔍 搜索")), Line(Plain(msgUsage)))}
 	}
 	sess := e.store.create(actor, nil)
-	return e.shown(sess.id, e.search(ctx, sess, term))
+	return e.shown(sess.id, e.searchTyped(ctx, sess, term))
+}
+
+// searchTyped searches what someone typed, reading its intent once: a
+// retry repeats the search alone and keeps that intent.
+func (e *Engine) searchTyped(ctx context.Context, sess session, typed string) Reply {
+	var term string
+	term, sess.download = splitIntent(typed)
+	return e.search(ctx, sess, term)
 }
 
 func (e *Engine) search(ctx context.Context, sess session, term string) Reply {
-	term, sess.download = splitIntent(term)
 	sess.query = term
 	results, err := e.backend.Search(ctx, term)
 	if err != nil {

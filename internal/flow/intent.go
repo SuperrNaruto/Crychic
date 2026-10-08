@@ -26,14 +26,9 @@ func splitIntent(term string) (title string, download bool) {
 
 // huntNow searches the resources of the card's target at once, for a title
 // searched with 下载. The card becomes the screen 返回 leads back to from
-// the releases, as if 搜索资源 had been pressed on it.
+// the releases, as if 搜索资源 had been pressed on it: navigate records it
+// (skipped) in place of the search under way.
 func (e *Engine) huntNow(sess session, card Reply) Reply {
-	if sess.screen.state != nil {
-		sess.history = pushed(sess.history, sess.screen)
-	}
-	if len(sess.history) > 0 {
-		card = withBack(sess.id, card)
-	}
-	sess.screen = screen{state: snapshot(sess), reply: card}
+	sess.skipped = &card
 	return e.searching(sess, actionTorrentRun)
 }

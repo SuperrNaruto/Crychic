@@ -354,3 +354,31 @@ func TestSearchPrefixes(t *testing.T) {
 	h.shows(3, "未搜索到任何资源")
 	h.tr.verify(t)
 }
+
+// 下载 outlasts a failed search: after 重试, picking a movie already in the
+// library still searches its resources at once, and once the release is
+// downloaded 返回 leads back to the results it was picked from.
+func TestDownloadPrefixSurvivesRetryAndLeadsBackToResults(t *testing.T) {
+	h := start(t, scenario{routes: map[string]route{
+		searchPath:       {status: http.StatusServiceUnavailable, fixture: "server_error.json"},
+		duneDetails:      ok("detail_dune.json"),
+		libraryMoviePath: ok("library_movie_held.json"),
+		duneLookup:       ok("subscription_none.json"),
+		duneTorrents:     searchingSites("torrents_dune.json"),
+		downloadPath:     ok("download_added.json"),
+	}})
+	h.say(alice, alice, "/search 下载 沙丘")
+	h.mp.setRoute(searchPath, ok("search_dune.json"))
+	h.tap(alice, 1, "重试")
+	h.searchTorrents(alice, 1, duneMovie)
+	h.shows(1, "《沙丘》的资源")
+	h.tap(alice, 1, "返回")
+	h.shows(1, "已经在媒体库里啦")
+	h.searchTorrents(alice, 1, searchResources)
+	h.tap(alice, 1, "1")
+	h.tap(alice, 1, downloadIt)
+	h.shows(1, "开始下载《沙丘》啦")
+	h.tap(alice, 1, "返回")
+	h.shows(1, "帮你找到这些「沙丘」啦")
+	h.tr.verify(t)
+}

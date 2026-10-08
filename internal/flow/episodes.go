@@ -72,7 +72,7 @@ func (e *Engine) Answer(ctx context.Context, actor Actor, typed Typed) Reply {
 		return e.research(ctx, sess, text)
 	}
 	if p.action == actionAskTitle {
-		return e.navigate(sess, p.action, e.search(ctx, sess, text))
+		return e.navigate(sess, p.action, e.searchTyped(ctx, sess, text))
 	}
 	return e.navigate(sess, answered, startFrom(sess, text))
 }
