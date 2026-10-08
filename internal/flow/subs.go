@@ -10,8 +10,8 @@ const (
 	actionSubs        = "j"  // lists the shown kind's subscriptions afresh
 	actionSubsKind    = "sf" // arg: Kind; shows that kind's subscriptions
 	actionCancelPick  = "sc" // lists the shown subscriptions the owner may cancel
-	actionAskCancel   = "v"  // arg: index into session subs; asks to confirm
-	actionUnsubscribe = "z"  // arg: index into session subs; cancels it
+	actionAskCancel   = "v"  // arg: subscription id; asks to confirm
+	actionUnsubscribe = "z"  // arg: subscription id; cancels it
 
 	msgNoSubs          = "现在还没有订阅哦～"
 	msgNoKindSubs      = "这里还没有%s订阅哦～"
@@ -54,13 +54,14 @@ func (e *Engine) chooseSubs(ctx context.Context, sess session, p press) (Reply, 
 	case actionCancelPick:
 		return e.cancelPicker(sess), true
 	case actionAskCancel, actionUnsubscribe:
-		if p.arg < 0 || p.arg >= len(sess.subs) || !slices.Contains(sess.mine, sess.subs[p.arg].ID) {
+		i := sess.subAt(p.arg)
+		if i < 0 || !slices.Contains(sess.mine, p.arg) {
 			return Reply{Notice: msgInvalidChoice}, true
 		}
 		if p.action == actionAskCancel {
-			return askCancel(sess, p.arg), true
+			return askCancel(sess, i), true
 		}
-		return e.unsubscribe(ctx, sess, sess.subs[p.arg]), true
+		return e.unsubscribe(ctx, sess, sess.subs[i]), true
 	}
 	return Reply{}, false
 }
@@ -103,7 +104,7 @@ func firstKind(subs []Subscription) Kind {
 func (e *Engine) subsPage(sess session) Reply {
 	var view listView
 	mine := false
-	for i, s := range sess.subs {
+	for _, s := range sess.subs {
 		if s.Kind != sess.kind {
 			continue
 		}
@@ -113,7 +114,7 @@ func (e *Engine) subsPage(sess session) Reply {
 		s.Title = truncate(s.Title, listTitleRunes)
 		view.entries = append(view.entries, listEntry{
 			text:    Lines(subEntry(n, s, requested)),
-			buttons: []Button{{Label: fmt.Sprint(n), Data: data(sess.id, actionSubDetail, i)}},
+			buttons: []Button{{Label: fmt.Sprint(n), Data: data(sess.id, actionSubDetail, s.ID)}},
 		})
 	}
 	view.heading = Heading(Plain(fmt.Sprintf("%s · %s（%d）", msgSubsTitle, sess.kind, len(view.entries))))
@@ -150,7 +151,7 @@ func markShown(label string, shown bool) string {
 // cancelPicker numbers the shown kind's subscriptions the owner asked for.
 func (e *Engine) cancelPicker(sess session) Reply {
 	view := listView{heading: Heading(Plain(msgCancelTitle)), note: msgCancelPick, footer: browseRow(sess.id)}
-	for i, s := range sess.subs {
+	for _, s := range sess.subs {
 		if s.Kind != sess.kind || !slices.Contains(sess.mine, s.ID) {
 			continue
 		}
@@ -158,7 +159,7 @@ func (e *Engine) cancelPicker(sess session) Reply {
 		s.Title = truncate(s.Title, listTitleRunes)
 		view.entries = append(view.entries, listEntry{
 			text:    Lines(subEntry(n, s, false)),
-			buttons: []Button{{Label: fmt.Sprint(n), Data: data(sess.id, actionAskCancel, i)}},
+			buttons: []Button{{Label: fmt.Sprint(n), Data: data(sess.id, actionAskCancel, s.ID)}},
 		})
 	}
 	if len(view.entries) == 0 {
@@ -200,7 +201,7 @@ func askCancel(sess session, index int) Reply {
 	return Reply{
 		Text:    Lines(Heading(Plain(msgCancelTitle)), Line(Strong(question)), Line(Plain(msgCancelEffect))),
 		Image:   s.Poster,
-		Buttons: [][]Button{{{Label: "确认取消", Data: data(sess.id, actionUnsubscribe, index)}}},
+		Buttons: [][]Button{{{Label: "确认取消", Data: data(sess.id, actionUnsubscribe, s.ID)}}},
 	}
 }
 
@@ -219,4 +220,12 @@ func (e *Engine) unsubscribe(ctx context.Context, sess session, s Subscription) 
 	e.store.put(sess)
 	done := fmt.Sprintf("好哒，《%s》%s的订阅已经取消啦。", s.Title, seasonSuffix(s))
 	return Reply{Text: Lines(Heading(Plain("✅ 已取消订阅")), Line(Plain(done))), Buttons: [][]Button{nav}}
+}
+
+// subAt is the index in the session's list of the subscription with id, -1
+// when it is not there. Buttons name a subscription by its id, never by its
+// place in a list a later read may have reordered: a stale 确认取消 or 暂停订阅
+// must not reach another subscription.
+func (sess session) subAt(id int) int {
+	return slices.IndexFunc(sess.subs, func(s Subscription) bool { return s.ID == id })
 }

@@ -18,13 +18,12 @@ const (
 )
 
 // chooseSubPause pauses or resumes a subscription the owner asked for, then
-// shows its details read afresh. The button names the subscription by id,
-// not by its place in a list a later read may have reordered.
+// shows its details read afresh.
 func (e *Engine) chooseSubPause(ctx context.Context, sess session, p press) (Reply, bool) {
 	if p.action != actionPauseSub && p.action != actionResumeSub {
 		return Reply{}, false
 	}
-	index := slices.IndexFunc(sess.subs, func(s Subscription) bool { return s.ID == p.arg })
+	index := sess.subAt(p.arg)
 	if index < 0 {
 		return Reply{Notice: msgInvalidChoice}, true
 	}

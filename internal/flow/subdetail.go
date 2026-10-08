@@ -8,8 +8,8 @@ import (
 )
 
 const (
-	actionSubDetail        = "sd"
-	actionRefreshSubDetail = "su"
+	actionSubDetail        = "sd" // arg: subscription id; shows its details
+	actionRefreshSubDetail = "su" // arg: subscription id; reads its details afresh
 	msgSubDetailTitle      = "📚 订阅详情"
 	msgSubDetailFailed     = "暂时查不到订阅详情，稍后再点一次试试吧～"
 	msgSubDetailGone       = "这条订阅已经结束或被取消啦，可以回订阅列表或查看订阅历史哦～"
@@ -34,10 +34,11 @@ func (e *Engine) chooseSubDetail(ctx context.Context, sess session, p press) (Re
 	if p.action != actionSubDetail && p.action != actionRefreshSubDetail {
 		return Reply{}, false
 	}
-	if p.arg < 0 || p.arg >= len(sess.subs) {
+	index := sess.subAt(p.arg)
+	if index < 0 {
 		return Reply{Notice: msgInvalidChoice}, true
 	}
-	return e.subDetail(ctx, sess, p.arg), true
+	return e.subDetail(ctx, sess, index), true
 }
 
 func (e *Engine) subDetail(ctx context.Context, sess session, index int) Reply {
@@ -58,7 +59,7 @@ func (e *Engine) subDetail(ctx context.Context, sess session, index int) Reply {
 	}
 	detail := e.readSubDetail(ctx, subs[i])
 	view := detail.view()
-	refresh := Button{Label: "刷新", Data: data(sess.id, actionRefreshSubDetail, index)}
+	refresh := Button{Label: "刷新", Data: data(sess.id, actionRefreshSubDetail, sess.subs[index].ID)}
 	view.menu = [][]Button{append([]Button{refresh}, pauseButton(sess, subs[i])...)}
 	view.footer = browseRow(sess.id)
 	return e.listPages(sess, view)

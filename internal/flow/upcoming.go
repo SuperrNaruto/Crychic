@@ -148,7 +148,7 @@ func upcomingView(sess session, found airings) listView {
 		for ; end < len(found.list) && found.list[end].date.Equal(found.list[start].date); end++ {
 			n++
 			day.text = append(day.text, airingEntry(sess, n, found.list[end]))
-			day.buttons = append(day.buttons, Button{Label: fmt.Sprint(n), Data: data(sess.id, actionSubDetail, found.list[end].sub)})
+			day.buttons = append(day.buttons, Button{Label: fmt.Sprint(n), Data: data(sess.id, actionSubDetail, sess.subs[found.list[end].sub].ID)})
 		}
 		view.entries = append(view.entries, day)
 		start = end
