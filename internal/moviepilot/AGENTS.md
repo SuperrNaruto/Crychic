@@ -1,0 +1,19 @@
+# MoviePilot
+
+改请求、响应转换或接口 fake 前，读取 [MoviePilot 详情](../../docs/agent-reference/moviepilot.md) 的对应小节。
+这些资料保留 v3.1.0 的上游观察；它们不替代对目标版本源码或官方文档的核验。
+
+- 真实服务操作遵守根安全边界；资源搜索即使是 GET 也不可由代理调用。
+- API key 代表 superuser。聊天请求者权限必须由应用自己的白名单与请求记录判断。
+- 按实际 `{success, message, data}` 响应解包，不信任路由声明的裸列表类型；HTTP 200 也可能是业务失败。
+- 媒体类型为中文枚举；没有来源或媒体 ID 的结果丢弃，未知类型不能当作电影。
+- 只把已判安全的拒绝变成 `flow.UserError`；含站点凭据的请求不能回显错误响应，执行错误只传 `HasError`。
+- `flow.Torrent.Record` 只在内存保留 `media_info` 与 `torrent_info`，按下载接口要求原样回传，不展示、记录或持久化。
+- 每次调用单独设预算，资源搜索使用独立长预算；传入的 HTTP client 不设统一 `Timeout`。
+- 媒体库查询失败表示未知，不表示不存在；在客户端边界排序并去重集数，防止多版本被计为多集。
+- 下载用实例与 hash 一起标识；删除必须带 `name`，不能让默认实例或不存在 hash 的成功响应掩盖目标错误。
+- 删除下载会删文件，且不会撤销订阅已记录的取得集数；确认文案不得省略这些后果。
+- 集数解析保留不连续区间，技术数字不能变成集数；不确定的资源范围不得据此过滤缺集或推断完整下载。
+- 转移历史按完成 civil date 和边界秒处理，不假设 ID 单调；相关持久化规则见 [通知详情](../../docs/agent-reference/notifications.md)。
+- 新增或变更发现接口时读 [发现详情](../../docs/agent-reference/discovery.md)，避免混用 TMDB、Douban 与 Bangumi 身份。
+- 不确定上游行为时读对应源码，入口包括 `app/api/endpoints/{media,subscribe}.py` 和 `app/api/response.py`，不要猜测。

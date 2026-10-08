@@ -1,0 +1,267 @@
+# 会话、交互与文案参考
+
+改会话、订阅、下载、导航或任意目录的用户可见内容时，读取相关小节。先读 [目录规则](../../internal/flow/AGENTS.md)。
+
+本文从原根指南按主题迁出，保留当时的实现说明与上游版本背景，不代表已对当前线上服务重新核验。涉及目标版本变化时，按根指南核验来源。
+
+## 界面与文案
+
+Flow choice buttons only choose: no emoji, no titles or facts in choice labels. A notice may have a
+`flow.Open` URL (e.g. 在 Emby 中观看), and inline articles have their separate deep-link URL button. Picks are number buttons
+(`gridColumns` a row) or short names (第 N 季), with the details in the message text; menus share rows
+(`menuColumns`)
+
+Button rows run in one order: choices (numbers and their pager, seasons, 确认X on a row of its own), switches
+(电视剧/电影, weekdays; the shown one marked `·X·` by `markShown`), onward actions (搜索资源/相似推荐/同系列 via `onward`,
+订阅历史, 重新搜索 on its own row), and last the one navigation row
+
+Navigation has one vocabulary. A request (search, subscribe, download, resubscribe) ends with 取消; a browsing
+screen (lists, details, charts, task views) ends with `browseRow`: 首页 then 关闭 (`c`, generic). Every way back
+is labelled 返回 (`labelBack`): navigate's history (`bk`, put in front of 取消/首页/关闭 by `withBack`) or `backTo` a
+list read afresh (tasks `l`, subscriptions `j`, history `hf`, charts `b`); a screen never shows two.
+Destructive confirmations are 确认X over 返回 alone
+
+Data with columns (season picker, multi-season results, a task's files or progress) is a `flow.Table`; the
+multi-season picker shows its ticks as `Ticked` lines
+
+Numbered list entries are `flow.entry` (an `Item` block): bold name, then facts (original title, year, kind,
+rating, state, progress) in italics below it (chart/related `Brief` entries put facts beside the name
+instead), rendered as `<li value="n">` so numbers match the buttons on every page. Each ordinary bot message
+opens with a `Heading`; inline articles use their separate classic HTML format; list sections and calendar
+dates are `Group`s, page numbers and refresh state are `Remark`s (footer), a media card's original title, year
+/ kind / rating, genres / length and cast share one line of `Small` print (joined by ` · `) under its heading,
+and a media card is separated from its question by a `Divider`
+
+User-facing copy is `flow.Text` built with `Strong`/`Emphasis`/`Mono`/`Linked`/`Quote`; never put platform
+markup in flow strings, adapters render and escape. Emoji sparingly: 🔍 search, 🎬/📺 card, ✅ done, ℹ️ already
+subscribed, ⬇️/⏸️ download progress, 📦 transfer job (⏳ ▶️ ✅ ⚠️ per file), 📋 task list, 📥 arrival, ⚠️ errors, ⌛
+expired, 🚫 refused
+
+Voice: the bot is cheerful and cute, calls itself 我 and the user 你, ends sentences with 啦/哦/呀/～. At most one
+kaomoji per message, only on home, success, empty/failed results and arrival notices (never in headings,
+toasts, tables or facts), from this set: `(๑•̀ㅂ•́)و✧` `ヾ(≧▽≦*)o` `(ﾉ>ω<)ﾉ` `(｡•́︿•̀｡)` ``(´-ω-`)``. Data stays
+neutral (titles, facts, table heads, subscription states, 第 N 季, page numbers, file states, chart names, the
+你请求的 tag), as do button labels and the command menu. Safety meaning never softens: an unknown subscription
+result still sends the user to `/subscribe` first, cancelling still says MoviePilot will stop
+searching/downloading for that subscription, without implying an existing torrent is deleted, an API key
+refusal still names the admin; MoviePilot's safe refusal messages are relayed verbatim; secret-bearing
+responses and execution errors are never relayed raw
+
+Errors safe to show users are `*flow.UserError`; others get logged and shown as the generic outage text
+
+## 语义文本模型
+
+`internal/flow/rich.go` - `flow.Text`: blocks by meaning (`Heading`, `Line` paragraphs, numbered `entry` items
+(a `Body` folds behind the name), `Group` section heads, `Quote`, `Table` (columns empty in every row are
+dropped), `Ticked` checklist lines, `Open` link button, `Small` print, `Remark` notes, `Divider`) of spans
+(bold, italic, code, link); an entry's `Tag` is a highlighted fact (你请求的)
+
+平台标签与 HTML 渲染见 [Telegram 参考](telegram.md#富文本海报与旧消息)。原有页码、标题、颜文字与图像呈现契约保留，不因拆文档而修改。
+
+## 搜索意图与首页
+
+`internal/flow/engine.go` - conversation choices; `internal/flow/search.go` - ordinary searches retain all
+returned results (a leading 订阅/搜索/下载 plus optional colon or space is stripped like MoviePilot's own bot,
+`intent.go`; read where a title is typed (`searchTyped`; 重试 repeats the bare search; correcting a title keeps
+its download intent unless an explicit 订阅/搜索/下载 prefix overrides it); 下载 sets `session.download`, so
+`confirmation` and `held` start the resource search as soon as a target is chosen, already in the library or
+not (`huntNow`); `navigate` records the skipped card (`session.skipped`) in place of the search under way like
+any step's screen, so 返回 leads to it from the releases and a download of a list pick leads back to that list),
+page 8 at a time, open unique results directly, and replace a query under a fresh session ID;
+`internal/flow/text.go` - result lines and media cards
+
+`internal/flow/home.go` - `/start` home menu (`features`), typed title search; 首页 clears the previous title's
+download intent, so subsequent discovery picks ask to subscribe normally; a feature with nothing to list
+(tasks, subscriptions, latest) only flashes a toast (`Reply.Notice`) and the menu stays, while the typed
+commands answer with a message; `internal/flow/charts.go` - `/trending` charts, paging, pick → subscribable
+result; 返回 on a pick redraws its chart page (retrying missing synopses); an empty/failed pick keeps the chart
+conversation and its return path. 取消 always ends the conversation
+
+## 屏幕导航与读取回执
+
+`internal/flow/nav.go` - 返回: every shown reply is kept with the session state behind it (`screen`); forward
+steps (`forward`: pick, season, 相似/系列, multi-season, start-episode prompt, chart pick, typed title) push the
+previous screen, same-level steps (paging, ticking, weekday, a typed episode) replace it, any other step
+clears the history; 返回 normally restores a screen exactly; a subscription list preceding a successful
+pause/resume is read afresh, preserving its kind and page (clamped if the list shrank). Forward picks must
+belong to the current screen; the immediately repeated accepted read replays its generated reply without
+backend calls or extra history, allowing a failed edit to recover. Every later transition clears that read
+receipt; background polls and writes are never cached as accepted read buttons. A request picked from a list
+(search results, chart page, 相似/系列; `listPicks`) keeps its session past the write (`settle` clears the
+confirmable target instead of taking it), and its outcome (subscribed, seasons, download, batch; `finishing`)
+offers 返回 to that list beside 首页/关闭; a request opened directly retains an immutable receipt without navigation
+until TTL, so a duplicate confirmation cannot replace success with expiry. `grid` lays out button rows
+
+Cancel/close and replacing a search use `store.take`. Confirmations use `settle`, which clears the target
+under the session's step lock before writing. Direct requests keep a terminal receipt without buttons until
+TTL; requests from lists keep navigation. A second tap only flashes a notice and cannot replace the outcome.
+重新订阅 keeps its session for 返回 to the history: steps of a session run one at a time and it clears the
+confirmable target before writing, so a second tap only gets a notice. Failed writes consume the target too;
+unknown outcomes use the operation-specific read path described under recovery and downloads.
+
+Session IDs are random across restarts; never replace them with a counter that resets on startup.
+`Choose`/`Answer` validate both user and chat and serialize steps per session. Calendar annotations clone both
+mutable slices before writing. E2E transcripts normalize opaque session IDs only when recording, never in
+updates sent to the app
+
+`internal/flow/store.go` - in-memory sessions (10 min TTL)
+
+`internal/flow/pages.go` - bounded pages for subscriptions, tasks and latest items; page buttons keep item
+indices stable
+
+## 确认票据与过期
+
+Button data is `<session>:<action>:<arg>` and must stay ≤ 64 bytes (Telegram limit). Guarded write buttons
+(`needsTicket`: `finishing`'s `ok`, `y`, `td`, `tz`, `bo`, plus subscription `sp`, `sr`, `z`) carry a fourth
+part, a ticket `navigate` hands the shown screen (`ticketed`); only a press with the shown screen's ticket
+writes, and 返回 restores a screen with its ticket, so a stale 确认 from an earlier pick of the same list never
+confirms the next pick. Subscription mutations do not enter `finishing`, which controls request navigation. An
+expired button only has its action to go on: task-specific actions point to `/tasks`, subscription-specific
+actions to `/subscribe`; ambiguous 返回/翻页 (`bk`/`p`) point to `/start` to reopen the relevant feature rather
+than claiming the page was a search
+
+## 只读恢复与未知写结果
+
+`internal/flow/recovery.go` - failed search, season and subscription reads keep their session and offer a
+read-only retry (`rt`); retry replaces the failed screen without adding a navigation step. Subscription writes
+go through `submit` once; transport/response failures or a missing positive ID point to `/subscribe`, never to
+a write retry. Failed reads clear the confirmable target while keeping retry context; a successful retry clears
+that retry state.
+
+未知结果按操作区分：订阅创建、重新订阅与取消先查 `/subscribe`；下载创建与删除先查 `/tasks`；暂停或恢复先刷新。明确的安全拒绝保留，不能把未收到结果解释成写入失败。
+
+## 季与起始集
+
+Subscriptions take `start_episode` (per season): MoviePilot skips earlier episodes. "只追新集" uses details'
+`next_episode_to_air` and only shows when it is in the chosen season and > 1; button data `ok:<n>` carries the
+start, validated against the season's episode count before the confirmable target is cleared
+
+Unique ordinary search results open directly, but chart identity disambiguation still requires a pick. The
+season picker is skipped for the season a search term named (`Media.Season`, from MoviePilot's search
+`season`, when the show has it; 青之芦苇 第二季 opens on 第 2 季) or a sole season whose number is positive; specials
+are never selected implicitly. TMDB may fold a sequel into season 1 (青之箱 第二季 continues at S1E27), which then
+opens like any sole season. Both shortcuts keep final confirmation. `重新搜索` (`rs`) replaces the old session
+when the new title is submitted; empty results keep a typed-title prompt. Generic paging records its screen,
+so 返回 restores the page selected from
+
+`internal/flow/seasons.go` - multi-season picker (「多选季…」): tick seasons, subscribe each from episode 1, report
+per season
+
+`internal/flow/episodes.go` - start-episode choices for seasons and typed answers (`Engine.Answer`)
+
+## 订阅列表详情与身份
+
+`internal/flow/subs.go` - `/subscribe`: subscriptions one kind at a time (电视剧/电影 buttons, `sf`, same-level; TV
+first when there are any); number buttons open read-only details (`sd`); one shared 取消订阅 (`sc`, only when the
+shown kind holds one the user requested, `Watcher.Requested`) lists just those to pick and confirm, then
+`Watcher.Forget`
+
+`internal/flow/subdetail.go`, `subdetailtext.go`, `subprogress.go` - subscription details re-read the
+subscription list on open and 刷新 (`su`, same-level), keeping its original page for 返回; successful state
+mutations and successful refreshes observing a changed state invalidate the source subscription-list snapshot,
+so 返回 reads it afresh; one that has ended offers 订阅历史 of its own kind (a calendar list chose none). A
+subscription the user requested shows 暂停订阅 (`sp`) or, when its state is S, 恢复订阅 (`sr`) beside 刷新
+(`subpause.go`, same-level): `PUT /api/v1/subscribe/status/{id}?state=S|R` once, then the details read afresh;
+a refusal (订阅不存在) is relayed as a notice and an unknown result asks to 刷新, never a retry. Settings and
+last-search execution state come from that list; library, downloads and transfer queue are read concurrently
+within the cosmetic budget. Exact kind + media identity + season associates tasks (movie and TV IDs can
+collide); unknown season/episode tasks only add a note. Library visibility is independent of task completion;
+a download percentage describes the whole torrent, not each file. Consecutive equal episode rows merge; at
+most 100 requested episodes, 20 table rows a page with explicit omissions. No resource names, sites,
+downloaders or file paths
+
+Subscription buttons (`sd`, `su`, `sp`, `sr`, `v`, `z`) carry the subscription id, never an index into the
+session's list (`session.subAt`). Row ids can also be reused: `subidentity.go` checks the displayed
+subscription's source, media id, kind, season, episode group and original creation `date`
+(`Subscription.Created`) against a fresh list before pause, resume or cancellation; an unavailable or changed
+identity only flashes a notice, never writes. Details use the same identity comparison.
+`Watcher.Requested(userID, subs)` checks the watch's media and season as well as its id, so reloading a reused
+id does not grant ownership of another target. MoviePilot's write API has no conditional identity parameter:
+these are client-side preflight checks, not an atomic compare-and-write guarantee against concurrent backend
+replacement.
+
+## 历史与洗版
+
+`internal/flow/history.go` - 订阅历史 (`hs` from the subscription list, `hf` switches kind): the kind's newest 10
+past subscriptions (`GET /api/v1/subscribe/history/{电视剧|电影}?page=1&count=10`); a pick (`hp`) already
+subscribed only flashes a notice (lookup failure still asks), otherwise a card asks; 确认重新订阅 (`ho`) posts the
+history record back unchanged like MoviePilot's WebUI (MoviePilot drops its id/state fields and keeps its
+settings), then watches for arrivals. It registers a `Request` from that history target and requester directly
+(`rememberRequest`): history has no current season/library observations, so their values remain unknown, never
+borrowed from `sess.seasons` or `sess.library` of a card visited before 首页. Arrivals settle normally without
+claiming the season is complete from another show's episode count
+
+`internal/flow/upgrade.go` - 洗版订阅 (`bv`, forward): offered on the movie confirm card, a season's start choices
+and a held card (movie or whole season in the library), never on an already subscribed card or after a typed
+start episode; it reads the target's subscription again (MoviePilot's create answers a subscribed target with
+the existing row unchanged, `exist_ok=True`), so an existing one or a failed read only flashes a notice; 确认洗版
+(`bo`, ticketed, `finishing`) posts the whole target with `best_version: 1` once (omitted otherwise, so
+MoviePilot's per-kind default config applies to ordinary subscriptions) and watches it with
+`Target.BestVersion`
+
+## 资源搜索筛选与批量下载
+
+`internal/flow/torrents.go`, `torrenttext.go` - 搜索资源 on a card with a chosen target (movie confirm, held,
+already subscribed, a season's start-episode prompt; `session.focus`): `ts`/`tr` start the slow site search in
+the background (`torrenthunt.go`, `session.hunt`; 取消 stops it) and show the card with a searching line and
+`Reply.Follow` (`tg` leads on from the card, `tq` replaces a failure): each refresh only checks the search,
+saying how many seconds it has run (from `Now`, so `h.advance` moves it) until the results replace it;
+releases list in MoviePilot's order (8 a page, number buttons `tp` carrying each release's own index),
+re-sortable like the WebUI (`torrentsort.go`: 默认/做种/时间/大小/站点, `to`, same-level) and filtered to one site (筛选站点
+`tf` lists sites with counts, `tw` picks one or all; its 返回 re-shows the list); for a season partly in the
+library (`torrentmissing.go`) each release says what it adds (补 E01-E12 when only part of it is missing, 已都有
+when none) and 只看缺集 (`tx`, arg 1 on / 0 off, same-level, offered while some release adds nothing) hides the
+releases adding nothing; MoviePilot reads episodes from a description only when the title names none, so a
+release whose title names none of its episodes (`Torrent.EpisodesUnsure`, `moviepilot/episodename.go`, which
+ignores audio channels like DDP5.1 and H.264; a whole pack saying 修复第9集章节 reads E09) gets no missing-episode
+note and is never hidden; lists/details say 集数识别不确定, and success does not repeat an uncertain episode range;
+all in the session without searching again, a pick shows the release under the card (two tables, H&R warning)
+and 确认下载 (`td`) writes once (the release to confirm is cleared before the write; a refusal is relayed, an
+unknown result points to `/tasks`, never a retry), then watches the download by its id for arrivals;
+`torrentbatch.go`: 多选… (`tm`, forward) turns the number buttons into ticks (`tk`, same-level, stays on the
+ticked one's page, at most `maxTickedReleases`) kept across paging, sort and filters; 下载所选 N 个 (`tb`) lists
+the ticked releases under the card and 确认下载 (`tz`) clears the batch before writing each once, tabling each
+release's outcome (refusal relayed, unknown → `/tasks`); every started download gets its own watch; deliveries
+follow the same-media/season aggregation rules in the notification reference, so separate watches do not
+promise separate messages
+
+资源原始记录、集数识别和删除实例参数见 [MoviePilot 参考](moviepilot.md)。每次下载的独立 watch 和同媒体同季的合并通知见
+[通知参考](notifications.md#到货聚合与画质)。
+
+## 任务最新入库与内容预算
+
+`internal/flow/tasks.go` - `/tasks`: list downloads and transfer jobs, follow one live (`Reply.Follow`);
+`taskdelete.go`: a download's view offers 删除任务 (`kd`), which stops following, re-reads the download and asks,
+warning that its files go too and, when a subscription of the same media and season exists, that the
+subscription will not fetch it again; 确认删除 (`ky`) clears the download to confirm before the write, relays a
+refusal, points an unknown result to `/tasks`, and `Watcher.ForgetDownload`s it; `internal/telegram/follow.go`
+re-asks the flow every `CRYCHIC_PROGRESS_INTERVAL` and edits only on change
+
+`internal/flow/latest.go` - `/newly_added`: newest media server items linked to their web page
+
+List pages budget text and item buttons together (up to 20 entries and 3000 content runes). Large transfer
+views show at most 100 file lines, retaining the full aggregate count and explicitly naming omitted files
+
+下载及转移任务的接口字段、SSE 限制、停止跟随和删除副作用见 [MoviePilot 任务参考](moviepilot.md#下载进度与任务删除)。
+投递失败只重试消息，见 [Telegram 跟随参考](telegram.md#跟随者投递与停止)。
+
+## 相关推荐
+
+`internal/flow/related.go` - 相似推荐 / 同系列 on a media card (season picker, movie confirm, held, already
+subscribed): lists related media or the movie's series like a chart (`pickEntry`, opening to synopses; generic
+`listPages` paging, which is a same-level step for 返回) with number buttons picking `actionMedia` directly;
+entering a related/series list clears the preceding title's download intent, while 返回 restores that title's
+own state; nothing found or a failed lookup only flashes a notice and keeps the card
+
+跨来源身份、日历、播出日期与合集 API 见 [发现参考](discovery.md)。
+
+## 回调动作索引
+
+Callback action strings are unique across every flow handler. Resource search is `ts`/`tg`/`tr`/`tq`, release
+pick `tp`, ticking releases `tm`/`tk`/`tb`/`tz`, release order `to`, site filter `tf`/`tw`, missing-only
+filter `tx`, download `td`, download deletion `kd`/`ky`; 洗版订阅 is `bv`/`bo`, subscription return is `j`,
+subscription kind `sf`, shared cancel `sc`, subscription details/refresh `sd`/`su`, pause/resume `sp`/`sr`,
+history `hs`/`hf`/`hp`/`ho`, calendar weekday is `w`, generic list paging is `p`, 相似推荐 is `r`, 同系列 is `n`,
+重新搜索 is `rs`, read-only 重试 is `rt` and 返回 is `bk`
+
+这是现有动作的导航索引；新增动作时核对源码中的全部 handler，不能把该表当作无需核验的注册中心。
