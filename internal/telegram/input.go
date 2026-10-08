@@ -32,17 +32,18 @@ func refused(user int64) flow.Reply {
 // replyTo also remembers input requested by an initial response, not only
 // by an edited message.
 func (a *adapter) replyTo(ctx context.Context, msg *models.Message, reply flow.Reply) {
-	sent, err := a.send(ctx, msg.Chat.ID, reply)
+	to := destinationOf(msg)
+	sent, err := a.send(ctx, to, reply)
 	a.logFailure("send reply", err)
 	if err == nil && reply.Follow != "" {
 		a.follow(follower{
-			target: editTarget{chat: msg.Chat.ID, user: msg.From.ID, message: sent.ID}, actor: actorOf(*msg.From, msg.Chat.ID),
+			target: editTarget{chat: msg.Chat.ID, user: msg.From.ID, message: sent.ID, thread: to.thread}, actor: actorOf(*msg.From, to),
 			data: reply.Follow, shown: renderReply(reply),
 		})
 	}
 	if err == nil && reply.Input != "" {
 		a.mu.Lock()
-		a.pending[inputKey{chat: msg.Chat.ID, user: msg.From.ID}] = pendingInput{message: sent.ID, input: reply.Input}
+		a.pending[inputOf(msg)] = pendingInput{message: sent.ID, input: reply.Input}
 		a.mu.Unlock()
 	}
 }
@@ -59,7 +60,7 @@ func (a *adapter) onText(ctx context.Context, msg *models.Message) {
 		}
 		return
 	}
-	key := inputKey{chat: msg.Chat.ID, user: msg.From.ID}
+	key := inputOf(msg)
 	a.mu.Lock()
 	p, waiting := a.pending[key]
 	a.mu.Unlock()
@@ -68,13 +69,13 @@ func (a *adapter) onText(ctx context.Context, msg *models.Message) {
 		return
 	}
 	if msg.Chat.Type == models.ChatTypePrivate {
-		reply := a.flow.Start(ctx, actorOf(*msg.From, msg.Chat.ID), msg.Text)
+		reply := a.flow.Start(ctx, actorOf(*msg.From, destinationOf(msg)), msg.Text)
 		a.replyTo(ctx, msg, reply)
 	}
 }
 
 func (a *adapter) answerText(ctx context.Context, msg *models.Message, p pendingInput) {
-	key := inputKey{chat: msg.Chat.ID, user: msg.From.ID}
+	key := inputOf(msg)
 	unlock, locked := a.lockMessage(ctx, messageKey{chat: key.chat, message: p.message})
 	if !locked {
 		return
@@ -101,11 +102,12 @@ func (a *adapter) answerText(ctx context.Context, msg *models.Message, p pending
 			return
 		}
 	}
-	actor := actorOf(*msg.From, msg.Chat.ID)
+	actor := actorOf(*msg.From, destinationOf(msg))
 	reply := a.flow.Answer(ctx, actor, flow.Typed{Input: p.input, Text: msg.Text})
 	if reply.Notice != "" {
 		a.log.Warn("typed answer refused", "notice", reply.Notice)
 		return
 	}
-	a.show(ctx, editTarget{chat: key.chat, user: key.user, message: p.message}, actor, reply)
+	target := editTarget{chat: key.chat, user: key.user, message: p.message, thread: key.thread}
+	a.show(ctx, follower{target: target, actor: actor}, reply)
 }

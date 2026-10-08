@@ -2,7 +2,10 @@ package telegram
 
 import (
 	"context"
+	"errors"
 	"time"
+
+	"github.com/go-telegram/bot"
 
 	"github.com/SuperrNaruto/Crychic/internal/flow"
 )
@@ -17,11 +20,14 @@ func (t editTarget) key() messageKey { return messageKey{chat: t.chat, message: 
 
 // follower keeps a live reply (flow.Reply.Follow) on screen up to date.
 type follower struct {
-	target editTarget
-	actor  flow.Actor
-	data   string // the Follow data of the reply on screen
-	shown  string // rendered text on screen, to skip edits that change nothing
-	cancel context.CancelFunc
+	target     editTarget
+	actor      flow.Actor
+	data       string // the Follow data of the reply on screen
+	shown      string // rendered text on screen, to skip edits that change nothing
+	cancel     context.CancelFunc
+	pending    *flow.Reply // a flow transition already read but not delivered
+	retryAt    time.Time
+	retryUntil time.Time
 }
 
 // follow starts refreshing f's message, replacing any earlier follower of it.
@@ -69,6 +75,13 @@ func (a *adapter) refresh(ctx context.Context, f *follower) {
 }
 
 func (a *adapter) refreshOnce(ctx context.Context, f *follower) bool {
+	now := time.Now()
+	if !f.retryUntil.IsZero() && !now.Before(f.retryUntil) {
+		return false
+	}
+	if now.Before(f.retryAt) {
+		return true
+	}
 	unlock, ok := a.lockMessage(ctx, f.target.key())
 	if !ok {
 		return false
@@ -77,16 +90,44 @@ func (a *adapter) refreshOnce(ctx context.Context, f *follower) bool {
 	if ctx.Err() != nil {
 		return false
 	}
-	reply := a.flow.Choose(ctx, f.actor, f.data)
-	if ctx.Err() != nil || reply.Notice != "" {
-		return false
+	if f.pending == nil {
+		reply := a.flow.Choose(ctx, f.actor, f.data)
+		if ctx.Err() != nil || reply.Notice != "" {
+			return false
+		}
+		f.pending = &reply
 	}
-	if rich := renderReply(reply); rich != f.shown {
-		a.edit(ctx, f.target, reply)
+	return a.deliverFollow(ctx, f)
+}
+
+// deliverFollow retries only the cached reply, never the transition that
+// produced it. A terminal result still belongs here until it is visible.
+func (a *adapter) deliverFollow(ctx context.Context, f *follower) bool {
+	reply := *f.pending
+	rich := renderReply(reply)
+	if rich != f.shown {
+		if _, err := a.edit(ctx, f.target, reply); err != nil {
+			f.deferRetry(err)
+			return ctx.Err() == nil
+		}
 		f.shown = rich
 	}
+	f.pending = nil
+	f.retryAt, f.retryUntil = time.Time{}, time.Time{}
 	f.data = reply.Follow
 	return reply.Follow != ""
+}
+
+// Telegram's flood-control delay overrides the normal refresh cadence.
+// Other failed edits retry on that cadence within the follower's budget.
+func (f *follower) deferRetry(err error) {
+	if f.retryUntil.IsZero() {
+		f.retryUntil = time.Now().Add(flow.FollowFor)
+	}
+	var limited *bot.TooManyRequestsError
+	if errors.As(err, &limited) && limited.RetryAfter > 0 {
+		f.retryAt = time.Now().Add(time.Duration(limited.RetryAfter) * time.Second)
+	}
 }
 
 // forget drops f from the followers unless a newer one replaced it.

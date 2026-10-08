@@ -36,10 +36,11 @@ func withoutPoster(reply flow.Reply, err error) (flow.Reply, bool) {
 }
 
 // send sends reply as a new rich message.
-func (a *adapter) send(ctx context.Context, chat any, reply flow.Reply) (*models.Message, error) {
+func (a *adapter) send(ctx context.Context, to destination, reply flow.Reply) (*models.Message, error) {
 	return a.deliver(ctx, reply, func(out outgoing) (*models.Message, error) {
 		return a.api.SendRichMessage(ctx, &bot.SendRichMessageParams{
-			ChatID: chat, RichMessage: *content(out), ReplyMarkup: keyboard(out.reply.Buttons),
+			ChatID: to.chat, MessageThreadID: to.thread,
+			RichMessage: *content(out), ReplyMarkup: keyboard(out.reply.Buttons),
 		})
 	})
 }
@@ -68,17 +69,18 @@ func (a *adapter) deliver(ctx context.Context, reply flow.Reply, try func(outgoi
 // and attaches pending input or a follower to the actual rendered message.
 func (a *adapter) showCallback(ctx context.Context, cq *models.CallbackQuery, reply flow.Reply) {
 	msg := cq.Message.Message
-	t := editTarget{chat: msg.Chat.ID, user: cq.From.ID, message: msg.ID, photo: len(msg.Photo) > 0}
-	a.show(ctx, t, actorOf(cq.From, msg.Chat.ID), reply)
+	t := editTarget{chat: msg.Chat.ID, user: cq.From.ID, message: msg.ID, thread: destinationOf(msg).thread, photo: len(msg.Photo) > 0}
+	a.show(ctx, follower{target: t, actor: actorOf(cq.From, t.destination())}, reply)
 }
 
-// show edits t to reply for actor, following it when the reply is live
+// show edits f's target to reply, following it when the reply is live
 // (a typed answer may start a resource search as much as a button).
-func (a *adapter) show(ctx context.Context, t editTarget, actor flow.Actor, reply flow.Reply) {
-	a.unfollow(t.key())
-	shown, ok := a.edit(ctx, t, reply)
-	if ok && reply.Follow != "" {
-		a.follow(follower{target: shown, actor: actor, data: reply.Follow, shown: renderReply(reply)})
+func (a *adapter) show(ctx context.Context, f follower, reply flow.Reply) {
+	a.unfollow(f.target.key())
+	shown, err := a.edit(ctx, f.target, reply)
+	if err == nil && reply.Follow != "" {
+		f.target, f.data, f.shown = shown, reply.Follow, renderReply(reply)
+		a.follow(f)
 	}
 }
 
@@ -104,7 +106,7 @@ func (a *adapter) editRich(ctx context.Context, t editTarget, out outgoing) (*mo
 // Send the destination first so a failed send never removes the menu, then
 // remove the superseded photo.
 func (a *adapter) replacePhoto(ctx context.Context, t editTarget, reply flow.Reply) (editTarget, error) {
-	msg, err := a.send(ctx, t.chat, reply)
+	msg, err := a.send(ctx, t.destination(), reply)
 	if err != nil {
 		return t, err
 	}

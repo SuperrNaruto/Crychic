@@ -205,21 +205,24 @@ func (h *harness) say(user, chat int64, text string) {
 // update that message.
 func (h *harness) answer(user int64, msgID int, text string) {
 	h.t.Helper()
-	h.typeInto(chatMessage{user: user, chat: mustMessage(h, msgID).chat, text: text}, msgID)
+	h.typeInto(chatMessage{user: user, chat: mustMessage(h, msgID).chat, text: text, thread: mustMessage(h, msgID).thread}, msgID)
 }
 
 // answerQuoting is answer as a reply quoting message msgID, which is how
 // group members answer.
 func (h *harness) answerQuoting(user int64, msgID int, text string) {
 	h.t.Helper()
-	h.typeInto(chatMessage{user: user, chat: mustMessage(h, msgID).chat, text: text, replyTo: msgID}, msgID)
+	h.typeInto(chatMessage{user: user, chat: mustMessage(h, msgID).chat, text: text, replyTo: msgID, thread: mustMessage(h, msgID).thread}, msgID)
 }
 
 func (h *harness) typeInto(m chatMessage, msgID int) {
 	h.t.Helper()
 	how := ""
+	if m.thread > 0 {
+		how = fmt.Sprintf(" topic %d", m.thread)
+	}
 	if m.replyTo > 0 {
-		how = fmt.Sprintf(" quoting message %d", m.replyTo)
+		how += fmt.Sprintf(" quoting message %d", m.replyTo)
 	}
 	h.tr.add(fmt.Sprintf(">> user %d in chat %d%s: %s", m.user, m.chat, how, m.text))
 	h.wait(h.tg.push(m.update(), fmt.Sprintf("edit:%d", msgID)), m.text)
@@ -239,6 +242,7 @@ type chatMessage struct {
 	user, chat int64
 	text       string
 	replyTo    int
+	thread     int
 }
 
 func (m chatMessage) update() map[string]any {
@@ -246,6 +250,10 @@ func (m chatMessage) update() map[string]any {
 		"message_id": 0, "date": messageDate, "text": m.text,
 		"from": map[string]any{"id": m.user, "is_bot": false, "first_name": strconv.FormatInt(m.user, 10)},
 		"chat": map[string]any{"id": m.chat, "type": chatType(m.chat)},
+	}
+	if m.thread > 0 {
+		msg["message_thread_id"], msg["is_topic_message"] = m.thread, true
+		msg["chat"] = map[string]any{"id": m.chat, "type": "supergroup", "is_forum": true}
 	}
 	if m.replyTo > 0 {
 		msg["reply_to_message"] = map[string]any{

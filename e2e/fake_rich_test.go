@@ -86,6 +86,12 @@ func (m message) wire(id int) map[string]any {
 		"message_id": id, "date": messageDate,
 		"chat": map[string]any{"id": m.chat, "type": chatType(m.chat)},
 	}
+	if m.forum {
+		out["chat"] = map[string]any{"id": m.chat, "type": "supergroup", "is_forum": true}
+	}
+	if m.thread != 0 {
+		out["message_thread_id"], out["is_topic_message"] = m.thread, true
+	}
 	if m.photo == nil {
 		out["rich_message"] = map[string]any{"blocks": m.headerBlocks()}
 		return out
@@ -113,7 +119,10 @@ func (f *fakeTelegram) readMessage(r *http.Request, method string) (message, err
 	if err != nil {
 		return message{}, fmt.Errorf("chat not found")
 	}
-	m := message{chat: chat}
+	m, err := f.addressed(r, method, chat)
+	if err != nil {
+		return message{}, err
+	}
 	var markup struct {
 		InlineKeyboard [][]button `json:"inline_keyboard"`
 	}

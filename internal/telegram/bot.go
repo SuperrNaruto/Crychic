@@ -104,7 +104,10 @@ type adapter struct {
 }
 
 // inputKey identifies whose typed answer a conversation message waits for.
-type inputKey struct{ chat, user int64 }
+type inputKey struct {
+	chat, user int64
+	thread     int
+}
 
 // pendingInput is a conversation message waiting for a typed answer.
 type pendingInput struct {
@@ -187,18 +190,14 @@ func (a *adapter) enter() bool {
 // include a mention. Broadcasts have no UserID and disclose no requester.
 func (b *Bot) Notify(ctx context.Context, n flow.Notice) error {
 	to, text := n.To, n.Text
-	if to.UserID == 0 {
-		_, err := b.adapter.send(ctx, to.Address, flow.Reply{Text: text, Image: n.Image})
+	address, err := parseAddress(to.Address)
+	if err != nil {
 		return err
 	}
-	chat, err := strconv.ParseInt(to.Address, 10, 64)
-	if err != nil {
-		return fmt.Errorf("telegram address %q: %w", to.Address, err)
-	}
-	if chat != to.UserID {
+	if to.UserID != 0 && address.chat != to.UserID {
 		text = withMention(text, to)
 	}
-	_, err = b.adapter.send(ctx, chat, flow.Reply{Text: text, Image: n.Image})
+	_, err = b.adapter.send(ctx, address, flow.Reply{Text: text, Image: n.Image})
 	return err
 }
 
@@ -231,15 +230,6 @@ func (b *Bot) registerCommands(ctx context.Context) {
 	}
 }
 
-// actorOf identifies user acting in chat.
-func actorOf(u models.User, chat int64) flow.Actor {
-	name := strings.TrimSpace(u.FirstName + " " + u.LastName)
-	if name == "" {
-		name = u.Username
-	}
-	return flow.Actor{UserID: u.ID, Name: name, Address: strconv.FormatInt(chat, decimal)}
-}
-
 func (a *adapter) handle(ctx context.Context, b *bot.Bot, upd *models.Update) {
 	if !a.enter() {
 		return
@@ -264,7 +254,7 @@ func (a *adapter) onMessage(ctx context.Context, b *bot.Bot, msg *models.Message
 		return
 	}
 	defer unlock()
-	cmd, arg, ok := parseCommand(msg.Text)
+	cmd, arg, ok := a.parseCommand(msg.Text)
 	if !ok {
 		a.onText(ctx, msg)
 		return
@@ -277,10 +267,10 @@ func (a *adapter) onMessage(ctx context.Context, b *bot.Bot, msg *models.Message
 	if a.allowed[msg.From.ID] {
 		if msg.Chat.Type == models.ChatTypePrivate && (cmd == cmdStart || cmd == cmdSearch) {
 			a.mu.Lock()
-			delete(a.pending, inputKey{chat: msg.Chat.ID, user: msg.From.ID})
+			delete(a.pending, inputOf(msg))
 			a.mu.Unlock()
 		}
-		reply = run(ctx, actorOf(*msg.From, msg.Chat.ID), arg)
+		reply = run(ctx, actorOf(*msg.From, destinationOf(msg)), arg)
 	}
 	a.replyTo(ctx, msg, reply)
 }
@@ -318,7 +308,7 @@ func (a *adapter) start(ctx context.Context, actor flow.Actor, arg string) flow.
 // stops the message's follower before waiting for the message: a refresh
 // may be a long backend call (a resource search) holding it.
 func (a *adapter) onCallback(ctx context.Context, b *bot.Bot, cq *models.CallbackQuery) {
-	actor := actorOf(cq.From, callbackChat(cq))
+	actor := actorOf(cq.From, callbackDestination(cq))
 	if a.allowed[cq.From.ID] {
 		a.stopOwnedFollower(callbackKey(cq), actor.UserID)
 	}
@@ -353,18 +343,19 @@ func callbackChat(cq *models.CallbackQuery) int64 {
 type editTarget struct {
 	chat, user int64
 	message    int
+	thread     int
 	photo      bool
 }
 
 // edit renders reply into the conversation message and records whether it
 // now waits for a typed answer.
-func (a *adapter) edit(ctx context.Context, t editTarget, reply flow.Reply) (editTarget, bool) {
+func (a *adapter) edit(ctx context.Context, t editTarget, reply flow.Reply) (editTarget, error) {
 	shown, err := a.display(ctx, t, reply)
-	if err != nil {
+	if err != nil && !strings.Contains(err.Error(), notModified) {
 		a.logFailure("edit reply", err)
-		return t, false
+		return t, err
 	}
-	key := inputKey{chat: t.chat, user: t.user}
+	key := inputKey{chat: t.chat, user: t.user, thread: t.thread}
 	a.mu.Lock()
 	if reply.Input != "" {
 		a.pending[key] = pendingInput{message: shown.message, input: reply.Input}
@@ -372,7 +363,7 @@ func (a *adapter) edit(ctx context.Context, t editTarget, reply flow.Reply) (edi
 		delete(a.pending, key)
 	}
 	a.mu.Unlock()
-	return shown, true
+	return shown, nil
 }
 
 func (a *adapter) logFailure(method string, err error) {
@@ -398,11 +389,14 @@ func keyboard(rows [][]flow.Button) models.ReplyMarkup {
 
 // parseCommand splits "/search@SomeBot dune part two" into its command and
 // argument; group chats address commands to a bot with the @ suffix.
-func parseCommand(text string) (cmd, arg string, ok bool) {
+func (a *adapter) parseCommand(text string) (cmd, arg string, ok bool) {
 	if !strings.HasPrefix(text, "/") {
 		return "", "", false
 	}
 	head, rest, _ := strings.Cut(text[1:], " ")
-	cmd, _, _ = strings.Cut(head, "@")
+	cmd, target, addressed := strings.Cut(head, "@")
+	if addressed && !strings.EqualFold(target, a.username) {
+		return "", "", true
+	}
 	return strings.ToLower(cmd), strings.TrimSpace(rest), true
 }

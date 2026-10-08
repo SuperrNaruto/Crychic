@@ -27,12 +27,14 @@ type button struct {
 // media its uploaded or reused photos, files the file_id behind each media
 // id) or a photo with a caption.
 type message struct {
-	chat  int64
-	text  string
-	rows  [][]button
-	media []photo
-	files map[string]string
-	photo *photo
+	thread int
+	forum  bool
+	chat   int64
+	text   string
+	rows   [][]button
+	media  []photo
+	files  map[string]string
+	photo  *photo
 }
 
 // fakeTelegram is a Bot API server: it hands queued updates to getUpdates,
@@ -51,6 +53,8 @@ type fakeTelegram struct {
 	lastMsg   int
 	waiters   map[string]chan struct{}
 	commands  map[string]string // setMyCommands menus by scope, as sent
+	forums    map[int64]bool
+	failure   *editFailure
 	stall     string
 	stalled   chan struct{}
 	badImage  string          // an image URL Telegram fails to fetch
@@ -68,6 +72,7 @@ func newFakeTelegram(tr *transcript) *fakeTelegram {
 		messages: map[int]message{},
 		allowed:  []string{"message", "callback_query"},
 		fileIDs:  map[string]bool{},
+		forums:   map[int64]bool{},
 		commands: map[string]string{},
 		waiters:  map[string]chan struct{}{},
 	}
@@ -85,6 +90,7 @@ func (f *fakeTelegram) push(upd map[string]any, doneKey string) <-chan struct{} 
 	if doneKey != "" {
 		f.waiters[doneKey] = done
 	}
+	f.observeForum(upd)
 	upd["update_id"] = len(f.updates) + 1 - f.idDrop
 	f.updates = append(f.updates, upd)
 	close(f.arrived)
@@ -120,6 +126,9 @@ func (f *fakeTelegram) serve(w http.ResponseWriter, r *http.Request) {
 		defer r.MultipartForm.RemoveAll()
 	}
 	if f.wait(r, method) {
+		return
+	}
+	if f.rejectEdit(w, r, method) {
 		return
 	}
 	if f.serveMessage(w, r, method) {
@@ -291,6 +300,9 @@ func (f *fakeTelegram) store(r *http.Request, method string) (map[string]any, er
 	f.mu.Unlock()
 
 	head := fmt.Sprintf("<< %s chat=%d message=%d", method, m.chat, id)
+	if m.forum {
+		head += fmt.Sprintf(" topic=%d", m.thread)
+	}
 	for _, p := range m.media {
 		head += p.description()
 	}
