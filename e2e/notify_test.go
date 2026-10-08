@@ -2,6 +2,7 @@ package e2e
 
 import (
 	"fmt"
+	"strings"
 	"testing"
 	"time"
 )
@@ -152,6 +153,75 @@ func TestNoticeWaitsForTheMediaServer(t *testing.T) {
 	h.transfers(duneFile())
 	h.catchUp(alice)
 	h.shows(2, "在 Emby 中观看")
+	h.tr.verify(t)
+}
+
+// A notice telling the arrivals of several watches of one season waits
+// until the media server shows all of them: the subscription's E12 shows,
+// the download's E01 does not yet, so neither is told before the scan.
+func TestSharedNoticeWaitsForEveryArrival(t *testing.T) {
+	h := start(t, scenario{lagging: true, quiet: "0s", routes: map[string]route{
+		searchPath:      ok("search_mygo.json"),
+		mygoDetails:     ok("detail_mygo.json"),
+		seasonsPath:     ok("seasons_mygo.json"),
+		libraryShowPath: ok("library_mygo.json"),
+		mygoLookup:      ok("subscription_none.json"),
+		mygoTorrents:    searchingSites("torrents_mygo_s1.json"),
+		downloadPath:    ok("download_added.json"),
+		subscribePath:   ok("subscribe_created.json"),
+	}})
+	h.say(alice, alice, "/search 迷途之子")
+	h.tap(alice, 1, "1")
+	h.tap(alice, 1, "第 1 季")
+	h.searchTorrents(alice, 1, searchResources)
+	h.tap(alice, 1, "1")
+	h.tap(alice, 1, downloadIt)
+	h.say(alice, alice, "/search 迷途之子")
+	h.tap(alice, 2, "1")
+	h.tap(alice, 2, "第 1 季")
+	h.tap(alice, 2, "指定起始集…")
+	h.answer(alice, 2, "12")
+	h.tap(alice, 2, "确认订阅")
+	h.mp.setRoute(libraryShowPath, ok(writeFixture(t, map[string][]int{"1": {12, 13}})))
+	early, late := mygo.file("S01", "E01"), mygo.file("S01", "E12")
+	early.Hash, late.Hash = addedHash, addedHash
+	h.transfers(early, late)
+	h.catchUp(alice)
+	h.shows(3, "E01、E12 到家啦")
+	h.tr.verify(t)
+}
+
+// A shared notice says every wanted episode is in only when that holds for
+// everyone it tells: Alice's subscription from E13 is complete, Bob's
+// download of the season still lacks E02–E12.
+func TestSharedNoticeIsCompleteOnlyForEveryWatch(t *testing.T) {
+	h := start(t, scenario{quiet: "2s", libraryWait: "0s", routes: map[string]route{
+		searchPath: ok("search_mygo.json"), mygoDetails: ok("detail_mygo.json"),
+		seasonsPath: ok("seasons_mygo.json"), mygoLookup: ok("subscription_none.json"),
+		mygoTorrents: searchingSites("torrents_mygo_s1.json"),
+		downloadPath: ok("download_added.json"), subscribePath: ok("subscribe_created.json"),
+	}})
+	h.say(alice, alice, "/search 迷途之子")
+	h.tap(alice, 1, "1")
+	h.tap(alice, 1, "第 1 季")
+	h.tap(alice, 1, "指定起始集…")
+	h.answer(alice, 1, "13")
+	h.tap(alice, 1, "确认订阅")
+	h.say(bob, bob, "/search 迷途之子")
+	h.tap(bob, 2, "1")
+	h.tap(bob, 2, "第 1 季")
+	h.searchTorrents(bob, 2, searchResources)
+	h.tap(bob, 2, "1")
+	h.tap(bob, 2, downloadIt)
+	first, final := mygo.file("S01", "E01"), mygo.file("S01", "E13")
+	first.Hash, final.Hash = addedHash, addedHash
+	told := h.tg.expect(fmt.Sprintf("send:%d", bob))
+	h.arrives(alice, first, final)
+	h.wait(told, "Bob's share of the notice")
+	h.shows(4, "E01、E13 到家啦")
+	if strings.Contains(mustMessage(h, 4).text, "全部到齐") {
+		t.Error("a notice to a download still lacking episodes says they are all in")
+	}
 	h.tr.verify(t)
 }
 

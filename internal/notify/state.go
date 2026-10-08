@@ -169,31 +169,44 @@ func (w watch) settled(now time.Time, quiet time.Duration) bool {
 	return w.ArrivedAt != nil && (w.complete() || now.Sub(*w.ArrivedAt) >= quiet)
 }
 
-// due lists the watches whose arrivals have settled.
+// due lists the watches whose arrivals have settled, with every watch of
+// the same media whose pending arrivals their notice would tell too, so
+// the media server is asked about all of them.
 func due(st state, now time.Time, quiet time.Duration) []watch {
 	var out []watch
 	for _, w := range st.Watches {
-		if w.settled(now, quiet) {
-			out = append(out, w)
+		if !w.settled(now, quiet) {
+			continue
+		}
+		for _, other := range st.Watches {
+			if other.ArrivedAt != nil && other.sameMedia(w) && !slices.ContainsFunc(out, other.same) {
+				out = append(out, other)
+			}
 		}
 	}
 	return out
+}
+
+// same reports whether w and o are the same watch.
+func (w watch) same(o watch) bool {
+	return w.key() == o.key()
 }
 
 // flush announces the settled watches except those held back (by key)
 // until the media server shows them. A complete watch ends with its notice.
 // Watches of the same media (and season) share their arrivals: a
 // subscription and a download bringing the same files are told in one
-// notice, to everyone who asked for either.
+// notice, to everyone who asked for either, once the media server shows
+// all of them.
 func flush(st state, now time.Time, settle settling) (state, []delivery) {
 	watches := slices.Clone(st.Watches)
 	ended := make([]bool, len(watches))
 	var out []delivery
 	for i, w := range watches {
-		if ended[i] || !w.settled(now, settle.quiet) || settle.held[w.key()] {
+		if ended[i] || !w.settled(now, settle.quiet) || settle.holds(watches, w) {
 			continue
 		}
-		d := delivery{watch: w, complete: w.complete(), image: w.Image}
+		d := delivery{watch: w, complete: true, image: w.Image}
 		d.watch.Requesters = nil
 		for j, other := range watches {
 			if ended[j] || other.ArrivedAt == nil || !other.sameMedia(w) {
@@ -213,7 +226,17 @@ func flush(st state, now time.Time, settle settling) (state, []delivery) {
 	return next, out
 }
 
-// with adds another watch's pending arrivals and requesters to d.
+// holds reports whether w's notice waits: the media server does not show
+// the pending arrivals of w or of another watch of the same media yet.
+func (s settling) holds(watches []watch, w watch) bool {
+	return slices.ContainsFunc(watches, func(o watch) bool {
+		return o.ArrivedAt != nil && o.sameMedia(w) && s.held[o.key()]
+	})
+}
+
+// with adds another watch's pending arrivals and requesters to d; the
+// notice says all wanted episodes are in only when they are for every
+// watch it tells.
 func (d delivery) with(w watch) delivery {
 	episodes := slices.Clone(d.episodes)
 	for _, ep := range w.Pending {
@@ -223,6 +246,7 @@ func (d delivery) with(w watch) delivery {
 	}
 	slices.Sort(episodes)
 	d.episodes = episodes
+	d.complete = d.complete && w.complete()
 	d.watch.Requesters = withActors(d.watch.Requesters, w.Requesters)
 	for _, r := range w.Releases {
 		d.releases = withRelease(d.releases, r)
