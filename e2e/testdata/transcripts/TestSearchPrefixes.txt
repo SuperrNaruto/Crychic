@@ -195,3 +195,48 @@
    <p>⚠️ 未搜索到任何资源</p>
    [重试 | 3:tr:0]
    [返回 | 3:bk:0] [取消 | 3:x:0]
+>> user 1001 in chat 1001: /start
+<< sendRichMessage chat=1001 message=4 photo=home.jpg 1280x720 sha256=d620fc3c5f168f03372b7fd77d4572d577b95fa1f410d95e2b60e5799f0d2315
+   <img src="tg://photo?id=p0"/>
+   <h3>🎬 Crychic</h3>
+   <p>想看什么告诉我呀～我帮你找片、订阅，入库了第一时间喊你！私聊直接发片名就能搜哦 (๑•̀ㅂ•́)و✧</p>
+   [搜索 | 4:h:0] [发现 | 4:h:1]
+   [我的订阅 | 4:h:2] [最新入库 | 4:h:3]
+   [任务进度 | 4:h:4] [追剧日历 | 4:h:5]
+>> user 1001 taps 4:h:0 on message 4
+<< editMessageText chat=1001 message=4
+   <h3>🔍 搜索</h3>
+   <p>想找哪部呀？直接回复片名告诉我～</p>
+   [首页 | 4:o:0] [取消 | 4:x:0]
+<< answerCallbackQuery
+>> user 1001 in chat 1001: 下载：深渊
+-> MoviePilot GET /api/v1/media/search?count=10&title=深渊&type=media
+-> MoviePilot GET /api/v1/media/301489?media_source=themoviedb&type_name=电视剧
+-> MoviePilot GET /api/v1/media/seasons?media_id=301489&media_source=themoviedb
+-> MoviePilot GET /api/v1/subscribe/media/301489?media_source=themoviedb&mtype=电视剧&season=1&title=深渊无间&year=2026
+<< editMessageText chat=1001 message=4 reuses=url-0e877991
+   <img src="tg://photo?id=p0"/>
+   <h3>📺 <a href="https://www.themoviedb.org/tv/301489">深渊无间</a></h3>
+   <footer>2026 · 电视剧 · ⭐ 8.0 · 悬疑 / 剧情 / 犯罪 · 共 1 季 16 集 · 主演：任嘉伦、秦俊杰、王砚辉</footer>
+   <blockquote expandable>深渊无间（别名：深渊），2026年刑侦悬疑剧，共16集，刘海波执导，改编自深蓝小说《深渊》。<br>
+   <br>
+   一篇名为《深渊》的推理网文突然上线，小说里的作案细节，竟然和多年前警方封存的“312悬案”高度吻合，包含只有凶手与办案警察才知晓的隐秘线索。新人刑警李成潜入当地网吧卧底调查，结识了网吧老板韩品木。韩品木气质温和，身份却充满谜团，正是这篇悬疑小说的幕后发布者，也是当年旧案受害者家属，身患绝症，多年暗中追查真凶。<br>
+   <br>
+   李成与刑侦队长赵干哲、退休老刑警辛吉然联手重启尘封八年的悬案。小城之内人人藏有秘密，多方嫌疑人互相博弈。随着调查深入，层层揭开旧案背后交织的亲情、恩怨与人性抉择，在正义与私刑的边界之间，探寻深渊之下的残酷真相。</blockquote>
+   <hr/>
+   <p>🔍 正在各个站点搜索资源，要等一会儿哦…</p>
+   [取消 | 4:x:0]
+-> MoviePilot GET /api/v1/search/media/301489?media_source=themoviedb&mtype=电视剧&season=1
+<< editMessageText chat=1001 message=4 reuses=url-0e877991
+   <img src="tg://photo?id=p0"/>
+   <h3>📺 <a href="https://www.themoviedb.org/tv/301489">深渊无间</a></h3>
+   <footer>2026 · 电视剧 · ⭐ 8.0 · 悬疑 / 剧情 / 犯罪 · 共 1 季 16 集 · 主演：任嘉伦、秦俊杰、王砚辉</footer>
+   <blockquote expandable>深渊无间（别名：深渊），2026年刑侦悬疑剧，共16集，刘海波执导，改编自深蓝小说《深渊》。<br>
+   <br>
+   一篇名为《深渊》的推理网文突然上线，小说里的作案细节，竟然和多年前警方封存的“312悬案”高度吻合，包含只有凶手与办案警察才知晓的隐秘线索。新人刑警李成潜入当地网吧卧底调查，结识了网吧老板韩品木。韩品木气质温和，身份却充满谜团，正是这篇悬疑小说的幕后发布者，也是当年旧案受害者家属，身患绝症，多年暗中追查真凶。<br>
+   <br>
+   李成与刑侦队长赵干哲、退休老刑警辛吉然联手重启尘封八年的悬案。小城之内人人藏有秘密，多方嫌疑人互相博弈。随着调查深入，层层揭开旧案背后交织的亲情、恩怨与人性抉择，在正义与私刑的边界之间，探寻深渊之下的残酷真相。</blockquote>
+   <hr/>
+   <p>⚠️ 未搜索到任何资源</p>
+   [重试 | 4:tr:0]
+   [返回 | 4:bk:0] [取消 | 4:x:0]

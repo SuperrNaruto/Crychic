@@ -69,13 +69,16 @@ func (a *adapter) deliver(ctx context.Context, reply flow.Reply, try func(outgoi
 func (a *adapter) showCallback(ctx context.Context, cq *models.CallbackQuery, reply flow.Reply) {
 	msg := cq.Message.Message
 	t := editTarget{chat: msg.Chat.ID, user: cq.From.ID, message: msg.ID, photo: len(msg.Photo) > 0}
+	a.show(ctx, t, actorOf(cq.From, msg.Chat.ID), reply)
+}
+
+// show edits t to reply for actor, following it when the reply is live
+// (a typed answer may start a resource search as much as a button).
+func (a *adapter) show(ctx context.Context, t editTarget, actor flow.Actor, reply flow.Reply) {
 	a.unfollow(t.key())
 	shown, ok := a.edit(ctx, t, reply)
 	if ok && reply.Follow != "" {
-		a.follow(follower{
-			target: shown, actor: actorOf(cq.From, msg.Chat.ID),
-			data: reply.Follow, shown: renderReply(reply),
-		})
+		a.follow(follower{target: shown, actor: actor, data: reply.Follow, shown: renderReply(reply)})
 	}
 }
 

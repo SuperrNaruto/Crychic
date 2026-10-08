@@ -320,7 +320,8 @@ func TestDownloadTickedReleases(t *testing.T) {
 
 // A title searched with 下载 searches resources as soon as a target is
 // chosen, and 返回 leads from the releases to the card it skipped; 订阅
-// and 搜索 only search, as MoviePilot's own bot reads them.
+// and 搜索 only search, as MoviePilot's own bot reads them. A title typed in
+// answer to 搜索 reads 下载 the same way and shows the search's outcome.
 func TestSearchPrefixes(t *testing.T) {
 	h := start(t, scenario{routes: map[string]route{
 		searchPath:      ok("search_mygo.json"),
@@ -352,6 +353,11 @@ func TestSearchPrefixes(t *testing.T) {
 	h.say(alice, alice, "下载：深渊")
 	h.wait(searched, "a resource search from the first message")
 	h.shows(3, "未搜索到任何资源")
+	h.say(alice, alice, "/start")
+	h.tap(alice, 4, "搜索")
+	h.answer(alice, 4, "下载：深渊")
+	h.wait(h.tg.expect("edit:4"), "a resource search from a typed answer")
+	h.shows(4, "未搜索到任何资源")
 	h.tr.verify(t)
 }
 

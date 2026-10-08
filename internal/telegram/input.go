@@ -90,10 +90,11 @@ func (a *adapter) answerText(ctx context.Context, msg *models.Message, p pending
 	if msg.Chat.Type != models.ChatTypePrivate && !isReply {
 		return
 	}
-	reply := a.flow.Answer(ctx, actorOf(*msg.From, msg.Chat.ID), flow.Typed{Input: p.input, Text: msg.Text})
+	actor := actorOf(*msg.From, msg.Chat.ID)
+	reply := a.flow.Answer(ctx, actor, flow.Typed{Input: p.input, Text: msg.Text})
 	if reply.Notice != "" {
 		a.log.Warn("typed answer refused", "notice", reply.Notice)
 		return
 	}
-	a.edit(ctx, editTarget{chat: key.chat, user: key.user, message: p.message}, reply)
+	a.show(ctx, editTarget{chat: key.chat, user: key.user, message: p.message}, actor, reply)
 }
