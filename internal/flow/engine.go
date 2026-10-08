@@ -112,7 +112,7 @@ func (e *Engine) choose(ctx context.Context, sess session, p press) Reply {
 	case actionBack:
 		return e.back(ctx, sess)
 	}
-	for _, choose := range []chooser{e.chooseHome, e.chooseRequest, e.chooseSeasons, e.chooseTask, e.chooseChart, e.chooseSubs, e.chooseSubDetail, e.chooseSubPause, e.chooseHistory, e.chooseRelated, e.chooseTorrents, e.chooseTorrentView, e.chooseTorrentBatch, e.chooseDelete} {
+	for _, choose := range []chooser{e.chooseHome, e.chooseRequest, e.chooseSeasons, e.chooseTask, e.chooseChart, e.chooseSubs, e.chooseSubDetail, e.chooseSubPause, e.chooseHistory, e.chooseRelated, e.chooseTorrents, e.chooseTorrentView, e.chooseTorrentBatch, e.chooseDelete, e.chooseUpgrade} {
 		if reply, ok := choose(ctx, sess, p); ok {
 			return e.navigate(sess, p.action, reply)
 		}
@@ -261,7 +261,8 @@ func (e *Engine) held(sess session, target Target) Reply {
 	if target.Season != nil {
 		what = "已经全部在媒体库里啦"
 	}
-	card := sess.picked.reply(Line(Plain(fmt.Sprintf("✅ %s%s，直接去看吧～", targetName(target), what))), onward(sess))
+	rows := append([][]Button{upgradeRow(sess)}, onward(sess)...)
+	card := sess.picked.reply(Line(Plain(fmt.Sprintf("✅ %s%s，直接去看吧～", targetName(target), what))), rows)
 	if sess.download {
 		return e.huntNow(sess, card)
 	}
@@ -325,14 +326,18 @@ func (e *Engine) targetCard(ctx context.Context, sess session, sub subscription)
 func confirmCard(sess session, target Target) Reply {
 	confirm := Button{Label: "确认订阅", Data: data(sess.id, actionConfirm, target.StartEpisode)}
 	question := Line(Strong(fmt.Sprintf("要订阅%s吗？", targetName(target))))
-	return sess.picked.reply(question, append([][]Button{{confirm}}, onward(sess)...))
+	rows := [][]Button{{confirm}}
+	if target.Season == nil {
+		rows = append(rows, upgradeRow(sess)) // a season's upgrade is offered with its start choices
+	}
+	return sess.picked.reply(question, append(rows, onward(sess)...))
 }
 
 // confirm subscribes from episode from (0 for movies or the season start).
 // The request is settled only after validation, so a forged or stale start
 // cannot consume it.
 func (e *Engine) confirm(ctx context.Context, sess session, from int) Reply {
-	if sess.target == nil || !sess.validStart(from) {
+	if sess.target == nil || sess.target.BestVersion || !sess.validStart(from) {
 		return Reply{Notice: msgInvalidChoice}
 	}
 	if !e.settle(sess) {

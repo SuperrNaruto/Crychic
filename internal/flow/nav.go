@@ -37,6 +37,7 @@ var forward = map[string]bool{
 	actionResearch: true, actionAskCancel: true, actionCancelPick: true,
 	actionHistory: true, actionHistoryPick: true, actionSubDetail: true,
 	actionTorrentRun: true, actionTorrentPick: true, actionTorrentMulti: true, actionTorrentBatch: true,
+	actionUpgrade: true,
 }
 
 var sameLevel = map[string]bool{
@@ -54,6 +55,7 @@ var listPicks = map[string]bool{actionMedia: true, actionChartPick: true}
 // leads back to that list afterwards, so browsing goes on from there.
 var finishing = map[string]bool{
 	actionConfirm: true, actionSubscribed: true, actionTorrentGet: true, actionTorrentBatchGet: true,
+	actionUpgradeConfirm: true,
 }
 
 // needsTicket also binds subscription mutations to the currently shown

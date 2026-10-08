@@ -247,6 +247,9 @@ type subscribeBody struct {
 	Season      *int   `json:"season,omitempty"`
 	// StartEpisode makes MoviePilot skip the season's earlier episodes.
 	StartEpisode int `json:"start_episode,omitempty"`
+	// BestVersion asks for an upgrade subscription; omitted, MoviePilot
+	// applies the kind's default subscription config.
+	BestVersion int `json:"best_version,omitempty"`
 }
 
 func (c *Client) Subscribe(ctx context.Context, t flow.Target) (int, error) {
@@ -254,6 +257,9 @@ func (c *Client) Subscribe(ctx context.Context, t flow.Target) (int, error) {
 		Name: t.Media.Title, Year: t.Media.Year, Type: kindType(t.Media.Kind),
 		MediaSource: t.Media.Source, MediaID: t.Media.ID, Season: t.Season,
 		StartEpisode: t.StartEpisode,
+	}
+	if t.BestVersion {
+		body.BestVersion = 1
 	}
 	var created struct {
 		ID *int `json:"id"`
