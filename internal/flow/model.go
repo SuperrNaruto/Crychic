@@ -231,13 +231,13 @@ type Torrent struct {
 	// EpisodesUnsure: the release's title does not name Episodes, so MoviePilot
 	// may have read them from the description (修复第9集章节 of a whole pack).
 	EpisodesUnsure bool
-	Resolution  string
-	Edition     string
-	Video       string
-	Group       string
-	Published   string
-	Media       Media // what the backend recognized the release as
-	Record      []byte
+	Resolution     string
+	Edition        string
+	Video          string
+	Group          string
+	Published      string
+	Media          Media // what the backend recognized the release as
+	Record         []byte
 }
 
 // Backend is the media server the bot subscribes through.
