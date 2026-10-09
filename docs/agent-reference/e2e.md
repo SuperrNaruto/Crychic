@@ -98,6 +98,12 @@ and details count as one route, searches first; the calendar's TMDB season reads
 The fake answers collection searches per title (`collectionSearch(title)`, `[]` otherwise, like MoviePilot),
 and the transcript sorts them like other simultaneous reads
 
+Calendar annotations first finish their parallel MoviePilot searches/Bangumi-detail reads, then read direct
+Bangumi only for missing synopses. Transcript normalization keeps these as separate read groups, preserving
+the provider fallback order while sorting only concurrent requests within a group. Availability scenarios
+cover successful MP overview, explicit failure fallback, the shared five-second deadline, and later retry;
+task-list scenarios independently fail/recover downloader and queue responses without any write API call.
+
 ## Bangumi 录制与时钟
 
 `e2e/testdata/bangumi/calendar.json` is a trimmed recording of `api.bgm.tv/calendar` (all seven weekday

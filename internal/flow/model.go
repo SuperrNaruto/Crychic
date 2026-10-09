@@ -266,6 +266,8 @@ type Backend interface {
 	Details(ctx context.Context, media Media) (Details, error)
 	// Lookup reads the media an identity (source, id, kind) names.
 	Lookup(ctx context.Context, identity Media) (Media, error)
+	// BangumiSummary asks the backend for a Bangumi subject's synopsis.
+	BangumiSummary(ctx context.Context, id string) (string, error)
 	Seasons(ctx context.Context, media Media) ([]Season, error)
 	Library(ctx context.Context, media Media) (Library, error)
 	Downloads(ctx context.Context) ([]Download, error)

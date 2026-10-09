@@ -17,6 +17,11 @@
 -> MoviePilot GET /api/v1/media/search?count=10&title=罗梅莉亚战记&type=media
 -> MoviePilot GET /api/v1/media/search?count=10&title=魔法少女育成計画 restart&type=media
 -> MoviePilot GET /api/v1/media/search?count=10&title=魔法少女育成计划 restart&type=media
+-> MoviePilot GET /api/v1/bangumi/390200
+-> MoviePilot GET /api/v1/bangumi/418229
+-> MoviePilot GET /api/v1/bangumi/511936
+-> MoviePilot GET /api/v1/bangumi/614640
+-> MoviePilot GET /api/v1/bangumi/624923
 -> Bangumi GET /v0/subjects/390200
 -> Bangumi GET /v0/subjects/418229
 -> Bangumi GET /v0/subjects/511936
@@ -97,9 +102,10 @@
 -> MoviePilot GET /api/v1/media/search?count=10&title=目覚めたら最強装備と宇宙船持ちだったので 、一戸建て目指して傭兵として自由に生きたい&type=media
 -> MoviePilot GET /api/v1/media/search?count=10&title=青之箱 第二季&type=media
 -> MoviePilot GET /api/v1/media/search?count=10&title=青之芦苇 第二季&type=media
+-> MoviePilot GET /api/v1/bangumi/536270
+-> MoviePilot GET /api/v1/bangumi/548156
+-> MoviePilot GET /api/v1/bangumi/555605
 -> Bangumi GET /v0/subjects/536270
--> Bangumi GET /v0/subjects/548156
--> Bangumi GET /v0/subjects/555605
 << editMessageText chat=1001 message=1
    <tg-slideshow>
    <img src="url-405878f6dad0081343c216620a25b8d9d48c3d9e09ca3f35b9d7d796d6c7d7bf"/>

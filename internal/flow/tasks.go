@@ -3,7 +3,6 @@ package flow
 import (
 	"context"
 	"strings"
-	"sync"
 	"time"
 )
 
@@ -47,42 +46,22 @@ func (e *Engine) Tasks(ctx context.Context, actor Actor) Reply {
 
 // listTasks shows the current tasks in sess, which stops following any.
 func (e *Engine) listTasks(ctx context.Context, sess session) Reply {
-	downloads, jobs, err := e.taskLists(ctx)
-	if err != nil {
-		e.store.take(sess.id)
-		return titled(msgTasksTitle, e.failure("transfers", err))
-	}
-	if len(downloads)+len(jobs) == 0 && sess.menu {
+	read := e.taskLists(ctx)
+	if read.empty() && sess.menu {
 		return Reply{Notice: msgNoTasks}
 	}
-	if len(downloads)+len(jobs) == 0 {
-		sess.tasks, sess.follow, sess.pages = nil, following{}, nil
-		e.store.put(sess)
-		return Reply{Text: Lines(Heading(Plain(msgTasksTitle)), Line(Plain(msgNoTasks))), Buttons: [][]Button{browseRow(sess.id)}}
-	}
-	sess.tasks, sess.follow = nil, following{}
-	for _, d := range downloads {
+	sess.tasks, sess.follow, sess.pages = nil, following{}, nil
+	for _, d := range read.downloads {
 		sess.tasks = append(sess.tasks, taskRef{download: true, id: d.ID, downloader: d.Downloader})
 	}
-	for _, j := range jobs {
+	for _, j := range read.jobs {
 		sess.tasks = append(sess.tasks, taskRef{id: j.ID})
 	}
 	e.store.put(sess)
-	return e.listPages(sess, taskList(sess.id, downloads, jobs))
-}
-
-func (e *Engine) taskLists(ctx context.Context) ([]Download, []TransferJob, error) {
-	var downloads []Download
-	var jobs []TransferJob
-	var downloadErr, jobErr error
-	var wg sync.WaitGroup
-	wg.Go(func() { downloads, downloadErr = e.backend.Downloads(ctx) })
-	wg.Go(func() { jobs, jobErr = e.backend.Transfers(ctx) })
-	wg.Wait()
-	if downloadErr != nil {
-		return nil, nil, downloadErr
+	if read.empty() {
+		return Reply{Text: Lines(Heading(Plain(msgTasksTitle)), Line(Plain(msgNoTasks))), Buttons: [][]Button{browseRow(sess.id)}}
 	}
-	return downloads, jobs, jobErr
+	return e.listPages(sess, read.view(sess.id))
 }
 
 // chooseTask applies the task actions; ok is false for any other action.

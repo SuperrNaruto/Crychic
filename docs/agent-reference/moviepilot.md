@@ -19,6 +19,8 @@ SHA-256 为 `c31b46882465e8e046ef405872e3e389c04c4e64e2ada6239ebe3ed27c364680`�
 - 资源搜索与系统进度 SSE 只声明 `MoviePilot` cookie 认证，本项目保留 `X-API-KEY` JSON API，不新增登录。
 - `DownloadAddedData.requires_confirmation` 是未识别资源入口的提示；当前已有媒体的 `/download/` 路径不
   自动改走 `/download/add`，也不因缺少 download ID 重试提交。
+- Bangumi 简介使用 `GET /api/v1/bangumi/{bangumiid}` 的 `data.overview`；空对象、null 或空简介不算有效
+  注释，允许在整页剩余预算内使用原公共 API 回退。没有完整星期分组契约的 MP 放送列表不替换公共日历。
 
 源码依据：[download.py](https://github.com/jxxghp/MoviePilot/blob/v3.1.1/app/api/endpoints/download.py)、
 [transfer.py](https://github.com/jxxghp/MoviePilot/blob/v3.1.1/app/api/endpoints/transfer.py)。

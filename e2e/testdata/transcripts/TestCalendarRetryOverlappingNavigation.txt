@@ -17,6 +17,11 @@
 -> MoviePilot GET /api/v1/media/search?count=10&title=罗梅莉亚战记&type=media
 -> MoviePilot GET /api/v1/media/search?count=10&title=魔法少女育成計画 restart&type=media
 -> MoviePilot GET /api/v1/media/search?count=10&title=魔法少女育成计划 restart&type=media
+-> MoviePilot GET /api/v1/bangumi/390200
+-> MoviePilot GET /api/v1/bangumi/418229
+-> MoviePilot GET /api/v1/bangumi/511936
+-> MoviePilot GET /api/v1/bangumi/614640
+-> MoviePilot GET /api/v1/bangumi/624923
 -> Bangumi GET /v0/subjects/390200
 -> Bangumi GET /v0/subjects/418229
 -> Bangumi GET /v0/subjects/511936
@@ -87,6 +92,7 @@
 << answerCallbackQuery
 >> user 1001 taps 1:w:1 on message 1
 -> MoviePilot GET /api/v1/media/search?count=10&title=列女战纪：女娲石记&type=media
+-> MoviePilot GET /api/v1/bangumi/390200
 -> Bangumi GET /v0/subjects/390200
 >> user 1001 taps 1:w:1 on message 1
 << editMessageText chat=1001 message=1
@@ -153,6 +159,7 @@
    [返回 | 1:b:0] [首页 | 1:o:0] [关闭 | 1:c:0]
 << answerCallbackQuery
 -> MoviePilot GET /api/v1/media/search?count=10&title=列女战纪：女娲石记&type=media
+-> MoviePilot GET /api/v1/bangumi/390200
 -> Bangumi GET /v0/subjects/390200
 << editMessageText chat=1001 message=1
    <tg-slideshow>
@@ -221,6 +228,8 @@
 -> MoviePilot GET /api/v1/media/search?count=10&title=Cyberpunk: Edgerunners 2&type=media
 -> MoviePilot GET /api/v1/media/search?count=10&title=Dark Machine The Animation&type=media
 -> MoviePilot GET /api/v1/media/search?count=10&title=赛博朋克：边缘行者 2&type=media
+-> MoviePilot GET /api/v1/bangumi/505550
+-> MoviePilot GET /api/v1/bangumi/513878
 -> Bangumi GET /v0/subjects/505550
 -> Bangumi GET /v0/subjects/513878
 << editMessageText chat=1001 message=1

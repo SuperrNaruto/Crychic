@@ -253,6 +253,11 @@ re-asks the flow every `CRYCHIC_PROGRESS_INTERVAL` and edits only on change
 List pages budget text and item buttons together (up to 20 entries and 3000 content runes). Large transfer
 views show at most 100 file lines, retaining the full aggregate count and explicitly naming omitted files
 
+Task lists keep downloader and transfer-queue reads independent (`taskreads.go`). A failed source is named
+as unknown while the successful source remains selectable. Any source failure retains the conversation and
+offers read-only 刷新; only two successful empty reads can claim there are no tasks. Refresh reconstructs
+task references from the available records and never starts a download, search or transfer.
+
 下载及转移任务的接口字段、SSE 限制、停止跟随和删除副作用见 [MoviePilot 任务参考](moviepilot.md#下载进度与任务删除)。
 投递失败只重试消息，见 [Telegram 跟随参考](telegram.md#跟随者投递与停止)。
 

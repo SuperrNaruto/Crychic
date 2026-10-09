@@ -8,46 +8,65 @@ import (
 
 const tmdbSource = "themoviedb"
 
-// annotate gives the picks in [first, end) a TMDB identity and link where
+// annotate gives the picks in at a TMDB identity and link where
 // TMDB has the same show, and a synopsis from TMDB, else from the calendar
 // itself. Calendar picks carry Bangumi ids and no synopsis, while transfer
 // history only carries TMDB ids. It is cosmetic: a failed lookup leaves the
 // pick as it was, and MoviePilot answers an upstream failure with an empty
 // result, so a pick still without synopsis is looked up again the next
-// time its page shows. Every lookup of a page runs at once, so a page
-// costs one round trip, not one per pick or per kind of lookup.
-func (e *Engine) annotate(ctx context.Context, sess *session, first, end int) {
+// time its page shows. MoviePilot reads overlap, followed only by missing
+// public synopses; both stages share one cosmetic deadline for the whole page.
+func (e *Engine) annotate(ctx context.Context, sess *session, at span) {
+	ctx, cancel := context.WithTimeout(ctx, cosmeticTimeout)
+	defer cancel()
 	sess.picks, sess.noted = slices.Clone(sess.picks), slices.Clone(sess.noted)
 	if len(sess.noted) != len(sess.picks) {
 		sess.noted = make([]bool, len(sess.picks))
 	}
 	picks, noted := sess.picks, sess.noted
 	var wg sync.WaitGroup
-	for i := first; i < end; i++ {
+	for i := at.first; i < at.end; i++ {
 		if noted[i] {
 			continue
 		}
 		wg.Go(func() {
 			picks[i] = e.note(ctx, picks[i])
-			noted[i] = picks[i].Overview != ""
+			noted[i] = picks[i].Overview != "" && ctx.Err() == nil
+		})
+	}
+	wg.Wait()
+	e.annotateMissing(ctx, sess, at)
+}
+
+// Fallbacks start after the page's MoviePilot reads, preserving provider
+// preference without extending the common deadline or mixing mutable results.
+func (e *Engine) annotateMissing(ctx context.Context, sess *session, at span) {
+	var wg sync.WaitGroup
+	for i := at.first; i < at.end; i++ {
+		if sess.picks[i].Overview != "" || ctx.Err() != nil {
+			continue
+		}
+		wg.Go(func() {
+			sess.picks[i].Overview = e.summary(ctx, sess.picks[i])
+			sess.noted[i] = sess.picks[i].Overview != "" && ctx.Err() == nil
 		})
 	}
 	wg.Wait()
 }
 
-// note looks pick up on TMDB by its title and its original title, and in
-// the calendar for a synopsis, all at once; the TMDB twin found by title
-// wins over the one found by original title.
+// Independent TMDB searches and MoviePilot's Bangumi synopsis overlap. Direct
+// Bangumi is only consulted if neither yields a synopsis within the page budget.
 func (e *Engine) note(ctx context.Context, pick Media) Media {
 	var byTitle, byOriginal []Media
-	var own string
+	own := pick.Overview
+	var summaryErr error
 	var wg sync.WaitGroup
 	wg.Go(func() { byTitle = e.lookup(ctx, pick.Title) })
 	if original := pick.OriginalTitle; original != "" && original != pick.Title {
 		wg.Go(func() { byOriginal = e.lookup(ctx, original) })
 	}
 	if pick.Overview == "" {
-		wg.Go(func() { own = e.summary(ctx, pick) })
+		wg.Go(func() { own, summaryErr = e.backend.BangumiSummary(ctx, pick.CalendarID) })
 	}
 	wg.Wait()
 	m, ok := tmdbTwin(pick, byTitle)
@@ -57,6 +76,9 @@ func (e *Engine) note(ctx context.Context, pick Media) Media {
 	if m.Overview == "" {
 		m.Overview = own
 	}
+	if summaryErr != nil && ctx.Err() == nil {
+		e.log.Warn("backend calendar synopsis unavailable", "pick", pick.CalendarID, "err", summaryErr)
+	}
 	return m
 }
 
@@ -64,7 +86,7 @@ func (e *Engine) note(ctx context.Context, pick Media) Media {
 // logged and leaves it without one, to be looked up again.
 func (e *Engine) summary(ctx context.Context, pick Media) string {
 	s, err := e.calendar.Summary(ctx, pick.CalendarID)
-	if err != nil {
+	if err != nil && ctx.Err() == nil {
 		e.log.Warn("calendar synopsis unavailable", "pick", pick.CalendarID, "err", err)
 	}
 	return s
@@ -73,7 +95,7 @@ func (e *Engine) summary(ctx context.Context, pick Media) string {
 // lookup searches term; a failure is logged and finds nothing.
 func (e *Engine) lookup(ctx context.Context, term string) []Media {
 	results, err := e.backend.Search(ctx, term)
-	if err != nil {
+	if err != nil && ctx.Err() == nil {
 		e.log.Warn("calendar lookup unavailable", "title", term, "err", err)
 	}
 	return results

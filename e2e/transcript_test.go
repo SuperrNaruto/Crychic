@@ -74,10 +74,11 @@ func (tr *transcript) settle() {
 
 const (
 	// mediaRoute is where MoviePilot media searches and details are read.
-	mediaRoute = "/api/v1/media/"
+	mediaRoute   = "/api/v1/media/"
+	bangumiRoute = "/api/v1/bangumi/"
 	// lookups is the route of the reads the bot makes at once (a calendar
 	// page, a show's card and seasons): MoviePilot media searches, details
-	// and seasons, and Bangumi subjects.
+	// and seasons, and MoviePilot's Bangumi details.
 	lookups = "lookups"
 )
 
@@ -102,16 +103,17 @@ func readRoute(line string) string {
 		// the calendar reads every subscribed season at once
 		return service + " tmdb seasons"
 	}
-	if route == mediaRoute || path == mediaRoute+"search" || path == mediaRoute+"seasons" || route == subjectsPath {
+	if route == mediaRoute || path == mediaRoute+"search" || path == mediaRoute+"seasons" || route == bangumiRoute {
 		return lookups
 	}
 	return service + " " + route
 }
 
 // readOrder sorts lookups as a pick made one at a time reads them: media
-// searches, then Bangumi subjects, then media details.
+// searches, then MoviePilot Bangumi details, then media details. Direct Bangumi
+// fallback is a separate read group, so its order after MoviePilot is preserved.
 func readOrder(line string) string {
-	for rank, marker := range []string{mediaRoute + "search", subjectsPath, mediaRoute} {
+	for rank, marker := range []string{mediaRoute + "search", bangumiRoute, mediaRoute} {
 		if strings.Contains(line, marker) {
 			return strconv.Itoa(rank) + line
 		}

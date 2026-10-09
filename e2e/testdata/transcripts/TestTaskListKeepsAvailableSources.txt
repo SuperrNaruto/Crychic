@@ -1,0 +1,90 @@
+>> user 1001 in chat 1001: /tasks
+<< sendRichMessage chat=1001 message=1
+   <h3>📋 正在忙的任务</h3>
+   <h4>⬇️ 下载</h4>
+   <ol start="1">
+   <li value="1"><b>《迷途之子!!!!!》第 1 季</b><br>
+   <i>E10–E12 · 17.5 GiB · 进度 0%</i></li>
+   </ol>
+   <footer>整理状态暂时无法确认</footer>
+   [1 | 1:k:0]
+   [刷新 | 1:l:0]
+   [首页 | 1:o:0] [关闭 | 1:c:0]
+>> user 1001 taps 1:k:0 on message 1
+<< editMessageText chat=1001 message=1
+   <img src="url-f1d1c3e9142d5b6cb0aec97f314112cb1cfcf5cab28cbc83476b0d4bf25e1175"/>
+   <h3>⬇️ 《迷途之子!!!!!》第 1 季 E10–E12</h3>
+   <table bordered compact>
+   <tr><th>大小</th><th>进度</th></tr>
+   <tr><td>17.5 GiB</td><td>0%</td></tr>
+   </table>
+   <footer>正在帮你盯着进度…</footer>
+   [停止刷新 | 1:u:0] [删除任务 | 1:kd:0]
+   [返回 | 1:l:0] [首页 | 1:o:0] [关闭 | 1:c:0]
+<< answerCallbackQuery
+>> user 1001 taps 1:l:0 on message 1
+<< editMessageText chat=1001 message=1
+   <h3>📋 正在忙的任务</h3>
+   <h4>⬇️ 下载</h4>
+   <ol start="1">
+   <li value="1"><b>《迷途之子!!!!!》第 1 季</b><br>
+   <i>E10–E12 · 17.5 GiB · 进度 0%</i></li>
+   </ol>
+   <footer>整理状态暂时无法确认</footer>
+   [1 | 1:k:0]
+   [刷新 | 1:l:0]
+   [首页 | 1:o:0] [关闭 | 1:c:0]
+<< answerCallbackQuery
+>> user 1001 taps 1:l:0 on message 1
+<< editMessageText chat=1001 message=1
+   <h3>📋 正在忙的任务</h3>
+   <h4>📦 整理</h4>
+   <ol start="1">
+   <li value="1"><b>《颂乐人偶》第 1 季</b><br>
+   <i>已整理 0/2 个文件</i></li>
+   </ol>
+   <footer>下载状态暂时无法确认</footer>
+   [1 | 1:k:0]
+   [刷新 | 1:l:0]
+   [首页 | 1:o:0] [关闭 | 1:c:0]
+<< answerCallbackQuery
+>> user 1001 taps 1:k:0 on message 1
+<< editMessageText chat=1001 message=1
+   <img src="url-caf3370aa7811b8d87c23685c80c5562086c41f07bc889d8304e5f09cb366cfd"/>
+   <h3>📦 《颂乐人偶》第 1 季</h3>
+   <p>已整理 0/2 个文件</p>
+   <table bordered compact>
+   <tr><th>集</th><th>状态</th></tr>
+   <tr><td>E13</td><td>▶️ 整理中</td></tr>
+   <tr><td>E12</td><td>⏳ 等待中</td></tr>
+   </table>
+   <footer>正在帮你盯着进度…</footer>
+   [停止刷新 | 1:u:0]
+   [返回 | 1:l:0] [首页 | 1:o:0] [关闭 | 1:c:0]
+<< answerCallbackQuery
+>> user 1001 taps 1:l:0 on message 1
+<< editMessageText chat=1001 message=1
+   <h3>📋 正在忙的任务</h3>
+   <h4>📦 整理</h4>
+   <ol start="1">
+   <li value="1"><b>《颂乐人偶》第 1 季</b><br>
+   <i>已整理 0/2 个文件</i></li>
+   </ol>
+   <footer>下载状态暂时无法确认</footer>
+   [1 | 1:k:0]
+   [刷新 | 1:l:0]
+   [首页 | 1:o:0] [关闭 | 1:c:0]
+<< answerCallbackQuery
+>> user 1001 taps 1:l:0 on message 1
+<< editMessageText chat=1001 message=1
+   <h3>📋 正在忙的任务</h3>
+   <footer>下载状态暂时无法确认；整理状态暂时无法确认</footer>
+   [刷新 | 1:l:0]
+   [首页 | 1:o:0] [关闭 | 1:c:0]
+<< answerCallbackQuery
+>> user 1001 taps 1:l:0 on message 1
+<< editMessageText chat=1001 message=1
+   <h3>📋 正在忙的任务</h3>
+   <p>现在没有在下载或整理的任务，大家都歇着呢～</p>
+   [首页 | 1:o:0] [关闭 | 1:c:0]
+<< answerCallbackQuery

@@ -14,8 +14,10 @@ title) for link + identity (same year and kind; a sequel whose search term names
 `season`, may start in an earlier year, since TMDB dates a show by its first season: 青之箱 第二季 is TMDB 207347 of
 2024, so its subscription matches transfers; the pick keeps its own name, and the 第X季 MoviePilot's search
 appends to a TMDB show's title, `flow.SeasonSuffix`, is stripped by `moviepilot` so cards and subscriptions
-name the show 《青之箱》第 1 季), synopsis from TMDB else Bangumi's own `/v0/subjects/{id}` (`flow.Calendar.Summary`,
-kept on `Media.CalendarID`); all three lookups of every pick on a page run at once (one round trip); a pick
+name the show 《青之箱》第 1 季), synopsis from TMDB else MoviePilot's `/api/v1/bangumi/{id}`
+(`Backend.BangumiSummary`), with direct `/v0/subjects/{id}` (`flow.Calendar.Summary`, using `Media.CalendarID`)
+only for still-missing synopses. MoviePilot reads of the page overlap; direct fallbacks are a second parallel
+group. Both share one 5-second cosmetic budget. A pick
 found with a synopsis is done for the session, one without is looked up again whenever its page shows
 (MoviePilot answers an upstream failure with an empty `MediaInfo`, HTTP 200, which is why synopses skip it).
 Other charts show the synopsis the chart carries (Douban's is a region / genre / director / cast line); chart
@@ -30,7 +32,7 @@ the same time, used only when the title finds nothing) and only taken directly w
 title+year+kind matches, else the user picks. Douban season titles like 「流人 第六季」 often find nothing right.
 MoviePilot's Bangumi calendar (`/api/v1/recommend/bangumi_calendar`) loses the weekday grouping and serves 30
 items a page (Monday to Wednesday), so the bot reads `api.bgm.tv/calendar` itself (summaries there are always
-empty; synopses come from TMDB, else Bangumi's subject API directly). A TMDB twin keeps its pick's `Weekday`
+empty; synopses prefer TMDB and MoviePilot, then direct Bangumi within the remaining budget). A TMDB twin keeps its pick's `Weekday`
 and air date.
 
 ## 追剧日历
@@ -59,6 +61,6 @@ failed read before it is the answer); a series named unlike its films (哈利·�
 
 ## 并发与可恢复元数据
 
-日历注释写入前复制两个可变 slice。找到简介的条目在当前会话中缓存；仍无简介的条目再次显示时重新尝试。元数据失败不可抹掉发现列表的返回路径。
+日历注释写入前复制两个可变 slice。完成查询且找到简介的条目在当前会话中缓存；仍无简介或预算到期前未完成的条目再次显示时重新尝试。已取得的结果不会因同页另一个慢条目被丢弃。元数据失败不可抹掉发现列表的返回路径。
 
 并行请求的路由归一化、逐标题假响应与合集候选顺序见 [E2E 参考](e2e.md#并行发现读取)。

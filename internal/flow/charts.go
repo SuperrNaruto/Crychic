@@ -179,7 +179,7 @@ func (e *Engine) chartPage(ctx context.Context, sess session, page int) Reply {
 	at := span{first: lo + page*chartPageSize, base: lo}
 	at.end = min(at.first+chartPageSize, hi)
 	if c.aired {
-		e.annotate(ctx, &sess, at.first, at.end)
+		e.annotate(ctx, &sess, at)
 	}
 	sess.page = page
 	e.store.put(sess)

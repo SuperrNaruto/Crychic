@@ -1,0 +1,164 @@
+>> user 1001 in chat 1001: /trending
+<< sendRichMessage chat=1001 message=1
+   <h3>🔥 发现好片</h3>
+   <p>今天想逛哪个榜单呀？</p>
+   [TMDB 流行趋势 | 1:d:0] [豆瓣热门电影 | 1:d:1]
+   [豆瓣热门剧集 | 1:d:2] [正在热映 | 1:d:3]
+   [新番放送 | 1:d:4]
+   [首页 | 1:o:0] [关闭 | 1:c:0]
+>> user 1001 taps 1:d:4 on message 1
+-> Bangumi GET /calendar
+-> MoviePilot GET /api/v1/media/search?count=10&title=PSYREN -サイレン-&type=media
+-> MoviePilot GET /api/v1/media/search?count=10&title=PSYREN -决战游戏-&type=media
+-> MoviePilot GET /api/v1/media/search?count=10&title=どうも、好きな人に惚れ薬を依頼された魔女です。&type=media
+-> MoviePilot GET /api/v1/media/search?count=10&title=ロメリア戦記&type=media
+-> MoviePilot GET /api/v1/media/search?count=10&title=你好，我是受心上人所托来做恋爱药的魔女。&type=media
+-> MoviePilot GET /api/v1/media/search?count=10&title=列女战纪：女娲石记&type=media
+-> MoviePilot GET /api/v1/media/search?count=10&title=罗梅莉亚战记&type=media
+-> MoviePilot GET /api/v1/media/search?count=10&title=魔法少女育成計画 restart&type=media
+-> MoviePilot GET /api/v1/media/search?count=10&title=魔法少女育成计划 restart&type=media
+-> MoviePilot GET /api/v1/bangumi/390200
+-> MoviePilot GET /api/v1/bangumi/418229
+-> MoviePilot GET /api/v1/bangumi/511936
+-> MoviePilot GET /api/v1/bangumi/614640
+-> MoviePilot GET /api/v1/bangumi/624923
+-> Bangumi GET /v0/subjects/390200
+-> Bangumi GET /v0/subjects/418229
+-> Bangumi GET /v0/subjects/511936
+-> Bangumi GET /v0/subjects/614640
+-> Bangumi GET /v0/subjects/624923
+<< editMessageText chat=1001 message=1
+   <tg-slideshow>
+   <img src="url-9e933bf5741fa03634fce27465541914f4e0cf39e7fcf8d057c5ec37f440e44e"/>
+   <img src="url-f53af7615ce6819bbdd59697dd9b649bdcc352865663df144eeb3671fd53bcbf"/>
+   <img src="url-8b4da0bfb9bef543c926e6becb55dbe1f6486c5500e33bf11b6a5e765fdcc79a"/>
+   <img src="url-1e587b41d0d73fe6cc2b07531bd80e9249742d8ec1f424b0a52bc6c4798e507f"/>
+   <img src="url-2b4fc794a6be040a03bec7b01b69c10df760cde0840d66da010be9f15a1c2c26"/>
+   </tg-slideshow>
+   <h3>🎌 新番放送 · 星期一（今天）</h3>
+   <h4>2026-10-05 首播</h4>
+   <ol start="1">
+   <li value="1"><a href="https://bgm.tv/subject/390200"><b>列女战纪：女娲石记</b></a></li>
+   <li value="2"><details><summary><b>魔法少女育成计划 restart</b> · <i>⭐ 8.1</i></summary>
+   <p>在这个世界上存在着一个不为人知的「魔法之国」，以及被选上并授予固有之力的魔法少女们。会使用「让料理变得美味」魔法的蓓蒂卡和各具特色的16位陌生魔法少女们，一起被迫参加神秘的假想游戏。那游戏本来是为了增强魔法少女的能力，且理应是安全的训练。然而那简直可以说是禁忌的考验，是被设计好的恶梦的开端。全新的「魔法少女育成计划」即将再次开始。</p>
+   <p><a href="https://bgm.tv/subject/418229">查看详情页</a></p>
+   </details>
+   </li>
+   <li value="3"><details><summary><b>罗梅莉亚战记</b> · <i>⭐ 6.3</i></summary>
+   <p>经过漫长旅程，打倒魔王塞尔吉斯归来的罗梅莉亚与未婚夫亨利王子。然而，亨利王子却冷酷地对罗梅莉亚宣告：“我要和你解除婚约。”<br>
+   冷眼看着沉溺于胜利喜悦中的亨利等人，罗梅莉亚踏上了下一次旅程。因战乱而荒废的祖国，以及被魔族夺去的人们的生活。即使打倒了魔王，堆积在眼前的各种问题也绝不会自动解决。<br>
+   所以，我要用我自己的方式，将人们幸福的生活夺回来。组建军队、推动经济，即使偶尔卷入阴谋之中，她的脚步也绝不放缓。<br>
+   然而这一选择，却为罗梅莉亚带来了更深沉的战祸。<br>
+   这是描绘打倒魔王『之后』的故事，是一段关于“一名少女”与“支持她的骑士们”的东山再起物语。<br>
+   <br>
+   [简介原文]<br>
+   長きにわたり旅をし、魔王ゼルギスを討ち果…</p>
+   <p><a href="https://bgm.tv/subject/511936">查看详情页</a></p>
+   </details>
+   </li>
+   <li value="4"><details><summary><b>PSYREN -决战游戏-</b></summary>
+   <p>高校一年生・夜科アゲハは、ある日、公衆電話に放置されていた<br>
+   “赤いテレホンカード”を拾う。数日後、同じテレホンカードを持っていた<br>
+   幼馴染みの同級生・雨宮桜子が姿を消す。<br>
+   アゲハは彼女を捜すため、全国規模で起こっている連続“神隠し”失踪事件<br>
+   の黒幕と噂される「秘密結社サイレン」へとアクセスする。<br>
+   そして、命を懸けたゲームが始まってしまった─</p>
+   <p><a href="https://bgm.tv/subject/614640">查看详情页</a></p>
+   </details>
+   </li>
+   <li value="5"><details><summary><b>你好，我是受心上人所托来做恋爱药的魔女。</b> · <i>⭐ 6.6</i></summary>
+   <p>シリーズ累計100万部突破。<br>
+   “失恋”から始まる、少し不器用で切ない恋物語。<br>
+   <br>
+   「惚れ薬を作ってほしい」<br>
+   <br>
+   湖に住む魔女ロゼは、密かに想いを寄せていた騎士ハリージュから、その一言を告げられる。<br>
+   彼が想っているのは、自分ではない誰か――その現実に、ロゼは失恋する。<br>
+   <br>
+   それでも彼の依頼を断れず、惚れ薬が完成するまでの間だけでも<br>
+   一緒にいられたらと、切ない想いを胸に日々を重ねていくロゼ。<br>
+   叶わぬ恋だとわかっていても、想いは消せない。<br>
+   <br>
+   これは、不器用な引きこもり魔女×世話焼きな生真面目騎士。<br>
+   惚れ薬をきっかけに紡がれる、切ない恋物語。</p>
+   <p><a href="https://bgm.tv/subject/624923">查看详情页</a></p>
+   </details>
+   </li>
+   </ol>
+   [1 | 1:i:0] [2 | 1:i:1] [3 | 1:i:2] [4 | 1:i:3]
+   [5 | 1:i:4]
+   [·一· | 1:w:1] [二 | 1:w:2] [三 | 1:w:3] [四 | 1:w:4] [五 | 1:w:5] [六 | 1:w:6] [日 | 1:w:7]
+   [返回 | 1:b:0] [首页 | 1:o:0] [关闭 | 1:c:0]
+<< answerCallbackQuery
+>> user 1001 taps 1:w:1 on message 1
+-> MoviePilot GET /api/v1/media/search?count=10&title=列女战纪：女娲石记&type=media
+-> MoviePilot GET /api/v1/bangumi/390200
+-> Bangumi GET /v0/subjects/390200
+<< editMessageText chat=1001 message=1
+   <tg-slideshow>
+   <img src="url-9e933bf5741fa03634fce27465541914f4e0cf39e7fcf8d057c5ec37f440e44e"/>
+   <img src="url-f53af7615ce6819bbdd59697dd9b649bdcc352865663df144eeb3671fd53bcbf"/>
+   <img src="url-8b4da0bfb9bef543c926e6becb55dbe1f6486c5500e33bf11b6a5e765fdcc79a"/>
+   <img src="url-1e587b41d0d73fe6cc2b07531bd80e9249742d8ec1f424b0a52bc6c4798e507f"/>
+   <img src="url-2b4fc794a6be040a03bec7b01b69c10df760cde0840d66da010be9f15a1c2c26"/>
+   </tg-slideshow>
+   <h3>🎌 新番放送 · 星期一（今天）</h3>
+   <h4>2026-10-05 首播</h4>
+   <ol start="1">
+   <li value="1"><details><summary><b>列女战纪：女娲石记</b></summary>
+   <p>补天的时代已经过去，天上的女娲石纷纷落至凡间，化为人形，闯荡四方。她们体内蕴藏着强大的灵力，被各界觊觎——灵岩便是其中一颗。她打算贿赂神仙，寻求天庭的庇护，后来结识了仙子素衣——她身为神仙，而另有所图。二人一拍即合，憧憬未来，却卷入了部分女娲石与神仙的纠纷，素衣不幸遇难。<br>
+   为了复活好友，灵岩与一位狡猾的女娲石合作了……</p>
+   <p><a href="https://bgm.tv/subject/390200">查看详情页</a></p>
+   </details>
+   </li>
+   <li value="2"><details><summary><b>魔法少女育成计划 restart</b> · <i>⭐ 8.1</i></summary>
+   <p>在这个世界上存在着一个不为人知的「魔法之国」，以及被选上并授予固有之力的魔法少女们。会使用「让料理变得美味」魔法的蓓蒂卡和各具特色的16位陌生魔法少女们，一起被迫参加神秘的假想游戏。那游戏本来是为了增强魔法少女的能力，且理应是安全的训练。然而那简直可以说是禁忌的考验，是被设计好的恶梦的开端。全新的「魔法少女育成计划」即将再次开始。</p>
+   <p><a href="https://bgm.tv/subject/418229">查看详情页</a></p>
+   </details>
+   </li>
+   <li value="3"><details><summary><b>罗梅莉亚战记</b> · <i>⭐ 6.3</i></summary>
+   <p>经过漫长旅程，打倒魔王塞尔吉斯归来的罗梅莉亚与未婚夫亨利王子。然而，亨利王子却冷酷地对罗梅莉亚宣告：“我要和你解除婚约。”<br>
+   冷眼看着沉溺于胜利喜悦中的亨利等人，罗梅莉亚踏上了下一次旅程。因战乱而荒废的祖国，以及被魔族夺去的人们的生活。即使打倒了魔王，堆积在眼前的各种问题也绝不会自动解决。<br>
+   所以，我要用我自己的方式，将人们幸福的生活夺回来。组建军队、推动经济，即使偶尔卷入阴谋之中，她的脚步也绝不放缓。<br>
+   然而这一选择，却为罗梅莉亚带来了更深沉的战祸。<br>
+   这是描绘打倒魔王『之后』的故事，是一段关于“一名少女”与“支持她的骑士们”的东山再起物语。<br>
+   <br>
+   [简介原文]<br>
+   長きにわたり旅をし、魔王ゼルギスを討ち果…</p>
+   <p><a href="https://bgm.tv/subject/511936">查看详情页</a></p>
+   </details>
+   </li>
+   <li value="4"><details><summary><b>PSYREN -决战游戏-</b></summary>
+   <p>高校一年生・夜科アゲハは、ある日、公衆電話に放置されていた<br>
+   “赤いテレホンカード”を拾う。数日後、同じテレホンカードを持っていた<br>
+   幼馴染みの同級生・雨宮桜子が姿を消す。<br>
+   アゲハは彼女を捜すため、全国規模で起こっている連続“神隠し”失踪事件<br>
+   の黒幕と噂される「秘密結社サイレン」へとアクセスする。<br>
+   そして、命を懸けたゲームが始まってしまった─</p>
+   <p><a href="https://bgm.tv/subject/614640">查看详情页</a></p>
+   </details>
+   </li>
+   <li value="5"><details><summary><b>你好，我是受心上人所托来做恋爱药的魔女。</b> · <i>⭐ 6.6</i></summary>
+   <p>シリーズ累計100万部突破。<br>
+   “失恋”から始まる、少し不器用で切ない恋物語。<br>
+   <br>
+   「惚れ薬を作ってほしい」<br>
+   <br>
+   湖に住む魔女ロゼは、密かに想いを寄せていた騎士ハリージュから、その一言を告げられる。<br>
+   彼が想っているのは、自分ではない誰か――その現実に、ロゼは失恋する。<br>
+   <br>
+   それでも彼の依頼を断れず、惚れ薬が完成するまでの間だけでも<br>
+   一緒にいられたらと、切ない想いを胸に日々を重ねていくロゼ。<br>
+   叶わぬ恋だとわかっていても、想いは消せない。<br>
+   <br>
+   これは、不器用な引きこもり魔女×世話焼きな生真面目騎士。<br>
+   惚れ薬をきっかけに紡がれる、切ない恋物語。</p>
+   <p><a href="https://bgm.tv/subject/624923">查看详情页</a></p>
+   </details>
+   </li>
+   </ol>
+   [1 | 1:i:0] [2 | 1:i:1] [3 | 1:i:2] [4 | 1:i:3]
+   [5 | 1:i:4]
+   [·一· | 1:w:1] [二 | 1:w:2] [三 | 1:w:3] [四 | 1:w:4] [五 | 1:w:5] [六 | 1:w:6] [日 | 1:w:7]
+   [返回 | 1:b:0] [首页 | 1:o:0] [关闭 | 1:c:0]
+<< answerCallbackQuery
