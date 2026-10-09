@@ -112,11 +112,10 @@ func (e *Engine) downloadBatch(_ context.Context, sess session) Reply {
 	b := newDownloadBatch(int(sess.ticket), releases)
 	sess.submission = b
 	sess.batch, sess.ticked, sess.target, sess.release = nil, nil, nil, nil
+	sess.torrents = nil
 	e.store.put(sess)
 	reply := submissionReply(sess, b.read())
 	request := session{owner: sess.owner, focus: sess.focus, seasons: sess.seasons, library: sess.library}
-	sess.torrents = nil
-	e.store.put(sess)
 	e.work.Go(func() { e.submitBatch(request, b, releases) })
 	return reply
 }

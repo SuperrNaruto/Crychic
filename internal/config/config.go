@@ -2,6 +2,7 @@
 package config
 
 import (
+	"cmp"
 	"errors"
 	"fmt"
 	"regexp"
@@ -69,19 +70,10 @@ func Load(getenv func(string) string) (Config, error) {
 		MoviePilotURL:      getenv("CRYCHIC_MOVIEPILOT_URL"),
 		MoviePilotAPIKey:   getenv("CRYCHIC_MOVIEPILOT_API_KEY"),
 		TelegramToken:      getenv("CRYCHIC_TELEGRAM_TOKEN"),
-		TelegramAPIURL:     getenv("CRYCHIC_TELEGRAM_API_URL"),
+		TelegramAPIURL:     cmp.Or(getenv("CRYCHIC_TELEGRAM_API_URL"), defaultTelegramAPI),
 		TelegramNotifyChat: strings.TrimSpace(getenv("CRYCHIC_TELEGRAM_NOTIFY_CHAT_ID")),
-	}
-	if cfg.TelegramAPIURL == "" {
-		cfg.TelegramAPIURL = defaultTelegramAPI
-	}
-	cfg.BangumiAPIURL = getenv("CRYCHIC_BANGUMI_API_URL")
-	if cfg.BangumiAPIURL == "" {
-		cfg.BangumiAPIURL = defaultBangumiAPI
-	}
-	cfg.DataDir = getenv("CRYCHIC_DATA_DIR")
-	if cfg.DataDir == "" {
-		cfg.DataDir = defaultDataDir
+		BangumiAPIURL:      cmp.Or(getenv("CRYCHIC_BANGUMI_API_URL"), defaultBangumiAPI),
+		DataDir:            cmp.Or(getenv("CRYCHIC_DATA_DIR"), defaultDataDir),
 	}
 	var errs []error
 	durations := []struct {

@@ -114,14 +114,11 @@ func (s *store) put(sess session) {
 	s.sessions[sess.id] = sess
 }
 
-// take removes and returns a session, so a step that ends the conversation
-// (confirm, cancel) runs at most once even on a double tap.
-func (s *store) take(id uint64) (session, bool) {
+// take removes a cancelled, replaced or unusable conversation.
+func (s *store) take(id uint64) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
-	sess, ok := s.live(id)
 	delete(s.sessions, id)
-	return sess, ok
 }
 
 func (s *store) live(id uint64) (session, bool) {

@@ -84,7 +84,6 @@ func (e *Engine) releases(sess session) Reply {
 	if sess.focus == nil || len(sess.torrents) == 0 {
 		return Reply{Notice: msgInvalidChoice}
 	}
-	e.store.put(sess)
 	return e.listPages(sess, torrentList(sess, *sess.focus))
 }
 

@@ -42,12 +42,11 @@ func (e *Engine) listPageWith(sess session, view listView, holds string) Reply {
 	for index, page := range sess.pages {
 		if holds != "" && hasData(page.Buttons, holds) {
 			sess.pageIndex = index
-			e.store.put(sess)
-			return page
+			break
 		}
 	}
 	e.store.put(sess)
-	return sess.pages[0]
+	return sess.pages[sess.pageIndex]
 }
 
 func hasData(rows [][]Button, d string) bool {

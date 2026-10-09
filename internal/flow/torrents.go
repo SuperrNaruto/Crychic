@@ -89,17 +89,16 @@ func (e *Engine) searchTorrents(sess session, run string) Reply {
 	sess.hunt, sess.torrents, sess.release = nil, h.found, nil
 	sess.torrentSort, sess.torrentSite, sess.missingOnly = 0, "", false
 	sess.ticking, sess.ticked, sess.batch = false, nil, nil
+	if h.err == nil && len(h.found) > 0 {
+		return e.listPages(sess, torrentList(sess, target))
+	}
 	e.store.put(sess)
+	text := Sentence(fmt.Sprintf("🔍 没搜到%s的资源 (｡•́︿•̀｡) 过段时间再来试试吧～", targetName(target)))
 	if h.err != nil {
-		rows := [][]Button{{{Label: "重试", Data: data(sess.id, actionTorrentRetry, 0)}}, {cancelButton(sess.id)}}
-		return sess.picked.replyLines(e.failure("torrent search", h.err).Text, rows)
+		text = e.failure("torrent search", h.err).Text
 	}
-	if len(h.found) == 0 {
-		text := Sentence(fmt.Sprintf("🔍 没搜到%s的资源 (｡•́︿•̀｡) 过段时间再来试试吧～", targetName(target)))
-		rows := [][]Button{{{Label: "重试", Data: data(sess.id, actionTorrentRetry, 0)}}, {cancelButton(sess.id)}}
-		return sess.picked.replyLines(text, rows)
-	}
-	return e.listPages(sess, torrentList(sess, target))
+	rows := [][]Button{{{Label: "重试", Data: data(sess.id, actionTorrentRetry, 0)}}, {cancelButton(sess.id)}}
+	return sess.picked.replyLines(text, rows)
 }
 
 // pickTorrent shows one release under the card and asks to download it.
