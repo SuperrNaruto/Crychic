@@ -1,6 +1,7 @@
 package moviepilot
 
 import (
+	"cmp"
 	"context"
 	"encoding/json"
 	"net/http"
@@ -19,7 +20,7 @@ const torrentSearchTimeout = 2 * time.Minute
 // (Context.to_dict). torrent_info carries the site's cookie and download
 // link, so it is only ever kept raw and handed back unchanged.
 type torrentContext struct {
-	Meta    *torrentMeta    `json:"meta_info"`
+	Meta    torrentMeta     `json:"meta_info"`
 	Torrent json.RawMessage `json:"torrent_info"`
 	Media   json.RawMessage `json:"media_info"`
 }
@@ -85,19 +86,14 @@ func (rc torrentContext) toTorrent() (flow.Torrent, bool) {
 	if err != nil {
 		return flow.Torrent{}, false
 	}
+	m := rc.Meta
 	found := flow.Torrent{
 		Title: facts.Title, Description: facts.Description, Site: facts.Site, Size: facts.Size,
 		Seeders: facts.Seeders, Promotion: facts.Promotion, HitAndRun: facts.HitAndRun,
 		Published: facts.Published, Media: media, Record: record,
-	}
-	if m := rc.Meta; m != nil {
-		found.Season, found.Episodes = m.Season, m.Episodes
-		found.EpisodesUnsure = len(m.Episodes) > 0 && !namesEpisodes(facts.Title, m.Episodes)
-		found.Resolution, found.Video, found.Group = m.Resolution, m.Video, m.Group
-		found.Edition = m.Edition
-		if found.Edition == "" {
-			found.Edition = m.Type
-		}
+		Season: m.Season, Episodes: m.Episodes,
+		EpisodesUnsure: len(m.Episodes) > 0 && !namesEpisodes(facts.Title, m.Episodes),
+		Resolution:     m.Resolution, Video: m.Video, Group: m.Group, Edition: cmp.Or(m.Edition, m.Type),
 	}
 	if media.Kind == flow.Movie {
 		found.Season, found.Episodes, found.EpisodesUnsure = nil, nil, false

@@ -58,11 +58,11 @@ func (c *Client) SubscriptionHistory(ctx context.Context, kind flow.Kind, count 
 // fields and keeps its settings (sites, quality, start episode, ...).
 func (c *Client) Resubscribe(ctx context.Context, past flow.PastSubscription) (int, error) {
 	var created struct {
-		ID *int `json:"id"`
+		ID int `json:"id"`
 	}
 	body := json.RawMessage(past.Record)
 	if err := c.do(ctx, call{method: http.MethodPost, path: "/api/v1/subscribe/", body: body}, &created); err != nil {
 		return 0, err
 	}
-	return deref(created.ID), nil
+	return created.ID, nil
 }

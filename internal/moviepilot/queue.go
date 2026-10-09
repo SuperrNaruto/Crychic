@@ -17,7 +17,7 @@ var fileStates = map[string]flow.FileState{
 }
 
 type queueJob struct {
-	Media *struct {
+	Media struct {
 		MediaSource string `json:"media_source"`
 		MediaID     string `json:"media_id"`
 		Type        string `json:"type"`
@@ -26,21 +26,18 @@ type queueJob struct {
 	} `json:"media"`
 	Season *int `json:"season"`
 	Tasks  []struct {
-		State string     `json:"state"`
-		Meta  *queueMeta `json:"meta"`
+		State string    `json:"state"`
+		Meta  queueMeta `json:"meta"`
 	} `json:"tasks"`
 }
 
 type queueMeta struct {
-	BeginEpisode *int `json:"begin_episode"`
+	BeginEpisode int  `json:"begin_episode"`
 	EndEpisode   *int `json:"end_episode"`
 }
 
-func (m *queueMeta) episodes() []int {
-	if m == nil {
-		return nil
-	}
-	first := deref(m.BeginEpisode)
+func (m queueMeta) episodes() []int {
+	first := m.BeginEpisode
 	last := first
 	if m.EndEpisode != nil {
 		last = *m.EndEpisode
@@ -57,7 +54,7 @@ func (c *Client) Transfers(ctx context.Context) ([]flow.TransferJob, error) {
 	}
 	var out []flow.TransferJob
 	for _, j := range jobs {
-		if j.Media == nil || j.Media.MediaID == "" {
+		if j.Media.MediaID == "" {
 			continue
 		}
 		job := flow.TransferJob{

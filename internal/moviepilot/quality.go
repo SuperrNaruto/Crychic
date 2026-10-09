@@ -1,6 +1,7 @@
 package moviepilot
 
 import (
+	"cmp"
 	"context"
 	"net/http"
 	"net/url"
@@ -23,22 +24,15 @@ type metaInfo struct {
 // answers no meta_info when it cannot recognize the media.
 func (c *Client) Quality(ctx context.Context, file string) (notify.Quality, error) {
 	var data struct {
-		Meta *metaInfo `json:"meta_info"`
+		Meta metaInfo `json:"meta_info"`
 	}
 	q := url.Values{"title": {file}}
 	if err := c.do(ctx, call{method: http.MethodGet, path: "/api/v1/media/recognize", query: q}, &data); err != nil {
 		return notify.Quality{}, err
 	}
-	if data.Meta == nil {
-		return notify.Quality{}, nil
-	}
 	m := data.Meta
-	edition := m.Edition
-	if edition == "" {
-		edition = m.Type
-	}
 	return notify.Quality{
-		Resolution: m.Resolution, Edition: edition, WebSource: m.WebSource,
+		Resolution: m.Resolution, Edition: cmp.Or(m.Edition, m.Type), WebSource: m.WebSource,
 		Video: m.Video, Audio: m.Audio, Group: m.Group,
 	}, nil
 }

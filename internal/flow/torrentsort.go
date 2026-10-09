@@ -44,16 +44,9 @@ func siteOf(t Torrent) string {
 }
 
 // newerFirst orders by publish time, newest first; MoviePilot words it
-// "2006-01-02 15:04:05", which sorts as text. Unknown times go last.
+// "2006-01-02 15:04:05", which sorts as text. Descending string order also
+// puts empty (unknown) times last.
 func newerFirst(a, b Torrent) int {
-	switch {
-	case a.Published == b.Published:
-		return 0
-	case a.Published == "":
-		return 1
-	case b.Published == "":
-		return -1
-	}
 	return cmp.Compare(b.Published, a.Published)
 }
 

@@ -25,7 +25,7 @@ type downloadTask struct {
 	LeftTime   string  `json:"left_time"`
 	// Media is filled from MoviePilot's download history; tasks added to the
 	// downloader by hand have none.
-	Media *struct {
+	Media struct {
 		MediaSource string `json:"media_source"`
 		MediaID     string `json:"media_id"`
 		Type        string `json:"type"`
@@ -57,7 +57,7 @@ func (c *Client) Downloads(ctx context.Context) ([]flow.Download, error) {
 	}
 	var out []flow.Download
 	for _, t := range tasks {
-		if t.Media == nil || t.Media.MediaID == "" {
+		if t.Media.MediaID == "" {
 			continue
 		}
 		out = append(out, flow.Download{

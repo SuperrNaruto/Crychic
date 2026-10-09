@@ -85,8 +85,7 @@ func (c *Client) Search(ctx context.Context, term string) ([]flow.Media, error) 
 
 // toMedia keeps only movies and shows that carry a subscribable identity.
 func (i mediaInfo) toMedia() (flow.Media, bool) {
-	kinds := map[string]flow.Kind{typeMovie: flow.Movie, typeTV: flow.TV}
-	kind, ok := kinds[i.Type]
+	kind, ok := mediaKinds[i.Type]
 	if !ok || i.MediaSource == "" || i.MediaID == "" {
 		return flow.Media{}, false
 	}
@@ -260,12 +259,12 @@ func (c *Client) Subscribe(ctx context.Context, t flow.Target) (int, error) {
 		body.BestVersion = 1
 	}
 	var created struct {
-		ID *int `json:"id"`
+		ID int `json:"id"`
 	}
 	if err := c.do(ctx, call{method: http.MethodPost, path: "/api/v1/subscribe/", body: body}, &created); err != nil {
 		return 0, err
 	}
-	return deref(created.ID), nil
+	return created.ID, nil
 }
 
 func kindType(k flow.Kind) string {
