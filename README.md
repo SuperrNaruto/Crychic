@@ -155,6 +155,10 @@ internal/config      环境变量配置
 
 聊天适配器通过共享的 `flow.Conversation` 驱动会话，通过 `notify.Sender` 投递入库通知；平台负责输入和渲染，业务流程不依赖 Telegram。Discord 尚未实现。
 
+## 改进计划
+
+[MoviePilot API 功能改进计划](docs/plans/moviepilot-api-improvements.md)记录了按实用价值排序的后续功能、Cookie 认证与非 Agent 流式接入方案，以及安全边界和验收要求。计划中的 Cookie 配置与新增功能尚未实现，不是当前部署说明。
+
 ## 测试
 
 行为优先的端到端测试（参考 [yetone/magpie](https://github.com/yetone/magpie)）：`e2e/` 用与 `main` 相同的组装方式启动真实应用，外部只替换为两个假服务：一个假 Telegram Bot API（真实长轮询 `getUpdates`），一个假 MoviePilot（校验 `X-API-KEY`）。

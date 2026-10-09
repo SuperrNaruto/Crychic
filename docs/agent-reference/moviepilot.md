@@ -16,7 +16,10 @@ SHA-256 为 `c31b46882465e8e046ef405872e3e389c04c4e64e2ada6239ebe3ed27c364680`�
   停止后续提交只阻止尚未发出的 POST，不调用下载 stop/delete。
 - `/download/` 与 `/transfer/queue` 可省略 `page/count` 保持完整结果；不能仅取第一页并据此宣称任务结束。
   `/transfer/queue/page` 的轻量 schema 缺少 `media.type` 和任务 `meta` 集数，当前详情仍用完整队列。
-- 资源搜索与系统进度 SSE 只声明 `MoviePilot` cookie 认证，本项目保留 `X-API-KEY` JSON API，不新增登录。
+- 资源搜索、系统进度与实时消息 SSE 只声明 `MoviePilot` Cookie 认证；现有代码仍使用 `X-API-KEY` JSON API。
+  2026-10-09 主人已允许增加 Cookie 认证，并明确不接入 Agent；后续范围见
+  [MoviePilot API 功能改进计划](../plans/moviepilot-api-improvements.md)。计划首版采用可选资源 Cookie，
+  不增加自动登录；Cookie 与 SSE 尚未实现。此决定不改变真实服务禁写、禁 PT 搜索及凭据隐私边界。
 - `DownloadAddedData.requires_confirmation` 是未识别资源入口的提示；当前已有媒体的 `/download/` 路径不
   自动改走 `/download/add`，也不因缺少 download ID 重试提交。
 - Bangumi 简介使用 `GET /api/v1/bangumi/{bangumiid}` 的 `data.overview`；空对象、null 或空简介不算有效

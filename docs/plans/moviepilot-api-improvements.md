@@ -1,0 +1,175 @@
+# MoviePilot API 功能改进计划
+
+更新日期为 2026-10-09。本计划按日常使用价值排序，不以开发成本排除功能。目标是在现有确定性会话流程上，改善资源搜索、订阅设置、请求追踪、异常定位与缺集处理。
+
+当前仅保存计划，未实现下列改进，也未授权代理对真实 MoviePilot 执行搜索或写操作。功能条目是后续实施顺序建议，不是已上线能力清单。
+
+## 已确定的范围
+
+- 排除音乐功能，不接入 MoviePilot Agent、不引入大模型执行或自然语言自动决策。
+- 允许增加 Cookie 认证，用于非 Agent 的资源搜索和处理进度 SSE；普通 JSON 请求继续使用现有 API key。
+- Cookie 认证不代表聊天用户有管理员权限。白名单、请求归属、聊天及话题隔离、最终确认和只写一次继续由 Crychic 控制。
+- 允许 Cookie 认证取代此前不接入这些 SSE 的范围限制，但不等于要求自动登录。首版采用可选资源 Cookie 配置，不增加账户密码、MFA 或自动登录流程。
+- 流式负责及时展示结果和状态；订阅、下载、整理历史、媒体库可见性仍负责确定业务事实。
+- 不调用 `/api/v1/message/agent/stream`，不把 `/api/v1/system/message` 或实时日志接成全局消息转发器。
+- 所有真实订阅、下载写入及真实 `/api/v1/search/*` 调用仍禁止由代理执行。验证使用真实 app 对外部 HTTP fake，实机业务操作由主人手测。
+
+## 当前已有能力
+
+已有片名搜索、多季订阅、起始集选择、洗版订阅、订阅暂停与恢复、订阅详情、相似推荐、同系列、追剧日历、最新入库、资源排序、站点结果筛选、缺集筛选、批量选种下载、任务跟随与删除、入库通知、停滞提醒和周汇总。
+
+改进应复用这些实现，不重复新建平行流程。当前资源搜索等待 JSON 完整结果，搜索中的消息仅展示等待过程；下载与整理状态通过轮询读取。订阅历史目前仅取每类最近 10 条。
+
+## 按价值排序的实施条目
+
+各条目可以独立交付，不要求整个清单全部完成才可使用。流式进度依赖 Cookie 接入；字幕流依赖字幕功能。其他功能不依赖 SSE。
+
+| 顺序 | 改进 | 用户价值与主要范围 | 接口或复用能力 |
+| --- | --- | --- | --- |
+| 1 | Cookie 认证与流式资源搜索 | 搜索结果逐步出现，选中资源不被后续结果替换；支持搜索前选择站点 | `GET /api/v1/search/media/{media_id}/stream`、`GET /api/v1/site/media/{media_type}`、现有资源列表与确认流程 |
+| 2 | 订阅条件编辑 | 在详情中调整规格、规则组、站点、包含与排除条件、起始集和洗版设置 | `PUT /api/v1/subscribe/`、`GET /api/v1/rule/groups`、`GET /api/v1/rule/builtin`、`GET /api/v1/rule/custom` |
+| 3 | 我的请求与异常中心 | 按请求人聚合待获取、下载、整理、库可见性和异常，定位未到货原因 | 订阅、下载、整理队列、`GET /api/v1/history/transfer?status=false`；人工复核仅作受限提示 |
+| 4 | 缺集下载方案 | 从可信资源范围中建议补集组合，展示重叠、重复已有、总大小与风险，用户确认后提交 | 现有媒体库检查、缺集计算、资源列表及串行批量下载 |
+| 5 | 单订阅立即搜索与执行跟踪 | 改完条件后主动搜索一次，并查看或停止自己发起的搜索批次 | `POST /api/v1/subscribe/search/{subscribe_id}`、`GET /api/v1/subscribe/execution/batches/{batch_id}`、`PUT /api/v1/subscribe/execution/batches/{batch_id}/cancel` |
+| 6 | 下载暂停与继续 | 暂时控制带宽时不必删除任务；可扩展显式任务限速 | `PATCH /api/v1/download/{hashString}` 的 `action`、`downloader` 与限速字段 |
+| 7 | 处理进度流 | 在能正确关联目标时补充实时处理进度，仍保留逐文件状态和库可见性 | `GET /api/v1/system/progress/{process_type}`、现有任务详情 |
+| 8 | 条件找片和演员声优作品 | 按类型、语言、评分及评分人数、发行日期探索，并进入人物作品列表 | `/api/v1/discover/tmdb_movies`、`tmdb_tvs`、`douban_movies`、`douban_tvs`、`bangumi`；TMDB、Douban、Bangumi 的人物作品接口 |
+| 9 | 主动选择剧集组 | 对有可靠编排映射的番剧和特殊分季，按所选剧集组创建订阅 | `GET /api/v1/media/groups/{tmdbid}`、`GET /api/v1/media/group/seasons/{episode_group}`、`episode_group` |
+| 10 | 同系列库存与补齐计划 | 一页区分已入库、下载中、已订阅和未获取，勾选缺少的作品再确认 | 现有合集、订阅、下载和媒体库查询 |
+| 11 | 完整订阅历史分页 | 找回早于最近 10 条的订阅，保留按原设置重新订阅 | `GET /api/v1/subscribe/history/{mtype}` 的 `page`、`count` |
+| 12 | 字幕搜索与下载 | 按电影或季集选择字幕，确认后由 MoviePilot 保存 | `/api/v1/search/subtitle/media/{media_id}`、`/api/v1/search/subtitle/title`、对应流式入口及 `POST /api/v1/download/subtitle` |
+
+资源结果还应支持组合筛选分辨率、编码、制作组、大小、免费和 H&R；这些筛选在已有结果中执行，不重新访问 PT 站点。当前已有的站点结果筛选与搜索前限定站点应明确区分。
+
+## Cookie 认证方案
+
+### 配置与凭据边界
+
+首版新增可选配置 `CRYCHIC_MOVIEPILOT_COOKIE`，内容仅为名为 `MoviePilot` 的资源 Cookie 值，不接受整段浏览器 Cookie 头或 `Set-Cookie` 内容。该变量尚未实现，不能当作当前部署参数使用。
+
+- 未配置时保持现有 API key JSON 行为，不要求每位用户或现有部署重新设置账户。
+- Cookie 由部署者通过受控环境注入；不在聊天中索取，不写进计划、compose 实值、日志、transcript 或 `requests.json`。
+- 仅保留于进程内存，验证失败的错误信息不回显配置值。拒绝换行、额外 Cookie 项等不符合单值契约的输入。
+- Cookie 只发送给已配置 MoviePilot 源站和明确允许的 SSE 路径；不发给 Telegram、海报服务、Bangumi 或跳转后的其他源站，不使用跨服务共享 Cookie jar。
+- 复用现有 transport 和依赖注入，不改变 TLS 校验，不新增明文公网凭据传输。
+- API key 与资源 Cookie 各司其职。不能把 API key 或普通登录 JWT 直接改名为 `MoviePilot` Cookie。
+
+v3.1.1 源码校验 Cookie 的资源令牌用途及身份。`verify_token` 的 Bearer 分支维护资源 Cookie，API key 分支只校验身份，不负责签发或刷新资源 Cookie。[认证源码](https://github.com/jxxghp/MoviePilot/blob/v3.1.1/app/adapters/web/security/access.py#L176-L301)
+
+### 过期和降级
+
+- 资源 Cookie 可能过期或被撤销。首版不存账户密码、不实现自动登录或续期；由部署者安全更新有效 Cookie 并重启。
+- SSE 认证失败时显示安全的不可用提示，普通元数据、订阅和任务 JSON 读取仍可使用 API key。
+- 未配置 Cookie 时，在发起搜索前直接选择原 JSON 路径。
+- 已发出的 SSE 搜索无论认证失败、断线、超时还是协议异常，都不自动重连或自动改发 JSON 搜索。用户显式选择重新搜索时才发起新的站点搜索，并说明可能重复访问站点。
+- 纯进度快照读取失败可以回到现有 JSON 状态读取；不得因此重新执行搜索、订阅、下载或整理。
+
+该设计依赖部署者能够提供目标 MoviePilot 接受的有效资源 Cookie。此前提不成立时，保留完整的 API key JSON 功能，禁用流式增强，不放宽鉴权。
+
+## 流式资源搜索的行为约束
+
+### 消费与展示
+
+1. 同一次搜索代次只启动一次上游搜索；后台消费 SSE，前台沿用 `Reply.Follow` 获取只读快照。
+2. 以 SSE 完整帧解析数据，不假设一次网络读取就是一个事件；处理心跳、错误、`append`、`replace` 和最终替换的分批信息。
+3. 上游会将大型最终 `replace` 拆成首个 `replace` 加后续 `append`，并携带 `replace_batch`、`batch_index`、`batch_count`。中途断流不能当成完整结果。
+4. 资源原始记录仍仅在内存保留并按现有下载契约回传。除现有不可展示的 `Torrent.Record` 外，仅向业务层投影安全字段；不记录原始 SSE 帧。
+5. 每次搜索使用独立代次，资源使用会话内稳定身份。排序、筛选、去重和最终替换不能让旧编号指向另一资源。
+6. 可以浏览已返回结果，但始终标明搜索未完成。进入资源详情后固定已选目标；新事件不能覆盖详情、确认页或成功回执。
+7. 最终结果移除或改变了已选目标时，拒绝旧确认并要求重新选择，不能把其他候选偷偷替换成下载目标。
+8. 后台消费与消息刷新分离，复用 `CRYCHIC_PROGRESS_INTERVAL`，当前默认值为 `5s`；首屏和终态及时投递，不逐事件刷屏。
+9. Telegram 临时投递失败只重试同一展示结果，不重跑业务或站点搜索。旧搜索的迟到事件不得覆盖新搜索或已接受的导航。
+10. 沿用现有资源搜索总预算；取消、会话结束与应用退出均关闭流并等待 worker 退出。取消本地等待不能宣称上游每个站点请求已即时停止。
+
+最终排序和局部筛选继续使用现有规则，不以到达顺序替代 MoviePilot 优先级。`/api/v1/search/last` 不提供 Crychic 会话隔离，不能用来恢复本用户的搜索。
+
+[搜索流与批处理源码](https://github.com/jxxghp/MoviePilot/blob/v3.1.1/app/api/endpoints/search.py#L97-L447)
+
+### 架构与实现入口
+
+```text
+Telegram 输入
+    -> flow 会话与确认
+    -> moviepilot 搜索 worker -> MoviePilot SSE
+    <- 安全结果快照
+    -> Reply.Follow -> Telegram 同一条消息
+
+MoviePilot 整理历史与媒体库 -> notify 状态与游标 -> 入库通知
+```
+
+| 范围 | 实现入口与职责 |
+| --- | --- |
+| `internal/config/config.go` | 增加可选 Cookie 配置和不回显敏感值的校验 |
+| `internal/app/` | 注入配置与 HTTP 依赖，保持共享 transport，等待流 worker 退出 |
+| `internal/moviepilot/` | 独立 SSE 请求与解析、认证和安全字段投影；不把 JSON 解包逻辑套到 SSE 上 |
+| `internal/flow/torrenthunt.go`、`store.go`、`torrents.go` | 管理搜索代次、结果快照、稳定选择、部分结果和终态 |
+| `internal/telegram/` | 仅消费现有语义 Reply，沿用消息锁、Follow 和投递恢复，不识别 MoviePilot 协议 |
+| `e2e/` | 外部 fake 增加 Cookie 和流式协议，验证真实 app 行为并生成可比对 transcript |
+| README、compose 示例、运行参考、MoviePilot 参考 | 实现时同步公开配置、认证边界和操作说明，不更新真实部署凭据 |
+
+首个完整流式功能会跨越超过 8 个文件，但不新增服务或运行时。优先复用现有 Follow 和 worker，而非另建消息队列、事件总线或第二套会话框架。首版新增一个公开配置项，不新增必需命令。
+
+## 处理进度与实时消息的取舍
+
+`GET /api/v1/system/progress/{process_type}` 按处理类型返回当前进度快照。只允许在身份信息足以关联目标时显示细粒度进度；无法关联时保留原逐文件状态或明确标注为全局处理信息。不能把全局百分比赋给每个任务，也不能把整理完成当成媒体服务器已可见。[进度源码](https://github.com/jxxghp/MoviePilot/blob/v3.1.1/app/api/endpoints/system.py#L630-L664)
+
+`GET /api/v1/system/message` 暂不接入常驻消费，也不提供人工连接真实服务的验证步骤。当前接口会取走共享队列里的消息，网页和机器人可能竞争；`role` 不隔离消费者，队列满时丢弃旧消息，没有可供本项目使用的可靠重放游标。
+
+只有上游提供独立消费者、事件身份及断线重放能力后，才重新评估系统消息流。即使未来接入，也不能替代整理历史、媒体库可见性和请求归属核验，不扩大现有通知对象范围。[消息路由](https://github.com/jxxghp/MoviePilot/blob/v3.1.1/app/api/endpoints/system.py#L711-L750) · [队列语义](https://github.com/jxxghp/MoviePilot/blob/v3.1.1/app/application/messaging/message.py#L1297-L1338)
+
+## 其他功能的实施边界
+
+- **订阅设置**：优先选择已有规则组；更新只提交明确改动字段，不覆盖其他后台设置。沿用订阅来源、媒体 ID、类型、季、剧集组和原创建时间预检。调整范围不能把未取得的集数当成已取得；写结果未知只刷新核对。
+- **我的请求**：用 Crychic 的请求记录建立归属，不依据管理员 key 对应的 `username` 分用户。最近完成记录从启用后建立最小脱敏历史；没有可靠归属的旧记录不自动补成某用户的请求。
+- **异常中心**：优先映射 `failure_stage`、`recovery_action`、`retry_exhausted`、`auto_paused` 等结构化状态。未知值显示未知，不解析错误原文猜原因。人工复核数据含路径和执行证据，不能直接展示或自动判定；无法可靠关联到本用户的记录不进入个人请求页。
+- **补集方案**：仅对可信覆盖范围生成建议，明确重叠、重复已有、总大小与 H&R；不确定范围留给人工选择。最终使用现有确认和串行逐项提交，不自动下载。
+- **立即搜索**：与只读刷新明确分开，确认时说明会访问站点且可能自动下载。只管理本用户明确发起的单订阅批次；返回批次信息不足以确认控制范围时，不提供取消入口。停止不撤销已提交下载。
+- **下载控制**：始终带下载器实例和 hash；暂停、继续、停止刷新、停止后续提交和删除分别命名。若扩展限速，每次明确确认目标与改动；按返回的每个动作结果展示，不把部分成功写成全部成功。
+- **发现与剧集组**：保留 TMDB、Douban、Bangumi 来源身份。歧义让用户选择；剧集组变更需要媒体库、资源范围、日历与通知映射一致，不能只换页面上的季号。
+- **同系列和历史**：媒体库读取失败显示未知；合集勾选后逐项确认范围。历史分页从上游继续读取，不用扩大一个固定首屏冒充完整历史。
+- **字幕**：保存由 MoviePilot 执行，目标与字幕均需确认；服务器路径不进消息。字幕下载不承诺自动校时、版本同步或已正确挂载到所有文件。
+
+## 实现前的失败方式与端到端验收
+
+先按下表枚举外部系统失败方式，再扩展 fake 和实现相应功能。只补真实行为缺口，不新增内部 mock、单元测试或变更侦测测试。已有安全行为由现有场景覆盖，只有新增交互缺口才增加场景。
+
+| 范围 | 必须覆盖的失败方式与边界 | 可核验结果 |
+| --- | --- | --- |
+| Cookie | 未配置、格式错误、过期、撤销、跨源重定向、图片请求串用凭据 | JSON 原功能保留；不泄漏值；其他外部 fake 收不到 Cookie；不重复发起搜索 |
+| SSE | 分片、心跳、空结果、重复候选、`append`、`replace` 分批、中断、错误帧、超时、无完整终态 | 有结果时可提前显示；不完整结果明确标记；旧编号不换目标；上游请求次数可核对 |
+| 会话并发 | 搜索中选资源或导航、迟到事件、连点确认、他人点击、跨话题、退出与重启 | 原消息与目标不被错误覆盖；写入至多一次；旧 worker 不跨重启继续工作 |
+| 消息投递 | 限流、编辑失败、响应迟到、结果未知 | 只恢复展示，不重跑业务；终态不被旧进度覆盖 |
+| 订阅编辑与补搜 | 身份复用、权限不足、并发修改、明确拒绝、写结果未知、取消范围不明 | 不越权、不覆盖未修改设置、不自动重试写入或误停全局批次 |
+| 请求与异常 | 身份缺失、状态未知、敏感错误、文件路径、订阅已结束但尚未入库 | 只展示可归属的安全信息，不把搜索结束或订阅关闭当成到货 |
+| 补集与下载控制 | 不连续集数、整包范围不明、已有库存、资源重叠、同 hash 不同实例、部分成功 | 覆盖范围不虚构；实例目标正确；确认与逐项回执保持一致 |
+| 进度与通知 | 全局进度无法关联、流断开、整理完成但库不可见、历史读取失败 | 退回原状态读取；不伪造单任务百分比、不提前通知完成、不推进错误游标 |
+| 发现与后续功能 | 跨来源重名、剧集组编号差异、旧历史翻页、系列部分查询失败、字幕目标不明 | 保留消歧和返回路径；不误订阅，不将未知当缺失 |
+
+每个新增行为场景通过真实 app 连接 fake Telegram、fake MoviePilot 及所需的其他外部 fake，以 `h.tr.verify(t)` 结束。产物为经脱敏、可重复比对的 `e2e/testdata/transcripts/*.txt`，必要时增加合成 SSE fixture；认证只核对合成凭据，不记录真实 Cookie 或原始资源帧。
+
+实施对应功能后执行：
+
+```sh
+go build ./cmd/crychic
+go vet ./...
+gofmt -l .
+go test -race ./...
+```
+
+仅在交互行为有意变化时使用 `go test ./e2e/ -update`，逐行审阅 transcript 差异后同功能提交。失败或不可用的检查必须报告，不绕过检查提交。主人手测真实业务时核对提前出现结果、取消、Cookie 失效提示、目标稳定和最终操作结果；代理不代为执行。
+
+## 发布与回退
+
+- 按独立功能提交，计划保存不自动触发代码实施、部署或推送。
+- Cookie 与搜索流同一里程碑交付；移除 Cookie 配置即可在重启后恢复原 JSON 搜索。回退时不重放中断的搜索或未知写入。
+- 进度流只增强显示，可以独立停止，原任务读取和通知链继续工作。
+- 订阅编辑、下载控制等已完成的外部变更不能由代码回退自动撤销；逐项回执与人工核对保留。
+- 个人请求历史若新增持久字段，保持现有状态兼容与原子保存，不重建或清空通知游标。关闭新入口不删除旧状态。
+
+## 核验基线与来源
+
+- 本地资料为主人提供的 `MoviePilot/OpenAPI/openapi.json`，`info.version` 为 `v3.1.1`，SHA-256 为 `c31b46882465e8e046ef405872e3e389c04c4e64e2ada6239ebe3ed27c364680`。该文件不作为运行依赖，也不包含在本次提交中。
+- Context7 的一般资料指向 `v3` 主线，Cookie 签发与校验细节查询未命中；本计划的关键认证和 SSE 结论以正文链接的官方 `v3.1.1` 源码补充核验，不把不同分支混作同一版本。
+- [订阅更新与字段保留](https://github.com/jxxghp/MoviePilot/blob/v3.1.1/app/api/endpoints/subscribe.py#L299-L379)、[单订阅搜索](https://github.com/jxxghp/MoviePilot/blob/v3.1.1/app/api/endpoints/submaintenance.py#L184-L217)、[执行批次投影](https://github.com/jxxghp/MoviePilot/blob/v3.1.1/app/application/subscription/status.py#L153-L221)、[下载与字幕控制](https://github.com/jxxghp/MoviePilot/blob/v3.1.1/app/api/endpoints/download.py#L369-L461)。
+- 项目约束入口为 [根指南](../../AGENTS.md)、[MoviePilot 参考](../agent-reference/moviepilot.md)、[会话参考](../agent-reference/flow.md)、[通知参考](../agent-reference/notifications.md)、[E2E 规则](../../e2e/AGENTS.md)。修改每个目录前仍须读取对应局部规则。
+- 接口和源码核对不等于目标部署已验收。此次保存计划没有读取真实凭据，没有连接真实 MoviePilot 的登录、资源搜索、消息流或写接口。
