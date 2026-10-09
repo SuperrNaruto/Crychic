@@ -112,7 +112,7 @@ indices stable
 ## 确认票据与过期
 
 Button data is `<session>:<action>:<arg>` and must stay ≤ 64 bytes (Telegram limit). Guarded write buttons
-(`needsTicket`: `finishing`'s `ok`, `y`, `td`, `tz`, `bo`, plus subscription `sp`, `sr`, `z`) carry a fourth
+(`needsTicket`: `finishing`'s `ok`, `y`, `td`, `tz`, `bo`, plus subscription `sp`, `sr`, `z`, `uw`) carry a fourth
 part, a ticket `navigate` hands the shown screen (`ticketed`); only a press with the shown screen's ticket
 writes, and 返回 restores a screen with its ticket, so a stale 确认 from an earlier pick of the same list never
 confirms the next pick. Subscription mutations do not enter `finishing`, which controls request navigation. An
@@ -179,6 +179,19 @@ identity only flashes a notice, never writes. Details use the same identity comp
 id does not grant ownership of another target. MoviePilot's write API has no conditional identity parameter:
 these are client-side preflight checks, not an atomic compare-and-write guarantee against concurrent backend
 replacement.
+
+### 订阅条件编辑
+
+`subedit.go`、`subeditchoices.go`、`subeditdirectory.go`、`subeditinput.go`、`subedittext.go` 和
+`subeditsave.go` 维护当前订阅的原始条件和内存草稿。只有请求者详情页提供「编辑条件」，打开和保存均按复合身份与 watcher 归属核验。保存前比较全部可编辑字段和总集数，普通进度变化不阻断，也不随草稿回传。
+
+字段页、关键词输入和预览均替换同一编辑层级；返回字段页只回编辑菜单，返回菜单才放弃草稿并回详情。选项代次从会话单调分配，不因返回恢复旧编号；旧分辨率或目录编号不能改到新字段、新规则。输入也携带字段屏幕代次。`uw` 绑定当前屏幕票据，写前消费草稿、清除可确认状态并移除编辑历史；回执只提供刷新和导航，不能返回旧确认。
+
+规格选择是固定且经过 v3.1.1 源码核对的匹配表达式。包含／排除采用单行字面关键词（256 字、12 项上限），`|` 分隔任一匹配，特殊字符转义；不使用 Go 正则解释旧 Python 表达式。原后台条件只显示已设置，输入经过检查的本次字面关键词在预览中显示。既有复杂正则只能保留或清空，编辑复杂表达式留在 MoviePilot 后台。
+
+规则组保留选择顺序，使用已有目录和引用规则摘要核对；不显示自定义规则正文、使用者、服务路径或错误原文。站点复用媒体类型目录，仅投影 ID 和名称，不保留或展示凭据。清空规则组沿用普通／洗版各自全局设置；空站点沿用后台默认。只有草稿改动了某个目录的选择且结果非空时，保存前才重新读取该目录核对；目录失败保留原草稿，不发出更新。
+
+写结果未知（含超时、半响应、缺少 `success`、跳转）不能重试。明确成功后先保存请求 watch 的新起始集和洗版模式，再读当前订阅；当前读失败不丢掉已确认的范围修改。后续刷新只读核对，不承诺客户端预检是后端原子 compare-and-write。
 
 ## 历史与洗版
 
@@ -286,6 +299,7 @@ pick `tp`, ticking releases `tm`/`tk`/`tb`/`tz`, release order `to`, site filter
 filter `tx`, download `td`, download deletion `kd`/`ky`; 洗版订阅 is `bv`/`bo`, subscription return is `j`,
 subscription kind `sf`, shared cancel `sc`, subscription details/refresh `sd`/`su`, pause/resume `sp`/`sr`,
 history `hs`/`hf`/`hp`/`ho`, calendar weekday is `w`, generic list paging is `p`, 相似推荐 is `r`, 同系列 is `n`,
-重新搜索 is `rs`, read-only 重试 is `rt` and 返回 is `bk`
+重新搜索 is `rs`, read-only 重试 is `rt` and 返回 is `bk`.
+订阅编辑为 `ue/uf/uv/uc/ua/uq/uw/ui`，依次对应入口、字段、选择、清空、返回菜单、预览、确认写入和 typed input。
 
 这是现有动作的导航索引；新增动作时核对源码中的全部 handler，不能把该表当作无需核验的注册中心。

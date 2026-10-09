@@ -40,6 +40,7 @@ var forward = map[string]bool{
 	actionTorrentRun: true, actionTorrentPick: true, actionTorrentMulti: true, actionTorrentBatch: true,
 	actionUpgrade:     true,
 	actionSearchSites: true,
+	actionSubEdit:     true,
 }
 
 var sameLevel = map[string]bool{
@@ -50,6 +51,8 @@ var sameLevel = map[string]bool{
 	actionTorrentTick: true, actionTorrentMissing: true,
 	actionTorrentRefresh: true, actionTorrentResearch: true,
 	actionSearchSite: true, actionSearchAll: true,
+	actionSubEditField: true, actionSubEditPick: true, actionSubEditClear: true,
+	actionSubEditApply: true, actionSubEditReview: true, actionSubEditSave: true,
 }
 
 // listPicks are the forward steps that pick from a list.
@@ -65,7 +68,7 @@ var finishing = map[string]bool{
 // needsTicket also binds subscription mutations to the currently shown
 // screen; those writes do not finish a media request.
 func needsTicket(action string) bool {
-	return finishing[action] || action == actionPauseSub || action == actionResumeSub || action == actionUnsubscribe
+	return finishing[action] || action == actionPauseSub || action == actionResumeSub || action == actionUnsubscribe || action == actionSubEditSave
 }
 
 // answered stands for a typed start episode, which replaces its prompt.
@@ -190,6 +193,7 @@ func (e *Engine) back(ctx context.Context, sess session) Reply {
 	restored.tickets = sess.tickets
 	restored.hunts = max(sess.hunts, restored.hunts)
 	restored.torrentIDs = max(sess.torrentIDs, restored.torrentIDs)
+	restored.editOptions = max(sess.editOptions, restored.editOptions)
 	if sess.streaming && restored.searchView == torrentListView && sess.hunt == restored.hunt {
 		restored = syncedHunt(restored, restored.hunt.read())
 		e.store.put(restored)

@@ -56,7 +56,8 @@ var idleServer = map[string]route{
 	queuePath:      ok("queue_none.json"),
 	clientsPath:    ok("mediaserver_clients.json"),
 	ruleGroupsPath: ok("subscribe_filter_groups.json"),
-	schedulePath:   ok("schedule.json"),
+	"GET /api/v1/system/setting/BestVersionFilterRuleGroups": ok("subscribe_upgrade_groups.json"),
+	schedulePath: ok("schedule.json"),
 }
 
 // polledPaths are read over and over, by live task views and by the
@@ -107,21 +108,25 @@ type fakeMoviePilot struct {
 	tr     *transcript
 	routes map[string]route
 
-	mu         sync.Mutex
-	transfers  []transfer // newest first, like MoviePilot
-	polled     chan struct{}
-	readers    []reader
-	created    int  // subscriptions created so far
-	added      int  // downloads added so far
-	lagging    bool // the media server has not scanned new transfers yet
-	scanned    int  // transfers the media server shows while lagging
-	searches   map[string]string
-	recognized map[string]string
-	deleted    map[downloadKey]bool   // downloads removed from each downloader
-	states     map[int]string         // subscription states set, by id
-	subscribed map[int]map[string]any // subscriptions created or found, for reads by id
-	held       map[string][]*heldCall
-	streams    map[string][]*searchStream
+	mu               sync.Mutex
+	transfers        []transfer // newest first, like MoviePilot
+	polled           chan struct{}
+	readers          []reader
+	created          int  // subscriptions created so far
+	added            int  // downloads added so far
+	lagging          bool // the media server has not scanned new transfers yet
+	scanned          int  // transfers the media server shows while lagging
+	searches         map[string]string
+	recognized       map[string]string
+	deleted          map[downloadKey]bool   // downloads removed from each downloader
+	states           map[int]string         // subscription states set, by id
+	subscribed       map[int]map[string]any // subscriptions created or found, for reads by id
+	held             map[string][]*heldCall
+	streams          map[string][]*searchStream
+	edited           map[int]map[string]any
+	editPatches      []map[string]any
+	editReply        subscriptionEditResponse
+	subscriptionRead *heldCall
 }
 
 // reader waits for a complete poll after it was registered. Only page one
@@ -200,6 +205,7 @@ func (f *fakeMoviePilot) serveAuthenticated(w http.ResponseWriter, r *http.Reque
 	case f.servesLibrary(w, r):
 	case f.deletesDownload(w, r):
 	case f.setsSubscriptionState(w, r):
+	case f.editsSubscription(w, r):
 	default:
 		f.serveRoute(w, r)
 	}
@@ -417,10 +423,14 @@ func (f *fakeMoviePilot) serveSubscription(w http.ResponseWriter, r *http.Reques
 		f.serveRoute(w, r)
 		return
 	}
+	if edited := f.editedSubscription(r.URL.Path); edited != nil {
+		sub = edited
+	}
 	if sub == nil {
 		sub = map[string]any{"id": nil}
 	}
 	data, _ := json.Marshal(sub)
+	f.waitSubscriptionRead(r.Context())
 	writeEnvelope(w, http.StatusOK, `{"success":true,"message":"","data":`+string(data)+`}`)
 }
 

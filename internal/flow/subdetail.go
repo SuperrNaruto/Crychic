@@ -58,10 +58,21 @@ func (e *Engine) subDetail(ctx context.Context, sess session, index int) Reply {
 		return subDetailGone(sess, sess.subs[index].Kind)
 	}
 	sess = refreshedSubscriptionState(sess, subs[i])
+	sess.subs = slices.Clone(sess.subs)
+	sess.subs[index] = subs[i]
+	sess.subEdit = nil
+	if slices.Contains(sess.mine, subs[i].ID) {
+		if err := e.watcher.RefreshSubscription(ctx, subs[i]); err != nil {
+			e.log.Warn("cannot refresh subscription notification scope", "subscription", subs[i].ID)
+		}
+	}
 	detail := e.readSubDetail(ctx, subs[i])
 	view := detail.view()
 	refresh := Button{Label: "刷新", Data: data(sess.id, actionRefreshSubDetail, sess.subs[index].ID)}
 	view.menu = [][]Button{append([]Button{refresh}, pauseButton(sess, subs[i])...)}
+	if slices.Contains(sess.mine, subs[i].ID) {
+		view.menu = append(view.menu, []Button{{Label: "编辑条件", Data: data(sess.id, actionSubEdit, subs[i].ID)}})
+	}
 	view.footer = browseRow(sess.id)
 	return e.listPages(sess, view)
 }
@@ -107,7 +118,7 @@ func (e *Engine) readSubDetail(ctx context.Context, sub Subscription) subscripti
 	ctx, cancel := context.WithTimeout(ctx, cosmeticTimeout)
 	defer cancel()
 	var wg sync.WaitGroup
-	wg.Go(func() { d.upkeep, d.upkeepErr = e.backend.SubscriptionUpkeep(ctx) })
+	wg.Go(func() { d.upkeep, d.upkeepErr = e.backend.SubscriptionUpkeep(ctx, sub.BestVersion) })
 	if sub.Source == "" || sub.MediaID == "" || (sub.Kind == TV && sub.Season == nil) {
 		err := errors.New("subscription has no usable media identity or season")
 		d.libraryErr, d.downloadsErr, d.transfersErr = err, err, err

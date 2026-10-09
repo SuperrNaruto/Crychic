@@ -50,9 +50,10 @@ type Options struct {
 type Notifier struct {
 	opts Options
 
-	mu           sync.Mutex
-	st           state
-	lastActivity time.Time
+	mu            sync.Mutex
+	st            state
+	lastActivity  time.Time
+	scopeRevision uint64 // guards in-flight reads against a newer local edit
 	// marks is when each unfinished download last made progress; only the
 	// polling goroutine uses it, and a restart starts the clocks afresh.
 	marks map[string]mark
@@ -70,6 +71,17 @@ func New(opts Options) (*Notifier, error) {
 // Watch implements flow.Watcher.
 func (n *Notifier) Watch(_ context.Context, req flow.Request) error {
 	return n.update(func(st state) state { return withRequest(st, req) })
+}
+
+// RefreshSubscription preserves existing requesters, arrivals and cursors.
+// The caller has observed this identity's current settings after an edit.
+func (n *Notifier) RefreshSubscription(_ context.Context, sub flow.Subscription) error {
+	n.mu.Lock()
+	defer n.mu.Unlock()
+	n.scopeRevision++
+	return n.updateLocked(func(st state) state {
+		return withSubscriptions(st, map[int]flow.Subscription{sub.ID: sub})
+	})
 }
 
 // Requested implements flow.Watcher.
@@ -179,13 +191,14 @@ func (n *Notifier) arrivals(ctx context.Context, snapshot state) ([]watch, error
 	}
 	snapshot = n.snapshot()
 	_, fresh := snapshot.trackTransfers(transfers)
+	revision := n.subscriptionScopeRevision()
 	subs, err := n.readSubscriptions(ctx, arrivingSubscriptions(snapshot.Watches, fresh))
 	if err != nil {
 		return nil, err
 	}
 	now := n.opts.Now()
 	var ready []watch
-	err = n.update(func(st state) state {
+	err = n.updateReadScope(revision, func(st state) state {
 		next, fresh := st.trackTransfers(transfers)
 		next = withSubscriptions(next, subs)
 		next = arrive(next, fresh, now)
@@ -294,6 +307,7 @@ func (n *Notifier) checkActivity(ctx context.Context) error {
 		return nil
 	}
 	watches := n.snapshot().Watches
+	revision := n.subscriptionScopeRevision()
 	active, err := n.downloading(ctx, watches)
 	if err != nil {
 		return err
@@ -308,10 +322,13 @@ func (n *Notifier) checkActivity(ctx context.Context) error {
 		}
 		active[w.key()] = w.subscribed(subs[w.SubscriptionID])
 	}
-	n.lastActivity = now
-	return n.update(func(st state) state {
+	err = n.updateReadScope(revision, func(st state) state {
 		return withActivity(withSubscriptions(st, subs), active, now)
 	})
+	if err == nil {
+		n.lastActivity = now
+	}
+	return err
 }
 
 // downloading tells, by watch key, which watched downloads are unfinished;
@@ -364,6 +381,11 @@ func (n *Notifier) snapshot() state {
 func (n *Notifier) update(transition func(state) state) error {
 	n.mu.Lock()
 	defer n.mu.Unlock()
+	return n.updateLocked(transition)
+}
+
+// updateLocked is shared by ordinary transitions and checked read commits.
+func (n *Notifier) updateLocked(transition func(state) state) error {
 	next := transition(n.st)
 	if reflect.DeepEqual(n.st, next) {
 		return nil

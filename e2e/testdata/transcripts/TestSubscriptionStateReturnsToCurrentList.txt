@@ -246,6 +246,7 @@
    </table>
    <footer>仅查询，不会触发搜索或下载；点击刷新查看最新状态哦～</footer>
    [刷新 | 3:su:1] [暂停订阅 | 3:sp:1]
+   [编辑条件 | 3:ue:1]
    [返回 | 3:bk:0] [首页 | 3:o:0] [关闭 | 3:c:0]
 << answerCallbackQuery
 >> user 1001 taps 3:sp:1 on message 3
@@ -274,6 +275,7 @@
    </table>
    <footer>仅查询，不会触发搜索或下载；点击刷新查看最新状态哦～</footer>
    [刷新 | 3:su:1] [恢复订阅 | 3:sr:1]
+   [编辑条件 | 3:ue:1]
    [返回 | 3:bk:0] [首页 | 3:o:0] [关闭 | 3:c:0]
 << answerCallbackQuery
 >> user 1001 taps 3:bk:0 on message 3
@@ -317,6 +319,7 @@
    </table>
    <footer>仅查询，不会触发搜索或下载；点击刷新查看最新状态哦～</footer>
    [刷新 | 3:su:1] [恢复订阅 | 3:sr:1]
+   [编辑条件 | 3:ue:1]
    [返回 | 3:bk:0] [首页 | 3:o:0] [关闭 | 3:c:0]
 << answerCallbackQuery
 >> user 1001 taps 3:sr:1 on message 3
@@ -345,6 +348,7 @@
    </table>
    <footer>仅查询，不会触发搜索或下载；点击刷新查看最新状态哦～</footer>
    [刷新 | 3:su:1] [暂停订阅 | 3:sp:1]
+   [编辑条件 | 3:ue:1]
    [返回 | 3:bk:0] [首页 | 3:o:0] [关闭 | 3:c:0]
 << answerCallbackQuery
 >> user 1001 taps 3:bk:0 on message 3
@@ -388,6 +392,7 @@
    </table>
    <footer>仅查询，不会触发搜索或下载；点击刷新查看最新状态哦～</footer>
    [刷新 | 3:su:2] [暂停订阅 | 3:sp:2]
+   [编辑条件 | 3:ue:2]
    [返回 | 3:bk:0] [首页 | 3:o:0] [关闭 | 3:c:0]
 << answerCallbackQuery
 >> user 1001 taps 3:sp:2 on message 3
@@ -418,6 +423,7 @@
    </table>
    <footer>仅查询，不会触发搜索或下载；点击刷新查看最新状态哦～</footer>
    [刷新 | 3:su:2] [恢复订阅 | 3:sr:2]
+   [编辑条件 | 3:ue:2]
    [返回 | 3:bk:0] [首页 | 3:o:0] [关闭 | 3:c:0]
 << answerCallbackQuery
 >> user 1001 taps 3:bk:0 on message 3

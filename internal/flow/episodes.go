@@ -56,7 +56,7 @@ type Typed struct {
 // Answer takes the text a user typed in response to a Reply with Input.
 func (e *Engine) Answer(ctx context.Context, actor Actor, typed Typed) Reply {
 	id, p, ok := parseData(typed.Input)
-	if !ok || (p.action != actionAskFrom && p.action != actionAskTitle && p.action != actionResearch) {
+	if !ok || !typedAction(p.action) {
 		return Reply{Notice: msgInvalidChoice}
 	}
 	sess, unlock, ok := e.lockSession(ctx, actor, id)
@@ -69,6 +69,9 @@ func (e *Engine) Answer(ctx context.Context, actor Actor, typed Typed) Reply {
 	}
 	sess.lastChoice, sess.lastReply = "", Reply{}
 	e.store.put(sess)
+	if p.action == actionSubEditInput {
+		return e.navigate(sess, answered, e.answerSubEdit(sess, typed))
+	}
 	text := strings.TrimSpace(typed.Text)
 	if p.action == actionResearch {
 		return e.research(ctx, sess, text)
@@ -77,6 +80,10 @@ func (e *Engine) Answer(ctx context.Context, actor Actor, typed Typed) Reply {
 		return e.navigate(sess, p.action, e.searchTyped(ctx, sess, text))
 	}
 	return e.navigate(sess, answered, startFrom(sess, text))
+}
+
+func typedAction(action string) bool {
+	return action == actionAskFrom || action == actionAskTitle || action == actionResearch || action == actionSubEditInput
 }
 
 // startFrom takes a typed start episode, asking again when it is invalid.

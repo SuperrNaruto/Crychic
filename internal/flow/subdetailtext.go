@@ -109,6 +109,9 @@ func subScope(s Subscription) string {
 	mode := "普通订阅"
 	if s.BestVersion {
 		mode = "洗版订阅"
+		if s.Kind == TV && s.BestVersionFull {
+			mode = "全集洗版订阅"
+		}
 	}
 	if s.Kind == Movie {
 		return mode

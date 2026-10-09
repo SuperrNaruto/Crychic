@@ -147,7 +147,14 @@ func availableChoice(sess session, raw, action string) bool {
 	if sess.searchView == torrentWaitingView {
 		return waitingTorrentChoice(action)
 	}
+	return availableScreenChoice(sess, raw, action)
+}
+
+func availableScreenChoice(sess session, raw, action string) bool {
 	shown := sess.screen.reply
+	if subEditAction(action) {
+		return hasData(shown.Buttons, raw)
+	}
 	if allowed, handled := availableTorrentChoice(sess, raw, action); handled {
 		return allowed
 	}
@@ -195,11 +202,14 @@ func (e *Engine) choose(ctx context.Context, sess session, p press) Reply {
 	case actionPage:
 		return e.page(sess, p.arg)
 	case actionBack:
+		if reply, handled := e.backFromSubEdit(sess); handled {
+			return reply
+		}
 		return e.back(ctx, sess)
 	case actionBatchProgress, actionBatchStop:
 		return e.batchProgress(sess, p)
 	}
-	for _, choose := range []chooser{e.chooseHome, e.chooseRequest, e.chooseSeasons, e.chooseTask, e.chooseChart, e.chooseSubs, e.chooseSubDetail, e.chooseSubPause, e.chooseHistory, e.chooseRelated, e.chooseTorrents, e.chooseSearchSites, e.chooseTorrentView, e.chooseTorrentBatch, e.chooseDelete, e.chooseUpgrade} {
+	for _, choose := range []chooser{e.chooseHome, e.chooseRequest, e.chooseSeasons, e.chooseTask, e.chooseChart, e.chooseSubs, e.chooseSubDetail, e.chooseSubPause, e.chooseSubEdit, e.chooseHistory, e.chooseRelated, e.chooseTorrents, e.chooseSearchSites, e.chooseTorrentView, e.chooseTorrentBatch, e.chooseDelete, e.chooseUpgrade} {
 		if reply, ok := choose(ctx, sess, p); ok {
 			return e.navigate(sess, p.action, reply)
 		}
@@ -256,16 +266,22 @@ func (e *Engine) pickMedia(ctx context.Context, sess session, index int) Reply {
 	wg.Go(func() { seasons, err = e.backend.Seasons(ctx, media) })
 	e.enrich(ctx, &sess, media)
 	wg.Wait()
-	return e.showSeasons(ctx, sess, seasons, err)
+	return e.showSeasons(ctx, sess, seasonRead{seasons, err})
 }
 
 func (e *Engine) offerSeasons(ctx context.Context, sess session) Reply {
 	seasons, err := e.backend.Seasons(ctx, sess.picked.Media)
-	return e.showSeasons(ctx, sess, seasons, err)
+	return e.showSeasons(ctx, sess, seasonRead{seasons, err})
+}
+
+type seasonRead struct {
+	seasons []Season
+	err     error
 }
 
 // showSeasons offers the seasons just read, or the read's failure.
-func (e *Engine) showSeasons(ctx context.Context, sess session, seasons []Season, err error) Reply {
+func (e *Engine) showSeasons(ctx context.Context, sess session, read seasonRead) Reply {
+	seasons, err := read.seasons, read.err
 	if err != nil {
 		return e.readFailure(sess, recovery{step: readSeasons}, err)
 	}

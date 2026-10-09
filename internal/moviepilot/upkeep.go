@@ -23,11 +23,14 @@ type scheduledJob struct {
 
 // SubscriptionUpkeep reads the global subscription rule groups and the
 // subscription jobs of MoviePilot's scheduler (its WebUI's 后台服务).
-func (c *Client) SubscriptionUpkeep(ctx context.Context) (flow.SubscriptionUpkeep, error) {
+func (c *Client) SubscriptionUpkeep(ctx context.Context, upgrade bool) (flow.SubscriptionUpkeep, error) {
 	var groups struct {
 		Value []string `json:"value"`
 	}
 	setting := call{method: http.MethodGet, path: "/api/v1/system/setting/SubscribeFilterRuleGroups"}
+	if upgrade {
+		setting.path = "/api/v1/system/setting/BestVersionFilterRuleGroups"
+	}
 	if err := c.do(ctx, setting, &groups); err != nil {
 		return flow.SubscriptionUpkeep{}, err
 	}

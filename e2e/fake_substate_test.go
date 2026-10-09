@@ -2,6 +2,7 @@ package e2e
 
 import (
 	"encoding/json"
+	"maps"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -65,13 +66,14 @@ func (f *fakeMoviePilot) restated(body string) string {
 	f.mu.Lock()
 	defer f.mu.Unlock()
 	var env map[string]any
-	if len(f.states) == 0 || json.Unmarshal([]byte(body), &env) != nil {
+	if json.Unmarshal([]byte(body), &env) != nil {
 		return body
 	}
 	subs, _ := env["data"].([]any)
 	for _, s := range subs {
 		sub, _ := s.(map[string]any)
 		id, _ := sub["id"].(float64)
+		maps.Copy(sub, f.edited[int(id)])
 		if state, ok := f.states[int(id)]; ok {
 			sub["state"] = state
 		}

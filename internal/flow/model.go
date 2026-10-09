@@ -165,26 +165,30 @@ type LibraryItem struct {
 
 // Subscription is one of the backend's subscriptions.
 type Subscription struct {
-	ID           int
-	Created      string // backend creation timestamp; distinguishes a reused id
-	Source       string
-	MediaID      string
-	Title        string
-	Year         string
-	Kind         Kind
-	Season       *int
-	State        string // backend state code, e.g. "R" while subscribed
-	Lack         int    // episodes still missing from the subscription, not library
-	Total        int    // episodes in the season, 0 when unknown
-	StartEpisode int
-	Poster       string
-	Quality      string
-	Resolution   string
-	Effect       string
-	FilterGroups []string
-	BestVersion  bool
-	LastSearch   time.Time
-	Execution    *SubscriptionExecution
+	ID              int
+	Created         string // backend creation timestamp; distinguishes a reused id
+	Source          string
+	MediaID         string
+	Title           string
+	Year            string
+	Kind            Kind
+	Season          *int
+	State           string // backend state code, e.g. "R" while subscribed
+	Lack            int    // episodes still missing from the subscription, not library
+	Total           int    // episodes in the season, 0 when unknown
+	StartEpisode    int
+	Poster          string
+	Quality         string
+	Resolution      string
+	Effect          string
+	FilterGroups    []string
+	BestVersion     bool
+	BestVersionFull bool
+	Sites           []int
+	Include         string // opaque backend expression; never displayed or logged
+	Exclude         string // opaque backend expression; never displayed or logged
+	LastSearch      time.Time
+	Execution       *SubscriptionExecution
 	// EpisodeGroup is the TMDB episode group whose seasons the subscription
 	// counts in, "" for the show's own seasons.
 	EpisodeGroup string
@@ -284,7 +288,12 @@ type Backend interface {
 	Series(ctx context.Context, media Media) ([]Media, error)
 	Subscriptions(ctx context.Context) ([]Subscription, error)
 	// SubscriptionUpkeep tells what applies to every subscription.
-	SubscriptionUpkeep(ctx context.Context) (SubscriptionUpkeep, error)
+	SubscriptionUpkeep(ctx context.Context, upgrade bool) (SubscriptionUpkeep, error)
+	// SubscriptionRules reads safe metadata for existing rule groups only.
+	SubscriptionRules(ctx context.Context) ([]SubscriptionRuleGroup, error)
+	SubscriptionSites(ctx context.Context, kind Kind) ([]SearchSite, error)
+	// UpdateSubscription sends the explicitly changed fields once.
+	UpdateSubscription(ctx context.Context, update SubscriptionUpdate) error
 	// SubscriptionHistory lists at most count past subscriptions of kind,
 	// newest first.
 	SubscriptionHistory(ctx context.Context, kind Kind, count int) ([]PastSubscription, error)
@@ -349,6 +358,8 @@ type Watcher interface {
 	Forget(ctx context.Context, sub Subscription) error
 	// ForgetDownload drops a download's requests, e.g. once it is deleted.
 	ForgetDownload(ctx context.Context, id string) error
+	// RefreshSubscription saves observed scope without creating new requesters.
+	RefreshSubscription(ctx context.Context, sub Subscription) error
 }
 
 // Actor is the chat user driving a conversation, in platform terms.

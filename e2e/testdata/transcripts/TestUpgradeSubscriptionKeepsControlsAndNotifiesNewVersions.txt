@@ -88,7 +88,7 @@
    [首页 | 2:o:0] [关闭 | 2:c:0]
 >> user 1001 taps 2:sd:1 on message 2
 -> MoviePilot GET /api/v1/subscribe/
--> MoviePilot GET /api/v1/system/setting/SubscribeFilterRuleGroups
+-> MoviePilot GET /api/v1/system/setting/BestVersionFilterRuleGroups
 -> MoviePilot GET /api/v1/dashboard/schedule
 << editMessageText chat=1001 message=2
    <h3>📚 订阅详情 · 《绝命毒师》第 2 季</h3>
@@ -96,7 +96,7 @@
    <h4>订阅设置</h4>
    <p>洗版订阅 · 从第 1 集开始 · 共 13 集 · MoviePilot 待获取 13 集<br>
    <b>规格 </b>不限（未单独设置）<br>
-   <b>规则组 </b>沿用全局 14 组：前置过滤 · 动画电影 · 华语电影 · 欧美电影 · 日番 · 国漫 · 纪录片 · 综艺 · 国产剧 · 港台剧 · 欧美剧 · 日韩剧 · 其他 · 未分类</p>
+   <b>规则组 </b>沿用全局 1 组：洗版优先</p>
    <h4>最近一次搜索</h4>
    <p><b>最近搜索 </b>还没有记录<br>
    <b>执行状态 </b>暂无执行记录</p>
@@ -110,6 +110,7 @@
    </table>
    <footer>仅查询，不会触发搜索或下载；点击刷新查看最新状态哦～</footer>
    [刷新 | 2:su:1] [暂停订阅 | 2:sp:1]
+   [编辑条件 | 2:ue:1]
    [返回 | 2:bk:0] [首页 | 2:o:0] [关闭 | 2:c:0]
 << answerCallbackQuery
 >> MoviePilot keeps this upgrade subscription active for a better release
@@ -125,7 +126,7 @@
 -> MoviePilot GET /api/v1/subscribe/
 -> MoviePilot PUT /api/v1/subscribe/status/1?state=S
 -> MoviePilot GET /api/v1/subscribe/
--> MoviePilot GET /api/v1/system/setting/SubscribeFilterRuleGroups
+-> MoviePilot GET /api/v1/system/setting/BestVersionFilterRuleGroups
 -> MoviePilot GET /api/v1/dashboard/schedule
 << editMessageText chat=1001 message=2
    <h3>📚 订阅详情 · 《绝命毒师》第 2 季</h3>
@@ -133,7 +134,7 @@
    <h4>订阅设置</h4>
    <p>洗版订阅 · 从第 1 集开始 · 共 13 集 · MoviePilot 待获取 13 集<br>
    <b>规格 </b>不限（未单独设置）<br>
-   <b>规则组 </b>沿用全局 14 组：前置过滤 · 动画电影 · 华语电影 · 欧美电影 · 日番 · 国漫 · 纪录片 · 综艺 · 国产剧 · 港台剧 · 欧美剧 · 日韩剧 · 其他 · 未分类</p>
+   <b>规则组 </b>沿用全局 1 组：洗版优先</p>
    <h4>最近一次搜索</h4>
    <p><b>最近搜索 </b>还没有记录<br>
    <b>执行状态 </b>暂无执行记录</p>
@@ -147,13 +148,14 @@
    </table>
    <footer>仅查询，不会触发搜索或下载；点击刷新查看最新状态哦～</footer>
    [刷新 | 2:su:1] [恢复订阅 | 2:sr:1]
+   [编辑条件 | 2:ue:1]
    [返回 | 2:bk:0] [首页 | 2:o:0] [关闭 | 2:c:0]
 << answerCallbackQuery
 >> user 1001 taps 2:sr:1 on message 2
 -> MoviePilot GET /api/v1/subscribe/
 -> MoviePilot PUT /api/v1/subscribe/status/1?state=R
 -> MoviePilot GET /api/v1/subscribe/
--> MoviePilot GET /api/v1/system/setting/SubscribeFilterRuleGroups
+-> MoviePilot GET /api/v1/system/setting/BestVersionFilterRuleGroups
 -> MoviePilot GET /api/v1/dashboard/schedule
 << editMessageText chat=1001 message=2
    <h3>📚 订阅详情 · 《绝命毒师》第 2 季</h3>
@@ -161,7 +163,7 @@
    <h4>订阅设置</h4>
    <p>洗版订阅 · 从第 1 集开始 · 共 13 集 · MoviePilot 待获取 13 集<br>
    <b>规格 </b>不限（未单独设置）<br>
-   <b>规则组 </b>沿用全局 14 组：前置过滤 · 动画电影 · 华语电影 · 欧美电影 · 日番 · 国漫 · 纪录片 · 综艺 · 国产剧 · 港台剧 · 欧美剧 · 日韩剧 · 其他 · 未分类</p>
+   <b>规则组 </b>沿用全局 1 组：洗版优先</p>
    <h4>最近一次搜索</h4>
    <p><b>最近搜索 </b>还没有记录<br>
    <b>执行状态 </b>暂无执行记录</p>
@@ -175,6 +177,7 @@
    </table>
    <footer>仅查询，不会触发搜索或下载；点击刷新查看最新状态哦～</footer>
    [刷新 | 2:su:1] [暂停订阅 | 2:sp:1]
+   [编辑条件 | 2:ue:1]
    [返回 | 2:bk:0] [首页 | 2:o:0] [关闭 | 2:c:0]
 << answerCallbackQuery
 >> user 1001 taps 2:bk:0 on message 2

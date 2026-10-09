@@ -124,8 +124,9 @@ the bot's other live writes are subscribing (and resubscribing), pausing/resumin
 a picked release and deleting a download
 
 Subscription details show what applies where a subscription sets nothing: no quality/resolution/effect is 不限,
-and no `filter_groups` falls back to the global `SubscribeFilterRuleGroups` setting (`GET
-/api/v1/system/setting/SubscribeFilterRuleGroups`; the per-kind default subscription configs only seed new
+and no `filter_groups` falls back to the global `SubscribeFilterRuleGroups` setting for ordinary subscriptions,
+or `BestVersionFilterRuleGroups` for upgrades (`GET /api/v1/system/setting/{name}`;
+the per-kind default subscription configs only seed new
 subscriptions). MoviePilot schedules no search per subscription (`execution_status.next_run_at` is null after
 a run), so 自动查找 reads its scheduler (`GET /api/v1/dashboard/schedule`, the WebUI's 后台服务): `subscribe_refresh`
 browses the sites' newest releases (`SUBSCRIBE_MODE`, every `SUBSCRIBE_RSS_INTERVAL` minutes) and
@@ -142,6 +143,18 @@ still contain paths or credentials: `moviepilot` passes only `HasError` to flow,
 private-looking error to prove it is not shown
 
 订阅身份核验与只写一次见 [会话参考](flow.md#订阅列表详情与身份)。`start_episode` 的范围及下一集条件见 [季与起始集](flow.md#季与起始集)。
+
+## v3.1.1 订阅条件更新
+
+`PUT /api/v1/subscribe/` 接受 `id` 和明确改动的公共字段。端点调用 `to_public_write_payload(exclude_unset=True)`；未提交的字段不写，空字符串或显式 null 可清空 `quality/resolution/effect/include/exclude`。Crychic 使用显式 null，集合清空使用 `[]`。成功为 `success: true, data: null`，不能要求返回订阅对象。[端点](https://github.com/jxxghp/MoviePilot/blob/v3.1.1/app/api/endpoints/subscribe.py#L299-L379) · [模型及排除字段](https://github.com/jxxghp/MoviePilot/blob/v3.1.1/app/schemas/subscribe.py#L129-L358)
+
+公共接口排除 `note`、`lack_episode`、`state`、`current_priority`、`episode_priority`、`date`、`username` 等运行事实。Crychic 不提交这些字段，也不通过改总集数或调用 reset 来调整起始集／洗版。关闭洗版仅改 `best_version`，保留暂时不生效的 `best_version_full`；电影不修改这个电视剧字段。[写服务](https://github.com/jxxghp/MoviePilot/blob/v3.1.1/app/application/subscription/mutation.py)
+
+规则读取使用 `GET /rule/groups?include_usage=false` 的 `data.rule_groups`，以及 `/rule/builtin`、`/rule/custom?include_group_refs=false` 的 `data.rules`。只投影唯一名称、类型、分类和可用性，内存中计算规则组及其引用规则的摘要以核对并发修改；不向 flow 传递规则正文或使用者信息。缺少集合、未知引用、重名和错误语法不可当成可信可选组。[目录投影](https://github.com/jxxghp/MoviePilot/blob/v3.1.1/app/application/filtering.py#L187-L225) · [查询](https://github.com/jxxghp/MoviePilot/blob/v3.1.1/app/application/filtering.py#L423-L488)
+
+规格匹配值来自固定版本内置规则；自定义包含／排除仅生成转义后的字面关键词表达式，不运行用户正则。MoviePilot 对资源的标题、描述、标签匹配包含／排除，对标题匹配规格；空规则组按普通／洗版选择不同全局组。[匹配](https://github.com/jxxghp/MoviePilot/blob/v3.1.1/app/application/torrent/download.py#L740-L783) · [内置规则](https://github.com/jxxghp/MoviePilot/blob/v3.1.1/app/application/rules.py#L510-L606) · [全局组选择](https://github.com/jxxghp/MoviePilot/blob/v3.1.1/app/chain/subscribe/match.py#L732-L745)
+
+更新使用 API key，无资源 Cookie；复用禁止重定向的 client 与共享 transport，防止 307/308 重放和认证外送。拒绝信息固定投影，不展示写请求或响应原文；未知 HTTP 状态、408、解码错误或缺少 `success` 均按结果未知处理。成功后只读核对，绝不自动再次 PUT。当前模块声明 Go 1.25，验证工具链为 1.26.0；Context7 虽指定 Go 1.25，仍给出主线 JSON v2 片段，不能用其 `omitempty` 语义解释本项目 JSON v1，已另外读取安装工具链的 `encoding/json` 与 `net/http` 源码。
 
 ## 超时与敏感错误
 

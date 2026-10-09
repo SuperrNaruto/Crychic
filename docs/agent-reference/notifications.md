@@ -69,7 +69,7 @@ complete season no longer count for stall notices, and a new request reusing its
 it instead of inheriting its requesters.
 
 Before collecting new transfers or completing pending arrivals, the notifier reads their subscriptions and
-refreshes the current total and `best_version`. A failed read preserves the cursor and pending state for a
+refreshes the current total, `start_episode` and `best_version`. A failed read preserves the cursor and pending state for a
 read-only retry; a successful empty/replaced row preserves the last known scope. The initial
 `Target.BestVersion` is persisted, so upgrades still notify when the backend closes the row before transfer.
 New upgrade transfers may announce an already-delivered episode again, but the transfer cursor prevents
@@ -85,6 +85,12 @@ persisted fields are unchanged; existing watches need no migration, but a new ta
 id-only merge cannot be reconstructed from that state.
 
 旧指南曾把关闭时点简写为“下载完成”，同时记录了“种子加入后即计为取得”的机制。这里保留可验证的应用约束：关闭不等于转移入库，watch 不可立即结束。上游精确触发条件须按目标版本核验，不能仅据旧简写推断。
+
+### 编辑订阅后的通知范围
+
+订阅条件编辑的明确成功响应到达后，先通过 `Watcher.RefreshSubscription` 保存既有 watch 的起始集、总集数和洗版模式，再读取当前订阅核对。即使随后读失败、后台订阅关闭或重启，已确认的范围也不会丢失。这个更新不创建 requester，不重置 Delivered、Held、Pending、digest 或 transfer cursor；被跳过的集数不被写成已到货。
+
+通知内部用内存中的 `scopeRevision` 拒绝与本地范围更新交错的陈旧订阅读取。读取期间发生编辑，整次到货状态及游标转换都放弃，下一轮只读重试；存活检查同样不应用旧结果。revision 无需持久化，重启后没有旧在途读取。状态文件字段兼容，原子保存及发送前持久化规则不变。
 
 ## 静默媒体库等待与持久化
 

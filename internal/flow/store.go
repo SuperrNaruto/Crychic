@@ -52,7 +52,9 @@ type session struct {
 	noted        []bool         // picks already given a link and synopsis
 	subs         []Subscription
 	mine         []int // ids of subs the owner asked for
-	kind         Kind  // the kind of subscription or history shown
+	subEdit      *subscriptionEdit
+	editOptions  int  // option generations never rewind when navigating back
+	kind         Kind // the kind of subscription or history shown
 	past         []PastSubscription
 	tasks        []taskRef
 	follow       following
@@ -124,6 +126,7 @@ func (s *store) put(sess session) {
 	sess.gate = current.gate
 	sess.hunts = max(sess.hunts, current.hunts)
 	sess.torrentIDs = max(sess.torrentIDs, current.torrentIDs, len(sess.torrents))
+	sess.editOptions = max(sess.editOptions, current.editOptions)
 	s.sessions[sess.id] = sess
 }
 

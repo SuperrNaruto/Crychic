@@ -335,15 +335,22 @@ func (c *Client) do(ctx context.Context, cl call, out any) error {
 		}
 		return &statusError{call: cl.method + " " + cl.path, code: resp.StatusCode, body: string(snippet)}
 	}
+	return decodeResponse(resp, cl, out)
+}
+
+func decodeResponse(resp *http.Response, cl call, out any) error {
 	var env struct {
-		Success bool            `json:"success"`
+		Success *bool           `json:"success"`
 		Message string          `json:"message"`
 		Data    json.RawMessage `json:"data"`
 	}
 	if err := json.NewDecoder(resp.Body).Decode(&env); err != nil {
 		return fmt.Errorf("moviepilot %s %s: decode: %w", cl.method, cl.path, err)
 	}
-	if !env.Success {
+	if env.Success == nil {
+		return fmt.Errorf("moviepilot %s %s: missing success flag", cl.method, cl.path)
+	}
+	if !*env.Success {
 		return refusal(env.Message)
 	}
 	if err := json.Unmarshal(env.Data, out); err != nil {

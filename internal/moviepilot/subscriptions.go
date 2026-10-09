@@ -12,27 +12,31 @@ import (
 )
 
 type subscriptionRecord struct {
-	ID           int      `json:"id"`
-	Date         string   `json:"date"`
-	Name         string   `json:"name"`
-	Year         string   `json:"year"`
-	Type         string   `json:"type"`
-	MediaSource  string   `json:"media_source"`
-	MediaID      string   `json:"media_id"`
-	Season       *int     `json:"season"`
-	State        string   `json:"state"`
-	Lack         int      `json:"lack_episode"`
-	Total        int      `json:"total_episode"`
-	StartEpisode int      `json:"start_episode"`
-	Poster       string   `json:"poster"`
-	Quality      string   `json:"quality"`
-	Resolution   string   `json:"resolution"`
-	Effect       string   `json:"effect"`
-	FilterGroups []string `json:"filter_groups"`
-	BestVersion  int      `json:"best_version"`
-	LastSearch   string   `json:"last_search"`
-	EpisodeGroup string   `json:"episode_group"`
-	Execution    *struct {
+	ID              int      `json:"id"`
+	Date            string   `json:"date"`
+	Name            string   `json:"name"`
+	Year            string   `json:"year"`
+	Type            string   `json:"type"`
+	MediaSource     string   `json:"media_source"`
+	MediaID         string   `json:"media_id"`
+	Season          *int     `json:"season"`
+	State           string   `json:"state"`
+	Lack            int      `json:"lack_episode"`
+	Total           int      `json:"total_episode"`
+	StartEpisode    int      `json:"start_episode"`
+	Poster          string   `json:"poster"`
+	Quality         string   `json:"quality"`
+	Resolution      string   `json:"resolution"`
+	Effect          string   `json:"effect"`
+	FilterGroups    []string `json:"filter_groups"`
+	BestVersion     int      `json:"best_version"`
+	BestVersionFull int      `json:"best_version_full"`
+	Sites           []int    `json:"sites"`
+	Include         string   `json:"include"`
+	Exclude         string   `json:"exclude"`
+	LastSearch      string   `json:"last_search"`
+	EpisodeGroup    string   `json:"episode_group"`
+	Execution       *struct {
 		State   string `json:"state"`
 		NextRun string `json:"next_run_at"`
 		Error   string `json:"error"`
@@ -76,6 +80,7 @@ func (r subscriptionRecord) subscription() flow.Subscription {
 		State: r.State, Lack: r.Lack, Total: r.Total, StartEpisode: r.StartEpisode, Poster: posterURL(r.Poster),
 		Quality: r.Quality, Resolution: r.Resolution, Effect: r.Effect,
 		FilterGroups: r.FilterGroups, BestVersion: r.BestVersion != 0, LastSearch: subscriptionTime(r.LastSearch),
+		BestVersionFull: r.BestVersionFull != 0, Sites: r.Sites, Include: r.Include, Exclude: r.Exclude,
 		EpisodeGroup: r.EpisodeGroup,
 	}
 	if r.Execution != nil {
