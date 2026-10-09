@@ -120,6 +120,7 @@ type fakeMoviePilot struct {
 	deleted    map[downloadKey]bool   // downloads removed from each downloader
 	states     map[int]string         // subscription states set, by id
 	subscribed map[int]map[string]any // subscriptions created or found, for reads by id
+	held       map[string][]*heldCall
 }
 
 // reader waits for a complete poll after it was registered. Only page one
@@ -196,6 +197,9 @@ func (f *fakeMoviePilot) serve(w http.ResponseWriter, r *http.Request) {
 }
 
 func (f *fakeMoviePilot) wait(r *http.Request) bool {
+	if !f.waitCall(r) {
+		return false
+	}
 	f.mu.Lock()
 	d := f.routes[r.Method+" "+r.URL.Path].delay
 	f.mu.Unlock()

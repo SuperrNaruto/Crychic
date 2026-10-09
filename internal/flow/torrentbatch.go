@@ -93,31 +93,37 @@ func (e *Engine) askBatch(sess session) Reply {
 // batchOutcome is what happened to one release of a batch.
 type batchOutcome struct {
 	release  Torrent
+	state    submissionState
 	err      error // set when MoviePilot refused or the result is unknown
 	unknown  bool
 	notified bool
 }
 
-// downloadBatch adds every release asked about to the downloader once:
-// the batch is cleared before the first write, so a second tap only
-// flashes a notice. A failed release is reported, never offered again.
-func (e *Engine) downloadBatch(ctx context.Context, sess session) Reply {
-	if len(sess.batch) == 0 || sess.focus == nil {
+// downloadBatch consumes confirmation before starting one serial API worker.
+// Polling only reads its progress; it never submits or retries a resource.
+func (e *Engine) downloadBatch(_ context.Context, sess session) Reply {
+	if len(sess.batch) == 0 || sess.focus == nil || sess.submission != nil {
 		return Reply{Notice: msgInvalidChoice}
 	}
-	batch := sess.batch
-	sess.batch, sess.ticked = nil, nil
-	e.store.put(sess)
-	outcomes := make([]batchOutcome, 0, len(batch))
-	for _, i := range batch {
-		outcomes = append(outcomes, e.downloadOne(ctx, sess, sess.torrents[i]))
+	var releases []Torrent
+	for _, i := range sess.batch {
+		releases = append(releases, sess.torrents[i])
 	}
-	return sess.picked.replyLines(e.batchLines(*sess.focus, outcomes), nil)
+	b := newDownloadBatch(int(sess.ticket), releases)
+	sess.submission = b
+	sess.batch, sess.ticked, sess.target, sess.release = nil, nil, nil, nil
+	e.store.put(sess)
+	reply := submissionReply(sess, b.read())
+	request := session{owner: sess.owner, focus: sess.focus, seasons: sess.seasons, library: sess.library}
+	sess.torrents = nil
+	e.store.put(sess)
+	e.work.Go(func() { e.submitBatch(request, b, releases) })
+	return reply
 }
 
 // downloadOne adds one release of a batch and watches it for arrivals.
 func (e *Engine) downloadOne(ctx context.Context, sess session, t Torrent) batchOutcome {
-	out := batchOutcome{release: t}
+	out := batchOutcome{release: Torrent{Title: t.Title}, state: submissionDone}
 	id, err := e.backend.Download(ctx, t)
 	if err == nil && id == "" {
 		err = fmt.Errorf("download answered no id")
@@ -139,17 +145,12 @@ func (e *Engine) batchLines(target Target, outcomes []batchOutcome) Text {
 	rows := make([][]Span, 0, len(outcomes))
 	started, unknown, notified := 0, false, true
 	for _, o := range outcomes {
-		result := "✅ 开始下载"
-		switch {
-		case o.unknown:
-			result, unknown = "⚠️ 没能确认", true
-		case o.err != nil:
-			result = "⚠️ " + failureText(o.err)
-		default:
+		unknown = unknown || o.unknown
+		if o.state == submissionDone && o.err == nil {
 			started++
 			notified = notified && o.notified
 		}
-		rows = append(rows, []Span{Strong(truncate(o.release.Title, listTitleRunes)), Plain(result)})
+		rows = append(rows, []Span{Strong(truncate(o.release.Title, listTitleRunes)), Plain(o.label())})
 	}
 	target.StartEpisode = 0
 	head := fmt.Sprintf("%s的下载结果来啦：", targetName(target))

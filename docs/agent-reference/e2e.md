@@ -59,6 +59,11 @@ send results from explicit media refusals. `rejectNextEdit` can return Telegram'
 delivery scenarios verify the deadline and retained file_id, as well as successful-receipt recovery without
 another MoviePilot write. Late initial responses and whitelist revocation are exercised at the app boundary.
 
+`fakeMoviePilot.holdCalls` blocks selected external API requests before processing, with explicit entered,
+release and exited barriers. Batch scenarios use it to observe each submission, stop before the next POST,
+and terminate/restart during an in-flight write. No internal flow state is mocked; every normal run compares
+the recorded progress and terminal receipt, including mixed success/refusal/unknown outcomes.
+
 `fakeImages` is Douban's image host: 418 without the Douban referer, 403 to Go's default User-Agent, a tiny
 JPEG per path otherwise, `h.img.setMissing(path)` answers 404; `app.Deps.Images` routes poster downloads to
 it. The fake Telegram hands out a file_id per upload, returns the top photo or slideshow with file_ids,

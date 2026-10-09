@@ -43,6 +43,7 @@ const (
 
 // Options configures an Engine.
 type Options struct {
+	RunContext      context.Context
 	Backend         Backend
 	Calendar        Calendar
 	Watcher         Watcher
@@ -53,6 +54,8 @@ type Options struct {
 
 // Engine runs request conversations against a Backend.
 type Engine struct {
+	runCtx          context.Context
+	work            sync.WaitGroup
 	backend         Backend
 	calendar        Calendar
 	watcher         Watcher
@@ -64,6 +67,7 @@ type Engine struct {
 
 func New(opts Options) *Engine {
 	return &Engine{
+		runCtx:          opts.RunContext,
 		backend:         opts.Backend,
 		calendar:        opts.Calendar,
 		watcher:         opts.Watcher,
@@ -73,6 +77,9 @@ func New(opts Options) *Engine {
 		noticeInChannel: opts.NoticeInChannel,
 	}
 }
+
+// Wait is called after platform handlers stop starting work during shutdown.
+func (e *Engine) Wait() { e.work.Wait() }
 
 // press is a button press: an action and its argument.
 type press struct {
@@ -134,6 +141,9 @@ func (e *Engine) rememberChoice(id uint64, raw string, reply Reply) {
 // A terminal receipt is immutable. Forward choices must still belong to
 // the shown screen, so an already accepted list pick cannot run twice.
 func availableChoice(sess session, raw, action string) bool {
+	if sess.submission != nil {
+		return action == actionBatchProgress || action == actionBatchStop
+	}
 	shown := sess.screen.reply
 	if sess.screen.state != nil && len(shown.Buttons) == 0 && shown.Follow == "" {
 		return false
@@ -151,6 +161,8 @@ func (e *Engine) choose(ctx context.Context, sess session, p press) Reply {
 		return e.page(sess, p.arg)
 	case actionBack:
 		return e.back(ctx, sess)
+	case actionBatchProgress, actionBatchStop:
+		return e.batchProgress(sess, p)
 	}
 	for _, choose := range []chooser{e.chooseHome, e.chooseRequest, e.chooseSeasons, e.chooseTask, e.chooseChart, e.chooseSubs, e.chooseSubDetail, e.chooseSubPause, e.chooseHistory, e.chooseRelated, e.chooseTorrents, e.chooseTorrentView, e.chooseTorrentBatch, e.chooseDelete, e.chooseUpgrade} {
 		if reply, ok := choose(ctx, sess, p); ok {

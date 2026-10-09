@@ -79,12 +79,14 @@ func Run(ctx context.Context, cfg config.Config, deps Deps) error {
 	}
 	calendar := bangumi.New(cfg.BangumiAPIURL, &http.Client{Timeout: backendTimeout, Transport: transport})
 	engine := flow.New(flow.Options{
-		Backend: backend, Calendar: calendar, Watcher: notifier, Log: log, Now: now,
+		RunContext: ctx,
+		Backend:    backend, Calendar: calendar, Watcher: notifier, Log: log, Now: now,
 		NoticeInChannel: cfg.TelegramNotifyChat != "",
 	})
 	var wg sync.WaitGroup
 	wg.Go(func() { notifier.Run(ctx) })
 	tg.Run(ctx, engine)
+	engine.Wait()
 	wg.Wait()
 	return nil
 }

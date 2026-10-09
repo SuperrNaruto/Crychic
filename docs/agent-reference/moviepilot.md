@@ -4,6 +4,25 @@
 
 本文从原根指南按主题迁出，保留当时的实现说明与上游版本背景，不代表已对当前线上服务重新核验。涉及目标版本变化时，按根指南核验来源。
 
+## v3.1.1 API 核验基线
+
+2026-10-09 核对主人提供的 `MoviePilot/OpenAPI/openapi.json`，`info.version` 为 `v3.1.1`，
+SHA-256 为 `c31b46882465e8e046ef405872e3e389c04c4e64e2ada6239ebe3ed27c364680`。
+该文件是开发核验材料，不是运行依赖；接口行为另对照官方 `v3.1.1` 源码。
+
+- 含媒体下载仍为单项 `POST /api/v1/download/`，必填 `media_in`、`torrent_in`，结果为 `data.download_id`。
+  没有手动勾选种子的批量提交 API；Crychic 只协调逐项调用，不直接操作下载器或 MoviePilot 数据库。
+- `/subscribe/execution/batches` 及其取消接口属于订阅搜索，不用于停止手动下载批次；
+  停止后续提交只阻止尚未发出的 POST，不调用下载 stop/delete。
+- `/download/` 与 `/transfer/queue` 可省略 `page/count` 保持完整结果；不能仅取第一页并据此宣称任务结束。
+  `/transfer/queue/page` 的轻量 schema 缺少 `media.type` 和任务 `meta` 集数，当前详情仍用完整队列。
+- 资源搜索与系统进度 SSE 只声明 `MoviePilot` cookie 认证，本项目保留 `X-API-KEY` JSON API，不新增登录。
+- `DownloadAddedData.requires_confirmation` 是未识别资源入口的提示；当前已有媒体的 `/download/` 路径不
+  自动改走 `/download/add`，也不因缺少 download ID 重试提交。
+
+源码依据：[download.py](https://github.com/jxxghp/MoviePilot/blob/v3.1.1/app/api/endpoints/download.py)、
+[transfer.py](https://github.com/jxxghp/MoviePilot/blob/v3.1.1/app/api/endpoints/transfer.py)。
+
 ## 认证类型与响应
 
 The API key authenticates as MoviePilot's **superuser**; every subscription is owned by the admin, not the

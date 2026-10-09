@@ -26,19 +26,20 @@ type session struct {
 	focus       *Target      // what the card shows, for 搜索资源; nil before a target is chosen
 	hunt        *torrentHunt // the resource search running for focus
 	torrents    []Torrent
-	torrentSort int     // index into torrentSorts
-	torrentSite string  // the one site whose releases show; "" for all
-	missingOnly bool    // only releases bringing missing episodes show
-	release     *int    // index of the release shown to download
-	ticking     bool    // the release list ticks releases to download together
-	ticked      []int   // indices of the ticked releases, ascending
-	batch       []int   // indices of the ticked releases asked to download
-	chosen      []int   // seasons ticked in the multi-season picker
-	chart       int     // index into charts being browsed
-	page        int     // page of the chart last shown
-	day         int     // calendar weekday shown, 1 Monday … 7 Sunday; 0 otherwise
-	picks       []Media // the chart's picks
-	noted       []bool  // picks already given a link and synopsis
+	torrentSort int            // index into torrentSorts
+	torrentSite string         // the one site whose releases show; "" for all
+	missingOnly bool           // only releases bringing missing episodes show
+	release     *int           // index of the release shown to download
+	ticking     bool           // the release list ticks releases to download together
+	ticked      []int          // indices of the ticked releases, ascending
+	batch       []int          // indices of the ticked releases asked to download
+	submission  *downloadBatch // API submissions; guarded separately from session snapshots
+	chosen      []int          // seasons ticked in the multi-season picker
+	chart       int            // index into charts being browsed
+	page        int            // page of the chart last shown
+	day         int            // calendar weekday shown, 1 Monday … 7 Sunday; 0 otherwise
+	picks       []Media        // the chart's picks
+	noted       []bool         // picks already given a link and synopsis
 	subs        []Subscription
 	mine        []int // ids of subs the owner asked for
 	kind        Kind  // the kind of subscription or history shown
@@ -79,7 +80,7 @@ func (s *store) create(owner Actor, results []Media) session {
 	defer s.mu.Unlock()
 	now := s.now()
 	for id, sess := range s.sessions {
-		if now.After(sess.expires) {
+		if sess.expired(now, s.ttl) {
 			delete(s.sessions, id)
 		}
 	}
@@ -125,8 +126,15 @@ func (s *store) take(id uint64) (session, bool) {
 
 func (s *store) live(id uint64) (session, bool) {
 	sess, ok := s.sessions[id]
-	if !ok || s.now().After(sess.expires) {
+	if !ok || sess.expired(s.now(), s.ttl) {
 		return session{}, false
 	}
 	return sess, true
+}
+
+func (sess session) expired(now time.Time, ttl time.Duration) bool {
+	if !now.After(sess.expires) {
+		return false
+	}
+	return sess.submission == nil || !sess.submission.retained(now, ttl)
 }

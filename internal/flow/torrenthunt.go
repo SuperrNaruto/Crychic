@@ -20,12 +20,13 @@ type torrentHunt struct {
 // own: the search outlives the button press that started it, and ends when
 // the backend answers (bounded by the backend's timeout) or stop is called.
 func (e *Engine) hunt(target Target) *torrentHunt {
-	ctx, cancel := context.WithCancel(context.Background())
+	ctx, cancel := context.WithCancel(e.runCtx)
 	h := &torrentHunt{started: e.now(), cancel: cancel, done: make(chan struct{})}
-	go func() {
+	e.work.Go(func() {
+		defer cancel()
 		defer close(h.done)
 		h.found, h.err = e.backend.SearchTorrents(ctx, target)
-	}()
+	})
 	return h
 }
 

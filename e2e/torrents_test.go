@@ -329,7 +329,7 @@ func TestDownloadTickedReleases(t *testing.T) {
 	h.tap(alice, 1, "返回")
 	h.tap(alice, 1, "下载所选 2 个")
 	confirm, _ := findButton(mustMessage(h, 1).rows, downloadIt)
-	h.tap(alice, 1, downloadIt)
+	submitSelected(h, 1, 2)
 	h.shows(1, "开始下载 2 个资源啦")
 	h.tapData(alice, 1, confirm)
 	first := mygo.file("S01", "E01")
@@ -339,6 +339,13 @@ func TestDownloadTickedReleases(t *testing.T) {
 	eighth.Hash = addedHashN(2)
 	h.arrives(alice, eighth)
 
+	failedBatch(h)
+	h.neverShowsSiteCredentials()
+	h.tr.verify(t)
+}
+
+func failedBatch(h *harness) {
+	h.t.Helper()
 	h.mp.setRoute(downloadPath, route{status: http.StatusServiceUnavailable, fixture: "server_error.json"})
 	h.say(alice, alice, "/search 迷途之子")
 	h.tap(alice, 4, "1")
@@ -347,13 +354,11 @@ func TestDownloadTickedReleases(t *testing.T) {
 	h.tap(alice, 4, "多选…")
 	h.tap(alice, 4, "1")
 	h.tap(alice, 4, "下载所选 1 个")
-	h.tap(alice, 4, downloadIt)
+	submitSelected(h, 4, 1)
 	h.shows(4, "/tasks")
 	if _, offered := findButton(mustMessage(h, 4).rows, downloadIt); offered {
-		t.Fatal("a download of unknown result is offered again")
+		h.t.Fatal("a download of unknown result is offered again")
 	}
-	h.neverShowsSiteCredentials()
-	h.tr.verify(t)
 }
 
 // A title searched with 下载 searches resources as soon as a target is

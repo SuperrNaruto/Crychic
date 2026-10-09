@@ -225,6 +225,17 @@ release's outcome (refusal relayed, unknown → `/tasks`); every started downloa
 follow the same-media/season aggregation rules in the notification reference, so separate watches do not
 promise separate messages
 
+Batch confirmation consumes its target before starting one background worker (`submission.go`). The worker
+serially posts each selected release to MoviePilot's download API; `br` only reads submission progress, and
+`bs` stops future submissions of that batch token. It does not cancel the current HTTP request or pause/delete
+existing downloads. While running, only progress and stop are accepted on that conversation; the final
+result restores its original list/terminal navigation. Requests can still be made in other messages.
+
+Progress outcomes contain titles and statuses, not site records. The live session remains available through
+execution and for the normal TTL after completion; in-memory batches are not persisted or resumed on restart.
+`app.Run` injects the run context and waits for flow workers after platform handlers drain. Shutdown cancels
+the in-flight call as an unknown result and starts no remaining items. Per-call MoviePilot budgets stay in force.
+
 资源原始记录、集数识别和删除实例参数见 [MoviePilot 参考](moviepilot.md)。每次下载的独立 watch 和同媒体同季的合并通知见
 [通知参考](notifications.md#到货聚合与画质)。
 

@@ -218,6 +218,8 @@ func tasksBack(id uint64) Button {
 // back to /tasks, all others to /search.
 func expired(action string) Reply {
 	switch action {
+	case actionBatchProgress, actionBatchStop:
+		return expiredText("这个批次页面过期啦，先用 /tasks 核对已创建的下载；剩余资源不会自动重新提交哦～")
 	case actionBack, actionPage:
 		return expiredText("⌛ 这个页面过期啦，发 /start 重新打开相应功能吧～")
 	case actionSubs, actionSubsKind, actionCancelPick, actionHistory, actionHistoryKind,
