@@ -47,7 +47,7 @@ func Run(ctx context.Context, cfg config.Config, deps Deps) error {
 	if images == nil {
 		images = &http.Client{Timeout: imageTimeout, Transport: transport}
 	}
-	backend := moviepilot.New(cfg.MoviePilotURL, cfg.MoviePilotAPIKey, &http.Client{Transport: transport})
+	backend := moviePilot(cfg, transport)
 	tg, err := telegram.New(telegram.Config{
 		Token:        cfg.TelegramToken,
 		APIURL:       cfg.TelegramAPIURL,
@@ -89,6 +89,13 @@ func Run(ctx context.Context, cfg config.Config, deps Deps) error {
 	engine.Wait()
 	wg.Wait()
 	return nil
+}
+
+func moviePilot(cfg config.Config, transport *http.Transport) *moviepilot.Client {
+	return moviepilot.New(moviepilot.Options{
+		BaseURL: cfg.MoviePilotURL, APIKey: cfg.MoviePilotAPIKey, Cookie: cfg.MoviePilotCookie,
+		HTTPClient: &http.Client{Transport: transport},
+	})
 }
 
 // privateChats are the whitelisted users' private chats with the bot,

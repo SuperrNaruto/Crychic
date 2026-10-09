@@ -12,53 +12,63 @@ const sessionIDBytes = 8
 // session is one in-flight request conversation. It is treated as a value:
 // every step stores a modified copy, never mutating a stored one.
 type session struct {
-	id          uint64
-	owner       Actor
-	menu        bool   // a home menu button is opening a feature; navigate clears it
-	query       string // the current ordinary title search
-	download    bool   // the search began with 下载: a chosen target searches resources at once
-	retry       recovery
-	results     []Media
-	picked      card
-	seasons     []Season
-	library     Library
-	target      *Target
-	focus       *Target      // what the card shows, for 搜索资源; nil before a target is chosen
-	hunt        *torrentHunt // the resource search running for focus
-	torrents    []Torrent
-	torrentSort int            // index into torrentSorts
-	torrentSite string         // the one site whose releases show; "" for all
-	missingOnly bool           // only releases bringing missing episodes show
-	release     *int           // index of the release shown to download
-	ticking     bool           // the release list ticks releases to download together
-	ticked      []int          // indices of the ticked releases, ascending
-	batch       []int          // indices of the ticked releases asked to download
-	submission  *downloadBatch // API submissions; guarded separately from session snapshots
-	chosen      []int          // seasons ticked in the multi-season picker
-	chart       int            // index into charts being browsed
-	page        int            // page of the chart last shown
-	day         int            // calendar weekday shown, 1 Monday … 7 Sunday; 0 otherwise
-	picks       []Media        // the chart's picks
-	noted       []bool         // picks already given a link and synopsis
-	subs        []Subscription
-	mine        []int // ids of subs the owner asked for
-	kind        Kind  // the kind of subscription or history shown
-	past        []PastSubscription
-	tasks       []taskRef
-	follow      following
-	doomed      *DownloadRef // the download and instance asked to be deleted
-	pages       []Reply
-	listing     string   // source of this list screen, empty on cards and detail pages
-	pageIndex   int      // current generic list page, preserved by 返回
-	screen      screen   // what the conversation message shows now
-	lastChoice  string   // the last accepted forward read, replayable after a failed edit
-	lastReply   Reply    // its generated reply, including background-follow information
-	history     []screen // screens 返回 leads back to, latest last
-	skipped     *Reply   // a card a resource search started at once went past (huntNow)
-	ticket      uint64   // carried by the shown screen's write buttons; 0 when it has none
-	tickets     uint64   // tickets handed out so far, never restored by 返回
-	expires     time.Time
-	gate        chan struct{} // serializes steps for this session, not unrelated users
+	id           uint64
+	owner        Actor
+	menu         bool   // a home menu button is opening a feature; navigate clears it
+	query        string // the current ordinary title search
+	download     bool   // the search began with 下载: a chosen target searches resources at once
+	retry        recovery
+	results      []Media
+	picked       card
+	seasons      []Season
+	library      Library
+	target       *Target
+	focus        *Target      // what the card shows, for 搜索资源; nil before a target is chosen
+	hunt         *torrentHunt // the resource search running for focus
+	torrents     []Torrent
+	torrentOrder []int // active stable indices in MoviePilot priority order
+	hunts        int   // generation counter, never restored by navigation
+	torrentIDs   int   // allocated resource numbers, also never restored by navigation
+	streaming    bool
+	searchDone   bool
+	searchFinal  bool
+	searchErr    error          // safe stream errors only
+	searchSites  []int          // upstream scope, not torrentSite's local result filter
+	sites        []SearchSite   // metadata for pre-search selection
+	searchView   string         // empty outside the resource list/detail surface
+	torrentSort  int            // index into torrentSorts
+	torrentSite  string         // the one site whose releases show; "" for all
+	missingOnly  bool           // only releases bringing missing episodes show
+	release      *int           // index of the release shown to download
+	ticking      bool           // the release list ticks releases to download together
+	ticked       []int          // indices of the ticked releases, ascending
+	batch        []int          // indices of the ticked releases asked to download
+	submission   *downloadBatch // API submissions; guarded separately from session snapshots
+	chosen       []int          // seasons ticked in the multi-season picker
+	chart        int            // index into charts being browsed
+	page         int            // page of the chart last shown
+	day          int            // calendar weekday shown, 1 Monday … 7 Sunday; 0 otherwise
+	picks        []Media        // the chart's picks
+	noted        []bool         // picks already given a link and synopsis
+	subs         []Subscription
+	mine         []int // ids of subs the owner asked for
+	kind         Kind  // the kind of subscription or history shown
+	past         []PastSubscription
+	tasks        []taskRef
+	follow       following
+	doomed       *DownloadRef // the download and instance asked to be deleted
+	pages        []Reply
+	listing      string   // source of this list screen, empty on cards and detail pages
+	pageIndex    int      // current generic list page, preserved by 返回
+	screen       screen   // what the conversation message shows now
+	lastChoice   string   // the last accepted forward read, replayable after a failed edit
+	lastReply    Reply    // its generated reply, including background-follow information
+	history      []screen // screens 返回 leads back to, latest last
+	skipped      *Reply   // a card a resource search started at once went past (huntNow)
+	ticket       uint64   // carried by the shown screen's write buttons; 0 when it has none
+	tickets      uint64   // tickets handed out so far, never restored by 返回
+	expires      time.Time
+	gate         chan struct{} // serializes steps for this session, not unrelated users
 }
 
 // store keeps sessions in memory, keyed by the id embedded in button data,
@@ -81,6 +91,7 @@ func (s *store) create(owner Actor, results []Media) session {
 	now := s.now()
 	for id, sess := range s.sessions {
 		if sess.expired(now, s.ttl) {
+			sess.hunt.stop()
 			delete(s.sessions, id)
 		}
 	}
@@ -111,6 +122,8 @@ func (s *store) put(sess session) {
 	}
 	sess.expires = s.now().Add(s.ttl)
 	sess.gate = current.gate
+	sess.hunts = max(sess.hunts, current.hunts)
+	sess.torrentIDs = max(sess.torrentIDs, current.torrentIDs, len(sess.torrents))
 	s.sessions[sess.id] = sess
 }
 
@@ -118,12 +131,15 @@ func (s *store) put(sess session) {
 func (s *store) take(id uint64) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
+	s.sessions[id].hunt.stop()
 	delete(s.sessions, id)
 }
 
 func (s *store) live(id uint64) (session, bool) {
 	sess, ok := s.sessions[id]
 	if !ok || sess.expired(s.now(), s.ttl) {
+		sess.hunt.stop()
+		delete(s.sessions, id)
 		return session{}, false
 	}
 	return sess, true

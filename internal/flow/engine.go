@@ -144,7 +144,13 @@ func availableChoice(sess session, raw, action string) bool {
 	if sess.submission != nil {
 		return action == actionBatchProgress || action == actionBatchStop
 	}
+	if sess.searchView == torrentWaitingView {
+		return waitingTorrentChoice(action)
+	}
 	shown := sess.screen.reply
+	if allowed, handled := availableTorrentChoice(sess, raw, action); handled {
+		return allowed
+	}
 	if sess.screen.state != nil && len(shown.Buttons) == 0 && shown.Follow == "" {
 		return false
 	}
@@ -152,6 +158,35 @@ func availableChoice(sess session, raw, action string) bool {
 		return hasData(shown.Buttons, raw)
 	}
 	return true
+}
+
+func waitingTorrentChoice(action string) bool {
+	return action == actionCancel || action == actionTorrentRun || action == actionTorrentAgain
+}
+
+func availableTorrentChoice(sess session, raw, action string) (bool, bool) {
+	shown := sess.screen.reply
+	if startsTorrentSearch(action) {
+		return sess.searchView != torrentWaitingView && hasData(shown.Buttons, raw), true
+	}
+	if sess.streaming && torrentAction(action) {
+		if action == actionTorrentRun || action == actionTorrentAgain {
+			return sess.searchView == torrentWaitingView || shown.Follow == raw, true
+		}
+		return hasData(shown.Buttons, raw), true
+	}
+	if action == actionSearchSite || action == actionSearchAll {
+		return hasData(shown.Buttons, raw), true
+	}
+	return false, false
+}
+
+func torrentAction(action string) bool {
+	return torrentScreenAction(action) && action != actionBack && action != actionPage
+}
+
+func startsTorrentSearch(action string) bool {
+	return action == actionTorrents || action == actionTorrentRetry || action == actionTorrentResearch || action == actionSearchStart
 }
 
 // choose dispatches a press only after Choose has checked its owner and ticket.
@@ -164,7 +199,7 @@ func (e *Engine) choose(ctx context.Context, sess session, p press) Reply {
 	case actionBatchProgress, actionBatchStop:
 		return e.batchProgress(sess, p)
 	}
-	for _, choose := range []chooser{e.chooseHome, e.chooseRequest, e.chooseSeasons, e.chooseTask, e.chooseChart, e.chooseSubs, e.chooseSubDetail, e.chooseSubPause, e.chooseHistory, e.chooseRelated, e.chooseTorrents, e.chooseTorrentView, e.chooseTorrentBatch, e.chooseDelete, e.chooseUpgrade} {
+	for _, choose := range []chooser{e.chooseHome, e.chooseRequest, e.chooseSeasons, e.chooseTask, e.chooseChart, e.chooseSubs, e.chooseSubDetail, e.chooseSubPause, e.chooseHistory, e.chooseRelated, e.chooseTorrents, e.chooseSearchSites, e.chooseTorrentView, e.chooseTorrentBatch, e.chooseDelete, e.chooseUpgrade} {
 		if reply, ok := choose(ctx, sess, p); ok {
 			return e.navigate(sess, p.action, reply)
 		}
@@ -489,7 +524,11 @@ func parseData(raw string) (id uint64, p press, ok bool) {
 // onward are a card's last rows: browse on from it (搜索资源, 相似推荐,
 // 同系列), then 取消.
 func onward(sess session) [][]Button {
-	return [][]Button{relatedRow(sess), {cancelButton(sess.id)}}
+	rows := [][]Button{relatedRow(sess)}
+	if scope := searchScopeRow(sess); len(scope) > 0 {
+		rows = append(rows, scope)
+	}
+	return append(rows, []Button{cancelButton(sess.id)})
 }
 
 func cancelButton(id uint64) Button {

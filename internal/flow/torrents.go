@@ -7,12 +7,14 @@ import (
 )
 
 const (
-	actionTorrents     = "ts" // searches the indexer sites for the card's target
-	actionTorrentRun   = "tg" // how that search goes (Follow data); its results lead on from the card
-	actionTorrentRetry = "tr" // searches again after a failure
-	actionTorrentAgain = "tq" // how the repeated search goes; its results replace the failure
-	actionTorrentPick  = "tp" // arg: index into session torrents; shows the release
-	actionTorrentGet   = "td" // arg: index; downloads the release
+	actionTorrents        = "ts" // searches the indexer sites for the card's target
+	actionTorrentRun      = "tg" // how that search goes (Follow data); its results lead on from the card
+	actionTorrentRetry    = "tr" // searches again after a failure
+	actionTorrentAgain    = "tq" // how the repeated search goes; its results replace the failure
+	actionTorrentPick     = "tp" // arg: index into session torrents; shows the release
+	actionTorrentGet      = "td" // arg: index; downloads the release
+	actionTorrentRefresh  = "tu" // read-only refresh, including a pinned preview detail
+	actionTorrentResearch = "te" // explicit repeat after a stream search, never automatic
 
 	torrentPageItems = 8
 
@@ -32,7 +34,11 @@ func (e *Engine) chooseTorrents(ctx context.Context, sess session, p press) (Rep
 	case actionTorrentRetry:
 		return e.searching(sess, actionTorrentAgain), true
 	case actionTorrentRun, actionTorrentAgain:
-		return e.searchTorrents(sess, p.action), true
+		return e.searchTorrents(sess, p), true
+	case actionTorrentRefresh:
+		return e.refreshTorrent(sess), true
+	case actionTorrentResearch:
+		return e.searching(sess, actionTorrentAgain), true
 	case actionTorrentPick:
 		return e.pickTorrent(sess, p.arg), true
 	case actionTorrentGet:
@@ -55,7 +61,8 @@ func (e *Engine) searching(sess session, run string) Reply {
 		return Reply{Notice: msgInvalidChoice}
 	}
 	sess.hunt.stop()
-	sess.hunt = e.hunt(*sess.focus)
+	sess = e.prepareHunt(sess)
+	sess.hunt = e.hunt(sess)
 	e.store.put(sess)
 	return searchingView(sess, run, 0)
 }
@@ -68,34 +75,41 @@ func searchingView(sess session, run string, elapsed time.Duration) Reply {
 	}
 	reply := sess.picked.reply(Line(Plain(words)), [][]Button{{cancelButton(sess.id)}})
 	reply.Follow = data(sess.id, run, 0)
+	if sess.streaming {
+		reply.Follow = data(sess.id, run, sess.hunt.token)
+		reply.Wake = sess.hunt.first
+	}
 	return reply
 }
 
 // searchTorrents shows how long the search has run, or once it is done
 // the releases found for the card's target; a failed search keeps the
 // card and offers to search again.
-func (e *Engine) searchTorrents(sess session, run string) Reply {
+func (e *Engine) searchTorrents(sess session, p press) Reply {
 	h := sess.hunt
-	if h == nil || sess.focus == nil {
+	if h == nil || sess.focus == nil || (sess.streaming && p.arg != h.token) {
 		return Reply{Notice: msgInvalidChoice}
 	}
-	select {
-	case <-h.done:
-	default:
-		return searchingView(sess, run, e.now().Sub(h.started))
+	if sess.streaming {
+		return e.streamTorrentView(sess, p.action)
+	}
+	progress := h.read()
+	if !progress.done {
+		return searchingView(sess, p.action, e.now().Sub(h.started))
 	}
 	h.stop()
 	target := *sess.focus
-	sess.hunt, sess.torrents, sess.release = nil, h.found, nil
+	sess.hunt, sess.torrents, sess.release = nil, progress.items, nil
+	sess.searchView = ""
 	sess.torrentSort, sess.torrentSite, sess.missingOnly = 0, "", false
 	sess.ticking, sess.ticked, sess.batch = false, nil, nil
-	if h.err == nil && len(h.found) > 0 {
+	if progress.err == nil && len(progress.items) > 0 {
 		return e.listPages(sess, torrentList(sess, target))
 	}
 	e.store.put(sess)
 	text := Sentence(fmt.Sprintf("🔍 没搜到%s的资源 (｡•́︿•̀｡) 过段时间再来试试吧～", targetName(target)))
-	if h.err != nil {
-		text = e.failure("torrent search", h.err).Text
+	if progress.err != nil {
+		text = e.failure("torrent search", progress.err).Text
 	}
 	rows := [][]Button{{{Label: "重试", Data: data(sess.id, actionTorrentRetry, 0)}}, {cancelButton(sess.id)}}
 	return sess.picked.replyLines(text, rows)
@@ -107,7 +121,11 @@ func (e *Engine) pickTorrent(sess session, index int) Reply {
 		return Reply{Notice: msgInvalidChoice}
 	}
 	sess.release = &index
+	sess.searchView = torrentDetailView
 	e.store.put(sess)
+	if sess.streaming {
+		return streamTorrentCard(sess, index)
+	}
 	t := sess.torrents[index]
 	text := torrentCard(t)
 	if t.HitAndRun {
@@ -126,6 +144,11 @@ func (e *Engine) download(ctx context.Context, sess session, index int) Reply {
 	if sess.release == nil || *sess.release != index || index >= len(sess.torrents) || sess.focus == nil {
 		return Reply{Notice: msgInvalidChoice}
 	}
+	if sess.streaming && !e.currentTorrent(sess, index) {
+		return Reply{Notice: msgTorrentChanged}
+	}
+	sess.hunt.stop()
+	sess.hunt, sess.searchView = nil, ""
 	sess.release = nil
 	e.store.put(sess)
 	t := sess.torrents[index]

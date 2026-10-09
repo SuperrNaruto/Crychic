@@ -47,6 +47,7 @@ var notifyStall = durationVar{"CRYCHIC_NOTIFY_STALL", defaultNotifyStall, 0}
 type Config struct {
 	MoviePilotURL      string
 	MoviePilotAPIKey   string
+	MoviePilotCookie   string
 	TelegramToken      string
 	TelegramAPIURL     string
 	TelegramAllowed    []int64
@@ -69,6 +70,7 @@ func Load(getenv func(string) string) (Config, error) {
 	cfg := Config{
 		MoviePilotURL:      getenv("CRYCHIC_MOVIEPILOT_URL"),
 		MoviePilotAPIKey:   getenv("CRYCHIC_MOVIEPILOT_API_KEY"),
+		MoviePilotCookie:   getenv("CRYCHIC_MOVIEPILOT_COOKIE"),
 		TelegramToken:      getenv("CRYCHIC_TELEGRAM_TOKEN"),
 		TelegramAPIURL:     cmp.Or(getenv("CRYCHIC_TELEGRAM_API_URL"), defaultTelegramAPI),
 		TelegramNotifyChat: strings.TrimSpace(getenv("CRYCHIC_TELEGRAM_NOTIFY_CHAT_ID")),
@@ -112,7 +114,7 @@ func (cfg *Config) validate() error {
 	if !validNotifyChat(cfg.TelegramNotifyChat) {
 		errs = append(errs, errors.New("CRYCHIC_TELEGRAM_NOTIFY_CHAT_ID: want a negative chat ID or @channelusername"))
 	}
-	return errors.Join(errs...)
+	return errors.Join(append(errs, cfg.validateResourceCookie())...)
 }
 
 var channelUsername = regexp.MustCompile(`^@[A-Za-z0-9_]+$`)

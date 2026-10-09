@@ -121,6 +121,7 @@ type fakeMoviePilot struct {
 	states     map[int]string         // subscription states set, by id
 	subscribed map[int]map[string]any // subscriptions created or found, for reads by id
 	held       map[string][]*heldCall
+	streams    map[string][]*searchStream
 }
 
 // reader waits for a complete poll after it was registered. Only page one
@@ -169,6 +170,10 @@ func (f *fakeMoviePilot) markRead() {
 }
 
 func (f *fakeMoviePilot) serve(w http.ResponseWriter, r *http.Request) {
+	if f.serveSearchStream(w, r) {
+		return
+	}
+	assertNoResourceCredentials(f.t, r)
 	if !f.wait(r) {
 		return
 	}
@@ -183,8 +188,12 @@ func (f *fakeMoviePilot) serve(w http.ResponseWriter, r *http.Request) {
 		writeEnvelope(w, http.StatusUnauthorized, `{"success":false,"message":"apikey 校验不通过","data":null}`)
 		return
 	}
+	f.serveAuthenticated(w, r)
+}
+
+func (f *fakeMoviePilot) serveAuthenticated(w http.ResponseWriter, r *http.Request) {
 	switch {
-	case isTransfers:
+	case r.Method == http.MethodGet && r.URL.Path == transferPath:
 		f.serveTransfers(w, r)
 	case r.Method == http.MethodGet && isSubscriptionByID(r.URL.Path):
 		f.serveSubscription(w, r)

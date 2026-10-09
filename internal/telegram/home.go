@@ -87,6 +87,7 @@ func (a *adapter) show(ctx context.Context, f follower, reply flow.Reply) {
 	}
 	if reply.Follow != "" {
 		f.target, f.data, f.shown = shown, reply.Follow, renderReply(reply)
+		f.wake = reply.Wake
 		f.trigger = ""
 		a.follow(f)
 	}

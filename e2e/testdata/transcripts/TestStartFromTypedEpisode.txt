@@ -69,6 +69,7 @@
    [指定起始集… | 1:e:0]
    [洗版订阅 | 1:bv:0]
    [搜索资源 | 1:ts:0] [相似推荐 | 1:r:0]
+   [选择搜索站点 | 1:ss:0]
    [返回 | 1:bk:0] [取消 | 1:x:0]
 << answerCallbackQuery
 >> user 1001 taps 1:e:0 on message 1
@@ -109,6 +110,7 @@
    <p><b>要订阅《名侦探柯南》第 1 季（从第 5 集开始）吗？</b></p>
    [确认订阅 | 1:ok:5]
    [搜索资源 | 1:ts:0] [相似推荐 | 1:r:0]
+   [选择搜索站点 | 1:ss:0]
    [返回 | 1:bk:0] [取消 | 1:x:0]
 >> user 1001 taps 1:bk:0 on message 1
 << editMessageText chat=1001 message=1
@@ -122,6 +124,7 @@
    [指定起始集… | 1:e:0]
    [洗版订阅 | 1:bv:0]
    [搜索资源 | 1:ts:0] [相似推荐 | 1:r:0]
+   [选择搜索站点 | 1:ss:0]
    [返回 | 1:bk:0] [取消 | 1:x:0]
 << answerCallbackQuery
 >> user 1001 taps 1:e:0 on message 1
@@ -144,6 +147,7 @@
    <p><b>要订阅《名侦探柯南》第 1 季（从第 500 集开始）吗？</b></p>
    [确认订阅 | 1:ok:500]
    [搜索资源 | 1:ts:0] [相似推荐 | 1:r:0]
+   [选择搜索站点 | 1:ss:0]
    [返回 | 1:bk:0] [取消 | 1:x:0]
 >> user 1001 taps 1:ok:500 on message 1
 -> MoviePilot POST /api/v1/subscribe/

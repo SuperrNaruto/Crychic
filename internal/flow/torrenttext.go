@@ -29,6 +29,9 @@ func torrentList(sess session, target Target) listView {
 		pageItems: torrentPageItems,
 		footer:    []Button{cancelButton(sess.id)},
 	}
+	if sess.streaming {
+		view.note = streamNote(sess, len(shown))
+	}
 	if sess.ticking {
 		label := fmt.Sprintf("下载所选 %d 个", len(sess.ticked))
 		view.menu = append(view.menu, []Button{{Label: label, Data: data(sess.id, actionTorrentBatch, 0)}})
@@ -40,10 +43,21 @@ func torrentList(sess session, target Target) listView {
 	if row := onwardRow(sess); len(row) > 0 {
 		view.menu = append(view.menu, row)
 	}
+	view.menu = append(view.menu, streamSearchMenu(sess)...)
 	for n, i := range shown {
+		if sess.streaming {
+			n = i
+		}
 		view.entries = append(view.entries, releaseEntry(sess, n+1, i))
 	}
 	return view
+}
+
+func streamSearchMenu(sess session) [][]Button {
+	if sess.streaming && sess.searchDone {
+		return [][]Button{{{Label: "重新搜索资源", Data: data(sess.id, actionTorrentResearch, 0)}}}
+	}
+	return nil
 }
 
 // listHint says what a number button does on the release list.
@@ -58,10 +72,10 @@ func listHint(sess session) string {
 // ticking several releases, unless they are being ticked.
 func onwardRow(sess session) []Button {
 	var row []Button
-	if sess.torrentSite != "" || len(torrentSites(sess.torrents)) > 1 {
+	if sess.torrentSite != "" || len(torrentSites(sess.activeResources())) > 1 {
 		row = append(row, Button{Label: msgSiteFilter, Data: data(sess.id, actionTorrentSites, 0)})
 	}
-	if !sess.ticking && len(sess.torrents) > 1 {
+	if !sess.ticking && len(sess.activeTorrents()) > 1 && (!sess.streaming || sess.searchDone && sess.searchFinal) {
 		row = append(row, Button{Label: msgTickReleases, Data: data(sess.id, actionTorrentMulti, 0)})
 	}
 	return row

@@ -14,6 +14,8 @@ services:
     environment:
       CRYCHIC_MOVIEPILOT_URL: http://127.0.0.1:3001
       CRYCHIC_MOVIEPILOT_API_KEY: ${CRYCHIC_MOVIEPILOT_API_KEY}
+      # Optional resource Cookie VALUE only; empty keeps JSON search. No auto-renewal.
+      CRYCHIC_MOVIEPILOT_COOKIE: ${CRYCHIC_MOVIEPILOT_COOKIE:-}
       CRYCHIC_TELEGRAM_TOKEN: ${CRYCHIC_TELEGRAM_TOKEN}
       CRYCHIC_TELEGRAM_ALLOWED_USERS: "123456789"
       # Optional: channel ID (-100...) or @channelusername; bot must be able to post.

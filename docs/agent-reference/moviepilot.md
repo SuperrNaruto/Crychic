@@ -16,10 +16,7 @@ SHA-256 为 `c31b46882465e8e046ef405872e3e389c04c4e64e2ada6239ebe3ed27c364680`�
   停止后续提交只阻止尚未发出的 POST，不调用下载 stop/delete。
 - `/download/` 与 `/transfer/queue` 可省略 `page/count` 保持完整结果；不能仅取第一页并据此宣称任务结束。
   `/transfer/queue/page` 的轻量 schema 缺少 `media.type` 和任务 `meta` 集数，当前详情仍用完整队列。
-- 资源搜索、系统进度与实时消息 SSE 只声明 `MoviePilot` Cookie 认证；现有代码仍使用 `X-API-KEY` JSON API。
-  2026-10-09 主人已允许增加 Cookie 认证，并明确不接入 Agent；后续范围见
-  [MoviePilot API 功能改进计划](../plans/moviepilot-api-improvements.md)。计划首版采用可选资源 Cookie，
-  不增加自动登录；Cookie 与 SSE 尚未实现。此决定不改变真实服务禁写、禁 PT 搜索及凭据隐私边界。
+- 资源搜索流已支持可选 `MoviePilot` 资源 Cookie；未配置仍走 `X-API-KEY` JSON 搜索。系统进度、实时消息和 Agent 流未接入。没有自动登录或续期；真实服务禁写、禁 PT 搜索及凭据隐私边界不变。
 - `DownloadAddedData.requires_confirmation` 是未识别资源入口的提示；当前已有媒体的 `/download/` 路径不
   自动改走 `/download/add`，也不因缺少 download ID 重试提交。
 - Bangumi 简介使用 `GET /api/v1/bangumi/{bangumiid}` 的 `data.overview`；空对象、null 或空简介不算有效
@@ -75,7 +72,21 @@ adjacent audio tracks such as `FLAC.2.0+5.1` share a separator, and neither may 
 Numeric boundaries are checked against the original title so fragments of years or resolutions are not
 removed.
 
+## 资源搜索流
+
+`searchstream.go` 只向 `GET /api/v1/search/media/{id}/stream` 发送资源 Cookie，JSON 仍使用 API Key。专用 client 复用 app transport，清空 Cookie jar，拒绝全部重定向，错误不携带响应正文或目标 URL。配置只接受未加引号的资源令牌值，公开域名要求 HTTPS；不会签发、续期或持久化 Cookie。[v3.1.1 认证](https://github.com/jxxghp/MoviePilot/blob/v3.1.1/app/adapters/web/security/access.py#L176-L301)
+
+`sse.go` 按完整帧读取 UTF-8，支持 BOM、CR/LF/CRLF、心跳注释和多行 data，EOF 不补发缺少空行的帧。`streamresults.go` 将早期候选与最终匹配分开，按 `replace_batch` 的连续批次和总数核对，收到完整 `done` 后一次发布终态；半批、缺终态、错误帧或超时均保留不完整状态。每帧上限 8 MiB，每个搜索阶段最多 10000 个结果，超限按不完整处理，不静默截断。[帧与批次](https://github.com/jxxghp/MoviePilot/blob/v3.1.1/app/api/endpoints/search.py#L97-L447)
+
+早期候选可能没有媒体身份，投影为 `Unverified`，不把搜索目标填回 `media_info`。最终资源核对来源、ID、类型与已知季号，只接受已匹配内容。稳定身份使用资源定位及选择字段的摘要，动态做种数与优先级不改变编号；原始下载记录仍只存在 `Torrent.Record`，不显示或保存。[候选和终态](https://github.com/jxxghp/MoviePilot/blob/v3.1.1/app/chain/search/execution.py#L129-L244)、[最终匹配投影](https://github.com/jxxghp/MoviePilot/blob/v3.1.1/app/chain/search/result.py#L250-L262)
+
+同一搜索只有一个请求，不自动重连或改发 JSON。Go 会重试可重放 GET，SSE 请求因此使用不可重建的空 Body 禁止已发请求重放，同时保持空 GET 语义；首字节丢失由外部 fake 验证。Go 模块为 1.25，本次工具链为 1.26.0，两版本相关分支已对照源码。[Go 1.25 请求重放判定](https://github.com/golang/go/blob/go1.25.0/src/net/http/request.go#L1534-L1547)、[HTTP/2 重试](https://github.com/golang/go/blob/go1.25.0/src/net/http/h2_bundle.go#L7988-L8017)
+
+搜索前站点列表读取 `GET /api/v1/site/media/{电影|电视剧}`，只投影有效、不重复的 ID 与名称。选择后 JSON 和 SSE 均传逗号分隔的 `sites`，不把本地结果筛选当成上游范围。[站点接口](https://github.com/jxxghp/MoviePilot/blob/v3.1.1/app/api/endpoints/site.py#L218-L276)
+
 ## 下载进度与任务删除
+
+资源搜索的 Cookie 流仅用于获取候选，不改变以下任务轮询与完成判断。
 
 `GET /api/v1/download/` lists unfinished torrents; `media` (source, id, `season` "S01", `episode` "E10-E12" or
 `E02、E04-E05`, parsed segment by segment without filling gaps) comes from MoviePilot's download history and is

@@ -11,6 +11,7 @@ import (
 	"net/url"
 	"strings"
 	"sync"
+	"testing"
 )
 
 const (
@@ -28,13 +29,14 @@ const (
 // across runs.
 type fakeImages struct {
 	*httptest.Server
+	t *testing.T
 
 	mu      sync.Mutex
 	missing map[string]bool // paths answering 404
 }
 
-func newFakeImages() *fakeImages {
-	f := &fakeImages{missing: map[string]bool{}}
+func newFakeImages(t *testing.T) *fakeImages {
+	f := &fakeImages{t: t, missing: map[string]bool{}}
 	f.Server = httptest.NewServer(f)
 	return f
 }
@@ -47,6 +49,7 @@ func (f *fakeImages) setMissing(path string) {
 }
 
 func (f *fakeImages) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	assertNoResourceCredentials(f.t, r)
 	f.mu.Lock()
 	missing := f.missing[r.URL.Path]
 	f.mu.Unlock()

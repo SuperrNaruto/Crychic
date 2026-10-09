@@ -40,6 +40,8 @@ var epoch = time.Date(2026, time.October, 5, 12, 0, 0, 0, time.FixedZone("UTC+8"
 type scenario struct {
 	routes      map[string]route
 	apiKey      string
+	cookie      string     // optional synthetic resource Cookie, separate from site cookies
+	progress    string     // empty uses the test refresh cadence
 	history     []transfer // transfers that predate the bot
 	quiet       string     // CRYCHIC_NOTIFY_QUIET, notifyQuiet if empty
 	stall       string     // CRYCHIC_NOTIFY_STALL, the production default if empty
@@ -77,17 +79,16 @@ func start(t *testing.T, sc scenario) *harness {
 	mp := newFakeMoviePilot(t, tr, sc.routes)
 	mp.add(sc.history...)
 	mp.lagging, mp.scanned, mp.searches, mp.recognized = sc.lagging, len(sc.history), sc.searches, sc.recognized
-	tg := newFakeTelegram(tr)
+	tg := newFakeTelegram(t, tr)
 	bgm := newFakeBangumi(t, tr)
 	if sc.apiKey == "" {
 		sc.apiKey = mpAPIKey
 	}
-	if sc.quiet == "" {
-		sc.quiet = notifyQuiet
-	}
+	sc = scenarioDefaults(sc)
 	env := map[string]string{
 		"CRYCHIC_MOVIEPILOT_URL":          mp.URL,
 		"CRYCHIC_MOVIEPILOT_API_KEY":      sc.apiKey,
+		"CRYCHIC_MOVIEPILOT_COOKIE":       sc.cookie,
 		"CRYCHIC_TELEGRAM_TOKEN":          tgToken,
 		"CRYCHIC_TELEGRAM_API_URL":        tg.URL,
 		"CRYCHIC_BANGUMI_API_URL":         bgm.URL,
@@ -97,7 +98,7 @@ func start(t *testing.T, sc scenario) *harness {
 		"CRYCHIC_NOTIFY_QUIET":            sc.quiet,
 		"CRYCHIC_NOTIFY_STALL":            sc.stall,
 		"CRYCHIC_NOTIFY_LIBRARY_WAIT":     sc.libraryWait,
-		"CRYCHIC_PROGRESS_INTERVAL":       progressInterval,
+		"CRYCHIC_PROGRESS_INTERVAL":       sc.progress,
 		"CRYCHIC_TELEGRAM_NOTIFY_CHAT_ID": sc.notifyChat,
 		"CRYCHIC_NOTIFY_DIGEST":           sc.digest,
 	}
@@ -105,7 +106,7 @@ func start(t *testing.T, sc scenario) *harness {
 	if err != nil {
 		t.Fatal(err)
 	}
-	h := &harness{t: t, tr: tr, tg: tg, mp: mp, bgm: bgm, img: newFakeImages(), cfg: cfg, began: time.Now()}
+	h := &harness{t: t, tr: tr, tg: tg, mp: mp, bgm: bgm, img: newFakeImages(t), cfg: cfg, began: time.Now()}
 	registered := tg.expect(commandsKey)
 	h.launch()
 	h.wait(registered, "registering the command menu")
@@ -118,6 +119,16 @@ func start(t *testing.T, sc scenario) *harness {
 		h.img.Close()
 	})
 	return h
+}
+
+func scenarioDefaults(sc scenario) scenario {
+	if sc.quiet == "" {
+		sc.quiet = notifyQuiet
+	}
+	if sc.progress == "" {
+		sc.progress = progressInterval
+	}
+	return sc
 }
 
 func (h *harness) launch() {
@@ -336,6 +347,10 @@ func findButton(rows [][]button, label string) (string, bool) {
 type testWriter struct{ t *testing.T }
 
 func (w testWriter) Write(p []byte) (int, error) {
+	if strings.Contains(string(p), resourceCookie) || strings.Contains(string(p), "fake-passkey") {
+		w.t.Error("credentials reached application logs")
+		return len(p), nil
+	}
 	w.t.Log(strings.TrimSpace(string(p)))
 	return len(p), nil
 }

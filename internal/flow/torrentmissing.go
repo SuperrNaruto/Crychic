@@ -55,7 +55,7 @@ func fills(t Torrent, season int, missing []int) []int {
 // (its own episodes already say so) or nothing is known.
 func (sess session) fillNote(t Torrent) string {
 	missing, ok := sess.missingEpisodes()
-	if !ok || t.EpisodesUnsure {
+	if !ok || t.EpisodesUnsure || t.Unverified {
 		return ""
 	}
 	filled := fills(t, *sess.focus.Season, missing)
@@ -73,13 +73,13 @@ func (sess session) fillNote(t Torrent) string {
 // does not name.
 func (sess session) fillsMissing(t Torrent) bool {
 	missing, ok := sess.missingEpisodes()
-	return !ok || t.EpisodesUnsure || len(fills(t, *sess.focus.Season, missing)) > 0
+	return !ok || t.EpisodesUnsure || t.Unverified || len(fills(t, *sess.focus.Season, missing)) > 0
 }
 
 // missingSwitch is the 只看缺集 switch, offered while some release brings
 // nothing missing or the filter is on.
 func missingSwitch(sess session) []Button {
-	if !sess.missingOnly && !slices.ContainsFunc(sess.torrents, func(t Torrent) bool { return !sess.fillsMissing(t) }) {
+	if !sess.missingOnly && !slices.ContainsFunc(sess.activeResources(), func(t Torrent) bool { return !sess.fillsMissing(t) }) {
 		return nil
 	}
 	arg := 1

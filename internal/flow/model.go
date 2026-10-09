@@ -239,6 +239,8 @@ type PastSubscription struct {
 // handed back unchanged to Download; it carries site credentials, so it is
 // never shown, logged or persisted.
 type Torrent struct {
+	Identity    string // opaque resource identity; never a URL or a credential
+	Unverified  bool   // a streaming preview without a matched media identity
 	Title       string
 	Description string
 	Site        string
@@ -304,7 +306,12 @@ type Backend interface {
 	// Subscribe creates a subscription and returns its id.
 	Subscribe(ctx context.Context, target Target) (int, error)
 	// SearchTorrents searches the indexer sites for releases of target.
-	SearchTorrents(ctx context.Context, target Target) ([]Torrent, error)
+	SearchTorrents(ctx context.Context, search TorrentSearch) ([]Torrent, error)
+	// StreamsTorrents is decided before dispatch, never by retrying a search.
+	StreamsTorrents() bool
+	// StreamTorrents publishes immutable snapshots; it never reconnects.
+	StreamTorrents(ctx context.Context, search TorrentSearch, publish func(TorrentSnapshot)) error
+	SearchSites(ctx context.Context, kind Kind) ([]SearchSite, error)
 	// Download adds a found release to the downloader and returns the
 	// download's id ("" when the backend did not say).
 	Download(ctx context.Context, torrent Torrent) (string, error)
@@ -395,6 +402,27 @@ type Reply struct {
 	Expired bool // the input or page no longer belongs to a live conversation
 	Input   string
 	Follow  string
+	// Wake closes for the first usable snapshot or the terminal result.
+	// Intermediate snapshots still use the platform's normal Follow cadence.
+	Wake <-chan struct{}
+}
+
+// TorrentSearch fixes the media and upstream site scope for one search.
+// Empty Sites uses all searchable sites, not a filter of existing results.
+type TorrentSearch struct {
+	Target Target
+	Sites  []int
+}
+
+type SearchSite struct {
+	ID   int
+	Name string
+}
+
+// Final requires a complete, validated upstream terminal result.
+type TorrentSnapshot struct {
+	Items []Torrent
+	Final bool
 }
 
 // UserError carries a message that is safe and useful to show the user.

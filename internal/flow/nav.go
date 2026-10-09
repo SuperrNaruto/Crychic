@@ -38,7 +38,8 @@ var forward = map[string]bool{
 	actionResearch: true, actionAskCancel: true, actionCancelPick: true,
 	actionHistory: true, actionHistoryPick: true, actionSubDetail: true,
 	actionTorrentRun: true, actionTorrentPick: true, actionTorrentMulti: true, actionTorrentBatch: true,
-	actionUpgrade: true,
+	actionUpgrade:     true,
+	actionSearchSites: true,
 }
 
 var sameLevel = map[string]bool{
@@ -47,6 +48,8 @@ var sameLevel = map[string]bool{
 	actionPauseSub: true, actionResumeSub: true,
 	actionTorrentAgain: true, actionTorrentSort: true, actionTorrentSites: true, actionTorrentSite: true,
 	actionTorrentTick: true, actionTorrentMissing: true,
+	actionTorrentRefresh: true, actionTorrentResearch: true,
+	actionSearchSite: true, actionSearchAll: true,
 }
 
 // listPicks are the forward steps that pick from a list.
@@ -85,11 +88,27 @@ func (e *Engine) navigate(prev session, action string, reply Reply) Reply {
 	if reply.Follow == "" {
 		return e.record(transition{prev: prev, next: next, action: action}, reply)
 	}
+	if next.streaming && next.searchView == torrentListView {
+		return e.record(transition{prev: prev, next: next, action: action}, reply)
+	}
 	if skipped := next.skipped; skipped != nil {
-		next.skipped = nil
-		e.record(transition{prev: prev, next: next, action: action}, *skipped)
+		e.recordSkipped(transition{prev: prev, next: next, action: action}, *skipped)
 	}
 	return reply
+}
+
+// The card skipped by 下载 is history, not a navigation away from its worker.
+// Keep the worker out of that snapshot, then restore it to the live session.
+func (e *Engine) recordSkipped(step transition, card Reply) {
+	hunt, streaming := step.next.hunt, step.next.streaming
+	step.next.skipped, step.next.hunt, step.next.streaming = nil, nil, false
+	step.next.searchView = ""
+	e.record(step, card)
+	next, ok := e.store.get(step.next.id)
+	if ok {
+		next.hunt, next.streaming, next.searchView = hunt, streaming, torrentWaitingView
+		e.store.put(next)
+	}
 }
 
 type transition struct {
@@ -101,6 +120,10 @@ type transition struct {
 // and returns it with the buttons its place in the history adds.
 func (e *Engine) record(step transition, reply Reply) Reply {
 	prev, next, action := step.prev, step.next, step.action
+	if next.streaming && !torrentScreenAction(action) {
+		next.hunt.stop()
+		next.searchView = ""
+	}
 	next.history = moved(prev, action, next.history)
 	if finishing[action] && len(next.history) > 0 {
 		reply.Buttons = append(reply.Buttons, browseRow(next.id))
@@ -165,6 +188,22 @@ func (e *Engine) back(ctx context.Context, sess session) Reply {
 	restored := *last.state
 	restored.history, restored.screen = sess.history[:len(sess.history)-1], last
 	restored.tickets = sess.tickets
+	restored.hunts = max(sess.hunts, restored.hunts)
+	restored.torrentIDs = max(sess.torrentIDs, restored.torrentIDs)
+	if sess.streaming && restored.searchView == torrentListView && sess.hunt == restored.hunt {
+		restored = syncedHunt(restored, restored.hunt.read())
+		e.store.put(restored)
+		return e.navigate(restored, actionTorrentAgain, e.streamReleases(restored))
+	}
+	if sess.streaming && restored.searchView == "" {
+		sess.hunt.stop()
+		if sess.hunt != nil {
+			sess = syncedHunt(sess, sess.hunt.read())
+		}
+		restored.hunt, restored.streaming = nil, false
+		// Preserve allocated numbers when starting another search on this card.
+		restored.torrents = make([]Torrent, max(len(sess.torrents), len(restored.torrents)))
+	}
 	e.store.put(restored)
 	if last.chart {
 		return e.navigate(restored, actionChartPage, e.chartPage(ctx, restored, restored.page))
@@ -173,6 +212,17 @@ func (e *Engine) back(ctx context.Context, sess session) Reply {
 		return e.refreshSubsScreen(ctx, restored)
 	}
 	return last.reply
+}
+
+func torrentScreenAction(action string) bool {
+	switch action {
+	case actionTorrentRun, actionTorrentAgain, actionTorrentRefresh, actionTorrentResearch,
+		actionTorrentPick, actionTorrentGet, actionTorrentSort, actionTorrentSites,
+		actionTorrentSite, actionTorrentMissing, actionTorrentMulti, actionTorrentTick,
+		actionTorrentBatch, actionTorrentBatchGet, actionPage, actionBack:
+		return true
+	}
+	return false
 }
 
 // refreshSubsScreen keeps the original kind and page after changing a

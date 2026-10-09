@@ -90,6 +90,8 @@ metadata; `Reply.Notice` keeps them untouched
 
 ## 跟随者投递与停止
 
+资源搜索仍走语义 `Reply.Follow`，适配器不解析 MoviePilot 帧。可选 `Reply.Wake` 通道在首批可用结果及终态关闭，提前触发一次只读刷新；普通中途结果沿用配置间隔。待投递 Reply 的限流和重试期限优先于唤醒，失败时移除本轮 wake，避免关闭通道触发忙循环。初始发送、typed edit 和 callback edit 都保留同一唤醒语义。
+
 A sent reply (not only an edited one) with `Follow` gets a follower (`adapter.replyTo`), and so does a typed
 answer's edit (`adapter.show`, shared with button presses), e.g. `/search 下载 <title>` with a unique result
 whose resource search starts at once; 重新搜索 is not offered on a search under way

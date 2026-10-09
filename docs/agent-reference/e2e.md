@@ -115,6 +115,12 @@ changing real timer cadence
 
 ## MoviePilot 录制来源与脱敏
 
+`fake_search_stream_test.go` 的 SSE 来自合成数据，帧形状对照 MoviePilot v3.1.1 `search.py` 与 `chain/search/execution.py`，早期候选明确没有媒体身份。复用既有合成种子记录，不录制真实流。HTTP admission、逐帧 flush 和连接退出屏障约束可重复时序；不排序有副作用的搜索请求来掩盖乱序。Cookie 仅在 fake 内校验，其他服务和普通 JSON 路径收到 Cookie 会使场景失败。
+
+`search_stream*_test.go`、`search_sites_test.go` 与 `cookie_config_test.go` 覆盖资源身份、完整帧和批次、读取总预算、断线不重搜、终态投递恢复、初始消息和输入、话题、到期和重启、搜索范围及启动拒绝。总预算场景实际等待两分钟，因此完整测试相应变长；不通过缩短生产预算或注入内部 mock 加速。每个场景仍以 transcript 比对结束。
+
+Telegram fake 的消息可见状态和对应 transcript 在同一锁内发布，避免测试已经读到新消息、记录却晚于后续取消的假乱序。发送响应仍可单独延迟，保留「消息已显示但响应尚未到达」的协议行为。
+
 Recordings of `/api/v1/download/` carry tracker URLs with passkeys, the site name, the release name and the
 owner's username: keep only the fields Crychic reads
 

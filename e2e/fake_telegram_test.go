@@ -8,6 +8,7 @@ import (
 	"strconv"
 	"strings"
 	"sync"
+	"testing"
 	"time"
 )
 
@@ -43,6 +44,7 @@ type message struct {
 type fakeTelegram struct {
 	*httptest.Server
 	tr *transcript
+	t  *testing.T
 
 	mu        sync.Mutex
 	updates   []map[string]any
@@ -66,9 +68,10 @@ type fakeTelegram struct {
 	allowed []string
 }
 
-func newFakeTelegram(tr *transcript) *fakeTelegram {
+func newFakeTelegram(t *testing.T, tr *transcript) *fakeTelegram {
 	f := &fakeTelegram{
 		tr:       tr,
+		t:        t,
 		arrived:  make(chan struct{}),
 		messages: map[int]message{},
 		allowed:  []string{"message", "callback_query"},
@@ -117,6 +120,7 @@ func (f *fakeTelegram) message(id int) (message, bool) {
 }
 
 func (f *fakeTelegram) serve(w http.ResponseWriter, r *http.Request) {
+	assertNoResourceCredentials(f.t, r)
 	method, found := strings.CutPrefix(r.URL.Path, "/bot"+tgToken+"/")
 	if !found {
 		reply(w, nil, fmt.Errorf("unknown path %s", r.URL.Path))
@@ -135,6 +139,10 @@ func (f *fakeTelegram) serve(w http.ResponseWriter, r *http.Request) {
 	if f.serveMessage(w, r, method) {
 		return
 	}
+	f.serveMethod(w, r, method)
+}
+
+func (f *fakeTelegram) serveMethod(w http.ResponseWriter, r *http.Request, method string) {
 	switch method {
 	case "getMe":
 		reply(w, map[string]any{"id": botUserID, "is_bot": true, "first_name": "Crychic", "username": "crychic_bot"}, nil)
@@ -303,8 +311,8 @@ func (f *fakeTelegram) store(r *http.Request, method string) (map[string]any, er
 			f.fileIDs[m.fileOf(src[1])] = true // Telegram keeps what it fetched
 		}
 	}
-	f.mu.Unlock()
-
+	// A message becomes observable together with its transcript. Otherwise a
+	// quick callback can record cancellation before this already visible edit.
 	head := fmt.Sprintf("<< %s chat=%d message=%d", method, m.chat, id)
 	if m.forum {
 		head += fmt.Sprintf(" topic=%d", m.thread)
@@ -318,6 +326,7 @@ func (f *fakeTelegram) store(r *http.Request, method string) (map[string]any, er
 		body = append(body, buttonLines(m.rows))
 	}
 	f.tr.add(head, body...)
+	f.mu.Unlock()
 	f.finish(doneKey)
 	return m.wire(id), nil
 }

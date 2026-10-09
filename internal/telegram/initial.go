@@ -72,6 +72,6 @@ func (a *adapter) completeInitial(ctx context.Context, start *initialReply, mess
 	}
 	a.mu.Unlock()
 	if !moved && start.reply.Follow != "" {
-		a.follow(follower{target: target, actor: start.actor, data: start.reply.Follow, shown: renderReply(start.reply)})
+		a.follow(follower{target: target, actor: start.actor, data: start.reply.Follow, shown: renderReply(start.reply), wake: start.reply.Wake})
 	}
 }

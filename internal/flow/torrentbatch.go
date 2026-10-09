@@ -36,6 +36,9 @@ var (
 func (e *Engine) chooseTorrentBatch(ctx context.Context, sess session, p press) (Reply, bool) {
 	switch p.action {
 	case actionTorrentMulti:
+		if sess.streaming && (!sess.searchDone || !sess.searchFinal) {
+			return Reply{Notice: msgTorrentPartial}, true
+		}
 		sess.ticking = true
 		return e.releases(sess), true
 	case actionTorrentTick:
@@ -71,6 +74,7 @@ func (e *Engine) askBatch(sess session) Reply {
 		return Reply{Notice: msgTickOne}
 	}
 	sess.batch = slices.Clone(sess.ticked)
+	sess.searchView = torrentBatchView
 	e.store.put(sess)
 	rows := make([][]Span, 0, len(sess.batch))
 	var total float64
@@ -107,8 +111,13 @@ func (e *Engine) downloadBatch(_ context.Context, sess session) Reply {
 	}
 	var releases []Torrent
 	for _, i := range sess.batch {
+		if sess.streaming && !e.currentTorrent(sess, i) {
+			return Reply{Notice: msgTorrentChanged}
+		}
 		releases = append(releases, sess.torrents[i])
 	}
+	sess.hunt.stop()
+	sess.hunt, sess.searchView = nil, ""
 	b := newDownloadBatch(int(sess.ticket), releases)
 	sess.submission = b
 	sess.batch, sess.ticked, sess.target, sess.release = nil, nil, nil, nil

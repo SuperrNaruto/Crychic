@@ -44,13 +44,29 @@ var errAuth = &flow.UserError{Message: "MoviePilot 不让我进门…请管理�
 type Client struct {
 	baseURL string
 	apiKey  string
+	cookie  string
 	http    *http.Client
+	stream  *http.Client
 }
 
-// New talks to MoviePilot through httpClient, which must not set its own
+type Options struct {
+	BaseURL    string
+	APIKey     string
+	Cookie     string
+	HTTPClient *http.Client
+}
+
+// New talks to MoviePilot through HTTPClient, which must not set its own
 // Timeout: each call is bounded by callTimeout or its call.timeout.
-func New(baseURL, apiKey string, httpClient *http.Client) *Client {
-	return &Client{baseURL: strings.TrimRight(baseURL, "/"), apiKey: apiKey, http: httpClient}
+func New(opts Options) *Client {
+	client := *opts.HTTPClient
+	client.Jar = nil
+	stream := client
+	stream.CheckRedirect = func(*http.Request, []*http.Request) error { return http.ErrUseLastResponse }
+	return &Client{
+		baseURL: strings.TrimRight(opts.BaseURL, "/"), apiKey: opts.APIKey,
+		cookie: opts.Cookie, http: &client, stream: &stream,
+	}
 }
 
 type mediaInfo struct {

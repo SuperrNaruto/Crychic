@@ -61,9 +61,11 @@ func (e *Engine) chooseTorrentView(_ context.Context, sess session, p press) (Re
 		sess.torrentSort = p.arg
 		return e.releases(sess), true
 	case actionTorrentSites:
+		sess.searchView = torrentFilterView
+		e.store.put(sess)
 		return sitePicker(sess), true
 	case actionTorrentSite:
-		sites := torrentSites(sess.torrents)
+		sites := torrentSites(sess.activeResources())
 		if p.arg < 0 || p.arg > len(sites) {
 			return Reply{Notice: msgInvalidChoice}, true
 		}
@@ -84,6 +86,11 @@ func (e *Engine) releases(sess session) Reply {
 	if sess.focus == nil || len(sess.torrents) == 0 {
 		return Reply{Notice: msgInvalidChoice}
 	}
+	if sess.streaming {
+		sess = syncedHunt(sess, sess.hunt.read())
+		sess.pageIndex = 0
+		return e.streamReleases(sess)
+	}
 	return e.listPages(sess, torrentList(sess, *sess.focus))
 }
 
@@ -92,7 +99,8 @@ func (e *Engine) releases(sess session) Reply {
 // order.
 func (sess session) shownTorrents() []int {
 	var shown []int
-	for i, t := range sess.torrents {
+	for _, i := range sess.activeTorrents() {
+		t := sess.torrents[i]
 		if (sess.torrentSite == "" || siteOf(t) == sess.torrentSite) && (!sess.missingOnly || sess.fillsMissing(t)) {
 			shown = append(shown, i)
 		}
@@ -101,6 +109,25 @@ func (sess session) shownTorrents() []int {
 		slices.SortStableFunc(shown, func(a, b int) int { return less(sess.torrents[a], sess.torrents[b]) })
 	}
 	return shown
+}
+
+func (sess session) activeTorrents() []int {
+	if sess.streaming {
+		return slices.Clone(sess.torrentOrder)
+	}
+	indices := make([]int, len(sess.torrents))
+	for i := range indices {
+		indices[i] = i
+	}
+	return indices
+}
+
+func (sess session) activeResources() []Torrent {
+	var out []Torrent
+	for _, i := range sess.activeTorrents() {
+		out = append(out, sess.torrents[i])
+	}
+	return out
 }
 
 // sortRow switches the release order, the shown one marked.
@@ -136,7 +163,7 @@ func torrentSites(torrents []Torrent) []siteCount {
 // sitePicker offers each site of the releases, and every site; 返回 shows
 // the list as it was.
 func sitePicker(sess session) Reply {
-	sites := torrentSites(sess.torrents)
+	sites := torrentSites(sess.activeResources())
 	text := Lines(Heading(Plain("🔍 "+msgSiteFilter)), Line(Strong(msgPickSite)))
 	buttons := []Button{{Label: markShown(msgAllSites, sess.torrentSite == ""), Data: data(sess.id, actionTorrentSite, 0)}}
 	for i, s := range sites {

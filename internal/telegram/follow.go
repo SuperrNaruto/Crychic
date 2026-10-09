@@ -30,6 +30,7 @@ type follower struct {
 	retryAt    time.Time
 	retryUntil time.Time
 	suspended  bool // protected by adapter.mu; a callback may resume a rejected choice
+	wake       <-chan struct{}
 }
 
 // follow starts refreshing f's message, replacing any earlier follower of it.
@@ -69,6 +70,8 @@ func (a *adapter) refresh(ctx context.Context, f *follower) {
 		case <-ctx.Done():
 			return
 		case <-ticker.C:
+		case <-f.wake:
+			f.wake = nil
 		}
 		if !a.refreshOnce(ctx, f) {
 			return
@@ -98,6 +101,7 @@ func (a *adapter) refreshOnce(ctx context.Context, f *follower) bool {
 			return false
 		}
 		f.pending = &reply
+		f.wake = reply.Wake
 	}
 	if ctx.Err() != nil {
 		return false
@@ -116,6 +120,7 @@ func (a *adapter) deliverFollow(ctx context.Context, f *follower) bool {
 				return false
 			}
 			f.deferRetry(err)
+			f.wake = nil // retry only on cadence or retry_after, not a closed wake channel
 			return ctx.Err() == nil
 		}
 		f.shown = rich
@@ -124,6 +129,7 @@ func (a *adapter) deliverFollow(ctx context.Context, f *follower) bool {
 	f.trigger = ""
 	f.retryAt, f.retryUntil = time.Time{}, time.Time{}
 	f.data = reply.Follow
+	f.wake = reply.Wake
 	return reply.Follow != ""
 }
 

@@ -201,6 +201,14 @@ MoviePilot's per-kind default config applies to ordinary subscriptions) and watc
 
 ## 资源搜索筛选与批量下载
 
+### 可选流式搜索
+
+配置资源 Cookie 后，`torrenthunt.go` 在独立代次中消费 SSE，前台只取只读快照。资源列表先展示未匹配候选，完整终态到齐前不开放单项或批量下载；空最终结果与不完整结果分别显示。每个资源分配固定编号，排序、过滤、返回和重搜都不能复用旧编号，最终顺序仍使用 MoviePilot 优先级。详情页固定已选资源，不受后台事件覆盖；「刷新结果」只读该资源最新状态，消失或选择字段改变则要求返回重选。
+
+`Reply.Wake` 只在首批可用结果和终态唤醒既有 Follow，其他更新继续用 `CRYCHIC_PROGRESS_INTERVAL`。Telegram 投递失败只重投保存的 Reply，不重搜。返回媒体卡片、取消、会话清理和 app 退出关闭并等待 worker；旧代次 Follow 不能覆盖新列表、详情或回执。Cookie 缺省仍走下述 JSON 流程。
+
+卡片的「选择搜索站点」先读取媒体类型对应站点，编号勾选后「开始搜索」才访问站点；空选择表示全部，读取失败或无站点不会启动搜索。「筛选站点」继续只过滤已有结果。新动作码为 `ss/st/sa/sb`，流式只读刷新为 `tu`，显式重复搜索为 `te`。
+
 `internal/flow/torrents.go`, `torrenttext.go` - 搜索资源 on a card with a chosen target (movie confirm, held,
 already subscribed, a season's start-episode prompt; `session.focus`): `ts`/`tr` start the slow site search in
 the background (`torrenthunt.go`, `session.hunt`; 取消 stops it) and show the card with a searching line and

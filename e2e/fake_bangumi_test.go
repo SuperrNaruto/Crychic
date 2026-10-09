@@ -40,6 +40,7 @@ func newFakeBangumi(t *testing.T, tr *transcript) *fakeBangumi {
 }
 
 func (f *fakeBangumi) serve(w http.ResponseWriter, r *http.Request) {
+	assertNoResourceCredentials(f.t, r)
 	f.tr.add("-> Bangumi " + r.Method + " " + r.URL.Path)
 	id, isSubject := strings.CutPrefix(r.URL.Path, subjectsPath)
 	if !f.wait(r, id) {
