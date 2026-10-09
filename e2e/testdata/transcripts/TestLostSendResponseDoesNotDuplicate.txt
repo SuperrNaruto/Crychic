@@ -1,0 +1,51 @@
+>> user 1001 in chat 1001: /search 沙丘
+-> MoviePilot GET /api/v1/media/search?count=10&title=沙丘&type=media
+<< sendRichMessage chat=1001 message=1
+   <tg-slideshow>
+   <img src="url-ae95e58ec03e202c035279fd7b770ee9063e24e22f246ec568120ac5a90252ea"/>
+   <img src="url-7ea76e3b74f0f1bba01161bd2446775a7fe7657b009df91fca57cb760c60208f"/>
+   <img src="url-e887bdb9df0034573d9e03f6507d8e8b7862bda8362f968e4349554493678ff8"/>
+   <img src="url-0603bc04eba9f23ccb0da918da40cefdcc9533bb920a16af3d7323b8954288fe"/>
+   <img src="url-f3924e4dafb7c35392e3de6d3fbfd5e540d3fcfe78dd69b758e7319101e217fe"/>
+   <img src="url-cfc61103a56e8781300f998571c8194d0958754710eb781ed3beae7e5eae3dc2"/>
+   <img src="url-d03384b6cc307585edcd449cb20296ce3fa11071866b554add8f77be947e6c17"/>
+   <img src="url-f6bf48e37249a47a3abcd09ca8c92f0ab0f5d0f1d21a40918902154571cda459"/>
+   </tg-slideshow>
+   <h3>🔍 帮你找到这些「沙丘」啦</h3>
+   <ol start="1">
+   <li value="1"><b>沙丘</b><br>
+   <i>Dune · 2021 · 电影 · ⭐ 7.8</i></li>
+   <li value="2"><b>沙丘：预言</b><br>
+   <i>Dune: Prophecy · 2024 · 电视剧 · ⭐ 7.2</i></li>
+   <li value="3"><b>沙丘</b><br>
+   <i>Dune · 1984 · 电影 · ⭐ 6.2</i></li>
+   <li value="4"><b>沙丘2</b><br>
+   <i>Dune: Part Two · 2024 · 电影 · ⭐ 8.1</i></li>
+   <li value="5"><b>沙丘3</b><br>
+   <i>Dune: Part Three · 2026 · 电影</i></li>
+   <li value="6"><b>沙丘之子</b><br>
+   <i>Frank Herbert&#39;s Children of Dune · 2003 · 电视剧 · ⭐ 6.9</i></li>
+   <li value="7"><b>沙丘魔堡2000</b><br>
+   <i>Frank Herbert&#39;s Dune · 2000 · 电视剧 · ⭐ 6.8</i></li>
+   <li value="8"><b>沙丘虫暴</b><br>
+   <i>2021 · 电影 · ⭐ 6.7</i></li>
+   </ol>
+   <footer>第 1/2 页</footer>
+   [1 | 1:m:0] [2 | 1:m:1] [3 | 1:m:2] [4 | 1:m:3]
+   [5 | 1:m:4] [6 | 1:m:5] [7 | 1:m:6] [8 | 1:m:7]
+   [下一页 › | 1:p:1]
+   [重新搜索 | 1:rs:0]
+   [取消 | 1:x:0]
+<< sendRichMessage response lost after display
+>> user 1001 in chat 1001: /help
+<< sendRichMessage chat=1001 message=2
+   <h3>我能帮你做这些～</h3>
+   <p>私聊直接发片名我就去搜，片名前加「下载」我会选好后直接搜资源；在等你回复起始集数的时候，先回答我，或者用 /search 换一部～<br>
+   <code>/start</code> 回到首页，所有功能都在这儿～<br>
+   在任意聊天输入 <code>@我的用户名 片名</code> 可以把片子分享出去，点卡片上的按钮回到我这儿订阅～<br>
+   <code>/search &lt;片名&gt;</code> 帮你搜电影和剧集，顺手在 MoviePilot 里订上；也能点「搜索资源」挑种子直接下载，一次可以多选哦～<br>
+   <code>/trending</code> 逛逛热门榜单和新番，看中了一键订阅～<br>
+   <code>/subscribe</code> 按电视剧、电影看订阅，还能暂停或取消你请求的、从订阅历史重新订阅～<br>
+   <code>/upcoming</code> 追剧日历：你订阅的剧接下来 7 天播哪几集～<br>
+   <code>/newly_added</code> 媒体库新到的片子，点片名直接去看～<br>
+   <code>/tasks</code> 看看下载和整理的进度，选一个我帮你实时盯着，不要的下载也能删掉～</p>

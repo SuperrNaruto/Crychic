@@ -67,9 +67,10 @@ posters are an `<img>` block on top; search result, chart, 相似推荐 and 同�
 `Reply.Gallery`, a `<tg-slideshow>` on top in list order (Telegram shows no per-slide captions, so slides
 carry no text). Telegram fetches posters itself the first time; every poster's `file_id` is then read from
 Telegram's copy of the message and later messages send it by `file_id` (`tg://photo?id=pN` media; transcripts
-normalize to the displayed image identity), so Telegram need not fetch it again. A refused message forgets the
-file_ids it reused and is retried once with its posters sent afresh, then without any poster (Telegram does
-not say which one failed; not for "message is not modified"). Douban images (`*.doubanio.com`, all Douban
+normalize to the displayed image identity), so Telegram need not fetch it again. Only an explicit invalid
+file identifier or failed image-URL rejection forgets reused file_ids and retries with fresh posters, then
+without posters. Network failures, rate limits and other refusals keep the cache. A new message whose send
+result is unknown is not resent: it may already be visible. Douban images (`*.doubanio.com`, all Douban
 charts and 正在热映) answer 418 without a Douban referer, so Telegram cannot fetch them:
 `internal/telegram/posters.go` downloads them with the referer and its own User-Agent (`img3` answers 403 to
 Go's default one; 5 s budget, 5 MB cap, 4 at a time), uploads them as `attach://` media (file_ids: memory
@@ -99,6 +100,17 @@ respecting Telegram's `retry_after`; retries stop after `FollowFor` from the fir
 navigation or cancellation discards the pending reply. A callback suspends its follower before waiting for the
 message lock, but a rejected callback resumes the same follower and pending reply; an intervening accepted
 navigation invalidates that identity.
+
+Ordinary callback and typed-answer edits use the same pending-reply mechanism, including successful write
+receipts. Repeating the callback that produced a pending reply only retries delivery, never the business
+step; flood-control delays and the original retry deadline remain in force. Permanent Telegram refusals
+stop retries. This applies to editing an existing rich message, not uncertain photo-replacement sends or
+arrival notices, whose save-before-send policy is unchanged.
+
+Initial sends with input or follow information record navigation accepted while their response is in flight.
+When the send returns, installation runs under the message lane and ignores superseded initial state. These
+records live only for that send; rejected callbacks do not supersede it. Requester-bearing notices recheck
+the current whitelist at delivery; identity-free configured channel broadcasts remain independent.
 
 An owner's button press suspends the message's follower before waiting for the message lane, so a slow refresh
 never holds the press

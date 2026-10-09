@@ -156,7 +156,11 @@ func (f *fakeTelegram) serveMessage(w http.ResponseWriter, r *http.Request, meth
 	switch method {
 	case "sendRichMessage", "editMessageText":
 		result, err := f.store(r, method)
-		f.waitResponse(r.Context(), method)
+		if f.waitResponse(r.Context(), method) {
+			w.Header().Set("Content-Length", "1")
+			w.WriteHeader(http.StatusOK)
+			return true
+		}
 		reply(w, result, err)
 	case "deleteMessage":
 		err := f.deleteMessage(r)

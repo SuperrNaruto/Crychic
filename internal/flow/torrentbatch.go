@@ -77,7 +77,7 @@ func (e *Engine) askBatch(sess session) Reply {
 	hitAndRun := false
 	for _, i := range sess.batch {
 		t := sess.torrents[i]
-		rows = append(rows, []Span{Strong(truncate(t.Title, listTitleRunes)), Plain(EpisodeRanges(t.Episodes)), Plain(siteOf(t)), Plain(size(t.Size))})
+		rows = append(rows, []Span{Strong(truncate(t.Title, listTitleRunes)), Plain(releaseEpisodes(t)), Plain(siteOf(t)), Plain(size(t.Size))})
 		total += t.Size
 		hitAndRun = hitAndRun || t.HitAndRun
 	}

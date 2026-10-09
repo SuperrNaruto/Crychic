@@ -269,8 +269,10 @@ func (p *posters) fetch(ctx context.Context, raw string) ([]byte, error) {
 // one of them is what Telegram refused.
 func (p *posters) sent(o outgoing, msg *models.Message, err error) {
 	if err != nil {
-		for _, r := range o.reuses {
-			p.forget(r.url)
+		if rejectedPoster(err) {
+			for _, r := range o.reuses {
+				p.forget(r.url)
+			}
 		}
 		return
 	}

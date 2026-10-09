@@ -1,0 +1,31 @@
+>> Telegram delays the next sendRichMessage response after displaying the message
+>> user 1001 in chat 1001: 下载 沙丘
+-> MoviePilot GET /api/v1/media/search?count=10&title=沙丘&type=media
+-> MoviePilot GET /api/v1/media/438631?media_source=themoviedb&type_name=电影
+-> MoviePilot GET /api/v1/subscribe/media/438631?media_source=themoviedb&mtype=电影&title=沙丘&year=2021
+<< sendRichMessage chat=1001 message=1
+   <img src="url-ae95e58ec03e202c035279fd7b770ee9063e24e22f246ec568120ac5a90252ea"/>
+   <h3>🎬 <a href="https://www.themoviedb.org/movie/438631">沙丘</a></h3>
+   <footer><i>Dune</i> · 2021 · 电影 · ⭐ 7.8 · 科幻 / 冒险 · 156 分钟 · 主演：提莫西·查拉梅、丽贝卡·弗格森、奥斯卡·伊萨克</footer>
+   <blockquote expandable>电影《沙丘》为观众呈现了一段神秘而感人至深的英雄之旅。天赋异禀的少年保罗·厄崔迪（提莫西·查拉梅 饰）被命运指引，为了保卫自己的家族和人民，决心前往浩瀚宇宙间最危险的星球，开启一场惊心动魄的冒险。与此同时，各路势力为了抢夺这颗星球上一种能够释放人类最大潜力的珍贵资源而纷纷加入战场。最终，唯有那些能够战胜内心恐惧的人才能生存下去。</blockquote>
+   <hr/>
+   <p>🔍 正在各个站点搜索资源，要等一会儿哦…</p>
+   [取消 | 1:x:0]
+>> user 1001 taps 1:x:0 on message 1
+<< editMessageText chat=1001 message=1
+   <h3>已取消</h3>
+   <p>好哒，已经取消啦～</p>
+<< answerCallbackQuery
+>> Telegram releases the delayed sendRichMessage response
+>> user 1001 in chat 1001: /help
+<< sendRichMessage chat=1001 message=2
+   <h3>我能帮你做这些～</h3>
+   <p>私聊直接发片名我就去搜，片名前加「下载」我会选好后直接搜资源；在等你回复起始集数的时候，先回答我，或者用 /search 换一部～<br>
+   <code>/start</code> 回到首页，所有功能都在这儿～<br>
+   在任意聊天输入 <code>@我的用户名 片名</code> 可以把片子分享出去，点卡片上的按钮回到我这儿订阅～<br>
+   <code>/search &lt;片名&gt;</code> 帮你搜电影和剧集，顺手在 MoviePilot 里订上；也能点「搜索资源」挑种子直接下载，一次可以多选哦～<br>
+   <code>/trending</code> 逛逛热门榜单和新番，看中了一键订阅～<br>
+   <code>/subscribe</code> 按电视剧、电影看订阅，还能暂停或取消你请求的、从订阅历史重新订阅～<br>
+   <code>/upcoming</code> 追剧日历：你订阅的剧接下来 7 天播哪几集～<br>
+   <code>/newly_added</code> 媒体库新到的片子，点片名直接去看～<br>
+   <code>/tasks</code> 看看下载和整理的进度，选一个我帮你实时盯着，不要的下载也能删掉～</p>

@@ -1,0 +1,26 @@
+>> user 1001 in chat 1001: 无海报影片
+-> MoviePilot GET /api/v1/media/search?count=10&title=无海报影片&type=media
+-> MoviePilot GET /api/v1/media/42?media_source=themoviedb&type_name=电影
+-> MoviePilot GET /api/v1/subscribe/media/42?media_source=themoviedb&mtype=电影&title=无海报影片
+<< sendRichMessage chat=1001 message=1
+   <h3>🎬 无海报影片</h3>
+   <footer>电影</footer>
+   <hr/>
+   <p><b>要订阅《无海报影片》吗？</b></p>
+   [确认订阅 | 1:ok:0]
+   [洗版订阅 | 1:bv:0]
+   [搜索资源 | 1:ts:0] [相似推荐 | 1:r:0] [同系列 | 1:n:0]
+   [重新搜索 | 1:rs:0]
+   [取消 | 1:x:0]
+>> user 1001 taps 1:ok:0 on message 1
+-> MoviePilot POST /api/v1/subscribe/
+   {"name":"无海报影片","type":"电影","media_source":"themoviedb","media_id":"42"}
+<< editMessageText message=1 temporarily unavailable
+<< answerCallbackQuery
+>> user 1001 taps 1:ok:0 on message 1
+<< editMessageText chat=1001 message=1
+   <h3>🎬 无海报影片</h3>
+   <footer>电影</footer>
+   <hr/>
+   <p>✅ 帮你订好《无海报影片》啦，入库了我第一时间叫你！ ヾ(≧▽≦*)o</p>
+<< answerCallbackQuery notice="操作已经处理啦，正在恢复显示结果，稍等一下哦～"

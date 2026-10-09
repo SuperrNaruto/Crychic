@@ -8,6 +8,7 @@ import (
 type responseHold struct {
 	method string
 	done   chan struct{}
+	lost   bool
 }
 
 // holdNextResponse models a response arriving after Telegram displayed the
@@ -24,17 +25,32 @@ func (f *fakeTelegram) holdNextResponse(method string) func() {
 	})
 }
 
-func (f *fakeTelegram) waitResponse(ctx context.Context, method string) {
+// loseNextResponse displays the message but closes an incomplete HTTP body.
+// The caller cannot infer that the server rejected the send.
+func (f *fakeTelegram) loseNextResponse(method string) <-chan struct{} {
+	f.mu.Lock()
+	defer f.mu.Unlock()
+	f.response = &responseHold{method: method, done: make(chan struct{}), lost: true}
+	return f.response.done
+}
+
+func (f *fakeTelegram) waitResponse(ctx context.Context, method string) bool {
 	f.mu.Lock()
 	hold := f.response
 	if hold == nil || hold.method != method {
 		f.mu.Unlock()
-		return
+		return false
 	}
 	f.response = nil
 	f.mu.Unlock()
+	if hold.lost {
+		f.tr.add("<< " + method + " response lost after display")
+		close(hold.done)
+		return true
+	}
 	select {
 	case <-hold.done:
 	case <-ctx.Done():
 	}
+	return false
 }

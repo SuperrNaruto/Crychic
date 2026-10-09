@@ -23,6 +23,7 @@ type follower struct {
 	target     editTarget
 	actor      flow.Actor
 	data       string // the Follow data of the reply on screen
+	trigger    string // accepted callback whose failed edit is pending
 	shown      string // rendered text on screen, to skip edits that change nothing
 	cancel     context.CancelFunc
 	pending    *flow.Reply // a flow transition already read but not delivered
@@ -76,13 +77,6 @@ func (a *adapter) refresh(ctx context.Context, f *follower) {
 }
 
 func (a *adapter) refreshOnce(ctx context.Context, f *follower) bool {
-	now := time.Now()
-	if !f.retryUntil.IsZero() && !now.Before(f.retryUntil) {
-		return false
-	}
-	if now.Before(f.retryAt) {
-		return true
-	}
 	unlock, ok := a.lockMessage(ctx, f.target.key())
 	if !ok {
 		return false
@@ -90,6 +84,13 @@ func (a *adapter) refreshOnce(ctx context.Context, f *follower) bool {
 	defer unlock()
 	if ctx.Err() != nil {
 		return false
+	}
+	now := time.Now()
+	if !f.retryUntil.IsZero() && !now.Before(f.retryUntil) {
+		return false
+	}
+	if now.Before(f.retryAt) {
+		return true
 	}
 	if f.pending == nil {
 		reply := a.flow.Choose(ctx, f.actor, f.data)
@@ -111,15 +112,47 @@ func (a *adapter) deliverFollow(ctx context.Context, f *follower) bool {
 	rich := renderReply(reply)
 	if rich != f.shown {
 		if _, err := a.edit(ctx, f.target, reply); err != nil {
+			if !retryableEdit(err) {
+				return false
+			}
 			f.deferRetry(err)
 			return ctx.Err() == nil
 		}
 		f.shown = rich
 	}
 	f.pending = nil
+	f.trigger = ""
 	f.retryAt, f.retryUntil = time.Time{}, time.Time{}
 	f.data = reply.Follow
 	return reply.Follow != ""
+}
+
+const msgDelivering = "操作已经处理啦，正在恢复显示结果，稍等一下哦～"
+
+// A duplicate press recovers its generated reply, never the write that made
+// it. The message lane is held and the previous follower has been suspended.
+func (a *adapter) recoverCallback(ctx context.Context, f *follower, raw string) bool {
+	if f == nil {
+		return false
+	}
+	a.mu.Lock()
+	current := a.followers[f.target.key()] == f
+	a.mu.Unlock()
+	if !current || f.pending == nil || f.trigger != raw {
+		return false
+	}
+	now := time.Now()
+	if !f.retryUntil.IsZero() && !now.Before(f.retryUntil) {
+		a.discardFollower(f)
+		return false
+	}
+	if now.Before(f.retryAt) {
+		return true
+	}
+	if !a.deliverFollow(ctx, f) {
+		a.discardFollower(f)
+	}
+	return true
 }
 
 // Telegram's flood-control delay overrides the normal refresh cadence.

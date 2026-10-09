@@ -2,7 +2,6 @@ package telegram
 
 import (
 	"context"
-	"strings"
 
 	"github.com/go-telegram/bot"
 	"github.com/go-telegram/bot/models"
@@ -28,7 +27,7 @@ func content(o outgoing) *models.InputRichMessage {
 // does not say which gallery poster failed, so the whole gallery goes.
 func withoutPoster(reply flow.Reply, err error) (flow.Reply, bool) {
 	posters := reply.Image != "" || len(reply.Gallery) > 0
-	if err == nil || !posters || strings.Contains(err.Error(), notModified) {
+	if !posters || !rejectedPoster(err) {
 		return reply, false
 	}
 	reply.Image, reply.Gallery = "", nil
@@ -52,7 +51,7 @@ func (a *adapter) deliver(ctx context.Context, reply flow.Reply, try func(outgoi
 	out := a.posters.prepare(ctx, reply)
 	msg, err := try(out)
 	a.posters.sent(out, msg, err)
-	if err != nil && len(out.reuses) > 0 && !strings.Contains(err.Error(), notModified) {
+	if rejectedPoster(err) && len(out.reuses) > 0 {
 		a.log.Warn("reused poster rejected, sending it afresh", "err", err)
 		out = a.posters.prepare(ctx, reply)
 		msg, err = try(out)
@@ -70,7 +69,7 @@ func (a *adapter) deliver(ctx context.Context, reply flow.Reply, try func(outgoi
 func (a *adapter) showCallback(ctx context.Context, cq *models.CallbackQuery, reply flow.Reply) {
 	msg := cq.Message.Message
 	t := editTarget{chat: msg.Chat.ID, user: cq.From.ID, message: msg.ID, thread: destinationOf(msg).thread, photo: len(msg.Photo) > 0}
-	a.show(ctx, follower{target: t, actor: actorOf(cq.From, t.destination())}, reply)
+	a.show(ctx, follower{target: t, actor: actorOf(cq.From, t.destination()), trigger: cq.Data}, reply)
 }
 
 // show edits f's target to reply, following it when the reply is live
@@ -78,8 +77,17 @@ func (a *adapter) showCallback(ctx context.Context, cq *models.CallbackQuery, re
 func (a *adapter) show(ctx context.Context, f follower, reply flow.Reply) {
 	a.unfollow(f.target.key())
 	shown, err := a.edit(ctx, f.target, reply)
-	if err == nil && reply.Follow != "" {
+	if err != nil {
+		if !f.target.photo && retryableEdit(err) {
+			f.pending = &reply
+			f.deferRetry(err)
+			a.follow(f)
+		}
+		return
+	}
+	if reply.Follow != "" {
 		f.target, f.data, f.shown = shown, reply.Follow, renderReply(reply)
+		f.trigger = ""
 		a.follow(f)
 	}
 }

@@ -101,6 +101,7 @@ type adapter struct {
 	pending   map[inputKey]pendingInput
 	followers map[messageKey]*follower
 	lanes     map[messageKey]*messageLane
+	initial   map[*initialReply]struct{} // initial sends not yet acknowledged
 }
 
 // inputKey identifies whose typed answer a conversation message waits for.
@@ -132,7 +133,8 @@ func New(cfg Config) (*Bot, error) {
 	a := &adapter{
 		allowed: allowed, log: cfg.Log, followEvery: cfg.FollowEvery, posters: newPosters(cfg.ImageClient, cfg.Log),
 		pending: map[inputKey]pendingInput{}, followers: map[messageKey]*follower{}, lanes: map[messageKey]*messageLane{},
-		inline: inlineSearches{running: map[int64]inlineSearch{}},
+		inline:  inlineSearches{running: map[int64]inlineSearch{}},
+		initial: map[*initialReply]struct{}{},
 	}
 	api, err := bot.New(cfg.Token,
 		bot.WithServerURL(cfg.APIURL),
@@ -190,6 +192,9 @@ func (a *adapter) enter() bool {
 // include a mention. Broadcasts have no UserID and disclose no requester.
 func (b *Bot) Notify(ctx context.Context, n flow.Notice) error {
 	to, text := n.To, n.Text
+	if to.UserID != 0 && !b.adapter.allowed[to.UserID] {
+		return nil
+	}
 	address, err := parseAddress(to.Address)
 	if err != nil {
 		return err
@@ -319,11 +324,9 @@ func (a *adapter) onCallback(ctx context.Context, b *bot.Bot, cq *models.Callbac
 		return
 	}
 	defer unlock()
-	reply := flow.Reply{Notice: "抱歉，你还没有使用权限哦～"}
-	if a.allowed[cq.From.ID] {
-		reply = a.flow.Choose(ctx, actor, cq.Data)
-	}
+	reply := a.callbackReply(ctx, cq, stopped)
 	if reply.Notice == "" && cq.Message.Message != nil {
+		a.supersedeInitial(callbackKey(cq))
 		a.showCallback(ctx, cq, reply)
 	} else if reply.Notice != "" {
 		a.resumeFollower(stopped)
@@ -333,6 +336,16 @@ func (a *adapter) onCallback(ctx context.Context, b *bot.Bot, cq *models.Callbac
 		Text:            reply.Notice,
 	})
 	a.logFailure("answerCallbackQuery", err)
+}
+
+func (a *adapter) callbackReply(ctx context.Context, cq *models.CallbackQuery, stopped *follower) flow.Reply {
+	if !a.allowed[cq.From.ID] {
+		return flow.Reply{Notice: "抱歉，你还没有使用权限哦～"}
+	}
+	if a.recoverCallback(ctx, stopped, cq.Data) {
+		return flow.Reply{Notice: msgDelivering}
+	}
+	return a.flow.Choose(ctx, actorOf(cq.From, callbackDestination(cq)), cq.Data)
 }
 
 // callbackChat is the chat a button was pressed in.

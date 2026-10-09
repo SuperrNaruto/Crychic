@@ -54,6 +54,11 @@ and cancellation ends the wait. `TestSubscribeMovie` presses a result before rel
 callbacks must work before the sender learns poster file_ids; the transcript records this delivery ordering
 without requiring one poster transport representation.
 
+`loseNextResponse` stores a displayed message but returns an incomplete HTTP body, distinguishing unknown
+send results from explicit media refusals. `rejectNextEdit` can return Telegram's 429 with `retry_after`;
+delivery scenarios verify the deadline and retained file_id, as well as successful-receipt recovery without
+another MoviePilot write. Late initial responses and whitelist revocation are exercised at the app boundary.
+
 `fakeImages` is Douban's image host: 418 without the Douban referer, 403 to Go's default User-Agent, a tiny
 JPEG per path otherwise, `h.img.setMissing(path)` answers 404; `app.Deps.Images` routes poster downloads to
 it. The fake Telegram hands out a file_id per upload, returns the top photo or slideshow with file_ids,

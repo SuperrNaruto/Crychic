@@ -34,6 +34,10 @@ notice per watch delivery to the channel, with no requester identity and no fall
 Blank keeps the original behavior. The destination is a negative chat ID or `@channelusername`; the bot needs
 channel posting rights. Delivery still persists before sending and does not replay failed sends.
 
+Requester delivery is checked against the current Telegram whitelist, including watches loaded after a
+restart. Removed users receive no further personal/group requester notices; remaining requesters and the
+identity-free configured channel are unaffected. Skipped notices are not replayed after reauthorization.
+
 ## 完成日期游标与迁移
 
 MoviePilot has no outgoing webhook, so arrivals come from polling successful transfer history (one record per

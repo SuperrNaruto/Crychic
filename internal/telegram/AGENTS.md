@@ -17,6 +17,8 @@
 - 每条消息的状态变化和编辑串行，包括后台刷新；callback 在等待消息锁前暂停 follower。
 - 被拒 callback 恢复同身份 follower 及未送达 Reply；接受导航后旧身份失效，不能恢复。
 - 失败投递只重试同一 Reply，不重跑 flow transition 或资源搜索；遵守 `retry_after` 和重试截止。
+- 普通编辑失败也保留终态回执；新消息发送结果未知时不重发。只有明确图片拒绝才降级海报或清除缓存。
+- 初始发送迟到的响应不得恢复已被接受导航替代的 Follow 或输入提示；带请求者身份的通知发送前复核当前白名单。
 - 发送、按钮编辑和 typed answer 编辑均按 `Reply.Follow` 启动跟随；`Reply.Notice` 不得编辑消息。
 - 按钮处理完成后最后回答 callback；用户可以在初始发送响应返回前点击已显示的按钮。
 - 停止轮询后等待 handler 与 follower 退出，不假设 SDK 自动等待。

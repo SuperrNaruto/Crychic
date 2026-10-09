@@ -32,19 +32,12 @@ func refused(user int64) flow.Reply {
 // replyTo also remembers input requested by an initial response, not only
 // by an edited message.
 func (a *adapter) replyTo(ctx context.Context, msg *models.Message, reply flow.Reply) {
-	to := destinationOf(msg)
-	sent, err := a.send(ctx, to, reply)
+	start := a.beginInitial(msg, reply)
+	defer a.endInitial(start)
+	sent, err := a.send(ctx, destinationOf(msg), reply)
 	a.logFailure("send reply", err)
-	if err == nil && reply.Follow != "" {
-		a.follow(follower{
-			target: editTarget{chat: msg.Chat.ID, user: msg.From.ID, message: sent.ID, thread: to.thread}, actor: actorOf(*msg.From, to),
-			data: reply.Follow, shown: renderReply(reply),
-		})
-	}
-	if err == nil && reply.Input != "" {
-		a.mu.Lock()
-		a.pending[inputOf(msg)] = pendingInput{message: sent.ID, input: reply.Input}
-		a.mu.Unlock()
+	if err == nil {
+		a.completeInitial(ctx, start, sent.ID)
 	}
 }
 

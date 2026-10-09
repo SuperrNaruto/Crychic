@@ -143,6 +143,14 @@ func TestDownloadMisreadSeasonPack(t *testing.T) {
 	if !strings.Contains(releases.text, "集数识别不确定") || strings.Contains(releases.text, " · E09") {
 		t.Error("uncertain episode metadata is presented as a definite release range")
 	}
+	h.tap(alice, 1, "多选…")
+	h.tap(alice, 1, "1")
+	h.tap(alice, 1, "下载所选 1 个")
+	if text := mustMessage(h, 1).text; !strings.Contains(text, "集数识别不确定") || strings.Contains(text, "<td>E09</td>") {
+		t.Error("batch confirmation turned uncertain episode metadata into a definite range")
+	}
+	h.tap(alice, 1, "返回")
+	h.tap(alice, 1, "返回")
 	h.tap(alice, 1, "1")
 	if card := mustMessage(h, 1).text; !strings.Contains(card, "集数识别不确定") || strings.Contains(card, "包含 E09") {
 		t.Error("uncertain episode metadata is presented as a definite card range")
