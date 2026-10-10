@@ -152,6 +152,9 @@ func availableChoice(sess session, raw, action string) bool {
 
 func availableScreenChoice(sess session, raw, action string) bool {
 	shown := sess.screen.reply
+	if requestAction(action) {
+		return hasData(shown.Buttons, raw)
+	}
 	if subEditAction(action) || sess.subEdit != nil {
 		return hasData(shown.Buttons, raw)
 	}
@@ -213,7 +216,7 @@ func (e *Engine) choose(ctx context.Context, sess session, p press) Reply {
 			return e.navigate(sess, actionSubEditApply, e.askSubEditLeave(sess, actionCancel))
 		}
 	}
-	for _, choose := range []chooser{e.chooseHome, e.chooseRequest, e.chooseSeasons, e.chooseTask, e.chooseChart, e.chooseSubs, e.chooseSubDetail, e.chooseSubPause, e.chooseSubEdit, e.chooseHistory, e.chooseRelated, e.chooseTorrents, e.chooseSearchSites, e.chooseTorrentView, e.chooseTorrentBatch, e.chooseDelete, e.chooseUpgrade} {
+	for _, choose := range []chooser{e.chooseHome, e.chooseRequest, e.chooseRequests, e.chooseSeasons, e.chooseTask, e.chooseChart, e.chooseSubs, e.chooseSubDetail, e.chooseSubPause, e.chooseSubEdit, e.chooseHistory, e.chooseRelated, e.chooseTorrents, e.chooseSearchSites, e.chooseTorrentView, e.chooseTorrentBatch, e.chooseDelete, e.chooseUpgrade} {
 		if reply, ok := choose(ctx, sess, p); ok {
 			return e.navigate(sess, p.action, reply)
 		}

@@ -28,6 +28,7 @@ func (e *Engine) features() []feature {
 		{"最新入库", e.latest},
 		{"任务进度", e.listTasks},
 		{"追剧日历", e.upcoming},
+		{"我的请求", func(ctx context.Context, sess session) Reply { return e.listRequests(ctx, sess, requestsTracking) }},
 	}
 }
 

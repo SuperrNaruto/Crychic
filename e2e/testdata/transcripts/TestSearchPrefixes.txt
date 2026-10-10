@@ -207,6 +207,7 @@
    [搜索 | 4:h:0] [发现 | 4:h:1]
    [我的订阅 | 4:h:2] [最新入库 | 4:h:3]
    [任务进度 | 4:h:4] [追剧日历 | 4:h:5]
+   [我的请求 | 4:h:6]
 >> user 1001 taps 4:h:0 on message 4
 << editMessageText chat=1001 message=4
    <h3>🔍 搜索</h3>

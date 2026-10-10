@@ -199,10 +199,33 @@
    <tg-button-row align="left">
    <tg-button type="url" style="success" url="https://emby.example.com/web/index.html#!/item?id=224207">在 Emby 中观看</tg-button>
    </tg-button-row>
+>> user 1001 in chat 1001: /requests
+-> MoviePilot GET /api/v1/history/transfer?count=50&page=1&status=false
+<< sendRichMessage chat=1001 message=3
+   <h3>📋 我的请求 · 跟踪中</h3>
+   <ol start="1">
+   <li value="1"><b>《迷途之子!!!!!》第 1 季</b><br>
+   <i>选种下载 · 暂无可确认的下载任务 · 到货待核对</i></li>
+   </ol>
+   <footer>只读核对，不会补搜、下载或重试整理；媒体库可见性请点开查看。<br>
+   失败记录仅按媒体身份和请求范围关联，不代表当前仍然阻塞。</footer>
+   [1 | 2:rp:0]
+   [·跟踪中· | 2:rq:0] [需留意 | 2:rq:1] [最近完成 | 2:rq:2]
+   [刷新 | 2:rq:0]
+   [首页 | 2:o:0] [关闭 | 2:c:0]
+>> user 1001 taps 2:rq:2 on message 3
+<< editMessageText chat=1001 message=3
+   <h3>📋 我的请求 · 最近完成</h3>
+   <p>还没有完成记录哦～只记录本功能启用后确认到货的完整请求范围。</p>
+   <footer>仅保存启用后的最近 50 条完整范围到货记录；完成记录不代表媒体库当前可见，点开核对哦～</footer>
+   [跟踪中 | 2:rq:0] [需留意 | 2:rq:1] [·最近完成· | 2:rq:2]
+   [刷新 | 2:rq:2]
+   [首页 | 2:o:0] [关闭 | 2:c:0]
+<< answerCallbackQuery
 >> Crychic restarts
 >> MoviePilot transfers 迷途之子!!!!! (themoviedb/224207) S01E01
 >> MoviePilot transfers 迷途之子!!!!! (themoviedb/224207) S01E09
-<< sendRichMessage chat=1001 message=3
+<< sendRichMessage chat=1001 message=4
    <img src="url-f1d1c3e9142d5b6cb0aec97f314112cb1cfcf5cab28cbc83476b0d4bf25e1175"/>
    <h3>📥 入库啦</h3>
    <p>你想看的<b>《迷途之子!!!!!》第 1 季</b> E01、E09 到家啦！<br>
@@ -210,3 +233,41 @@
    <tg-button-row align="left">
    <tg-button type="url" style="success" url="https://emby.example.com/web/index.html#!/item?id=224207">在 Emby 中观看</tg-button>
    </tg-button-row>
+>> user 1001 in chat 1001: /requests
+<< sendRichMessage chat=1001 message=5
+   <h3>📋 我的请求 · 跟踪中</h3>
+   <p>目前没有正在跟踪的请求，可以查看最近完成哦～</p>
+   <footer>只读核对，不会补搜、下载或重试整理；媒体库可见性请点开查看。<br>
+   失败记录仅按媒体身份和请求范围关联，不代表当前仍然阻塞。</footer>
+   [·跟踪中· | 3:rq:0] [需留意 | 3:rq:1] [最近完成 | 3:rq:2]
+   [刷新 | 3:rq:0]
+   [首页 | 3:o:0] [关闭 | 3:c:0]
+>> user 1001 taps 3:rq:2 on message 5
+<< editMessageText chat=1001 message=5
+   <h3>📋 我的请求 · 最近完成</h3>
+   <ol start="1">
+   <li value="1"><b>《迷途之子!!!!!》第 1 季</b><br>
+   <i>选种下载 · 所需范围已到货 · 2026-10-05 12:00（北京时间）</i></li>
+   </ol>
+   <footer>仅保存启用后的最近 50 条完整范围到货记录；完成记录不代表媒体库当前可见，点开核对哦～</footer>
+   [1 | 3:rp:0]
+   [跟踪中 | 3:rq:0] [需留意 | 3:rq:1] [·最近完成· | 3:rq:2]
+   [刷新 | 3:rq:2]
+   [首页 | 3:o:0] [关闭 | 3:c:0]
+<< answerCallbackQuery
+>> user 1001 taps 3:rp:0 on message 5
+<< editMessageText chat=1001 message=5
+   <h3>📥 完成记录 · 《迷途之子!!!!!》第 1 季</h3>
+   <footer>2023 · 电视剧</footer>
+   <p>选种下载 · 所需范围已到货 · 2026-10-05 12:00（北京时间）<br>
+   当时请求范围：从第 1 集开始，至第 13 集。<br>
+   已确认所需范围到货；完成记录不代表媒体库当前可见。</p>
+   <h4>媒体库与任务</h4>
+   <table bordered compact>
+   <tr><th>集数</th><th>媒体库</th></tr>
+   <tr><td>E01–E13</td><td>已入库</td></tr>
+   </table>
+   <footer>仅查询，不会触发搜索或下载；点击刷新查看最新状态哦～</footer>
+   [刷新 | 3:rr:0]
+   [返回 | 3:bk:0] [首页 | 3:o:0] [关闭 | 3:c:0]
+<< answerCallbackQuery

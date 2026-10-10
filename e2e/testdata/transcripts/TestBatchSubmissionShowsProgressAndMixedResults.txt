@@ -265,6 +265,7 @@
    <code>/search &lt;片名&gt;</code> 帮你搜电影和剧集，顺手在 MoviePilot 里订上；也能点「搜索资源」挑种子直接下载，一次可以多选哦～<br>
    <code>/trending</code> 逛逛热门榜单和新番，看中了一键订阅～<br>
    <code>/subscribe</code> 按电视剧、电影看订阅，还能暂停或取消你请求的、从订阅历史重新订阅～<br>
+   <code>/requests</code> 查看你的请求、需留意的异常和最近完成，点开核对到货与媒体库状态～<br>
    <code>/upcoming</code> 追剧日历：你订阅的剧接下来 7 天播哪几集～<br>
    <code>/newly_added</code> 媒体库新到的片子，点片名直接去看～<br>
    <code>/tasks</code> 看看下载和整理的进度，选一个我帮你实时盯着，不要的下载也能删掉～</p>

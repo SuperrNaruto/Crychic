@@ -58,6 +58,7 @@ type session struct {
 	kind         Kind                     // the kind of subscription or history shown
 	past         []PastSubscription
 	tasks        []taskRef
+	requestKeys  []string // stable read-only request numbers, never reused by refresh or back
 	follow       following
 	doomed       *DownloadRef // the download and instance asked to be deleted
 	pages        []Reply

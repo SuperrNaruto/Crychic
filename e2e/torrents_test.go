@@ -159,18 +159,30 @@ func TestDownloadMisreadSeasonPack(t *testing.T) {
 	if strings.Contains(mustMessage(h, 1).text, "第 1 季 E09啦") {
 		t.Error("the download receipt promises the incorrectly recognized episode")
 	}
+	checkMisreadPackArrivals(h)
+	h.tr.verify(t)
+}
+
+func checkMisreadPackArrivals(h *harness) {
+	h.t.Helper()
 	h.restart()
 	first, last := mygo.file("S01", "E02-E08"), mygo.file("S01", "E10-E13")
 	first.Hash, last.Hash = addedHash, addedHash
 	h.arrives(alice, first, last)
 	h.shows(2, "E02–E08、E10–E13 到家啦")
 	h.shows(2, "加上媒体库已有的，这一季的剧集全部到齐啦")
+	h.say(alice, alice, "/requests")
+	h.tap(alice, 3, "最近完成")
+	h.shows(3, "还没有完成记录")
 	h.restart()
 	firstHeld, ninthHeld := mygo.file("S01", "E01"), mygo.file("S01", "E09")
 	firstHeld.Hash, ninthHeld.Hash = addedHash, addedHash
 	h.arrives(alice, firstHeld, ninthHeld)
-	h.shows(3, "E01、E09 到家啦")
-	h.tr.verify(t)
+	h.shows(4, "E01、E09 到家啦")
+	h.say(alice, alice, "/requests")
+	h.tap(alice, 5, "最近完成")
+	h.tap(alice, 5, "1")
+	h.shows(5, "所需范围已到货")
 }
 
 // A failed search keeps the card and can be repeated; MoviePilot's own

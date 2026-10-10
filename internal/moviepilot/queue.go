@@ -2,6 +2,7 @@ package moviepilot
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"net/http"
 
@@ -26,8 +27,10 @@ type queueJob struct {
 	} `json:"media"`
 	Season *int `json:"season"`
 	Tasks  []struct {
-		State string    `json:"state"`
-		Meta  queueMeta `json:"meta"`
+		State      string    `json:"state"`
+		Meta       queueMeta `json:"meta"`
+		Download   string    `json:"download_hash"`
+		Downloader string    `json:"downloader"`
 	} `json:"tasks"`
 }
 
@@ -52,6 +55,9 @@ func (c *Client) Transfers(ctx context.Context) ([]flow.TransferJob, error) {
 	if err := c.do(ctx, call{method: http.MethodGet, path: "/api/v1/transfer/queue"}, &jobs); err != nil {
 		return nil, err
 	}
+	if jobs == nil {
+		return nil, errors.New("moviepilot: missing transfer queue")
+	}
 	var out []flow.TransferJob
 	for _, j := range jobs {
 		if j.Media.MediaID == "" {
@@ -63,7 +69,11 @@ func (c *Client) Transfers(ctx context.Context) ([]flow.TransferJob, error) {
 			Image: posterURL(j.Media.PosterPath), Source: j.Media.MediaSource, MediaID: j.Media.MediaID,
 		}
 		for _, t := range j.Tasks {
-			file := flow.TransferFile{Episodes: t.Meta.episodes(), State: fileStates[t.State]}
+			state, known := fileStates[t.State]
+			if !known {
+				state = flow.FileUnknown
+			}
+			file := flow.TransferFile{Episodes: t.Meta.episodes(), State: state, Download: t.Download, Downloader: t.Downloader}
 			job.Files = append(job.Files, file)
 		}
 		out = append(out, job)

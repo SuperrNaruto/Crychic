@@ -247,6 +247,7 @@
    [搜索 | 3:h:0] [发现 | 3:h:1]
    [我的订阅 | 3:h:2] [最新入库 | 3:h:3]
    [任务进度 | 3:h:4] [追剧日历 | 3:h:5]
+   [我的请求 | 3:h:6]
 << answerCallbackQuery
 >> user 1001 taps 3:h:2 on message 3
 -> MoviePilot GET /api/v1/subscribe/
@@ -342,6 +343,7 @@
    [搜索 | 3:h:0] [发现 | 3:h:1]
    [我的订阅 | 3:h:2] [最新入库 | 3:h:3]
    [任务进度 | 3:h:4] [追剧日历 | 3:h:5]
+   [我的请求 | 3:h:6]
 << answerCallbackQuery
 >> user 1001 taps 3:h:2 on message 3
 -> MoviePilot GET /api/v1/subscribe/

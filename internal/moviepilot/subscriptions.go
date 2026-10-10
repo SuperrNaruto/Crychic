@@ -50,6 +50,9 @@ func (c *Client) Subscriptions(ctx context.Context) ([]flow.Subscription, error)
 	if err := c.do(ctx, call{method: http.MethodGet, path: "/api/v1/subscribe/"}, &records); err != nil {
 		return nil, err
 	}
+	if records == nil {
+		return nil, errors.New("moviepilot: missing subscription list")
+	}
 	subs := make([]flow.Subscription, 0, len(records))
 	for _, r := range records {
 		if _, supported := mediaKinds[r.Type]; !supported {

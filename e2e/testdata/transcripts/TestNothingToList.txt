@@ -11,6 +11,7 @@
    [搜索 | 2:h:0] [发现 | 2:h:1]
    [我的订阅 | 2:h:2] [最新入库 | 2:h:3]
    [任务进度 | 2:h:4] [追剧日历 | 2:h:5]
+   [我的请求 | 2:h:6]
 >> user 1001 taps 2:h:4 on message 2
 << answerCallbackQuery notice="现在没有在下载或整理的任务，大家都歇着呢～"
 >> user 1001 taps 2:h:2 on message 2

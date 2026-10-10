@@ -3,6 +3,7 @@ package moviepilot
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"net/http"
 	"net/url"
 
@@ -55,20 +56,40 @@ func (c *Client) Downloads(ctx context.Context) ([]flow.Download, error) {
 	if err := c.do(ctx, call{method: http.MethodGet, path: "/api/v1/download/"}, &tasks); err != nil {
 		return nil, err
 	}
+	if tasks == nil {
+		return nil, errors.New("moviepilot: missing download list")
+	}
+	ambiguous := ambiguousDownloadInstances(tasks)
 	var out []flow.Download
 	for _, t := range tasks {
 		if t.Media.MediaID == "" {
 			continue
 		}
 		out = append(out, flow.Download{
-			DownloadRef: flow.DownloadRef{ID: t.Hash, Downloader: t.Downloader},
-			Source:      t.Media.MediaSource, MediaID: t.Media.MediaID, Kind: mediaKinds[t.Media.Type],
+			DownloadRef:       flow.DownloadRef{ID: t.Hash, Downloader: t.Downloader},
+			InstanceAmbiguous: ambiguous[t.Hash],
+			Source:            t.Media.MediaSource, MediaID: t.Media.MediaID, Kind: mediaKinds[t.Media.Type],
 			Title: t.Media.Title, Image: t.Media.Image,
 			Season: parseSeason(string(t.Media.Season)), Episodes: parseEpisodes(string(t.Media.Episode)),
 			Size: t.Size, Progress: t.Progress, Paused: t.State == statePaused, Speed: t.Speed, Left: t.LeftTime,
 		})
 	}
 	return out, nil
+}
+
+// Keep unknown-media records out of task lists, but do not let them hide
+// an instance collision when another record has the requested media.
+func ambiguousDownloadInstances(tasks []downloadTask) map[string]bool {
+	instances := map[string]string{}
+	ambiguous := map[string]bool{}
+	for _, task := range tasks {
+		previous, seen := instances[task.Hash]
+		if task.Downloader == "" || (seen && previous != task.Downloader) {
+			ambiguous[task.Hash] = true
+		}
+		instances[task.Hash] = task.Downloader
+	}
+	return ambiguous
 }
 
 // DeleteDownload removes a download from its own instance, with its files.

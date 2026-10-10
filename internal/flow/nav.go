@@ -41,9 +41,11 @@ var forward = map[string]bool{
 	actionUpgrade:     true,
 	actionSearchSites: true,
 	actionSubEdit:     true,
+	actionRequestPick: true,
 }
 
 var sameLevel = map[string]bool{
+	actionRequests: true, actionRequestRefresh: true,
 	actionTick: true, actionChartPage: true, actionWeekday: true, actionPage: true, answered: true,
 	actionRetry: true, actionSubsKind: true, actionHistoryKind: true, actionRefreshSubDetail: true,
 	actionPauseSub: true, actionResumeSub: true,
@@ -198,6 +200,7 @@ func (e *Engine) back(ctx context.Context, sess session) Reply {
 	restored.torrentIDs = max(sess.torrentIDs, restored.torrentIDs)
 	restored.editOptions = max(sess.editOptions, restored.editOptions)
 	restored.subReceipt = sess.subReceipt
+	restored.requestKeys = sess.requestKeys
 	if sess.streaming && restored.searchView == torrentListView && sess.hunt == restored.hunt {
 		restored = syncedHunt(restored, restored.hunt.read())
 		e.store.put(restored)

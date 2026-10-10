@@ -22,8 +22,9 @@ import (
 const (
 	mpAPIKey = "mp-test-key"
 
-	transferPath     = "/api/v1/history/transfer"
-	subscriptionPath = "/api/v1/subscribe/"
+	transferPath        = "/api/v1/history/transfer"
+	subscriptionPath    = "/api/v1/subscribe/"
+	failedTransfersPath = "GET /api/v1/history/transfer?status=false"
 
 	libraryShowPath  = "POST /api/v1/mediaserver/exists_remote"
 	libraryMoviePath = "POST /api/v1/mediaserver/notexists"
@@ -83,19 +84,25 @@ func ok(fixture string) route { return route{status: http.StatusOK, fixture: fix
 
 // transfer is one record of MoviePilot's transfer (整理) history.
 type transfer struct {
-	ID          int    `json:"id"`
-	Title       string `json:"title"`
-	Type        string `json:"type"`
-	MediaSource string `json:"media_source"`
-	MediaID     string `json:"media_id"`
-	Seasons     string `json:"seasons"`
-	Episodes    string `json:"episodes"`
-	Image       string `json:"image"`
-	Year        string `json:"year"`
-	Status      bool   `json:"status"`
-	Date        string `json:"date"`
-	Src         string `json:"src,omitempty"`
-	Hash        string `json:"download_hash,omitempty"`
+	ID             int    `json:"id"`
+	Title          string `json:"title"`
+	Type           string `json:"type"`
+	MediaSource    string `json:"media_source"`
+	MediaID        string `json:"media_id"`
+	Seasons        string `json:"seasons"`
+	Episodes       string `json:"episodes"`
+	Image          string `json:"image"`
+	Year           string `json:"year"`
+	Status         bool   `json:"status"`
+	Date           string `json:"date"`
+	Src            string `json:"src,omitempty"`
+	Hash           string `json:"download_hash,omitempty"`
+	EpisodeGroup   string `json:"episode_group,omitempty"`
+	FailureStage   string `json:"failure_stage,omitempty"`
+	RecoveryAction string `json:"recovery_action,omitempty"`
+	RetryExhausted bool   `json:"retry_exhausted,omitempty"`
+	AutoPaused     bool   `json:"auto_paused,omitempty"`
+	Error          string `json:"errmsg,omitempty"`
 }
 
 // fakeMoviePilot serves canned routes plus the live transfer history a
@@ -182,7 +189,7 @@ func (f *fakeMoviePilot) serve(w http.ResponseWriter, r *http.Request) {
 	if !f.wait(r) {
 		return
 	}
-	isTransfers := r.Method == http.MethodGet && r.URL.Path == transferPath
+	isTransfers := r.Method == http.MethodGet && r.URL.Path == transferPath && r.URL.Query().Get("status") != "false"
 	if isTransfers {
 		f.markPolled()
 	}
@@ -235,7 +242,7 @@ func isPolled(r *http.Request) bool {
 	if r.Method != http.MethodGet {
 		return polledPaths[r.Method+" "+r.URL.Path]
 	}
-	return r.URL.Path == transferPath || isSubscriptionByID(r.URL.Path) || polledPaths[r.Method+" "+r.URL.Path]
+	return (r.URL.Path == transferPath && r.URL.Query().Get("status") != "false") || isSubscriptionByID(r.URL.Path) || polledPaths[r.Method+" "+r.URL.Path]
 }
 
 // markPolled signals the notifier's first look at the transfer history.
@@ -395,14 +402,17 @@ func addedHashN(n int) string {
 
 // serveTransfers filters by status and pages by date, not by increasing id.
 func (f *fakeMoviePilot) serveTransfers(w http.ResponseWriter, r *http.Request) {
+	if f.serveFailedTransferRoute(w, r) {
+		return
+	}
 	page, _ := strconv.Atoi(r.URL.Query().Get("page"))
 	count, _ := strconv.Atoi(r.URL.Query().Get("count"))
 	f.mu.Lock()
 	records := transferHistory(f.transfers, r.URL.Query().Get("status"))
 	from := min(max(page-1, 0)*count, len(records))
-	list := slices.Clone(records[from:min(from+count, len(records))])
+	list := append([]transfer{}, records[from:min(from+count, len(records))]...)
 	total := len(records)
-	if page == 1 {
+	if page == 1 && r.URL.Query().Get("status") != "false" {
 		f.markRead()
 	}
 	f.mu.Unlock()

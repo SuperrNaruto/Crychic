@@ -40,6 +40,7 @@ Data flow: Telegram update → `telegram.adapter` → `flow.Engine.Start/Choose`
 | 季与升级 | [internal/flow/seasons.go](../../internal/flow/seasons.go) | `episodes.go`、`upgrade.go`；多季、起始集与洗版 |
 | 资源与下载 | [internal/flow/torrents.go](../../internal/flow/torrents.go) | `torrenttext.go`、`torrenthunt.go`、`torrentsort.go`、`torrentmissing.go`、`torrentbatch.go` |
 | 任务与删除 | [internal/flow/tasks.go](../../internal/flow/tasks.go) | `taskdelete.go`、`tasktext.go`；任务跟随与删除确认 |
+| 我的请求与异常 | [internal/flow/requests.go](../../internal/flow/requests.go) | `requestreads.go`、`requestidentity.go`、`requestissues.go`、`requesttext.go`；MoviePilot `failures.go` 读取失败历史，notify `requests.go` 投影归属与保存最近完成 |
 | 语义文本 | [internal/flow/rich.go](../../internal/flow/rich.go) | `text.go`；语义块、卡片与列表文案 |
 | Inline | [internal/flow/inline.go](../../internal/flow/inline.go) | `internal/telegram/inline.go`；无会话查找、经典 HTML 与 deep link |
 | 平台输入与时序 | [internal/telegram/input.go](../../internal/telegram/input.go) | `address.go`、`lanes.go`、`follow.go`；引用、topic、锁与重投 |

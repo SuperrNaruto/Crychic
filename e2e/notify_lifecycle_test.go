@@ -115,6 +115,9 @@ func TestUpgradeSubscriptionKeepsControlsAndNotifiesNewVersions(t *testing.T) {
 	if strings.Contains(h.tr.String(), "这一季你要的剧集全部到齐") {
 		t.Error("ordinary delivered episodes were treated as proof that an upgrade is complete")
 	}
+	h.say(alice, alice, "/requests")
+	h.tap(alice, 6, "最近完成")
+	h.shows(6, "还没有完成记录")
 	h.tr.verify(t)
 }
 

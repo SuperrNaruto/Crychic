@@ -81,6 +81,7 @@ func withSubscriptions(st state, subs map[int]flow.Subscription) state {
 		}
 		w.Start = max(sub.StartEpisode, 1)
 		w.BestVersion = sub.BestVersion
+		w.Unmapped = sub.EpisodeGroup != ""
 		next.Watches[i] = w
 	}
 	return next

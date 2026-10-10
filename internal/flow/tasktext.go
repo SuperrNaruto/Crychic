@@ -23,6 +23,7 @@ var msgFollowExpired = fmt.Sprintf("已经帮你盯了 %d 分钟，先歇一下�
 
 // fileStateText words each transfer file state with its marker.
 var fileStateText = map[FileState]string{
+	FileUnknown: "整理状态未知",
 	FileWaiting: "⏳ 等待中",
 	FileRunning: "▶️ 整理中",
 	FileDone:    "✅ 已完成",

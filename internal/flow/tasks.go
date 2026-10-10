@@ -196,6 +196,9 @@ func tasksBack(id uint64) Button {
 // expired tells the user how to start over: buttons of a task list lead
 // back to /tasks, all others to /search.
 func expired(action string) Reply {
+	if requestAction(action) {
+		return expiredText("⌛ 这个请求页面过期啦，发 /requests 重新核对吧～")
+	}
 	if subEditAction(action) {
 		return expiredText("⌛ 这个编辑页面过期啦，先用 /subscribe 核对当前订阅条件哦～")
 	}

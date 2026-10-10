@@ -111,18 +111,19 @@ type DownloadRef struct {
 // Download is an unfinished task in the backend's downloader.
 type Download struct {
 	DownloadRef
-	Source   string
-	MediaID  string
-	Kind     Kind // zero when the backend did not identify its media type
-	Title    string
-	Image    string
-	Season   *int    // nil for movies or when unknown
-	Episodes []int   // empty when unknown
-	Size     float64 // bytes being downloaded, 0 when unknown
-	Progress float64 // percent
-	Paused   bool
-	Speed    string // download speed as the backend words it
-	Left     string // remaining time as the backend words it, "" when unknown
+	InstanceAmbiguous bool // the same hash has conflicting or missing instance identities
+	Source            string
+	MediaID           string
+	Kind              Kind // zero when the backend did not identify its media type
+	Title             string
+	Image             string
+	Season            *int    // nil for movies or when unknown
+	Episodes          []int   // empty when unknown
+	Size              float64 // bytes being downloaded, 0 when unknown
+	Progress          float64 // percent
+	Paused            bool
+	Speed             string // download speed as the backend words it
+	Left              string // remaining time as the backend words it, "" when unknown
 }
 
 // FileState is where one file of a transfer job stands.
@@ -135,10 +136,14 @@ const (
 	FileFailed
 )
 
+const FileUnknown FileState = -1
+
 // TransferFile is one file being moved into the library.
 type TransferFile struct {
-	Episodes []int // all episodes in the file; empty for movies or when unknown
-	State    FileState
+	Episodes   []int // all episodes in the file; empty for movies or when unknown
+	State      FileState
+	Download   string // optional torrent hash for a specifically requested download
+	Downloader string // instance identity, never displayed
 }
 
 // TransferJob is a batch of files of one title (and season) the backend is
@@ -278,6 +283,7 @@ type Backend interface {
 	Library(ctx context.Context, media Media) (Library, error)
 	Downloads(ctx context.Context) ([]Download, error)
 	Transfers(ctx context.Context) ([]TransferJob, error)
+	FailedTransfers(ctx context.Context) (FailedTransfers, error)
 	// Discover lists a chart's picks; they may come from other metadata
 	// sources than search does.
 	Discover(ctx context.Context, chart Chart) ([]Media, error)
@@ -350,6 +356,8 @@ type Request struct {
 // Watcher remembers requests so requesters hear about arrivals.
 type Watcher interface {
 	Watch(ctx context.Context, req Request) error
+	// Requests returns only this user's local watches and recent completions.
+	Requests(userID int64) []RequestRecord
 	// Requested lists ids from subs whose media and season userID asked for;
 	// a backend may reuse a removed subscription's row id for another target.
 	Requested(userID int64, subs []Subscription) []int

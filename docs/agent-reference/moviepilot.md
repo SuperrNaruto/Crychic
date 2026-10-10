@@ -25,6 +25,12 @@ SHA-256 为 `c31b46882465e8e046ef405872e3e389c04c4e64e2ada6239ebe3ed27c364680`�
 源码依据：[download.py](https://github.com/jxxghp/MoviePilot/blob/v3.1.1/app/api/endpoints/download.py)、
 [transfer.py](https://github.com/jxxghp/MoviePilot/blob/v3.1.1/app/api/endpoints/transfer.py)。
 
+## v3.1.3 兼容性核验
+
+2026-10-10 对照官方 `v3.1.3` 提交 `7aa5d613b8641b94624f8879ad9596dbcd4edffa`。第 3 项使用的订阅列表、下载列表、完整整理队列和失败历史契约与 `v3.1.1` 兼容。版本记录用于追溯源码，客户端不检测或锁定小版本，也没有逐版本适配分支；只解码使用的字段。
+
+本次相关变化是手动音乐整理新增可选 `music_cue_enable`，以及下载目录别名说明。认证、订阅条件 schema 和更新实现未变。资源搜索流新增默认关闭的 `manual_paging` 及可选分页参数，Crychic 未发送这些参数，仍使用兼容的完整搜索流。源码见 [队列模型](https://github.com/jxxghp/MoviePilot/blob/v3.1.3/app/schemas/transfer.py)、[下载端点](https://github.com/jxxghp/MoviePilot/blob/v3.1.3/app/api/endpoints/download.py)、[搜索流](https://github.com/jxxghp/MoviePilot/blob/v3.1.3/app/api/endpoints/search.py)。Context7 仍指向 `v3` 主线，具体差异以上述固定版本源码为准。
+
 ## 认证类型与响应
 
 The API key authenticates as MoviePilot's **superuser**; every subscription is owned by the admin, not the
@@ -167,6 +173,10 @@ download post) never quotes MoviePilot's error answer, which can echo the reques
 ## 关联接口与转移历史
 
 推荐、日历与合集的响应限制见 [发现参考](discovery.md)。成功转移的按秒游标、失败记录重试、初始化和迁移见 [通知参考](notifications.md#完成日期游标与迁移)。
+
+`failures.go` 按 `status=false`、每页 50 条读取最近失败历史，每次最多 100 条；沿用 `data.list` 和 `data.total`。后页失败保留前页已确认记录，并明确标为不完整；达到上限单独提示。来源、类型、媒体 ID、季集和失败状态须能关联请求，缺失可选阶段时使用未知，不影响其他进度。重复 ID 只计一次，成功记录不进入失败摘要。
+
+公开历史只提供 `download_hash`，没有下载器实例字段；原始 `errmsg`、`recovery_action`、路径和文件列表不解码到业务模型。固定建议依据 `failure_stage`，两个可选布尔标记保留自动暂停和重试耗尽信息。完整队列的文件包含 `downloader` 与 `download_hash`，仅在内存用于关联；未知队列状态投影为 `FileUnknown`。订阅、下载和整理列表的 `data: null` 视为来源未读到，不当作成功空列表。契约见 [历史端点](https://github.com/jxxghp/MoviePilot/blob/v3.1.3/app/api/endpoints/history.py#L512-L542)、[历史模型](https://github.com/jxxghp/MoviePilot/blob/v3.1.3/app/schemas/history.py#L74-L166)、[阶段定义](https://github.com/jxxghp/MoviePilot/blob/v3.1.3/app/application/transfer/feedback.py#L9-L110)。
 
 When MoviePilot behavior is unclear, read its source (`app/api/endpoints/{media,subscribe}.py`) instead of
 guessing

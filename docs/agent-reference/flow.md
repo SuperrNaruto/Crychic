@@ -288,6 +288,14 @@ task references from the available records and never starts a download, search o
 下载及转移任务的接口字段、SSE 限制、停止跟随和删除副作用见 [MoviePilot 任务参考](moviepilot.md#下载进度与任务删除)。
 投递失败只重试消息，见 [Telegram 跟随参考](telegram.md#跟随者投递与停止)。
 
+## 我的请求与异常
+
+`/requests` 和首页「我的请求」读取 `Watcher.Requests(userID)` 的本地归属记录，分跟踪中、需留意和最近完成。首页没有任何记录时只闪提示，直接命令仍返回空状态页。编号由会话内的稳定 key 分配，刷新、筛选和返回不复用；每次打开或刷新详情重新检查归属，旧请求取消后不能借旧按钮读取另一条请求。页面复用 `listPages`、语义文本和逐集进度，不增加写入口或后台刷新服务。
+
+`requestreads.go` 在共享五秒预算内并行读取订阅、下载、整理队列和失败历史；详情额外并行读一个媒体库目标，列表不逐个请求媒体库。失败来源标为未知，成功来源继续使用。需留意包含暂停、执行错误、未知执行状态、匹配的失败记录及不完整读取，不把需要核对都解释成业务失败。下载按媒体、季、hash 和当前实例观察关联；跨实例、实例缺失、季集不明和未映射剧集组不伪造进度。
+
+失败阶段映射为固定建议，不展示上游错误或 `recovery_action`。订阅可按媒体与所需季集范围关联失败文件；选种下载的失败历史缺少实例身份，仅显示待核对提示。最近完成来自通知结算，详情只查询当前媒体库，并显示结算时的范围；不恢复为订阅或下载目标。
+
 ## 相关推荐
 
 `internal/flow/related.go` - 相似推荐 / 同系列 on a media card (season picker, movie confirm, held, already
@@ -308,5 +316,6 @@ history `hs`/`hf`/`hp`/`ho`, calendar weekday is `w`, generic list paging is `p`
 重新搜索 is `rs`, read-only 重试 is `rt` and 返回 is `bk`.
 订阅编辑为 `ue/uf/uv/uc/ua/uq/uw/ui`，依次对应入口、字段、选择、清空、返回菜单、预览、确认写入和 typed input。
 交互增强为 `uo/ud/uy`（恢复原值、确认放弃、只读核对）及 `up/uk/ub/ug/ur`（冲突字段、保留草稿、采用后台、完成处理、重新读取）。
+我的请求为 `rq/rp/rr`，分别对应模式切换或列表刷新、选取请求、详情刷新；均只读。
 
 这是现有动作的导航索引；新增动作时核对源码中的全部 handler，不能把该表当作无需核验的注册中心。

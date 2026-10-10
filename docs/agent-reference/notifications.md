@@ -138,6 +138,14 @@ notice goes to `Destination` or each of `DigestTo` (title + season merged in fir
 `GET /api/v1/mediaserver/latest`, at most 30 listed); the first check after enabling only sets `LastDigest`,
 and an empty week sends nothing. Transitions keep fields they do not touch (`state.emptied`)
 
+## 请求投影与最近完成
+
+`requests.go` 在状态锁的只读快照上筛选请求人，向 flow 返回跟踪记录与最近完成，不向 MoviePilot 查询、不写状态、不输出其他请求者。`flush` 结算到货时将完整范围的最小记录写入 `completed_requests`，与 pending 清理和其他通知字段一起原子保存，仍先保存后发送。最近完成整个实例最多 50 条，同一 watch 更新最新结算，随后按用户筛选；下载退出 watch 后仍可查看完成记录。
+
+记录保留媒体身份、标题、季、起始集、总集数、请求类型、时间和用户 ID，不保留聊天地址、用户名称、文件样本、原始错误或服务器路径。旧状态无需重建，只有升级后的新结算才生成历史；不能把旧 Delivered 或未知资源集数回填为完成。下载记录清除 Held 后判断自身文件是否覆盖全季；洗版不宣布升级目标完成。
+
+现有订阅读取同时保存一个 `unmapped` 布尔值，记录已观察到非默认剧集组，不保存组原文。关闭或读取失败保留这个事实，重启后仍不把默认季集匹配当作完整请求。未映射范围不会在到货通知里宣称整季完成，也不进入最近完成；既有单次到货和游标语义保留。请求页看到当前默认组恢复时，尚未读取的媒体库结果保持未知，下一次再核对。
+
 ## 相关实现与测试
 
 请求记录由 flow 交给 watcher；订阅历史重建不能借用之前卡片的季数或 Held，见 [历史规则](flow.md#历史与洗版)。

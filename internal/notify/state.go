@@ -27,8 +27,9 @@ type state struct {
 	Watches      []watch         `json:"watches"`
 	// Digest is every arrival since the last weekly digest; LastDigest is
 	// when that went out, or when digests began.
-	Digest     []digestEntry `json:"digest,omitempty"`
-	LastDigest *time.Time    `json:"last_digest,omitempty"`
+	Digest     []digestEntry      `json:"digest,omitempty"`
+	LastDigest *time.Time         `json:"last_digest,omitempty"`
+	Completed  []completedRequest `json:"completed_requests,omitempty"`
 }
 
 // emptied is st without its watches, for a transition to fill them anew;
@@ -52,6 +53,7 @@ type watch struct {
 	Start          int        `json:"start,omitempty"`           // first wanted episode
 	Total          int        `json:"total,omitempty"`           // latest known last episode, 0 if unknown
 	BestVersion    bool       `json:"best_version,omitempty"`    // later versions can deliver the same episode again
+	Unmapped       bool       `json:"unmapped,omitempty"`        // observed custom episode group, preserved after closure
 	MovieDelivered bool       `json:"movie_delivered,omitempty"` // ordinary movie requests announce once
 	Closed         bool       `json:"closed,omitempty"`          // its subscription row was last read gone
 	Held           []int      `json:"held,omitempty"`            // existing library episodes, only for downloads
@@ -229,6 +231,7 @@ func (w watch) same(o watch) bool {
 // all of them.
 func flush(st state, now time.Time, settle settling) (state, []delivery) {
 	watches := slices.Clone(st.Watches)
+	completed := st.Completed
 	ended := make([]bool, len(watches))
 	var out []delivery
 	for i, w := range watches {
@@ -242,11 +245,13 @@ func flush(st state, now time.Time, settle settling) (state, []delivery) {
 				continue
 			}
 			d = d.with(other)
+			completed = withCompleted(completed, other, now)
 			watches[j], ended[j] = other.announced()
 		}
 		out = append(out, d)
 	}
 	next := st.emptied()
+	next.Completed = completed
 	for i, w := range watches {
 		if !ended[i] {
 			next.Watches = append(next.Watches, w)
@@ -363,7 +368,7 @@ func (w watch) complete() bool {
 	if w.Season == nil {
 		return w.ArrivedAt != nil
 	}
-	if w.Total == 0 || w.BestVersion {
+	if w.Total == 0 || w.BestVersion || w.Unmapped {
 		return false
 	}
 	for ep := w.Start; ep <= w.Total; ep++ {
