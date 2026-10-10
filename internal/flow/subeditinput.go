@@ -17,17 +17,18 @@ const (
 func subEditPrompt(sess session, problem string) Reply {
 	edit := sess.subEdit
 	text := edit.heading(msgSubEditTitle + " · " + editFieldName(edit.field))
+	text = append(text, Line(Plain(edit.fieldStatus())))
 	if problem != "" {
 		text = append(text, Line(Plain(problem)))
 	}
 	prompt := fmt.Sprintf("回复单行关键词，用 | 分隔多个候选（任一匹配），最多 %d 字、%d 项；按字面匹配，不接收正则表达式。不要输入密钥、链接或服务器路径哦～", maxConditionRunes, maxConditionTerms)
-	rows := [][]Button{{{Label: "清空", Data: data(sess.id, actionSubEditClear, edit.options)}}, {cancelButton(sess.id)}}
+	rows := [][]Button{{{Label: "不限", Data: data(sess.id, actionSubEditClear, edit.options)}}, subEditRestoreRow(sess), {cancelButton(sess.id)}}
 	if edit.field == editStart {
 		prompt = "直接回复起始集数，最小为 1；不会把略过的集数写成已取得哦～"
 		if edit.base.Total > 0 {
 			prompt = fmt.Sprintf("直接回复起始集数（1–%d），不会把略过的集数写成已取得哦～", edit.base.Total)
 		}
-		rows = [][]Button{{cancelButton(sess.id)}}
+		rows = [][]Button{subEditRestoreRow(sess), {cancelButton(sess.id)}}
 	}
 	text = append(text, Line(Plain(prompt)))
 	return Reply{Text: text, Image: edit.base.Poster, Buttons: rows, Input: data(sess.id, actionSubEditInput, edit.options)}
@@ -86,7 +87,7 @@ func literalCondition(text string) (string, string) {
 	for i, term := range terms {
 		term = strings.TrimSpace(term)
 		if term == "" {
-			return "", "关键词不能为空；想移除限制请点「清空」哦～"
+			return "", "关键词不能为空；想移除限制请点「不限」哦～"
 		}
 		terms[i] = regexp.QuoteMeta(term)
 	}

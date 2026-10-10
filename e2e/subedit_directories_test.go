@@ -48,12 +48,12 @@ func TestSubscriptionEditChoiceIdentitySurvivesPaging(t *testing.T) {
 	h := subscriptionEditor(t)
 	h.tap(alice, editMessage, "分辨率")
 	stale, _ := findButton(mustMessage(h, editMessage).rows, "1")
-	staleClear, _ := findButton(mustMessage(h, editMessage).rows, "清空")
+	staleClear, _ := findButton(mustMessage(h, editMessage).rows, "不限")
 	h.tap(alice, editMessage, "返回")
-	h.tap(alice, editMessage, "质量")
+	h.tap(alice, editMessage, "资源类型")
 	h.tapData(alice, editMessage, stale)
 	h.tapData(alice, editMessage, staleClear)
-	h.shows(editMessage, "· 质量")
+	h.shows(editMessage, "· 资源类型")
 	h.tap(alice, editMessage, "返回")
 	groups := numberedEditGroups(count)
 	h.mp.setRoute(editGroupsPath, ok(writeFixture(t, map[string]any{"rule_groups": groups})))
@@ -89,7 +89,7 @@ func numberedEditGroups(count int) []map[string]any {
 
 func TestSubscriptionEditDirectoryFailuresKeepDraft(t *testing.T) {
 	h := subscriptionEditor(t)
-	chooseEditValue(h, "质量", "清空")
+	chooseEditValue(h, "资源类型", "不限")
 	for _, path := range []string{editGroupsPath, editBuiltinPath, editCustomPath} {
 		h.mp.setRoute(path, route{status: http.StatusServiceUnavailable, fixture: "server_error.json"})
 		h.tap(alice, editMessage, "规则组")

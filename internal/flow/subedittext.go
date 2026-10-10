@@ -18,13 +18,14 @@ const (
 	editStart
 	editUpgrade
 	editReview
+	editConflicts
 )
 
 var subEditFields = []struct {
 	id   int
 	name string
 }{
-	{editResolution, "分辨率"}, {editQuality, "质量"}, {editEffect, "特效"},
+	{editResolution, "分辨率"}, {editQuality, "资源类型"}, {editEffect, "画面格式"},
 	{editGroups, "规则组"}, {editSites, "站点"}, {editInclude, "包含条件"},
 	{editExclude, "排除条件"}, {editStart, "起始集"}, {editUpgrade, "洗版模式"},
 }
@@ -45,19 +46,40 @@ func (e *Engine) subEditMenu(sess session) Reply {
 	e.store.put(sess)
 	edit := sess.subEdit
 	text := edit.heading(msgSubEditTitle)
-	text = append(text, Line(Plain("这是未保存的草稿，选一项调整，最后查看修改并确认哦～")))
+	status := "没有未保存的修改，选一项开始编辑吧～"
+	if count := edit.changeCount(); count > 0 {
+		status = fmt.Sprintf("有 %d 项未保存。查看修改并确认后才会生效哦～", count)
+	}
+	text = append(text, Line(Plain(status)))
+	if edit.problem != "" {
+		text = append(text, Line(Plain(edit.problem)))
+	}
 	var buttons []Button
 	for _, field := range subEditFields {
 		if field.id == editStart && edit.base.Kind != TV {
 			continue
 		}
-		text = append(text, Line(Strong(field.name+" "), Plain(edit.draftText(field.id))))
+		label := field.name
+		if edit.base.conditions().changedField(edit.draft, field.id) {
+			label += "（已修改）"
+		}
+		text = append(text, Line(Strong(label+" "), Plain(edit.draftText(field.id))))
 		buttons = append(buttons, Button{Label: field.name, Data: data(sess.id, actionSubEditField, field.id)})
 	}
 	rows := grid(buttons, menuColumns)
 	rows = append(rows, []Button{{Label: "查看修改", Data: data(sess.id, actionSubEditReview, 0)}}, []Button{cancelButton(sess.id)})
 	text = append(text, Remark("仅保存后续匹配条件；不会主动补搜，不会暂停或删除已有下载。原有后台表达式不在聊天中展开。"))
 	return Reply{Text: text, Image: edit.base.Poster, Buttons: rows}
+}
+
+func (edit subscriptionEdit) changeCount() int {
+	n := 0
+	for _, field := range subEditFields {
+		if edit.base.conditions().changedField(edit.draft, field.id) {
+			n++
+		}
+	}
+	return n
 }
 
 func (edit subscriptionEdit) heading(title string) Text {
@@ -137,6 +159,9 @@ func (edit subscriptionEdit) siteText(ids []int) string {
 
 func (e *Engine) reviewSubEdit(sess session) Reply {
 	edit := *sess.subEdit
+	if edit.base.Kind == TV && !validEditStart(max(edit.draft.StartEpisode, 1), edit.base.Total) {
+		return Reply{Notice: "起始集超出了最新范围，请先修改起始集哦～"}
+	}
 	before := edit.base.conditions()
 	if before.same(edit.draft) {
 		return Reply{Notice: "还没有要保存的修改哦～"}

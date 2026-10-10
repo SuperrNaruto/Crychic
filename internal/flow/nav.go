@@ -53,6 +53,9 @@ var sameLevel = map[string]bool{
 	actionSearchSite: true, actionSearchAll: true,
 	actionSubEditField: true, actionSubEditPick: true, actionSubEditClear: true,
 	actionSubEditApply: true, actionSubEditReview: true, actionSubEditSave: true,
+	actionSubEditRestore: true, actionSubEditDiscard: true, actionSubEditCheck: true,
+	actionSubConflictPick: true, actionSubConflictKeep: true, actionSubConflictAdopt: true,
+	actionSubConflictDone: true, actionSubConflictReload: true,
 }
 
 // listPicks are the forward steps that pick from a list.
@@ -194,6 +197,7 @@ func (e *Engine) back(ctx context.Context, sess session) Reply {
 	restored.hunts = max(sess.hunts, restored.hunts)
 	restored.torrentIDs = max(sess.torrentIDs, restored.torrentIDs)
 	restored.editOptions = max(sess.editOptions, restored.editOptions)
+	restored.subReceipt = sess.subReceipt
 	if sess.streaming && restored.searchView == torrentListView && sess.hunt == restored.hunt {
 		restored = syncedHunt(restored, restored.hunt.read())
 		e.store.put(restored)

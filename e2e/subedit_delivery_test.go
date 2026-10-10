@@ -10,7 +10,7 @@ import (
 
 func TestSubscriptionEditReceiptAndPostWriteReadRecover(t *testing.T) {
 	h := subscriptionEditor(t)
-	chooseEditValue(h, "质量", "清空")
+	chooseEditValue(h, "资源类型", "不限")
 	h.tap(alice, editMessage, "查看修改")
 	const retrySeconds = 1
 	limited := h.tg.rejectNextEdit(editMessage, retrySeconds)
@@ -24,7 +24,7 @@ func TestSubscriptionEditReceiptAndPostWriteReadRecover(t *testing.T) {
 	assertEditCount(h, 1)
 	h.tap(alice, editMessage, "刷新")
 	h.tap(alice, editMessage, "编辑条件")
-	chooseEditValue(h, "特效", "清空")
+	chooseEditValue(h, "画面格式", "不限")
 	h.tap(alice, editMessage, "查看修改")
 	h.mp.editResponse(subscriptionEditResponse{readFails: true})
 	h.tap(alice, editMessage, "确认保存")
@@ -43,7 +43,7 @@ func TestSubscriptionEditRedirectKeepsCredentialsAtOrigin(t *testing.T) {
 		writeEnvelope(w, http.StatusOK, `{"success":true,"data":null}`)
 	}))
 	defer other.Close()
-	chooseEditValue(h, "质量", "清空")
+	chooseEditValue(h, "资源类型", "不限")
 	h.tap(alice, editMessage, "查看修改")
 	h.mp.editResponse(subscriptionEditResponse{location: other.URL + "/api/v1/subscribe/"})
 	h.tap(alice, editMessage, "确认保存")
@@ -80,7 +80,7 @@ func TestSubscriptionEditMovieKeepsEpisodeSettings(t *testing.T) {
 // still visible. Recreating the same row must not recreate ownership.
 func TestSubscriptionEditRevokedRequestCannotSave(t *testing.T) {
 	h := subscriptionEditor(t)
-	chooseEditValue(h, "质量", "清空")
+	chooseEditValue(h, "资源类型", "不限")
 	h.tap(alice, editMessage, "查看修改")
 	h.mp.setRoute(deleteFirst, ok("subscribe_deleted.json"))
 	h.say(alice, alice, "/subscribe")
@@ -127,8 +127,9 @@ func TestSubscriptionEditStartRespectsCurrentTotal(t *testing.T) {
 	h.tap(alice, editMessage, "确认保存")
 	h.shows(editMessage, "后台条件已变化")
 	assertEditCount(h, 0)
-	h.tap(alice, editMessage, "刷新")
-	h.tap(alice, editMessage, "编辑条件")
+	h.tap(alice, editMessage, "完成处理")
+	h.tap(alice, editMessage, "起始集")
+	h.tap(alice, editMessage, "恢复原值")
 	h.tap(alice, editMessage, "包含条件")
 	const beyondSession = 11 * time.Minute
 	h.advance(beyondSession)

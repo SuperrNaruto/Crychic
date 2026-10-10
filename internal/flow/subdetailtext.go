@@ -59,7 +59,7 @@ func (d subscriptionDetail) settingsText() Text {
 		Small(Plain(joinNonEmpty(" · ", s.Year, s.Kind.String(), cmp.Or(stateText[s.State], "状态未知")))),
 		Group("订阅设置"),
 		Line(Plain(subScope(s))),
-		Line(Strong("规格 "), Plain(cmp.Or(subSetting(joinNonEmpty(" · ", s.Resolution, s.Quality, s.Effect)), "不限（未单独设置）"))),
+		Line(Strong("规格 "), Plain(subSpecifications(s))),
 		Line(Strong("规则组 "), Plain(cmp.Or(subSetting(strings.Join(s.FilterGroups, " · ")), d.globalGroups()))),
 		Group("最近一次搜索"),
 		Line(Strong("最近搜索 "), Plain(subTime(s.LastSearch))),
@@ -76,6 +76,19 @@ func (d subscriptionDetail) settingsText() Text {
 		Line(Strong("订阅刷新 "), Plain(d.jobText(d.upkeep.Refresh, "浏览站点最新种子"))),
 		Line(Strong("定时搜索 "), Plain(d.jobText(d.upkeep.Search, "逐个搜索所有订阅"))),
 	)
+}
+
+func subSpecifications(sub Subscription) string {
+	var values []string
+	for _, setting := range []struct {
+		value   string
+		choices []subscriptionSpec
+	}{{sub.Resolution, resolutionChoices}, {sub.Quality, qualityChoices}, {sub.Effect, effectChoices}} {
+		if setting.value != "" {
+			values = append(values, namedSpec(setting.value, setting.choices))
+		}
+	}
+	return cmp.Or(subSetting(strings.Join(values, " · ")), "不限（未单独设置）")
 }
 
 // globalGroups words the rule groups a subscription without its own uses.

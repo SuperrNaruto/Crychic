@@ -6,14 +6,17 @@ import (
 )
 
 const (
-	actionSubEdit       = "ue"
-	actionSubEditField  = "uf"
-	actionSubEditPick   = "uv"
-	actionSubEditClear  = "uc"
-	actionSubEditApply  = "ua"
-	actionSubEditReview = "uq"
-	actionSubEditSave   = "uw"
-	actionSubEditInput  = "ui"
+	actionSubEdit        = "ue"
+	actionSubEditField   = "uf"
+	actionSubEditPick    = "uv"
+	actionSubEditClear   = "uc"
+	actionSubEditApply   = "ua"
+	actionSubEditReview  = "uq"
+	actionSubEditSave    = "uw"
+	actionSubEditInput   = "ui"
+	actionSubEditRestore = "uo"
+	actionSubEditDiscard = "ud"
+	actionSubEditCheck   = "uy"
 
 	msgSubEditTitle = "编辑订阅条件"
 	msgSubEditOwn   = "只能编辑你请求的订阅哦～"
@@ -28,15 +31,19 @@ type subscriptionEdit struct {
 	includeWords string
 	excludeWords string
 	options      int // current option-screen generation
+	leaving      *subEditDeparture
+	conflict     *subEditConflict
+	problem      string
 }
 
 func subEditAction(action string) bool {
 	switch action {
 	case actionSubEdit, actionSubEditField, actionSubEditPick, actionSubEditClear,
-		actionSubEditApply, actionSubEditReview, actionSubEditSave, actionSubEditInput:
+		actionSubEditApply, actionSubEditReview, actionSubEditSave, actionSubEditInput,
+		actionSubEditRestore, actionSubEditDiscard, actionSubEditCheck:
 		return true
 	}
-	return false
+	return subEditConflictAction(action)
 }
 
 func (e *Engine) chooseSubEdit(ctx context.Context, sess session, p press) (Reply, bool) {
@@ -46,24 +53,35 @@ func (e *Engine) chooseSubEdit(ctx context.Context, sess session, p press) (Repl
 	if p.action == actionSubEdit {
 		return e.openSubEdit(ctx, sess, p.arg), true
 	}
+	if p.action == actionSubEditCheck {
+		return e.checkSubEditResult(ctx, sess, p.arg), true
+	}
 	if sess.subEdit == nil {
 		return Reply{Notice: msgInvalidChoice}, true
 	}
+	return e.editSubCondition(ctx, sess, p), true
+}
+
+func (e *Engine) editSubCondition(ctx context.Context, sess session, p press) Reply {
 	switch p.action {
 	case actionSubEditField:
-		return e.openSubEditField(ctx, sess, p.arg), true
+		return e.openSubEditField(ctx, sess, p.arg)
 	case actionSubEditPick:
-		return e.chooseSubEditOption(sess, p.arg), true
+		return e.chooseSubEditOption(sess, p.arg)
 	case actionSubEditClear:
-		return e.clearSubEdit(sess), true
+		return e.clearSubEdit(sess)
 	case actionSubEditApply:
-		return e.subEditMenu(sess), true
+		return e.subEditMenu(sess)
 	case actionSubEditReview:
-		return e.reviewSubEdit(sess), true
+		return e.reviewSubEdit(sess)
 	case actionSubEditSave:
-		return e.saveSubEdit(ctx, sess, p.arg), true
+		return e.saveSubEdit(ctx, sess, p.arg)
+	case actionSubEditRestore:
+		return e.restoreSubEditField(sess)
+	case actionSubEditDiscard:
+		return e.discardSubEdit(ctx, sess)
 	}
-	return Reply{Notice: msgInvalidChoice}, true
+	return e.chooseSubEditConflict(ctx, sess, p)
 }
 
 func (e *Engine) chooseSubEditOption(sess session, arg int) Reply {
@@ -112,11 +130,25 @@ func copySubEdit(sess session) session {
 	return sess
 }
 
-// Editing is a local form: field screens do not accumulate navigation
-// snapshots containing older drafts. 返回 from the menu discards the form.
+// Field navigation keeps the draft. Leaving a changed form needs an
+// explicit discard, without putting a writable draft in navigation history.
 func (e *Engine) backFromSubEdit(sess session) (Reply, bool) {
-	if sess.subEdit == nil || sess.subEdit.field == editMenu {
+	if sess.subEdit == nil {
 		return Reply{}, false
 	}
+	if sess.subEdit.leaving != nil {
+		return e.resumeSubEdit(sess), true
+	}
+	if sess.subEdit.conflict != nil && sess.subEdit.conflict.field != editMenu {
+		return e.navigate(sess, actionSubEditApply, e.subEditConflictOverview(sess)), true
+	}
+	if sess.subEdit.field == editMenu {
+		if !sess.subEdit.dirty() {
+			return Reply{}, false
+		}
+		return e.navigate(sess, actionSubEditApply, e.askSubEditLeave(sess, actionBack)), true
+	}
+	sess = copySubEdit(sess)
+	sess.subEdit.conflict = nil
 	return e.navigate(sess, actionSubEditApply, e.subEditMenu(sess)), true
 }

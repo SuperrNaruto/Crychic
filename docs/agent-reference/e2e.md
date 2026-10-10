@@ -119,6 +119,8 @@ changing real timer cadence
 
 `holdSubscriptionRead` 在 fake 已读取并序列化旧订阅后阻塞 HTTP 响应，与通用 `holdCalls` 的请求入站屏障不同。它验证本地编辑完成以后，陈旧的通知读取不会覆盖起始集和洗版模式，也不会错误推进整理游标。固定 transcript 记录用户可见结果，目录定义、后台路径和敏感旧条件不进入产物。
 
+`subedit_ux_test.go` 通过真实聊天入口覆盖退出草稿保护、继续输入与放弃后订阅控制、单字段恢复、只读逐字段核对、后台冲突保留与采用后台、处理期间再次变更、最新起始集上限。每个场景保留不重复 PUT、陈旧按钮无效和敏感文本不泄露的断言。既有目录变更场景扩展为保留其他草稿并完成重新选择；条件 PUT 计数按完整路由行计算，不能把暂停路由误算为条件更新。
+
 `fake_search_stream_test.go` 的 SSE 来自合成数据，帧形状对照 MoviePilot v3.1.1 `search.py` 与 `chain/search/execution.py`，早期候选明确没有媒体身份。复用既有合成种子记录，不录制真实流。HTTP admission、逐帧 flush 和连接退出屏障约束可重复时序；不排序有副作用的搜索请求来掩盖乱序。Cookie 仅在 fake 内校验，其他服务和普通 JSON 路径收到 Cookie 会使场景失败。
 
 `search_stream*_test.go`、`search_sites_test.go` 与 `cookie_config_test.go` 覆盖资源身份、完整帧和批次、读取总预算、断线不重搜、终态投递恢复、初始消息和输入、话题、到期和重启、搜索范围及启动拒绝。总预算场景实际等待两分钟，因此完整测试相应变长；不通过缩短生产预算或注入内部 mock 加速。每个场景仍以 transcript 比对结束。

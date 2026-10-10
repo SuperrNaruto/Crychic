@@ -70,6 +70,9 @@ func (e *Engine) subDetail(ctx context.Context, sess session, index int) Reply {
 	view := detail.view()
 	refresh := Button{Label: "刷新", Data: data(sess.id, actionRefreshSubDetail, sess.subs[index].ID)}
 	view.menu = [][]Button{append([]Button{refresh}, pauseButton(sess, subs[i])...)}
+	if sess.subReceipt != nil && sess.subReceipt.base.same(subs[i]) {
+		view.menu = append(view.menu, subEditCheckRow(sess))
+	}
 	if slices.Contains(sess.mine, subs[i].ID) {
 		view.menu = append(view.menu, []Button{{Label: "编辑条件", Data: data(sess.id, actionSubEdit, subs[i].ID)}})
 	}

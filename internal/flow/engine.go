@@ -152,7 +152,7 @@ func availableChoice(sess session, raw, action string) bool {
 
 func availableScreenChoice(sess session, raw, action string) bool {
 	shown := sess.screen.reply
-	if subEditAction(action) {
+	if subEditAction(action) || sess.subEdit != nil {
 		return hasData(shown.Buttons, raw)
 	}
 	if allowed, handled := availableTorrentChoice(sess, raw, action); handled {
@@ -208,6 +208,10 @@ func (e *Engine) choose(ctx context.Context, sess session, p press) Reply {
 		return e.back(ctx, sess)
 	case actionBatchProgress, actionBatchStop:
 		return e.batchProgress(sess, p)
+	case actionCancel:
+		if sess.subEdit != nil && sess.subEdit.dirty() {
+			return e.navigate(sess, actionSubEditApply, e.askSubEditLeave(sess, actionCancel))
+		}
 	}
 	for _, choose := range []chooser{e.chooseHome, e.chooseRequest, e.chooseSeasons, e.chooseTask, e.chooseChart, e.chooseSubs, e.chooseSubDetail, e.chooseSubPause, e.chooseSubEdit, e.chooseHistory, e.chooseRelated, e.chooseTorrents, e.chooseSearchSites, e.chooseTorrentView, e.chooseTorrentBatch, e.chooseDelete, e.chooseUpgrade} {
 		if reply, ok := choose(ctx, sess, p); ok {

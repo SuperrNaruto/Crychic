@@ -36,7 +36,7 @@ Data flow: Telegram update → `telegram.adapter` → `flow.Engine.Start/Choose`
 | 首页与最新入库 | [internal/flow/home.go](../../internal/flow/home.go) | `latest.go`；空菜单提示与标题输入 |
 | 发现与关联 | [internal/flow/charts.go](../../internal/flow/charts.go) | `notes.go`、`related.go`、`upcoming.go`；日历、简介、合集与追剧日期 |
 | 订阅与历史 | [internal/flow/subs.go](../../internal/flow/subs.go) | `subdetail.go`、`subdetailtext.go`、`subprogress.go`、`subpause.go`、`subidentity.go`、`history.go` |
-| 订阅条件编辑 | [internal/flow/subedit.go](../../internal/flow/subedit.go) | `subeditchoices.go`、`subeditdirectory.go`、`subeditinput.go`、`subeditsave.go`；MoviePilot `subedit.go`、`subrules.go` |
+| 订阅条件编辑 | [internal/flow/subedit.go](../../internal/flow/subedit.go) | `subeditchoices.go`、`subeditdirectory.go`、`subeditinput.go`、`subeditsave.go`；`subeditleave.go` 保护草稿，`subeditcheck.go` 核对只读回执，`subeditconflict.go` 处理冲突；MoviePilot `subedit.go`、`subrules.go` |
 | 季与升级 | [internal/flow/seasons.go](../../internal/flow/seasons.go) | `episodes.go`、`upgrade.go`；多季、起始集与洗版 |
 | 资源与下载 | [internal/flow/torrents.go](../../internal/flow/torrents.go) | `torrenttext.go`、`torrenthunt.go`、`torrentsort.go`、`torrentmissing.go`、`torrentbatch.go` |
 | 任务与删除 | [internal/flow/tasks.go](../../internal/flow/tasks.go) | `taskdelete.go`、`tasktext.go`；任务跟随与删除确认 |

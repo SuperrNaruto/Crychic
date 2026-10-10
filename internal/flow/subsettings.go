@@ -55,6 +55,29 @@ func (s SubscriptionConditions) changedField(other SubscriptionConditions, field
 	return false
 }
 
+func (s *SubscriptionConditions) copyField(from SubscriptionConditions, field int) {
+	switch field {
+	case editQuality:
+		s.Quality = from.Quality
+	case editResolution:
+		s.Resolution = from.Resolution
+	case editEffect:
+		s.Effect = from.Effect
+	case editGroups:
+		s.FilterGroups = slices.Clone(from.FilterGroups)
+	case editSites:
+		s.Sites = slices.Clone(from.Sites)
+	case editInclude:
+		s.Include = from.Include
+	case editExclude:
+		s.Exclude = from.Exclude
+	case editStart:
+		s.StartEpisode = from.StartEpisode
+	case editUpgrade:
+		s.BestVersion, s.BestVersionFull = from.BestVersion, from.BestVersionFull
+	}
+}
+
 // SubscriptionUpdate contains a base and a draft so the backend can send only
 // actual changes. ID is the sole identity field the upstream write accepts.
 type SubscriptionUpdate struct {

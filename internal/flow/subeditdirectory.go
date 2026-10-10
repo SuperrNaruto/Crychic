@@ -27,6 +27,7 @@ func (e *Engine) readSubEditChoices(ctx context.Context, sess session) Reply {
 			return Reply{Notice: "站点选项过多，请先到 MoviePilot 后台整理哦～"}
 		}
 	}
+	edit.problem = ""
 	return e.subEditDirectory(sess, "")
 }
 
@@ -44,7 +45,7 @@ func (e *Engine) subEditDirectory(sess session, holds string) Reply {
 	edit := sess.subEdit
 	view := listView{
 		heading: Heading(Plain(msgSubEditTitle + " · " + editFieldName(edit.field))),
-		note:    "勾选后点完成选择，最终确认之前不会保存或访问 PT 站点。保留原有选择；不在当前目录的旧项不会被默默删除。",
+		note:    "选择已记入草稿，尚未保存；完成选择或返回都会保留勾选。只有最终确认才写入，不会主动访问 PT 站点。",
 		footer:  []Button{cancelButton(sess.id)},
 	}
 	reset := "沿用全局"
@@ -59,6 +60,7 @@ func (e *Engine) subEditDirectory(sess session, holds string) Reply {
 	}
 	view.menu = [][]Button{
 		{{Label: reset, Data: data(sess.id, actionSubEditClear, edit.options)}},
+		subEditRestoreRow(sess),
 		{{Label: "完成选择", Data: data(sess.id, actionSubEditApply, edit.options)}},
 	}
 	return e.listPageWith(sess, view, holds)

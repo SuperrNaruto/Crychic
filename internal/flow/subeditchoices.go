@@ -46,12 +46,7 @@ func namedSpec(expression string, choices []subscriptionSpec) string {
 	if expression == "" {
 		return "不限（未设置）"
 	}
-	for _, choice := range choices {
-		if expression == choice.expression || expression == choice.name {
-			return choice.name
-		}
-	}
-	return "已设置后台表达式（保留原值）"
+	return knownSpec(expression, choices)
 }
 
 func (e *Engine) openSubEditField(ctx context.Context, sess session, field int) Reply {
@@ -78,6 +73,7 @@ func (e *Engine) subEditOptions(sess session) Reply {
 	view := listView{
 		heading: Heading(Plain(msgSubEditTitle + " · " + editFieldName(edit.field))),
 		note:    "这里只修改草稿，选择后返回编辑菜单哦～", footer: []Button{cancelButton(sess.id)},
+		entries: []listEntry{{text: Sentence(edit.fieldStatus())}},
 	}
 	choices := specChoices(edit.field)
 	if edit.field == editUpgrade {
@@ -87,11 +83,16 @@ func (e *Engine) subEditOptions(sess session) Reply {
 		}
 		view.note = "洗版可能再次下载已有内容；仅改变匹配模式，不重置当前优先级，不承诺已洗版完成。"
 	} else {
-		view.menu = [][]Button{{{Label: "清空", Data: data(sess.id, actionSubEditClear, edit.options)}}}
+		view.menu = [][]Button{{{Label: "不限", Data: data(sess.id, actionSubEditClear, edit.options)}}}
 	}
+	view.menu = append(view.menu, subEditRestoreRow(sess))
 	for i, choice := range choices {
+		item := entry(i+1, Strong(choice.name))
+		if edit.optionCurrent(choice) {
+			item.Tag = "当前"
+		}
 		view.entries = append(view.entries, listEntry{
-			text:    Lines(entry(i+1, Strong(choice.name))),
+			text:    Lines(item),
 			buttons: []Button{{Label: fmt.Sprint(i + 1), Data: subEditChoiceData(sess, i+1)}},
 		})
 	}
@@ -114,7 +115,7 @@ func (e *Engine) pickSubEdit(sess session, index int) Reply {
 	if index < 1 || index > len(choices) {
 		return Reply{Notice: msgInvalidChoice}
 	}
-	edit.setExpression(choices[index-1].expression)
+	edit.chooseSpec(choices[index-1])
 	return e.subEditMenu(sess)
 }
 

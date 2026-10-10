@@ -64,11 +64,11 @@ func chooseEditValue(h *harness, field, choice string) {
 func TestSubscriptionEditsSaveOnlyConfirmedChanges(t *testing.T) {
 	h := subscriptionEditor(t)
 	chooseEditValue(h, "分辨率", "1")
-	chooseEditValue(h, "质量", "清空")
-	chooseEditValue(h, "特效", "清空")
+	chooseEditValue(h, "资源类型", "不限")
+	chooseEditValue(h, "画面格式", "不限")
 	h.tap(alice, editMessage, "包含条件")
 	h.answer(alice, editMessage, "Group.+|简体")
-	chooseEditValue(h, "排除条件", "清空")
+	chooseEditValue(h, "排除条件", "不限")
 	h.tap(alice, editMessage, "规则组")
 	h.tap(alice, editMessage, "✓ 1")
 	h.tap(alice, editMessage, "2")
@@ -107,7 +107,7 @@ func TestSubscriptionEditsSaveOnlyConfirmedChanges(t *testing.T) {
 
 func assertEditCount(h *harness, expected int) {
 	h.t.Helper()
-	count := strings.Count(h.tr.String(), "-> MoviePilot "+editSubscriptionPath)
+	count := strings.Count(h.tr.String(), "-> MoviePilot "+editSubscriptionPath+"\n")
 	if count != expected {
 		h.t.Fatalf("subscription updates = %d, want %d", count, expected)
 	}

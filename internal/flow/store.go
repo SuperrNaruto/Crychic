@@ -53,8 +53,9 @@ type session struct {
 	subs         []Subscription
 	mine         []int // ids of subs the owner asked for
 	subEdit      *subscriptionEdit
-	editOptions  int  // option generations never rewind when navigating back
-	kind         Kind // the kind of subscription or history shown
+	subReceipt   *subscriptionEditReceipt // immutable, read-only; never a write target
+	editOptions  int                      // option generations never rewind when navigating back
+	kind         Kind                     // the kind of subscription or history shown
 	past         []PastSubscription
 	tasks        []taskRef
 	follow       following
