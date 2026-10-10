@@ -45,8 +45,6 @@ func (e *Engine) chooseTorrentBatch(ctx context.Context, sess session, p press) 
 		return e.tickRelease(sess, p.arg), true
 	case actionTorrentBatch:
 		return e.askBatch(sess), true
-	case actionTorrentBatchGet:
-		return e.downloadBatch(ctx, sess), true
 	}
 	return Reply{}, false
 }
@@ -74,6 +72,7 @@ func (e *Engine) askBatch(sess session) Reply {
 		return Reply{Notice: msgTickOne}
 	}
 	sess.batch = slices.Clone(sess.ticked)
+	sess.plan = nil
 	sess.searchView = torrentBatchView
 	e.store.put(sess)
 	rows := make([][]Span, 0, len(sess.batch))
@@ -121,6 +120,7 @@ func (e *Engine) downloadBatch(_ context.Context, sess session) Reply {
 	b := newDownloadBatch(int(sess.ticket), releases)
 	sess.submission = b
 	sess.batch, sess.ticked, sess.target, sess.release = nil, nil, nil, nil
+	sess.plan = nil
 	sess.torrents = nil
 	e.store.put(sess)
 	reply := submissionReply(sess, b.read())

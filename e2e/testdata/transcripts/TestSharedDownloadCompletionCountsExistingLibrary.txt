@@ -92,6 +92,7 @@
    [下一页 › | 1:p:1]
    [·默认· | 1:to:0] [做种 | 1:to:1] [时间 | 1:to:2] [大小 | 1:to:3] [站点 | 1:to:4]
    [筛选站点 | 1:tf:0] [多选… | 1:tm:0]
+   [缺集方案 | 1:pl:0]
    [返回 | 1:bk:0] [取消 | 1:x:0]
 >> user 1001 taps 1:tp:0 on message 1
 << editMessageText chat=1001 message=1
@@ -221,6 +222,7 @@
    [·默认· | 2:to:0] [做种 | 2:to:1] [时间 | 2:to:2] [大小 | 2:to:3] [站点 | 2:to:4]
    [只看缺集 | 2:tx:1]
    [筛选站点 | 2:tf:0] [多选… | 2:tm:0]
+   [缺集方案 | 2:pl:0]
    [返回 | 2:bk:0] [取消 | 2:x:0]
 >> user 1002 taps 2:p:1 on message 2
 << editMessageText chat=1002 message=2
@@ -247,6 +249,7 @@
    [·默认· | 2:to:0] [做种 | 2:to:1] [时间 | 2:to:2] [大小 | 2:to:3] [站点 | 2:to:4]
    [只看缺集 | 2:tx:1]
    [筛选站点 | 2:tf:0] [多选… | 2:tm:0]
+   [缺集方案 | 2:pl:0]
    [返回 | 2:bk:0] [取消 | 2:x:0]
 << answerCallbackQuery
 >> user 1002 taps 2:tp:13 on message 2

@@ -2,6 +2,7 @@ package moviepilot
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"net/http"
 	"slices"
@@ -41,8 +42,14 @@ func (c *Client) heldEpisodes(ctx context.Context, q libraryQuery) (flow.Library
 	if err := c.do(ctx, call{method: http.MethodPost, path: "/api/v1/mediaserver/exists_remote", body: q}, &raw); err != nil {
 		return flow.Library{}, err
 	}
+	if raw == nil {
+		return flow.Library{}, errors.New("moviepilot: missing library episodes")
+	}
 	held := make(map[int][]int, len(raw))
 	for season, episodes := range raw {
+		if episodes == nil {
+			return flow.Library{}, errors.New("moviepilot: missing library episodes")
+		}
 		n, err := strconv.Atoi(season)
 		if err != nil {
 			return flow.Library{}, fmt.Errorf("moviepilot: season %q in library answer", season)

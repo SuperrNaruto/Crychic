@@ -42,11 +42,13 @@ var forward = map[string]bool{
 	actionSearchSites: true,
 	actionSubEdit:     true,
 	actionRequestPick: true,
+	actionTorrentPlan: true,
 }
 
 var sameLevel = map[string]bool{
 	actionRequests: true, actionRequestRefresh: true,
-	actionTick: true, actionChartPage: true, actionWeekday: true, actionPage: true, answered: true,
+	actionTorrentPlanRefresh: true,
+	actionTick:               true, actionChartPage: true, actionWeekday: true, actionPage: true, answered: true,
 	actionRetry: true, actionSubsKind: true, actionHistoryKind: true, actionRefreshSubDetail: true,
 	actionPauseSub: true, actionResumeSub: true,
 	actionTorrentAgain: true, actionTorrentSort: true, actionTorrentSites: true, actionTorrentSite: true,
@@ -230,7 +232,7 @@ func torrentScreenAction(action string) bool {
 	case actionTorrentRun, actionTorrentAgain, actionTorrentRefresh, actionTorrentResearch,
 		actionTorrentPick, actionTorrentGet, actionTorrentSort, actionTorrentSites,
 		actionTorrentSite, actionTorrentMissing, actionTorrentMulti, actionTorrentTick,
-		actionTorrentBatch, actionTorrentBatchGet, actionPage, actionBack:
+		actionTorrentBatch, actionTorrentBatchGet, actionTorrentPlan, actionTorrentPlanRefresh, actionPage, actionBack:
 		return true
 	}
 	return false

@@ -182,6 +182,7 @@
    [下一页 › | 2:p:1]
    [·默认· | 2:to:0] [做种 | 2:to:1] [时间 | 2:to:2] [大小 | 2:to:3] [站点 | 2:to:4]
    [筛选站点 | 2:tf:0] [多选… | 2:tm:0]
+   [缺集方案 | 2:pl:0]
    [返回 | 2:bk:0] [取消 | 2:x:0]
 >> user 1002 taps 2:tp:0 on message 2
 << editMessageText chat=1002 message=2

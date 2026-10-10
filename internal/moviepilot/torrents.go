@@ -32,8 +32,26 @@ type torrentContext struct {
 
 type torrentMeta struct {
 	metaInfo
-	Season   *int  `json:"begin_season"`
-	Episodes []int `json:"episode_list"`
+	Season       *int   `json:"begin_season"`
+	EndSeason    *int   `json:"end_season"`
+	Seasons      []int  `json:"season_list"`
+	Episodes     []int  `json:"episode_list"`
+	EpisodeGroup string `json:"episode_group"`
+}
+
+// Season lists can default an unidentified TV release to S01 upstream;
+// they never supply a missing begin_season or override contradictory facts.
+func (m torrentMeta) rangeUnsure() bool {
+	if m.EpisodeGroup != "" {
+		return true
+	}
+	if m.EndSeason != nil && (m.Season == nil || *m.EndSeason != *m.Season) {
+		return true
+	}
+	if len(m.Seasons) == 0 {
+		return false
+	}
+	return m.Season == nil || len(m.Seasons) != 1 || m.Seasons[0] != *m.Season
 }
 
 // torrentFacts are the fields of torrent_info shown to pick a release.
@@ -99,7 +117,10 @@ func (rc torrentContext) toTorrent() (flow.Torrent, bool) {
 		return flow.Torrent{}, false
 	}
 	var facts torrentFacts
-	var info mediaInfo
+	var info struct {
+		mediaInfo
+		EpisodeGroup string `json:"episode_group"`
+	}
 	if json.Unmarshal(rc.Torrent, &facts) != nil || json.Unmarshal(rc.Media, &info) != nil {
 		return flow.Torrent{}, false
 	}
@@ -109,6 +130,7 @@ func (rc torrentContext) toTorrent() (flow.Torrent, bool) {
 	}
 	found, ok := rc.project(facts)
 	found.Media = media
+	found.RangeUnsure = found.RangeUnsure || info.EpisodeGroup != ""
 	if media.Kind == flow.Movie {
 		found.Season, found.Episodes, found.EpisodesUnsure = nil, nil, false
 	}
@@ -142,6 +164,7 @@ func (rc torrentContext) project(facts torrentFacts) (flow.Torrent, bool) {
 		Published: facts.Published, Record: record,
 		Season: m.Season, Episodes: m.Episodes,
 		EpisodesUnsure: len(m.Episodes) > 0 && !namesEpisodes(facts.Title, m.Episodes),
+		RangeUnsure:    m.rangeUnsure(),
 		Resolution:     m.Resolution, Video: m.Video, Group: m.Group, Edition: cmp.Or(m.Edition, m.Type),
 	}
 	return found, true

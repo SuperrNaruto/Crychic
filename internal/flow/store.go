@@ -43,6 +43,7 @@ type session struct {
 	ticking      bool           // the release list ticks releases to download together
 	ticked       []int          // indices of the ticked releases, ascending
 	batch        []int          // indices of the ticked releases asked to download
+	plan         *torrentPlan   // immutable missing-episode proposal; inventory is rechecked before submission
 	submission   *downloadBatch // API submissions; guarded separately from session snapshots
 	chosen       []int          // seasons ticked in the multi-season picker
 	chart        int            // index into charts being browsed

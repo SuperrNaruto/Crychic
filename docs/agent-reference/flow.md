@@ -266,6 +266,16 @@ the in-flight call as an unknown result and starts no remaining items. Per-call 
 资源原始记录、集数识别和删除实例参数见 [MoviePilot 参考](moviepilot.md)。每次下载的独立 watch 和同媒体同季的合并通知见
 [通知参考](notifications.md#到货聚合与画质)。
 
+### 缺集下载方案
+
+`torrentplan.go`、`torrentplanread.go`、`torrentplanselect.go`、`torrentplanmodel.go` 和 `torrentplantext.go` 复用资源结果及批量提交。完整 TV 单季结果提供「缺集方案」，当前站点筛选作用于全部结果而非当前页；显示排序不影响确定性建议。生成与重新计算并行只读媒体库及季信息，共用现有五秒预算，不访问资源搜索端点。
+
+所需范围为当前起始集至季末，季总数须明确且不超过 100。只用同来源、ID、类型、明确单季、非空且未越界的可信识别集数；`Unverified`、`EpisodesUnsure`、`RangeUnsure` 均排除，不从空列表推断整季，也不将非默认剧集组映射成普通季。按新增覆盖量、无 H&R、少重复、已知且较小体积、MoviePilot 顺序贪心选取，最多 20 个，不承诺最优或种子文件核验。
+
+摘要保留完整集数汇总，资源按既有文本预算分页。重复已有、资源间重叠及起始集以前三个集合可相交；大小未知单列，不把部分已知大小称为总量。下载完整资源，不提供种子内文件裁剪。空库存必须提示上游可能隐藏媒体库连接或扫描问题；方案不把正在下载的内容算作已入库。
+
+`session.plan` 是不可变内存预览；确认仍使用原 `tz` 当前屏幕票据。确认前再次读取并比较本季库存、总数及起始集；变化用只读 `pc` 转移替换预览，不按写入完成处理导航，重新签发确认票据。错误页撤下确认，重算不重放写入。成功预检后交给原串行 worker 并消费方案，返回不能恢复已提交目标；客户端预检仍非后端原子事务。
+
 ## 任务最新入库与内容预算
 
 `internal/flow/tasks.go` - `/tasks`: list downloads and transfer jobs, follow one live (`Reply.Follow`);
@@ -317,5 +327,6 @@ history `hs`/`hf`/`hp`/`ho`, calendar weekday is `w`, generic list paging is `p`
 订阅编辑为 `ue/uf/uv/uc/ua/uq/uw/ui`，依次对应入口、字段、选择、清空、返回菜单、预览、确认写入和 typed input。
 交互增强为 `uo/ud/uy`（恢复原值、确认放弃、只读核对）及 `up/uk/ub/ug/ur`（冲突字段、保留草稿、采用后台、完成处理、重新读取）。
 我的请求为 `rq/rp/rr`，分别对应模式切换或列表刷新、选取请求、详情刷新；均只读。
+缺集方案为 `pl/pc`（生成／重新计算），确认复用 `tz`；确认发现库存变化时按只读 `pc` 更新屏幕。
 
 这是现有动作的导航索引；新增动作时核对源码中的全部 handler，不能把该表当作无需核验的注册中心。

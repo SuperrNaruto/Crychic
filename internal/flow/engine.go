@@ -147,6 +147,9 @@ func availableChoice(sess session, raw, action string) bool {
 	if sess.searchView == torrentWaitingView {
 		return waitingTorrentChoice(action)
 	}
+	if allowed, handled := planScreenChoice(sess, raw, action); handled {
+		return allowed
+	}
 	return availableScreenChoice(sess, raw, action)
 }
 
@@ -211,12 +214,18 @@ func (e *Engine) choose(ctx context.Context, sess session, p press) Reply {
 		return e.back(ctx, sess)
 	case actionBatchProgress, actionBatchStop:
 		return e.batchProgress(sess, p)
+	case actionTorrentBatchGet:
+		return e.confirmTorrentPlan(ctx, sess)
 	case actionCancel:
 		if sess.subEdit != nil && sess.subEdit.dirty() {
 			return e.navigate(sess, actionSubEditApply, e.askSubEditLeave(sess, actionCancel))
 		}
 	}
-	for _, choose := range []chooser{e.chooseHome, e.chooseRequest, e.chooseRequests, e.chooseSeasons, e.chooseTask, e.chooseChart, e.chooseSubs, e.chooseSubDetail, e.chooseSubPause, e.chooseSubEdit, e.chooseHistory, e.chooseRelated, e.chooseTorrents, e.chooseSearchSites, e.chooseTorrentView, e.chooseTorrentBatch, e.chooseDelete, e.chooseUpgrade} {
+	return e.chooseAction(ctx, sess, p)
+}
+
+func (e *Engine) chooseAction(ctx context.Context, sess session, p press) Reply {
+	for _, choose := range []chooser{e.chooseHome, e.chooseRequest, e.chooseRequests, e.chooseSeasons, e.chooseTask, e.chooseChart, e.chooseSubs, e.chooseSubDetail, e.chooseSubPause, e.chooseSubEdit, e.chooseHistory, e.chooseRelated, e.chooseTorrents, e.chooseSearchSites, e.chooseTorrentView, e.chooseTorrentBatch, e.chooseTorrentPlan, e.chooseDelete, e.chooseUpgrade} {
 		if reply, ok := choose(ctx, sess, p); ok {
 			return e.navigate(sess, p.action, reply)
 		}

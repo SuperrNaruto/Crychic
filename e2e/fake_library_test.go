@@ -81,12 +81,27 @@ func (f *fakeMoviePilot) serveLibraryFailure(w http.ResponseWriter, key string) 
 	}
 	raw := fixture(f, rt.fixture)
 	var env struct {
-		Success bool `json:"success"`
+		Success bool             `json:"success"`
+		Data    map[string][]int `json:"data"`
 	}
-	if err := json.Unmarshal(raw, &env); err == nil && env.Success && rt.status == http.StatusOK {
+	if err := json.Unmarshal(raw, &env); err == nil && env.Success && rt.status == http.StatusOK && knownLibraryData(env.Data) {
 		return false
 	}
 	writeEnvelope(w, rt.status, string(raw))
+	return true
+}
+
+// Only known inventory can be combined with synthetic scanned transfers.
+// Keep null or malformed upstream data intact so the app observes uncertainty.
+func knownLibraryData(held map[string][]int) bool {
+	if held == nil {
+		return false
+	}
+	for _, episodes := range held {
+		if episodes == nil {
+			return false
+		}
+	}
 	return true
 }
 

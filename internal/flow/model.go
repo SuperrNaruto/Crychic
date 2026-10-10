@@ -262,6 +262,7 @@ type Torrent struct {
 	// EpisodesUnsure: the release's title does not name Episodes, so MoviePilot
 	// may have read them from the description (修复第9集章节 of a whole pack).
 	EpisodesUnsure bool
+	RangeUnsure    bool // multiple seasons or an unmapped episode group
 	Resolution     string
 	Edition        string
 	Video          string

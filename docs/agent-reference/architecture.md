@@ -39,6 +39,7 @@ Data flow: Telegram update → `telegram.adapter` → `flow.Engine.Start/Choose`
 | 订阅条件编辑 | [internal/flow/subedit.go](../../internal/flow/subedit.go) | `subeditchoices.go`、`subeditdirectory.go`、`subeditinput.go`、`subeditsave.go`；`subeditleave.go` 保护草稿，`subeditcheck.go` 核对只读回执，`subeditconflict.go` 处理冲突；MoviePilot `subedit.go`、`subrules.go` |
 | 季与升级 | [internal/flow/seasons.go](../../internal/flow/seasons.go) | `episodes.go`、`upgrade.go`；多季、起始集与洗版 |
 | 资源与下载 | [internal/flow/torrents.go](../../internal/flow/torrents.go) | `torrenttext.go`、`torrenthunt.go`、`torrentsort.go`、`torrentmissing.go`、`torrentbatch.go` |
+| 缺集下载方案 | [internal/flow/torrentplan.go](../../internal/flow/torrentplan.go) | `torrentplanread.go` 读取及预检，`torrentplanselect.go` 确定性建议，`torrentplanmodel.go` 汇总范围，`torrentplantext.go` 有界预览；确认复用原串行批量下载 |
 | 任务与删除 | [internal/flow/tasks.go](../../internal/flow/tasks.go) | `taskdelete.go`、`tasktext.go`；任务跟随与删除确认 |
 | 我的请求与异常 | [internal/flow/requests.go](../../internal/flow/requests.go) | `requestreads.go`、`requestidentity.go`、`requestissues.go`、`requesttext.go`；MoviePilot `failures.go` 读取失败历史，notify `requests.go` 投影归属与保存最近完成 |
 | 语义文本 | [internal/flow/rich.go](../../internal/flow/rich.go) | `text.go`；语义块、卡片与列表文案 |

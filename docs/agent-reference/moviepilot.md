@@ -64,6 +64,8 @@ unless library sync runs, so it isn't used
 
 这里的 POST 是只读媒体库查询；根禁令按业务副作用判断。GET `/api/v1/search/*` 仍是禁止的真实站点搜索，不能据 HTTP 方法判定安全。
 
+缺集方案会阻止库读取失败后的自动建议。TV 响应整体 `data:null` 或任一季条目 `null` 不符合 v3.1.1 的字典／集数数组契约，客户端返回通用错误；空对象 `{}` 与合法季条目中的 `[]` 保持合法。不过上游媒体库模块可能将提供方失败也折叠为空结果，合法 `{}` 不能证明媒体库健康，因此空库存预览必须提示先核对连接与扫描状态。参见 [端点](https://github.com/jxxghp/MoviePilot/blob/v3.1.1/app/api/endpoints/mediaserver.py#L129-L150)、[模型](https://github.com/jxxghp/MoviePilot/blob/v3.1.1/app/schemas/mediaserver.py#L42-L43) 与 [提供方聚合](https://github.com/jxxghp/MoviePilot/blob/v3.1.1/app/modules/_base/mediaserver.py#L138-L156)。
+
 ## 资源搜索与原始记录
 
 Resource search is `GET /api/v1/search/media/{id}?media_source=&mtype=&season=` (MoviePilot searches every
@@ -77,6 +79,10 @@ Release-name technical numbers are masked without consuming their boundaries (`m
 adjacent audio tracks such as `FLAC.2.0+5.1` share a separator, and neither may become an episode token.
 Numeric boundaries are checked against the original title so fragments of years or resolutions are not
 removed.
+
+补集建议额外投影 `end_season`、`season_list` 及 meta/media 的 `episode_group` 为安全标记 `RangeUnsure`，不展开或持久化组信息。多季、季列表与明确季号冲突或任一非默认组均不参与建议。`season_list` 在未识别季号的 TV 中可能默认 `[1]`，不能补出缺失的 `begin_season`；`episode_list` 仍只是识别结果，并非种子文件清单。参见 [MetaBase](https://github.com/jxxghp/MoviePilot/blob/v3.1.1/app/domain/meta/metabase.py#L471-L511)、[MetaInfo](https://github.com/jxxghp/MoviePilot/blob/v3.1.1/app/schemas/context.py#L14-L97)、[结果投影](https://github.com/jxxghp/MoviePilot/blob/v3.1.1/app/chain/search/result.py#L241-L264) 与 [clear 行为](https://github.com/jxxghp/MoviePilot/blob/v3.1.1/app/domain/context.py#L1961-L1980)。
+
+含媒体的 [下载接口](https://github.com/jxxghp/MoviePilot/blob/v3.1.1/app/api/endpoints/download.py#L219-L255) 没有按集裁剪参数；缺集组合仍逐个原样提交整个资源，不把重复已有或重叠的文件暗示为不会下载。`size` 为零或未知时不按零成本推荐，不把已知部分相加冒充完整总大小。第 4 项 Context7 结果指向 `v3` 主线且未命中上述细节，故关键结论按固定 `v3.1.1` 源码核验。
 
 ## 资源搜索流
 

@@ -79,7 +79,7 @@ func (e *Engine) Answer(ctx context.Context, actor Actor, typed Typed) Reply {
 	if p.action == actionAskTitle {
 		return e.navigate(sess, p.action, e.searchTyped(ctx, sess, text))
 	}
-	return e.navigate(sess, answered, startFrom(sess, text))
+	return e.navigate(sess, answered, e.startFrom(sess, text))
 }
 
 func typedAction(action string) bool {
@@ -87,13 +87,15 @@ func typedAction(action string) bool {
 }
 
 // startFrom takes a typed start episode, asking again when it is invalid.
-func startFrom(sess session, text string) Reply {
+func (e *Engine) startFrom(sess session, text string) Reply {
 	from, err := strconv.Atoi(episodeNumber(text))
 	if err != nil || from < 1 || !sess.validStart(from) {
 		return askStart(sess, fmt.Sprintf("⚠️「%s」好像不是有效的集数哦～", text))
 	}
 	target := *sess.target
 	target.StartEpisode = from
+	sess.target, sess.focus = &target, &target
+	e.store.put(sess)
 	return confirmCard(sess, target)
 }
 

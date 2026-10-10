@@ -40,9 +40,7 @@ func torrentList(sess session, target Target) listView {
 	if row := missingSwitch(sess); len(row) > 0 {
 		view.menu = append(view.menu, row)
 	}
-	if row := onwardRow(sess); len(row) > 0 {
-		view.menu = append(view.menu, row)
-	}
+	view.menu = append(view.menu, grid(onwardRow(sess), menuColumns)...)
 	view.menu = append(view.menu, streamSearchMenu(sess)...)
 	for n, i := range shown {
 		if sess.streaming {
@@ -77,6 +75,9 @@ func onwardRow(sess session) []Button {
 	}
 	if !sess.ticking && len(sess.activeTorrents()) > 1 && (!sess.streaming || sess.searchDone && sess.searchFinal) {
 		row = append(row, Button{Label: msgTickReleases, Data: data(sess.id, actionTorrentMulti, 0)})
+	}
+	if planAvailable(sess) {
+		row = append(row, Button{Label: msgTorrentPlan, Data: data(sess.id, actionTorrentPlan, 0)})
 	}
 	return row
 }

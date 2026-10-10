@@ -30,6 +30,7 @@ func (e *Engine) prepareHunt(sess session) session {
 		sess.torrents = nil
 	}
 	sess.torrentOrder, sess.release, sess.batch, sess.ticked = nil, nil, nil, nil
+	sess.plan = nil
 	sess.ticking, sess.missingOnly, sess.searchDone, sess.searchFinal = false, false, false, false
 	sess.torrentSort, sess.torrentSite, sess.searchErr = 0, "", nil
 	sess.searchView = torrentWaitingView
