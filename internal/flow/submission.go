@@ -97,14 +97,14 @@ func (b *downloadBatch) retained(now time.Time, ttl time.Duration) bool {
 	return b.finished.IsZero() || now.Before(b.finished.Add(ttl))
 }
 
-func (e *Engine) submitBatch(sess session, b *downloadBatch, releases []Torrent) {
+func (e *Engine) submitBatch(b *downloadBatch, releases []Torrent) {
 	defer func() { b.finish(e.now()) }()
 	for {
 		i, ok := b.admit(e.runCtx)
 		if !ok {
 			return
 		}
-		b.accept(i, e.downloadOne(e.runCtx, sess, releases[i]))
+		b.accept(i, e.downloadOne(e.runCtx, releases[i]))
 		releases[i] = Torrent{}
 	}
 }

@@ -64,7 +64,7 @@ func (e *Engine) retryConfirmation(ctx context.Context, sess session) Reply {
 	if err != nil {
 		return e.readFailure(sess, sess.retry, err)
 	}
-	return e.confirmation(ctx, sess, subscription{id: sub.ID, state: sub.State, target: target})
+	return e.confirmation(sess, subscription{id: sub.ID, state: sub.State, target: target})
 }
 
 const msgSubmitUnknown = "呜，没能确认订阅有没有成功…先用 /subscribe 看一眼，确认没订上再来找我哦。"

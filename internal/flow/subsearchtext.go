@@ -38,7 +38,7 @@ func subSearchView(sess session) Reply {
 	if run.problem != "" {
 		text = append(text, Line(Plain(run.problem)))
 	}
-	text = append(text, Remark("搜索结束不代表找到资源、下载完成或媒体库可见；已提交的下载不会撤销，请用 /tasks 和 /requests 核对哦～"))
+	text = append(text, Remark("搜索结束不代表找到资源、下载完成或媒体库可见；已提交的下载不会撤销，请用 /tasks 和订阅详情核对哦～"))
 	text = append(text, Remark("只保留当前会话最近一次搜索回执；返回、停止刷新、关闭或重启机器人都不会停止后台搜索。"))
 	if run.on {
 		text = append(text, Remark(msgFollowing))

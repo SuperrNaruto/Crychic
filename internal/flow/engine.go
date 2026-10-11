@@ -401,13 +401,13 @@ func (e *Engine) offerConfirm(ctx context.Context, sess session, target Target) 
 	if err != nil {
 		return e.readFailure(sess, recovery{step: readSubscription, target: target}, err)
 	}
-	return e.confirmation(ctx, sess, subscription{id: existing.ID, state: existing.State, target: target})
+	return e.confirmation(sess, subscription{id: existing.ID, state: existing.State, target: target})
 }
 
 // confirmation shows the card for sub's target, or for a title searched
 // with 下载 starts searching its resources at once.
-func (e *Engine) confirmation(ctx context.Context, sess session, sub subscription) Reply {
-	sess, card := e.targetCard(ctx, sess, sub)
+func (e *Engine) confirmation(sess session, sub subscription) Reply {
+	sess, card := e.targetCard(sess, sub)
 	if sess.download {
 		return e.huntNow(sess, card)
 	}
@@ -416,7 +416,7 @@ func (e *Engine) confirmation(ctx context.Context, sess session, sub subscriptio
 
 // targetCard says sub's target is already subscribed, or asks to confirm
 // it; the session returned is the one stored for the card.
-func (e *Engine) targetCard(ctx context.Context, sess session, sub subscription) (session, Reply) {
+func (e *Engine) targetCard(sess session, sub subscription) (session, Reply) {
 	sess.retry, sess.target = recovery{}, nil
 	target := sub.target
 	sess.focus = &target

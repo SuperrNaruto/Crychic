@@ -123,13 +123,12 @@ func (e *Engine) downloadBatch(_ context.Context, sess session) Reply {
 	sess.torrents = nil
 	e.store.put(sess)
 	reply := submissionReply(sess, b.read())
-	request := session{owner: sess.owner, focus: sess.focus, seasons: sess.seasons, library: sess.library}
-	e.work.Go(func() { e.submitBatch(request, b, releases) })
+	e.work.Go(func() { e.submitBatch(b, releases) })
 	return reply
 }
 
-// downloadOne adds one release of a batch and watches it for arrivals.
-func (e *Engine) downloadOne(ctx context.Context, sess session, t Torrent) batchOutcome {
+// downloadOne adds one release of a batch.
+func (e *Engine) downloadOne(ctx context.Context, t Torrent) batchOutcome {
 	out := batchOutcome{release: Torrent{Title: t.Title}, state: submissionDone}
 	id, err := e.backend.Download(ctx, t)
 	if err == nil && id == "" {
