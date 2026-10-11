@@ -200,8 +200,10 @@ MoviePilot 会校验令牌的资源用途和身份，API Key 或普通登录 JWT
 ```sh
 cp compose.example.yaml compose.yaml   # 填入 API Key、Bot Token、白名单
 mkdir -p data && sudo chown 65532:65532 data
-docker compose up -d --build
+CRYCHIC_VERSION="$(git describe --tags --always --dirty)" docker compose up -d --build
 ```
+
+`CRYCHIC_VERSION` 写入二进制与镜像标签，启动日志会打印；省略时为 `dev`。`docker run --rm crychic -version` 可查看镜像版本。
 
 镜像基于 `distroless/static`（约 15 MB），以 uid 65532 运行，数据目录挂载到 `/data`。示例使用 host 网络，以便访问同机的 MoviePilot（`127.0.0.1:3001`）。
 

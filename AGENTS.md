@@ -64,7 +64,8 @@ Go 聊天机器人；通过 MoviePilot v3 搜索媒体、订阅或下载选中�
 - 构建：`go build ./cmd/crychic`。
 - 静态检查与格式检查：`go vet ./... && gofmt -l .`，两者都应无输出。
 - 完整端到端检查：`go test -race ./...`；测试仅放在 `e2e/`。
-- 单场景、golden 更新、Docker 构建及部署参数见 `docs/agent-reference/operations.md`。
+- MP 插件宿主 E2E：`e2e/run_mp_plugin_e2e.sh`；CI 在 push、tag 与 PR 时运行上述全部检查。
+- 单场景、golden 更新、Docker 构建、版本号及部署参数见 `docs/agent-reference/operations.md`。
 
 ## 局部规则导航
 

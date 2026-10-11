@@ -13,6 +13,8 @@
 | `go test -race ./...` | Run all tests (they live only in `e2e/`) |
 | `go test ./e2e/ -run TestSubscribeMovie` | Run one scenario |
 | `docker build -t crychic .` | Build the image (distroless, uid 65532, data at `/data`); `compose.example.yaml` shows a deployment |
+| `e2e/run_mp_plugin_e2e.sh` | MP plugin E2E in the official MP image; `--update` rewrites its transcript |
+| `crychic -version` | Print the build version and exit |
 | `go test ./e2e/ -update` | Regenerate golden transcripts after an intended behavior change |
 
 ## 检查时机
@@ -20,6 +22,14 @@
 Go 改动执行根指南的 build、vet、gofmt 检查与 race E2E；容器改动再核对 Docker 构建。`go vet` 和 `gofmt -l` 均须无输出，退出码与输出一起判断。
 
 有意改变交互行为才用 `go test ./e2e/ -update`，之后逐行审阅 transcript。普通测试不会重写 golden。失败或不能执行的检查如实报告，不能为提交绕过。
+
+## 版本与 CI
+
+机器人版本来自 git tag（`vX.Y.Z`）。仓库内 `go build` 由 Go 工具链写入 tag 或伪版本，有未提交改动时带 `+dirty`；Docker 上下文不含 `.git`，须用 `--build-arg VERSION="$(git describe --tags --always --dirty)"` 注入，compose 示例读取 `CRYCHIC_VERSION`，未注入时为 `dev`。启动日志和 `-version` 输出该版本，镜像标签 `org.opencontainers.image.version` 同值。
+
+MP 插件版本独立维护：`package.v3.json` 的 `version`、`history` 与 `__init__.py` 的 `plugin_version` 必须一致，只在插件改动时提升，避免宿主提示无意义升级。
+
+`.github/workflows/ci.yml` 在 push main、`v*` tag 与 PR 时运行：Go 构建、vet、gofmt、race E2E；插件版本一致性及隔离宿主 E2E；Docker 构建与 `-version` 检查。CI 只用 fake 与隔离镜像，不发布镜像，不接触真实服务。
 
 ## 环境变量
 
