@@ -81,7 +81,7 @@ func (e *Engine) subEditOptions(sess session) Reply {
 		if edit.base.Kind == TV {
 			choices = []subscriptionSpec{{"普通订阅", ""}, {"分集洗版", ""}, {"全集洗版", ""}}
 		}
-		view.note = "洗版可能再次下载已有内容；仅改变匹配模式，不重置当前优先级，不承诺已洗版完成。"
+		view.note = "洗版可能再次下载已有内容；这里只改变匹配模式，当前优先级保持原样，洗版进度以 MoviePilot 为准。"
 	} else {
 		view.menu = [][]Button{{{Label: "不限", Data: data(sess.id, actionSubEditClear, edit.options)}}}
 	}

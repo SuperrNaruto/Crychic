@@ -128,7 +128,7 @@
 -> MoviePilot GET /api/v1/media/seasons?media_id=224207&media_source=themoviedb
 << editMessageText chat=1001 message=1
    <h3>缺集方案 · 《迷途之子!!!!!》第 1 季</h3>
-   <p>按 MoviePilot 本次返回库存与资源识别范围计算，不代表种子文件已逐个核实。</p>
+   <p>按 MoviePilot 本次返回的库存与资源识别范围计算，种子里的实际文件以下载结果为准。</p>
    <table bordered compact>
    <tr><th>项目</th><th>集数</th></tr>
    <tr><td>所需范围</td><td>E01–E13</td></tr>
@@ -142,12 +142,12 @@
    </table>
    <p>总大小 1.0 GiB<br>
    ⚠️ 1 个资源未报告做种，不能保证可以下载。</p>
-   <footer>优先多补缺集，同覆盖时优先无 H&amp;R、少重复、已知且较小体积，最后按 MoviePilot 优先级；这是建议，不保证最优。确认前会再核对库存，但不能防止核对之后发生变化。</footer>
+   <footer>优先多补缺集，同覆盖时优先无 H&amp;R、少重复、已知且较小体积，最后按 MoviePilot 优先级；这是建议方案。确认前会再核对一次库存，之后的变化以 MoviePilot 为准。</footer>
    <ol start="1">
    <li value="1"><b>MyGO.S01.E02.1080p-MissingTwo</b><br>
    <i>站点甲 · 1.0 GiB · 做种 0 · E02</i></li>
    </ol>
-   <footer>建议 1 个资源；确认下载的是完整资源，不会裁剪已有或重叠文件。尚未入库的下载未计入，请先用 /tasks 核对。</footer>
+   <footer>建议 1 个资源；确认后下载完整资源，已有或重叠的文件也会一并下载。尚未入库的下载未计入，请先用 /tasks 核对。</footer>
    [确认下载 | 1:tz:0]
    [重新计算 | 1:pc:0]
    [返回 | 1:bk:0] [取消 | 1:x:0]
@@ -169,7 +169,7 @@
 -> MoviePilot GET /api/v1/media/seasons?media_id=224207&media_source=themoviedb
 << editMessageText chat=1001 message=1
    <h3>缺集方案 · 《迷途之子!!!!!》第 1 季</h3>
-   <p>按 MoviePilot 本次返回库存与资源识别范围计算，不代表种子文件已逐个核实。</p>
+   <p>按 MoviePilot 本次返回的库存与资源识别范围计算，种子里的实际文件以下载结果为准。</p>
    <table bordered compact>
    <tr><th>项目</th><th>集数</th></tr>
    <tr><td>所需范围</td><td>E01–E13</td></tr>
@@ -183,8 +183,8 @@
    </table>
    <p>本次返回库存已覆盖所需范围，不需要生成下载方案啦。<br>
    尚未选择可下载资源。</p>
-   <footer>优先多补缺集，同覆盖时优先无 H&amp;R、少重复、已知且较小体积，最后按 MoviePilot 优先级；这是建议，不保证最优。确认前会再核对库存，但不能防止核对之后发生变化。</footer>
-   <footer>建议 0 个资源；确认下载的是完整资源，不会裁剪已有或重叠文件。尚未入库的下载未计入，请先用 /tasks 核对。</footer>
+   <footer>优先多补缺集，同覆盖时优先无 H&amp;R、少重复、已知且较小体积，最后按 MoviePilot 优先级；这是建议方案。确认前会再核对一次库存，之后的变化以 MoviePilot 为准。</footer>
+   <footer>建议 0 个资源；确认后下载完整资源，已有或重叠的文件也会一并下载。尚未入库的下载未计入，请先用 /tasks 核对。</footer>
    [重新计算 | 1:pc:0]
    [返回 | 1:bk:0] [取消 | 1:x:0]
 << answerCallbackQuery

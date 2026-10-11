@@ -68,7 +68,7 @@ func (e *Engine) subEditMenu(sess session) Reply {
 	}
 	rows := grid(buttons, menuColumns)
 	rows = append(rows, []Button{{Label: "查看修改", Data: data(sess.id, actionSubEditReview, 0)}}, []Button{cancelButton(sess.id)})
-	text = append(text, Remark("仅保存后续匹配条件；不会主动补搜，不会暂停或删除已有下载。原有后台表达式不在聊天中展开。"))
+	text = append(text, Remark("只保存后续匹配条件，已有下载保持原样；要补搜请用「立即搜索」。原有后台表达式请到 MoviePilot 查看。"))
 	return Reply{Text: text, Image: edit.base.Poster, Buttons: rows}
 }
 
@@ -176,7 +176,7 @@ func (e *Engine) reviewSubEdit(sess session) Reply {
 	if before.BestVersion != edit.draft.BestVersion && len(edit.draft.FilterGroups) == 0 {
 		text = append(text, Line(Plain("生效规则组 · "+edit.groupText(edit.draft))))
 	}
-	text = append(text, Remark("只提交上述改动，不重置已取得集数、缺集数或洗版优先级；调整范围不代表剧集已到货。后台后续调度会使用新条件，并可能搜索下载。"))
+	text = append(text, Remark("只提交上述改动，已取得集数、缺集数和洗版优先级保持原样；到货情况以媒体库为准。后台后续调度会使用新条件，并可能搜索下载。"))
 	edit.field, sess.subEdit = editReview, &edit
 	e.store.put(sess)
 	return Reply{Text: text, Image: edit.base.Poster, Buttons: [][]Button{{{Label: "确认保存", Data: data(sess.id, actionSubEditSave, edit.base.ID)}}}}

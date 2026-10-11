@@ -186,7 +186,7 @@
    <tr><th>集数</th><th>媒体库</th><th>下载与整理</th></tr>
    <tr><td>E01–E13</td><td>未入库</td><td>暂无任务记录</td></tr>
    </table>
-   <footer>仅查询，不会触发搜索或下载；点击刷新查看最新状态哦～</footer>
+   <footer>这里只查询状态，点击刷新查看最新状态哦～</footer>
    [刷新 | 3:su:1] [暂停订阅 | 3:sp:1]
    [编辑条件 | 3:ue:1]
    [立即搜索 | 3:qs:1]
@@ -219,7 +219,7 @@
    <tr><th>集数</th><th>媒体库</th><th>下载与整理</th></tr>
    <tr><td>E01–E13</td><td>未入库</td><td>暂无任务记录</td></tr>
    </table>
-   <footer>仅查询，不会触发搜索或下载；点击刷新查看最新状态哦～</footer>
+   <footer>这里只查询状态，点击刷新查看最新状态哦～</footer>
    [刷新 | 3:su:1] [恢复订阅 | 3:sr:1]
    [编辑条件 | 3:ue:1]
    [立即搜索 | 3:qs:1]
@@ -252,7 +252,7 @@
    <tr><th>集数</th><th>媒体库</th><th>下载与整理</th></tr>
    <tr><td>E01–E13</td><td>未入库</td><td>暂无任务记录</td></tr>
    </table>
-   <footer>仅查询，不会触发搜索或下载；点击刷新查看最新状态哦～</footer>
+   <footer>这里只查询状态，点击刷新查看最新状态哦～</footer>
    [刷新 | 3:su:1] [暂停订阅 | 3:sp:1]
    [编辑条件 | 3:ue:1]
    [立即搜索 | 3:qs:1]
@@ -290,7 +290,7 @@
 << editMessageText chat=1001 message=3
    <h3>📚 取消订阅</h3>
    <p><b>真的要取消订阅《绝命毒师》第 2 季吗？</b><br>
-   取消后 MoviePilot 就不会再帮它搜索下载了哦。</p>
+   取消后 MoviePilot 会停止为它搜索下载哦。</p>
    [确认取消 | 3:z:1]
    [返回 | 3:bk:0]
 << answerCallbackQuery

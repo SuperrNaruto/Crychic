@@ -24,9 +24,9 @@ func subEditPrompt(sess session, problem string) Reply {
 	prompt := fmt.Sprintf("回复单行关键词，用 | 分隔多个候选（任一匹配），最多 %d 字、%d 项；按字面匹配，不接收正则表达式。不要输入密钥、链接或服务器路径哦～", maxConditionRunes, maxConditionTerms)
 	rows := [][]Button{{{Label: "不限", Data: data(sess.id, actionSubEditClear, edit.options)}}, subEditRestoreRow(sess), {cancelButton(sess.id)}}
 	if edit.field == editStart {
-		prompt = "直接回复起始集数，最小为 1；不会把略过的集数写成已取得哦～"
+		prompt = "直接回复起始集数，最小为 1；略过的集数保持未取得哦～"
 		if edit.base.Total > 0 {
-			prompt = fmt.Sprintf("直接回复起始集数（1–%d），不会把略过的集数写成已取得哦～", edit.base.Total)
+			prompt = fmt.Sprintf("直接回复起始集数（1–%d），略过的集数保持未取得哦～", edit.base.Total)
 		}
 		rows = [][]Button{subEditRestoreRow(sess), {cancelButton(sess.id)}}
 	}

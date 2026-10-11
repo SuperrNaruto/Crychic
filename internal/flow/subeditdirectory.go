@@ -45,7 +45,7 @@ func (e *Engine) subEditDirectory(sess session, holds string) Reply {
 	edit := sess.subEdit
 	view := listView{
 		heading: Heading(Plain(msgSubEditTitle + " · " + editFieldName(edit.field))),
-		note:    "选择已记入草稿，尚未保存；完成选择或返回都会保留勾选。只有最终确认才写入，不会主动访问 PT 站点。",
+		note:    "选择已记入草稿，尚未保存；完成选择或返回都会保留勾选。最终确认后才写入 MoviePilot，选择期间只读取站点列表。",
 		footer:  []Button{cancelButton(sess.id)},
 	}
 	reset := "沿用全局"

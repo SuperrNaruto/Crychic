@@ -46,6 +46,8 @@ searching/downloading for that subscription, without implying an existing torren
 refusal still names the admin; MoviePilot's safe refusal messages are relayed verbatim; secret-bearing
 responses and execution errors are never relayed raw
 
+文案用正面陈述说明会发生什么、结果在哪里核对（主人 2026-10-11 要求）。不写「会 X，而不会 Y」「不会 Y」「不代表／不等于／不是 Z」「不保证／不承诺」这类用否定排除误解的免责句；安全含义改用正面说法保留，例如「已提交的下载会保留」「订阅保持暂停」「是否已经停下请刷新核对」「需要时请手动重新搜索」。直接的输入纠错和权限提示（如「这是别人的请求哦，不能替 TA 点」）不受此限。
+
 Errors safe to show users are `*flow.UserError`; others get logged and shown as the generic outage text
 
 ## 语义文本模型

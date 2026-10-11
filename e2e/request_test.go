@@ -56,9 +56,9 @@ func TestStartFromTypedEpisode(t *testing.T) {
 	h.tap(alice, 1, conanFirst)
 	h.tap(alice, 1, "指定起始集…")
 	h.answer(alice, 1, "沙丘")
-	h.shows(1, "「沙丘」好像不是有效的集数")
+	h.shows(1, "「沙丘」对不上可选的集数")
 	h.answer(alice, 1, "1300")
-	h.shows(1, "「1300」好像不是有效的集数")
+	h.shows(1, "「1300」对不上可选的集数")
 	h.answer(alice, 1, "第５集")
 	h.shows(1, "从第 5 集开始")
 	h.tap(alice, 1, "返回")
@@ -287,7 +287,7 @@ func TestPrivateQuotedAnswerKeepsCurrentPrompt(t *testing.T) {
 	h.tr.add(fmt.Sprintf(">> user %d in chat %d quoting message 1: 5", alice, alice))
 	wrong := chatMessage{user: alice, chat: alice, text: "5", replyTo: 1}
 	h.wait(h.tg.push(wrong.update(), fmt.Sprintf("send:%d", alice)), "a mismatched reply warning")
-	h.shows(3, "你回复的不是我正在等的那条提问")
+	h.shows(3, "我在等你回复最新的那条提问")
 	if mustMessage(h, 1).seen() != older || mustMessage(h, 2).seen() != current {
 		t.Error("a mismatched reply changed a conversation")
 	}

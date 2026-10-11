@@ -13,8 +13,8 @@ import (
 )
 
 var (
-	errStreamAuth = &flow.UserError{Message: "资源 Cookie 已过期、被撤销或无权访问，请管理员安全更新配置后重启。普通 API Key 功能仍可使用；不会自动重新搜索。"}
-	errStream     = &flow.UserError{Message: "资源搜索流已中断或返回了无法核验的数据，不会自动重新搜索。"}
+	errStreamAuth = &flow.UserError{Message: "资源 Cookie 已过期、被撤销或无权访问，请管理员安全更新配置后重启。普通 API Key 功能仍可使用；需要时请手动重新搜索。"}
+	errStream     = &flow.UserError{Message: "资源搜索流已中断或返回了无法核验的数据，需要时请手动重新搜索。"}
 )
 
 func (c *Client) StreamsTorrents() bool { return c.cookie != "" }

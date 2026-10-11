@@ -250,7 +250,7 @@
    <tr><td><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 02 [WebRip 1080p HEVC-10bit AAC]</b></td><td>等待提交</td></tr>
    <tr><td><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 03 [WebRip 1080p HEVC-10bit AAC]</b></td><td>等待提交</td></tr>
    </table>
-   <footer>当前一项会等到结果或超时；已创建的下载会保留，不会暂停或删除哦～</footer>
+   <footer>当前一项会等到结果或超时；已创建的下载会照常保留哦～</footer>
    [停止后续提交 | 1:bs:2]
 << answerCallbackQuery
 >> Crychic restarts
@@ -262,5 +262,5 @@
 >> user 1001 taps 1:bs:2 on message 1
 << editMessageText chat=1001 message=1
    <h3>⌛ 过期啦</h3>
-   <p>这个批次页面过期啦，先用 /tasks 核对已创建的下载；剩余资源不会自动重新提交哦～</p>
+   <p>这个批次页面过期啦，先用 /tasks 核对已创建的下载；剩余资源请重新选择后再提交哦～</p>
 << answerCallbackQuery

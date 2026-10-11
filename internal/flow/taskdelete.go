@@ -9,7 +9,7 @@ const (
 	msgDeleteTitle   = "删除下载任务"
 	msgDeleteAsk     = "⚠️ 要删除这个下载任务吗？"
 	msgDeleteFiles   = "会把已经下载的文件一起删掉，删了就找不回来啦。"
-	msgDeleteSub     = "它还在订阅里：如果这个任务是订阅下的，MoviePilot 已经把它记成下好了，删掉后订阅不会自动重新下载哦。"
+	msgDeleteSub     = "它还在订阅里：如果这个任务是订阅下的，MoviePilot 已经把它记成下好了，删掉后要重新下载得手动来哦。"
 	msgDeleteUnknown = "呜，没能确认有没有删掉…用 /tasks 看一眼吧。"
 	msgDeleteLabel   = "确认删除"
 )

@@ -128,7 +128,7 @@ func (a airings) gaps() string {
 		notes = append(notes, fmt.Sprintf("有 %d 部剧暂时没读到播出时间", a.failed))
 	}
 	if a.skipped > 0 {
-		notes = append(notes, fmt.Sprintf("%d 部不是 TMDB 条目，查不到播出时间", a.skipped))
+		notes = append(notes, fmt.Sprintf("%d 部缺少 TMDB 条目，查不到播出时间", a.skipped))
 	}
 	return joinNonEmpty("；", notes...)
 }

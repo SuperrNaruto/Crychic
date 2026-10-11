@@ -267,7 +267,7 @@
    <tr><td><b>Dune.2021.1080p.BluRay.x264.DTS-HD.MA.5.1-CHD</b></td><td>提交中</td></tr>
    <tr><td><b>Dune.2021.2160p.WEB-DL.H265.DDP5.1-ADWeb</b></td><td>等待提交</td></tr>
    </table>
-   <footer>当前一项会等到结果或超时；已创建的下载会保留，不会暂停或删除哦～</footer>
+   <footer>当前一项会等到结果或超时；已创建的下载会照常保留哦～</footer>
    [停止后续提交 | 1:bs:4]
 << answerCallbackQuery
 -> MoviePilot POST /api/v1/download/
@@ -284,7 +284,7 @@
    <tr><td><b>Dune.2021.1080p.BluRay.x264.DTS-HD.MA.5.1-CHD</b></td><td>✅ 开始下载</td></tr>
    <tr><td><b>Dune.2021.2160p.WEB-DL.H265.DDP5.1-ADWeb</b></td><td>提交中</td></tr>
    </table>
-   <footer>当前一项会等到结果或超时；已创建的下载会保留，不会暂停或删除哦～</footer>
+   <footer>当前一项会等到结果或超时；已创建的下载会照常保留哦～</footer>
    [停止后续提交 | 1:bs:4]
 -> MoviePilot POST /api/v1/download/
    media_in 沙丘, torrent_in Dune.2021.2160p.WEB-DL.H265.DDP5.1-ADWeb with the search result's site credentials

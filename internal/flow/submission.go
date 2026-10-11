@@ -12,7 +12,7 @@ const (
 	actionBatchProgress = "br"
 	actionBatchStop     = "bs"
 	msgBatchStop        = "停止后续提交"
-	msgBatchStopNote    = "当前一项会等到结果或超时；已创建的下载会保留，不会暂停或删除哦～"
+	msgBatchStopNote    = "当前一项会等到结果或超时；已创建的下载会照常保留哦～"
 )
 
 type submissionState int

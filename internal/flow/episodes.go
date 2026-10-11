@@ -90,7 +90,7 @@ func typedAction(action string) bool {
 func (e *Engine) startFrom(sess session, text string) Reply {
 	from, err := strconv.Atoi(episodeNumber(text))
 	if err != nil || from < 1 || !sess.validStart(from) {
-		return askStart(sess, fmt.Sprintf("⚠️「%s」好像不是有效的集数哦～", text))
+		return askStart(sess, fmt.Sprintf("⚠️「%s」对不上可选的集数哦～", text))
 	}
 	target := *sess.target
 	target.StartEpisode = from

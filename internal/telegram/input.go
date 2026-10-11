@@ -111,7 +111,7 @@ func (a *adapter) acceptsAnswer(ctx context.Context, msg *models.Message, p pend
 	}
 	a.replyTo(ctx, msg, flow.Reply{Text: flow.Lines(
 		flow.Heading(flow.Plain("⚠️ 请回复当前提问")),
-		flow.Line(flow.Plain("你回复的不是我正在等的那条提问哦。请回复最新的提问，或者重新打开想回答的提问～")),
+		flow.Line(flow.Plain("我在等你回复最新的那条提问哦。请回复它，或者重新打开想回答的提问～")),
 	)})
 	return false
 }

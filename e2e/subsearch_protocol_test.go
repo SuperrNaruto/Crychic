@@ -82,7 +82,7 @@ func TestSubscriptionSearchDoesNotTakeOverExistingBatch(t *testing.T) {
 	h.mp.setSearchBatch(foreign, map[string]any{"source": "fallback", "total_count": 2, "state": "cancelling", "can_cancel": false})
 	beginSubscriptionSearch(h)
 	h.shows(subSearchMessage, "已有搜索正在处理")
-	h.shows(subSearchMessage, "不会接管")
+	h.shows(subSearchMessage, "查看和停止它请到 MoviePilot")
 	if h.mp.searchCalls("GET "+subBatchPrefix+foreign) != 0 {
 		t.Error("the bot inspected an existing shared batch as its own")
 	}

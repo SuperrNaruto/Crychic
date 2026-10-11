@@ -65,7 +65,7 @@
 -> MoviePilot GET /api/v1/search/media/438631/stream?media_source=themoviedb&mtype=电影
 << editMessageText chat=1001 message=1
    <h3>🔍 《沙丘》的资源</h3>
-   <footer>共 0 个，⚠️ 结果不完整。资源 Cookie 已过期、被撤销或无权访问，请管理员安全更新配置后重启。普通 API Key 功能仍可使用；不会自动重新搜索。 点「重新搜索资源」会再次访问站点，可能重复访问站点。 点编号看详情～</footer>
+   <footer>共 0 个，⚠️ 结果不完整。资源 Cookie 已过期、被撤销或无权访问，请管理员安全更新配置后重启。普通 API Key 功能仍可使用；需要时请手动重新搜索。 点「重新搜索资源」会再次访问站点，可能重复访问站点。 点编号看详情～</footer>
    [·默认· | 1:to:0] [做种 | 1:to:1] [时间 | 1:to:2] [大小 | 1:to:3] [站点 | 1:to:4]
    [重新搜索资源 | 1:te:0]
    [返回 | 1:bk:0] [取消 | 1:x:0]
@@ -83,7 +83,7 @@
 -> MoviePilot GET /api/v1/search/media/438631/stream?media_source=themoviedb&mtype=电影
 << editMessageText chat=1001 message=1
    <h3>🔍 《沙丘》的资源</h3>
-   <footer>共 0 个，⚠️ 结果不完整。资源 Cookie 已过期、被撤销或无权访问，请管理员安全更新配置后重启。普通 API Key 功能仍可使用；不会自动重新搜索。 点「重新搜索资源」会再次访问站点，可能重复访问站点。 点编号看详情～</footer>
+   <footer>共 0 个，⚠️ 结果不完整。资源 Cookie 已过期、被撤销或无权访问，请管理员安全更新配置后重启。普通 API Key 功能仍可使用；需要时请手动重新搜索。 点「重新搜索资源」会再次访问站点，可能重复访问站点。 点编号看详情～</footer>
    [·默认· | 1:to:0] [做种 | 1:to:1] [时间 | 1:to:2] [大小 | 1:to:3] [站点 | 1:to:4]
    [重新搜索资源 | 1:te:0]
    [返回 | 1:bk:0] [取消 | 1:x:0]

@@ -19,7 +19,7 @@ const (
 	msgCancelTitle     = "📚 取消订阅"
 	msgCancelPick      = "点编号选一个要取消的订阅吧。"
 	msgNothingToCancel = "这里没有可以取消的订阅哦～"
-	msgCancelEffect    = "取消后 MoviePilot 就不会再帮它搜索下载了哦。"
+	msgCancelEffect    = "取消后 MoviePilot 会停止为它搜索下载哦。"
 )
 
 // subKinds are the subscription filters, in button order.

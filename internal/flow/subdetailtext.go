@@ -155,11 +155,11 @@ func subSetting(raw string) string {
 }
 
 func (d subscriptionDetail) progressNote(omitted int, ambiguous bool) string {
-	notes := []string{"仅查询，不会触发搜索或下载；点击刷新查看最新状态哦～"}
+	notes := []string{"这里只查询状态，点击刷新查看最新状态哦～"}
 	if slices.ContainsFunc(d.downloads, func(item Download) bool {
 		return d.sameMedia(item.Kind, item.Source, item.MediaID) && d.sameSeason(item.Season)
 	}) {
-		notes = append(notes, "下载百分比为关联任务的整体进度，不是单集文件进度。")
+		notes = append(notes, "下载百分比是关联任务整个种子的进度。")
 	}
 	for _, read := range []struct {
 		name string

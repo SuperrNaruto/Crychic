@@ -6,8 +6,8 @@ import (
 )
 
 const (
-	msgSearchWarning = "确认后会访问站点，并可能按执行时的订阅条件自动下载资源；正在处理的搜索可能被后台合并。这不是只读刷新哦～"
-	msgStopWarning   = "只请求停止本次搜索中尚未越过下载提交边界的工作，不会撤销已提交的下载，也不会暂停或删除订阅。已发出的站点请求不保证立即结束哦～"
+	msgSearchWarning = "确认后会访问站点，并可能按执行时的订阅条件自动下载资源；正在处理的搜索可能被后台合并。这是一次真实的站点搜索哦～"
+	msgStopWarning   = "只请求停止本次搜索里还没提交下载的工作；已提交的下载和订阅都会保留。已发出的站点请求可能还要一会儿才结束哦～"
 )
 
 func (e *Engine) subSearchConfirmation(sess session, sub Subscription, problem string) Reply {
@@ -17,7 +17,7 @@ func (e *Engine) subSearchConfirmation(sess session, sub Subscription, problem s
 	text := Lines(Heading(Plain("🔍 立即搜索订阅")), Line(Strong(taskName(truncate(sub.Title, listTitleRunes), sub.Season))),
 		Line(Plain(subScope(sub))), Line(Strong("规格 "), Plain(subSpecifications(sub))), Divider(), Line(Plain(msgSearchWarning)))
 	if sub.State == statePaused {
-		text = append(text, Line(Plain("这条订阅已暂停；本次仍会搜索，但不会恢复自动订阅。暂停订阅也不会停止已受理的搜索，请用「停止本次搜索」。")))
+		text = append(text, Line(Plain("这条订阅已暂停；本次仍会搜索，订阅保持暂停。要停止已受理的搜索，请用「停止本次搜索」。")))
 	}
 	if problem != "" {
 		text = append(text, Line(Plain(problem)))
@@ -38,8 +38,8 @@ func subSearchView(sess session) Reply {
 	if run.problem != "" {
 		text = append(text, Line(Plain(run.problem)))
 	}
-	text = append(text, Remark("搜索结束不代表找到资源、下载完成或媒体库可见；已提交的下载不会撤销，请用 /tasks 和订阅详情核对哦～"))
-	text = append(text, Remark("只保留当前会话最近一次搜索回执；返回、停止刷新、关闭或重启机器人都不会停止后台搜索。"))
+	text = append(text, Remark("搜索结束只说明这次搜索执行完了；已提交的下载会保留，资源、下载和入库情况请用 /tasks 和订阅详情核对哦～"))
+	text = append(text, Remark("只保留当前会话最近一次搜索回执；返回、停止刷新、关闭或重启机器人后，后台搜索照常进行。"))
 	if run.on {
 		text = append(text, Remark(msgFollowing))
 	} else if run.last != nil && run.last.active() {
@@ -58,11 +58,11 @@ func subSearchReceiptText(run subscriptionSearch) Text {
 	case searchAccepted:
 		text = Lines(Line(Plain("已提交一次单订阅搜索，以下只跟踪本次新建批次哦～")))
 	case searchOngoing:
-		text = Lines(Group("已有搜索正在处理"), Line(Plain("后台合并到了已有批次，本次没有新建批次。我不会接管它的查看或停止权限，请在 MoviePilot 核对哦～")))
+		text = Lines(Group("已有搜索正在处理"), Line(Plain("后台合并到了已有批次，本次没有新建批次。查看和停止它请到 MoviePilot 操作哦～")))
 	case searchRefused:
 		text = Lines(Group("未能提交搜索"), Line(Plain(run.message)))
 	default:
-		text = Lines(Group("搜索结果待核对"), Line(Plain("没能确认搜索是否已受理，不会重复提交。请先用 /subscribe 和 /tasks 核对，或到 MoviePilot 查看哦～")))
+		text = Lines(Group("搜索结果待核对"), Line(Plain("没能确认搜索是否已受理，为免重复只提交了一次。请先用 /subscribe 和 /tasks 核对，或到 MoviePilot 查看哦～")))
 	}
 	return append(text, subSearchStopText(run)...)
 }
@@ -70,11 +70,11 @@ func subSearchReceiptText(run subscriptionSearch) Text {
 func subSearchStopText(run subscriptionSearch) Text {
 	switch run.stop {
 	case searchAccepted:
-		return Lines(Group("停止请求已提交"), Line(Plain("MoviePilot 已受理停止请求，不等于已经停止；实际状态请刷新核对哦～")))
+		return Lines(Group("停止请求已提交"), Line(Plain("MoviePilot 已受理停止请求，是否已经停下请刷新核对哦～")))
 	case searchRefused:
-		return Lines(Group("未能提交停止请求"), Line(Plain(run.stopNote)), Line(Plain("只提供刷新核对，不会再次提交停止请求哦～")))
+		return Lines(Group("未能提交停止请求"), Line(Plain(run.stopNote)), Line(Plain("这里只提供刷新核对哦～")))
 	case searchUnknown:
-		return Lines(Group("停止结果待核对"), Line(Plain("没能确认停止请求是否生效，只提供刷新核对，不会再次提交哦～")))
+		return Lines(Group("停止结果待核对"), Line(Plain("没能确认停止请求是否生效，请刷新核对哦～")))
 	}
 	return nil
 }
@@ -83,7 +83,7 @@ func subSearchBatchText(run subscriptionSearch) Text {
 	batch := run.last
 	heading := "本次批次"
 	if !run.fresh {
-		heading = "上次核实的批次状态（不是当前状态）"
+		heading = "上次核实的批次状态（可能已变化）"
 	}
 	rows := [][]Span{
 		{Plain("批次状态"), Plain(cmp.Or(subExecutionText[batch.State], "未知"))},

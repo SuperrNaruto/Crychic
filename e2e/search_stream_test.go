@@ -151,7 +151,7 @@ func TestStreamCookieFailuresKeepJSONMetadataAvailable(t *testing.T) {
 	s.status = http.StatusUnauthorized
 	startStream(h, s)
 	batchShows(h, 1, "资源 Cookie")
-	h.shows(1, "不会自动重新搜索")
+	h.shows(1, "需要时请手动重新搜索")
 	h.streamCount(1)
 	second := h.mp.stream(duneStream)
 	second.status = http.StatusForbidden

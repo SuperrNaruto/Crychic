@@ -250,7 +250,7 @@
    <tr><td><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 02 [WebRip 1080p HEVC-10bit AAC]</b></td><td>等待提交</td></tr>
    <tr><td><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 03 [WebRip 1080p HEVC-10bit AAC]</b></td><td>等待提交</td></tr>
    </table>
-   <footer>当前一项会等到结果或超时；已创建的下载会保留，不会暂停或删除哦～</footer>
+   <footer>当前一项会等到结果或超时；已创建的下载会照常保留哦～</footer>
    [停止后续提交 | 1:bs:2]
 << answerCallbackQuery
 >> user 1001 taps 1:tz:0 on message 1
@@ -285,7 +285,7 @@
    <tr><td><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 02 [WebRip 1080p HEVC-10bit AAC]</b></td><td>提交中</td></tr>
    <tr><td><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 03 [WebRip 1080p HEVC-10bit AAC]</b></td><td>等待提交</td></tr>
    </table>
-   <footer>当前一项会等到结果或超时；已创建的下载会保留，不会暂停或删除哦～</footer>
+   <footer>当前一项会等到结果或超时；已创建的下载会照常保留哦～</footer>
    [停止后续提交 | 1:bs:2]
 >> MoviePilot refuses the second resource
 -> MoviePilot POST /api/v1/download/
@@ -303,7 +303,7 @@
    <tr><td><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 02 [WebRip 1080p HEVC-10bit AAC]</b></td><td>⚠️ 任务添加失败</td></tr>
    <tr><td><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 03 [WebRip 1080p HEVC-10bit AAC]</b></td><td>提交中</td></tr>
    </table>
-   <footer>当前一项会等到结果或超时；已创建的下载会保留，不会暂停或删除哦～</footer>
+   <footer>当前一项会等到结果或超时；已创建的下载会照常保留哦～</footer>
    [停止后续提交 | 1:bs:2]
 >> MoviePilot leaves the third submission uncertain
 -> MoviePilot POST /api/v1/download/

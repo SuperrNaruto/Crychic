@@ -51,7 +51,7 @@ func (e *Engine) searchSites(ctx context.Context, sess session) Reply {
 func (e *Engine) siteScope(sess session) Reply {
 	view := listView{
 		heading: Heading(Plain("🔍 " + msgSearchSites)),
-		note:    "先选择要访问的站点，再点开始搜索；这里不会重新筛选已有结果哦～",
+		note:    "先选择要访问的站点，再点开始搜索；筛选已有结果请用「筛选站点」哦～",
 		menu: [][]Button{
 			{{Label: markShown(msgAllSites, len(sess.searchSites) == 0), Data: data(sess.id, actionSearchAll, 0)}},
 			{{Label: "开始搜索", Data: data(sess.id, actionSearchStart, 0)}},

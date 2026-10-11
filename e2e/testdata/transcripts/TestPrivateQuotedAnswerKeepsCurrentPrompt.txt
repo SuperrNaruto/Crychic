@@ -122,7 +122,7 @@
 >> user 1001 in chat 1001 quoting message 1: 5
 << sendRichMessage chat=1001 message=3
    <h3>⚠️ 请回复当前提问</h3>
-   <p>你回复的不是我正在等的那条提问哦。请回复最新的提问，或者重新打开想回答的提问～</p>
+   <p>我在等你回复最新的那条提问哦。请回复它，或者重新打开想回答的提问～</p>
 >> user 1001 in chat 1001 quoting message 2: 7
 << editMessageText chat=1001 message=2
    <img src="url-0e877991e89f96e869fc23915b46aa7b8cc2c3b8ece9f4109ee50677841933f4"/>

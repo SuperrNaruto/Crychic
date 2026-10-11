@@ -55,7 +55,7 @@ func (e *Engine) readSavedSubEdit(ctx context.Context, sess session, edit subscr
 	if !current.conditions().same(edit.draft) {
 		return subEditReceipt(sess, current, subEditOutcome{"修改已受理，条件又有变化", "MoviePilot 已确认保存，但当前条件与刚提交的草稿不同，请刷新核对哦～"})
 	}
-	return subEditReceipt(sess, current, subEditOutcome{"✅ 订阅条件已保存", "后续会按当前条件匹配；这里没有主动补搜，也没有重置下载事实哦～"})
+	return subEditReceipt(sess, current, subEditOutcome{"✅ 订阅条件已保存", "后续会按当前条件匹配；现有下载和进度保持原样，要补搜请在订阅详情点「立即搜索」哦～"})
 }
 
 func consumedSubEdit(sess session) session {

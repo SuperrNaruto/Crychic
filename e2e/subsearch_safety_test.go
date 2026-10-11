@@ -32,7 +32,7 @@ func TestSubscriptionSearchRechecksIdentityAndConditions(t *testing.T) {
 	h.tap(alice, subSearchMessage, "确认搜索")
 	h.shows(subSearchMessage, "已变化")
 	h.shows(subSearchMessage, "已暂停")
-	h.shows(subSearchMessage, "不会恢复")
+	h.shows(subSearchMessage, "订阅保持暂停")
 	h.tapData(alice, subSearchMessage, confirm)
 	assertSubscriptionSearchCalls(h, 0, 0)
 	h.tap(alice, subSearchMessage, "确认搜索")

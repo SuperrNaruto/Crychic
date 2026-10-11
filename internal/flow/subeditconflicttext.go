@@ -59,7 +59,7 @@ func (e *Engine) subEditConflictField(sess session, field int) Reply {
 	e.store.put(sess)
 	text := edit.heading("选择冲突处理方式")
 	text = append(text, edit.conflictFieldText("", field)...)
-	text = append(text, Remark("只选择草稿如何继续，不会保存到 MoviePilot；未知后台表达式不展开。"))
+	text = append(text, Remark("这里只决定草稿如何继续，保存仍要最后确认；未知后台表达式请到 MoviePilot 查看。"))
 	return Reply{Text: text, Buttons: [][]Button{
 		{{Label: "保留草稿", Data: data(sess.id, actionSubConflictKeep, edit.options)},
 			{Label: "采用后台", Data: data(sess.id, actionSubConflictAdopt, edit.options)}},

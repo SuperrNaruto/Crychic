@@ -15,7 +15,7 @@ func TestSubscriptionSearchCancellationIsOnlyARequest(t *testing.T) {
 			h.mp.setSearchBatch(firstSubBatch, map[string]any{"state": state, "phase": state})
 			h.tap(alice, subSearchMessage, "刷新")
 			h.tap(alice, subSearchMessage, "停止本次搜索")
-			h.shows(subSearchMessage, "不会撤销")
+			h.shows(subSearchMessage, "已提交的下载和订阅都会保留")
 			h.tap(alice, subSearchMessage, "返回")
 			assertSubscriptionSearchCalls(h, 1, 0)
 			h.tap(alice, subSearchMessage, "停止本次搜索")

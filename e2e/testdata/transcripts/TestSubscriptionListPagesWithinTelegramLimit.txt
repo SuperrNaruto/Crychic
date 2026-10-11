@@ -465,7 +465,7 @@
    <tr><td>E19</td><td>已入库</td><td>暂无任务记录</td></tr>
    <tr><td>E20</td><td>未入库</td><td>暂无任务记录</td></tr>
    </table>
-   <footer>仅查询，不会触发搜索或下载；点击刷新查看最新状态哦～<br>
+   <footer>这里只查询状态，点击刷新查看最新状态哦～<br>
    还有 999900 集未列出，完整情况请到 MoviePilot 查看。</footer>
    <footer>第 1/5 页</footer>
    [下一页 › | 1:p:1]
@@ -512,7 +512,7 @@
    <tr><td>E39</td><td>已入库</td><td>暂无任务记录</td></tr>
    <tr><td>E40</td><td>未入库</td><td>暂无任务记录</td></tr>
    </table>
-   <footer>仅查询，不会触发搜索或下载；点击刷新查看最新状态哦～<br>
+   <footer>这里只查询状态，点击刷新查看最新状态哦～<br>
    还有 999900 集未列出，完整情况请到 MoviePilot 查看。</footer>
    <footer>第 2/5 页</footer>
    [‹ 上一页 | 1:p:0] [下一页 › | 1:p:2]
@@ -559,7 +559,7 @@
    <tr><td>E59</td><td>已入库</td><td>暂无任务记录</td></tr>
    <tr><td>E60</td><td>未入库</td><td>暂无任务记录</td></tr>
    </table>
-   <footer>仅查询，不会触发搜索或下载；点击刷新查看最新状态哦～<br>
+   <footer>这里只查询状态，点击刷新查看最新状态哦～<br>
    还有 999900 集未列出，完整情况请到 MoviePilot 查看。</footer>
    <footer>第 3/5 页</footer>
    [‹ 上一页 | 1:p:1] [下一页 › | 1:p:3]
@@ -606,7 +606,7 @@
    <tr><td>E79</td><td>已入库</td><td>暂无任务记录</td></tr>
    <tr><td>E80</td><td>未入库</td><td>暂无任务记录</td></tr>
    </table>
-   <footer>仅查询，不会触发搜索或下载；点击刷新查看最新状态哦～<br>
+   <footer>这里只查询状态，点击刷新查看最新状态哦～<br>
    还有 999900 集未列出，完整情况请到 MoviePilot 查看。</footer>
    <footer>第 4/5 页</footer>
    [‹ 上一页 | 1:p:2] [下一页 › | 1:p:4]
@@ -653,7 +653,7 @@
    <tr><td>E99</td><td>已入库</td><td>暂无任务记录</td></tr>
    <tr><td>E100</td><td>未入库</td><td>暂无任务记录</td></tr>
    </table>
-   <footer>仅查询，不会触发搜索或下载；点击刷新查看最新状态哦～<br>
+   <footer>这里只查询状态，点击刷新查看最新状态哦～<br>
    还有 999900 集未列出，完整情况请到 MoviePilot 查看。</footer>
    <footer>第 5/5 页</footer>
    [‹ 上一页 | 1:p:3]

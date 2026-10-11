@@ -197,14 +197,14 @@ func tasksBack(id uint64) Button {
 // back to /tasks, all others to /search.
 func expired(action string) Reply {
 	if subSearchAction(action) {
-		return expiredText("这个搜索页面过期啦，已提交的搜索可能仍在后台运行；请用 /subscribe 和 /tasks 核对，不会自动重新提交哦～")
+		return expiredText("这个搜索页面过期啦，已提交的搜索可能仍在后台运行；请用 /subscribe 和 /tasks 核对，需要时再手动发起哦～")
 	}
 	if subEditAction(action) {
 		return expiredText("⌛ 这个编辑页面过期啦，先用 /subscribe 核对当前订阅条件哦～")
 	}
 	switch action {
 	case actionBatchProgress, actionBatchStop:
-		return expiredText("这个批次页面过期啦，先用 /tasks 核对已创建的下载；剩余资源不会自动重新提交哦～")
+		return expiredText("这个批次页面过期啦，先用 /tasks 核对已创建的下载；剩余资源请重新选择后再提交哦～")
 	case actionBack, actionPage:
 		return expiredText("⌛ 这个页面过期啦，发 /start 重新打开相应功能吧～")
 	case actionSubs, actionSubsKind, actionCancelPick, actionHistory, actionHistoryKind,

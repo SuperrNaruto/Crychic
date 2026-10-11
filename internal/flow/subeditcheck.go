@@ -46,7 +46,7 @@ func (e *Engine) checkSubEditResult(ctx context.Context, sess session, token int
 		}
 		text = append(text, Group(field.name), Line(Strong(status)), Line(Plain("期望 · "+view.valueText(receipt.want, field.id))))
 	}
-	text = append(text, Remark("只核对当前值，没有再次保存。当前值相同不证明上次请求一定成功，其他值也不代表请求从未成功；条件内容不在这里展开。"))
+	text = append(text, Remark("这里只读取当前值做核对。当前值只反映现在的条件，上次请求的结果以 MoviePilot 记录为准；条件内容请到 MoviePilot 查看。"))
 	return Reply{Text: text, Image: receipt.base.Poster, Buttons: [][]Button{subEditCheckRow(sess), browseRow(sess.id)}}
 }
 

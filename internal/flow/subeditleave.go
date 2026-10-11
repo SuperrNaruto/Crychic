@@ -28,7 +28,7 @@ func (e *Engine) askSubEditLeave(sess session, action string) Reply {
 	sess.pages = nil
 	e.store.put(sess)
 	text := sess.subEdit.heading("放弃未保存修改？")
-	text = append(text, Line(Plain(fmt.Sprintf("有 %d 项未保存。点「返回」继续编辑；放弃只丢掉草稿，不会取消订阅哦～", sess.subEdit.changeCount()))))
+	text = append(text, Line(Plain(fmt.Sprintf("有 %d 项未保存。点「返回」继续编辑；放弃只丢掉草稿，订阅保持原样哦～", sess.subEdit.changeCount()))))
 	return Reply{Text: text, Buttons: [][]Button{
 		{{Label: "放弃修改", Data: data(sess.id, actionSubEditDiscard, sess.subEdit.options)}},
 		{backTo(sess.id, actionBack, 0)},

@@ -16,7 +16,7 @@ const (
 	actionSubSearchCancel = "qy"
 
 	msgSubSearchChange = "订阅条件或状态已变化，请核对后重新确认搜索哦～"
-	msgSubSearchUnread = "暂时无法读取本次搜索状态，点「刷新」只会重新核对，不会重新搜索哦～"
+	msgSubSearchUnread = "暂时无法读取本次搜索状态，点「刷新」重新核对一下吧～"
 	msgSubSearchScope  = "批次范围暂时无法核实，没有开放停止操作，请到 MoviePilot 核对哦～"
 )
 
