@@ -291,6 +291,11 @@ subscription will not fetch it again; 确认删除 (`ky`) clears the download to
 refusal and points an unknown result to `/tasks`; `internal/telegram/follow.go`
 re-asks the flow every `CRYCHIC_PROGRESS_INTERVAL` and edits only on change
 
+`taskprogress.go`: a transfer view with a running file reads the plugin's progress records once per refresh
+and adds a percentage to the running file exactly one active record names (media, season, episodes,
+download hash and instance); twin running files, several records, an ended record or an unavailable read
+leave the states as they are
+
 `taskpause.go`: a download view offers 暂停下载 (`kp`) or 恢复下载 (`kr`) by the state of its last successful read;
 both stop following, read the download afresh and ask on a card with 确认暂停 (`kq`) or 确认恢复 (`ks`) over 返回.
 The confirm code carries the direction, the ticket binds it to the shown screen, and the asked target

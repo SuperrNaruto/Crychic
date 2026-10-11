@@ -142,7 +142,7 @@ func (e *Engine) taskView(ctx context.Context, ref taskRef) (view Reply, control
 	}
 	for _, j := range jobs {
 		if j.ID == ref.id {
-			return transferView(j), noControl, false, nil
+			return transferView(e.withProgress(ctx, j)), noControl, false, nil
 		}
 	}
 	return Reply{Text: Sentence(msgTransferGone)}, noControl, true, nil

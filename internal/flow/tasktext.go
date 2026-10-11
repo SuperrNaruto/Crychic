@@ -89,7 +89,7 @@ func transferView(j TransferJob) Reply {
 		if len(f.Episodes) > 0 {
 			name = EpisodeRanges(f.Episodes)
 		}
-		rows = append(rows, []Span{Plain(name), Plain(fileStateText[f.State])})
+		rows = append(rows, []Span{Plain(name), Plain(fileState(f))})
 	}
 	text := Lines(Heading(Plain("📦 "+taskName(j.Title, j.Season))), Line(Plain(filesDone(j))))
 	if len(rows) > 0 {
@@ -99,6 +99,15 @@ func transferView(j TransferJob) Reply {
 		text = append(text, Remark(fmt.Sprintf("还有 %d 个文件没列出来，完整状态去 MoviePilot 看看吧～", remaining)))
 	}
 	return Reply{Text: text, Image: j.Image}
+}
+
+// fileState is a file's state, with how far a running file has been moved
+// when that is known, e.g. ▶️ 整理中 38%.
+func fileState(f TransferFile) string {
+	if f.Percent == nil {
+		return fileStateText[f.State]
+	}
+	return fmt.Sprintf("%s %.0f%%", fileStateText[f.State], *f.Percent)
 }
 
 func progress(d Download) string {

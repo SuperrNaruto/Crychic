@@ -20,7 +20,7 @@ Crychic 是 Go 媒体订阅与下载机器人，当前主要平台为 Telegram�
 
 后续新增能力默认核对 MP 最新稳定版，保存对应版本与来源。既有版本核验保留用于追溯，不例行重复验证多个旧版本；目标部署有明确版本差异时，单独验证相关差异。
 
-通知接入已增加 MP 侧 Crychic 自定义渠道插件，持久安全投影通过认证长轮询与消费确认传输；Go 继续负责当前富文本展示。详见 [第 6 项前置任务](../plans/moviepilot-api-improvements.md#第-6-项前置任务-moviepilot-原生通知接入)。下文目录及数据流描述当前实现；Discord 仅为后续扩展方向。
+通知接入已增加 MP 侧 Crychic 自定义渠道插件，持久安全投影通过认证长轮询与消费确认传输；Go 继续负责当前富文本展示。插件 v1.2.0 另以 API key 只读投影整理队列运行文件的进度，补足原生进度流只认资源 Cookie 的缺口。详见 [第 6 项前置任务](../plans/moviepilot-api-improvements.md#第-6-项前置任务-moviepilot-原生通知接入)。下文目录及数据流描述当前实现；Discord 仅为后续扩展方向。
 
 ## 用户与权限模型
 
@@ -73,7 +73,7 @@ Data flow: Telegram update → `telegram.adapter` → `flow.Engine.Start/Choose`
 | 季与升级 | [internal/flow/seasons.go](../../internal/flow/seasons.go) | `episodes.go`、`upgrade.go`；多季、起始集与洗版 |
 | 资源与下载 | [internal/flow/torrents.go](../../internal/flow/torrents.go) | `torrenttext.go`、`torrenthunt.go`、`torrentsort.go`、`torrentmissing.go`、`torrentbatch.go` |
 | 缺集下载方案 | [internal/flow/torrentplan.go](../../internal/flow/torrentplan.go) | `torrentplanread.go` 读取及预检，`torrentplanselect.go` 确定性建议，`torrentplanmodel.go` 汇总范围，`torrentplantext.go` 有界预览；确认复用原串行批量下载 |
-| 任务控制与删除 | [internal/flow/tasks.go](../../internal/flow/tasks.go) | `taskpause.go`、`taskdelete.go`、`tasktext.go`；任务跟随、暂停恢复与删除确认 |
+| 任务控制与删除 | [internal/flow/tasks.go](../../internal/flow/tasks.go) | `taskpause.go`、`taskprogress.go`、`taskdelete.go`、`tasktext.go`；任务跟随、整理百分比、暂停恢复与删除确认 |
 | 语义文本 | [internal/flow/rich.go](../../internal/flow/rich.go) | `text.go`；语义块、卡片与列表文案 |
 | Inline | [internal/flow/inline.go](../../internal/flow/inline.go) | `internal/telegram/inline.go`；无会话查找、经典 HTML 与 deep link |
 | 平台输入与时序 | [internal/telegram/input.go](../../internal/telegram/input.go) | `address.go`、`lanes.go`、`follow.go`；引用、topic、锁与重投 |

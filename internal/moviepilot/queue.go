@@ -2,9 +2,11 @@ package moviepilot
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/SuperrNaruto/Crychic/internal/flow"
 )
@@ -79,4 +81,53 @@ func (c *Client) Transfers(ctx context.Context) ([]flow.TransferJob, error) {
 		out = append(out, job)
 	}
 	return out, nil
+}
+
+const (
+	// progressTimeout keeps a task view from waiting on the optional plugin.
+	progressTimeout = 5 * time.Second
+	fullPercent     = 100
+)
+
+// fileProgress is one running file as the Crychic plugin projects it: the
+// queue's identity and the host's own progress record, never a path.
+type fileProgress struct {
+	MediaSource string   `json:"media_source"`
+	MediaID     string   `json:"media_id"`
+	Season      *int     `json:"season"`
+	Download    string   `json:"download_hash"`
+	Downloader  string   `json:"downloader"`
+	Active      *bool    `json:"active"`
+	Percent     *float64 `json:"percent"`
+	Begin       int      `json:"begin_episode"`
+	End         *int     `json:"end_episode"`
+}
+
+// TransferProgress reads the running files' byte progress from the Crychic
+// plugin; MoviePilot's own progress stream only accepts a browser cookie.
+// Any failure, including a plugin without the route, is unknown progress.
+func (c *Client) TransferProgress(ctx context.Context) ([]flow.FileProgress, error) {
+	var out struct {
+		Files []fileProgress `json:"files"`
+	}
+	cl := call{method: http.MethodGet, path: nativePrefix + "transfer-progress", timeout: progressTimeout}
+	data, err := c.pluginCall(ctx, cl)
+	if err != nil {
+		return nil, err
+	}
+	if json.Unmarshal(data, &out) != nil || out.Files == nil {
+		return nil, errNativeRead
+	}
+	records := make([]flow.FileProgress, 0, len(out.Files))
+	for _, f := range out.Files {
+		if f.Active == nil || f.Percent == nil || *f.Percent < 0 || *f.Percent > fullPercent {
+			continue
+		}
+		records = append(records, flow.FileProgress{
+			Source: f.MediaSource, MediaID: f.MediaID, Season: f.Season,
+			Episodes: queueMeta{BeginEpisode: f.Begin, EndEpisode: f.End}.episodes(),
+			Download: f.Download, Downloader: f.Downloader, Active: *f.Active, Percent: *f.Percent,
+		})
+	}
+	return records, nil
 }

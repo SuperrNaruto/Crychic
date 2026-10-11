@@ -40,6 +40,9 @@ type nativeMP struct {
 	consumer  string
 	active    bool
 	malformed bool
+	// progress is what the plugin's transfer-progress route reports; nil
+	// is a plugin from before that route, which MoviePilot answers with 404.
+	progress []map[string]any
 }
 
 func newNativeMP() *nativeMP {
@@ -73,6 +76,8 @@ func (n *nativeMP) serve(w http.ResponseWriter, r *http.Request) bool {
 		n.read(w, r)
 	case nativePrefix + "ack":
 		n.ack(w, r)
+	case nativePrefix + "transfer-progress":
+		n.reportProgress(w)
 	default:
 		w.WriteHeader(http.StatusNotFound)
 	}
@@ -143,6 +148,23 @@ func (n *nativeMP) ack(w http.ResponseWriter, r *http.Request) {
 		close(n.baseline)
 	}
 	n.write(w, map[string]any{"sequence": n.acked})
+}
+
+func (n *nativeMP) reportProgress(w http.ResponseWriter) {
+	n.mu.Lock()
+	defer n.mu.Unlock()
+	if n.progress == nil {
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
+	n.write(w, map[string]any{"files": n.progress})
+}
+
+// setProgress changes the plugin's transfer progress records from now on.
+func (n *nativeMP) setProgress(files []map[string]any) {
+	n.mu.Lock()
+	defer n.mu.Unlock()
+	n.progress = files
 }
 
 func (n *nativeMP) write(w http.ResponseWriter, data any) {

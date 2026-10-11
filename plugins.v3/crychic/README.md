@@ -1,6 +1,6 @@
 # Crychic 原生通知渠道
 
-实现 MP 的自定义通知渠道，现有 Go 机器人仍是唯一 Telegram 接入端。默认不开启；不创建 MP 用户、渠道或机器人，不修改既有渠道和用户绑定。
+实现 MP 的自定义通知渠道，并以 API key 提供整理进度只读投影；现有 Go 机器人仍是唯一 Telegram 接入端。默认不开启；不创建 MP 用户、渠道或机器人，不修改既有渠道和用户绑定。
 
 ## 安装与配置
 
@@ -16,11 +16,14 @@
 
 ## 接口与状态
 
-默认由 MP 的 API-key 依赖保护，无匿名入口。三个接口均使用 `{success,data}`，失败只返回固定安全代码。
+默认由 MP 的 API-key 依赖保护，无匿名入口。四个接口均使用 `{success,data}`，失败只返回固定安全代码。
 
 - `GET /api/v1/plugin/Crychic/status` 返回协议版本、渠道、稳定 stream 和 head。
 - `GET /api/v1/plugin/Crychic/notifications` 接受 `after`、`consumer_id`、`channel_id`、`stream_id` 和 `wait`；最长等待 25 秒，每批最多 32 条，读取不删除记录。
 - `POST /api/v1/plugin/Crychic/ack` 接受同一来源与消费身份、`sequence`；幂等确认并清理安全投影，不宣称 Telegram 发送成功。
+- `GET /api/v1/plugin/Crychic/transfer-progress`（v1.2.0）返回整理队列中运行文件的进度，`data.files` 每项为 `media_source`、`media_id`、`season`、`begin_episode`、`end_episode`、`download_hash`、`downloader`、`active` 与 `percent`。只要求插件已启用，与通知渠道配置无关；失败代码为 `progress_unavailable`。
+
+原生 `/api/v1/system/progress/{key}` 只接受 30 分钟有效的资源 Cookie，`RESOURCE_SECRET_KEY` 未固定时随 MP 重启轮换，Go 无法用 API key 稳定读取；公开 SDK 也没有整理队列入口。因此该接口只读 `/transfer/queue` 的同一来源（单例 `TransferChain` 的作业视图）及宿主进度缓存，键沿用写入方 `transfer_process` 的 `md5(Path(fileitem.path).as_posix())`，与官方整理队列页面一致，最多 12 个文件。不修改队列或进度，不返回路径、文件名、进度文本或错误；没有进度记录的运行文件（如硬链接）不出现。复制失败中断时宿主可能留下未结束的旧记录，Go 只在文件仍运行且身份唯一时展示。
 
 协议版本为 1，通知包含独立 ID、sequence、platform、recipient、title、text、image、link。首版平台为 Telegram；不在插件中生成 HTML，也不根据正文计算媒体业务结论。平台适配与未来 Discord 接入留在 Go 端。
 
@@ -34,7 +37,7 @@ Go 在 `native-notifications.json` 中先原子记录投递尝试，再发送和
 
 ## 宿主兼容点
 
-本次以 MP 前后端 v3.1.4 核验。公开 SDK 用于插件声明、API 和自有数据库；窄范围适配复用 `_MessageBase` 的渠道检查与目标辅助方法，并包装 `NotificationMixin.post_message_strict` 的可信事件身份。普通请求关联 ID 不能当消息去重键。停止时仅撤销自己安装的包装，其他渠道继续执行。
+本次以 MP 前后端 v3.1.4 核验。整理进度另以内部适配读取 `TransferChain().get_queue_tasks()` 与 `ProgressHelper`，宿主 E2E 用真实作业视图和 `transfer_process` 写入方核对键规则与投影。公开 SDK 用于插件声明、API 和自有数据库；窄范围适配复用 `_MessageBase` 的渠道检查与目标辅助方法，并包装 `NotificationMixin.post_message_strict` 的可信事件身份。普通请求关联 ID 不能当消息去重键。停止时仅撤销自己安装的包装，其他渠道继续执行。
 
 宿主调度先执行插件模块、再执行系统渠道；durable 通知走 strict 调度，插件异常会中断本轮系统渠道并触发 outbox 重试。因此捕获阶段的任何失败，包括渠道缺失或歧义、目标无效、正文过长及插件数据库失败，都只记录固定代码并放弃本渠道这一条，不抛回宿主。代价是插件数据库的瞬时故障会漏掉这条 Crychic 通知，不靠 MP 重试补回。
 
@@ -42,6 +45,6 @@ Go 在 `native-notifications.json` 中先原子记录投递尝试，再发送和
 
 真实 Go app 对外部 HTTP fake 的场景在 `e2e/`。真实 MP 宿主测试使用官方镜像 `jxxghp/moviepilot-v3:3.1.4`，不连接真实服务，不加载生产配置；执行命令见 `e2e/run_mp_plugin_e2e.sh`。产物为 `e2e/testdata/transcripts/MPPluginNativeHost.txt`。
 
-宿主验收另覆盖安全 URL 配对、编码凭据、旧队列修正、空闲数据库预算、入队唤醒、消费者争抢与重载等待隔离。脚本输出合成三秒空闲等待的真实进度读取与租约写入数量，transcript 保存预算和行为结论，不记录通知原文、凭据或不稳定耗时。
+宿主验收另覆盖整理进度只投影有记录的运行文件、排除等待中、无记录和全局进度且不含路径，以及安全 URL 配对、编码凭据、旧队列修正、空闲数据库预算、入队唤醒、消费者争抢与重载等待隔离。脚本输出合成三秒空闲等待的真实进度读取与租约写入数量，transcript 保存预算和行为结论，不记录通知原文、凭据或不稳定耗时。
 
-停用插件只停止通知接入，Go 其他功能继续运行，持久队列保留。旧请求状态首次迁移前保留 `requests.json.pre-native`；回退需先停 Go 并由主人选择备份状态，不能自动恢复旧周报、pending 或未知投递。不要让旧版本地通知引擎和新渠道同时投递。
+停用插件只停止通知接入和整理百分比，Go 其他功能继续运行，持久队列保留。旧请求状态首次迁移前保留 `requests.json.pre-native`；回退需先停 Go 并由主人选择备份状态，不能自动恢复旧周报、pending 或未知投递。不要让旧版本地通知引擎和新渠道同时投递。

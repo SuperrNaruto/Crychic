@@ -1,6 +1,7 @@
 package moviepilot
 
 import (
+	"cmp"
 	"context"
 	"encoding/json"
 	"errors"
@@ -53,45 +54,55 @@ func (c *Client) NativeAck(ctx context.Context, cursor notify.NativeCursor) erro
 }
 
 func (c *Client) nativeCall(ctx context.Context, cl call, out any) error {
-	ctx, cancel := context.WithTimeout(ctx, nativeTimeout)
+	data, err := c.pluginCall(ctx, cl)
+	if err != nil {
+		return err
+	}
+	if cl.method == http.MethodGet && !nativeWireHeader(data) {
+		return errNativeRead
+	}
+	if json.Unmarshal(data, out) != nil {
+		return errNativeRead
+	}
+	return nil
+}
+
+// pluginCall answers a Crychic plugin route's data: no redirects, a bounded
+// body and one fixed error, so nothing upstream reaches logs or chats.
+func (c *Client) pluginCall(ctx context.Context, cl call) (json.RawMessage, error) {
+	ctx, cancel := context.WithTimeout(ctx, cmp.Or(cl.timeout, nativeTimeout))
 	defer cancel()
 	req, err := c.newRequest(ctx, cl)
 	if err != nil {
-		return errNativeRead
+		return nil, errNativeRead
 	}
 	resp, err := c.stream.Do(req)
 	if err != nil {
-		return errNativeRead
+		return nil, errNativeRead
 	}
 	defer resp.Body.Close()
 	if resp.StatusCode != http.StatusOK {
-		return errNativeRead
+		return nil, errNativeRead
 	}
 	raw, err := io.ReadAll(io.LimitReader(resp.Body, nativeResponseLimit+1))
 	if err != nil || len(raw) > nativeResponseLimit {
-		return errNativeRead
+		return nil, errNativeRead
 	}
-	return decodeNativeResponse(raw, cl, out)
+	return pluginData(raw)
 }
 
-func decodeNativeResponse(raw []byte, cl call, out any) error {
+func pluginData(raw []byte) (json.RawMessage, error) {
 	var envelope struct {
 		Success *bool           `json:"success"`
 		Data    json.RawMessage `json:"data"`
 	}
 	if json.Unmarshal(raw, &envelope) != nil {
-		return errNativeRead
+		return nil, errNativeRead
 	}
 	if envelope.Success == nil || !*envelope.Success || len(envelope.Data) == 0 || string(envelope.Data) == "null" {
-		return errNativeRead
+		return nil, errNativeRead
 	}
-	if cl.method == http.MethodGet && !nativeWireHeader(envelope.Data) {
-		return errNativeRead
-	}
-	if json.Unmarshal(envelope.Data, out) != nil {
-		return errNativeRead
-	}
-	return nil
+	return envelope.Data, nil
 }
 
 func nativeWireHeader(raw json.RawMessage) bool {

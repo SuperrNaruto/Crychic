@@ -119,6 +119,8 @@ changing real timer cadence
 
 `myrequests*_test.go` 与失败历史 fake 随 `/requests` 于 2026-10-11 删除；订阅、下载与整理进度由订阅详情和任务场景覆盖。
 
+`taskprogress_test.go` 的 2 个场景经真实 `/tasks` 跟随整理任务：插件路由缺失（404）时只显示状态，报告后仅对应运行文件显示百分比，他片记录与已完成文件不显示；同一身份的两个运行文件或已结束记录不显示。fake 的插件进度由 `nativeMP.setProgress` 设定，形状按 v1.2.0 插件投影合成，宿主侧形状由 `MPPluginNativeHost.txt` 核对。
+
 `taskpause_test.go` 的 3 个场景经真实 `/tasks` 入口覆盖下载暂停与恢复：非默认实例上的分别确认、写后只读核对、旧确认票据不再写入；确认后目标已被他处暂停或已消失时不写，同 hash 多实例时撤下暂停、恢复和删除；HTTP 200 拒绝、503 与不确认所请求操作的成功响应。`fake_download_control_test.go` 按 v3.1.4 `update_task` 合成：未配置实例使该项失败，不存在的 hash 仍成功，`success` 为逐项合取，缺实例直接使场景失败；暂停状态反映到之后的下载列表。`download_control_empty.json` 是合成的空结果成功响应，未对真实下载器执行暂停或恢复。
 
 `subedit*_test.go` 经真实 `/subscribe` 详情和输入流程验证条件草稿、最小 PUT、null/空集合、并发修改、目录解析与规则摘要、旧编号/票据、401/403、拒绝/408/半响应/缺失成功标记/重定向、投递重试、话题、过期、重启及编辑后的到货。`fake_subedit_test.go` 按 v3.1.1 更新模型只应用明确字段，不重写未提交设置；允许“已提交但丢响应”和“已保存但后续读取不可用”。`subscribe_upgrade_groups.json` 为合成的洗版全局规则配置。

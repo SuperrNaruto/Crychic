@@ -1,4 +1,4 @@
-"""MP 原生自定义 crychic 通知渠道与持久长轮询接入。"""
+"""MP 原生自定义 crychic 通知渠道、持久长轮询接入与整理进度只读投影。"""
 
 import asyncio
 import inspect
@@ -10,6 +10,7 @@ from app.sdk.services import NotificationHelper
 from .adapter import EVENT_KEY, EventIdentity, NotificationMixin, Policy
 from .configuration import CHANNEL_TYPE, configuration_form, setup_steps
 from .models import Pending, Progress, Receipt
+from .progress import running_progress
 from .projection import project, recipient
 from .store import Outbox
 
@@ -19,11 +20,11 @@ RECHECK_INTERVAL = 5
 
 
 class Crychic(_PluginBase):
-    """只实现通知渠道，不接收 Telegram 用户更新或重写业务通知。"""
+    """实现通知渠道与整理进度只读投影，不接收 Telegram 用户更新或重写业务通知。"""
 
     plugin_name = "Crychic"
-    plugin_desc = "MP 自定义通知渠道，持久长轮询接入现有 Crychic 机器人。"
-    plugin_version = "1.1.0"
+    plugin_desc = "MP 自定义通知渠道，持久长轮询接入现有 Crychic 机器人，并提供整理进度只读投影。"
+    plugin_version = "1.2.0"
     plugin_author = "Crychic"
     plugin_config_prefix = "crychic_"
     plugin_order = 100
@@ -100,7 +101,8 @@ class Crychic(_PluginBase):
         """默认 API-key 认证；无匿名入口，不返回原始错误。"""
         return [dict(path="/status", endpoint=self.status, methods=["GET"], auth="apikey"),
                 dict(path="/notifications", endpoint=self.notifications, methods=["GET"], auth="apikey"),
-                dict(path="/ack", endpoint=self.ack, methods=["POST"], auth="apikey")]
+                dict(path="/ack", endpoint=self.ack, methods=["POST"], auth="apikey"),
+                dict(path="/transfer-progress", endpoint=self.transfer_progress, methods=["GET"], auth="apikey")]
 
     def status(self):
         """返回协议状态和必要进度，不带消息内容。"""
@@ -155,6 +157,16 @@ class Crychic(_PluginBase):
             return dict(success=True, data=await asyncio.to_thread(self.outbox.ack, self.channel().id, query))
         except Exception:
             return dict(success=False, code="ack_rejected", data=None)
+
+    async def transfer_progress(self):
+        """原生进度只认资源 Cookie，这里以 API key 只读投影运行中文件；与通知渠道配置无关。"""
+        try:
+            if not getattr(self, "enabled", False):
+                raise ValueError("inactive")
+            files = await asyncio.to_thread(running_progress)
+            return dict(success=True, data=dict(files=files))
+        except Exception:
+            return dict(success=False, code="progress_unavailable", data=None)
 
     def get_form(self):
         """渠道类型开关和业务受众仍由 MP 原生页面配置。"""

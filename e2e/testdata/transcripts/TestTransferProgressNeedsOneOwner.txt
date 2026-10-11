@@ -1,0 +1,49 @@
+>> user 1001 in chat 1001: /tasks
+<< sendRichMessage chat=1001 message=1
+   <h3>📋 正在忙的任务</h3>
+   <h4>📦 整理</h4>
+   <ol start="1">
+   <li value="1"><b>《颂乐人偶》第 1 季</b><br>
+   <i>已整理 0/2 个文件</i></li>
+   </ol>
+   [1 | 1:k:0]
+   [首页 | 1:o:0] [关闭 | 1:c:0]
+>> user 1001 taps 1:k:0 on message 1
+<< editMessageText chat=1001 message=1
+   <img src="url-caf3370aa7811b8d87c23685c80c5562086c41f07bc889d8304e5f09cb366cfd"/>
+   <h3>📦 《颂乐人偶》第 1 季</h3>
+   <p>已整理 0/2 个文件</p>
+   <table bordered compact>
+   <tr><th>集</th><th>状态</th></tr>
+   <tr><td>E13</td><td>▶️ 整理中</td></tr>
+   <tr><td>E13</td><td>▶️ 整理中</td></tr>
+   </table>
+   <footer>正在帮你盯着进度…</footer>
+   [停止刷新 | 1:u:0]
+   [返回 | 1:l:0] [首页 | 1:o:0] [关闭 | 1:c:0]
+<< answerCallbackQuery
+>> user 1001 taps 1:l:0 on message 1
+<< editMessageText chat=1001 message=1
+   <h3>📋 正在忙的任务</h3>
+   <h4>📦 整理</h4>
+   <ol start="1">
+   <li value="1"><b>《颂乐人偶》第 1 季</b><br>
+   <i>已整理 0/2 个文件</i></li>
+   </ol>
+   [1 | 1:k:0]
+   [首页 | 1:o:0] [关闭 | 1:c:0]
+<< answerCallbackQuery
+>> user 1001 taps 1:k:0 on message 1
+<< editMessageText chat=1001 message=1
+   <img src="url-caf3370aa7811b8d87c23685c80c5562086c41f07bc889d8304e5f09cb366cfd"/>
+   <h3>📦 《颂乐人偶》第 1 季</h3>
+   <p>已整理 0/2 个文件</p>
+   <table bordered compact>
+   <tr><th>集</th><th>状态</th></tr>
+   <tr><td>E13</td><td>▶️ 整理中</td></tr>
+   <tr><td>E12</td><td>⏳ 等待中</td></tr>
+   </table>
+   <footer>正在帮你盯着进度…</footer>
+   [停止刷新 | 1:u:0]
+   [返回 | 1:l:0] [首页 | 1:o:0] [关闭 | 1:c:0]
+<< answerCallbackQuery

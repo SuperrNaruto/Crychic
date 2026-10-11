@@ -20,7 +20,7 @@ from app.factory import create_app
 from app.application.configuration import get_configured_system_config
 from app.application.plugin.runtime import get_plugin_manager
 from app.application.plugin.routes import register_plugin_api
-from app.schemas.types import SystemConfigKey, MessageType
+from app.schemas.types import SystemConfigKey, MessageType, MediaType, ProgressKey
 from app.schemas.message import Message
 from app.chain.system import SystemChain
 from app.db.oper.plugininstance import PluginInstanceOper
@@ -29,6 +29,13 @@ from app.runtime.settings import get_runtime_setting
 from app.application.chain.context import get_chain_runtime_context
 from app.runtime.extensions.module.manager import ModuleManager
 from app.startup.initializers.command import configure_command_runtime, stop_command
+from app.chain.transfer.facade import TransferChain
+from app.application.transfer.models import TransferTask
+from app.domain.context import MediaInfo
+from app.domain.metainfo import MetaInfo
+from app.runtime.progress import ProgressHelper
+from app.schemas.file import FileItem
+from app.modules.filemanager.storages import transfer_process
 
 PORT = 18181
 ROOT = f"http://127.0.0.1:{PORT}/api/v1/plugin/Crychic/"
@@ -138,6 +145,7 @@ async def exercise():
     await polling_lifecycle(chain, cursor)
     await failure_isolation(chain, cursor)
     await filtering_and_schedule(chain, cursor)
+    await transfer_progress()
     if ModuleManager().get_running_module("TelegramModule") is not None:
         raise RuntimeError("plugin activated a Telegram bot")
     TRACE.append("custom channel -> no native Telegram client or update receiver")
@@ -415,6 +423,58 @@ async def filtering_and_schedule(chain, cursor):
     TRACE.append("native disabled type and send-time queue -> no premature delivery")
     config.set(SystemConfigKey.NotificationSendTime, [])
     queue.init_config()
+
+
+FIXTURE_DIR = "/fixture/downloads/Fixture.Show.S01"
+FIXTURE_HASH = "c" * 40
+FIXTURE_TMDB = 274580
+RUNNING_PERCENT = 37.5
+FULL_PERCENT = 100
+GLOBAL_PERCENT = 80
+
+
+def transfer_task(episode):
+    """真实宿主任务模型；路径只在宿主内存中，用于证明投影不外泄。"""
+    name = f"Fixture.Show.S01E{episode:02d}.1080p.mkv"
+    media = MediaInfo()
+    media.type, media.tmdb_id, media.title = MediaType.TV, FIXTURE_TMDB, "Fixture Show"
+    media.media_source, media.media_id = "themoviedb", str(FIXTURE_TMDB)
+    return TransferTask(fileitem=FileItem(storage="local", type="file", path=f"{FIXTURE_DIR}/{name}", name=name),
+                        meta=MetaInfo(name), mediainfo=media, downloader="qBittorrent", download_hash=FIXTURE_HASH)
+
+
+async def transfer_progress():
+    """真实作业视图与宿主上传进度写入方：只投影有记录的运行中文件，全局进度和路径不外泄。"""
+    jobs = TransferChain().jobview
+    running, waiting, unrecorded = transfer_task(13), transfer_task(12), transfer_task(14)
+    for task in (running, waiting, unrecorded):
+        jobs.add_task(task)
+    jobs.running_task(running)
+    jobs.running_task(unrecorded)
+    total = ProgressHelper(ProgressKey.FileTransfer)
+    total.start()
+    total.update(value=GLOBAL_PERCENT, text=f"正在整理 {running.fileitem.path}")
+    report = transfer_process(Path(running.fileitem.path).as_posix())
+    report(RUNNING_PERCENT)
+    try:
+        data = await asyncio.to_thread(http_call, "transfer-progress")
+        expected = dict(media_source="themoviedb", media_id=str(FIXTURE_TMDB), season=1, begin_episode=13,
+                        end_episode=None, download_hash=FIXTURE_HASH, downloader="qBittorrent",
+                        active=True, percent=RUNNING_PERCENT)
+        if data["files"] != [expected]:
+            raise RuntimeError("transfer progress projection changed: " + json.dumps(data["files"]))
+        if FIXTURE_DIR in json.dumps(data) or "mkv" in json.dumps(data):
+            raise RuntimeError("transfer progress exposed a path or file name")
+        TRACE.append("running queue file -> authenticated progress by identity; waiting, unrecorded and global excluded")
+        report(FULL_PERCENT)
+        ended = await asyncio.to_thread(http_call, "transfer-progress")
+        if [(f["active"], f["percent"]) for f in ended["files"]] != [(False, 100.0)]:
+            raise RuntimeError("finished file progress was not reported as ended")
+        TRACE.append("finished file progress -> inactive full value; no path or file name")
+    finally:
+        total.end()
+        for task in (running, waiting, unrecorded):
+            jobs.remove_task(task.fileitem)
 
 
 async def main():

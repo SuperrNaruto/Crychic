@@ -110,8 +110,9 @@ cosmetic like details
 `/tasks` follows a task by re-reading `GET /api/v1/download/` (by downloader instance and torrent hash,
 `flow.DownloadRef`) or `GET /api/v1/transfer/queue` (by media + season; tasks are
 `waiting`/`running`/`completed`/`failed`, each file covers `meta.begin_episode` through `meta.end_episode`,
-inclusive; a missing end means one episode). Byte progress of a transfer is only an SSE stream behind a
-browser cookie (`/system/progress/filetransfer`), so transfers show per-file states. A view stops when its
+inclusive; a missing end means one episode). MoviePilot's progress SSE (`/system/progress/{key}`) only
+accepts the resource cookie, and its `filetransfer` key is the whole queue's count, so transfers show
+per-file states; a running file's byte progress comes from the Crychic plugin (below). A view stops when its
 task leaves the list, when its owner presses 停止刷新, or after `flow.FollowFor` (10 min); a callback first
 suspends the follower, with rejected callbacks resuming it as described in the Telegram reference. Every task
 view has 返回 (`l`), which re-reads both lists in the same session (a finished view keeps its session for that).
@@ -124,6 +125,19 @@ reports success even for an absent hash, so that response cannot correct a missi
 names stay out of messages and buttons. Deleting does not undo a subscription: its `note` recorded the
 episodes as obtained when the torrent was added, and nothing in MoviePilot's core listens for the deletion, so
 the subscription never fetches them again
+
+### 整理逐文件进度（v3.1.4 核验）
+
+复制、移动和上传网盘由 `app/modules/filemanager/storages/__init__.py` 的 `transfer_process` 写入
+`md5(Path(fileitem.path).as_posix())` 键，`start` 设 `enable`，100% 时 `end`；硬链接与软链接不写。官方网页整理
+队列对每个 `running` 任务订阅同一键，只取 `enable` 与 `value`。原生读取 `GET /api/v1/system/progress/{key}`
+依赖 `verify_resource_token`，API key 不被接受，故由插件 `GET /api/v1/plugin/Crychic/transfer-progress` 以
+API key 投影，详见 [插件说明](../../plugins.v3/crychic/README.md#接口与状态)。
+
+`TransferProgress` 复用插件路由的无重定向 client、2 MiB 上限与固定错误，单独 5 秒超时；没有 `files`、缺
+`active`/`percent` 或越界的项丢弃。Go 只在整理任务有运行文件时读取，按媒体来源与 ID、季、集范围、下载
+hash 与实例匹配；同一身份多个运行文件、多个记录或记录已结束时不显示百分比。404（旧插件）及任何失败
+都只保留逐文件状态。
 
 ### 暂停与恢复（v3.1.4 核验）
 

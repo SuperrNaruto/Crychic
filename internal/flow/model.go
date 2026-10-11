@@ -142,8 +142,22 @@ const FileUnknown FileState = -1
 type TransferFile struct {
 	Episodes   []int // all episodes in the file; empty for movies or when unknown
 	State      FileState
-	Download   string // optional torrent hash for a specifically requested download
-	Downloader string // instance identity, never displayed
+	Download   string   // optional torrent hash for a specifically requested download
+	Downloader string   // instance identity, never displayed
+	Percent    *float64 // how far a running file has been moved, when exactly one record says
+}
+
+// FileProgress is the backend's progress record of one running transfer
+// file, named by the queue's identity of it rather than by its path.
+type FileProgress struct {
+	Source     string
+	MediaID    string
+	Season     *int
+	Episodes   []int
+	Download   string
+	Downloader string
+	Active     bool // false once the move has finished or was abandoned
+	Percent    float64
 }
 
 // TransferJob is a batch of files of one title (and season) the backend is
@@ -284,6 +298,9 @@ type Backend interface {
 	Library(ctx context.Context, media Media) (Library, error)
 	Downloads(ctx context.Context) ([]Download, error)
 	Transfers(ctx context.Context) ([]TransferJob, error)
+	// TransferProgress reads the running transfer files' progress records;
+	// an error means progress is unknown, never that a file stalled.
+	TransferProgress(ctx context.Context) ([]FileProgress, error)
 	// Discover lists a chart's picks; they may come from other metadata
 	// sources than search does.
 	Discover(ctx context.Context, chart Chart) ([]Media, error)
