@@ -49,7 +49,9 @@ type session struct {
 	chart        int            // index into charts being browsed
 	page         int            // page of the chart last shown
 	day          int            // calendar weekday shown, 1 Monday … 7 Sunday; 0 otherwise
-	picks        []Media        // the chart's picks
+	picks        []Media        // the chart's picks, or works listed to pick like them
+	people       []Person       // the cast listed for the picked media
+	filter       discoverFilter // condition search being edited; zero until opened
 	noted        []bool         // picks already given a link and synopsis
 	subs         []Subscription
 	subEdit      *subscriptionEdit

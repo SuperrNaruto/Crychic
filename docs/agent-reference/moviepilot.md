@@ -231,7 +231,7 @@ download post) never quotes MoviePilot's error answer, which can echo the reques
 
 ## 关联接口
 
-推荐、日历与合集的响应限制见 [发现参考](discovery.md)。Crychic 自 2026-10-11 起不再读取整理历史（`/api/v1/history/transfer`，含失败记录）或单个订阅（`GET /api/v1/subscribe/{id}`）；这两类读取只服务已删除的本地请求归属。订阅、下载和整理列表的 `data: null` 视为来源未读到，不当作成功空列表。历史契约仍可参考 [历史端点](https://github.com/jxxghp/MoviePilot/blob/v3.1.3/app/api/endpoints/history.py#L512-L542)。
+推荐、日历、合集、条件找片与人物作品的接口契约见 [发现参考](discovery.md)。Crychic 自 2026-10-11 起不再读取整理历史（`/api/v1/history/transfer`，含失败记录）或单个订阅（`GET /api/v1/subscribe/{id}`）；这两类读取只服务已删除的本地请求归属。订阅、下载和整理列表的 `data: null` 视为来源未读到，不当作成功空列表。历史契约仍可参考 [历史端点](https://github.com/jxxghp/MoviePilot/blob/v3.1.3/app/api/endpoints/history.py#L512-L542)。
 
 When MoviePilot behavior is unclear, read its source (`app/api/endpoints/{media,subscribe}.py`) instead of
 guessing

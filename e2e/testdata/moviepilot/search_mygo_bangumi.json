@@ -1,0 +1,20 @@
+{
+  "success": true,
+  "message": "",
+  "data": [
+    {
+      "type": "电视剧",
+      "title": "BanG Dream! It's MyGO!!!!!",
+      "original_title": "BanG Dream! It's MyGO!!!!!",
+      "year": "2023",
+      "media_source": "bangumi",
+      "media_id": "428735",
+      "vote_average": 7.9,
+      "poster_path": "https://lain.bgm.tv/pic/cover/l/e7/a7/428735_1v11n.jpg",
+      "detail_link": "https://bgm.tv/subject/428735",
+      "overview": "「能一辈子和我搞乐队吗？」\r\n\r\n在高一的春季即将结束之时，羽丘女子学园里人人都在参加乐队活动。\r\n入学较晚的爱音，也为了尽快融入班级，急忙寻找乐队成员。\r\n在寻找时，她发现被称为「羽丘的不可思议少女」的灯还没有参加乐队，\r\n于是爱音不由得向她发出邀请…\r\n\r\n我们的<音乐(呐喊)>，伤痕累累而充满狼狈。\r\n迷茫也无所谓，迷茫也要前进。",
+      "release_date": "2023-06-29",
+      "season": null
+    }
+  ]
+}

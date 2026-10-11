@@ -1,0 +1,42 @@
+{
+  "success": true,
+  "message": "",
+  "data": [
+    {
+      "source": "bangumi",
+      "id": 43502,
+      "name": "矢方美紀",
+      "character": null,
+      "career": [
+        "ナレーション"
+      ]
+    },
+    {
+      "source": "bangumi",
+      "id": 25119,
+      "name": "仲田ありさ",
+      "character": null,
+      "career": [
+        "アナウンス"
+      ]
+    },
+    {
+      "source": "bangumi",
+      "id": 9188,
+      "name": "愛美",
+      "character": null,
+      "career": [
+        "戸山香澄"
+      ]
+    },
+    {
+      "source": "bangumi",
+      "id": 24387,
+      "name": "大塚紗英",
+      "character": null,
+      "career": [
+        "花園たえ"
+      ]
+    }
+  ]
+}

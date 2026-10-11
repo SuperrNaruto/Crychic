@@ -1,0 +1,11 @@
+{
+  "success": true,
+  "message": "",
+  "data": [
+    {
+      "season_number": 1,
+      "name": "第 1 季",
+      "episode_count": 14
+    }
+  ]
+}

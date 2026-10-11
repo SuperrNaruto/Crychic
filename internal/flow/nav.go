@@ -42,6 +42,8 @@ var forward = map[string]bool{
 	actionSearchSites: true,
 	actionSubEdit:     true,
 	actionTorrentPlan: true,
+	actionCast:        true, actionCastPerson: true, actionWorkPick: true,
+	actionFilter: true, actionFilterRun: true,
 }
 
 var sameLevel = map[string]bool{
@@ -60,10 +62,11 @@ var sameLevel = map[string]bool{
 	actionSubEditRestore: true, actionSubEditDiscard: true, actionSubEditCheck: true,
 	actionSubConflictPick: true, actionSubConflictKeep: true, actionSubConflictAdopt: true,
 	actionSubConflictDone: true, actionSubConflictReload: true,
+	actionFilterKind: true, actionFilterField: true, actionFilterSet: true, actionFilterMore: true,
 }
 
 // listPicks are the forward steps that pick from a list.
-var listPicks = map[string]bool{actionMedia: true, actionChartPick: true}
+var listPicks = map[string]bool{actionMedia: true, actionChartPick: true, actionWorkPick: true}
 
 // finishing are the steps that write a request; one picked from a list
 // leads back to that list afterwards, so browsing goes on from there.

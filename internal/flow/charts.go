@@ -100,6 +100,7 @@ func (e *Engine) chartMenu(sess session) Reply {
 	for i, c := range charts {
 		buttons = append(buttons, Button{Label: c.label, Data: data(sess.id, actionChart, i)})
 	}
+	buttons = append(buttons, Button{Label: "条件找片", Data: data(sess.id, actionFilter, 0)})
 	rows := append(grid(buttons, menuColumns), browseRow(sess.id))
 	return Reply{Text: Lines(Heading(Plain(msgCharts)), Line(Plain(msgPickChart))), Buttons: rows}
 }

@@ -1,0 +1,508 @@
+>> user 1001 in chat 1001: /trending
+<< sendRichMessage chat=1001 message=1
+   <h3>🔥 发现好片</h3>
+   <p>今天想逛哪个榜单呀？</p>
+   [TMDB 流行趋势 | 1:d:0] [豆瓣热门电影 | 1:d:1]
+   [豆瓣热门剧集 | 1:d:2] [正在热映 | 1:d:3]
+   [新番放送 | 1:d:4] [条件找片 | 1:ya:0]
+   [首页 | 1:o:0] [关闭 | 1:c:0]
+>> user 1001 taps 1:ya:0 on message 1
+<< editMessageText chat=1001 message=1
+   <h3>🎯 条件找片</h3>
+   <p>按 TMDB 的数据找片，选好条件点「开始找片」～</p>
+   <table bordered compact>
+   <tr><th>条件</th><th>设置</th></tr>
+   <tr><td>类型</td><td>电影</td></tr>
+   <tr><td>题材</td><td>不限</td></tr>
+   <tr><td>语言</td><td>不限</td></tr>
+   <tr><td>评分</td><td>不限</td></tr>
+   <tr><td>评分人数</td><td>≥10</td></tr>
+   <tr><td>上映</td><td>不限</td></tr>
+   <tr><td>排序</td><td>热门</td></tr>
+   </table>
+   [·电影· | 1:yk:1] [电视剧 | 1:yk:2]
+   [题材 | 1:yf:0] [语言 | 1:yf:1] [评分 | 1:yf:2]
+   [评分人数 | 1:yf:3] [上映 | 1:yf:4] [排序 | 1:yf:5]
+   [开始找片 | 1:ys:0]
+   [返回 | 1:bk:0] [首页 | 1:o:0] [关闭 | 1:c:0]
+<< answerCallbackQuery
+>> user 1001 taps 1:yk:2 on message 1
+<< editMessageText chat=1001 message=1
+   <h3>🎯 条件找片</h3>
+   <p>按 TMDB 的数据找片，选好条件点「开始找片」～</p>
+   <table bordered compact>
+   <tr><th>条件</th><th>设置</th></tr>
+   <tr><td>类型</td><td>电视剧</td></tr>
+   <tr><td>题材</td><td>不限</td></tr>
+   <tr><td>语言</td><td>不限</td></tr>
+   <tr><td>评分</td><td>不限</td></tr>
+   <tr><td>评分人数</td><td>≥10</td></tr>
+   <tr><td>上映</td><td>不限</td></tr>
+   <tr><td>排序</td><td>热门</td></tr>
+   </table>
+   [电影 | 1:yk:1] [·电视剧· | 1:yk:2]
+   [题材 | 1:yf:0] [语言 | 1:yf:1] [评分 | 1:yf:2]
+   [评分人数 | 1:yf:3] [上映 | 1:yf:4] [排序 | 1:yf:5]
+   [开始找片 | 1:ys:0]
+   [返回 | 1:bk:0] [首页 | 1:o:0] [关闭 | 1:c:0]
+<< answerCallbackQuery
+>> user 1001 taps 1:yf:0 on message 1
+<< editMessageText chat=1001 message=1
+   <h3>🎯 条件找片</h3>
+   <p>按 TMDB 的数据找片，选好条件点「开始找片」～</p>
+   <table bordered compact>
+   <tr><th>条件</th><th>设置</th></tr>
+   <tr><td>类型</td><td>电视剧</td></tr>
+   <tr><td>题材</td><td>不限</td></tr>
+   <tr><td>语言</td><td>不限</td></tr>
+   <tr><td>评分</td><td>不限</td></tr>
+   <tr><td>评分人数</td><td>≥10</td></tr>
+   <tr><td>上映</td><td>不限</td></tr>
+   <tr><td>排序</td><td>热门</td></tr>
+   </table>
+   <footer>选一个「题材」：</footer>
+   [·不限· | 1:yo:0] [动作冒险 | 1:yo:1] [动画 | 1:yo:2]
+   [喜剧 | 1:yo:3] [犯罪 | 1:yo:4] [纪录 | 1:yo:5]
+   [剧情 | 1:yo:6] [家庭 | 1:yo:7] [儿童 | 1:yo:8]
+   [悬疑 | 1:yo:9] [新闻 | 1:yo:10] [真人秀 | 1:yo:11]
+   [科幻奇幻 | 1:yo:12] [肥皂剧 | 1:yo:13] [脱口秀 | 1:yo:14]
+   [战争政治 | 1:yo:15] [西部 | 1:yo:16]
+   [电影 | 1:yk:1] [·电视剧· | 1:yk:2]
+   [·题材· | 1:yf:0] [语言 | 1:yf:1] [评分 | 1:yf:2]
+   [评分人数 | 1:yf:3] [上映 | 1:yf:4] [排序 | 1:yf:5]
+   [开始找片 | 1:ys:0]
+   [返回 | 1:bk:0] [首页 | 1:o:0] [关闭 | 1:c:0]
+<< answerCallbackQuery
+>> user 1001 taps 1:yo:2 on message 1
+<< editMessageText chat=1001 message=1
+   <h3>🎯 条件找片</h3>
+   <p>按 TMDB 的数据找片，选好条件点「开始找片」～</p>
+   <table bordered compact>
+   <tr><th>条件</th><th>设置</th></tr>
+   <tr><td>类型</td><td>电视剧</td></tr>
+   <tr><td>题材</td><td>动画</td></tr>
+   <tr><td>语言</td><td>不限</td></tr>
+   <tr><td>评分</td><td>不限</td></tr>
+   <tr><td>评分人数</td><td>≥10</td></tr>
+   <tr><td>上映</td><td>不限</td></tr>
+   <tr><td>排序</td><td>热门</td></tr>
+   </table>
+   [电影 | 1:yk:1] [·电视剧· | 1:yk:2]
+   [题材 | 1:yf:0] [语言 | 1:yf:1] [评分 | 1:yf:2]
+   [评分人数 | 1:yf:3] [上映 | 1:yf:4] [排序 | 1:yf:5]
+   [开始找片 | 1:ys:0]
+   [返回 | 1:bk:0] [首页 | 1:o:0] [关闭 | 1:c:0]
+<< answerCallbackQuery
+>> user 1001 taps 1:yf:1 on message 1
+<< editMessageText chat=1001 message=1
+   <h3>🎯 条件找片</h3>
+   <p>按 TMDB 的数据找片，选好条件点「开始找片」～</p>
+   <table bordered compact>
+   <tr><th>条件</th><th>设置</th></tr>
+   <tr><td>类型</td><td>电视剧</td></tr>
+   <tr><td>题材</td><td>动画</td></tr>
+   <tr><td>语言</td><td>不限</td></tr>
+   <tr><td>评分</td><td>不限</td></tr>
+   <tr><td>评分人数</td><td>≥10</td></tr>
+   <tr><td>上映</td><td>不限</td></tr>
+   <tr><td>排序</td><td>热门</td></tr>
+   </table>
+   <footer>选一个「语言」：</footer>
+   [·不限· | 1:yo:100] [中文 | 1:yo:101] [英语 | 1:yo:102]
+   [日语 | 1:yo:103] [韩语 | 1:yo:104] [法语 | 1:yo:105]
+   [德语 | 1:yo:106] [西班牙语 | 1:yo:107] [意大利语 | 1:yo:108]
+   [俄语 | 1:yo:109] [葡萄牙语 | 1:yo:110] [阿拉伯语 | 1:yo:111]
+   [印地语 | 1:yo:112] [泰语 | 1:yo:113]
+   [电影 | 1:yk:1] [·电视剧· | 1:yk:2]
+   [题材 | 1:yf:0] [·语言· | 1:yf:1] [评分 | 1:yf:2]
+   [评分人数 | 1:yf:3] [上映 | 1:yf:4] [排序 | 1:yf:5]
+   [开始找片 | 1:ys:0]
+   [返回 | 1:bk:0] [首页 | 1:o:0] [关闭 | 1:c:0]
+<< answerCallbackQuery
+>> user 1001 taps 1:yo:103 on message 1
+<< editMessageText chat=1001 message=1
+   <h3>🎯 条件找片</h3>
+   <p>按 TMDB 的数据找片，选好条件点「开始找片」～</p>
+   <table bordered compact>
+   <tr><th>条件</th><th>设置</th></tr>
+   <tr><td>类型</td><td>电视剧</td></tr>
+   <tr><td>题材</td><td>动画</td></tr>
+   <tr><td>语言</td><td>日语</td></tr>
+   <tr><td>评分</td><td>不限</td></tr>
+   <tr><td>评分人数</td><td>≥10</td></tr>
+   <tr><td>上映</td><td>不限</td></tr>
+   <tr><td>排序</td><td>热门</td></tr>
+   </table>
+   [电影 | 1:yk:1] [·电视剧· | 1:yk:2]
+   [题材 | 1:yf:0] [语言 | 1:yf:1] [评分 | 1:yf:2]
+   [评分人数 | 1:yf:3] [上映 | 1:yf:4] [排序 | 1:yf:5]
+   [开始找片 | 1:ys:0]
+   [返回 | 1:bk:0] [首页 | 1:o:0] [关闭 | 1:c:0]
+<< answerCallbackQuery
+>> user 1001 taps 1:yf:3 on message 1
+<< editMessageText chat=1001 message=1
+   <h3>🎯 条件找片</h3>
+   <p>按 TMDB 的数据找片，选好条件点「开始找片」～</p>
+   <table bordered compact>
+   <tr><th>条件</th><th>设置</th></tr>
+   <tr><td>类型</td><td>电视剧</td></tr>
+   <tr><td>题材</td><td>动画</td></tr>
+   <tr><td>语言</td><td>日语</td></tr>
+   <tr><td>评分</td><td>不限</td></tr>
+   <tr><td>评分人数</td><td>≥10</td></tr>
+   <tr><td>上映</td><td>不限</td></tr>
+   <tr><td>排序</td><td>热门</td></tr>
+   </table>
+   <footer>选一个「评分人数」：</footer>
+   [·≥10· | 1:yo:300] [不限 | 1:yo:301] [≥100 | 1:yo:302]
+   [≥1000 | 1:yo:303]
+   [电影 | 1:yk:1] [·电视剧· | 1:yk:2]
+   [题材 | 1:yf:0] [语言 | 1:yf:1] [评分 | 1:yf:2]
+   [·评分人数· | 1:yf:3] [上映 | 1:yf:4] [排序 | 1:yf:5]
+   [开始找片 | 1:ys:0]
+   [返回 | 1:bk:0] [首页 | 1:o:0] [关闭 | 1:c:0]
+<< answerCallbackQuery
+>> user 1001 taps 1:yo:302 on message 1
+<< editMessageText chat=1001 message=1
+   <h3>🎯 条件找片</h3>
+   <p>按 TMDB 的数据找片，选好条件点「开始找片」～</p>
+   <table bordered compact>
+   <tr><th>条件</th><th>设置</th></tr>
+   <tr><td>类型</td><td>电视剧</td></tr>
+   <tr><td>题材</td><td>动画</td></tr>
+   <tr><td>语言</td><td>日语</td></tr>
+   <tr><td>评分</td><td>不限</td></tr>
+   <tr><td>评分人数</td><td>≥100</td></tr>
+   <tr><td>上映</td><td>不限</td></tr>
+   <tr><td>排序</td><td>热门</td></tr>
+   </table>
+   [电影 | 1:yk:1] [·电视剧· | 1:yk:2]
+   [题材 | 1:yf:0] [语言 | 1:yf:1] [评分 | 1:yf:2]
+   [评分人数 | 1:yf:3] [上映 | 1:yf:4] [排序 | 1:yf:5]
+   [开始找片 | 1:ys:0]
+   [返回 | 1:bk:0] [首页 | 1:o:0] [关闭 | 1:c:0]
+<< answerCallbackQuery
+>> user 1001 taps 1:yf:4 on message 1
+<< editMessageText chat=1001 message=1
+   <h3>🎯 条件找片</h3>
+   <p>按 TMDB 的数据找片，选好条件点「开始找片」～</p>
+   <table bordered compact>
+   <tr><th>条件</th><th>设置</th></tr>
+   <tr><td>类型</td><td>电视剧</td></tr>
+   <tr><td>题材</td><td>动画</td></tr>
+   <tr><td>语言</td><td>日语</td></tr>
+   <tr><td>评分</td><td>不限</td></tr>
+   <tr><td>评分人数</td><td>≥100</td></tr>
+   <tr><td>上映</td><td>不限</td></tr>
+   <tr><td>排序</td><td>热门</td></tr>
+   </table>
+   <footer>选一个「上映」：</footer>
+   [·不限· | 1:yo:400] [近 1 年 | 1:yo:401] [近 3 年 | 1:yo:402]
+   [近 10 年 | 1:yo:403]
+   [电影 | 1:yk:1] [·电视剧· | 1:yk:2]
+   [题材 | 1:yf:0] [语言 | 1:yf:1] [评分 | 1:yf:2]
+   [评分人数 | 1:yf:3] [·上映· | 1:yf:4] [排序 | 1:yf:5]
+   [开始找片 | 1:ys:0]
+   [返回 | 1:bk:0] [首页 | 1:o:0] [关闭 | 1:c:0]
+<< answerCallbackQuery
+>> user 1001 taps 1:yo:401 on message 1
+<< editMessageText chat=1001 message=1
+   <h3>🎯 条件找片</h3>
+   <p>按 TMDB 的数据找片，选好条件点「开始找片」～</p>
+   <table bordered compact>
+   <tr><th>条件</th><th>设置</th></tr>
+   <tr><td>类型</td><td>电视剧</td></tr>
+   <tr><td>题材</td><td>动画</td></tr>
+   <tr><td>语言</td><td>日语</td></tr>
+   <tr><td>评分</td><td>不限</td></tr>
+   <tr><td>评分人数</td><td>≥100</td></tr>
+   <tr><td>上映</td><td>近 1 年</td></tr>
+   <tr><td>排序</td><td>热门</td></tr>
+   </table>
+   [电影 | 1:yk:1] [·电视剧· | 1:yk:2]
+   [题材 | 1:yf:0] [语言 | 1:yf:1] [评分 | 1:yf:2]
+   [评分人数 | 1:yf:3] [上映 | 1:yf:4] [排序 | 1:yf:5]
+   [开始找片 | 1:ys:0]
+   [返回 | 1:bk:0] [首页 | 1:o:0] [关闭 | 1:c:0]
+<< answerCallbackQuery
+>> user 1001 taps 1:yf:5 on message 1
+<< editMessageText chat=1001 message=1
+   <h3>🎯 条件找片</h3>
+   <p>按 TMDB 的数据找片，选好条件点「开始找片」～</p>
+   <table bordered compact>
+   <tr><th>条件</th><th>设置</th></tr>
+   <tr><td>类型</td><td>电视剧</td></tr>
+   <tr><td>题材</td><td>动画</td></tr>
+   <tr><td>语言</td><td>日语</td></tr>
+   <tr><td>评分</td><td>不限</td></tr>
+   <tr><td>评分人数</td><td>≥100</td></tr>
+   <tr><td>上映</td><td>近 1 年</td></tr>
+   <tr><td>排序</td><td>热门</td></tr>
+   </table>
+   <footer>选一个「排序」：</footer>
+   [·热门· | 1:yo:500] [评分最高 | 1:yo:501] [最新 | 1:yo:502]
+   [电影 | 1:yk:1] [·电视剧· | 1:yk:2]
+   [题材 | 1:yf:0] [语言 | 1:yf:1] [评分 | 1:yf:2]
+   [评分人数 | 1:yf:3] [上映 | 1:yf:4] [·排序· | 1:yf:5]
+   [开始找片 | 1:ys:0]
+   [返回 | 1:bk:0] [首页 | 1:o:0] [关闭 | 1:c:0]
+<< answerCallbackQuery
+>> user 1001 taps 1:yo:501 on message 1
+<< editMessageText chat=1001 message=1
+   <h3>🎯 条件找片</h3>
+   <p>按 TMDB 的数据找片，选好条件点「开始找片」～</p>
+   <table bordered compact>
+   <tr><th>条件</th><th>设置</th></tr>
+   <tr><td>类型</td><td>电视剧</td></tr>
+   <tr><td>题材</td><td>动画</td></tr>
+   <tr><td>语言</td><td>日语</td></tr>
+   <tr><td>评分</td><td>不限</td></tr>
+   <tr><td>评分人数</td><td>≥100</td></tr>
+   <tr><td>上映</td><td>近 1 年</td></tr>
+   <tr><td>排序</td><td>评分最高</td></tr>
+   </table>
+   [电影 | 1:yk:1] [·电视剧· | 1:yk:2]
+   [题材 | 1:yf:0] [语言 | 1:yf:1] [评分 | 1:yf:2]
+   [评分人数 | 1:yf:3] [上映 | 1:yf:4] [排序 | 1:yf:5]
+   [开始找片 | 1:ys:0]
+   [返回 | 1:bk:0] [首页 | 1:o:0] [关闭 | 1:c:0]
+<< answerCallbackQuery
+>> user 1001 taps 1:ys:0 on message 1
+-> MoviePilot GET /api/v1/discover/tmdb_tvs?page=1&release_date=2025-10-05&sort_by=vote_average.desc&vote_average=0&vote_count=100&with_genres=16&with_original_language=ja
+<< editMessageText chat=1001 message=1
+   <tg-slideshow>
+   <img src="url-6ea40f597a6f3a985ac6a47ff51e2c88f762504cee4cd5e18ded2eb6cd2f1996"/>
+   <img src="url-c661f14d7a5405dbd08152f19bca791027e3fbe68ae3fffa7a603251407add29"/>
+   <img src="url-1f6f10ea99084a063ca49f0f0bde44fd22aee75261aa253461615b208cc7fc91"/>
+   <img src="url-2dcc3fcc1a644b2af33cdd9835173a177ecab5e825b03884cfccb616fd05074c"/>
+   <img src="url-18c3a7a1b8fbd47318a3dbc7e288811031db63940fe127b9503add981fc315a3"/>
+   <img src="url-e00a05aa17c4d74d21e5fab4eb92f2336a7a8c57ebbc73c563c5ae6c31d36fba"/>
+   <img src="url-bc82b0d3db084e79d86607e1a3e01a307da152b6f3c904b6d629baa7ef30762f"/>
+   <img src="url-d1794cfa9a2e71f89b11530505068c9b1c82fc259f90a00dd01e877c08120508"/>
+   <img src="url-9826f635b42e5b27b933f7713b354a77fa833768a2b40e874d04c83aca5f185f"/>
+   <img src="url-9058ba62ea45d9e1dc1035931fb069bd9bc26b928a9ba9fce70164b9d039f7e5"/>
+   <img src="url-e54b2b6fa4e5395c6a786e0165e0130880b17e26e6a901f97a59670c6d88bb73"/>
+   <img src="url-dade608fbb28f3ebf77e46e779e2951dce1b8fd231650de86f5d32e9e15aecb9"/>
+   <img src="url-752b3eae7981d2fff534e4d8e69de9818822893c8aa75736885884012e1866b9"/>
+   </tg-slideshow>
+   <h3>🎯 找到的作品</h3>
+   <ol start="1">
+   <li value="1"><details><summary><b>电锯人 总集篇</b> · <i>2025 · ⭐ 9.2</i></summary>
+   <p>这部分为前后两部分的总集篇（Part I 和 Part II），对《电锯人》第一季的精彩片段进行了重新剪辑与浓缩。作品重温了电次的旅程——从身为背负债务的恶魔猎人开始，到他化身为电锯人的过程。<br>
+   <br>
+   除了重新剪辑的内容外，总集篇还加入了全新动画片段《Chainsaw Days》。这些片段改编自原作漫画中的特别篇章。</p>
+   <p><a href="https://www.themoviedb.org/tv/299555">查看详情页</a></p>
+   </details>
+   </li>
+   <li value="2"><details><summary><b>刃牙道：无敌武士</b> · <i>2026 · ⭐ 9.1</i></summary>
+   <p>力量的终极象征“宫本武藏”来到允许使用武器的地下斗技场，愚地独步、涉川刚气、烈海王等强者轮番上阵，挑战武藏如神一般的力量。刀剑与拳头的生死对决，落败者难逃一死，战况令人血脉贲张。<br>
+   <br>
+   做好心理准备，看刃牙和其他地下斗技场选手英勇迎接全新战斗，凭胜负决定谁才是人类史上最强战士。<br>
+   <br>
+   该剧改编自板垣惠介的同名漫画，原作于 2014 至 2018 年间在《周刊少年 Champion》上连载。</p>
+   <p><a href="https://www.themoviedb.org/tv/300054">查看详情页</a></p>
+   </details>
+   </li>
+   <li value="3"><details><summary><b>葬送的芙莉莲</b> · <i>2023 · ⭐ 8.8</i></summary>
+   <p>打倒了魔王的勇者一行人的后日谈——在“那之后”的故事。身为魔法使的芙莉莲是一位精灵，她和另外三人有着不一样的地方。对于生活在“之后”的世界、感受到的事情有着不一样的看法……残存世间的人们所编织的，葬送与祈祷相伴的故事——从“冒险的结束”开始了。</p>
+   <p><a href="https://www.themoviedb.org/tv/209867">查看详情页</a></p>
+   </details>
+   </li>
+   <li value="4"><details><summary><b>章鱼哔的原罪</b> · <i>2025 · ⭐ 8.8</i></summary>
+   <p>“章鱼哔的原罪”是一个关于“为了在宇宙中传播快乐而旅行的快乐星球人”，与不会笑的少女静香在地球上相遇的故事。被静香命名为“章鱼噼”的快乐星球人，试图用拥有神奇力量的“快乐道具”让静香露出笑容，但却屡屡失败。就在这时，满身伤痕的静香向章鱼哔求助，章鱼哔违反了规定，将快乐道具借给了她，从而引发了一系列严重的问题……</p>
+   <p><a href="https://www.themoviedb.org/tv/284445">查看详情页</a></p>
+   </details>
+   </li>
+   <li value="5"><details><summary><b>航海王</b> · <i>1999 · ⭐ 8.8</i></summary>
+   <p>拥有财富、名声、势力，拥有整个世界的海贼王 – 哥尔·D·罗杰，他在临刑前的一句话，让人们趋之若鹜奔向大海。“想要我的财宝吗？想要的话可以全部给你，去找吧！我把所有财宝都放在那里。”于是所有男子汉航向伟大的航路追逐梦想，世界开始迎接“大海贼时代”。</p>
+   <p><a href="https://www.themoviedb.org/tv/37854">查看详情页</a></p>
+   </details>
+   </li>
+   <li value="6"><details><summary><b>藤本树 17-26</b> · <i>2025 · ⭐ 8.7</i></summary>
+   <p>本系列动画选集由六间动画工作室、七位导演改编《电锯人》作者藤本树的早期短篇作品，内容涵盖藤本树于17岁至26岁期间的创作，其中包括他首次投稿参赛的漫画作品。青春爱恋、混乱、疯狂，以及人与人之间的情感纠葛，本系列将带您一一领略生动又精采的故事。</p>
+   <p><a href="https://www.themoviedb.org/tv/299778">查看详情页</a></p>
+   </details>
+   </li>
+   <li value="7"><details><summary><b>薰香花朵凛然绽放</b> · <i>2025 · ⭐ 8.7</i></summary>
+   <p>窗帘的另一头，是和我永远没有交集的世界——差生云集的底层男校千鸟高中，一直被历史悠久的贵族女校桔梗女校所鄙视。尽管两校的校舍相邻，但桔梗女校从来都是将窗帘拉得严严实实，不让千鸟高中的人看到人影。在千鸟上学的䌷凛太郎，因为长相问题，经常被人误以为是一个可怕的人不敢接近，因此也习惯了和他人保持距离。而在某一天，在给家里的蛋糕店帮忙时，一个名叫薰子的顾客对他说：“我从来不觉得凛太郎很可怕啊？”薰子对凛太郎没有半点偏见，和她一起度过的时光既让凛太郎感到困惑，也感到惬意。但他很快就发现，薰子是桔梗女校的学生……</p>
+   <p><a href="https://www.themoviedb.org/tv/271607">查看详情页</a></p>
+   </details>
+   </li>
+   <li value="8"><details><summary><b>钢之炼金术师 FA</b> · <i>2009 · ⭐ 8.7</i></summary>
+   <p>炼金术，一种建立在等价交换原则基础上的科学，将物质进行理解、分解、再构造，将一种物品变成另外一种。但是，这样先进的技术却不能进行人体炼成，这是炼金术绝对的禁忌。可是，拥有极高炼金术天赋的爱德华（朴璐美 配音）和阿尔冯斯（钉宫理恵 配音）兄弟，因为对母亲极大的思念不惜触犯禁忌。而最终的代价却是，爱德华失去了一条手臂和一条腿，弟弟阿尔冯斯只能将灵魂依附在一副巨大的装甲之内。终于明白一切的兄弟俩，为了恢复原状，寻求更多的炼金术知识，成为国家炼金术师踏上了寻找终极炼金物品——贤者之石的旅程。在不断的探索中，两兄弟终于发现了贤者之石背后的真相，对身处的这个军事化国家也有了更深入的了解。此时，面对国家、民…</p>
+   <p><a href="https://www.themoviedb.org/tv/31911">查看详情页</a></p>
+   </details>
+   </li>
+   <li value="9"><details><summary><b>剑风传奇：黄金时代篇</b> · <i>2022 · ⭐ 8.7</i></summary>
+   <p>孤独的雇佣兵格斯在一片百年战争肆虐的土地上旅行。他在战斗中的凶猛和技巧吸引了格里菲斯的注意，他是一群被称为鹰之团的雇佣兵的领袖。勇者成为格里菲斯最亲密的盟友和知己，但尽管他们取得了所有的胜利，勇者开始质疑自己为什么要为另一个人统治自己王国的梦想而战斗。勇者不知道，格里菲斯不屈不挠的野心即将赋予他们俩可怕的命运。</p>
+   <p><a href="https://www.themoviedb.org/tv/211057">查看详情页</a></p>
+   </details>
+   </li>
+   <li value="10"><details><summary><b>尖帽子的魔法工房</b> · <i>2026 · ⭐ 8.7</i></summary>
+   <p>生活在一个偏远村庄的少女可可一直渴望成为一名魔法师，但是这个世界只有出生就是魔法师的人才能成为魔法师。在一次偶然事故中，可可不小心看到了魔法师奇夫利施展魔法的过程，发现了魔法的真相。于是可可便临摹起了自己还是孩童时一位自称魔法师的神秘男子卖给她的一本绘本，不料却用出了强大而危险的禁忌魔法，将自己的母亲与房子都变成了石头。发现了自己不小心将魔法真相泄露而返回寻找可可的奇夫利看到禁忌魔法所造成的惨状，决心将她收为自己的徒弟，解开「绘本」之谜，帮助她将自己的母亲恢复原状。</p>
+   <p><a href="https://www.themoviedb.org/tv/196950">查看详情页</a></p>
+   </details>
+   </li>
+   <li value="11"><details><summary><b>进击的巨人</b> · <i>2013 · ⭐ 8.7</i></summary>
+   <p>曾几何时，世界上突然出现无数身形庞大的巨人，普通人类的生命受到前所未有的威胁。为了保护自身安全，最后的人类筑起三座高墙：玛莉亚、露丝和希娜。人类迎来了长达一个世纪的和平岁月，却也让自己成为圈养在笼中的鸟儿，屈辱地失去自由。845 年，高达 60 米的超大型巨人和铠之巨人登场， 摧毁了最外层的玛莉亚之壁，也惊醒了人类似乎永远不会苏醒的长梦。在此事件中，不愿蜷缩在墙内的少年艾伦·耶格尔亲眼目睹母亲遇害，由此更坚定了他加入调查兵团的决心。在此之后，艾伦和青梅竹马三笠·阿克曼、好友阿尔敏·亚鲁雷特加入第 104 期训练兵团，发誓成为足以消灭所有巨人的英勇战士。百年的和平结束，人类和巨人的战争再度拉开序…</p>
+   <p><a href="https://www.themoviedb.org/tv/1429">查看详情页</a></p>
+   </details>
+   </li>
+   <li value="12"><details><summary><b>我独自升级</b> · <i>2024 · ⭐ 8.7</i></summary>
+   <p>10年前，世界与其他次元链接的“门”被打开，各种魔物不断出现，于是乎能力各异的猎魔者也随之出现，被称为“猎人”。程肖宇(成振宇)是一名实力最弱的E级猎人，在一次挑战任务中，遇到了可怕的隐藏挑战。生死存亡之际，他居然获得了升级系统！在系统的利用下，他能成为最强猎人吗？</p>
+   <p><a href="https://www.themoviedb.org/tv/127532">查看详情页</a></p>
+   </details>
+   </li>
+   <li value="13"><details><summary><b>第一神拳</b> · <i>2000 · ⭐ 8.7</i></summary>
+   <p>电视动画《第一神拳》由MADHOUSE制作改编自日本漫画家森川让次原作的同名漫画。动画于2000年10月3日起在日本电视台首播，全76话.<br>
+   <br>
+   电视动画《第一神拳 New Challenger》于2009年1月6日播出，全26话.<br>
+   <br>
+   电视动画《第一神拳 Rising》于2013年10月5日播出，全25话.<br>
+   <br>
+   电视动画剧场版《第一神拳 Champion Road》于2003年4月18日播出.<br>
+   <br>
+   60分钟OVA《第一神拳 间柴vs木村 死刑执行》于2003年9月5日发售.</p>
+   <p><a href="https://www.themoviedb.org/tv/42705">查看详情页</a></p>
+   </details>
+   </li>
+   </ol>
+   <footer>条件：电视剧 · 动画 · 日语 · ≥100 · 近 1 年 · 评分最高</footer>
+   <footer>第 1/2 页</footer>
+   [1 | 1:cp:0] [2 | 1:cp:1] [3 | 1:cp:2] [4 | 1:cp:3]
+   [5 | 1:cp:4] [6 | 1:cp:5] [7 | 1:cp:6] [8 | 1:cp:7]
+   [9 | 1:cp:8] [10 | 1:cp:9] [11 | 1:cp:10] [12 | 1:cp:11]
+   [13 | 1:cp:12]
+   [下一页 › | 1:p:1]
+   [更多结果 | 1:ym:0]
+   [返回 | 1:bk:0] [首页 | 1:o:0] [关闭 | 1:c:0]
+<< answerCallbackQuery
+>> user 1001 taps 1:ym:0 on message 1
+-> MoviePilot GET /api/v1/discover/tmdb_tvs?page=2&release_date=2025-10-05&sort_by=vote_average.desc&vote_average=0&vote_count=100&with_genres=16&with_original_language=ja
+<< editMessageText chat=1001 message=1
+   <tg-slideshow>
+   <img src="url-2355a9a05d3383c3cd812e05f8a2a59cd4bf077d5bf3e4a86e4ac0834abc89da"/>
+   <img src="url-4fc38dad4c3ea31ba8d9a576ee517ad4ff052aa8669d53f25b7b3eed5b5870df"/>
+   <img src="url-cb8b4a78025370c60dd6a90ea1ec41ef8ed1c33eaebc4f2d80bbf9c69128dbcc"/>
+   <img src="url-79cfdb9e3a1c17d9d2aa44f68c7d81660c8d80ab97beaf1b91b7ab51e6a32f99"/>
+   <img src="url-8cbe670cf4f62516cc3462ad11b25f7f11af46b9b4ce6ddedad11c016207297d"/>
+   <img src="url-325b78f247f7fc22afb64f66aee6c2240e24304eaeac74cfcd74ec7eebac2ccd"/>
+   <img src="url-519daca5ad8a992ea9ac7800c6d30e8aef0226d136f57366d4405c9209f5a0f2"/>
+   <img src="url-2306660f310695f2a41530223e1765a98595f4ad0d2ed585d69ec50ba0023e45"/>
+   <img src="url-5c91ecabb7bb2808975b85b1a34ada22f936dbf72874087619966f1d8459753a"/>
+   <img src="url-a68062345cad53781e7debdd067b0a8066d4fdbc1e64a32cdfc773889f1c0403"/>
+   </tg-slideshow>
+   <h3>🎯 找到的作品</h3>
+   <ol start="14">
+   <li value="14"><details><summary><b>灌篮高手</b> · <i>1993 · ⭐ 8.7</i></summary>
+   <p>湘北高中的一年级新生樱木花道在初中就有了被50个女孩抛弃的“悲惨”经历，最后一个女孩抛弃他原来是看上了篮球部队小田，由此樱木对篮球更是深恶痛绝。进入高中后，樱木看上了美少女赤木晴子，晴子十分热爱篮球，为了赢取晴子的芳心，樱木决定加入篮球部。在侥幸赢得与篮球队队长赤木刚宪的打赌后，樱木顺利加入了篮球队。随着国中篮球联赛的最有价值球员流川枫的到来、伤愈复出的控位宫城良田以及误入歧途的前国中最有价值球员三井寿的回归，去年不堪一击的湘北篮球今年可谓人强马壮，虽然问题少年一大帮，但是在队长赤木刚宪的带领下，这一群以全国第一为目标的篮球少年正朝着自己的梦想进发！</p>
+   <p><a href="https://www.themoviedb.org/tv/42573">查看详情页</a></p>
+   </details>
+   </li>
+   <li value="15"><details><summary><b>全职猎人</b> · <i>2011 · ⭐ 8.7</i></summary>
+   <p>主人公小杰从小在鲸鱼岛长大，与米特阿姨和阿婆相依为伴。性格开朗的他，有着能与动物沟通的灵性。因为无父无母，小杰将米特阿姨当成自己的生母爱着。直到9岁那一年，小杰在森林里被一位青年男子搭救。从他口中小杰得知自己的父亲还活着而且职业是猎人。在说服米特阿姨之后，小杰独自踏上了寻父的征程。然而世界那么大，在茫茫人海中找到父亲谈何容易？于是，小杰决定成为猎人，从这里开始找寻他父亲的踪迹。靠这样一种信念开始了冒险旅途，并在旅途当中结交好友，不断成长，从而引发了后面的所有故事，引出全职猎人的精彩世界。</p>
+   <p><a href="https://www.themoviedb.org/tv/46298">查看详情页</a></p>
+   </details>
+   </li>
+   <li value="16"><details><summary><b>药屋少女的呢喃</b> · <i>2023 · ⭐ 8.7</i></summary>
+   <p>“可否为我配制一帖春药？”猫猫的眼眸瞬间浮现出惊讶与好奇的色彩。位处大陆中央的某个大国，有位姑娘置身于皇帝宫阙之中。姑娘名唤猫猫，原在烟花巷担任药师，眼下则在后宫做下女。这个绝对称不上美女的姑娘很懂分寸，只是静待期满离宫。她有自信，皇帝绝对不会“宠幸”她。其间，猫猫得知皇子皆年幼早夭的事，并听闻连尚在人世的皇子皇女也身染重病，她开始调查他们的病因。广获赞誉的酣畅淋漓推理之作，众所期盼的第一集终于出版。以中世东方为舞台，“试毒”少女将一一解决宫中发生的悬疑案件！</p>
+   <p><a href="https://www.themoviedb.org/tv/220542">查看详情页</a></p>
+   </details>
+   </li>
+   <li value="17"><details><summary><b>鬼灭之刃</b> · <i>2019 · ⭐ 8.6</i></summary>
+   <p>时值日本大正时期。<br>
+   <br>
+   传说太阳下山后，有恶鬼出没吃人。亦有猎鬼人斩杀恶鬼、保护人们。<br>
+   <br>
+   卖炭少年炭治郎，他那平凡而幸福的日常生活，在家人遭到恶鬼袭击的那一天发生了剧变。母亲与四个弟弟妹妹惨遭杀害，而与他一起生还的妹妹祢豆子亦异变成凶暴的鬼。<br>
+   <br>
+   在猎鬼人的指引下，立志成为猎鬼人的炭治郎与变成鬼却尚存理智的祢豆子踏上了旅程。通过艰苦的剑术修行与赌命试炼，炭治郎成为了猎鬼人组织“鬼杀队”的一员。<br>
+   <br>
+   为了让妹妹祢豆子变回人类，为了讨伐杀害家人的恶鬼，为了斩断悲伤的连锁，少年与鬼的战斗不曾停歇。<br>
+   <br>
+   幸福被破坏之时，总是弥漫着鲜血的味道。纵然我身俱灭，定将恶鬼斩杀！血风剑戟冒险谭，开幕！</p>
+   <p><a href="https://www.themoviedb.org/tv/85937">查看详情页</a></p>
+   </details>
+   </li>
+   <li value="18"><details><summary><b>元气少女缘结神</b> · <i>2012 · ⭐ 8.6</i></summary>
+   <p>桃园奈奈生因好赌的父亲在欠下一屁股债后离家出走，被赶出去流落街头的时候帮助了一位被狗追到树下的神秘男人，神秘男人知道她的遭遇后说：“那我把我的家给你吧！”，于是无家可归的奈奈生在半信半疑之下前往那个&#34;家&#34;，发现那竟是一间荒废许久的神社，还出现一个狐狸妖怪，自称是侍奉土地神的狐妖巴卫，而神秘男人竟然是土地神，神秘男人把家让给她，也就是连土地神的职位也一并交给她，从此奈奈生开始了当土地神之路……</p>
+   <p><a href="https://www.themoviedb.org/tv/62741">查看详情页</a></p>
+   </details>
+   </li>
+   <li value="19"><details><summary><b>死亡笔记</b> · <i>2006 · ⭐ 8.6</i></summary>
+   <p>&#34;名字被写在这个笔记本上的人会死&#34;——死神流克拥有这样的死亡笔记，却将它遗失在人间。天才高中生夜神月捡到这本笔记本，本以为是恶作剧的他，在笔记本上写下了电视中播放的罪犯的名字，确认了笔记本能力的真实性。厌倦腐朽世界的夜神月使用笔记本的力量，开始杀死犯罪者，以此希望建立一个没有犯罪的美好理想世界，而自己成为“新世界的神”。  　　连续罪犯死亡事件，吸引了全世界警察的目光，更吸引了世界第一名侦探L的注意，L能否将被崇拜者称为“基拉”的夜神月逮捕？  　　一本死神的笔记本，拉开了天才与天才之间卓越巅峰的头脑战争的序幕。本已对人间失去兴趣的流克，在旁观惊心动魄的斗智过程中感叹“人类，真有趣。”</p>
+   <p><a href="https://www.themoviedb.org/tv/13916">查看详情页</a></p>
+   </details>
+   </li>
+   <li value="20"><details><summary><b>乱马½</b> · <i>1989 · ⭐ 8.6</i></summary>
+   <p>天道茜和姐姐天道美、天道霞以及父亲天道早云一起经营着属于他们的道场。一天，早乙女乱马和其父玄马的到来打破了道场平静的生活。原来，和父亲在中国修炼的时候，乱马掉入了溺女泉，于是拥有了一碰冷水就会变身成女人的体质。在莫名其妙中，早云居然将小茜许配给了乱马，这让个性要强的小茜不能接受。乱马就读了当地的风林馆高中，在学校里，他遇见了诸多有趣的朋友和强大的对手，在每日打打闹闹的生活上，小茜和乱马之间的感情也产生了微妙的变化。</p>
+   <p><a href="https://www.themoviedb.org/tv/57706">查看详情页</a></p>
+   </details>
+   </li>
+   <li value="21"><details><summary><b>排球少年！！</b> · <i>2014 · ⭐ 8.6</i></summary>
+   <p>童年时一次看电视转播的经历，在少年日向翔阳的心中种下了排球的种子。他在初中时代是排球部的主将，可是人丁寥落的排球部始终没有起色，唯一一场比赛也已惨败告终。在此之后，他终于如愿考入梦寐以求的学府乌野高中，并加入了该校的排球部。当年翔阳在电视上看到的正是乌野高中的比赛，如今这个学校的排球却正面临着衰败的命运。与宿命的对手和好友影山飞雄聚首于此，心怀排球梦想的少年们将团结一心，带领着乌野这名王者再度振翅高飞。</p>
+   <p><a href="https://www.themoviedb.org/tv/60863">查看详情页</a></p>
+   </details>
+   </li>
+   <li value="22"><details><summary><b>魔卡少女樱</b> · <i>1998 · ⭐ 8.6</i></summary>
+   <p>小学生木之本樱（丹下樱 配音）是一个平凡的女孩，有一个温柔的爸爸木之本藤隆（田中秀幸 配音）和一个体贴的好友大道寺知世（岩男润子 配音）。一天，在父亲的书房中她发现了一本尘封已久的魔法书，并无意间解除了书上的封印，一只会说话的玩偶可鲁贝洛斯（久川绫 配音）出现在了她的面前。小可告诉她，自己是守护这本书的神兽，书中封印着名叫库洛牌的东西。现在，封印解除了，它要小樱成为库洛魔法师，它将协助她收复这些四处捣乱的库洛牌。隔天，小樱的班上转来了一个名叫李小狼（熊井素子 配音）的转学生，这个外表酷酷的男孩原来也是冲着库洛牌而来。  随着库洛牌的封印，越来越多的角色出现在了小樱的身边，而他们的真正目的，却还…</p>
+   <p><a href="https://www.themoviedb.org/tv/35790">查看详情页</a></p>
+   </details>
+   </li>
+   <li value="23"><details><summary><b>超级酷乐猫</b> · <i>1999 · ⭐ 8.6</i></summary>
+   <p>酷乐是老爷爷和老奶奶饲养的小猫，一直过着愉快的生活。然而梦想征服世界的刚博士，为了实现自己的野心，将善战的小黑猫酷乐改造成战斗机器猫。但莫名其妙被改造的酷乐，却不接受刚博士的控制，而回到主人爷爷及奶奶身边。不死心的刚博士为了打倒背叛的酷乐 便与伙伴小M制造了其他生化机械兵器，不过倒霉的刚博士似乎永远都控制不了自己制造的机器，于是再度失控的 机器人军团开始大闹樱花镇，此时就连外星人及怪兽都来凑一脚。因此为了收拾刚博士的烂摊子，酷乐、小M与 独眼龙小虎联手出击，为守护樱花镇的和平与敌人展开激烈的战斗。不过据说他们所造成的破坏似乎比敌人还多……</p>
+   <p><a href="https://www.themoviedb.org/tv/86389">查看详情页</a></p>
+   </details>
+   </li>
+   </ol>
+   <footer>条件：电视剧 · 动画 · 日语 · ≥100 · 近 1 年 · 评分最高</footer>
+   <footer>第 2/2 页</footer>
+   [14 | 1:cp:13] [15 | 1:cp:14] [16 | 1:cp:15] [17 | 1:cp:16]
+   [18 | 1:cp:17] [19 | 1:cp:18] [20 | 1:cp:19] [21 | 1:cp:20]
+   [22 | 1:cp:21] [23 | 1:cp:22]
+   [‹ 上一页 | 1:p:0]
+   [返回 | 1:bk:0] [首页 | 1:o:0] [关闭 | 1:c:0]
+<< answerCallbackQuery
+>> user 1001 taps 1:bk:0 on message 1
+<< editMessageText chat=1001 message=1
+   <h3>🎯 条件找片</h3>
+   <p>按 TMDB 的数据找片，选好条件点「开始找片」～</p>
+   <table bordered compact>
+   <tr><th>条件</th><th>设置</th></tr>
+   <tr><td>类型</td><td>电视剧</td></tr>
+   <tr><td>题材</td><td>动画</td></tr>
+   <tr><td>语言</td><td>日语</td></tr>
+   <tr><td>评分</td><td>不限</td></tr>
+   <tr><td>评分人数</td><td>≥100</td></tr>
+   <tr><td>上映</td><td>近 1 年</td></tr>
+   <tr><td>排序</td><td>评分最高</td></tr>
+   </table>
+   [电影 | 1:yk:1] [·电视剧· | 1:yk:2]
+   [题材 | 1:yf:0] [语言 | 1:yf:1] [评分 | 1:yf:2]
+   [评分人数 | 1:yf:3] [上映 | 1:yf:4] [排序 | 1:yf:5]
+   [开始找片 | 1:ys:0]
+   [返回 | 1:bk:0] [首页 | 1:o:0] [关闭 | 1:c:0]
+<< answerCallbackQuery
+>> user 1001 taps 1:yk:1 on message 1
+<< editMessageText chat=1001 message=1
+   <h3>🎯 条件找片</h3>
+   <p>按 TMDB 的数据找片，选好条件点「开始找片」～</p>
+   <table bordered compact>
+   <tr><th>条件</th><th>设置</th></tr>
+   <tr><td>类型</td><td>电影</td></tr>
+   <tr><td>题材</td><td>不限</td></tr>
+   <tr><td>语言</td><td>日语</td></tr>
+   <tr><td>评分</td><td>不限</td></tr>
+   <tr><td>评分人数</td><td>≥100</td></tr>
+   <tr><td>上映</td><td>近 1 年</td></tr>
+   <tr><td>排序</td><td>评分最高</td></tr>
+   </table>
+   [·电影· | 1:yk:1] [电视剧 | 1:yk:2]
+   [题材 | 1:yf:0] [语言 | 1:yf:1] [评分 | 1:yf:2]
+   [评分人数 | 1:yf:3] [上映 | 1:yf:4] [排序 | 1:yf:5]
+   [开始找片 | 1:ys:0]
+   [返回 | 1:bk:0] [首页 | 1:o:0] [关闭 | 1:c:0]
+<< answerCallbackQuery
+>> user 1001 taps 1:ys:0 on message 1
+-> MoviePilot GET /api/v1/discover/tmdb_movies?page=1&release_date=2025-10-05&sort_by=vote_average.desc&vote_average=0&vote_count=100&with_genres=&with_original_language=ja
+<< answerCallbackQuery notice="没有符合条件的作品，放宽一点条件试试吧～"

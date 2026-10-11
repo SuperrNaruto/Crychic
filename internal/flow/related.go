@@ -38,6 +38,9 @@ func relatedRow(sess session) []Button {
 	if sess.picked.Media.Kind == Movie {
 		row = append(row, Button{Label: "同系列", Data: data(sess.id, actionSeries, 0)})
 	}
+	if castSource(sess.picked.Media) {
+		row = append(row, Button{Label: labelCast, Data: data(sess.id, actionCast, 0)})
+	}
 	return row
 }
 

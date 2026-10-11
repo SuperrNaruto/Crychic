@@ -119,6 +119,8 @@ changing real timer cadence
 
 `myrequests*_test.go` 与失败历史 fake 随 `/requests` 于 2026-10-11 删除；订阅、下载与整理进度由订阅详情和任务场景覆盖。
 
+`people_test.go` 与 `discoverfilter_test.go` 的 3 个场景经真实 `/search`、`/trending` 入口覆盖 TMDB 演员作品、Bangumi 配音演员（角色名、重复作品去重、对不上时说明）以及条件找片（逐项选择、TMDB 下界参数与日期、翻页去重与原编号、返回保留条件、换类型清空题材、无结果提示）。`credits_dune.json`、`person_works_tmdb.json`、`discover_anime_p1.json`、`credits_mygo_bangumi.json`、`person_works_bangumi.json`、`detail_mygo_bangumi.json` 与 `seasons_mygo_bangumi.json` 是 2026-10-12 从 v3.1.4 只读录制并裁剪的字段；`discover_anime_p2.json` 为真实第 2 页前插入第 1 页末条，模拟 TMDB 排名在翻页间变动；`search_mygo_bangumi.json` 把 `/api/v1/bangumi/428735` 的录制改成搜索结果形状，模拟搜索来源包含 Bangumi 的部署。fake 按 `page` 区分条件找片的后续页（`discoverPage`）。
+
 `taskprogress_test.go` 的 2 个场景经真实 `/tasks` 跟随整理任务：插件路由缺失（404）时只显示状态，报告后仅对应运行文件显示百分比，他片记录与已完成文件不显示；同一身份的两个运行文件或已结束记录不显示。fake 的插件进度由 `nativeMP.setProgress` 设定，形状按 v1.2.0 插件投影合成，宿主侧形状由 `MPPluginNativeHost.txt` 核对。
 
 `taskpause_test.go` 的 3 个场景经真实 `/tasks` 入口覆盖下载暂停与恢复：非默认实例上的分别确认、写后只读核对、旧确认票据不再写入；确认后目标已被他处暂停或已消失时不写，同 hash 多实例时撤下暂停、恢复和删除；HTTP 200 拒绝、503 与不确认所请求操作的成功响应。`fake_download_control_test.go` 按 v3.1.4 `update_task` 合成：未配置实例使该项失败，不存在的 hash 仍成功，`success` 为逐项合取，缺实例直接使场景失败；暂停状态反映到之后的下载列表。`download_control_empty.json` 是合成的空结果成功响应，未对真实下载器执行暂停或恢复。

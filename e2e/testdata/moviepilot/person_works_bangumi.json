@@ -1,0 +1,90 @@
+{
+  "success": true,
+  "message": "",
+  "data": [
+    {
+      "type": "电视剧",
+      "title": "スター街道",
+      "original_title": "スター街道",
+      "year": null,
+      "media_source": "bangumi",
+      "media_id": "341295",
+      "vote_average": 0.0,
+      "poster_path": "https://lain.bgm.tv/pic/cover/l/a3/ee/341295_oUUjQ.jpg",
+      "detail_link": "https://bgm.tv/subject/341295",
+      "overview": null,
+      "release_date": null,
+      "season": null
+    },
+    {
+      "type": "电视剧",
+      "title": "THE THIRD(仮) 1st ライブ",
+      "original_title": "THE THIRD(仮) 1st ライブ",
+      "year": null,
+      "media_source": "bangumi",
+      "media_id": "267116",
+      "vote_average": 0.0,
+      "poster_path": "https://lain.bgm.tv/pic/cover/l/e3/71/267116_aK7ha.jpg",
+      "detail_link": "https://bgm.tv/subject/267116",
+      "overview": null,
+      "release_date": null,
+      "season": null
+    },
+    {
+      "type": "电视剧",
+      "title": "スター街道",
+      "original_title": "スター街道",
+      "year": null,
+      "media_source": "bangumi",
+      "media_id": "341295",
+      "vote_average": 0.0,
+      "poster_path": "https://lain.bgm.tv/pic/cover/l/a3/ee/341295_oUUjQ.jpg",
+      "detail_link": "https://bgm.tv/subject/341295",
+      "overview": null,
+      "release_date": null,
+      "season": null
+    },
+    {
+      "type": "电视剧",
+      "title": "スター街道",
+      "original_title": "スター街道",
+      "year": null,
+      "media_source": "bangumi",
+      "media_id": "341295",
+      "vote_average": 0.0,
+      "poster_path": "https://lain.bgm.tv/pic/cover/l/a3/ee/341295_oUUjQ.jpg",
+      "detail_link": "https://bgm.tv/subject/341295",
+      "overview": null,
+      "release_date": null,
+      "season": null
+    },
+    {
+      "type": "电视剧",
+      "title": "アニメ「BanG Dream! 2nd＆3rd Season」オリジナル・サウンドトラック",
+      "original_title": "アニメ「BanG Dream! 2nd＆3rd Season」オリジナル・サウンドトラック",
+      "year": null,
+      "media_source": "bangumi",
+      "media_id": "293422",
+      "vote_average": 0.0,
+      "poster_path": "https://lain.bgm.tv/pic/cover/l/32/79/293422_Tl9E9.jpg",
+      "detail_link": "https://bgm.tv/subject/293422",
+      "overview": null,
+      "release_date": null,
+      "season": 2
+    },
+    {
+      "type": "电视剧",
+      "title": "THE THIRD(仮) 1st ライブ",
+      "original_title": "THE THIRD(仮) 1st ライブ",
+      "year": null,
+      "media_source": "bangumi",
+      "media_id": "259658",
+      "vote_average": 0.0,
+      "poster_path": "https://lain.bgm.tv/pic/cover/l/70/57/259658_hH3Pa.jpg",
+      "detail_link": "https://bgm.tv/subject/259658",
+      "overview": null,
+      "release_date": null,
+      "season": null
+    }
+  ]
+}

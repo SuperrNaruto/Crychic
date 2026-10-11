@@ -1,0 +1,50 @@
+{
+  "success": true,
+  "message": "",
+  "data": {
+    "genres": [
+      {
+        "id": "BanGDream",
+        "name": "BanGDream"
+      },
+      {
+        "id": "原创",
+        "name": "原创"
+      },
+      {
+        "id": "音乐",
+        "name": "音乐"
+      }
+    ],
+    "runtime": null,
+    "number_of_seasons": 1,
+    "number_of_episodes": 14,
+    "overview": "「能一辈子和我搞乐队吗？」\r\n\r\n在高一的春季即将结束之时，羽丘女子学园里人人都在参加乐队活动。\r\n入学较晚的爱音，也为了尽快融入班级，急忙寻找乐队成员。\r\n在寻找时，她发现被称为「羽丘的不可思议少女」的灯还没有参加乐队，\r\n于是爱音不由得向她发出邀请…\r\n\r\n我们的<音乐(呐喊)>，伤痕累累而充满狼狈。\r\n迷茫也无所谓，迷茫也要前进。",
+    "next_episode_to_air": {
+      "id": null,
+      "air_date": null,
+      "episode_number": null,
+      "episode_type": null,
+      "name": null,
+      "overview": null,
+      "production_code": null,
+      "runtime": null,
+      "season_number": null,
+      "show_id": null,
+      "still_path": null,
+      "vote_average": null,
+      "vote_count": null
+    },
+    "actors": [
+      {
+        "name": "矢方美紀"
+      },
+      {
+        "name": "仲田ありさ"
+      },
+      {
+        "name": "愛美"
+      }
+    ]
+  }
+}

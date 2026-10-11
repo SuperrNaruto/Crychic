@@ -309,6 +309,12 @@ type Backend interface {
 	// Series lists the movies of the series movie media belongs to, in
 	// release order; empty when it belongs to none.
 	Series(ctx context.Context, media Media) ([]Media, error)
+	// DiscoverBy lists TMDB media meeting q, one upstream page at a time.
+	DiscoverBy(ctx context.Context, q DiscoverQuery) ([]Media, error)
+	// Cast lists the people credited on media; empty when its source has none.
+	Cast(ctx context.Context, media Media) ([]Person, error)
+	// PersonWorks lists the media p is credited on, each once.
+	PersonWorks(ctx context.Context, p Person) ([]Media, error)
 	Subscriptions(ctx context.Context) ([]Subscription, error)
 	// SubscriptionUpkeep tells what applies to every subscription.
 	SubscriptionUpkeep(ctx context.Context, upgrade bool) (SubscriptionUpkeep, error)
@@ -356,6 +362,26 @@ type Backend interface {
 	// SetDownloadPaused stops or starts one download on its own instance;
 	// success means the backend accepted it, a read shows the actual state.
 	SetDownloadPaused(ctx context.Context, download DownloadRef, paused bool) error
+}
+
+// DiscoverQuery is a TMDB condition search; zero values mean any.
+type DiscoverQuery struct {
+	Kind      Kind
+	Genre     string // TMDB genre id of Kind
+	Language  string // ISO 639-1 original language
+	MinRating float64
+	MinVotes  int
+	Since     string // first release on or after, YYYY-MM-DD
+	Sort      string // TMDB sort key of Kind
+	Page      int    // from 1
+}
+
+// Person is someone credited on media, by the source that credits them.
+type Person struct {
+	Source string
+	ID     string
+	Name   string
+	Role   string // characters played or voiced, as the source words them
 }
 
 // Calendar lists the shows airing this season, each with its weekday.

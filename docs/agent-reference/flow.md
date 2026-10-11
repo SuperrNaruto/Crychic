@@ -291,6 +291,10 @@ subscription will not fetch it again; 确认删除 (`ky`) clears the download to
 refusal and points an unknown result to `/tasks`; `internal/telegram/follow.go`
 re-asks the flow every `CRYCHIC_PROGRESS_INTERVAL` and edits only on change
 
+`discoverfilter.go` and `people.go`: the condition search panel (`ya`, same-level `yk`/`yf`/`yo`, forward
+`ys`, same-level `ym`) and a card's 演职人员 (`ca` → `cw` → `cp`) list picks like a chart; see
+[发现参考](discovery.md#条件找片与演职人员)
+
 `taskprogress.go`: a transfer view with a running file reads the plugin's progress records once per refresh
 and adds a percentage to the running file exactly one active record names (media, season, episodes,
 download hash and instance); twin running files, several records, an ended record or an unavailable read

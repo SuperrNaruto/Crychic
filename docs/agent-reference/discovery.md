@@ -59,6 +59,27 @@ failed read before it is the answer); a series named unlike its films (哈利·�
 
 相关列表的进入、返回、下载意图清除与空结果 notice 规则见 [会话参考](flow.md#相关推荐)。
 
+## 条件找片与演职人员
+
+2026-10-12 对照 MP `v3.1.4` 源码与前端核验。`/api/v1/discover/tmdb_movies|tmdb_tvs` 接受 `sort_by`、`with_genres`、
+`with_original_language`、`vote_average`、`vote_count`、`release_date`、`page`，模块把评分、人数与日期分别作为
+`vote_average.gte`、`vote_count.gte`、`release_date.gte`（剧集为 `first_air_date.gte`）传给 TMDB，每页 20 条。题材
+id（电影与剧集不同）、13 种语言和排序键取自 MP 官方 TMDB 探索页；评分人数默认 ≥10 与官方一致，避免冷门作品霸占
+评分排序。`douban_movies|douban_tvs` 只有 `sort` 与 `tags`，`bangumi` 只有分类、排序与年份，没有评分、人数和日期，
+本版不提供它们的条件找片。TMDB 结果自带 TMDB 身份。
+
+`internal/flow/discoverfilter.go`：条件页是一个屏幕，`yf` 在当前页展开某项选项，`yo` 选定后收起，`yk` 切换电影/
+电视剧并清空题材；它们都是同级替换，所以「返回」始终回到榜单菜单。`ys` 读取第一页并前进到结果页，`ym` 读取下
+一页并按来源与 ID 去重后追加，显示含第一个新结果的那页，旧编号不变；最多 100 条，末页不满 20 条时不再提供
+「更多结果」。没有结果只闪提示，条件留在原页。`session.filter` 为值类型，历史快照各自保存条件。
+
+`internal/flow/people.go`：卡片的「演职人员」（`ca`）仅对 TMDB 与 Bangumi 媒体显示。TMDB 读
+`/api/v1/tmdb/credits/{id}/{电影|电视剧}`，角色取 `character`；Bangumi 读 `/api/v1/bangumi/credits/{id}`，是番剧配音
+人物，`character` 为空，角色取 `career`（角色名）。豆瓣演职员需要另外核验，本版不提供。`cw` 读
+`/api/v1/{tmdb|bangumi}/person/credits/{person_id}`：TMDB 按日期倒序，Bangumi 没有年份且同一条目按角色重复出现，
+客户端按来源与 ID 去重。作品与条件找片结果都放进 `session.picks`，由 `cp` 走与榜单相同的 `pickFromChart`：TMDB
+作品按身份直接对上，其他来源按标题搜索，对不上时说明而不猜测。
+
 ## 并发与可恢复元数据
 
 日历注释写入前复制两个可变 slice。完成查询且找到简介的条目在当前会话中缓存；仍无简介或预算到期前未完成的条目再次显示时重新尝试。已取得的结果不会因同页另一个慢条目被丢弃。元数据失败不可抹掉发现列表的返回路径。

@@ -183,8 +183,13 @@ func releaseKey(m flow.Media) string {
 
 // medias reads a search-shaped list, keeping the subscribable entries.
 func (c *Client) medias(ctx context.Context, path string) ([]flow.Media, error) {
+	return c.mediasWith(ctx, call{method: http.MethodGet, path: path})
+}
+
+// mediasWith reads a search-shaped media list, keeping the subscribable.
+func (c *Client) mediasWith(ctx context.Context, cl call) ([]flow.Media, error) {
 	var infos []mediaInfo
-	if err := c.do(ctx, call{method: http.MethodGet, path: path}, &infos); err != nil {
+	if err := c.do(ctx, cl, &infos); err != nil {
 		return nil, err
 	}
 	out := make([]flow.Media, 0, len(infos))

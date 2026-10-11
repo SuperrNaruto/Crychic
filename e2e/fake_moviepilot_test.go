@@ -274,6 +274,14 @@ func (f *fakeMoviePilot) setRoute(key string, rt route) {
 	f.routes[key] = rt
 }
 
+// discoverPrefix is where MoviePilot's TMDB condition searches live.
+const discoverPrefix = "/api/v1/discover/"
+
+// discoverPage is the route of a condition search's later page.
+func discoverPage(key, page string) string {
+	return key + "?page=" + page
+}
+
 // episodeGroupSeason is the route of season (a TMDB season route) as an
 // episode group numbers it.
 func episodeGroupSeason(season, group string) string {
@@ -286,6 +294,10 @@ func (f *fakeMoviePilot) serveRoute(w http.ResponseWriter, r *http.Request) {
 	if group := r.URL.Query().Get("episode_group"); group != "" {
 		// MoviePilot reads a season of the episode group instead.
 		key = episodeGroupSeason(key, group)
+	}
+	if page := r.URL.Query().Get("page"); strings.HasPrefix(path, discoverPrefix) && page != "" && page != "1" {
+		// Condition searches page through TMDB; later pages have their own answer.
+		key = discoverPage(key, page)
 	}
 	f.mu.Lock()
 	rt, found := f.routes[key]
