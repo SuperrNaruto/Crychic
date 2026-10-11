@@ -1,0 +1,36 @@
+{
+  "success": true,
+  "message": "",
+  "data": [
+    {
+      "season_number": 0,
+      "name": "特别篇",
+      "episode_count": 18
+    },
+    {
+      "season_number": 1,
+      "name": "立志篇",
+      "episode_count": 26
+    },
+    {
+      "season_number": 2,
+      "name": "无限列车篇",
+      "episode_count": 7
+    },
+    {
+      "season_number": 3,
+      "name": "游郭篇",
+      "episode_count": 11
+    },
+    {
+      "season_number": 4,
+      "name": "刀匠村篇",
+      "episode_count": 11
+    },
+    {
+      "season_number": 5,
+      "name": "柱训练篇",
+      "episode_count": 8
+    }
+  ]
+}

@@ -31,8 +31,8 @@ func (e *Engine) chooseRelated(ctx context.Context, sess session, p press) (Repl
 // target is chosen, similar media, and for a movie its series.
 func relatedRow(sess session) []Button {
 	var row []Button
-	if sess.focus != nil {
-		row = append(row, torrentButton(sess.id))
+	if sess.focus != nil && sess.focus.EpisodeGroup == "" {
+		row = append(row, torrentButton(sess.id)) // resources are searched by standard seasons
 	}
 	row = append(row, Button{Label: "相似推荐", Data: data(sess.id, actionRelated, 0)})
 	if sess.picked.Media.Kind == Movie {

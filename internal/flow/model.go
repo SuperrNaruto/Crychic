@@ -92,7 +92,19 @@ type Target struct {
 	Media        Media
 	Season       *int
 	StartEpisode int
-	BestVersion  bool // explicitly requests MoviePilot's upgrade subscription
+	BestVersion  bool   // explicitly requests MoviePilot's upgrade subscription
+	EpisodeGroup string // TMDB episode group numbering Season; "" for standard seasons
+	GroupName    string // the group's name, for copy only
+}
+
+// EpisodeGroup is a TMDB episode group: another numbering of a show's
+// episodes into seasons.
+type EpisodeGroup struct {
+	ID       string
+	Name     string
+	Type     int // TMDB's 1 original air date … 7 TV
+	Seasons  int
+	Episodes int
 }
 
 // Library is what the media server already holds of one title.
@@ -315,6 +327,10 @@ type Backend interface {
 	Cast(ctx context.Context, media Media) ([]Person, error)
 	// PersonWorks lists the media p is credited on, each once.
 	PersonWorks(ctx context.Context, p Person) ([]Media, error)
+	// EpisodeGroups lists a TMDB show's episode groups.
+	EpisodeGroups(ctx context.Context, media Media) ([]EpisodeGroup, error)
+	// GroupSeasons lists an episode group's seasons in its own numbering.
+	GroupSeasons(ctx context.Context, group string) ([]Season, error)
 	Subscriptions(ctx context.Context) ([]Subscription, error)
 	// SubscriptionUpkeep tells what applies to every subscription.
 	SubscriptionUpkeep(ctx context.Context, upgrade bool) (SubscriptionUpkeep, error)

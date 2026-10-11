@@ -1,0 +1,20 @@
+{
+  "success": true,
+  "message": "",
+  "data": [
+    {
+      "type": "电视剧",
+      "title": "鬼灭之刃",
+      "original_title": "鬼滅の刃",
+      "year": "2019",
+      "media_source": "themoviedb",
+      "media_id": "85937",
+      "vote_average": 8.6,
+      "poster_path": "https://image.tmdb.org/t/p/original/tZ0yGfG4EIox7bYJTxAtqUhoOmR.jpg",
+      "detail_link": "https://www.themoviedb.org/tv/85937",
+      "overview": "时值日本大正时期。\n\n传说太阳下山后，有恶鬼出没吃人。亦有猎鬼人斩杀恶鬼、保护人们。\n\n卖炭少年炭治郎，他那平凡而幸福的日常生活，在家人遭到恶鬼袭击的那一天发生了剧变。母亲与四个弟弟妹妹惨遭杀害，而与他一起生还的妹妹祢豆子亦异变成凶暴的鬼。\n\n在猎鬼人的指引下，立志成为猎鬼人的炭治郎与变成鬼却尚存理智的祢豆子踏上了旅程。通过艰苦的剑术修行与赌命试炼，炭治郎成为了猎鬼人组织“鬼杀队”的一员。\n\n为了让妹妹祢豆子变回人类，为了讨伐杀害家人的恶鬼，为了斩断悲伤的连锁，少年与鬼的战斗不曾停歇。\n\n幸福被破坏之时，总是弥漫着鲜血的味道。纵然我身俱灭，定将恶鬼斩杀！血风剑戟冒险谭，开幕！",
+      "release_date": "2019-04-06",
+      "season": null
+    }
+  ]
+}

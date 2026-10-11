@@ -1,0 +1,41 @@
+{
+  "success": true,
+  "message": "",
+  "data": [
+    {
+      "id": "652f328fa8023600c316174e",
+      "name": "Single season format",
+      "type": 2,
+      "group_count": 1,
+      "episode_count": 63
+    },
+    {
+      "id": "66168434242f94017dc4cdfb",
+      "name": "Crunchyroll without Mugen Train Arc",
+      "type": 4,
+      "group_count": 3,
+      "episode_count": 48
+    },
+    {
+      "id": "63469edcf621b20079f9ba41",
+      "name": "Story Arcs",
+      "type": 5,
+      "group_count": 9,
+      "episode_count": 55
+    },
+    {
+      "id": "6a41d1a35b1d3784b9905dc2",
+      "name": "Crunchyroll",
+      "type": 5,
+      "group_count": 0,
+      "episode_count": 0
+    },
+    {
+      "id": "66c6dcd6cd3639e51ad7ec9f",
+      "name": "Wikpedia / News",
+      "type": 6,
+      "group_count": 4,
+      "episode_count": 63
+    }
+  ]
+}

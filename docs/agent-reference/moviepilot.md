@@ -231,7 +231,13 @@ download post) never quotes MoviePilot's error answer, which can echo the reques
 
 ## 关联接口
 
-推荐、日历、合集、条件找片与人物作品的接口契约见 [发现参考](discovery.md)。Crychic 自 2026-10-11 起不再读取整理历史（`/api/v1/history/transfer`，含失败记录）或单个订阅（`GET /api/v1/subscribe/{id}`）；这两类读取只服务已删除的本地请求归属。订阅、下载和整理列表的 `data: null` 视为来源未读到，不当作成功空列表。历史契约仍可参考 [历史端点](https://github.com/jxxghp/MoviePilot/blob/v3.1.3/app/api/endpoints/history.py#L512-L542)。
+推荐、日历、合集、条件找片与人物作品的接口契约见 [发现参考](discovery.md)。
+
+剧集组（2026-10-12 对照 v3.1.4）：`GET /api/v1/media/groups/{tmdbid}` 返回 `{id, name, type, group_count,
+episode_count}`，`type` 为 TMDB 的 1 首播、2 绝对、3 DVD、4 数字、5 故事线、6 制作、7 电视；也会有 0 季 0 集的空组。
+`GET /api/v1/media/group/seasons/{id}` 返回组内季号、名称和集数。`POST /api/v1/subscribe/` 的公开字段含
+`episode_group`，创建时 MP 按该组重新识别并计算总集数，查重按媒体、季与剧集组。`GET /api/v1/subscribe/media/{id}`
+只按季号过滤、不看剧集组，因此带剧集组的目标改为读取完整订阅列表，按来源、ID、季与剧集组匹配。Crychic 自 2026-10-11 起不再读取整理历史（`/api/v1/history/transfer`，含失败记录）或单个订阅（`GET /api/v1/subscribe/{id}`）；这两类读取只服务已删除的本地请求归属。订阅、下载和整理列表的 `data: null` 视为来源未读到，不当作成功空列表。历史契约仍可参考 [历史端点](https://github.com/jxxghp/MoviePilot/blob/v3.1.3/app/api/endpoints/history.py#L512-L542)。
 
 When MoviePilot behavior is unclear, read its source (`app/api/endpoints/{media,subscribe}.py`) instead of
 guessing

@@ -291,6 +291,13 @@ subscription will not fetch it again; 确认删除 (`ky`) clears the download to
 refusal and points an unknown result to `/tasks`; `internal/telegram/follow.go`
 re-asks the flow every `CRYCHIC_PROGRESS_INTERVAL` and edits only on change
 
+`groups.go`: a TMDB show's season picker offers 剧集组… (`eg`, forward) listing groups with seasons and episodes;
+`ep` (forward) reads the group's seasons (`/media/group/seasons/{id}`, episode counts zero dropped) and shows them
+through the ordinary season picker with `session.group` set. Targets carry `EpisodeGroup` and its name; under
+a group the library is replaced by a note, downloads are not matched (`Target.has`), and multi-season, the
+next-episode start, 搜索资源, 选择搜索站点 and 洗版 are left out because they work in standard seasons. A new
+media pick clears the group
+
 `discoverfilter.go` and `people.go`: the condition search panel (`ya`, same-level `yk`/`yf`/`yo`, forward
 `ys`, same-level `ym`) and a card's 演职人员 (`ca` → `cw` → `cp`) list picks like a chart; see
 [发现参考](discovery.md#条件找片与演职人员)

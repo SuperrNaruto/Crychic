@@ -72,7 +72,7 @@ func (e *Engine) siteScope(sess session) Reply {
 }
 
 func searchScopeRow(sess session) []Button {
-	if sess.focus == nil {
+	if sess.focus == nil || sess.focus.EpisodeGroup != "" {
 		return nil
 	}
 	return []Button{{Label: msgSearchSites, Data: data(sess.id, actionSearchSites, 0)}}

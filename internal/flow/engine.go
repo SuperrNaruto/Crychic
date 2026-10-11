@@ -217,7 +217,7 @@ func (e *Engine) choose(ctx context.Context, sess session, p press) Reply {
 }
 
 func (e *Engine) chooseAction(ctx context.Context, sess session, p press) Reply {
-	for _, choose := range []chooser{e.chooseHome, e.chooseRequest, e.chooseSeasons, e.chooseTask, e.chooseChart, e.chooseSubs, e.chooseSubDetail, e.chooseSubPause, e.chooseSubEdit, e.chooseSubSearch, e.chooseHistory, e.chooseRelated, e.choosePeople, e.chooseFilter, e.chooseTorrents, e.chooseSearchSites, e.chooseTorrentView, e.chooseTorrentBatch, e.chooseTorrentPlan, e.chooseDelete, e.chooseToggle, e.chooseUpgrade} {
+	for _, choose := range []chooser{e.chooseHome, e.chooseRequest, e.chooseSeasons, e.chooseTask, e.chooseChart, e.chooseSubs, e.chooseSubDetail, e.chooseSubPause, e.chooseSubEdit, e.chooseSubSearch, e.chooseHistory, e.chooseRelated, e.choosePeople, e.chooseFilter, e.chooseGroups, e.chooseTorrents, e.chooseSearchSites, e.chooseTorrentView, e.chooseTorrentBatch, e.chooseTorrentPlan, e.chooseDelete, e.chooseToggle, e.chooseUpgrade} {
 		if reply, ok := choose(ctx, sess, p); ok {
 			return e.navigate(sess, p.action, reply)
 		}
@@ -259,6 +259,7 @@ func (e *Engine) pickMedia(ctx context.Context, sess session, index int) Reply {
 	}
 	media := sess.results[index]
 	sess.target, sess.seasons, sess.chosen, sess.retry, sess.focus = nil, nil, nil, recovery{}, nil
+	sess.group, sess.groups = EpisodeGroup{}, nil
 	if media.Kind == Movie {
 		e.enrich(ctx, &sess, media)
 		if sess.library.Movie {
@@ -298,7 +299,7 @@ func (e *Engine) showSeasons(ctx context.Context, sess session, read seasonRead)
 	}
 	sess.seasons, sess.retry = seasons, recovery{}
 	e.store.put(sess)
-	if n, ok := impliedSeason(sess.picked.Media, seasons); ok {
+	if n, ok := impliedSeason(sess.picked.Media, seasons); ok && sess.group.ID == "" {
 		return e.pickSeason(ctx, sess, n)
 	}
 	picks := make([]Button, 0, len(seasons))
@@ -306,11 +307,18 @@ func (e *Engine) showSeasons(ctx context.Context, sess session, read seasonRead)
 		picks = append(picks, Button{Label: seasonName(s.Number), Data: data(sess.id, actionSeason, s.Number)})
 	}
 	rows := grid(picks, seasonColumns)
-	if len(sess.selectable()) > 1 {
+	if len(sess.selectable()) > 1 && sess.group.ID == "" {
 		rows = append(rows, []Button{{Label: "多选季…", Data: data(sess.id, actionMulti, 0)}})
 	}
+	if groupsOffered(sess) {
+		rows = append(rows, []Button{{Label: labelGroups, Data: data(sess.id, actionGroups, 0)}})
+	}
 	rows = append(rows, relatedRow(sess), []Button{cancelButton(sess.id)})
-	return sess.picked.replyLines(sess.seasonTable(msgPickSeason, seasons), rows)
+	question := msgPickSeason
+	if sess.group.ID != "" {
+		question = fmt.Sprintf("按剧集组「%s」的编排，%s", sess.group.Name, msgPickSeason)
+	}
+	return sess.picked.replyLines(sess.seasonTable(question, seasons), rows)
 }
 
 // impliedSeason is the season a show's pick already names: the one its
@@ -385,7 +393,7 @@ func (e *Engine) pickSeason(ctx context.Context, sess session, number int) Reply
 		if s.Number != number {
 			continue
 		}
-		target := Target{Media: sess.picked.Media, Season: &number}
+		target := Target{Media: sess.picked.Media, Season: &number, EpisodeGroup: sess.group.ID, GroupName: sess.group.Name}
 		if sess.wholeSeasonHeld(s) {
 			return e.held(sess, target)
 		}

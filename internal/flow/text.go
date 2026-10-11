@@ -22,6 +22,7 @@ type card struct {
 	Details        Details
 	Downloads      []Download // the chosen target's unfinished downloads
 	LibraryUnknown bool
+	LibraryNote    string // replaces the library facts when they cannot apply
 }
 
 // reply shows the card, poster above, then a divider, message and buttons.
@@ -32,7 +33,10 @@ func (c card) reply(message Block, buttons [][]Button) Reply {
 // replyLines is reply with a message of several lines.
 func (c card) replyLines(message Text, buttons [][]Button) Reply {
 	text := append(c.text(), Divider())
-	if c.LibraryUnknown {
+	switch {
+	case c.LibraryNote != "":
+		text = append(text, Line(Plain(c.LibraryNote)))
+	case c.LibraryUnknown:
 		text = append(text, Line(Plain("⚠️ 暂时看不到媒体库里有没有它…")))
 	}
 	text = append(text, message...)
@@ -102,7 +106,8 @@ func downloadLine(d Download) Block {
 // has reports whether download d is for this target: same media and, for a
 // season, the same season when the download names one.
 func (t Target) has(d Download) bool {
-	if d.Kind != t.Media.Kind || d.Source != t.Media.Source || d.MediaID != t.Media.ID {
+	// Downloads name standard seasons, which a group renumbers.
+	if t.EpisodeGroup != "" || d.Kind != t.Media.Kind || d.Source != t.Media.Source || d.MediaID != t.Media.ID {
 		return false
 	}
 	return t.Season == nil || d.Season == nil || *d.Season == *t.Season
@@ -159,8 +164,15 @@ func targetName(t Target) string {
 		return name
 	}
 	name = fmt.Sprintf("%s第 %d 季", name, *t.Season)
+	var notes []string
+	if t.EpisodeGroup != "" {
+		notes = append(notes, fmt.Sprintf("剧集组「%s」", t.GroupName))
+	}
 	if t.StartEpisode > 0 {
-		name += fmt.Sprintf("（从第 %d 集开始）", t.StartEpisode)
+		notes = append(notes, fmt.Sprintf("从第 %d 集开始", t.StartEpisode))
+	}
+	if len(notes) > 0 {
+		name += "（" + strings.Join(notes, "，") + "）"
 	}
 	return name
 }

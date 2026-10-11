@@ -44,6 +44,7 @@ var forward = map[string]bool{
 	actionTorrentPlan: true,
 	actionCast:        true, actionCastPerson: true, actionWorkPick: true,
 	actionFilter: true, actionFilterRun: true,
+	actionGroups: true, actionGroupPick: true,
 }
 
 var sameLevel = map[string]bool{

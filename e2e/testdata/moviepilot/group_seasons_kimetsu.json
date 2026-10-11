@@ -1,0 +1,30 @@
+{
+  "success": true,
+  "message": "",
+  "data": [
+    {
+      "season_number": 1,
+      "name": "Tanjiro Kamado, Unwavering Resolve Arc",
+      "episode_count": 26,
+      "order": null
+    },
+    {
+      "season_number": 2,
+      "name": "Mugen Train Arc and Entertainment District Arc",
+      "episode_count": 18,
+      "order": null
+    },
+    {
+      "season_number": 3,
+      "name": "Swordsmith Village Arc",
+      "episode_count": 11,
+      "order": null
+    },
+    {
+      "season_number": 4,
+      "name": "Hashira Training Arc",
+      "episode_count": 8,
+      "order": null
+    }
+  ]
+}

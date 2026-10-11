@@ -11,11 +11,15 @@ import (
 // the next episode to air (ongoing shows), or an episode the user types.
 func startChoices(sess session, season int) Reply {
 	rows := [][]Button{{{Label: "从第 1 集开始", Data: data(sess.id, actionConfirm, 0)}}}
-	if next := sess.picked.Details.Next; next.Season == season && next.Number > 1 {
+	// The next episode to air is numbered in standard seasons.
+	if next := sess.picked.Details.Next; next.Season == season && next.Number > 1 && sess.group.ID == "" {
 		label := fmt.Sprintf("只追新集（第 %d 集起）", next.Number)
 		rows[0] = append(rows[0], Button{Label: label, Data: data(sess.id, actionConfirm, next.Number)})
 	}
-	rows = append(rows, []Button{{Label: "指定起始集…", Data: data(sess.id, actionAskFrom, 0)}}, upgradeRow(sess))
+	rows = append(rows, []Button{{Label: "指定起始集…", Data: data(sess.id, actionAskFrom, 0)}})
+	if sess.group.ID == "" {
+		rows = append(rows, upgradeRow(sess)) // an upgrade subscribes standard seasons
+	}
 	rows = append(rows, onward(sess)...)
 	var facts []string
 	if count := sess.episodeCount(season); count > 0 {

@@ -225,6 +225,9 @@ func (c *Client) Seasons(ctx context.Context, media flow.Media) ([]flow.Season, 
 // FindSubscription asks MoviePilot for an existing subscription; it answers
 // with an empty subscription (null id) when there is none.
 func (c *Client) FindSubscription(ctx context.Context, t flow.Target) (flow.Subscription, error) {
+	if t.EpisodeGroup != "" {
+		return c.findGroupSubscription(ctx, t)
+	}
 	q := url.Values{
 		"media_source": {t.Media.Source},
 		"title":        {t.Media.Title},
@@ -263,13 +266,16 @@ type subscribeBody struct {
 	// BestVersion asks for an upgrade subscription; omitted, MoviePilot
 	// applies the kind's default subscription config.
 	BestVersion int `json:"best_version,omitempty"`
+	// EpisodeGroup numbers Season by a TMDB episode group; MoviePilot then
+	// reads the season's episodes in that group.
+	EpisodeGroup string `json:"episode_group,omitempty"`
 }
 
 func (c *Client) Subscribe(ctx context.Context, t flow.Target) (int, error) {
 	body := subscribeBody{
 		Name: t.Media.Title, Year: t.Media.Year, Type: kindType(t.Media.Kind),
 		MediaSource: t.Media.Source, MediaID: t.Media.ID, Season: t.Season,
-		StartEpisode: t.StartEpisode,
+		StartEpisode: t.StartEpisode, EpisodeGroup: t.EpisodeGroup,
 	}
 	if t.BestVersion {
 		body.BestVersion = 1

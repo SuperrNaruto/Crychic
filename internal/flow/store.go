@@ -52,6 +52,8 @@ type session struct {
 	picks        []Media        // the chart's picks, or works listed to pick like them
 	people       []Person       // the cast listed for the picked media
 	filter       discoverFilter // condition search being edited; zero until opened
+	groups       []EpisodeGroup // the picked show's usable episode groups
+	group        EpisodeGroup   // the group seasons are numbered by; zero for standard seasons
 	noted        []bool         // picks already given a link and synopsis
 	subs         []Subscription
 	subEdit      *subscriptionEdit
