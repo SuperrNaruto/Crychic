@@ -27,6 +27,14 @@ Go 改动执行根指南的 build、vet、gofmt 检查与 race E2E；容器改�
 
 机器人版本来自 git tag（`vX.Y.Z`）。仓库内 `go build` 由 Go 工具链写入 tag 或伪版本，有未提交改动时带 `+dirty`；Docker 上下文不含 `.git`，须用 `--build-arg VERSION="$(git describe --tags --always --dirty)"` 注入，compose 示例读取 `CRYCHIC_VERSION`，未注入时为 `dev`。启动日志和 `-version` 输出该版本，镜像标签 `org.opencontainers.image.version` 同值。
 
+发版规则（主人 2026-10-11 授权，代理直接执行，不逐次确认）：
+
+- 只在构建部署镜像时打 tag，不按提交打；部署镜像用该 tag 构建，使线上版本可对应到提交。
+- 0.x 阶段，上一 tag 以来含 `feat` 或不兼容改动升 minor，仅有 `fix`、文档等改动升 patch；只有文档、CI 等不进二进制的改动不打 tag。
+- 在已提交且检查通过的 HEAD 上打附注 tag（`git tag -a vX.Y.Z -m "Crychic vX.Y.Z"`），交付时报告版本与依据。
+- 只打本地 tag；push 分支或 tag 仍需主人明确要求。
+- 升 1.0.0、跳号、无法判断是否不兼容时先问主人。
+
 MP 插件版本独立维护：`package.v3.json` 的 `version`、`history` 与 `__init__.py` 的 `plugin_version` 必须一致，只在插件改动时提升，避免宿主提示无意义升级。
 
 `.github/workflows/ci.yml` 在 push main、`v*` tag 与 PR 时运行：Go 构建、vet、gofmt、race E2E；插件版本一致性及隔离宿主 E2E；Docker 构建与 `-version` 检查。CI 只用 fake 与隔离镜像，不发布镜像，不接触真实服务。
