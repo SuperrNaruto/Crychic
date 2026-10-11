@@ -284,7 +284,6 @@ type Backend interface {
 	Library(ctx context.Context, media Media) (Library, error)
 	Downloads(ctx context.Context) ([]Download, error)
 	Transfers(ctx context.Context) ([]TransferJob, error)
-	FailedTransfers(ctx context.Context) (FailedTransfers, error)
 	// Discover lists a chart's picks; they may come from other metadata
 	// sources than search does.
 	Discover(ctx context.Context, chart Chart) ([]Media, error)
@@ -344,35 +343,6 @@ type Calendar interface {
 	Calendar(ctx context.Context) ([]Media, error)
 	// Summary is a calendar pick's synopsis, "" when it has none.
 	Summary(ctx context.Context, id string) (string, error)
-}
-
-// Request is a subscription or a download someone asked for, to be told
-// when it arrives. Download, when set, is the download's id and
-// SubscriptionID is 0.
-type Request struct {
-	SubscriptionID int
-	Download       string
-	Target         Target
-	SeasonEpisodes int   // episodes in the requested season, 0 if unknown or a movie
-	Held           []int // episodes of the season already in the library
-	Requester      Actor
-}
-
-// Watcher remembers requests so requesters hear about arrivals.
-type Watcher interface {
-	Watch(ctx context.Context, req Request) error
-	// Requests returns only this user's local watches and recent completions.
-	Requests(userID int64) []RequestRecord
-	// Requested lists ids from subs whose media and season userID asked for;
-	// a backend may reuse a removed subscription's row id for another target.
-	Requested(userID int64, subs []Subscription) []int
-	// Forget drops requests for the cancelled subscription's id and target,
-	// keeping older targets whose row id it reused.
-	Forget(ctx context.Context, sub Subscription) error
-	// ForgetDownload drops a download's requests, e.g. once it is deleted.
-	ForgetDownload(ctx context.Context, id string) error
-	// RefreshSubscription saves observed scope without creating new requesters.
-	RefreshSubscription(ctx context.Context, sub Subscription) error
 }
 
 // Actor is the chat user driving a conversation, in platform terms.

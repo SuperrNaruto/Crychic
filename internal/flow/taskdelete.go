@@ -88,9 +88,6 @@ func (e *Engine) deleteDownload(ctx context.Context, sess session, index int) Re
 	if err := e.backend.DeleteDownload(ctx, ref); err != nil {
 		return withTaskButtons(titled(msgDeleteTitle, e.deleteFailure(ref.ID, err)), sess)
 	}
-	if err := e.watcher.ForgetDownload(ctx, ref.ID); err != nil {
-		e.log.Error("cannot forget deleted download", "download", ref.ID, "err", err)
-	}
 	done := Lines(Heading(Plain("✅ 已删除")), Line(Plain("已经删掉啦，下载的文件也一起清掉了～")))
 	return withTaskButtons(Reply{Text: done}, sess)
 }

@@ -48,13 +48,9 @@ type scenario struct {
 	libraryWait string     // empty uses the production default
 	notifyChat  string     // optional channel for arrival notices
 	digest      string     // CRYCHIC_NOTIFY_DIGEST, none if empty
-	lagging     bool       // the media server shows new transfers only on catchUp
 	// searches answers a search for one title with its own fixture; other
 	// titles get the searchPath route.
 	searches map[string]string
-	// recognized answers MoviePilot's release-name recognizer for one file
-	// name with its own fixture; others are not recognized, as live.
-	recognized map[string]string
 }
 
 type harness struct {
@@ -78,7 +74,7 @@ func start(t *testing.T, sc scenario) *harness {
 	tr := &transcript{}
 	mp := newFakeMoviePilot(t, tr, sc.routes)
 	mp.add(sc.history...)
-	mp.lagging, mp.scanned, mp.searches, mp.recognized = sc.lagging, len(sc.history), sc.searches, sc.recognized
+	mp.searches = sc.searches
 	tg := newFakeTelegram(t, tr)
 	bgm := newFakeBangumi(t, tr)
 	if sc.apiKey == "" {
@@ -110,7 +106,6 @@ func start(t *testing.T, sc scenario) *harness {
 	registered := tg.expect(commandsKey)
 	h.launch()
 	h.wait(registered, "registering the command menu")
-	h.wait(mp.polled, "the notifier's first poll")
 	if sc.apiKey == mpAPIKey {
 		h.wait(mp.native.baseline, "native notification baseline")
 	}
@@ -180,12 +175,12 @@ func (h *harness) arrives(chat int64, records ...transfer) {
 	h.nativeNotice(nativeMessage{Title: "MoviePilot 通知", Text: text, Recipient: recipient})
 }
 
-// transfers adds records to MoviePilot's transfer history and waits until
-// the notifier has read them, without expecting a notice.
+// transfers adds records to MoviePilot's transfer history, which the fake
+// library serves; nothing in Crychic reads the history itself.
 func (h *harness) transfers(records ...transfer) {
 	h.t.Helper()
 	h.logTransfers(records)
-	h.wait(h.mp.add(records...), "the notifier reading new transfers")
+	h.mp.add(records...)
 }
 
 func (h *harness) logTransfers(records []transfer) {
@@ -202,16 +197,6 @@ func (h *harness) reports(msgID int, key, fixture string) {
 	done := h.tg.expect(fmt.Sprintf("edit:%d", msgID))
 	h.mp.setRoute(key, ok(fixture))
 	h.wait(done, "a live view refresh")
-}
-
-// catchUp lets a lagging media server scan the transfers and waits for the
-// notice that was held back for it.
-func (h *harness) catchUp(chat int64) {
-	h.t.Helper()
-	h.tr.add(">> the media server scans the new files")
-	done := h.tg.expect(fmt.Sprintf("send:%d", chat))
-	h.mp.catchUp()
-	h.wait(done, "a notice held for the media server")
 }
 
 // say sends a text message from user in chat and waits for the bot's reply.

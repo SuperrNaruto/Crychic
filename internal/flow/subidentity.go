@@ -28,10 +28,10 @@ func sameSeason(a, b *int) bool {
 	return *a == *b
 }
 
-// checkSubscription rechecks the displayed identity and ownership before
+// checkSubscription rechecks the displayed identity before
 // a write. MoviePilot's mutations accept only a row id, so an unknown or
 // replaced row must not reach them. A failed read leaves the screen intact.
-func (e *Engine) checkSubscription(ctx context.Context, sess session, sub Subscription) string {
+func (e *Engine) checkSubscription(ctx context.Context, sub Subscription) string {
 	subs, err := e.backend.Subscriptions(ctx)
 	if err != nil {
 		e.log.Warn("subscription identity unavailable", "subscription", sub.ID, "err", err)
@@ -42,9 +42,6 @@ func (e *Engine) checkSubscription(ctx context.Context, sess session, sub Subscr
 	}
 	if !slices.ContainsFunc(subs, sub.same) {
 		return msgSubChanged
-	}
-	if !slices.Contains(e.watcher.Requested(sess.owner.UserID, []Subscription{sub}), sub.ID) {
-		return msgInvalidChoice
 	}
 	return ""
 }

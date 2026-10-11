@@ -13,7 +13,6 @@ type Conversation interface {
 	Home(ctx context.Context, actor Actor) Reply
 	Charts(ctx context.Context, actor Actor) Reply
 	Subscriptions(ctx context.Context, actor Actor) Reply
-	Requests(ctx context.Context, actor Actor) Reply
 	Latest(ctx context.Context, actor Actor) Reply
 	Upcoming(ctx context.Context, actor Actor) Reply
 	// Open shows the card of the media a MediaRef names (a deep link).

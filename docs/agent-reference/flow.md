@@ -40,8 +40,7 @@ expired, 🚫 refused
 Voice: the bot is cheerful and cute, calls itself 我 and the user 你, ends sentences with 啦/哦/呀/～. At most one
 kaomoji per message, only on home, success, empty/failed results and arrival notices (never in headings,
 toasts, tables or facts), from this set: `(๑•̀ㅂ•́)و✧` `ヾ(≧▽≦*)o` `(ﾉ>ω<)ﾉ` `(｡•́︿•̀｡)` ``(´-ω-`)``. Data stays
-neutral (titles, facts, table heads, subscription states, 第 N 季, page numbers, file states, chart names, the
-你请求的 tag), as do button labels and the command menu. Safety meaning never softens: an unknown subscription
+neutral (titles, facts, table heads, subscription states, 第 N 季, page numbers, file states, chart names), as do button labels and the command menu. Safety meaning never softens: an unknown subscription
 result still sends the user to `/subscribe` first, cancelling still says MoviePilot will stop
 searching/downloading for that subscription, without implying an existing torrent is deleted, an API key
 refusal still names the admin; MoviePilot's safe refusal messages are relayed verbatim; secret-bearing
@@ -54,7 +53,7 @@ Errors safe to show users are `*flow.UserError`; others get logged and shown as 
 `internal/flow/rich.go` - `flow.Text`: blocks by meaning (`Heading`, `Line` paragraphs, numbered `entry` items
 (a `Body` folds behind the name), `Group` section heads, `Quote`, `Table` (columns empty in every row are
 dropped), `Ticked` checklist lines, `Open` link button, `Small` print, `Remark` notes, `Divider`) of spans
-(bold, italic, code, link); an entry's `Tag` is a highlighted fact (你请求的)
+(bold, italic, code, link); an entry's `Tag` is a highlighted fact
 
 平台标签与 HTML 渲染见 [Telegram 参考](telegram.md#富文本海报与旧消息)。原有页码、标题、颜文字与图像呈现契约保留，不因拆文档而修改。
 
@@ -152,15 +151,15 @@ per season
 ## 订阅列表详情与身份
 
 `internal/flow/subs.go` - `/subscribe`: subscriptions one kind at a time (电视剧/电影 buttons, `sf`, same-level; TV
-first when there are any); number buttons open read-only details (`sd`); one shared 取消订阅 (`sc`, only when the
-shown kind holds one the user requested, `Watcher.Requested`) lists just those to pick and confirm, then
-`Watcher.Forget`
+first when there are any); number buttons open read-only details (`sd`); one shared 取消订阅 (`sc`, whenever the
+shown kind holds any) lists them to pick and confirm. Every whitelisted user manages every subscription,
+including ones created in MoviePilot's web UI (see [用户与权限模型](architecture.md#用户与权限模型))
 
 `internal/flow/subdetail.go`, `subdetailtext.go`, `subprogress.go` - subscription details re-read the
 subscription list on open and 刷新 (`su`, same-level), keeping its original page for 返回; successful state
 mutations and successful refreshes observing a changed state invalidate the source subscription-list snapshot,
-so 返回 reads it afresh; one that has ended offers 订阅历史 of its own kind (a calendar list chose none). A
-subscription the user requested shows 暂停订阅 (`sp`) or, when its state is S, 恢复订阅 (`sr`) beside 刷新
+so 返回 reads it afresh; one that has ended offers 订阅历史 of its own kind (a calendar list chose none). Every
+subscription shows 暂停订阅 (`sp`) or, when its state is S, 恢复订阅 (`sr`) beside 刷新
 (`subpause.go`, same-level): `PUT /api/v1/subscribe/status/{id}?state=S|R` once, then the details read afresh;
 a refusal (订阅不存在) is relayed as a notice and an unknown result asks to 刷新, never a retry. Settings and
 last-search execution state come from that list; library, downloads and transfer queue are read concurrently
@@ -174,16 +173,14 @@ Subscription buttons (`sd`, `su`, `sp`, `sr`, `v`, `z`) carry the subscription i
 session's list (`session.subAt`). Row ids can also be reused: `subidentity.go` checks the displayed
 subscription's source, media id, kind, season, episode group and original creation `date`
 (`Subscription.Created`) against a fresh list before pause, resume or cancellation; an unavailable or changed
-identity only flashes a notice, never writes. Details use the same identity comparison.
-`Watcher.Requested(userID, subs)` checks the watch's media and season as well as its id, so reloading a reused
-id does not grant ownership of another target. MoviePilot's write API has no conditional identity parameter:
+identity only flashes a notice, never writes. Details use the same identity comparison. MoviePilot's write API has no conditional identity parameter:
 these are client-side preflight checks, not an atomic compare-and-write guarantee against concurrent backend
 replacement.
 
 ### 订阅条件编辑
 
 `subedit.go`、`subeditchoices.go`、`subeditdirectory.go`、`subeditinput.go`、`subedittext.go` 和
-`subeditsave.go` 维护当前订阅的原始条件和内存草稿。只有请求者详情页提供「编辑条件」，打开和保存均按复合身份与 watcher 归属核验。保存前比较全部可编辑字段和总集数，普通进度变化不阻断，也不随草稿回传。
+`subeditsave.go` 维护当前订阅的原始条件和内存草稿。每个订阅详情页都提供「编辑条件」，打开和保存均按复合身份核验。保存前比较全部可编辑字段和总集数，普通进度变化不阻断，也不随草稿回传。
 
 字段页、关键词输入和预览均替换同一编辑层级；字段页返回保留草稿，编辑菜单返回或取消在有改动时先确认放弃。退出确认用「返回」继续原字段／输入，用「放弃修改」丢弃草稿；无改动不多问。退出确认保存独立的展示快照，不放进可恢复写目标的导航历史，恢复时重新签发写票据。选项、恢复原值、放弃与输入代次均不因返回复用，旧按钮不能影响新字段或新草稿。
 
@@ -195,21 +192,21 @@ replacement.
 
 后台条件或总集数变化进入 `subeditconflict.go` 的保留草稿比较流程。只有用户和后台都改动同字段且值不同才要求逐项选择；未修改字段明确说明沿用后台新值，其他草稿保留。「完成处理」再次读取同一身份和快照，若又变更则重新处理；选择完成后以最新快照为基线，重新生成预览和确认，不能自动写入。目录变更返回编辑菜单保留草稿，仍须重新选项并经原目录预检。
 
-`uw` 绑定当前屏幕票据，写前消费草稿并移除编辑历史，同时保存独立的只读 `session.subReceipt`。`subeditcheck.go` 比较本次实际修改的每个字段，显示与期望一致／仍为原值／其他值／未知；未知身份、无归属或读取失败均不猜测。包含／排除原文不展开。核对及返回只能持有不可提交的摘要，不能把旧确认恢复成草稿；摘要只保留本会话最近一次提交，仍遵守 TTL，不持久化。
+`uw` 绑定当前屏幕票据，写前消费草稿并移除编辑历史，同时保存独立的只读 `session.subReceipt`。`subeditcheck.go` 比较本次实际修改的每个字段，显示与期望一致／仍为原值／其他值／未知；未知身份或读取失败均不猜测。包含／排除原文不展开。核对及返回只能持有不可提交的摘要，不能把旧确认恢复成草稿；摘要只保留本会话最近一次提交，仍遵守 TTL，不持久化。
 
-写结果未知（含超时、半响应、缺少 `success`、跳转）不能重试。明确成功后先保存请求 watch 的新起始集和洗版模式，再读当前订阅；当前读失败不丢掉已确认的范围修改。回执及同会话对应详情提供「核对结果」，仅只读比较当前值，不能据相等追认当时请求成功，不承诺客户端预检是后端原子 compare-and-write。
+写结果未知（含超时、半响应、缺少 `success`、跳转）不能重试。明确成功后再读当前订阅；当前读失败只提示稍后核对。回执及同会话对应详情提供「核对结果」，仅只读比较当前值，不能据相等追认当时请求成功，不承诺客户端预检是后端原子 compare-and-write。
 
 ### 单订阅立即搜索与执行跟踪
 
-`subsearch.go` 在请求者的订阅详情中提供「立即搜索」。进入确认和最终提交均读取订阅，核对归属与复合身份；缺失创建时间不能发起搜索。条件、暂停状态或总集数发生变化时重新确认。提示明确说明会访问站点、可能按执行时的条件自动下载；暂停中的订阅仍可经明确确认搜索一次，不恢复自动调度。
+`subsearch.go` 在订阅详情中提供「立即搜索」。进入确认和最终提交均读取订阅，核对复合身份；缺失创建时间不能发起搜索。条件、暂停状态或总集数发生变化时重新确认。提示明确说明会访问站点、可能按执行时的条件自动下载；暂停中的订阅仍可经明确确认搜索一次，不恢复自动调度。
 
 `qc` 只接受当前屏幕票据，写前清空 `subSearchAsk`，建立结果尚未确定的本地回执。明确的新建单订阅回执才保留批次 ID；合并到已有批次或响应不完整时不取得控制权。`session.subSearch` 只保留当前会话最近一次尝试，返回保留最新值，不从旧屏幕恢复。批次序号区分同一会话前后的搜索，旧按钮不能转而控制新批次。
 
 状态页复用 `Reply.Follow`，每次只读本地记录的批次 ID，沿用现有刷新间隔与十分钟跟踪上限。用户点击先中断在途 Follow 读取时，丢弃该次读取副本，不覆盖当前屏幕；读取本身超时或失败仍保留标明非当前状态的上次快照，撤下停止入口，等待显式刷新。范围不符或未知状态不开放控制。批次完成只表示搜索执行事实，不推断资源、下载或媒体库状态。返回重新读取订阅详情，停止刷新、关闭与会话过期均不取消上游。
 
-「停止本次搜索」有独立确认，`qy` 写前再核对当前归属、订阅复合身份，以及批次 ID、创建时间、`manual` 来源、单订阅总数、当前订阅 ID、计数和 `can_cancel`。预检不能代替后端原子比较并写入。停止确认在 PUT 前消费，明确拒绝和未知结果都只保留只读核对，不从返回或投递恢复中重复 PUT。
+「停止本次搜索」有独立确认，`qy` 写前再核对订阅复合身份，以及批次 ID、创建时间、`manual` 来源、单订阅总数、当前订阅 ID、计数和 `can_cancel`。预检不能代替后端原子比较并写入。停止确认在 PUT 前消费，明确拒绝和未知结果都只保留只读核对，不从返回或投递恢复中重复 PUT。
 
-停止回执与批次终态分开显示，受理不等于已经停止；批次最后标为已停止时，也可能已有搜索任务提交了下载。已提交下载不撤销，订阅自动调度不暂停。回执、批次 ID 和停止状态不持久化，重启不自动恢复控制权或重放写入，通知 watch 和完成历史不变。
+停止回执与批次终态分开显示，受理不等于已经停止；批次最后标为已停止时，也可能已有搜索任务提交了下载。已提交下载不撤销，订阅自动调度不暂停。回执、批次 ID 和停止状态不持久化，重启不自动恢复控制权或重放写入。
 
 ## 历史与洗版
 
@@ -217,18 +214,14 @@ replacement.
 past subscriptions (`GET /api/v1/subscribe/history/{电视剧|电影}?page=1&count=10`); a pick (`hp`) already
 subscribed only flashes a notice (lookup failure still asks), otherwise a card asks; 确认重新订阅 (`ho`) posts the
 history record back unchanged like MoviePilot's WebUI (MoviePilot drops its id/state fields and keeps its
-settings), then watches for arrivals. It registers a `Request` from that history target and requester directly
-(`rememberRequest`): history has no current season/library observations, so their values remain unknown, never
-borrowed from `sess.seasons` or `sess.library` of a card visited before 首页. Arrivals settle normally without
-claiming the season is complete from another show's episode count
+settings); the receipt only says MoviePilot sends notifications by its own settings
 
 `internal/flow/upgrade.go` - 洗版订阅 (`bv`, forward): offered on the movie confirm card, a season's start choices
 and a held card (movie or whole season in the library), never on an already subscribed card or after a typed
 start episode; it reads the target's subscription again (MoviePilot's create answers a subscribed target with
 the existing row unchanged, `exist_ok=True`), so an existing one or a failed read only flashes a notice; 确认洗版
 (`bo`, ticketed, `finishing`) posts the whole target with `best_version: 1` once (omitted otherwise, so
-MoviePilot's per-kind default config applies to ordinary subscriptions) and watches it with
-`Target.BestVersion`
+MoviePilot's per-kind default config applies to ordinary subscriptions)
 
 ## 资源搜索筛选与批量下载
 
@@ -256,13 +249,12 @@ ignores audio channels like DDP5.1 and H.264; a whole pack saying 修复第9集�
 note and is never hidden; lists/details say 集数识别不确定, and success does not repeat an uncertain episode range;
 all in the session without searching again, a pick shows the release under the card (two tables, H&R warning)
 and 确认下载 (`td`) writes once (the release to confirm is cleared before the write; a refusal is relayed, an
-unknown result points to `/tasks`, never a retry), then watches the download by its id for arrivals;
+unknown result points to `/tasks`, never a retry);
 `torrentbatch.go`: 多选… (`tm`, forward) turns the number buttons into ticks (`tk`, same-level, stays on the
 ticked one's page, at most `maxTickedReleases`) kept across paging, sort and filters; 下载所选 N 个 (`tb`) lists
 the ticked releases under the card and 确认下载 (`tz`) clears the batch before writing each once, tabling each
-release's outcome (refusal relayed, unknown → `/tasks`); every started download gets its own watch; deliveries
-follow the same-media/season aggregation rules in the notification reference, so separate watches do not
-promise separate messages
+release's outcome (refusal relayed, unknown → `/tasks`); arrival notices come from MoviePilot, so separate
+downloads do not promise separate messages
 
 Batch confirmation consumes its target before starting one background worker (`submission.go`). The worker
 serially posts each selected release to MoviePilot's download API; `br` only reads submission progress, and
@@ -275,8 +267,7 @@ execution and for the normal TTL after completion; in-memory batches are not per
 `app.Run` injects the run context and waits for flow workers after platform handlers drain. Shutdown cancels
 the in-flight call as an unknown result and starts no remaining items. Per-call MoviePilot budgets stay in force.
 
-资源原始记录、集数识别和删除实例参数见 [MoviePilot 参考](moviepilot.md)。每次下载的独立 watch 和同媒体同季的合并通知见
-[通知参考](notifications.md#到货聚合与画质)。
+资源原始记录、集数识别和删除实例参数见 [MoviePilot 参考](moviepilot.md)。
 
 ### 缺集下载方案
 
@@ -294,7 +285,7 @@ the in-flight call as an unknown result and starts no remaining items. Per-call 
 `taskdelete.go`: a download's view offers 删除任务 (`kd`), which stops following, re-reads the download and asks,
 warning that its files go too and, when a subscription of the same media and season exists, that the
 subscription will not fetch it again; 确认删除 (`ky`) clears the download to confirm before the write, relays a
-refusal, points an unknown result to `/tasks`, and `Watcher.ForgetDownload`s it; `internal/telegram/follow.go`
+refusal and points an unknown result to `/tasks`; `internal/telegram/follow.go`
 re-asks the flow every `CRYCHIC_PROGRESS_INTERVAL` and edits only on change
 
 `internal/flow/latest.go` - `/newly_added`: newest media server items linked to their web page
@@ -309,14 +300,6 @@ task references from the available records and never starts a download, search o
 
 下载及转移任务的接口字段、SSE 限制、停止跟随和删除副作用见 [MoviePilot 任务参考](moviepilot.md#下载进度与任务删除)。
 投递失败只重试消息，见 [Telegram 跟随参考](telegram.md#跟随者投递与停止)。
-
-## 我的请求与异常
-
-`/requests` 和首页「我的请求」读取 `Watcher.Requests(userID)` 的本地归属记录，分跟踪中、需留意和最近完成。首页没有任何记录时只闪提示，直接命令仍返回空状态页。编号由会话内的稳定 key 分配，刷新、筛选和返回不复用；每次打开或刷新详情重新检查归属，旧请求取消后不能借旧按钮读取另一条请求。页面复用 `listPages`、语义文本和逐集进度，不增加写入口或后台刷新服务。
-
-`requestreads.go` 在共享五秒预算内并行读取订阅、下载、整理队列和失败历史；详情额外并行读一个媒体库目标，列表不逐个请求媒体库。失败来源标为未知，成功来源继续使用。需留意包含暂停、执行错误、未知执行状态、匹配的失败记录及不完整读取，不把需要核对都解释成业务失败。下载按媒体、季、hash 和当前实例观察关联；跨实例、实例缺失、季集不明和未映射剧集组不伪造进度。
-
-失败阶段映射为固定建议，不展示上游错误或 `recovery_action`。订阅可按媒体与所需季集范围关联失败文件；选种下载的失败历史缺少实例身份，仅显示待核对提示。最近完成来自通知结算，详情只查询当前媒体库，并显示结算时的范围；不恢复为订阅或下载目标。
 
 ## 相关推荐
 
@@ -338,7 +321,6 @@ history `hs`/`hf`/`hp`/`ho`, calendar weekday is `w`, generic list paging is `p`
 重新搜索 is `rs`, read-only 重试 is `rt` and 返回 is `bk`.
 订阅编辑为 `ue/uf/uv/uc/ua/uq/uw/ui`，依次对应入口、字段、选择、清空、返回菜单、预览、确认写入和 typed input。
 交互增强为 `uo/ud/uy`（恢复原值、确认放弃、只读核对）及 `up/uk/ub/ug/ur`（冲突字段、保留草稿、采用后台、完成处理、重新读取）。
-我的请求为 `rq/rp/rr`，分别对应模式切换或列表刷新、选取请求、详情刷新；均只读。
 缺集方案为 `pl/pc`（生成／重新计算），确认复用 `tz`；确认发现库存变化时按只读 `pc` 更新屏幕。
 单订阅搜索为 `qs/qc`（确认页／提交），`qv/qr/qf/qu`（打开或继续刷新／手动读取／Follow 读取／停止刷新），`qx/qy`（停止确认页／提交停止）。只有 `qc/qy` 写入并绑定当前票据，所有动作只接受当前页面的按钮或 Follow。
 

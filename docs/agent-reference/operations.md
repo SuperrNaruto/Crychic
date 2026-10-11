@@ -46,8 +46,8 @@ MP 插件版本独立维护：`package.v3.json` 的 `version`、`history` 与 `_
 - `CRYCHIC_TELEGRAM_ALLOWED_USERS` - required, comma-separated user IDs; empty refuses to start
 - `CRYCHIC_TELEGRAM_API_URL` - optional, defaults to `https://api.telegram.org`
 - `CRYCHIC_BANGUMI_API_URL` - optional, defaults to `https://api.bgm.tv`; the 新番放送 calendar is read from it
-- `CRYCHIC_DATA_DIR` - optional, defaults to `data`; holds `requests.json` and `native-notifications.json`
-- `CRYCHIC_NOTIFY_INTERVAL` - optional, defaults to `1m`, minimum `100ms`; request-fact polling and failed native-reception retry interval
+- `CRYCHIC_DATA_DIR` - optional, defaults to `data`; holds `native-notifications.json`; an older `requests.json` is no longer read and is left in place
+- `CRYCHIC_NOTIFY_INTERVAL` - optional, defaults to `1m`, minimum `100ms`; retry interval after a failed native-notification reception
 - `CRYCHIC_PROGRESS_INTERVAL` - optional, defaults to `5s`, minimum `100ms`; task and resource-list refresh cadence. SSE first results and terminal state wake the existing follower early; intermediate frames do not each trigger an edit.
 
 ## 配置与部署入口

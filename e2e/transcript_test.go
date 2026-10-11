@@ -94,10 +94,10 @@ func readRoute(line string) string {
 		return ""
 	}
 	path, query, _ := strings.Cut(path, "?")
-	if requestDiagnosticRead(path, query) {
-		// Request diagnostics read these sources concurrently. Only adjacent
+	if path == subscriptionPath {
+		// Subscription reads can overlap other concurrent reads. Only adjacent
 		// reads share this group; writes and user interactions remain ordered.
-		return service + " request diagnostics"
+		return service + " subscription reads"
 	}
 	if strings.Contains(query, "type=collection") {
 		// a movie's series is searched by all its names at once
@@ -112,10 +112,6 @@ func readRoute(line string) string {
 		return lookups
 	}
 	return service + " " + route
-}
-
-func requestDiagnosticRead(path, query string) bool {
-	return path == subscriptionPath || (path == transferPath && strings.Contains(query, "status=false"))
 }
 
 // readOrder sorts lookups as a pick made one at a time reads them: media

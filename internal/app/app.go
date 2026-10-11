@@ -24,8 +24,6 @@ const (
 	backendTimeout  = 30 * time.Second
 	telegramTimeout = 70 * time.Second // longer than Telegram's one-minute long poll
 	imageTimeout    = 10 * time.Second
-	// stateFile holds requests awaiting arrival, inside the data dir.
-	stateFile = "requests.json"
 )
 
 // Deps are what the app takes from its host besides configuration.
@@ -37,22 +35,12 @@ type Deps struct {
 	Images *http.Client
 }
 
-// Run serves the Telegram bot and arrival notices until ctx is cancelled.
+// Run serves the Telegram bot and native notices until ctx is cancelled.
 func Run(ctx context.Context, cfg config.Config, deps Deps) error {
 	log, now := deps.Log, deps.Now
 	transport := newTransport()
 	backend := moviePilot(cfg, transport)
 	tg, err := telegramBot(cfg, transport, deps)
-	if err != nil {
-		return err
-	}
-	notifier, err := notify.New(notify.Options{
-		Feed:     backend,
-		Path:     filepath.Join(cfg.DataDir, stateFile),
-		Interval: cfg.NotifyInterval,
-		Now:      now,
-		Log:      log,
-	})
 	if err != nil {
 		return err
 	}
@@ -64,10 +52,9 @@ func Run(ctx context.Context, cfg config.Config, deps Deps) error {
 	calendar := bangumi.New(cfg.BangumiAPIURL, &http.Client{Timeout: backendTimeout, Transport: transport})
 	engine := flow.New(flow.Options{
 		RunContext: ctx,
-		Backend:    backend, Calendar: calendar, Watcher: notifier, Log: log, Now: now,
+		Backend:    backend, Calendar: calendar, Log: log, Now: now,
 	})
 	var wg sync.WaitGroup
-	wg.Go(func() { notifier.Run(ctx) })
 	wg.Go(func() { native.Run(ctx) })
 	tg.Run(ctx, engine)
 	engine.Wait()

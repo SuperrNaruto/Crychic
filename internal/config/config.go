@@ -24,7 +24,7 @@ const (
 // often one message may be edited, so seconds rather than milliseconds.
 var followEvery = durationVar{"CRYCHIC_PROGRESS_INTERVAL", defaultFollowEvery, minimumFollowEvery}
 
-// notifyInterval is how often arrivals are checked, e.g. "1m" or "30s".
+// notifyInterval is how soon native notice reception retries after a failure, e.g. "1m".
 var notifyInterval = durationVar{"CRYCHIC_NOTIFY_INTERVAL", defaultNotifyInterval, minimumNotifyInterval}
 
 // Config is the full runtime configuration.

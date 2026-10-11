@@ -6,7 +6,6 @@
    [搜索 | 1:h:0] [发现 | 1:h:1]
    [我的订阅 | 1:h:2] [最新入库 | 1:h:3]
    [任务进度 | 1:h:4] [追剧日历 | 1:h:5]
-   [我的请求 | 1:h:6]
 >> user 1001 taps 1:h:5 on message 1
 -> MoviePilot GET /api/v1/subscribe/
 -> MoviePilot GET /api/v1/tmdb/283938/1
@@ -57,7 +56,9 @@
    <tr><td>E15–E30</td><td>未入库</td><td>暂无任务记录</td></tr>
    </table>
    <footer>仅查询，不会触发搜索或下载；点击刷新查看最新状态哦～</footer>
-   [刷新 | 1:su:1]
+   [刷新 | 1:su:1] [暂停订阅 | 1:sp:1]
+   [编辑条件 | 1:ue:1]
+   [立即搜索 | 1:qs:1]
    [返回 | 1:bk:0] [首页 | 1:o:0] [关闭 | 1:c:0]
 << answerCallbackQuery
 >> user 1001 taps 1:bk:0 on message 1

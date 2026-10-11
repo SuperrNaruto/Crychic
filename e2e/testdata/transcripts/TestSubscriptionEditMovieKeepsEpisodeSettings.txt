@@ -20,15 +20,14 @@
    <h3>🎬 无海报影片</h3>
    <footer>电影</footer>
    <hr/>
-   <p>✅ 帮你订好《无海报影片》啦，通知由 MoviePilot 按设置发送，可在 /requests 核对到货哦～ ヾ(≧▽≦*)o</p>
+   <p>✅ 帮你订好《无海报影片》啦，通知由 MoviePilot 按设置发送哦～ ヾ(≧▽≦*)o</p>
 << answerCallbackQuery
 >> user 1001 in chat 1001: /subscribe
 -> MoviePilot GET /api/v1/subscribe/
 << sendRichMessage chat=1001 message=2
    <h3>📚 订阅清单 · 电影（1）</h3>
    <ol start="1">
-   <li value="1"><b>《无海报影片》</b><br>
-   <i><mark>你请求的</mark></i></li>
+   <li value="1"><b>《无海报影片》</b></li>
    </ol>
    [1 | 2:sd:1]
    [电视剧 | 2:sf:2] [·电影· | 2:sf:1]

@@ -76,22 +76,6 @@ func TestSubscriptionEditMovieKeepsEpisodeSettings(t *testing.T) {
 	h.tr.verify(t)
 }
 
-// A second live conversation may cancel the request while the old edit is
-// still visible. Recreating the same row must not recreate ownership.
-func TestSubscriptionEditRevokedRequestCannotSave(t *testing.T) {
-	h := subscriptionEditor(t)
-	chooseEditValue(h, "资源类型", "不限")
-	h.tap(alice, editMessage, "查看修改")
-	h.mp.setRoute(deleteFirst, ok("subscribe_deleted.json"))
-	h.say(alice, alice, "/subscribe")
-	h.tap(alice, 3, "取消订阅")
-	h.tap(alice, 3, "1")
-	h.tap(alice, 3, "确认取消")
-	h.tap(alice, editMessage, "确认保存")
-	assertEditCount(h, 0)
-	h.tr.verify(t)
-}
-
 func TestSubscriptionEditInputStaysInRequestTopic(t *testing.T) {
 	const topic = 17
 	h := subscriptionEditor(t)

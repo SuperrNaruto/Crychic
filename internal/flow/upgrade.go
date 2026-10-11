@@ -62,11 +62,9 @@ func (e *Engine) confirmUpgrade(ctx context.Context, sess session) Reply {
 	}
 	e.settle(sess)
 	target := *sess.target
-	id, err := e.submit(ctx, target)
-	if err != nil {
+	if _, err := e.submit(ctx, target); err != nil {
 		return sess.picked.replyLines(e.failure("subscribe", err).Text, nil)
 	}
-	ending := e.watch(ctx, sess, subscription{id: id, target: target})
-	done := fmt.Sprintf("✅ 帮你订好%s的洗版啦%s ヾ(≧▽≦*)o", targetName(target), ending)
+	done := fmt.Sprintf("✅ 帮你订好%s的洗版啦%s ヾ(≧▽≦*)o", targetName(target), noticeEnding)
 	return sess.picked.reply(Line(Plain(done)), nil)
 }

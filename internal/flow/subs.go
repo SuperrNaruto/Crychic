@@ -9,7 +9,7 @@ import (
 const (
 	actionSubs        = "j"  // lists the shown kind's subscriptions afresh
 	actionSubsKind    = "sf" // arg: Kind; shows that kind's subscriptions
-	actionCancelPick  = "sc" // lists the shown subscriptions the owner may cancel
+	actionCancelPick  = "sc" // lists the shown subscriptions to cancel
 	actionAskCancel   = "v"  // arg: subscription id; asks to confirm
 	actionUnsubscribe = "z"  // arg: subscription id; cancels it
 
@@ -17,10 +17,9 @@ const (
 	msgNoKindSubs      = "这里还没有%s订阅哦～"
 	msgSubsTitle       = "📚 订阅清单"
 	msgCancelTitle     = "📚 取消订阅"
-	msgCancelPick      = "只能取消你请求的订阅哦，点编号选一个吧。"
-	msgNothingToCancel = "这里没有你请求的订阅可以取消哦～"
+	msgCancelPick      = "点编号选一个要取消的订阅吧。"
+	msgNothingToCancel = "这里没有可以取消的订阅哦～"
 	msgCancelEffect    = "取消后 MoviePilot 就不会再帮它搜索下载了哦。"
-	msgRequestedTag    = "你请求的"
 )
 
 // subKinds are the subscription filters, in button order.
@@ -55,7 +54,7 @@ func (e *Engine) chooseSubs(ctx context.Context, sess session, p press) (Reply, 
 		return e.cancelPicker(sess), true
 	case actionAskCancel, actionUnsubscribe:
 		i := sess.subAt(p.arg)
-		if i < 0 || !slices.Contains(sess.mine, p.arg) {
+		if i < 0 {
 			return Reply{Notice: msgInvalidChoice}, true
 		}
 		if p.action == actionAskCancel {
@@ -77,7 +76,7 @@ func (e *Engine) listSubs(ctx context.Context, sess session) Reply {
 	if len(subs) == 0 && sess.menu {
 		return Reply{Notice: msgNoSubs}
 	}
-	sess.subs, sess.mine = subs, e.watcher.Requested(sess.owner.UserID, subs)
+	sess.subs = subs
 	if len(subs) == 0 {
 		sess.pages, sess.listing, sess.pageIndex = nil, subscriptionList, 0
 		e.store.put(sess)
@@ -108,26 +107,22 @@ func firstKind(subs []Subscription) Kind {
 // open read-only details, and one shared button cancels.
 func (e *Engine) subsPage(sess session) Reply {
 	view := listView{source: subscriptionList}
-	mine := false
 	for _, s := range sess.subs {
 		if s.Kind != sess.kind {
 			continue
 		}
 		n := len(view.entries) + 1
-		requested := slices.Contains(sess.mine, s.ID)
-		mine = mine || requested
 		s.Title = truncate(s.Title, listTitleRunes)
 		view.entries = append(view.entries, listEntry{
-			text:    Lines(subEntry(n, s, requested)),
+			text:    Lines(subEntry(n, s)),
 			buttons: []Button{{Label: fmt.Sprint(n), Data: data(sess.id, actionSubDetail, s.ID)}},
 		})
 	}
 	view.heading = Heading(Plain(fmt.Sprintf("%s · %s（%d）", msgSubsTitle, sess.kind, len(view.entries))))
+	actions := []Button{{Label: "订阅历史", Data: data(sess.id, actionHistory, int(sess.kind))}}
 	if len(view.entries) == 0 {
 		view.entries = []listEntry{{text: Sentence(fmt.Sprintf(msgNoKindSubs, sess.kind))}}
-	}
-	actions := []Button{{Label: "订阅历史", Data: data(sess.id, actionHistory, int(sess.kind))}}
-	if mine {
+	} else {
 		actions = append([]Button{{Label: "取消订阅", Data: data(sess.id, actionCancelPick, 0)}}, actions...)
 	}
 	view.menu = [][]Button{kindRow(sess.id, actionSubsKind, sess.kind), actions}
@@ -153,17 +148,17 @@ func markShown(label string, shown bool) string {
 	return label
 }
 
-// cancelPicker numbers the shown kind's subscriptions the owner asked for.
+// cancelPicker numbers the shown kind's subscriptions.
 func (e *Engine) cancelPicker(sess session) Reply {
 	view := listView{heading: Heading(Plain(msgCancelTitle)), note: msgCancelPick, footer: browseRow(sess.id)}
 	for _, s := range sess.subs {
-		if s.Kind != sess.kind || !slices.Contains(sess.mine, s.ID) {
+		if s.Kind != sess.kind {
 			continue
 		}
 		n := len(view.entries) + 1
 		s.Title = truncate(s.Title, listTitleRunes)
 		view.entries = append(view.entries, listEntry{
-			text:    Lines(subEntry(n, s, false)),
+			text:    Lines(subEntry(n, s)),
 			buttons: []Button{{Label: fmt.Sprint(n), Data: data(sess.id, actionAskCancel, s.ID)}},
 		})
 	}
@@ -173,8 +168,8 @@ func (e *Engine) cancelPicker(sess session) Reply {
 	return e.listPages(sess, view)
 }
 
-// subEntry is e.g. "1. **《绝命毒师》第 2 季**" over "_订阅中 · 缺 3/13 集 · 你请求的_".
-func subEntry(n int, s Subscription, mine bool) Block {
+// subEntry is e.g. "1. **《绝命毒师》第 2 季**" over "_订阅中 · 缺 3/13 集_".
+func subEntry(n int, s Subscription) Block {
 	missing := ""
 	if s.Kind == TV && s.Lack > 0 {
 		missing = fmt.Sprintf("缺 %d 集", s.Lack)
@@ -183,11 +178,7 @@ func subEntry(n int, s Subscription, mine bool) Block {
 		}
 	}
 	name := fmt.Sprintf("《%s》%s", s.Title, seasonSuffix(s))
-	item := entry(n, Strong(name), stateText[s.State], missing)
-	if mine {
-		item.Tag = msgRequestedTag
-	}
-	return item
+	return entry(n, Strong(name), stateText[s.State], missing)
 }
 
 // seasonSuffix follows a 《title》, e.g. 第 2 季.
@@ -210,10 +201,9 @@ func askCancel(sess session, index int) Reply {
 	}
 }
 
-// unsubscribe deletes s and forgets its requests, so nobody waits for an
-// arrival that will not come.
+// unsubscribe deletes s after rechecking its identity.
 func (e *Engine) unsubscribe(ctx context.Context, sess session, s Subscription) Reply {
-	if notice := e.checkSubscription(ctx, sess, s); notice != "" {
+	if notice := e.checkSubscription(ctx, s); notice != "" {
 		return Reply{Notice: notice}
 	}
 	nav := append([]Button{backTo(sess.id, actionSubs, 0)}, browseRow(sess.id)...)
@@ -221,9 +211,6 @@ func (e *Engine) unsubscribe(ctx context.Context, sess session, s Subscription) 
 		failed := titled(msgCancelTitle, e.failure("unsubscribe", err))
 		failed.Buttons = [][]Button{nav}
 		return failed
-	}
-	if err := e.watcher.Forget(ctx, s); err != nil {
-		e.log.Error("cannot forget cancelled subscription", "subscription", s.ID, "err", err)
 	}
 	e.store.put(sess)
 	done := fmt.Sprintf("好哒，《%s》%s的订阅已经取消啦。", s.Title, seasonSuffix(s))

@@ -27,7 +27,7 @@ SHA-256 为 `c31b46882465e8e046ef405872e3e389c04c4e64e2ada6239ebe3ed27c364680`�
 
 ## v3.1.3 兼容性核验
 
-2026-10-10 对照官方 `v3.1.3` 提交 `7aa5d613b8641b94624f8879ad9596dbcd4edffa`。第 3 项使用的订阅列表、下载列表、完整整理队列和失败历史契约与 `v3.1.1` 兼容。版本记录用于追溯源码，客户端不检测或锁定小版本，也没有逐版本适配分支；只解码使用的字段。
+2026-10-10 对照官方 `v3.1.3` 提交 `7aa5d613b8641b94624f8879ad9596dbcd4edffa`。第 3 项使用的订阅列表、下载列表、完整整理队列和失败历史契约与 `v3.1.1` 兼容（第 3 项「我的请求」已于 2026-10-11 删除）。版本记录用于追溯源码，客户端不检测或锁定小版本，也没有逐版本适配分支；只解码使用的字段。
 
 本次相关变化是手动音乐整理新增可选 `music_cue_enable`，以及下载目录别名说明。认证、订阅条件 schema 和更新实现未变。资源搜索流新增默认关闭的 `manual_paging` 及可选分页参数，Crychic 未发送这些参数，仍使用兼容的完整搜索流。源码见 [队列模型](https://github.com/jxxghp/MoviePilot/blob/v3.1.3/app/schemas/transfer.py)、[下载端点](https://github.com/jxxghp/MoviePilot/blob/v3.1.3/app/api/endpoints/download.py)、[搜索流](https://github.com/jxxghp/MoviePilot/blob/v3.1.3/app/api/endpoints/search.py)。Context7 仍指向 `v3` 主线，具体差异以上述固定版本源码为准。
 
@@ -146,7 +146,7 @@ browses the sites' newest releases (`SUBSCRIBE_MODE`, every `SUBSCRIBE_RSS_INTER
 等待 or 正在运行. Both reads are cosmetic, inside the details' budget (`flow.SubscriptionUpkeep`); `schedule.json`
 and `subscribe_filter_groups.json` are trimmed live recordings
 
-Only the subscription list attaches `execution_status`; `GET /api/v1/subscribe/{id}` does not. `last_search`
+Only the subscription list attaches `execution_status`; `GET /api/v1/subscribe/{id}` does not, and Crychic does not read it. `last_search`
 and execution `next_run_at` are UTC timestamps, displayed in China time; missing/unrecognized timestamps and
 states stay unknown. MoviePilot v3.1.0's execution-error projection only flattens/truncates text, so it can
 still contain paths or credentials: `moviepilot` passes only `HasError` to flow, never the original error.
@@ -194,13 +194,9 @@ download post) never quotes MoviePilot's error answer, which can echo the reques
 
 上游拒绝原样转述只适用于安全的 `flow.UserError`；`call.secret` 和执行错误的原文可能带请求载荷、路径或凭据，安全过滤优先。
 
-## 关联接口与转移历史
+## 关联接口
 
-推荐、日历与合集的响应限制见 [发现参考](discovery.md)。成功转移的按秒游标、失败记录重试、初始化和迁移见 [通知参考](notifications.md#完成日期游标与迁移)。
-
-`failures.go` 按 `status=false`、每页 50 条读取最近失败历史，每次最多 100 条；沿用 `data.list` 和 `data.total`。后页失败保留前页已确认记录，并明确标为不完整；达到上限单独提示。来源、类型、媒体 ID、季集和失败状态须能关联请求，缺失可选阶段时使用未知，不影响其他进度。重复 ID 只计一次，成功记录不进入失败摘要。
-
-公开历史只提供 `download_hash`，没有下载器实例字段；原始 `errmsg`、`recovery_action`、路径和文件列表不解码到业务模型。固定建议依据 `failure_stage`，两个可选布尔标记保留自动暂停和重试耗尽信息。完整队列的文件包含 `downloader` 与 `download_hash`，仅在内存用于关联；未知队列状态投影为 `FileUnknown`。订阅、下载和整理列表的 `data: null` 视为来源未读到，不当作成功空列表。契约见 [历史端点](https://github.com/jxxghp/MoviePilot/blob/v3.1.3/app/api/endpoints/history.py#L512-L542)、[历史模型](https://github.com/jxxghp/MoviePilot/blob/v3.1.3/app/schemas/history.py#L74-L166)、[阶段定义](https://github.com/jxxghp/MoviePilot/blob/v3.1.3/app/application/transfer/feedback.py#L9-L110)。
+推荐、日历与合集的响应限制见 [发现参考](discovery.md)。Crychic 自 2026-10-11 起不再读取整理历史（`/api/v1/history/transfer`，含失败记录）或单个订阅（`GET /api/v1/subscribe/{id}`）；这两类读取只服务已删除的本地请求归属。订阅、下载和整理列表的 `data: null` 视为来源未读到，不当作成功空列表。历史契约仍可参考 [历史端点](https://github.com/jxxghp/MoviePilot/blob/v3.1.3/app/api/endpoints/history.py#L512-L542)。
 
 When MoviePilot behavior is unclear, read its source (`app/api/endpoints/{media,subscribe}.py`) instead of
 guessing

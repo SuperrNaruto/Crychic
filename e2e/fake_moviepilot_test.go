@@ -12,7 +12,6 @@ import (
 	"os"
 	"path/filepath"
 	"slices"
-	"strconv"
 	"strings"
 	"sync"
 	"testing"
@@ -22,9 +21,7 @@ import (
 const (
 	mpAPIKey = "mp-test-key"
 
-	transferPath        = "/api/v1/history/transfer"
-	subscriptionPath    = "/api/v1/subscribe/"
-	failedTransfersPath = "GET /api/v1/history/transfer?status=false"
+	subscriptionPath = "/api/v1/subscribe/"
 
 	libraryShowPath  = "POST /api/v1/mediaserver/exists_remote"
 	libraryMoviePath = "POST /api/v1/mediaserver/notexists"
@@ -32,7 +29,6 @@ const (
 	queuePath        = "GET /api/v1/transfer/queue"
 	clientsPath      = "GET /api/v1/mediaserver/clients"
 	latestPath       = "GET /api/v1/mediaserver/latest"
-	recognizePath    = "GET /api/v1/media/recognize"
 	ruleGroupsPath   = "GET /api/v1/system/setting/SubscribeFilterRuleGroups"
 	schedulePath     = "GET /api/v1/dashboard/schedule"
 
@@ -116,26 +112,19 @@ type fakeMoviePilot struct {
 	tr     *transcript
 	routes map[string]route
 
-	mu               sync.Mutex
-	transfers        []transfer // newest first, like MoviePilot
-	polled           chan struct{}
-	readers          []reader
-	created          int  // subscriptions created so far
-	added            int  // downloads added so far
-	lagging          bool // the media server has not scanned new transfers yet
-	scanned          int  // transfers the media server shows while lagging
-	searches         map[string]string
-	recognized       map[string]string
-	deleted          map[downloadKey]bool   // downloads removed from each downloader
-	states           map[int]string         // subscription states set, by id
-	subscribed       map[int]map[string]any // subscriptions created or found, for reads by id
-	held             map[string][]*heldCall
-	streams          map[string][]*searchStream
-	edited           map[int]map[string]any
-	editPatches      []map[string]any
-	editReply        subscriptionEditResponse
-	subscriptionRead *heldCall
-	execution        fakeSubscriptionExecution
+	mu          sync.Mutex
+	transfers   []transfer // newest first, like MoviePilot
+	created     int        // subscriptions created so far
+	added       int        // downloads added so far
+	searches    map[string]string
+	deleted     map[downloadKey]bool // downloads removed from each downloader
+	states      map[int]string       // subscription states set, by id
+	held        map[string][]*heldCall
+	streams     map[string][]*searchStream
+	edited      map[int]map[string]any
+	editPatches []map[string]any
+	editReply   subscriptionEditResponse
+	execution   fakeSubscriptionExecution
 }
 
 // reader waits for a complete poll after it was registered. Only page one
@@ -148,15 +137,14 @@ type reader struct {
 func newFakeMoviePilot(t *testing.T, tr *transcript, routes map[string]route) *fakeMoviePilot {
 	all := maps.Clone(idleServer)
 	maps.Copy(all, routes)
-	f := &fakeMoviePilot{t: t, tr: tr, routes: all, polled: make(chan struct{}), deleted: map[downloadKey]bool{}, states: map[int]string{}}
+	f := &fakeMoviePilot{t: t, tr: tr, routes: all, deleted: map[downloadKey]bool{}, states: map[int]string{}}
 	f.native = newNativeMP()
 	f.Server = httptest.NewServer(http.HandlerFunc(f.serve))
 	return f
 }
 
-// add appends records to the transfer history; the returned channel closes
-// once a poll that read them has finished.
-func (f *fakeMoviePilot) add(records ...transfer) <-chan struct{} {
+// add appends records to the transfer history the fake library serves.
+func (f *fakeMoviePilot) add(records ...transfer) {
 	f.mu.Lock()
 	defer f.mu.Unlock()
 	for _, r := range records {
@@ -164,24 +152,6 @@ func (f *fakeMoviePilot) add(records ...transfer) <-chan struct{} {
 		r.Status = true
 		f.transfers = append([]transfer{r}, f.transfers...)
 	}
-	rd := reader{done: make(chan struct{})}
-	f.readers = append(f.readers, rd)
-	return rd.done
-}
-
-// markRead is called on page one with f.mu held. The next poll starts only
-// after the preceding poll finished reading every page and sending notices.
-func (f *fakeMoviePilot) markRead() {
-	waiting := f.readers[:0]
-	for _, rd := range f.readers {
-		if rd.seen {
-			close(rd.done)
-			continue
-		}
-		rd.seen = true
-		waiting = append(waiting, rd)
-	}
-	f.readers = waiting
 }
 
 func (f *fakeMoviePilot) serve(w http.ResponseWriter, r *http.Request) {
@@ -191,10 +161,6 @@ func (f *fakeMoviePilot) serve(w http.ResponseWriter, r *http.Request) {
 	assertNoResourceCredentials(f.t, r)
 	if !f.wait(r) {
 		return
-	}
-	isTransfers := r.Method == http.MethodGet && r.URL.Path == transferPath && r.URL.Query().Get("status") != "false"
-	if isTransfers {
-		f.markPolled()
 	}
 	if !isPolled(r) && !strings.HasPrefix(r.URL.Path, nativePrefix) {
 		f.record(r)
@@ -211,10 +177,6 @@ func (f *fakeMoviePilot) serveAuthenticated(w http.ResponseWriter, r *http.Reque
 		return
 	}
 	switch {
-	case r.Method == http.MethodGet && r.URL.Path == transferPath:
-		f.serveTransfers(w, r)
-	case r.Method == http.MethodGet && isSubscriptionByID(r.URL.Path):
-		f.serveSubscription(w, r)
 	case f.servesLibrary(w, r):
 	case f.deletesDownload(w, r):
 	case f.setsSubscriptionState(w, r):
@@ -249,18 +211,7 @@ func isPolled(r *http.Request) bool {
 	if r.Method != http.MethodGet {
 		return polledPaths[r.Method+" "+r.URL.Path]
 	}
-	return (r.URL.Path == transferPath && r.URL.Query().Get("status") != "false") || isSubscriptionByID(r.URL.Path) || isSubscriptionBatchRead(r) || polledPaths[r.Method+" "+r.URL.Path]
-}
-
-// markPolled signals the notifier's first look at the transfer history.
-func (f *fakeMoviePilot) markPolled() {
-	f.mu.Lock()
-	defer f.mu.Unlock()
-	select {
-	case <-f.polled:
-	default:
-		close(f.polled)
-	}
+	return isSubscriptionBatchRead(r) || polledPaths[r.Method+" "+r.URL.Path]
 }
 
 func (f *fakeMoviePilot) record(r *http.Request) {
@@ -338,10 +289,6 @@ func (f *fakeMoviePilot) serveRoute(w http.ResponseWriter, r *http.Request) {
 	if fixture, ok := f.searches[title]; ok && key == searchPath {
 		rt, found = route{status: http.StatusOK, fixture: fixture}, true
 	}
-	if key == recognizePath {
-		// MoviePilot answers a file it cannot recognize with no meta_info.
-		rt, found = ok(cmp.Or(f.recognized[title], "recognize_none.json")), true
-	}
 	if key == searchPath && r.URL.Query().Get("type") == "collection" {
 		// MoviePilot answers a name matching no collection with an empty list.
 		rt, found = f.routes[collectionSearch(title)], true
@@ -376,7 +323,6 @@ func (f *fakeMoviePilot) routeBody(r *http.Request, rt route) string {
 	if key == downloadPath && rt.status == http.StatusOK {
 		body = f.hashed(body)
 	}
-	f.rememberSubscription(r, body)
 	return body
 }
 
@@ -405,55 +351,6 @@ func (f *fakeMoviePilot) hashed(body string) string {
 func addedHashN(n int) string {
 	suffix := fmt.Sprintf("%02d", n)
 	return addedHash[:len(addedHash)-len(suffix)] + suffix
-}
-
-// serveTransfers filters by status and pages by date, not by increasing id.
-func (f *fakeMoviePilot) serveTransfers(w http.ResponseWriter, r *http.Request) {
-	if f.serveFailedTransferRoute(w, r) {
-		return
-	}
-	page, _ := strconv.Atoi(r.URL.Query().Get("page"))
-	count, _ := strconv.Atoi(r.URL.Query().Get("count"))
-	f.mu.Lock()
-	records := transferHistory(f.transfers, r.URL.Query().Get("status"))
-	from := min(max(page-1, 0)*count, len(records))
-	list := append([]transfer{}, records[from:min(from+count, len(records))]...)
-	total := len(records)
-	if page == 1 && r.URL.Query().Get("status") != "false" {
-		f.markRead()
-	}
-	f.mu.Unlock()
-	data, _ := json.Marshal(map[string]any{"list": list, "total": total})
-	writeEnvelope(w, http.StatusOK, `{"success":true,"message":"","data":`+string(data)+`}`)
-}
-
-// serveSubscription reads the subscription currently using this id, or
-// MoviePilot's empty record when none does. An explicit route can model
-// its completion or replacement independently of the original request.
-func (f *fakeMoviePilot) serveSubscription(w http.ResponseWriter, r *http.Request) {
-	f.mu.Lock()
-	_, routed := f.routes[r.Method+" "+r.URL.Path]
-	id, _ := strconv.Atoi(strings.TrimPrefix(r.URL.Path, subscriptionPath))
-	sub := f.subscribed[id]
-	f.mu.Unlock()
-	if routed {
-		f.serveRoute(w, r)
-		return
-	}
-	if edited := f.editedSubscription(r.URL.Path); edited != nil {
-		sub = edited
-	}
-	if sub == nil {
-		sub = map[string]any{"id": nil}
-	}
-	data, _ := json.Marshal(sub)
-	f.waitSubscriptionRead(r.Context())
-	writeEnvelope(w, http.StatusOK, `{"success":true,"message":"","data":`+string(data)+`}`)
-}
-
-func isSubscriptionByID(path string) bool {
-	_, err := strconv.Atoi(strings.TrimPrefix(path, subscriptionPath))
-	return strings.HasPrefix(path, subscriptionPath) && err == nil
 }
 
 func writeEnvelope(w http.ResponseWriter, status int, body string) {

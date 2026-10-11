@@ -59,7 +59,7 @@ func (e *Engine) chooseSubEditConflict(ctx context.Context, sess session, p pres
 	case actionSubConflictDone:
 		return e.finishSubEditConflict(ctx, sess)
 	case actionSubConflictReload:
-		current, notice := e.editableSubscription(ctx, sess, sess.subEdit.base)
+		current, notice := e.editableSubscription(ctx, sess.subEdit.base)
 		if notice != "" {
 			return Reply{Notice: notice}
 		}
@@ -93,7 +93,7 @@ func (e *Engine) finishSubEditConflict(ctx context.Context, sess session) Reply 
 			return Reply{Notice: "还有冲突项没选好，请先逐项处理哦～"}
 		}
 	}
-	current, notice := e.editableSubscription(ctx, sess, edit.base)
+	current, notice := e.editableSubscription(ctx, edit.base)
 	if notice != "" {
 		return Reply{Notice: notice}
 	}

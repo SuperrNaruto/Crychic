@@ -36,45 +36,37 @@ const (
 	msgNoSeasons     = "呜，没查到这部剧有哪几季…"
 	msgPickSeason    = "想订哪一季呀？"
 	msgInvalidChoice = "这个选项不太对哦～"
-	msgWillNotify    = "通知由 MoviePilot 按设置发送，可在 /requests 核对到货哦～"
-	msgWillPost      = msgWillNotify
-	msgNoNotice      = "MoviePilot 会自己去搜索下载哒。"
+	msgWillNotify    = "通知由 MoviePilot 按设置发送哦～"
 )
 
 // Options configures an Engine.
 type Options struct {
-	RunContext      context.Context
-	Backend         Backend
-	Calendar        Calendar
-	Watcher         Watcher
-	Log             *slog.Logger
-	Now             func() time.Time
-	NoticeInChannel bool
+	RunContext context.Context
+	Backend    Backend
+	Calendar   Calendar
+	Log        *slog.Logger
+	Now        func() time.Time
 }
 
 // Engine runs request conversations against a Backend.
 type Engine struct {
-	runCtx          context.Context
-	work            sync.WaitGroup
-	backend         Backend
-	calendar        Calendar
-	watcher         Watcher
-	log             *slog.Logger
-	now             func() time.Time
-	store           *store
-	noticeInChannel bool
+	runCtx   context.Context
+	work     sync.WaitGroup
+	backend  Backend
+	calendar Calendar
+	log      *slog.Logger
+	now      func() time.Time
+	store    *store
 }
 
 func New(opts Options) *Engine {
 	return &Engine{
-		runCtx:          opts.RunContext,
-		backend:         opts.Backend,
-		calendar:        opts.Calendar,
-		watcher:         opts.Watcher,
-		log:             opts.Log,
-		now:             opts.Now,
-		store:           newStore(opts.Now, SessionTTL),
-		noticeInChannel: opts.NoticeInChannel,
+		runCtx:   opts.RunContext,
+		backend:  opts.Backend,
+		calendar: opts.Calendar,
+		log:      opts.Log,
+		now:      opts.Now,
+		store:    newStore(opts.Now, SessionTTL),
 	}
 }
 
@@ -158,9 +150,6 @@ func availableChoice(sess session, raw, action string) bool {
 
 func availableScreenChoice(sess session, raw, action string) bool {
 	shown := sess.screen.reply
-	if requestAction(action) {
-		return hasData(shown.Buttons, raw)
-	}
 	if subEditAction(action) || sess.subEdit != nil {
 		return hasData(shown.Buttons, raw)
 	}
@@ -228,7 +217,7 @@ func (e *Engine) choose(ctx context.Context, sess session, p press) Reply {
 }
 
 func (e *Engine) chooseAction(ctx context.Context, sess session, p press) Reply {
-	for _, choose := range []chooser{e.chooseHome, e.chooseRequest, e.chooseRequests, e.chooseSeasons, e.chooseTask, e.chooseChart, e.chooseSubs, e.chooseSubDetail, e.chooseSubPause, e.chooseSubEdit, e.chooseSubSearch, e.chooseHistory, e.chooseRelated, e.chooseTorrents, e.chooseSearchSites, e.chooseTorrentView, e.chooseTorrentBatch, e.chooseTorrentPlan, e.chooseDelete, e.chooseUpgrade} {
+	for _, choose := range []chooser{e.chooseHome, e.chooseRequest, e.chooseSeasons, e.chooseTask, e.chooseChart, e.chooseSubs, e.chooseSubDetail, e.chooseSubPause, e.chooseSubEdit, e.chooseSubSearch, e.chooseHistory, e.chooseRelated, e.chooseTorrents, e.chooseSearchSites, e.chooseTorrentView, e.chooseTorrentBatch, e.chooseTorrentPlan, e.chooseDelete, e.chooseUpgrade} {
 		if reply, ok := choose(ctx, sess, p); ok {
 			return e.navigate(sess, p.action, reply)
 		}
@@ -437,7 +426,7 @@ func (e *Engine) targetCard(ctx context.Context, sess session, sub subscription)
 		if sub.state == statePaused {
 			state = "已订阅，目前已暂停哦"
 		}
-		status := fmt.Sprintf("ℹ️ %s%s%s", targetName(target), state, e.watch(ctx, sess, sub))
+		status := fmt.Sprintf("ℹ️ %s%s%s", targetName(target), state, noticeEnding)
 		return sess, sess.picked.reply(Line(Plain(status)), onward(sess))
 	}
 	sess.target = &target
@@ -469,11 +458,10 @@ func (e *Engine) confirm(ctx context.Context, sess session, from int) Reply {
 	e.settle(sess)
 	target := *sess.target
 	target.StartEpisode = from
-	id, err := e.submit(ctx, target)
-	if err != nil {
+	if _, err := e.submit(ctx, target); err != nil {
 		return sess.picked.replyLines(e.failure("subscribe", err).Text, nil)
 	}
-	done := fmt.Sprintf("✅ 帮你订好%s啦%s ヾ(≧▽≦*)o", targetName(target), e.watch(ctx, sess, subscription{id: id, target: target}))
+	done := fmt.Sprintf("✅ 帮你订好%s啦%s ヾ(≧▽≦*)o", targetName(target), noticeEnding)
 	return sess.picked.reply(Line(Plain(done)), nil)
 }
 
@@ -484,47 +472,8 @@ type subscription struct {
 	target Target
 }
 
-// watch registers the session owner for an arrival notice and returns the
-// sentence ending that tells them whether they will get one.
-func (e *Engine) watch(ctx context.Context, sess session, sub subscription) string {
-	return e.noticeEnding(e.remember(ctx, sess, sub))
-}
-
-// noticeEnding tells whether an arrival notice will follow: remembered is
-// whether the request was registered for one.
-func (e *Engine) noticeEnding(remembered bool) string {
-	if !remembered {
-		return "，" + msgNoNotice
-	}
-	return "，" + e.noticePromise()
-}
-
-func (e *Engine) noticePromise() string {
-	if e.noticeInChannel {
-		return msgWillPost
-	}
-	return msgWillNotify
-}
-
-// remember registers the session owner for an arrival notice of sub.
-func (e *Engine) remember(ctx context.Context, sess session, sub subscription) bool {
-	req := Request{SubscriptionID: sub.id, Target: sub.target, Requester: sess.owner}
-	if season := sub.target.Season; season != nil {
-		req.SeasonEpisodes = sess.episodeCount(*season)
-		req.Held = sess.library.Episodes[*season]
-	}
-	return e.rememberRequest(ctx, req)
-}
-
-// rememberRequest persists a request with only observations of its own
-// target; callers without a current media card leave those unknown.
-func (e *Engine) rememberRequest(ctx context.Context, req Request) bool {
-	if err := e.watcher.Watch(ctx, req); err != nil {
-		e.log.Error("cannot remember request for notification", "subscription", req.SubscriptionID, "err", err)
-		return false
-	}
-	return true
-}
+// noticeEnding closes a write receipt: MoviePilot decides every notification.
+const noticeEnding = "，" + msgWillNotify
 
 func (e *Engine) failure(step string, err error) Reply {
 	if msg, ok := UserMessage(err); ok {

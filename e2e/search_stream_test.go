@@ -129,12 +129,18 @@ func assertResourcePrivacy(h *harness) {
 	if strings.Contains(h.tr.String(), resourceCookie) {
 		h.t.Fatal("resource Cookie reached the transcript")
 	}
-	raw, err := os.ReadFile(filepath.Join(h.cfg.DataDir, "requests.json"))
+	files, err := os.ReadDir(h.cfg.DataDir)
 	if err != nil {
 		h.t.Fatal(err)
 	}
-	if strings.Contains(string(raw), resourceCookie) || strings.Contains(string(raw), siteCookie) {
-		h.t.Fatal("resource credentials were persisted")
+	for _, file := range files {
+		raw, err := os.ReadFile(filepath.Join(h.cfg.DataDir, file.Name()))
+		if err != nil {
+			h.t.Fatal(err)
+		}
+		if strings.Contains(string(raw), resourceCookie) || strings.Contains(string(raw), siteCookie) {
+			h.t.Fatalf("resource credentials were persisted in %s", file.Name())
+		}
 	}
 }
 

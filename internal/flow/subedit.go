@@ -19,7 +19,6 @@ const (
 	actionSubEditCheck   = "uy"
 
 	msgSubEditTitle = "编辑订阅条件"
-	msgSubEditOwn   = "只能编辑你请求的订阅哦～"
 )
 
 type subscriptionEdit struct {
@@ -94,10 +93,10 @@ func (e *Engine) chooseSubEditOption(sess session, arg int) Reply {
 
 func (e *Engine) openSubEdit(ctx context.Context, sess session, id int) Reply {
 	index := sess.subAt(id)
-	if index < 0 || !slices.Contains(sess.mine, id) {
-		return Reply{Notice: msgSubEditOwn}
+	if index < 0 {
+		return Reply{Notice: msgInvalidChoice}
 	}
-	sub, notice := e.editableSubscription(ctx, sess, sess.subs[index])
+	sub, notice := e.editableSubscription(ctx, sess.subs[index])
 	if notice != "" {
 		return Reply{Notice: notice}
 	}
@@ -105,7 +104,7 @@ func (e *Engine) openSubEdit(ctx context.Context, sess session, id int) Reply {
 	return e.subEditMenu(sess)
 }
 
-func (e *Engine) editableSubscription(ctx context.Context, sess session, base Subscription) (Subscription, string) {
+func (e *Engine) editableSubscription(ctx context.Context, base Subscription) (Subscription, string) {
 	subs, err := e.backend.Subscriptions(ctx)
 	if err != nil {
 		e.log.Warn("subscription edit preflight unavailable", "subscription", base.ID)
@@ -115,11 +114,7 @@ func (e *Engine) editableSubscription(ctx context.Context, sess session, base Su
 	if i < 0 {
 		return Subscription{}, msgSubChanged
 	}
-	sub := subs[i]
-	if !slices.Contains(e.watcher.Requested(sess.owner.UserID, []Subscription{sub}), sub.ID) {
-		return Subscription{}, msgSubEditOwn
-	}
-	return sub, ""
+	return subs[i], ""
 }
 
 func copySubEdit(sess session) session {

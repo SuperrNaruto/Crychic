@@ -11,13 +11,12 @@ const (
 
 	msgPauseSub   = "暂停订阅"
 	msgResumeSub  = "恢复订阅"
-	msgPauseOwn   = "只能暂停或恢复你请求的订阅哦～"
 	msgPauseCheck = "没能确认改好了没有，点「刷新」看看现在的状态吧～"
 
 	statePaused = "S"
 )
 
-// chooseSubPause pauses or resumes a subscription the owner asked for, then
+// chooseSubPause pauses or resumes a subscription, then
 // shows its details read afresh.
 func (e *Engine) chooseSubPause(ctx context.Context, sess session, p press) (Reply, bool) {
 	if p.action != actionPauseSub && p.action != actionResumeSub {
@@ -27,10 +26,7 @@ func (e *Engine) chooseSubPause(ctx context.Context, sess session, p press) (Rep
 	if index < 0 {
 		return Reply{Notice: msgInvalidChoice}, true
 	}
-	if !slices.Contains(sess.mine, p.arg) {
-		return Reply{Notice: msgPauseOwn}, true
-	}
-	if notice := e.checkSubscription(ctx, sess, sess.subs[index]); notice != "" {
+	if notice := e.checkSubscription(ctx, sess.subs[index]); notice != "" {
 		return Reply{Notice: notice}, true
 	}
 	paused := p.action == actionPauseSub
@@ -51,11 +47,8 @@ func (e *Engine) chooseSubPause(ctx context.Context, sess session, p press) (Rep
 	return e.subDetail(ctx, sess, index), true
 }
 
-// pauseButton pauses or resumes sub when the owner asked for it.
+// pauseButton pauses or resumes sub.
 func pauseButton(sess session, sub Subscription) []Button {
-	if !slices.Contains(sess.mine, sub.ID) {
-		return nil
-	}
 	if sub.State == statePaused {
 		return []Button{{Label: msgResumeSub, Data: data(sess.id, actionResumeSub, sub.ID)}}
 	}

@@ -1,13 +1,11 @@
 package e2e
 
 import (
-	"context"
 	"encoding/json"
 	"io"
 	"maps"
 	"net/http"
 	"slices"
-	"strconv"
 )
 
 const (
@@ -25,29 +23,6 @@ type subscriptionEditResponse struct {
 	location  string
 	lost      bool
 	readFails bool
-}
-
-func (f *fakeMoviePilot) holdSubscriptionRead() *heldCall {
-	f.mu.Lock()
-	defer f.mu.Unlock()
-	f.subscriptionRead = &heldCall{entered: make(chan struct{}), release: make(chan struct{}), exited: make(chan struct{})}
-	return f.subscriptionRead
-}
-
-func (f *fakeMoviePilot) waitSubscriptionRead(ctx context.Context) {
-	f.mu.Lock()
-	held := f.subscriptionRead
-	f.subscriptionRead = nil
-	f.mu.Unlock()
-	if held == nil {
-		return
-	}
-	close(held.entered)
-	defer close(held.exited)
-	select {
-	case <-held.release:
-	case <-ctx.Done():
-	}
 }
 
 func (f *fakeMoviePilot) editResponse(response subscriptionEditResponse) {
@@ -138,17 +113,4 @@ func (f *fakeMoviePilot) subscriptionPatches() []map[string]any {
 	f.mu.Lock()
 	defer f.mu.Unlock()
 	return slices.Clone(f.editPatches)
-}
-
-// Read-by-ID uses the same persisted row as the listing after an edit.
-// Exact routes can still model closure or an unavailable backend.
-func (f *fakeMoviePilot) editedSubscription(path string) map[string]any {
-	id, _ := strconv.Atoi(path[len(subscriptionPath):])
-	f.mu.Lock()
-	_, edited := f.edited[id]
-	f.mu.Unlock()
-	if !edited {
-		return nil
-	}
-	return f.editableSubscription(id)
 }

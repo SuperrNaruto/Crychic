@@ -81,7 +81,6 @@ type seasonOutcome struct {
 	season   int
 	existing bool
 	err      error
-	notified bool
 }
 
 // subscribeSeasons subscribes each ticked season from its first episode,
@@ -111,14 +110,13 @@ func (e *Engine) subscribeSeason(ctx context.Context, sess session, season int) 
 		out.err = err
 		return out
 	}
-	out.notified = e.remember(ctx, sess, subscription{id: id, target: target})
 	return out
 }
 
 // outcomeLines tables each season's outcome, e.g. 第 2 季 | ✅ 已订阅.
 func (e *Engine) outcomeLines(m Media, outcomes []seasonOutcome) Text {
 	rows := make([][]Span, 0, len(outcomes))
-	notified := false
+	subscribed := false
 	for _, o := range outcomes {
 		result := "✅ 已订阅"
 		switch {
@@ -128,11 +126,11 @@ func (e *Engine) outcomeLines(m Media, outcomes []seasonOutcome) Text {
 			result = "ℹ️ 已在订阅中"
 		}
 		rows = append(rows, []Span{Strong(seasonName(o.season)), Plain(result)})
-		notified = notified || o.notified
+		subscribed = subscribed || o.err == nil
 	}
 	text := Lines(Line(Strong(fmt.Sprintf("《%s》的订阅结果来啦：", m.Title))), Table(outcomeHead, rows...))
-	if notified {
-		text = append(text, Line(Plain(e.noticePromise())))
+	if subscribed {
+		text = append(text, Line(Plain(msgWillNotify)))
 	}
 	return text
 }

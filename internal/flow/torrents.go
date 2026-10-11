@@ -157,7 +157,7 @@ func (e *Engine) download(ctx context.Context, sess session, index int) Reply {
 		return sess.picked.replyLines(e.downloadFailure(t, id, err).Text, nil)
 	}
 	what := releaseName(*sess.focus, t)
-	done := fmt.Sprintf("✅ 开始下载%s啦%s ヾ(≧▽≦*)o", what, e.noticeEnding(e.rememberDownload(ctx, sess, added{id: id, release: t})))
+	done := fmt.Sprintf("✅ 开始下载%s啦%s ヾ(≧▽≦*)o", what, noticeEnding)
 	return sess.picked.reply(Line(Plain(done)), nil)
 }
 
@@ -169,33 +169,4 @@ func (e *Engine) downloadFailure(t Torrent, id string, err error) Reply {
 	}
 	e.log.Error("download result unknown", "media", t.Media.ID, "id", id, "err", err)
 	return Reply{Text: Sentence(msgDownloadUnknown)}
-}
-
-// added is a release the backend began downloading, under the download's id.
-type added struct {
-	id      string
-	release Torrent
-}
-
-// rememberDownload registers the session owner for an arrival notice of a
-// download of the card's target. The watch waits for the whole season, not
-// the release's episodes: MoviePilot reads those from the description too,
-// where 「第9集章节」 makes a 25-episode pack E09.
-func (e *Engine) rememberDownload(ctx context.Context, sess session, dl added) bool {
-	target, id := *sess.focus, dl.id
-	req := Request{Download: id, Target: target, Requester: sess.owner}
-	if season := target.Season; season != nil {
-		req.Target.StartEpisode = 0
-		req.SeasonEpisodes = sess.episodeCount(*season)
-		// Existing full seasons cannot complete a replacement download; its
-		// own files must arrive. Partial holdings only fill the known gaps.
-		if !sess.wholeSeasonHeld(Season{Number: *season, EpisodeCount: req.SeasonEpisodes}) {
-			req.Held = sess.library.Episodes[*season]
-		}
-	}
-	if err := e.watcher.Watch(ctx, req); err != nil {
-		e.log.Error("cannot remember download for notification", "download", id, "err", err)
-		return false
-	}
-	return true
 }

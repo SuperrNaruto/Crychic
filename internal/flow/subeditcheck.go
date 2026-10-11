@@ -29,10 +29,7 @@ func (e *Engine) checkSubEditResult(ctx context.Context, sess session, token int
 	if receipt == nil || token != receipt.token {
 		return Reply{Notice: msgInvalidChoice}
 	}
-	current, notice := e.editableSubscription(ctx, sess, receipt.base)
-	if notice == "" {
-		e.keepSubEditScope(ctx, current)
-	}
+	current, notice := e.editableSubscription(ctx, receipt.base)
 	text := Lines(Heading(Plain("订阅修改核对结果")), Line(Strong(taskName(truncate(receipt.base.Title, listTitleRunes), receipt.base.Season))))
 	if notice != "" {
 		text = append(text, Line(Plain(notice)))

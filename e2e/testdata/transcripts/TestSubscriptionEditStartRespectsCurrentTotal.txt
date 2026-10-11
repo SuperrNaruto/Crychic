@@ -71,7 +71,7 @@
    <footer><i>Breaking Bad</i> · 2008 · 电视剧 · ⭐ 9.0 · 剧情 / 犯罪 · 共 5 季 62 集 · 主演：布莱恩·克兰斯顿、亚伦·保尔、安娜·冈</footer>
    <blockquote expandable>高中化学教师沃尔特·怀特被诊断患有晚期癌症，为保障家人经济生活，他与学生杰西制毒贩毒，并逐渐坠落至万劫不复的深渊。</blockquote>
    <hr/>
-   <p>✅ 帮你订好《绝命毒师》第 2 季啦，通知由 MoviePilot 按设置发送，可在 /requests 核对到货哦～ ヾ(≧▽≦*)o</p>
+   <p>✅ 帮你订好《绝命毒师》第 2 季啦，通知由 MoviePilot 按设置发送哦～ ヾ(≧▽≦*)o</p>
    [返回 | 1:bk:0] [首页 | 1:o:0] [关闭 | 1:c:0]
 << answerCallbackQuery
 >> user 1001 in chat 1001: /subscribe
@@ -80,7 +80,7 @@
    <h3>📚 订阅清单 · 电视剧（1）</h3>
    <ol start="1">
    <li value="1"><b>《绝命毒师》第 2 季</b><br>
-   <i>订阅中 · 缺 11/13 集 · <mark>你请求的</mark></i></li>
+   <i>订阅中 · 缺 11/13 集</i></li>
    </ol>
    [1 | 2:sd:1]
    [·电视剧· | 2:sf:2] [电影 | 2:sf:1]

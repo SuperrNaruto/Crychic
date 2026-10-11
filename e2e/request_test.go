@@ -449,74 +449,46 @@ const (
 	deleteFirst = "DELETE /api/v1/subscribe/1"
 )
 
-// The subscription list offers one cancel button, which lists only what
-// the user asked for; a cancelled subscription is deleted and its arrivals
-// are no longer announced. Someone who asked for nothing gets no button.
-func TestCancelOwnSubscription(t *testing.T) {
+// The subscription list offers one cancel button listing every shown
+// subscription, including ones created outside Crychic; a cancelled
+// subscription is deleted after its identity is checked again.
+func TestCancelSubscription(t *testing.T) {
 	h := start(t, scenario{routes: map[string]route{
-		searchPath:    ok("search_breaking_bad.json"),
-		breakDetails:  ok("detail_breaking_bad.json"),
-		seasonsPath:   ok("seasons_breaking_bad.json"),
-		breakingQuery: ok("subscription_none.json"),
-		subscribePath: ok("subscribe_created.json"),
-		subsPath:      ok("subscriptions.json"),
-		deleteFirst:   ok("subscribe_deleted.json"),
+		subsPath:    ok("subscriptions.json"),
+		deleteFirst: ok("subscribe_deleted.json"),
 	}})
-	h.say(alice, alice, "/search 绝命毒师")
-	h.tap(alice, 1, "1")
-	h.tap(alice, 1, "第 2 季")
-	h.tap(alice, 1, "从第 1 集开始")
 	h.say(alice, alice, "/subscribe")
-	h.tap(alice, 2, "取消订阅")
-	h.tap(alice, 2, "1")
-	h.tap(alice, 2, "返回")
-	h.shows(2, "只能取消你请求的订阅")
-	h.tap(alice, 2, "返回")
-	h.shows(2, "订阅清单")
-	h.tap(alice, 2, "取消订阅")
-	h.tap(alice, 2, "1")
-	h.tap(alice, 2, "确认取消")
-	h.shows(2, "《绝命毒师》第 2 季的订阅已经取消啦")
-	h.tap(alice, 2, "返回")
-	h.shows(2, "订阅清单")
-	h.transfers(breakingBad.file("S02", "E01-E13"))
-	h.say(bob, bob, "/subscribe")
-	if _, found := findButton(mustMessage(h, 3).rows, "取消订阅"); found {
-		t.Fatal("bob asked for nothing, so there must be nothing for him to cancel")
-	}
+	h.tap(alice, 1, "取消订阅")
+	h.tap(alice, 1, "1")
+	h.tap(alice, 1, "返回")
+	h.shows(1, "点编号选一个要取消的订阅")
+	h.tap(alice, 1, "返回")
+	h.shows(1, "订阅清单")
+	h.tap(alice, 1, "取消订阅")
+	h.tap(alice, 1, "1")
+	h.tap(alice, 1, "确认取消")
+	h.shows(1, "《绝命毒师》第 2 季的订阅已经取消啦")
+	h.tap(alice, 1, "返回")
+	h.shows(1, "订阅清单")
 	h.tr.verify(t)
 }
 
-// A subscription the user asked for can be paused and resumed from its
-// details, which then show its state read afresh; MoviePilot's refusal is
-// relayed and keeps the details. Nobody else gets the button.
-func TestPauseOwnSubscription(t *testing.T) {
+// Any subscription can be paused and resumed from its details, which then
+// show its state read afresh; MoviePilot's refusal is relayed and keeps the
+// details.
+func TestPauseSubscription(t *testing.T) {
 	h := start(t, scenario{routes: map[string]route{
-		searchPath:    ok("search_breaking_bad.json"),
-		breakDetails:  ok("detail_breaking_bad.json"),
-		seasonsPath:   ok("seasons_breaking_bad.json"),
-		breakingQuery: ok("subscription_none.json"),
-		subscribePath: ok("subscribe_created.json"),
-		subsPath:      ok("subscriptions.json"),
+		subsPath: ok("subscriptions.json"),
 	}})
-	h.say(alice, alice, "/search 绝命毒师")
-	h.tap(alice, 1, "1")
-	h.tap(alice, 1, "第 2 季")
-	h.tap(alice, 1, "从第 1 集开始")
 	h.say(alice, alice, "/subscribe")
-	h.tap(alice, 2, "1")
-	h.tap(alice, 2, "暂停订阅")
-	h.shows(2, "已暂停")
-	h.tap(alice, 2, "恢复订阅")
-	h.shows(2, "订阅中")
+	h.tap(alice, 1, "1")
+	h.tap(alice, 1, "暂停订阅")
+	h.shows(1, "已暂停")
+	h.tap(alice, 1, "恢复订阅")
+	h.shows(1, "订阅中")
 	h.mp.setRoute("PUT /api/v1/subscribe/status/1", ok("subscribe_gone.json"))
-	h.tap(alice, 2, "暂停订阅")
-	h.shows(2, "订阅中")
-	h.say(bob, bob, "/subscribe")
-	h.tap(bob, 3, "1")
-	if _, found := findButton(mustMessage(h, 3).rows, "暂停订阅"); found {
-		t.Fatal("bob asked for nothing, so there must be nothing for him to pause")
-	}
+	h.tap(alice, 1, "暂停订阅")
+	h.shows(1, "订阅中")
 	h.tr.verify(t)
 }
 

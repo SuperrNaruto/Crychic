@@ -10,7 +10,7 @@
    </ol>
    [1 | 1:sd:1] [2 | 1:sd:5]
    [·电视剧· | 1:sf:2] [电影 | 1:sf:1]
-   [订阅历史 | 1:hs:2]
+   [取消订阅 | 1:sc:0] [订阅历史 | 1:hs:2]
    [首页 | 1:o:0] [关闭 | 1:c:0]
 >> user 1001 taps 1:hs:2 on message 1
 -> MoviePilot GET /api/v1/subscribe/history/电视剧?count=10&page=1
@@ -137,7 +137,7 @@
    <h3>📺 颂乐人偶</h3>
    <footer>2025 · 电视剧</footer>
    <hr/>
-   <p>✅ 已经帮你重新订阅《颂乐人偶》第 1 季啦，通知由 MoviePilot 按设置发送，可在 /requests 核对到货哦～ ヾ(≧▽≦*)o</p>
+   <p>✅ 已经帮你重新订阅《颂乐人偶》第 1 季啦，通知由 MoviePilot 按设置发送哦～ ヾ(≧▽≦*)o</p>
    [返回 | 1:hf:2] [首页 | 1:o:0] [关闭 | 1:c:0]
 << answerCallbackQuery
 >> user 1001 taps 1:ho:0 on message 1

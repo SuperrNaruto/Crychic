@@ -90,7 +90,6 @@
    [搜索 | 2:h:0] [发现 | 2:h:1]
    [我的订阅 | 2:h:2] [最新入库 | 2:h:3]
    [任务进度 | 2:h:4] [追剧日历 | 2:h:5]
-   [我的请求 | 2:h:6]
 >> user 1001 in chat 1001: 沙丘
 -> MoviePilot GET /api/v1/media/search?count=10&title=沙丘&type=media
 << sendRichMessage chat=1001 message=3

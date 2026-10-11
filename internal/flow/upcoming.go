@@ -50,7 +50,7 @@ func (e *Engine) upcoming(ctx context.Context, sess session) Reply {
 		e.store.take(sess.id)
 		return titled(msgUpcomingTitle, e.failure("subscriptions", err))
 	}
-	sess.subs, sess.mine = subs, e.watcher.Requested(sess.owner.UserID, subs)
+	sess.subs = subs
 	found := e.readAirings(ctx, subs, e.now().In(calendarZone))
 	if len(found.list) == 0 && found.failed == 0 && sess.menu {
 		return Reply{Notice: msgNoUpcomingTip}
@@ -169,12 +169,8 @@ func airingEntry(sess session, n int, a airing) Block {
 	if s.State == statePaused {
 		paused = stateText[statePaused]
 	}
-	item := entry(n, Strong(truncate(s.Title, listTitleRunes)),
+	return entry(n, Strong(truncate(s.Title, listTitleRunes)),
 		fmt.Sprintf("%s 第 %d 集", seasonName(*s.Season), a.ep.Number), name, paused)
-	if slices.Contains(sess.mine, s.ID) {
-		item.Tag = msgRequestedTag
-	}
-	return item
 }
 
 // dayLabel is e.g. "10月7日 周三 · 今天".

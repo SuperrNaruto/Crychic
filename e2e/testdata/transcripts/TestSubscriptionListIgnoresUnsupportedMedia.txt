@@ -8,7 +8,7 @@
    </ol>
    [1 | 1:sd:73]
    [·电视剧· | 1:sf:2] [电影 | 1:sf:1]
-   [订阅历史 | 1:hs:2]
+   [取消订阅 | 1:sc:0] [订阅历史 | 1:hs:2]
    [首页 | 1:o:0] [关闭 | 1:c:0]
 >> user 1001 taps 1:sf:1 on message 1
 << editMessageText chat=1001 message=1
@@ -19,7 +19,7 @@
    </ol>
    [1 | 1:sd:72]
    [电视剧 | 1:sf:2] [·电影· | 1:sf:1]
-   [订阅历史 | 1:hs:1]
+   [取消订阅 | 1:sc:0] [订阅历史 | 1:hs:1]
    [首页 | 1:o:0] [关闭 | 1:c:0]
 << answerCallbackQuery
 >> user 1001 in chat 1001: /subscribe

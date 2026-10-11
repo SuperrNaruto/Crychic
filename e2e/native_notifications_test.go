@@ -55,19 +55,6 @@ func TestNativeChannelKeepsTargetAndTopic(t *testing.T) {
 	h.tr.verify(t)
 }
 
-func TestTransfersDoNotGenerateNativeNotifications(t *testing.T) {
-	h := start(t, scenario{routes: movieRequestRoutes(), quiet: "0s", stall: "100ms", digest: "mon 12:00"})
-	requestMovieDownload(h)
-	h.transfers(duneFile())
-	h.say(alice, alice, "/requests")
-	h.tap(alice, 2, "最近完成")
-	h.shows(2, "完成")
-	if strings.Contains(h.tr.String(), "<h3>📥 入库啦") {
-		t.Fatal("local arrival engine still sends")
-	}
-	h.tr.verify(t)
-}
-
 func TestNativeUnknownSendIsNotReplayed(t *testing.T) {
 	h := start(t, scenario{})
 	h.tg.loseNextResponse("sendRichMessage")

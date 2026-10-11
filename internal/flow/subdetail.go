@@ -61,11 +61,6 @@ func (e *Engine) subDetail(ctx context.Context, sess session, index int) Reply {
 	sess.subs = slices.Clone(sess.subs)
 	sess.subs[index] = subs[i]
 	sess.subEdit = nil
-	if slices.Contains(sess.mine, subs[i].ID) {
-		if err := e.watcher.RefreshSubscription(ctx, subs[i]); err != nil {
-			e.log.Warn("cannot refresh subscription notification scope", "subscription", subs[i].ID)
-		}
-	}
 	detail := e.readSubDetail(ctx, subs[i])
 	view := detail.view()
 	view.menu = subDetailMenu(sess, subs[i])
@@ -79,11 +74,8 @@ func subDetailMenu(sess session, sub Subscription) [][]Button {
 	if sess.subReceipt != nil && sess.subReceipt.base.same(sub) {
 		rows = append(rows, subEditCheckRow(sess))
 	}
-	if slices.Contains(sess.mine, sub.ID) {
-		rows = append(rows, []Button{{Label: "编辑条件", Data: data(sess.id, actionSubEdit, sub.ID)}})
-		rows = append(rows, subSearchButtons(sess, sub))
-	}
-	return rows
+	rows = append(rows, []Button{{Label: "编辑条件", Data: data(sess.id, actionSubEdit, sub.ID)}})
+	return append(rows, subSearchButtons(sess, sub))
 }
 
 // A successful refresh resolves an uncertain state write too. Mark only

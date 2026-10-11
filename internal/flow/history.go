@@ -125,15 +125,12 @@ func (e *Engine) resubscribe(ctx context.Context, sess session, index int) Reply
 	e.store.put(sess)
 	ps := sess.past[index]
 	target := pastTarget(ps)
-	id, err := e.written(target, func() (int, error) { return e.backend.Resubscribe(ctx, ps) })
+	_, err := e.written(target, func() (int, error) { return e.backend.Resubscribe(ctx, ps) })
 	rows := [][]Button{append([]Button{backTo(sess.id, actionHistoryKind, int(sess.kind))}, browseRow(sess.id)...)}
 	if err != nil {
 		return card{Media: ps.Media}.replyLines(e.failure("resubscribe", err).Text, rows)
 	}
-	// History has no current season/library observations of this target.
-	// The session may still carry another show's card from before 首页.
-	req := Request{SubscriptionID: id, Target: target, Requester: sess.owner}
-	done := fmt.Sprintf("✅ 已经帮你重新订阅%s啦%s ヾ(≧▽≦*)o", targetName(target), e.noticeEnding(e.rememberRequest(ctx, req)))
+	done := fmt.Sprintf("✅ 已经帮你重新订阅%s啦%s ヾ(≧▽≦*)o", targetName(target), noticeEnding)
 	return card{Media: ps.Media}.reply(Line(Plain(done)), rows)
 }
 

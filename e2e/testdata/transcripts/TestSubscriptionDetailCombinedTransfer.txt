@@ -10,7 +10,7 @@
    </ol>
    [1 | 1:sd:1] [2 | 1:sd:5]
    [·电视剧· | 1:sf:2] [电影 | 1:sf:1]
-   [订阅历史 | 1:hs:2]
+   [取消订阅 | 1:sc:0] [订阅历史 | 1:hs:2]
    [首页 | 1:o:0] [关闭 | 1:c:0]
 >> user 1001 taps 1:sd:1 on message 1
 -> MoviePilot GET /api/v1/subscribe/
@@ -40,7 +40,9 @@
    <tr><td>E04–E13</td><td>未入库</td><td>暂无任务记录</td></tr>
    </table>
    <footer>仅查询，不会触发搜索或下载；点击刷新查看最新状态哦～</footer>
-   [刷新 | 1:su:1]
+   [刷新 | 1:su:1] [暂停订阅 | 1:sp:1]
+   [编辑条件 | 1:ue:1]
+   [立即搜索 | 1:qs:1]
    [返回 | 1:bk:0] [首页 | 1:o:0] [关闭 | 1:c:0]
 << answerCallbackQuery
 >> user 1001 in chat 1001: /tasks

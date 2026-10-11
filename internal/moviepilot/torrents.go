@@ -30,6 +30,15 @@ type torrentContext struct {
 	Match   string          `json:"match_status"`
 }
 
+// metaInfo is MoviePilot's release-name recognition of a resource.
+type metaInfo struct {
+	Resolution string `json:"resource_pix"`
+	Edition    string `json:"edition"`
+	Type       string `json:"resource_type"`
+	Video      string `json:"video_encode"`
+	Group      string `json:"resource_team"`
+}
+
 type torrentMeta struct {
 	metaInfo
 	Season       *int   `json:"begin_season"`

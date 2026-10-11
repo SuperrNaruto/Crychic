@@ -199,9 +199,6 @@ func expired(action string) Reply {
 	if subSearchAction(action) {
 		return expiredText("这个搜索页面过期啦，已提交的搜索可能仍在后台运行；请用 /subscribe 和 /tasks 核对，不会自动重新提交哦～")
 	}
-	if requestAction(action) {
-		return expiredText("⌛ 这个请求页面过期啦，发 /requests 重新核对吧～")
-	}
 	if subEditAction(action) {
 		return expiredText("⌛ 这个编辑页面过期啦，先用 /subscribe 核对当前订阅条件哦～")
 	}

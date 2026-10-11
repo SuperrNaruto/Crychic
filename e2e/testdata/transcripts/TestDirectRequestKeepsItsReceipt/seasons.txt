@@ -106,7 +106,7 @@
    <tr><td><b>第 2 季</b></td><td>✅ 已订阅</td></tr>
    <tr><td><b>第 3 季</b></td><td>✅ 已订阅</td></tr>
    </table>
-   <p>通知由 MoviePilot 按设置发送，可在 /requests 核对到货哦～</p>
+   <p>通知由 MoviePilot 按设置发送哦～</p>
 << answerCallbackQuery
 >> user 1001 taps 1:y:0 on message 1
 << answerCallbackQuery notice="这个选项不太对哦～"

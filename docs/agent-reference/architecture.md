@@ -10,17 +10,31 @@ Crychic 是 Go 媒体订阅与下载机器人，当前主要平台为 Telegram�
 
 | 部分 | 职责 |
 | --- | --- |
-| 现有 Crychic Go 应用 | 平台接入、白名单、会话、最终确认、请求归属、展示及安全投递 |
+| 现有 Crychic Go 应用 | 平台接入、白名单、会话、最终确认、展示及安全投递 |
 | MP 原生 API | 已能可靠满足需求的查询与操作，继续直接调用 |
 | MP 侧 Crychic 插件 | 补足 API 未能提供的能力、事件、上下文或可靠接入机制，复用 MP 原生实现 |
 
 新增功能先核验原生 API 的能力与契约。API 足够时直接使用；存在明确缺口时，在对应功能计划中记录缺口、插件必要性及接入验收条件，再增加所需扩展。插件可以通过小接口供 Go 应用调用或接收结果，不将所有原生请求统一搬进插件。
 
-插件保持薄适配层，优先使用公开 SDK 和受支持的扩展点。不另写搜索、订阅、下载、整理或通知业务引擎，不将整个 Crychic 重写成插件。插件身份与管理员 API key 均不能替代聊天用户授权；请求归属、聊天及话题隔离、最终确认和未知结果不重放继续由既有安全边界约束。
+插件保持薄适配层，优先使用公开 SDK 和受支持的扩展点。不另写搜索、订阅、下载、整理或通知业务引擎，不将整个 Crychic 重写成插件。插件身份与管理员 API key 均不能替代聊天用户授权；白名单、聊天及话题隔离、最终确认和未知结果不重放继续由既有安全边界约束。
 
 后续新增能力默认核对 MP 最新稳定版，保存对应版本与来源。既有版本核验保留用于追溯，不例行重复验证多个旧版本；目标部署有明确版本差异时，单独验证相关差异。
 
 通知接入已增加 MP 侧 Crychic 自定义渠道插件，持久安全投影通过认证长轮询与消费确认传输；Go 继续负责当前富文本展示。详见 [第 6 项前置任务](../plans/moviepilot-api-improvements.md#第-6-项前置任务-moviepilot-原生通知接入)。下文目录及数据流描述当前实现；Discord 仅为后续扩展方向。
+
+## 用户与权限模型
+
+2026-10-11 起按单一信任域运行：白名单内用户同等管理 MP 内全部订阅与下载，包括在 MP 网页端创建的订阅；Crychic 不再维护本地请求归属，也不提供 `/requests`。
+
+原因是 MP 的 API key 只有一个，且固定映射到超级用户（v3.1.4 `app/adapters/web/security/access.py` 的 `verify_token` 与 `validate_api_credential_identity`），MP 无法区分聊天用户。本地归属表只能在 Crychic 内部模拟权限，代价是一整套请求记录、整理历史轮询和完成结算，而且挡住了主人管理在网页端建立的订阅。
+
+多用户隔离后置到 MP 官方支持按用户的 API 凭据之后再设计。保留的扩展接缝：
+
+- `flow.Actor` 仍贯穿每次会话与写入，Telegram 白名单与会话按用户、聊天和话题隔离保持不变。
+- 后续按 `Actor` 在 `internal/app` 选择对应的 MP 凭据或 Backend，归属与权限沿用 MP 自身的用户体系，不重建本地归属表。
+- 写前的订阅复合身份复核（ID、来源、媒体、季、剧集组、创建时间）与归属无关，继续保留。
+
+旧部署数据目录里的 `requests.json` 与 `requests.json.pre-native` 不再读取，也不删除或改写。
 
 ## 目录职责
 
@@ -31,7 +45,7 @@ internal/flow/       # platform-agnostic conversation: search → pick (library 
 internal/moviepilot/ # minimal MoviePilot client, implements flow.Backend
 internal/bangumi/    # Bangumi's public API (no key): airing calendar and synopses, implements flow.Calendar
 internal/telegram/   # renders flow.Reply as messages + inline keyboards; whitelist check; delivers notices
-internal/notify/     # remembers requests (data dir JSON), reconciles request facts; consumes MP native notices separately
+internal/notify/     # consumes MP native notices from the Crychic plugin and hands them to the platform
 internal/config/     # env vars → config.Config
 e2e/                 # behavior tests: real app vs fake Telegram Bot API + fake MoviePilot + fake Bangumi
 ```
@@ -42,7 +56,7 @@ Data flow: Telegram update → `telegram.adapter` → `flow.Engine.Start/Choose`
 `flow.Reply` → `sendRichMessage` (command) or `editMessageText` with `rich_message` (button) →
 `answerCallbackQuery` last.
 
-平台不得被 flow 导入；具体依赖只在 app 装配，main 与 E2E 共用入口。通知请求通过 watcher 保存，平台只负责输入、渲染与投递。
+平台不得被 flow 导入；具体依赖只在 app 装配，main 与 E2E 共用入口。平台只负责输入、渲染与投递；通知由 MP 原生渠道产生。
 
 ## 关键文件索引
 
@@ -60,14 +74,13 @@ Data flow: Telegram update → `telegram.adapter` → `flow.Engine.Start/Choose`
 | 资源与下载 | [internal/flow/torrents.go](../../internal/flow/torrents.go) | `torrenttext.go`、`torrenthunt.go`、`torrentsort.go`、`torrentmissing.go`、`torrentbatch.go` |
 | 缺集下载方案 | [internal/flow/torrentplan.go](../../internal/flow/torrentplan.go) | `torrentplanread.go` 读取及预检，`torrentplanselect.go` 确定性建议，`torrentplanmodel.go` 汇总范围，`torrentplantext.go` 有界预览；确认复用原串行批量下载 |
 | 任务与删除 | [internal/flow/tasks.go](../../internal/flow/tasks.go) | `taskdelete.go`、`tasktext.go`；任务跟随与删除确认 |
-| 我的请求与异常 | [internal/flow/requests.go](../../internal/flow/requests.go) | `requestreads.go`、`requestidentity.go`、`requestissues.go`、`requesttext.go`；MoviePilot `failures.go` 读取失败历史，notify `requests.go` 投影归属与保存最近完成 |
 | 语义文本 | [internal/flow/rich.go](../../internal/flow/rich.go) | `text.go`；语义块、卡片与列表文案 |
 | Inline | [internal/flow/inline.go](../../internal/flow/inline.go) | `internal/telegram/inline.go`；无会话查找、经典 HTML 与 deep link |
 | 平台输入与时序 | [internal/telegram/input.go](../../internal/telegram/input.go) | `address.go`、`lanes.go`、`follow.go`；引用、topic、锁与重投 |
 | 平台渲染与海报 | [internal/telegram/rich.go](../../internal/telegram/rich.go) | `home.go`、`posters.go`；rich HTML、首页 JPEG 与缓存 |
-| MoviePilot | [internal/moviepilot/client.go](../../internal/moviepilot/client.go) | `subscriptions.go`、`downloads.go`、`transfers.go`、`episodename.go` 等；接口与解析 |
+| MoviePilot | [internal/moviepilot/client.go](../../internal/moviepilot/client.go) | `subscriptions.go`、`downloads.go`、`labels.go`、`episodename.go` 等；接口与解析 |
 | Bangumi | [internal/bangumi/client.go](../../internal/bangumi/client.go) | 保留星期分组的日历与 subject 简介 |
-| 通知 | [internal/notify/notifier.go](../../internal/notify/notifier.go) | `state.go`、`cursor.go`、`digest.go`、`stall.go`、`subscriptions.go`、`quality.go` |
+| 通知 | [internal/notify/native.go](../../internal/notify/native.go) | `native_state.go`、`native_model.go`、`native_text.go`；MoviePilot `native.go` 长轮询与确认 |
 | E2E | [e2e/harness_test.go](../../e2e/harness_test.go) | `transcript_test.go`、`fake_*.go` 与 `testdata/transcripts/*.txt` |
 
 ## 按主题继续读取

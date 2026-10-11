@@ -22,7 +22,7 @@ func (e *Engine) saveSubEdit(ctx context.Context, sess session, id int) Reply {
 		}
 		return e.retainSubEditProblem(sess, notice)
 	}
-	current, notice := e.editableSubscription(ctx, sess, edit.base)
+	current, notice := e.editableSubscription(ctx, edit.base)
 	if notice != "" {
 		return Reply{Notice: notice}
 	}
@@ -48,33 +48,14 @@ func (edit subscriptionEdit) confirmable(id int) bool {
 }
 
 func (e *Engine) readSavedSubEdit(ctx context.Context, sess session, edit subscriptionEdit) Reply {
-	persisted := e.keepSubEditScope(ctx, edit.applied())
-	current, notice := e.editableSubscription(ctx, sess, edit.base)
+	current, notice := e.editableSubscription(ctx, edit.base)
 	if notice != "" {
 		return subEditReceipt(sess, edit.base, subEditOutcome{"修改已受理，等待读取", "MoviePilot 已确认保存，但暂时读不到当前条件；请点「核对结果」，不要重复提交哦～"})
-	}
-	suffix := "后续会按当前条件匹配；这里没有主动补搜，也没有重置下载事实哦～"
-	if !e.keepSubEditScope(ctx, current) || !persisted {
-		suffix = "条件已保存，但通知范围暂时没能保存；请刷新核对哦～"
 	}
 	if !current.conditions().same(edit.draft) {
 		return subEditReceipt(sess, current, subEditOutcome{"修改已受理，条件又有变化", "MoviePilot 已确认保存，但当前条件与刚提交的草稿不同，请刷新核对哦～"})
 	}
-	return subEditReceipt(sess, current, subEditOutcome{"✅ 订阅条件已保存", suffix})
-}
-
-func (edit subscriptionEdit) applied() Subscription {
-	sub := edit.base
-	sub.StartEpisode, sub.BestVersion, sub.BestVersionFull = edit.draft.StartEpisode, edit.draft.BestVersion, edit.draft.BestVersionFull
-	return sub
-}
-
-func (e *Engine) keepSubEditScope(ctx context.Context, sub Subscription) bool {
-	if err := e.watcher.RefreshSubscription(ctx, sub); err != nil {
-		e.log.Error("cannot persist edited subscription scope", "subscription", sub.ID)
-		return false
-	}
-	return true
+	return subEditReceipt(sess, current, subEditOutcome{"✅ 订阅条件已保存", "后续会按当前条件匹配；这里没有主动补搜，也没有重置下载事实哦～"})
 }
 
 func consumedSubEdit(sess session) session {

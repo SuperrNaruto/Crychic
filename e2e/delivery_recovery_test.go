@@ -146,3 +146,19 @@ func TestRevokedRequesterStopsReceivingNotices(t *testing.T) {
 	}
 	h.tr.verify(t)
 }
+
+// noticeAt checks the observable recipient and content together: the right
+// text delivered to another chat is still a lost notice.
+type arrivalCheck struct {
+	message int
+	chat    int64
+	title   string
+}
+
+func noticeAt(h *harness, want arrivalCheck) {
+	h.t.Helper()
+	msg, ok := h.tg.message(want.message)
+	if !ok || msg.chat != want.chat || !strings.Contains(msg.text, want.title) || !strings.Contains(msg.text, "MoviePilot 通知") {
+		h.t.Errorf("arrival %d: want %q in chat %d, got chat %d text %q", want.message, want.title, want.chat, msg.chat, msg.text)
+	}
+}

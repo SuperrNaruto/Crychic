@@ -57,25 +57,6 @@ func checkSearchWithoutCreationDate(h *harness) {
 	assertSubscriptionSearchCalls(h, 1, 0)
 }
 
-func TestSubscriptionSearchRevocationRemovesControl(t *testing.T) {
-	h := subscriptionSearchHarness(t)
-	beginSubscriptionSearch(h)
-	h.tap(alice, subSearchMessage, "停止刷新")
-	h.tap(alice, subSearchMessage, "停止本次搜索")
-	h.mp.setRoute(deleteFirst, ok("subscribe_deleted.json"))
-	h.say(alice, alice, "/subscribe")
-	const anotherList = 3
-	h.tap(alice, anotherList, "取消订阅")
-	h.tap(alice, anotherList, "1")
-	h.tap(alice, anotherList, "确认取消")
-	h.tap(alice, subSearchMessage, "确认停止搜索")
-	assertSubscriptionSearchCalls(h, 1, 0)
-	h.tap(alice, subSearchMessage, "返回")
-	h.shows(subSearchMessage, "订阅搜索")
-	h.tap(alice, subSearchMessage, "关闭")
-	h.tr.verify(t)
-}
-
 func TestSubscriptionSearchStopRechecksScope(t *testing.T) {
 	h := subscriptionSearchHarness(t)
 	beginSubscriptionSearch(h)

@@ -15,7 +15,6 @@ const (
 	actionSubSearchStop   = "qx"
 	actionSubSearchCancel = "qy"
 
-	msgSubSearchOwn    = "只能操作你请求的订阅搜索哦～"
 	msgSubSearchChange = "订阅条件或状态已变化，请核对后重新确认搜索哦～"
 	msgSubSearchUnread = "暂时无法读取本次搜索状态，点「刷新」只会重新核对，不会重新搜索哦～"
 	msgSubSearchScope  = "批次范围暂时无法核实，没有开放停止操作，请到 MoviePilot 核对哦～"
@@ -80,21 +79,21 @@ func (e *Engine) chooseSubSearchRun(ctx context.Context, sess session, p press) 
 
 func (e *Engine) askSubSearch(ctx context.Context, sess session, id int) Reply {
 	index := sess.subAt(id)
-	if index < 0 || !slices.Contains(sess.mine, id) {
-		return Reply{Notice: msgSubSearchOwn}
+	if index < 0 {
+		return Reply{Notice: msgInvalidChoice}
 	}
 	base := sess.subs[index]
 	if run := sess.subSearch; run != nil && run.base.same(base) && !run.canSearchAgain() {
 		return e.refreshSubSearch(ctx, copySubSearch(sess))
 	}
-	sub, notice := e.ownedSearchSubscription(ctx, sess, base)
+	sub, notice := e.searchSubscription(ctx, base)
 	if notice != "" {
 		return Reply{Notice: notice}
 	}
 	return e.subSearchConfirmation(sess, sub, "")
 }
 
-func (e *Engine) ownedSearchSubscription(ctx context.Context, sess session, base Subscription) (Subscription, string) {
+func (e *Engine) searchSubscription(ctx context.Context, base Subscription) (Subscription, string) {
 	if base.Created == "" {
 		return Subscription{}, msgSubCheck
 	}
@@ -107,11 +106,7 @@ func (e *Engine) ownedSearchSubscription(ctx context.Context, sess session, base
 	if index < 0 {
 		return Subscription{}, msgSubChanged
 	}
-	sub := subs[index]
-	if !slices.Contains(e.watcher.Requested(sess.owner.UserID, []Subscription{sub}), sub.ID) {
-		return Subscription{}, msgSubSearchOwn
-	}
-	return sub, ""
+	return subs[index], ""
 }
 
 func (e *Engine) startSubSearch(ctx context.Context, sess session, id int) Reply {
@@ -119,7 +114,7 @@ func (e *Engine) startSubSearch(ctx context.Context, sess session, id int) Reply
 		return Reply{Notice: msgInvalidChoice}
 	}
 	base := *sess.subSearchAsk
-	sub, notice := e.ownedSearchSubscription(ctx, sess, base)
+	sub, notice := e.searchSubscription(ctx, base)
 	if notice != "" {
 		return Reply{Notice: notice}
 	}

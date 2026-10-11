@@ -71,20 +71,12 @@ accepts known file_ids only, and records each displayed image by its complete st
 `message.seen()` (URL hash or uploaded-byte SHA-256), not its URL/upload/file_id transport; the cache recovery
 scenario separately asserts actual file_id reuse
 
-## 轮询日期与通知假服务
+## 整理记录与媒体库假服务
 
-The fake media server shows every transfer on top of the scenario's library fixture; `scenario.lagging` +
-`h.catchUp` model a server that has not scanned yet. Library and latest reads are polled, so they stay out of
-transcripts
-
-The fake answers `recognize` per file name (`scenario.recognized`, others get `recognize_none.json` like
-live); fake transfers carry `Src`/`Hash` only where a scenario needs qualities. History is filtered by status
-and paged by `Date`, with no assumed ID order between completion times. `failedTransfer`/`retryTransfer` model
-a failed row becoming successful without changing its ID; failed records are not visible in the fake media
-library. Only page-one reads advance the harness's full-poll barrier.
-
-The E2E quiet default is `300ms`; `transfers` waits until a whole poll handled the records, so a scenario can
-act between polls. Polling calls stay out of transcripts while their emitted notices remain recorded.
+The fake media server shows every transfer added with `h.transfers` on top of the scenario's library fixture;
+nothing in Crychic reads the transfer history itself, so `transfers` does not wait for any poll. Library and
+latest reads are polled, so they stay out of transcripts. Notices come only from `h.nativeNotice` (and
+`h.arrives`, which adds transfers and then a native notice).
 
 身份复用场景分别通过替换列出的订阅和向新请求返回复用 row ID 建模，不得以只增不减的假 ID 排除这个生产失败方式。
 
@@ -125,9 +117,7 @@ changing real timer cadence
 
 `fake_library_test.go` 仅在成功响应具有有效非 null 季字典和集数数组时叠加已扫描整理文件；整体或单季 null 保留原响应，不能让 fake 把未知库重写为空库。测试在实现入口前因缺按钮失败；起始集扩展在修复前因仍从 E01 计算失败。产物均为固定脱敏 transcript，普通运行逐字比对。
 
-`myrequests*_test.go` 覆盖请求归属、筛选与稳定编号、下载实例关联、安全失败阶段、部分读取和页数上限、完成历史与重启。fake 按 `status=false` 独立注入失败页，不推进通知的成功历史轮询屏障；没有录制真实请求或错误。合成字段同时对照 `v3.1.1` 与 `v3.1.3` 的相同影视读取契约，不按版本号复制同一套测试。
-
-共享预算场景用 HTTP 入站屏障确认下载和媒体库在慢订阅读取结束前已开始，实际等待生产五秒预算，只保留成功来源。transcript 只归一化同一批相邻的并行订阅和失败历史读取，不跨用户动作或写操作排序。已有下载整包与洗版到货场景扩展验证完成历史，不再复制其通知过程；每个场景仍以固定产物比对结束。
+`myrequests*_test.go` 与失败历史 fake 随 `/requests` 于 2026-10-11 删除；订阅、下载与整理进度由订阅详情和任务场景覆盖。
 
 `subedit*_test.go` 经真实 `/subscribe` 详情和输入流程验证条件草稿、最小 PUT、null/空集合、并发修改、目录解析与规则摘要、旧编号/票据、401/403、拒绝/408/半响应/缺失成功标记/重定向、投递重试、话题、过期、重启及编辑后的到货。`fake_subedit_test.go` 按 v3.1.1 更新模型只应用明确字段，不重写未提交设置；允许“已提交但丢响应”和“已保存但后续读取不可用”。`subscribe_upgrade_groups.json` 为合成的洗版全局规则配置。
 
@@ -163,6 +153,6 @@ summary) and scenarios check never reach a chat; never commit real keys or token
 
 ## 原生通知与插件宿主
 
-原生通知 HTTP fake 独立于转移历史，h.transfers 不生成通知；h.nativeNotice 明确模拟 MP 的投递记录。旧 h.arrives 仅用于既有媒体交互场景，同时明确产生独立 MP 通知，不验证已退役的本地通知规则。基线 ACK 是启动屏障。
+原生通知 HTTP fake 独立于转移历史，h.transfers 不生成通知；h.nativeNotice 明确模拟 MP 的投递记录。h.arrives 仅用于既有媒体交互场景，同时明确产生独立 MP 通知。基线 ACK 是启动屏障。
 
 主场景验证富文本、明确目标和话题、白名单、未知发送、重启、坏批次及只有事实无通知；每个场景结束比对 transcript。`run_mp_plugin_e2e.sh` 在 `--network none` 的官方 MP v3.1.4 镜像中，用合成临时状态启动真实宿主和插件，以认证 HTTP 读写插件状态。验证 native post_message 路由、类型开关、发送时段、durable 身份、持久缓冲及不启动 Telegram 客户端。普通运行比对 MPPluginNativeHost.txt，只有 --update 才更新。

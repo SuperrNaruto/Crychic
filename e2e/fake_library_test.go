@@ -23,7 +23,7 @@ type libraryQuery struct {
 }
 
 // servesLibrary answers the media server checks like an Emby that has
-// scanned every transfer (unless lagging) on top of what the scenario's
+// scanned every transfer on top of what the scenario's
 // library fixture held before; it reports whether it handled r.
 func (f *fakeMoviePilot) servesLibrary(w http.ResponseWriter, r *http.Request) bool {
 	switch r.Method + " " + r.URL.Path {
@@ -43,10 +43,7 @@ func (f *fakeMoviePilot) servesLibrary(w http.ResponseWriter, r *http.Request) b
 func (f *fakeMoviePilot) shown() []transfer {
 	f.mu.Lock()
 	defer f.mu.Unlock()
-	if !f.lagging {
-		return slices.DeleteFunc(slices.Clone(f.transfers), func(t transfer) bool { return !t.Status })
-	}
-	return slices.DeleteFunc(slices.Clone(f.transfers[len(f.transfers)-f.scanned:]), func(t transfer) bool { return !t.Status })
+	return slices.Clone(f.transfers)
 }
 
 func (f *fakeMoviePilot) serveEpisodes(w http.ResponseWriter, r *http.Request) {
@@ -167,13 +164,6 @@ func (f *fakeMoviePilot) heldBefore(key string, held *map[string][]int) {
 	for season, eps := range env.Data {
 		(*held)[season] = append((*held)[season], eps...)
 	}
-}
-
-// catchUp makes a lagging media server scan every transfer so far.
-func (f *fakeMoviePilot) catchUp() {
-	f.mu.Lock()
-	defer f.mu.Unlock()
-	f.scanned = len(f.transfers)
 }
 
 func fixture(f *fakeMoviePilot, name string) []byte {

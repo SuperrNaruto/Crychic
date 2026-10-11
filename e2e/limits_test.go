@@ -127,27 +127,6 @@ func TestTelegramSendHasDeadline(t *testing.T) {
 	h.tr.verify(t)
 }
 
-// Polling an unchanged server must not replace the durable state file.
-func TestIdlePollingDoesNotRewriteState(t *testing.T) {
-	h := start(t, scenario{})
-	h.transfers()
-	path := filepath.Join(h.cfg.DataDir, "requests.json")
-	before, err := os.Stat(path)
-	if err != nil {
-		t.Fatal(err)
-	}
-	h.transfers()
-	after, err := os.Stat(path)
-	if err != nil {
-		t.Fatal(err)
-	}
-	if !os.SameFile(before, after) {
-		t.Error("idle polling replaced the unchanged state file")
-	}
-	h.tr.add(">> unchanged server polled twice; durable state file retained")
-	h.tr.verify(t)
-}
-
 // A large transfer is summarized in one live message rather than rejected
 // for its length; aggregate progress still counts every file.
 func TestLargeTransferFitsTelegramLimit(t *testing.T) {

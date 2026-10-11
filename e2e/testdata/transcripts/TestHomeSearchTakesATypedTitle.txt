@@ -6,7 +6,6 @@
    [搜索 | 1:h:0] [发现 | 1:h:1]
    [我的订阅 | 1:h:2] [最新入库 | 1:h:3]
    [任务进度 | 1:h:4] [追剧日历 | 1:h:5]
-   [我的请求 | 1:h:6]
 >> user 1002 taps 1:h:0 on message 1
 << answerCallbackQuery notice="这是别人的请求哦，不能替 TA 点～"
 >> user 1001 taps 1:h:0 on message 1
@@ -23,7 +22,6 @@
    [搜索 | 1:h:0] [发现 | 1:h:1]
    [我的订阅 | 1:h:2] [最新入库 | 1:h:3]
    [任务进度 | 1:h:4] [追剧日历 | 1:h:5]
-   [我的请求 | 1:h:6]
 << answerCallbackQuery
 >> user 1001 taps 1:h:0 on message 1
 << editMessageText chat=1001 message=1
@@ -83,7 +81,6 @@
    [搜索 | 1:h:0] [发现 | 1:h:1]
    [我的订阅 | 1:h:2] [最新入库 | 1:h:3]
    [任务进度 | 1:h:4] [追剧日历 | 1:h:5]
-   [我的请求 | 1:h:6]
 << answerCallbackQuery
 >> Crychic restarts
 >> user 1001 taps 1:h:0 on message 1

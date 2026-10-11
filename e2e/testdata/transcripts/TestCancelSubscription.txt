@@ -1,0 +1,108 @@
+>> user 1001 in chat 1001: /subscribe
+-> MoviePilot GET /api/v1/subscribe/
+<< sendRichMessage chat=1001 message=1
+   <h3>📚 订阅清单 · 电视剧（2）</h3>
+   <ol start="1">
+   <li value="1"><b>《绝命毒师》第 2 季</b><br>
+   <i>订阅中 · 缺 13/13 集</i></li>
+   <li value="2"><b>《颂乐人偶》第 1 季</b><br>
+   <i>订阅中 · 缺 1/13 集</i></li>
+   </ol>
+   [1 | 1:sd:1] [2 | 1:sd:5]
+   [·电视剧· | 1:sf:2] [电影 | 1:sf:1]
+   [取消订阅 | 1:sc:0] [订阅历史 | 1:hs:2]
+   [首页 | 1:o:0] [关闭 | 1:c:0]
+>> user 1001 taps 1:sc:0 on message 1
+<< editMessageText chat=1001 message=1
+   <h3>📚 取消订阅</h3>
+   <ol start="1">
+   <li value="1"><b>《绝命毒师》第 2 季</b><br>
+   <i>订阅中 · 缺 13/13 集</i></li>
+   <li value="2"><b>《颂乐人偶》第 1 季</b><br>
+   <i>订阅中 · 缺 1/13 集</i></li>
+   </ol>
+   <footer>点编号选一个要取消的订阅吧。</footer>
+   [1 | 1:v:1] [2 | 1:v:5]
+   [返回 | 1:bk:0] [首页 | 1:o:0] [关闭 | 1:c:0]
+<< answerCallbackQuery
+>> user 1001 taps 1:v:1 on message 1
+<< editMessageText chat=1001 message=1
+   <img src="url-1bc43c78f90216151f38c5364e20d05ed84bcd8927d87d91cbd1c655434f0dd9"/>
+   <h3>📚 取消订阅</h3>
+   <p><b>真的要取消订阅《绝命毒师》第 2 季吗？</b><br>
+   取消后 MoviePilot 就不会再帮它搜索下载了哦。</p>
+   [确认取消 | 1:z:1]
+   [返回 | 1:bk:0]
+<< answerCallbackQuery
+>> user 1001 taps 1:bk:0 on message 1
+<< editMessageText chat=1001 message=1
+   <h3>📚 取消订阅</h3>
+   <ol start="1">
+   <li value="1"><b>《绝命毒师》第 2 季</b><br>
+   <i>订阅中 · 缺 13/13 集</i></li>
+   <li value="2"><b>《颂乐人偶》第 1 季</b><br>
+   <i>订阅中 · 缺 1/13 集</i></li>
+   </ol>
+   <footer>点编号选一个要取消的订阅吧。</footer>
+   [1 | 1:v:1] [2 | 1:v:5]
+   [返回 | 1:bk:0] [首页 | 1:o:0] [关闭 | 1:c:0]
+<< answerCallbackQuery
+>> user 1001 taps 1:bk:0 on message 1
+<< editMessageText chat=1001 message=1
+   <h3>📚 订阅清单 · 电视剧（2）</h3>
+   <ol start="1">
+   <li value="1"><b>《绝命毒师》第 2 季</b><br>
+   <i>订阅中 · 缺 13/13 集</i></li>
+   <li value="2"><b>《颂乐人偶》第 1 季</b><br>
+   <i>订阅中 · 缺 1/13 集</i></li>
+   </ol>
+   [1 | 1:sd:1] [2 | 1:sd:5]
+   [·电视剧· | 1:sf:2] [电影 | 1:sf:1]
+   [取消订阅 | 1:sc:0] [订阅历史 | 1:hs:2]
+   [首页 | 1:o:0] [关闭 | 1:c:0]
+<< answerCallbackQuery
+>> user 1001 taps 1:sc:0 on message 1
+<< editMessageText chat=1001 message=1
+   <h3>📚 取消订阅</h3>
+   <ol start="1">
+   <li value="1"><b>《绝命毒师》第 2 季</b><br>
+   <i>订阅中 · 缺 13/13 集</i></li>
+   <li value="2"><b>《颂乐人偶》第 1 季</b><br>
+   <i>订阅中 · 缺 1/13 集</i></li>
+   </ol>
+   <footer>点编号选一个要取消的订阅吧。</footer>
+   [1 | 1:v:1] [2 | 1:v:5]
+   [返回 | 1:bk:0] [首页 | 1:o:0] [关闭 | 1:c:0]
+<< answerCallbackQuery
+>> user 1001 taps 1:v:1 on message 1
+<< editMessageText chat=1001 message=1
+   <img src="url-1bc43c78f90216151f38c5364e20d05ed84bcd8927d87d91cbd1c655434f0dd9"/>
+   <h3>📚 取消订阅</h3>
+   <p><b>真的要取消订阅《绝命毒师》第 2 季吗？</b><br>
+   取消后 MoviePilot 就不会再帮它搜索下载了哦。</p>
+   [确认取消 | 1:z:1]
+   [返回 | 1:bk:0]
+<< answerCallbackQuery
+>> user 1001 taps 1:z:1 on message 1
+-> MoviePilot GET /api/v1/subscribe/
+-> MoviePilot DELETE /api/v1/subscribe/1
+<< editMessageText chat=1001 message=1
+   <h3>✅ 已取消订阅</h3>
+   <p>好哒，《绝命毒师》第 2 季的订阅已经取消啦。</p>
+   [返回 | 1:j:0] [首页 | 1:o:0] [关闭 | 1:c:0]
+<< answerCallbackQuery
+>> user 1001 taps 1:j:0 on message 1
+-> MoviePilot GET /api/v1/subscribe/
+<< editMessageText chat=1001 message=1
+   <h3>📚 订阅清单 · 电视剧（2）</h3>
+   <ol start="1">
+   <li value="1"><b>《绝命毒师》第 2 季</b><br>
+   <i>订阅中 · 缺 13/13 集</i></li>
+   <li value="2"><b>《颂乐人偶》第 1 季</b><br>
+   <i>订阅中 · 缺 1/13 集</i></li>
+   </ol>
+   [1 | 1:sd:1] [2 | 1:sd:5]
+   [·电视剧· | 1:sf:2] [电影 | 1:sf:1]
+   [取消订阅 | 1:sc:0] [订阅历史 | 1:hs:2]
+   [首页 | 1:o:0] [关闭 | 1:c:0]
+<< answerCallbackQuery

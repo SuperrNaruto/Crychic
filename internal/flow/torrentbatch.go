@@ -95,11 +95,10 @@ func (e *Engine) askBatch(sess session) Reply {
 
 // batchOutcome is what happened to one release of a batch.
 type batchOutcome struct {
-	release  Torrent
-	state    submissionState
-	err      error // set when MoviePilot refused or the result is unknown
-	unknown  bool
-	notified bool
+	release Torrent
+	state   submissionState
+	err     error // set when MoviePilot refused or the result is unknown
+	unknown bool
 }
 
 // downloadBatch consumes confirmation before starting one serial API worker.
@@ -144,19 +143,17 @@ func (e *Engine) downloadOne(ctx context.Context, sess session, t Torrent) batch
 		}
 		return out
 	}
-	out.notified = e.rememberDownload(ctx, sess, added{id: id, release: t})
 	return out
 }
 
 // batchLines tables each release's outcome, e.g. Dune.2021… | ✅ 开始下载.
 func (e *Engine) batchLines(target Target, outcomes []batchOutcome) Text {
 	rows := make([][]Span, 0, len(outcomes))
-	started, unknown, notified := 0, false, true
+	started, unknown := 0, false
 	for _, o := range outcomes {
 		unknown = unknown || o.unknown
 		if o.state == submissionDone && o.err == nil {
 			started++
-			notified = notified && o.notified
 		}
 		rows = append(rows, []Span{Strong(truncate(o.release.Title, listTitleRunes)), Plain(o.label())})
 	}
@@ -164,7 +161,7 @@ func (e *Engine) batchLines(target Target, outcomes []batchOutcome) Text {
 	head := fmt.Sprintf("%s的下载结果来啦：", targetName(target))
 	text := Lines(Line(Strong(head)), Table(batchResultHead, rows...))
 	if started > 0 {
-		done := fmt.Sprintf("✅ 开始下载 %d 个资源啦%s ヾ(≧▽≦*)o", started, e.noticeEnding(notified))
+		done := fmt.Sprintf("✅ 开始下载 %d 个资源啦%s ヾ(≧▽≦*)o", started, noticeEnding)
 		text = append(text, Line(Plain(done)))
 	}
 	if unknown {

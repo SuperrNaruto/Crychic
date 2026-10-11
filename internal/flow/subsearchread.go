@@ -62,7 +62,7 @@ func (e *Engine) askStopSubSearch(ctx context.Context, sess session) Reply {
 	if !sess.subSearch.canStop() {
 		return e.showSubSearch(sess)
 	}
-	if _, notice := e.ownedSearchSubscription(ctx, sess, sess.subSearch.base); notice != "" {
+	if _, notice := e.searchSubscription(ctx, sess.subSearch.base); notice != "" {
 		return Reply{Notice: notice}
 	}
 	sess.subSearch.on, sess.subSearchPage = false, subSearchStopPage
@@ -79,7 +79,7 @@ func (e *Engine) stopSubSearch(ctx context.Context, sess session) Reply {
 	if !run.canStop() {
 		return e.showSubSearch(sess)
 	}
-	if _, notice := e.ownedSearchSubscription(ctx, sess, run.base); notice != "" {
+	if _, notice := e.searchSubscription(ctx, run.base); notice != "" {
 		return Reply{Notice: notice}
 	}
 	// Even an explicitly rejected cancellation consumes this confirmation.
