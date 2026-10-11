@@ -119,6 +119,8 @@ changing real timer cadence
 
 `myrequests*_test.go` 与失败历史 fake 随 `/requests` 于 2026-10-11 删除；订阅、下载与整理进度由订阅详情和任务场景覆盖。
 
+`taskpause_test.go` 的 3 个场景经真实 `/tasks` 入口覆盖下载暂停与恢复：非默认实例上的分别确认、写后只读核对、旧确认票据不再写入；确认后目标已被他处暂停或已消失时不写，同 hash 多实例时撤下暂停、恢复和删除；HTTP 200 拒绝、503 与不确认所请求操作的成功响应。`fake_download_control_test.go` 按 v3.1.4 `update_task` 合成：未配置实例使该项失败，不存在的 hash 仍成功，`success` 为逐项合取，缺实例直接使场景失败；暂停状态反映到之后的下载列表。`download_control_empty.json` 是合成的空结果成功响应，未对真实下载器执行暂停或恢复。
+
 `subedit*_test.go` 经真实 `/subscribe` 详情和输入流程验证条件草稿、最小 PUT、null/空集合、并发修改、目录解析与规则摘要、旧编号/票据、401/403、拒绝/408/半响应/缺失成功标记/重定向、投递重试、话题、过期、重启及编辑后的到货。`fake_subedit_test.go` 按 v3.1.1 更新模型只应用明确字段，不重写未提交设置；允许“已提交但丢响应”和“已保存但后续读取不可用”。`subscribe_upgrade_groups.json` 为合成的洗版全局规则配置。
 
 `holdSubscriptionRead` 在 fake 已读取并序列化旧订阅后阻塞 HTTP 响应，与通用 `holdCalls` 的请求入站屏障不同。它验证本地编辑完成以后，陈旧的通知读取不会覆盖起始集和洗版模式，也不会错误推进整理游标。固定 transcript 记录用户可见结果，目录定义、后台路径和敏感旧条件不进入产物。

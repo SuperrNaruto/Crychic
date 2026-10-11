@@ -134,7 +134,7 @@
    <tr><td>14.6 GiB</td><td>12%</td><td>8.2MB/s</td><td>27分40秒</td></tr>
    </table>
    <footer>正在帮你盯着进度…</footer>
-   [停止刷新 | 2:u:0] [删除任务 | 2:kd:0]
+   [停止刷新 | 2:u:0] [暂停下载 | 2:kp:0] [删除任务 | 2:kd:0]
    [返回 | 2:l:0] [首页 | 2:o:0] [关闭 | 2:c:0]
 << answerCallbackQuery
 >> user 1001 taps 2:kd:0 on message 2
@@ -183,7 +183,7 @@
    <tr><td>17.5 GiB</td><td>0%</td></tr>
    </table>
    <footer>正在帮你盯着进度…</footer>
-   [停止刷新 | 2:u:0] [删除任务 | 2:kd:0]
+   [停止刷新 | 2:u:0] [暂停下载 | 2:kp:0] [删除任务 | 2:kd:0]
    [返回 | 2:l:0] [首页 | 2:o:0] [关闭 | 2:c:0]
 << answerCallbackQuery
 >> user 1001 taps 2:kd:0 on message 2

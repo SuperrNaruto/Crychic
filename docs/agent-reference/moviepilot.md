@@ -96,7 +96,7 @@ removed.
 
 搜索前站点列表读取 `GET /api/v1/site/media/{电影|电视剧}`，只投影有效、不重复的 ID 与名称。选择后 JSON 和 SSE 均传逗号分隔的 `sites`，不把本地结果筛选当成上游范围。[站点接口](https://github.com/jxxghp/MoviePilot/blob/v3.1.1/app/api/endpoints/site.py#L218-L276)
 
-## 下载进度与任务删除
+## 下载进度、暂停恢复与任务删除
 
 资源搜索的 Cookie 流仅用于获取候选，不改变以下任务轮询与完成判断。
 
@@ -124,6 +124,27 @@ reports success even for an absent hash, so that response cannot correct a missi
 names stay out of messages and buttons. Deleting does not undo a subscription: its `note` recorded the
 episodes as obtained when the torrent was added, and nothing in MoviePilot's core listens for the deletion, so
 the subscription never fetches them again
+
+### 暂停与恢复（v3.1.4 核验）
+
+2026-10-12 对照 MP 最新稳定版 `v3.1.4`（部署同版本）源码：`app/api/endpoints/download.py` 的 `update_task`、
+`app/application/download/tasks.py` 的 `DownloadTaskMutationService`、`app/schemas/download.py` 及
+`app/modules/{qbittorrent,transmission}`。`PATCH /api/v1/download/{hash}` 认证为 `get_current_active_user`（API key
+即超级用户），请求体只发 `{"action": "stop"|"start", "downloader": <实例>}`。hash 须为 40 位十六进制，否则
+`success=false`；省略 `downloader` 时 MP 自行按 hash 查找实例，Crychic 始终显式传任务自己的实例，实例缺失或同
+hash 多实例时不提供控制。响应 `data` 为 `{hash, downloader, results: [{operation, success, message}]}`，
+`success` 是逐项结果的合取；空 `results` 在上游也算成功，所以客户端要求恰好一项、`operation` 与请求一致且
+hash 和实例匹配，否则按结果未知处理。
+
+下载器对不存在的 hash 也报告成功（qBittorrent `torrents_pause/resume` 无异常即真），未配置或停用的实例使该项
+失败。因此确认前和写入前都重读 `GET /api/v1/download/`，写后只给只读「查看任务」。qBittorrent 的
+`downloading` 过滤包含 `StoppedDownloading`（qBittorrent `TorrentImpl::isDownloading`），暂停的未完成任务仍以
+`state=paused` 留在列表中，可以恢复；Transmission 的列表只取 `downloading`/`download_pending`，暂停后任务离开
+列表，恢复需到 MP 或下载器中进行。2026-10-12 只读查询 `/api/v1/download/clients`，目标部署只有一个 qBittorrent。
+
+写请求复用禁止重定向、无 Cookie jar 的 client，不回显响应正文。HTTP 200 的 `success=false`、400/404/405/409/
+422/429 投影为固定拒绝文案；401/403 为 API key 拒绝；其他状态、超时、解码失败、缺 `success` 或结果不匹配都
+按未知结果处理，绝不自动再次 PATCH。旧的 `GET /download/start|stop/{hash}` 会改状态却是 GET，不使用。
 
 ## 订阅默认项与执行状态
 

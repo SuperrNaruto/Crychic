@@ -30,13 +30,13 @@ func (c *Client) UpdateSubscription(ctx context.Context, update flow.Subscriptio
 		return &flow.UserError{Message: "MoviePilot 拒绝了这次修改，请到后台核对订阅和条件哦～"}
 	}
 	var status *statusError
-	if errors.As(err, &status) && rejectedSubscriptionStatus(status.code) {
+	if errors.As(err, &status) && rejectedWriteStatus(status.code) {
 		return &flow.UserError{Message: "MoviePilot 拒绝了这次修改，请到后台核对订阅和条件哦～"}
 	}
 	return errors.New("moviepilot: subscription update outcome unknown")
 }
 
-func rejectedSubscriptionStatus(status int) bool {
+func rejectedWriteStatus(status int) bool {
 	switch status {
 	case http.StatusBadRequest, http.StatusNotFound, http.StatusMethodNotAllowed,
 		http.StatusConflict, http.StatusUnprocessableEntity, http.StatusTooManyRequests:

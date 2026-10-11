@@ -34,9 +34,10 @@ func (ref taskRef) downloadRef() DownloadRef {
 
 // following is the live view of one task in a session.
 type following struct {
-	on    bool
-	until time.Time
-	last  Reply // shown again, with a warning, when a refresh fails
+	on      bool
+	until   time.Time
+	last    Reply           // shown again, with a warning, when a refresh fails
+	control downloadControl // what the last successful read lets the view offer
 }
 
 // Tasks lists the backend's downloads and transfer jobs to pick one to follow.
@@ -91,7 +92,7 @@ func (e *Engine) refresh(ctx context.Context, sess session, index int) Reply {
 	if index < 0 || index >= len(sess.tasks) {
 		return Reply{Notice: msgInvalidChoice}
 	}
-	view, gone, err := e.taskView(ctx, sess.tasks[index])
+	view, control, gone, err := e.taskView(ctx, sess.tasks[index])
 	if err != nil && len(sess.follow.last.Text) == 0 {
 		e.store.take(sess.id)
 		return titled(msgTasksTitle, e.failure("task", err))
@@ -108,7 +109,7 @@ func (e *Engine) refresh(ctx context.Context, sess session, index int) Reply {
 		return view
 	}
 	if err == nil {
-		sess.follow.last = view
+		sess.follow.last, sess.follow.control = view, control
 	}
 	if e.now().After(sess.follow.until) {
 		sess.follow.on = false
@@ -122,29 +123,29 @@ func (e *Engine) refresh(ctx context.Context, sess session, index int) Reply {
 	return live
 }
 
-// taskView renders the current state of ref; gone means it has finished
-// and the view is final.
-func (e *Engine) taskView(ctx context.Context, ref taskRef) (view Reply, gone bool, err error) {
+// taskView renders the current state of ref and the controls it allows;
+// gone means it has finished and the view is final.
+func (e *Engine) taskView(ctx context.Context, ref taskRef) (view Reply, control downloadControl, gone bool, err error) {
 	if ref.download {
 		downloads, err := e.backend.Downloads(ctx)
 		if err != nil {
-			return Reply{}, false, err
+			return Reply{}, noControl, false, err
 		}
 		if d, found := findDownload(downloads, ref.downloadRef()); found {
-			return downloadView(d), false, nil
+			return downloadView(d), controlOf(d), false, nil
 		}
-		return Reply{Text: Sentence(msgDownloadGone)}, true, nil
+		return Reply{Text: Sentence(msgDownloadGone)}, noControl, true, nil
 	}
 	jobs, err := e.backend.Transfers(ctx)
 	if err != nil {
-		return Reply{}, false, err
+		return Reply{}, noControl, false, err
 	}
 	for _, j := range jobs {
 		if j.ID == ref.id {
-			return transferView(j), false, nil
+			return transferView(j), noControl, false, nil
 		}
 	}
-	return Reply{Text: Sentence(msgTransferGone)}, true, nil
+	return Reply{Text: Sentence(msgTransferGone)}, noControl, true, nil
 }
 
 // ended keeps the title line and poster of the last view above the final
@@ -170,12 +171,12 @@ func withWarning(view Reply, note string) Reply {
 }
 
 // taskControls are refresh control's row in task index's view, with
-// 删除任务 for a download.
+// 暂停下载 or 恢复下载 and 删除任务 for a download whose instance is known.
 func (sess session) taskControls(index int, refresh Button) []Button {
-	if sess.isDownload(index) {
-		return []Button{refresh, deleteButton(sess.id, index)}
+	if !sess.isDownload(index) || sess.follow.control == noControl {
+		return []Button{refresh}
 	}
-	return []Button{refresh}
+	return []Button{refresh, toggleButton(sess.id, index, sess.follow.control), deleteButton(sess.id, index)}
 }
 
 // taskRows are a task view's buttons: its controls above 返回 to the list
@@ -210,7 +211,8 @@ func expired(action string) Reply {
 	case actionSubs, actionSubsKind, actionCancelPick, actionHistory, actionHistoryKind,
 		actionHistoryPick, actionResubscribe, actionSubDetail, actionRefreshSubDetail, actionPauseSub, actionResumeSub:
 		return expiredText("⌛ 这个订阅列表过期啦，重新 /subscribe 一下吧～")
-	case actionTask, actionFollow, actionUnfollow, actionList, actionAskDelete, actionDelete:
+	case actionTask, actionFollow, actionUnfollow, actionList, actionAskDelete, actionDelete,
+		actionAskPause, actionAskResume, actionPause, actionResume:
 		return expiredText(msgTasksExpired)
 	case actionMedia, actionSeason, actionConfirm, actionAskFrom, actionCancel, actionMulti, actionTick, actionSubscribed,
 		actionRelated, actionSeries, actionResearch, actionRetry,

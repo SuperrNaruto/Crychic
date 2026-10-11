@@ -336,6 +336,9 @@ type Backend interface {
 	Download(ctx context.Context, torrent Torrent) (string, error)
 	// DeleteDownload removes a download together with its files.
 	DeleteDownload(ctx context.Context, download DownloadRef) error
+	// SetDownloadPaused stops or starts one download on its own instance;
+	// success means the backend accepted it, a read shows the actual state.
+	SetDownloadPaused(ctx context.Context, download DownloadRef, paused bool) error
 }
 
 // Calendar lists the shows airing this season, each with its weekday.

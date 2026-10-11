@@ -19,7 +19,7 @@
    <tr><td>17.5 GiB</td><td>0%</td></tr>
    </table>
    <footer>正在帮你盯着进度…</footer>
-   [停止刷新 | 1:u:1] [删除任务 | 1:kd:1]
+   [停止刷新 | 1:u:1] [暂停下载 | 1:kp:1] [删除任务 | 1:kd:1]
    [返回 | 1:l:0] [首页 | 1:o:0] [关闭 | 1:c:0]
 << answerCallbackQuery
 >> user 1001 taps 1:kd:1 on message 1

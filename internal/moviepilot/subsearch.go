@@ -129,5 +129,5 @@ func searchWriteRefused(err error) bool {
 		return true
 	}
 	var status *statusError
-	return errors.As(err, &status) && rejectedSubscriptionStatus(status.code)
+	return errors.As(err, &status) && rejectedWriteStatus(status.code)
 }

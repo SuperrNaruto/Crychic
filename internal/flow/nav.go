@@ -72,10 +72,12 @@ var finishing = map[string]bool{
 	actionUpgradeConfirm: true,
 }
 
-// needsTicket also binds subscription mutations to the currently shown
-// screen; those writes do not finish a media request.
+// needsTicket also binds subscription and download control mutations to
+// the currently shown screen; those writes do not finish a media request.
 func needsTicket(action string) bool {
-	return finishing[action] || action == actionPauseSub || action == actionResumeSub || action == actionUnsubscribe || action == actionSubEditSave || action == actionSubSearchStart || action == actionSubSearchCancel
+	return finishing[action] || action == actionPauseSub || action == actionResumeSub || action == actionUnsubscribe ||
+		action == actionSubEditSave || action == actionSubSearchStart || action == actionSubSearchCancel ||
+		action == actionPause || action == actionResume
 }
 
 // answered stands for a typed start episode, which replaces its prompt.

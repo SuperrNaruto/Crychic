@@ -59,7 +59,8 @@ type session struct {
 	past         []PastSubscription
 	tasks        []taskRef
 	follow       following
-	doomed       *DownloadRef // the download and instance asked to be deleted
+	doomed       *DownloadRef    // the download and instance asked to be deleted
+	toggle       *downloadToggle // the download asked to be paused or resumed
 	pages        []Reply
 	listing      string   // source of this list screen, empty on cards and detail pages
 	pageIndex    int      // current generic list page, preserved by 返回

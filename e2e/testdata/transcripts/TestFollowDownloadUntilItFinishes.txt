@@ -31,7 +31,7 @@
    <tr><td>17.5 GiB</td><td>0%</td></tr>
    </table>
    <footer>正在帮你盯着进度…</footer>
-   [停止刷新 | 1:u:0] [删除任务 | 1:kd:0]
+   [停止刷新 | 1:u:0] [暂停下载 | 1:kp:0] [删除任务 | 1:kd:0]
    [返回 | 1:l:0] [首页 | 1:o:0] [关闭 | 1:c:0]
 << answerCallbackQuery
 >> MoviePilot now answers GET /api/v1/download/ with downloads_mygo_later.json
@@ -43,7 +43,7 @@
    <tr><td>17.5 GiB</td><td>43%</td><td>3.1MB/s</td><td>5分12秒</td></tr>
    </table>
    <footer>正在帮你盯着进度…</footer>
-   [停止刷新 | 1:u:0] [删除任务 | 1:kd:0]
+   [停止刷新 | 1:u:0] [暂停下载 | 1:kp:0] [删除任务 | 1:kd:0]
    [返回 | 1:l:0] [首页 | 1:o:0] [关闭 | 1:c:0]
 >> user 1001 taps 1:u:0 on message 1
 << editMessageText chat=1001 message=1
@@ -54,7 +54,7 @@
    <tr><td>17.5 GiB</td><td>43%</td><td>3.1MB/s</td><td>5分12秒</td></tr>
    </table>
    <footer>好，不自动刷新啦～</footer>
-   [继续刷新 | 1:k:0] [删除任务 | 1:kd:0]
+   [继续刷新 | 1:k:0] [暂停下载 | 1:kp:0] [删除任务 | 1:kd:0]
    [返回 | 1:l:0] [首页 | 1:o:0] [关闭 | 1:c:0]
 << answerCallbackQuery
 >> user 1001 taps 1:l:0 on message 1
@@ -82,7 +82,7 @@
    <tr><td>17.5 GiB</td><td>43%</td><td>3.1MB/s</td><td>5分12秒</td></tr>
    </table>
    <footer>正在帮你盯着进度…</footer>
-   [停止刷新 | 1:u:0] [删除任务 | 1:kd:0]
+   [停止刷新 | 1:u:0] [暂停下载 | 1:kp:0] [删除任务 | 1:kd:0]
    [返回 | 1:l:0] [首页 | 1:o:0] [关闭 | 1:c:0]
 << answerCallbackQuery
 >> MoviePilot now answers GET /api/v1/download/ with downloads_none.json

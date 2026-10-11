@@ -155,7 +155,15 @@ func TestDeleteFromNondefaultDownloader(t *testing.T) {
 
 func twoDownloaders(t *testing.T) string {
 	t.Helper()
-	raw, err := os.ReadFile(filepath.Join("testdata", "moviepilot", "downloads_dune_mygo.json"))
+	return downloadsWith(t, "downloads_dune_mygo.json", func(data []map[string]any) {
+		data[1]["downloader"] = secondaryDownloader
+	})
+}
+
+// downloadsWith is a download list fixture after edit changed its tasks.
+func downloadsWith(t *testing.T, fixture string, edit func([]map[string]any)) string {
+	t.Helper()
+	raw, err := os.ReadFile(filepath.Join("testdata", "moviepilot", fixture))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -163,6 +171,6 @@ func twoDownloaders(t *testing.T) string {
 	if err := json.Unmarshal(raw, &env); err != nil {
 		t.Fatal(err)
 	}
-	env.Data[1]["downloader"] = "qBittorrent-secondary"
+	edit(env.Data)
 	return writeFixture(t, env.Data)
 }

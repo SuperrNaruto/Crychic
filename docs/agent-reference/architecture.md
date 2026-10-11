@@ -73,7 +73,7 @@ Data flow: Telegram update → `telegram.adapter` → `flow.Engine.Start/Choose`
 | 季与升级 | [internal/flow/seasons.go](../../internal/flow/seasons.go) | `episodes.go`、`upgrade.go`；多季、起始集与洗版 |
 | 资源与下载 | [internal/flow/torrents.go](../../internal/flow/torrents.go) | `torrenttext.go`、`torrenthunt.go`、`torrentsort.go`、`torrentmissing.go`、`torrentbatch.go` |
 | 缺集下载方案 | [internal/flow/torrentplan.go](../../internal/flow/torrentplan.go) | `torrentplanread.go` 读取及预检，`torrentplanselect.go` 确定性建议，`torrentplanmodel.go` 汇总范围，`torrentplantext.go` 有界预览；确认复用原串行批量下载 |
-| 任务与删除 | [internal/flow/tasks.go](../../internal/flow/tasks.go) | `taskdelete.go`、`tasktext.go`；任务跟随与删除确认 |
+| 任务控制与删除 | [internal/flow/tasks.go](../../internal/flow/tasks.go) | `taskpause.go`、`taskdelete.go`、`tasktext.go`；任务跟随、暂停恢复与删除确认 |
 | 语义文本 | [internal/flow/rich.go](../../internal/flow/rich.go) | `text.go`；语义块、卡片与列表文案 |
 | Inline | [internal/flow/inline.go](../../internal/flow/inline.go) | `internal/telegram/inline.go`；无会话查找、经典 HTML 与 deep link |
 | 平台输入与时序 | [internal/telegram/input.go](../../internal/telegram/input.go) | `address.go`、`lanes.go`、`follow.go`；引用、topic、锁与重投 |

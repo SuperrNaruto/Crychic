@@ -1,0 +1,96 @@
+>> user 1001 in chat 1001: /tasks
+<< sendRichMessage chat=1001 message=1
+   <h3>📋 正在忙的任务</h3>
+   <h4>⬇️ 下载</h4>
+   <ol start="1">
+   <li value="1"><b>《沙丘》</b><br>
+   <i>14.6 GiB · 进度 12%</i></li>
+   <li value="2"><b>《迷途之子!!!!!》第 1 季</b><br>
+   <i>E10–E12 · 17.5 GiB · 进度 0%</i></li>
+   </ol>
+   [1 | 1:k:0] [2 | 1:k:1]
+   [首页 | 1:o:0] [关闭 | 1:c:0]
+>> user 1001 taps 1:k:1 on message 1
+<< editMessageText chat=1001 message=1
+   <img src="url-f1d1c3e9142d5b6cb0aec97f314112cb1cfcf5cab28cbc83476b0d4bf25e1175"/>
+   <h3>⬇️ 《迷途之子!!!!!》第 1 季 E10–E12</h3>
+   <table bordered compact>
+   <tr><th>大小</th><th>进度</th></tr>
+   <tr><td>17.5 GiB</td><td>0%</td></tr>
+   </table>
+   <footer>正在帮你盯着进度…</footer>
+   [停止刷新 | 1:u:1] [暂停下载 | 1:kp:1] [删除任务 | 1:kd:1]
+   [返回 | 1:l:0] [首页 | 1:o:0] [关闭 | 1:c:0]
+<< answerCallbackQuery
+>> user 1001 taps 1:kp:1 on message 1
+<< editMessageText chat=1001 message=1
+   <img src="url-f1d1c3e9142d5b6cb0aec97f314112cb1cfcf5cab28cbc83476b0d4bf25e1175"/>
+   <h3>⬇️ 《迷途之子!!!!!》第 1 季 E10–E12</h3>
+   <table bordered compact>
+   <tr><th>大小</th><th>进度</th></tr>
+   <tr><td>17.5 GiB</td><td>0%</td></tr>
+   </table>
+   <hr/>
+   <p><b>⏸️ 要暂停这个下载吗？</b><br>
+   已经下载的部分都留着，之后点「恢复下载」就能接着下～</p>
+   [确认暂停 | 1:kq:1]
+   [返回 | 1:l:0]
+<< answerCallbackQuery
+>> user 1001 taps 1:kq:1 on message 1
+-> MoviePilot PATCH /api/v1/download/5c1d0a2e8f3b4c6d7e8f9a0b1c2d3e4f5a6b7c8d
+   {"action":"stop","downloader":"qBittorrent-secondary"}
+<< editMessageText chat=1001 message=1
+   <h3>✅ 已提交暂停</h3>
+   <p>MoviePilot 已经收下啦，点「查看任务」看看下载器里的实际状态～</p>
+   [查看任务 | 1:k:1]
+   [返回 | 1:l:0] [首页 | 1:o:0] [关闭 | 1:c:0]
+<< answerCallbackQuery
+>> user 1001 taps 1:kq:1 on message 1
+<< answerCallbackQuery notice="这个选项不太对哦～"
+>> user 1001 taps 1:k:1 on message 1
+<< editMessageText chat=1001 message=1
+   <img src="url-f1d1c3e9142d5b6cb0aec97f314112cb1cfcf5cab28cbc83476b0d4bf25e1175"/>
+   <h3>⏸️ 《迷途之子!!!!!》第 1 季 E10–E12</h3>
+   <table bordered compact>
+   <tr><th>大小</th><th>进度</th></tr>
+   <tr><td>17.5 GiB</td><td>已暂停 0%</td></tr>
+   </table>
+   <footer>正在帮你盯着进度…</footer>
+   [停止刷新 | 1:u:1] [恢复下载 | 1:kr:1] [删除任务 | 1:kd:1]
+   [返回 | 1:l:0] [首页 | 1:o:0] [关闭 | 1:c:0]
+<< answerCallbackQuery
+>> user 1001 taps 1:kr:1 on message 1
+<< editMessageText chat=1001 message=1
+   <img src="url-f1d1c3e9142d5b6cb0aec97f314112cb1cfcf5cab28cbc83476b0d4bf25e1175"/>
+   <h3>⏸️ 《迷途之子!!!!!》第 1 季 E10–E12</h3>
+   <table bordered compact>
+   <tr><th>大小</th><th>进度</th></tr>
+   <tr><td>17.5 GiB</td><td>已暂停 0%</td></tr>
+   </table>
+   <hr/>
+   <p><b>⬇️ 要恢复这个下载吗？</b><br>
+   下载器会从暂停的地方接着下～</p>
+   [确认恢复 | 1:ks:1]
+   [返回 | 1:l:0]
+<< answerCallbackQuery
+>> user 1001 taps 1:ks:1 on message 1
+-> MoviePilot PATCH /api/v1/download/5c1d0a2e8f3b4c6d7e8f9a0b1c2d3e4f5a6b7c8d
+   {"action":"start","downloader":"qBittorrent-secondary"}
+<< editMessageText chat=1001 message=1
+   <h3>✅ 已提交恢复</h3>
+   <p>MoviePilot 已经收下啦，点「查看任务」看看下载器里的实际状态～</p>
+   [查看任务 | 1:k:1]
+   [返回 | 1:l:0] [首页 | 1:o:0] [关闭 | 1:c:0]
+<< answerCallbackQuery
+>> user 1001 taps 1:k:1 on message 1
+<< editMessageText chat=1001 message=1
+   <img src="url-f1d1c3e9142d5b6cb0aec97f314112cb1cfcf5cab28cbc83476b0d4bf25e1175"/>
+   <h3>⬇️ 《迷途之子!!!!!》第 1 季 E10–E12</h3>
+   <table bordered compact>
+   <tr><th>大小</th><th>进度</th></tr>
+   <tr><td>17.5 GiB</td><td>0%</td></tr>
+   </table>
+   <footer>正在帮你盯着进度…</footer>
+   [停止刷新 | 1:u:1] [暂停下载 | 1:kp:1] [删除任务 | 1:kd:1]
+   [返回 | 1:l:0] [首页 | 1:o:0] [关闭 | 1:c:0]
+<< answerCallbackQuery

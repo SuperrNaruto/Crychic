@@ -6,6 +6,7 @@ import (
 	"errors"
 	"net/http"
 	"net/url"
+	"strings"
 
 	"github.com/SuperrNaruto/Crychic/internal/flow"
 )
@@ -98,4 +99,61 @@ func (c *Client) DeleteDownload(ctx context.Context, download flow.DownloadRef) 
 	var none json.RawMessage
 	q := url.Values{"name": {download.Downloader}}
 	return c.do(ctx, call{method: http.MethodDelete, path: "/api/v1/download/" + url.PathEscape(download.ID), query: q}, &none)
+}
+
+const (
+	controlStart = "start"
+	controlStop  = "stop"
+)
+
+var errControlOutcome = errors.New("moviepilot: download control outcome unknown")
+
+// downloadControl is v3.1.4's PATCH answer: one result per requested
+// operation, with the instance MoviePilot actually used.
+type downloadControl struct {
+	Hash       string `json:"hash"`
+	Downloader string `json:"downloader"`
+	Results    []struct {
+		Operation string `json:"operation"`
+		Success   bool   `json:"success"`
+	} `json:"results"`
+}
+
+// SetDownloadPaused stops or starts one download on its own instance. The
+// downloader accepts an absent hash too, so callers read the list before and
+// after; an empty instance would let MoviePilot pick one, so it is refused.
+func (c *Client) SetDownloadPaused(ctx context.Context, download flow.DownloadRef, paused bool) error {
+	action, verb := controlStart, "恢复"
+	if paused {
+		action, verb = controlStop, "暂停"
+	}
+	refused := &flow.UserError{Message: "MoviePilot 没能" + verb + "这个下载，请到 MoviePilot 核对任务哦～"}
+	if download.ID == "" || download.Downloader == "" {
+		return refused
+	}
+	client := *c
+	client.http = c.stream // shared transport, no redirects or Cookie jar
+	body := map[string]string{"action": action, "downloader": download.Downloader}
+	cl := call{method: http.MethodPatch, path: "/api/v1/download/" + url.PathEscape(download.ID), body: body, secret: true}
+	var result downloadControl
+	err := client.do(ctx, cl, &result)
+	switch {
+	case err == nil && result.confirms(download, action):
+		return nil
+	case err == nil:
+		return errControlOutcome
+	case errors.Is(err, errAuth):
+		return err
+	case searchWriteRefused(err):
+		return refused
+	}
+	return errControlOutcome
+}
+
+// confirms reports whether the answer is about this download on this
+// instance and carries exactly the requested operation, successful; an
+// empty result list would also count as success upstream.
+func (d downloadControl) confirms(download flow.DownloadRef, action string) bool {
+	return strings.EqualFold(d.Hash, download.ID) && d.Downloader == download.Downloader &&
+		len(d.Results) == 1 && d.Results[0].Operation == action && d.Results[0].Success
 }

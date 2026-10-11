@@ -67,9 +67,10 @@ var polledPaths = map[string]bool{
 
 // route is a canned MoviePilot answer. Fixtures are trimmed recordings from a
 // live v3.1.0 instance, except subscribe_rejected.json, server_error.json,
-// library_movie_held.json and queue_none.json, which follow the source
-// because the live instance can't produce them safely (or holds no movie
-// yet), and *_later.json, which advance a recording to show progress.
+// library_movie_held.json, queue_none.json and download_control_empty.json,
+// which follow the source because the live instance can't produce them
+// safely (or holds no movie yet), and *_later.json, which advance a
+// recording to show progress.
 type route struct {
 	status  int
 	fixture string
@@ -118,6 +119,7 @@ type fakeMoviePilot struct {
 	added       int        // downloads added so far
 	searches    map[string]string
 	deleted     map[downloadKey]bool // downloads removed from each downloader
+	paused      map[downloadKey]bool // downloads stopped (true) or started on each downloader
 	states      map[int]string       // subscription states set, by id
 	held        map[string][]*heldCall
 	streams     map[string][]*searchStream
@@ -137,7 +139,7 @@ type reader struct {
 func newFakeMoviePilot(t *testing.T, tr *transcript, routes map[string]route) *fakeMoviePilot {
 	all := maps.Clone(idleServer)
 	maps.Copy(all, routes)
-	f := &fakeMoviePilot{t: t, tr: tr, routes: all, deleted: map[downloadKey]bool{}, states: map[int]string{}}
+	f := &fakeMoviePilot{t: t, tr: tr, routes: all, deleted: map[downloadKey]bool{}, paused: map[downloadKey]bool{}, states: map[int]string{}}
 	f.native = newNativeMP()
 	f.Server = httptest.NewServer(http.HandlerFunc(f.serve))
 	return f
@@ -179,6 +181,7 @@ func (f *fakeMoviePilot) serveAuthenticated(w http.ResponseWriter, r *http.Reque
 	switch {
 	case f.servesLibrary(w, r):
 	case f.deletesDownload(w, r):
+	case f.controlsDownload(w, r):
 	case f.setsSubscriptionState(w, r):
 	case f.editsSubscription(w, r):
 	case f.servesSubscriptionExecution(w, r):
@@ -315,7 +318,7 @@ func (f *fakeMoviePilot) routeBody(r *http.Request, rt route) string {
 		body = f.numbered(body)
 	}
 	if key == downloadsPath {
-		body = f.undeleted(body)
+		body = f.currentDownloads(body)
 	}
 	if key == subsPath && rt.status == http.StatusOK {
 		body = f.restated(body)
@@ -384,8 +387,9 @@ func (f *fakeMoviePilot) deletesDownload(w http.ResponseWriter, r *http.Request)
 	return true
 }
 
-// undeleted leaves the deleted downloads out of a download list.
-func (f *fakeMoviePilot) undeleted(body string) string {
+// currentDownloads leaves the deleted downloads out of a download list and
+// shows the state the stopped or started ones are in now.
+func (f *fakeMoviePilot) currentDownloads(body string) string {
 	var env struct {
 		Success bool             `json:"success"`
 		Message string           `json:"message"`
@@ -396,6 +400,11 @@ func (f *fakeMoviePilot) undeleted(body string) string {
 	}
 	f.mu.Lock()
 	env.Data = slices.DeleteFunc(env.Data, func(d map[string]any) bool { return f.deleted[keyOfDownload(d)] })
+	for _, d := range env.Data {
+		if paused, set := f.paused[keyOfDownload(d)]; set {
+			d["state"] = map[bool]string{true: "paused", false: "downloading"}[paused]
+		}
+	}
 	f.mu.Unlock()
 	out, _ := json.Marshal(env)
 	return string(out)

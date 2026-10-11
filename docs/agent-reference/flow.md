@@ -113,7 +113,8 @@ indices stable
 ## 确认票据与过期
 
 Button data is `<session>:<action>:<arg>` and must stay ≤ 64 bytes (Telegram limit). Guarded write buttons
-(`needsTicket`: `finishing`'s `ok`, `y`, `td`, `tz`, `bo`, plus subscription `sp`, `sr`, `z`, `uw`) carry a fourth
+(`needsTicket`: `finishing`'s `ok`, `y`, `td`, `tz`, `bo`, plus subscription `sp`, `sr`, `z`, `uw`, `qc`, `qy`
+and download `kq`, `ks`) carry a fourth
 part, a ticket `navigate` hands the shown screen (`ticketed`); only a press with the shown screen's ticket
 writes, and 返回 restores a screen with its ticket, so a stale 确认 from an earlier pick of the same list never
 confirms the next pick. Subscription mutations do not enter `finishing`, which controls request navigation. An
@@ -289,6 +290,15 @@ warning that its files go too and, when a subscription of the same media and sea
 subscription will not fetch it again; 确认删除 (`ky`) clears the download to confirm before the write, relays a
 refusal and points an unknown result to `/tasks`; `internal/telegram/follow.go`
 re-asks the flow every `CRYCHIC_PROGRESS_INTERVAL` and edits only on change
+
+`taskpause.go`: a download view offers 暂停下载 (`kp`) or 恢复下载 (`kr`) by the state of its last successful read;
+both stop following, read the download afresh and ask on a card with 确认暂停 (`kq`) or 确认恢复 (`ks`) over 返回.
+The confirm code carries the direction, the ticket binds it to the shown screen, and the asked target
+(`session.toggle`) is consumed before anything else. The download is read again right before the one write:
+gone, already in the asked state, or without one known instance (`InstanceAmbiguous`) shows it as it is and
+writes nothing. A task without one known instance offers neither pause/resume nor 删除任务. The receipt says
+MoviePilot accepted it and offers only 查看任务 (`k`), a read; a refusal is relayed, an unknown result points
+to the same read, never a retry
 
 `internal/flow/latest.go` - `/newly_added`: newest media server items linked to their web page
 

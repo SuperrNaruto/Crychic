@@ -30,15 +30,15 @@ func (e *Engine) chooseDelete(ctx context.Context, sess session, p press) (Reply
 	return Reply{}, false
 }
 
-// askDelete stops following download index and asks before deleting it,
-// warning when a subscription of the same media and season exists (the
-// downloader does not say which subscription, if any, added it). That check is a courtesy, so
-// a failed one still asks.
+// askDelete stops following download index and asks before deleting it
+// from its one known instance, warning when a subscription of the same
+// media and season exists (the downloader does not say which subscription,
+// if any, added it). That check is a courtesy, so a failed one still asks.
 func (e *Engine) askDelete(ctx context.Context, sess session, index int) Reply {
 	if !sess.isDownload(index) {
 		return Reply{Notice: msgInvalidChoice}
 	}
-	sess.follow.on, sess.doomed = false, nil
+	sess.follow.on, sess.doomed, sess.toggle = false, nil, nil
 	downloads, err := e.backend.Downloads(ctx)
 	if err != nil {
 		e.store.put(sess)
@@ -48,6 +48,11 @@ func (e *Engine) askDelete(ctx context.Context, sess session, index int) Reply {
 	if !found {
 		e.store.put(sess)
 		return withTaskButtons(titled(msgTasksTitle, Reply{Text: Sentence(msgDownloadGone)}), sess)
+	}
+	sess.follow.last, sess.follow.control = downloadView(d), controlOf(d)
+	if sess.follow.control == noControl {
+		e.store.put(sess)
+		return pausedView(sess, index, msgControlElsewhere)
 	}
 	sess.doomed = &d.DownloadRef
 	e.store.put(sess)
