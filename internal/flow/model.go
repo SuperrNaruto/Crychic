@@ -301,6 +301,10 @@ type Backend interface {
 	SubscriptionSites(ctx context.Context, kind Kind) ([]SearchSite, error)
 	// UpdateSubscription sends the explicitly changed fields once.
 	UpdateSubscription(ctx context.Context, update SubscriptionUpdate) error
+	// SearchSubscription explicitly enqueues one subscription's search.
+	SearchSubscription(ctx context.Context, sub Subscription) (SubscriptionSearchReceipt, error)
+	SubscriptionSearchBatch(ctx context.Context, id string) (SubscriptionSearchBatch, error)
+	CancelSubscriptionSearch(ctx context.Context, id string) error
 	// SubscriptionHistory lists at most count past subscriptions of kind,
 	// newest first.
 	SubscriptionHistory(ctx context.Context, kind Kind, count int) ([]PastSubscription, error)

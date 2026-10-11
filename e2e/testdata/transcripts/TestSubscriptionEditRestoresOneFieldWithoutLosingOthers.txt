@@ -111,6 +111,7 @@
    <footer>仅查询，不会触发搜索或下载；点击刷新查看最新状态哦～</footer>
    [刷新 | 2:su:1] [暂停订阅 | 2:sp:1]
    [编辑条件 | 2:ue:1]
+   [立即搜索 | 2:qs:1]
    [返回 | 2:bk:0] [首页 | 2:o:0] [关闭 | 2:c:0]
 << answerCallbackQuery
 >> user 1001 taps 2:ue:1 on message 2

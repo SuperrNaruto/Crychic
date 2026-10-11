@@ -46,6 +46,8 @@ var forward = map[string]bool{
 }
 
 var sameLevel = map[string]bool{
+	actionSubSearch: true, actionSubSearchStart: true, actionSubSearchView: true, actionSubSearchRead: true,
+	actionSubSearchFollow: true, actionSubSearchPause: true, actionSubSearchStop: true, actionSubSearchCancel: true,
 	actionRequests: true, actionRequestRefresh: true,
 	actionTorrentPlanRefresh: true,
 	actionTick:               true, actionChartPage: true, actionWeekday: true, actionPage: true, answered: true,
@@ -75,7 +77,7 @@ var finishing = map[string]bool{
 // needsTicket also binds subscription mutations to the currently shown
 // screen; those writes do not finish a media request.
 func needsTicket(action string) bool {
-	return finishing[action] || action == actionPauseSub || action == actionResumeSub || action == actionUnsubscribe || action == actionSubEditSave
+	return finishing[action] || action == actionPauseSub || action == actionResumeSub || action == actionUnsubscribe || action == actionSubEditSave || action == actionSubSearchStart || action == actionSubSearchCancel
 }
 
 // answered stands for a typed start episode, which replaces its prompt.
@@ -98,7 +100,7 @@ func (e *Engine) navigate(prev session, action string, reply Reply) Reply {
 	if reply.Follow == "" {
 		return e.record(transition{prev: prev, next: next, action: action}, reply)
 	}
-	if next.streaming && next.searchView == torrentListView {
+	if (next.streaming && next.searchView == torrentListView) || next.subSearchPage == subSearchStatusPage {
 		return e.record(transition{prev: prev, next: next, action: action}, reply)
 	}
 	if skipped := next.skipped; skipped != nil {
@@ -130,6 +132,9 @@ type transition struct {
 // and returns it with the buttons its place in the history adds.
 func (e *Engine) record(step transition, reply Reply) Reply {
 	prev, next, action := step.prev, step.next, step.action
+	if !subSearchAction(action) {
+		next.subSearchPage, next.subSearchAsk = "", nil
+	}
 	if next.streaming && !torrentScreenAction(action) {
 		next.hunt.stop()
 		next.searchView = ""
@@ -202,6 +207,7 @@ func (e *Engine) back(ctx context.Context, sess session) Reply {
 	restored.torrentIDs = max(sess.torrentIDs, restored.torrentIDs)
 	restored.editOptions = max(sess.editOptions, restored.editOptions)
 	restored.subReceipt = sess.subReceipt
+	restored.subSearch = sess.subSearch
 	restored.requestKeys = sess.requestKeys
 	if sess.streaming && restored.searchView == torrentListView && sess.hunt == restored.hunt {
 		restored = syncedHunt(restored, restored.hunt.read())

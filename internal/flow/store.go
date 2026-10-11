@@ -74,6 +74,10 @@ type session struct {
 	tickets      uint64   // tickets handed out so far, never restored by 返回
 	expires      time.Time
 	gate         chan struct{} // serializes steps for this session, not unrelated users
+
+	subSearch     *subscriptionSearch // latest local attempt; never rewound by navigation
+	subSearchAsk  *Subscription       // current unsubmitted search confirmation only
+	subSearchPage string              // empty outside the search prompt/status/stop surface
 }
 
 // store keeps sessions in memory, keyed by the id embedded in button data,

@@ -150,6 +150,9 @@ func availableChoice(sess session, raw, action string) bool {
 	if allowed, handled := planScreenChoice(sess, raw, action); handled {
 		return allowed
 	}
+	if allowed, handled := subSearchChoice(sess, raw, action); handled {
+		return allowed
+	}
 	return availableScreenChoice(sess, raw, action)
 }
 
@@ -225,7 +228,7 @@ func (e *Engine) choose(ctx context.Context, sess session, p press) Reply {
 }
 
 func (e *Engine) chooseAction(ctx context.Context, sess session, p press) Reply {
-	for _, choose := range []chooser{e.chooseHome, e.chooseRequest, e.chooseRequests, e.chooseSeasons, e.chooseTask, e.chooseChart, e.chooseSubs, e.chooseSubDetail, e.chooseSubPause, e.chooseSubEdit, e.chooseHistory, e.chooseRelated, e.chooseTorrents, e.chooseSearchSites, e.chooseTorrentView, e.chooseTorrentBatch, e.chooseTorrentPlan, e.chooseDelete, e.chooseUpgrade} {
+	for _, choose := range []chooser{e.chooseHome, e.chooseRequest, e.chooseRequests, e.chooseSeasons, e.chooseTask, e.chooseChart, e.chooseSubs, e.chooseSubDetail, e.chooseSubPause, e.chooseSubEdit, e.chooseSubSearch, e.chooseHistory, e.chooseRelated, e.chooseTorrents, e.chooseSearchSites, e.chooseTorrentView, e.chooseTorrentBatch, e.chooseTorrentPlan, e.chooseDelete, e.chooseUpgrade} {
 		if reply, ok := choose(ctx, sess, p); ok {
 			return e.navigate(sess, p.action, reply)
 		}

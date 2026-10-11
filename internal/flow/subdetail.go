@@ -68,16 +68,22 @@ func (e *Engine) subDetail(ctx context.Context, sess session, index int) Reply {
 	}
 	detail := e.readSubDetail(ctx, subs[i])
 	view := detail.view()
-	refresh := Button{Label: "刷新", Data: data(sess.id, actionRefreshSubDetail, sess.subs[index].ID)}
-	view.menu = [][]Button{append([]Button{refresh}, pauseButton(sess, subs[i])...)}
-	if sess.subReceipt != nil && sess.subReceipt.base.same(subs[i]) {
-		view.menu = append(view.menu, subEditCheckRow(sess))
-	}
-	if slices.Contains(sess.mine, subs[i].ID) {
-		view.menu = append(view.menu, []Button{{Label: "编辑条件", Data: data(sess.id, actionSubEdit, subs[i].ID)}})
-	}
+	view.menu = subDetailMenu(sess, subs[i])
 	view.footer = browseRow(sess.id)
 	return e.listPages(sess, view)
+}
+
+func subDetailMenu(sess session, sub Subscription) [][]Button {
+	refresh := Button{Label: "刷新", Data: data(sess.id, actionRefreshSubDetail, sub.ID)}
+	rows := [][]Button{append([]Button{refresh}, pauseButton(sess, sub)...)}
+	if sess.subReceipt != nil && sess.subReceipt.base.same(sub) {
+		rows = append(rows, subEditCheckRow(sess))
+	}
+	if slices.Contains(sess.mine, sub.ID) {
+		rows = append(rows, []Button{{Label: "编辑条件", Data: data(sess.id, actionSubEdit, sub.ID)}})
+		rows = append(rows, subSearchButtons(sess, sub))
+	}
+	return rows
 }
 
 // A successful refresh resolves an uncertain state write too. Mark only

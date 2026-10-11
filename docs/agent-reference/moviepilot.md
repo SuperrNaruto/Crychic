@@ -168,6 +168,24 @@ private-looking error to prove it is not shown
 
 更新使用 API key，无资源 Cookie；复用禁止重定向的 client 与共享 transport，防止 307/308 重放和认证外送。拒绝信息固定投影，不展示写请求或响应原文；未知 HTTP 状态、408、解码错误或缺少 `success` 均按结果未知处理。成功后只读核对，绝不自动再次 PUT。当前模块声明 Go 1.25，验证工具链为 1.26.0；Context7 虽指定 Go 1.25，仍给出主线 JSON v2 片段，不能用其 `omitempty` 语义解释本项目 JSON v1，已另外读取安装工具链的 `encoding/json` 与 `net/http` 源码。
 
+## 单订阅搜索与执行批次
+
+`POST /api/v1/subscribe/search/{subscribe_id}?type={电影|电视剧}` 只提交一个既有订阅，无请求体。使用 API key，不需要资源 Cookie。`data` 包含 `batch_id`、`batch_ids`、`target_count`、`queued_count`、`ongoing_count` 和 `single`；HTTP 成功或有批次 ID 都不足以证明本次新建了批次。
+
+`subsearch.go` 仅在目标数与新建数均为 1、合并数为 0、`single=true`、唯一批次 ID 一致时向 flow 返回可跟踪身份。缺失／null 计数不按零处理。新建数为 0、合并数为 1 表示已有任务，客户端不向 flow 暴露其批次 ID。上游合并可能提升排队任务优先级或清除其补查游标，但仍保留原任务与批次身份；不把它当作机器人新建的搜索。
+
+`GET /api/v1/subscribe/execution/batches/{batch_id}` 返回统一包裹的批次投影，不包含完整任务列表。只读取安全字段，原始执行错误仅投影为 `HasError`。总数、已处理数、完成数、失败数和停止数必须存在；跳过数沿用上游模型的零默认值，所有计数仍须相互一致。终态必须处理完全部目标，活动状态不能已全部处理。未知枚举显示未知，不提供停止入口。flow 进一步核对本地新建回执、`manual` 来源、单订阅范围、当前订阅 ID 与创建时间；终态的当前订阅 ID 为空是正常情况。字段要求见[批次响应模型](https://github.com/jxxghp/MoviePilot/blob/v3.1.1/app/schemas/subscribe.py#L96-L116)。
+
+`PUT /api/v1/subscribe/execution/batches/{batch_id}/cancel` 无请求体，成功只返回 `success=true, data=null`。排队任务可以立即停止，运行中的任务先标记正在停止；已越过下载提交边界的结果不会撤销。手动搜索不要求订阅处于自动调度状态，暂停订阅也不会取消已接纳任务。不得用全局批次列表或订阅最近一次执行 ID 建立聊天请求者的控制权。
+
+三个端点均复用共享传输，但拒绝全部重定向且不共享 Cookie jar，错误不带 URL、响应原文或站点信息。搜索和停止不自动重试；408、跳转、缺少成功标记及半响应属于未知写入。批次 ID 只允许有界的 ASCII 字母、数字、下划线和连字符，不拼接不可信路径。
+
+关键依据为 `v3.1.1` 的[提交端点](https://github.com/jxxghp/MoviePilot/blob/v3.1.1/app/api/endpoints/submaintenance.py#L184-L217)、[入队装配](https://github.com/jxxghp/MoviePilot/blob/v3.1.1/app/api/dependencies/subscription.py#L138-L177)、[合并实现](https://github.com/jxxghp/MoviePilot/blob/v3.1.1/app/db/oper/subscriptionsearch.py#L29-L145)、[批次投影](https://github.com/jxxghp/MoviePilot/blob/v3.1.1/app/application/subscription/status.py#L179-L220)、[停止端点](https://github.com/jxxghp/MoviePilot/blob/v3.1.1/app/api/endpoints/subexecution.py#L88-L117)与[提交后的结果处理](https://github.com/jxxghp/MoviePilot/blob/v3.1.1/app/application/subscription/observability.py#L105-L156)。Context7 返回的是 `v3` 主线资料，接口细节以上述固定源码及本地 OpenAPI 为准。
+
+2026-10-10 另对照 `v3.1.3`，提交、读取、取消端点及状态投影、手动入队装配与 `v3.1.1` 相同。该版本增加分页检查点清理、站点请求间隔，以及增量搜索完成标记参与收尾；客户端只展示实际返回的状态与计数，不推断已提交下载的终态，也不按版本分支。见[队列实现](https://github.com/jxxghp/MoviePilot/blob/v3.1.3/app/db/oper/subscriptionsearch.py)和[执行收尾](https://github.com/jxxghp/MoviePilot/blob/v3.1.3/app/application/subscription/observability.py#L105-L158)。
+
+Go Context7 查询虽指定 1.25，HTTP 片段仍引用主线，故另核对[Go 1.25 请求重放判定](https://github.com/golang/go/blob/go1.25.0/src/net/http/request.go#L1534-L1547)、[传输重试](https://github.com/golang/go/blob/go1.25.0/src/net/http/transport.go#L808-L860)及本机 1.26 工具链源码。没有幂等键的 POST／PUT 不会在已发请求的模糊失败后按可重放请求处理；尚未写出请求的安全重连与应用重复提交不是同一件事。
+
 ## 超时与敏感错误
 
 MoviePilot calls are bounded per call (`moviepilot.callTimeout`, 30 s; resource search `torrentSearchTimeout`,

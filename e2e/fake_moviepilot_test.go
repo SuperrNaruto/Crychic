@@ -134,6 +134,7 @@ type fakeMoviePilot struct {
 	editPatches      []map[string]any
 	editReply        subscriptionEditResponse
 	subscriptionRead *heldCall
+	execution        fakeSubscriptionExecution
 }
 
 // reader waits for a complete poll after it was registered. Only page one
@@ -213,6 +214,7 @@ func (f *fakeMoviePilot) serveAuthenticated(w http.ResponseWriter, r *http.Reque
 	case f.deletesDownload(w, r):
 	case f.setsSubscriptionState(w, r):
 	case f.editsSubscription(w, r):
+	case f.servesSubscriptionExecution(w, r):
 	default:
 		f.serveRoute(w, r)
 	}
@@ -242,7 +244,7 @@ func isPolled(r *http.Request) bool {
 	if r.Method != http.MethodGet {
 		return polledPaths[r.Method+" "+r.URL.Path]
 	}
-	return (r.URL.Path == transferPath && r.URL.Query().Get("status") != "false") || isSubscriptionByID(r.URL.Path) || polledPaths[r.Method+" "+r.URL.Path]
+	return (r.URL.Path == transferPath && r.URL.Query().Get("status") != "false") || isSubscriptionByID(r.URL.Path) || isSubscriptionBatchRead(r) || polledPaths[r.Method+" "+r.URL.Path]
 }
 
 // markPolled signals the notifier's first look at the transfer history.
