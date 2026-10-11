@@ -36,8 +36,8 @@ const (
 	msgNoSeasons     = "呜，没查到这部剧有哪几季…"
 	msgPickSeason    = "想订哪一季呀？"
 	msgInvalidChoice = "这个选项不太对哦～"
-	msgWillNotify    = "入库了我第一时间叫你！"
-	msgWillPost      = "入库后我会在通知频道告诉你！"
+	msgWillNotify    = "通知由 MoviePilot 按设置发送，可在 /requests 核对到货哦～"
+	msgWillPost      = msgWillNotify
 	msgNoNotice      = "MoviePilot 会自己去搜索下载哒。"
 )
 

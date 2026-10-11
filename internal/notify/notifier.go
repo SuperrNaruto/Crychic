@@ -13,50 +13,27 @@ import (
 )
 
 const (
-	// orphanGrace is how long a watch outlives its vanished subscription,
-	// covering files still being transferred after downloads finished.
-	orphanGrace = 72 * time.Hour
-	// activityEvery spaces out the per-subscription liveness checks.
-	activityEvery      = time.Hour
-	libraryConcurrency = 4
-	libraryTimeout     = 5 * time.Second
+	orphanGrace   = 72 * time.Hour
+	activityEvery = time.Hour
 )
 
-// Options configures a Notifier.
+// Options configures the request fact tracker. It never sends notifications.
 type Options struct {
 	Feed     Feed
-	Sender   Sender
-	Path     string // state file
+	Path     string
 	Interval time.Duration
-	Quiet    time.Duration // how long a show's arrivals settle before a notice
-	// Destination replaces requester delivery when set; it is an opaque
-	// platform address. No requester identity is included in broadcasts.
-	Destination string
-	// LibraryWait is how long a settled notice waits for the media server
-	// to show what arrived; after that it goes out anyway.
-	LibraryWait time.Duration
-	// Stall is how long a watched download may make no progress before its
-	// requesters are told it is stuck; zero never tells them.
-	Stall time.Duration
-	// Digest is when a weekly digest of every arrival goes out, to
-	// Destination when set, else to each of DigestTo; a nil Zone sends none.
-	Digest   Schedule
-	DigestTo []flow.Actor
 	Now      func() time.Time
 	Log      *slog.Logger
 }
 
-// Notifier remembers requests and announces arrivals to their requesters.
+// Notifier retains its historical name for the flow.Watcher boundary.
+// Its only responsibility is now local request ownership and read-only facts.
 type Notifier struct {
-	opts Options
-
+	opts          Options
 	mu            sync.Mutex
 	st            state
 	lastActivity  time.Time
-	scopeRevision uint64 // guards in-flight reads against a newer local edit
-	// marks is when each unfinished download last made progress; only the
-	// polling goroutine uses it, and a restart starts the clocks afresh.
-	marks map[string]mark
+	scopeRevision uint64
 }
 
 // New loads remembered requests from opts.Path.
@@ -65,7 +42,11 @@ func New(opts Options) (*Notifier, error) {
 	if err != nil {
 		return nil, err
 	}
-	return &Notifier{opts: opts, st: st, marks: map[string]mark{}}, nil
+	st, err = migrateRequestState(opts.Path, st)
+	if err != nil {
+		return nil, err
+	}
+	return &Notifier{opts: opts, st: st}, nil
 }
 
 // Watch implements flow.Watcher.
@@ -123,7 +104,7 @@ func (n *Notifier) Run(ctx context.Context) {
 	defer ticker.Stop()
 	for {
 		if err := n.poll(ctx); err != nil && ctx.Err() == nil {
-			n.opts.Log.Warn("arrival check failed", "err", err)
+			n.opts.Log.Warn("request fact check failed", "err", err)
 		}
 		select {
 		case <-ctx.Done():
@@ -133,32 +114,13 @@ func (n *Notifier) Run(ctx context.Context) {
 	}
 }
 
-// poll reads new transfers and notifies. Network calls run outside the lock;
-// state is persisted before sending, so a crash can lose a notice but never
-// repeat one.
+// poll only reconciles request facts. Native notifications use a separate feed.
 func (n *Notifier) poll(ctx context.Context) error {
 	snapshot := n.snapshot()
 	if !snapshot.Baseline {
 		return n.baseline(ctx)
 	}
-	ready, err := n.arrivals(ctx, snapshot)
-	if err != nil {
-		return err
-	}
-	now := n.opts.Now()
-	settle := settling{quiet: n.opts.Quiet, held: n.unseen(ctx, ready, now)}
-	var deliveries []delivery
-	err = n.update(func(st state) state {
-		next, out := flush(st, now, settle)
-		deliveries = out
-		return next
-	})
-	if err != nil {
-		return err
-	}
-	n.send(ctx, n.withLinks(ctx, deliveries))
-	n.checkStalls(ctx)
-	if err := n.checkDigest(ctx); err != nil {
+	if err := n.arrivals(ctx, snapshot); err != nil {
 		return err
 	}
 	return n.checkActivity(ctx)
@@ -178,123 +140,30 @@ func (n *Notifier) baseline(ctx context.Context) error {
 	})
 }
 
-// arrivals reads outside the state lock, then saves newly observed files,
-// their digest entries and the success-time cursor as one transition.
-func (n *Notifier) arrivals(ctx context.Context, snapshot state) ([]watch, error) {
+// arrivals keeps scope changes and a complete transfer checkpoint atomic.
+func (n *Notifier) arrivals(ctx context.Context, snapshot state) error {
 	since := ""
 	if snapshot.Cursor != nil {
 		since = snapshot.Cursor.Date
 	}
 	transfers, err := n.opts.Feed.TransfersSince(ctx, since)
 	if err != nil {
-		return nil, err
+		return err
 	}
 	snapshot = n.snapshot()
 	_, fresh := snapshot.trackTransfers(transfers)
 	revision := n.subscriptionScopeRevision()
 	subs, err := n.readSubscriptions(ctx, arrivingSubscriptions(snapshot.Watches, fresh))
 	if err != nil {
-		return nil, err
+		return err
 	}
-	now := n.opts.Now()
-	var ready []watch
-	err = n.updateReadScope(revision, func(st state) state {
+	if ctx.Err() != nil {
+		return ctx.Err()
+	}
+	return n.updateReadScope(revision, func(st state) state {
 		next, fresh := st.trackTransfers(transfers)
-		next = withSubscriptions(next, subs)
-		next = arrive(next, fresh, now)
-		if n.opts.Digest.Zone != nil {
-			next = withDigest(next, fresh, now)
-		}
-		ready = due(next, now, n.opts.Quiet)
-		return next
+		return recordRequestFacts(withSubscriptions(next, subs), fresh, n.opts.Now())
 	})
-	return ready, err
-}
-
-// unseen picks the ready watches to hold back: the media server does not
-// show their arrivals yet and they have waited less than LibraryWait.
-func (n *Notifier) unseen(ctx context.Context, ready []watch, now time.Time) map[string]bool {
-	held := map[string]bool{}
-	if n.opts.LibraryWait <= 0 {
-		return held
-	}
-	var mu sync.Mutex
-	var wg sync.WaitGroup
-	slots := make(chan struct{}, libraryConcurrency)
-	for _, w := range ready {
-		if n.waited(w, now) >= n.opts.LibraryWait {
-			continue
-		}
-		select {
-		case slots <- struct{}{}:
-		case <-ctx.Done():
-			wg.Wait()
-			return held
-		}
-		wg.Go(func() {
-			defer func() { <-slots }()
-			if !n.visible(ctx, w) {
-				mu.Lock()
-				held[w.key()] = true
-				mu.Unlock()
-			}
-		})
-	}
-	wg.Wait()
-	return held
-}
-
-func (n *Notifier) waited(w watch, now time.Time) time.Duration {
-	waited := now.Sub(*w.ArrivedAt)
-	if !w.complete() {
-		waited -= n.opts.Quiet
-	}
-	return waited
-}
-
-// visible asks the media server whether w's pending arrivals show; when it
-// cannot tell, the notice is not held up.
-func (n *Notifier) visible(ctx context.Context, w watch) bool {
-	ctx, cancel := context.WithTimeout(ctx, libraryTimeout)
-	defer cancel()
-	lib, err := n.opts.Feed.Library(ctx, w.media())
-	if err != nil {
-		n.opts.Log.Warn("library check failed", "watch", w.key(), "err", err)
-		return true
-	}
-	if w.Season == nil {
-		return lib.Movie
-	}
-	have := lib.Episodes[*w.Season]
-	for _, ep := range w.Pending {
-		if !slices.Contains(have, ep) {
-			return false
-		}
-	}
-	return true
-}
-
-// withLinks finds where each delivery can be watched among the media
-// servers' newest items.
-func (n *Notifier) withLinks(ctx context.Context, deliveries []delivery) []delivery {
-	if len(deliveries) == 0 {
-		return nil
-	}
-	items, err := n.opts.Feed.Latest(ctx)
-	if err != nil {
-		n.opts.Log.Warn("latest items unavailable", "err", err)
-		return deliveries
-	}
-	out := slices.Clone(deliveries)
-	for i, d := range out {
-		for _, it := range items {
-			if it.Title == d.watch.Title && (d.watch.Year == "" || it.Year == d.watch.Year) {
-				out[i].watchAt = it
-				break
-			}
-		}
-	}
-	return out
 }
 
 // checkActivity asks MoviePilot, at most once per activityEvery, which
@@ -348,27 +217,6 @@ func (n *Notifier) downloading(ctx context.Context, watches []watch) (map[string
 		}
 	}
 	return active, nil
-}
-
-func (n *Notifier) send(ctx context.Context, deliveries []delivery) {
-	for _, d := range deliveries {
-		d.qualities = n.qualities(ctx, d.releases)
-		n.tell(ctx, d.watch, flow.Notice{Text: arrivalText(d), Image: d.image})
-	}
-}
-
-// tell sends notice to w's requesters, or to the destination instead.
-func (n *Notifier) tell(ctx context.Context, w watch, notice flow.Notice) {
-	recipients := w.Requesters
-	if n.opts.Destination != "" {
-		recipients = []flow.Actor{{Address: n.opts.Destination}}
-	}
-	for _, to := range recipients {
-		notice.To = to
-		if err := n.opts.Sender.Notify(ctx, notice); err != nil {
-			n.opts.Log.Error("notice not delivered", "user", to.UserID, "err", err)
-		}
-	}
 }
 
 func (n *Notifier) snapshot() state {

@@ -20,7 +20,7 @@ Crychic 是 Go 媒体订阅与下载机器人，当前主要平台为 Telegram�
 
 后续新增能力默认核对 MP 最新稳定版，保存对应版本与来源。既有版本核验保留用于追溯，不例行重复验证多个旧版本；目标部署有明确版本差异时，单独验证相关差异。
 
-插件当前尚未实现，也没有已确定的公共接口、传输协议或部署目录。通知接入是首个按此原则规划的插件扩展，详见 [第 6 项前置任务](../plans/moviepilot-api-improvements.md#第-6-项前置任务-moviepilot-原生通知接入)。下文目录及数据流仍描述当前实现。
+通知接入已增加 MP 侧 Crychic 自定义渠道插件，持久安全投影通过认证长轮询与消费确认传输；Go 继续负责当前富文本展示。详见 [第 6 项前置任务](../plans/moviepilot-api-improvements.md#第-6-项前置任务-moviepilot-原生通知接入)。下文目录及数据流描述当前实现；Discord 仅为后续扩展方向。
 
 ## 目录职责
 
@@ -31,7 +31,7 @@ internal/flow/       # platform-agnostic conversation: search → pick (library 
 internal/moviepilot/ # minimal MoviePilot client, implements flow.Backend
 internal/bangumi/    # Bangumi's public API (no key): airing calendar and synopses, implements flow.Calendar
 internal/telegram/   # renders flow.Reply as messages + inline keyboards; whitelist check; delivers notices
-internal/notify/     # remembers requests (data dir JSON), polls MoviePilot transfer history, notifies requesters
+internal/notify/     # remembers requests (data dir JSON), reconciles request facts; consumes MP native notices separately
 internal/config/     # env vars → config.Config
 e2e/                 # behavior tests: real app vs fake Telegram Bot API + fake MoviePilot + fake Bangumi
 ```

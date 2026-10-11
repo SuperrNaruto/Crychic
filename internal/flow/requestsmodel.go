@@ -13,7 +13,6 @@ type RequestRecord struct {
 	Total          int
 	Delivered      []int
 	MovieDelivered bool
-	Pending        bool
 	Unmapped       bool // a known custom episode group cannot use default season numbering
 	CompletedAt    time.Time
 }

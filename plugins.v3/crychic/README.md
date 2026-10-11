@@ -1,0 +1,39 @@
+# Crychic 原生通知渠道
+
+实现 MP 的自定义通知渠道，现有 Go 机器人仍是唯一 Telegram 接入端。默认不开启；不创建 MP 用户、渠道或机器人，不修改既有渠道和用户绑定。
+
+## 安装与配置
+
+1. 使用仓库 `package.v3.json` 和 `plugins.v3/crychic/` 作为 MP v3 插件包。未推送的本地提交不会出现在远程插件市场；安装、复制源码及重载由主人执行。
+2. 在 MP 通知设置中新增「自定义」，类型填 `crychic`，名称自行指定，选择通知类型并启用。
+3. 在 Crychic 插件页面启用接入。只配置一条 crychic 渠道时可省略渠道 ID；多条时必须明确选择。
+4. 默认目标支持正用户 ID、负群组或频道 ID及 `@channelusername`。用户范围由 MP 决定；用户个人 Telegram 绑定优先，未绑定用户不回退默认管理员。话题仅适用于负数目标。
+5. Go 应用继续使用原有 MP 地址、API key 和 Crychic Bot token。MP 内不填写该 Bot token，不启动原生 Telegram 客户端。
+
+管理员 API key 只认证接入，不代表聊天用户。个人接收仍遵守 Go 应用的白名单，频道投递不增加请求者身份。默认目标不会被旧 `CRYCHIC_TELEGRAM_NOTIFY_CHAT_ID` 覆盖。
+
+## 接口与状态
+
+默认由 MP 的 API-key 依赖保护，无匿名入口。三个接口均使用 `{success,data}`，失败只返回固定安全代码。
+
+- `GET /api/v1/plugin/Crychic/status` 返回协议版本、渠道、稳定 stream 和 head。
+- `GET /api/v1/plugin/Crychic/notifications` 接受 `after`、`consumer_id`、`channel_id`、`stream_id` 和 `wait`；最长等待 25 秒，每批最多 32 条，读取不删除记录。
+- `POST /api/v1/plugin/Crychic/ack` 接受同一来源与消费身份、`sequence`；幂等确认并清理安全投影，不宣称 Telegram 发送成功。
+
+协议版本为 1，通知包含独立 ID、sequence、platform、recipient、title、text、image、link。首版平台为 Telegram；不在插件中生成 HTML，也不根据正文计算媒体业务结论。平台适配与未来 Discord 接入留在 Go 端。
+
+插件自有数据库保存未消费安全投影、稳定顺序、排他租约及最小去重身份；不保存原始 Message、未知附件、密钥或敏感路径。租约为 60 秒，重启使用同一消费身份恢复。来源或游标异常停止接入，不自动清空队列或改用历史/SSE。
+
+Go 在 `native-notifications.json` 中先原子记录投递尝试，再发送和确认；结果未知不重放。这个取舍仍可能漏发，不承诺严格一次且仅一次送达。首次基线跳过接入前记录，普通重启不重新建立基线。
+
+## 宿主兼容点
+
+本次以 MP 前后端 v3.1.4 核验。公开 SDK 用于插件声明、API 和自有数据库；窄范围适配复用 `_MessageBase` 的渠道检查与目标辅助方法，并包装 `NotificationMixin.post_message_strict` 的可信事件身份。普通请求关联 ID不能当消息去重键。停止时仅撤销自己安装的包装，其他渠道继续执行。
+
+宿主调度先执行插件模块、再执行系统渠道；durable 通知走 strict 调度，插件异常会中断本轮系统渠道并触发 outbox 重试。因此捕获阶段的任何失败，包括渠道缺失或歧义、目标无效、正文过长及插件数据库失败，都只记录固定代码并放弃本渠道这一条，不抛回宿主。代价是插件数据库的瞬时故障会漏掉这条 Crychic 通知，不靠 MP 重试补回。
+
+## 验证与回退
+
+真实 Go app 对外部 HTTP fake 的场景在 `e2e/`。真实 MP 宿主测试使用官方镜像 `jxxghp/moviepilot-v3:3.1.4`，不连接真实服务，不加载生产配置；执行命令见 `e2e/run_mp_plugin_e2e.sh`。产物为 `e2e/testdata/transcripts/MPPluginNativeHost.txt`。
+
+停用插件只停止通知接入，Go 其他功能继续运行，持久队列保留。旧请求状态首次迁移前保留 `requests.json.pre-native`；回退需先停 Go 并由主人选择备份状态，不能自动恢复旧周报、pending 或未知投递。不要让旧版本地通知引擎和新渠道同时投递。

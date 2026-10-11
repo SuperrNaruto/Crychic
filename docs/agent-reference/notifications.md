@@ -1,153 +1,39 @@
-# 通知状态、到货与迁移参考
+# 原生通知、请求事实与迁移
 
-改通知、持久化、游标、迁移、合并或生命周期时读取。先读 [目录规则](../../internal/notify/AGENTS.md)，改文案另读 [界面规则](flow.md#界面与文案)。
+通知业务由 MP 原生设置决定。Go 端仅进行独立的可靠传输、既有安全边界检查及富文本展示，不再生成本地到货、完成、停滞、周报或静默汇总。
 
-本文从原根指南按主题迁出，保留当时的实现说明与上游版本背景，不代表已对当前线上服务重新核验。涉及目标版本变化时，按根指南核验来源。
+## 接入链路
 
-## 到货聚合与画质
+MP 原生路由与发送调度 → 自定义 crychic 渠道插件 → 持久安全投影 → Go 长轮询 → 平台语义渲染。
 
-Arrivals: `notify.Notifier` polls `GET /api/v1/history/transfer` → `arrive` records matches as pending (media
-+ season + episode range, plus one source file name per download, at most 3) → `flush` announces once settled
-→ each download's quality is read from MoviePilot's own release-name recognizer (`GET
-/api/v1/media/recognize?title=<file>`, what its WebUI shows; also a TMDB lookup, ~2 s, cosmetic within 10 s,
-unrecognized answers `meta_info: null`) and shown once as small print, e.g. `1080p · BluRay · x265 · FLAC 2.0
-· FROGE` → `telegram.Bot.Notify` posts in the requesting chat, mentioning the requester in groups. Only the
-file name of `src` is kept, never the server path. Watches of the same media and season (a subscription and a
-download picked for it) match the same transfer, so `flush` tells them together: the first to settle announces
-every pending arrival of all of them in one notice, to all their requesters, once the media server shows every
-one of them (`due` checks the whole group, `settling.holds`); the notice says all wanted episodes are in only
-when that holds for every watch it tells, in a download's words only when every watch it tells is a download;
-a stuck download is likewise told once to every watch awaiting it (`withStalls`).
+插件实现 `get_module()` 的 post_message 发送阶段扩展，使用原生 `_MessageBase` 检查和已解析用户绑定。返回 None，不阻断其他渠道。不创建 Telegram 客户端或额外机器人，不消费系统 SSE，不把历史通知当作实际投递源。插件安装与真实配置由主人执行，见 [插件说明](../../plugins.v3/crychic/README.md)。
 
-A download's watch (`Request.Download`, `watch.Download`) matches transfers by `download_hash` and its season,
-takes every file of that download and ends when the whole season arrived (not the release's episode range:
-MoviePilot also reads episodes from the description, so a 25-episode pack saying 「修复第9集章节」 is E09 in its
-search results and download history, and `/tasks` shows that label), else settles after quiet, or
-`orphanGrace` after the download left `GET /api/v1/download/`; stall notices match it by hash
+## 状态与一次投递尝试
 
-每个订阅或下载保留自己的 watch；同媒体同季的待发到货由 `due` / `settling.holds` / `flush` 一起等待和投递。独立 watch 不意味着每个下载必须各发一条消息。
+MP 插件自有数据库保存安全投影、稳定消息顺序、排他消费租约及最小去重身份。已确认后清除对应内容；普通插件重启继续待处理记录，不根据正文相同去重。原始 Message、未知附件、凭据和敏感路径不持久化。
 
-## 频道与请求者投递
+Go `native-notifications.json` 仅保存 consumer、channel、stream 和 sequence。首次保存当前基线，首次没有消息也保存；普通重启不建立新基线。来源变化、顺序缺口或坏响应停止接入，不推进正常游标。ACK 只确认消费，不代表媒体业务完成或平台发送成功。
 
-With `CRYCHIC_TELEGRAM_NOTIFY_CHAT_ID` set, `notify.Options.Destination` replaces requester delivery: one
-notice per watch delivery to the channel, with no requester identity and no fallback to the originating chats.
-Blank keeps the original behavior. The destination is a negative chat ID or `@channelusername`; the bot needs
-channel posting rights. Delivery still persists before sending and does not replay failed sends.
+先原子保存本次投递尝试，再发送；未知结果不自动重放。其间进程退出可能漏发，这一取舍不承诺 exactly-once。接收失败不触发 MP 搜索或任何业务重试，插件不可用只影响通知。
 
-Requester delivery is checked against the current Telegram whitelist, including watches loaded after a
-restart. Removed users receive no further personal/group requester notices; remaining requesters and the
-identity-free configured channel are unaffected. Skipped notices are not replayed after reauthorization.
+## 受众与展示
 
-## 完成日期游标与迁移
+MP 决定管理员、用户和通知类型、时段。Go 不重新建立管理员或请求归属规则，不通过正文猜用户。个人投递复核已有 Telegram 白名单；频道按 MP 明确目标发送，不加请求者身份，不回退其他聊天。旧频道环境变量不能覆盖 MP 目标。
 
-MoviePilot has no outgoing webhook, so arrivals come from polling successful transfer history (one record per
-file, `seasons` "S03", `episodes` "E01" or "E01-E03"). v3.1.0 sorts by local completion `date` (`YYYY-MM-DD
-HH:MM:SS`), not ID, and a failed transfer succeeding on retry updates the same row's date/status.
-`TransferCursor` persists that date and all successful IDs seen in its second; reads include the entire
-boundary second across pages. The first poll records the whole newest second as baseline, so earlier history
-is never announced. The bot compares MoviePilot's civil dates as written, not with its own clock. The catch-up
-remains bounded; an incomplete newest second at that bound is an error, never a committed checkpoint.
+标题、正文、图片和链接映射为 flow.Text，平台渲染与内容独立；上游文本转义，不重算集数或附加完成结论。首版 Telegram 使用现有 rich message；Discord 尚未实现，协议保留平台字段。
 
-Old notification files with only `baseline`/`last_transfer` migrate in one atomic state update: still-unseen
-IDs above the old watermark are processed once, all currently read successes seed the date cursor, and pending
-notices, requests and digest entries are preserved. Ambiguous older IDs are not replayed during migration;
-low-ID successes already missed before upgrading cannot be reliably distinguished from previously processed
-history. An initialized empty cursor is persisted too, so the first later arrival is not swallowed as another
-baseline.
+## 请求事实与迁移
 
-状态入口为 `internal/notify/state.go`，游标入口为
-`internal/notify/cursor.go`。`withRequest`、`arrive`、`flush`、`withActivity` 保持纯状态转换，写盘原子完成。
+原 `requests.json` 保存请求归属与最近完成，Notifier 的历史名称保留，但 Run 仅做只读事实核对。成功转移仍按完成 civil date 与该秒所有 ID 推进游标；边界不完整不提交。并发订阅 scope 更新使整次读取失效，不能覆盖新范围。
 
-## 订阅身份范围与关闭
+完成记录来自可信完整范围，最多 50 条；下载只计自身文件，Held 不证明替换到货。未映射剧集组、未知总集数及洗版不虚构完成。记录不从通知正文反推，不回填旧已取得集数。
 
-A MoviePilot subscription may close before files are transferred: a closed subscription must not immediately
-end a watch. A completed download watch ends after its notice; a subscription watch keeps its requesters and
-delivered episodes until `orphanGrace` (72h) after its subscription disappears. This preserves controls for
-active upgrade subscriptions and notices for seasons whose episode counts grow. A watch whose row was last
-read gone is `closed`: its last total bounds episodes again, other downloads of a delivered movie or a
-complete season no longer count for stall notices, and a new request reusing its id (nothing pending) replaces
-it instead of inheriting its requesters.
+首次转换先保留原始字节到 `requests.json.pre-native`，随后清理通知专用 pending、图片、文件样本和停滞字段，保留请求、Delivered、Held、游标、digest 回退材料及 Completed。新转移不保存文件路径或通知专用样本。回退由主人在停机后明确选择备份，不能自动恢复旧发送引擎。
 
-Before collecting new transfers or completing pending arrivals, the notifier reads their subscriptions and
-refreshes the current total, `start_episode` and `best_version`. A failed read preserves the cursor and pending state for a
-read-only retry; a successful empty/replaced row preserves the last known scope. The initial
-`Target.BestVersion` is persisted, so upgrades still notify when the backend closes the row before transfer.
-New upgrade transfers may announce an already-delivered episode again, but the transfer cursor prevents
-replay; TV upgrade notices never infer complete upgrading from previously held episodes. Ordinary movies
-retain a delivered marker and notify once.
+quiet、library wait、stall、digest 与旧频道变量失去业务作用，显式设置仅提示变量名。请求回执说明通知由 MP 按设置发送，不承诺由本地观察立即通知。
 
-A subscription watch is identified by its row id **and** media source, media id and season; SQLite can reuse a
-completed row id while its older files still await arrival. `withRequest` keeps those targets separate, and
-derived `watch.key` values keep their library waits and activity independent. `Feed.Subscription` reads the
-current row's identity from `GET /api/v1/subscribe/{id}`: a replacement does not keep the older watch active.
-`Watcher.Forget` takes the cancelled `Subscription`, not just its id, so it removes only that target. The
-persisted fields are unchanged; existing watches need no migration, but a new target already lost by the old
-id-only merge cannot be reconstructed from that state.
+## 验证
 
-旧指南曾把关闭时点简写为“下载完成”，同时记录了“种子加入后即计为取得”的机制。这里保留可验证的应用约束：关闭不等于转移入库，watch 不可立即结束。上游精确触发条件须按目标版本核验，不能仅据旧简写推断。
+失败清单和主场景见 [验收设计](../../e2e/native_notifications_design.md)。Go 真实 app 对外部 HTTP fake，比对提交的 transcript。插件使用官方 MP v3.1.4 隔离宿主运行真实原生组件，不连接外网或生产配置；脚本 [run_mp_plugin_e2e.sh](../../e2e/run_mp_plugin_e2e.sh) 普通运行比对产物，--update 才有意更新。
 
-### 编辑订阅后的通知范围
-
-订阅条件编辑的明确成功响应到达后，先通过 `Watcher.RefreshSubscription` 保存既有 watch 的起始集、总集数和洗版模式，再读取当前订阅核对。即使随后读失败、后台订阅关闭或重启，已确认的范围也不会丢失。这个更新不创建 requester，不重置 Delivered、Held、Pending、digest 或 transfer cursor；被跳过的集数不被写成已到货。
-
-通知内部用内存中的 `scopeRevision` 拒绝与本地范围更新交错的陈旧订阅读取。读取期间发生编辑，整次到货状态及游标转换都放弃，下一轮只读重试；存活检查同样不应用旧结果。revision 无需持久化，重启后没有旧在途读取。状态文件字段兼容，原子保存及发送前持久化规则不变。
-
-## 静默媒体库等待与持久化
-
-MoviePilot transfers episodes one by one as their downloads finish, often minutes apart. A show's arrivals
-stay pending (persisted) until nothing new came for `CRYCHIC_NOTIFY_QUIET`, then go out as one notice; a watch
-whose every wanted episode is in (and any movie) is announced at once.
-
-A settled notice is held until the media server shows the arrival (`exists_remote`/`notexists`; rclone/alist
-dir caches can delay Emby by minutes), at most `CRYCHIC_NOTIFY_LIBRARY_WAIT`; the notice then links to the
-item from `GET /api/v1/mediaserver/latest` (matched by title + year; `link` is the server's public web URL,
-item `image` is an internal URL and is not used).
-
-`LibraryWait=0` bypasses media-server checks. Movies and complete seasons start that wait immediately;
-incomplete seasons start after quiet. Unchanged notifier state is not rewritten; necessary writes remain
-serialized under the state lock
-
-Notifier state is saved before notices are sent: a crash may drop a notice, never repeat one. Polling calls
-are kept out of e2e transcripts; the notices they cause are recorded
-
-## 洗版已持有集数与停滞
-
-MoviePilot counts episodes as obtained once their torrent is added and closes the subscription then; it never
-checks progress (`chain/subscribe/completion.py`), so a dead torrent would end in silence. Each poll also
-reads `GET /api/v1/download/`: a non-paused download of a watched media/season (and, when known, a
-still-missing episode) whose progress has not changed for `CRYCHIC_NOTIFY_STALL` is told about once
-(`internal/notify/stall.go`). MoviePilot v3.1.0 collapses queuedDL into downloading, so the reminder says long
-without progress and names queuing as a possibility, not a proven dead torrent. Progress marks live in memory
-(a restart restarts the clocks, so no state write per poll); the told torrent hashes persist in the watch
-(`stalled`), so a restart never repeats a stall notice
-
-Held episodes never appear in transfer history, so a `Request` carries `Held`. Subscription watches count them
-as delivered; download watches persist them separately (`held`) and use their union with actual arrivals only
-for completion, so re-downloaded episodes still announce. An already fully held season does not seed Held for
-a replacement download. Completion that used prior holdings says so, but does not retire the download watch
-before its own files cover the season (or orphan grace expires), so later replacements of previously held
-episodes still notify; old requests without Held are readable but cannot have the missing observation
-reconstructed
-
-## 每周汇总
-
-`internal/notify/digest.go` - weekly digest (`Options.Digest`, a `Schedule`): while enabled, every successful
-transfer of each poll (requested or not, title and year from the record) is kept in `state.Digest`; once the
-schedule's latest moment is after `state.LastDigest`, the entries are cleared and `LastDigest` set before one
-notice goes to `Destination` or each of `DigestTo` (title + season merged in first-arrival order, linked via
-`GET /api/v1/mediaserver/latest`, at most 30 listed); the first check after enabling only sets `LastDigest`,
-and an empty week sends nothing. Transitions keep fields they do not touch (`state.emptied`)
-
-## 请求投影与最近完成
-
-`requests.go` 在状态锁的只读快照上筛选请求人，向 flow 返回跟踪记录与最近完成，不向 MoviePilot 查询、不写状态、不输出其他请求者。`flush` 结算到货时将完整范围的最小记录写入 `completed_requests`，与 pending 清理和其他通知字段一起原子保存，仍先保存后发送。最近完成整个实例最多 50 条，同一 watch 更新最新结算，随后按用户筛选；下载退出 watch 后仍可查看完成记录。
-
-记录保留媒体身份、标题、季、起始集、总集数、请求类型、时间和用户 ID，不保留聊天地址、用户名称、文件样本、原始错误或服务器路径。旧状态无需重建，只有升级后的新结算才生成历史；不能把旧 Delivered 或未知资源集数回填为完成。下载记录清除 Held 后判断自身文件是否覆盖全季；洗版不宣布升级目标完成。
-
-现有订阅读取同时保存一个 `unmapped` 布尔值，记录已观察到非默认剧集组，不保存组原文。关闭或读取失败保留这个事实，重启后仍不把默认季集匹配当作完整请求。未映射范围不会在到货通知里宣称整季完成，也不进入最近完成；既有单次到货和游标语义保留。请求页看到当前默认组恢复时，尚未读取的媒体库结果保持未知，下一次再核对。
-
-## 相关实现与测试
-
-请求记录由 flow 交给 watcher；订阅历史重建不能借用之前卡片的季数或 Held，见 [历史规则](flow.md#历史与洗版)。
-
-媒体库延迟、同 ID 转移重试、完整轮询屏障、日期分页和状态迁移的 fake 语义见 [E2E 参考](e2e.md#轮询日期与通知假服务)。
+旧 quiet、合并、库等待、停滞、周报通知场景随业务退役；请求页、权限、身份复用和事实范围的有效覆盖保留。旧版本历史实现与来源保留在 [功能计划](../plans/moviepilot-api-improvements.md)。

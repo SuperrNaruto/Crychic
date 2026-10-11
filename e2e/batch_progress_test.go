@@ -120,7 +120,7 @@ func TestBatchStopKeepsCurrentSubmissionAndArrival(t *testing.T) {
 	file := mygo.file("S01", "E01")
 	file.Hash = addedHash
 	h.arrives(alice, file)
-	h.shows(2, "E01 到家啦")
+	h.shows(2, "MoviePilot 原生")
 	h.tap(alice, 1, "返回")
 	if strings.Contains(h.tr.String(), "DELETE ") || strings.Contains(h.tr.String(), "/download/stop/") {
 		t.Error("stopping unsubmitted resources mutated an existing download")

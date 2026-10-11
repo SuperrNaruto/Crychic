@@ -455,26 +455,20 @@
    <tr><td><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 01 [WebRip 1080p HEVC-10bit AAC]</b></td><td>✅ 开始下载</td></tr>
    <tr><td><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 08 [WebRip 1080p HEVC-10bit AAC]</b></td><td>✅ 开始下载</td></tr>
    </table>
-   <p>✅ 开始下载 2 个资源啦，入库了我第一时间叫你！ ヾ(≧▽≦*)o</p>
+   <p>✅ 开始下载 2 个资源啦，通知由 MoviePilot 按设置发送，可在 /requests 核对到货哦～ ヾ(≧▽≦*)o</p>
    [返回 | 1:bk:0] [首页 | 1:o:0] [关闭 | 1:c:0]
 >> user 1001 taps 1:tz:0 on message 1
 << answerCallbackQuery notice="这个选项不太对哦～"
 >> MoviePilot transfers 迷途之子!!!!! (themoviedb/224207) S01E01
+>> MoviePilot produces a native notification
 << sendRichMessage chat=1001 message=2
-   <img src="url-f1d1c3e9142d5b6cb0aec97f314112cb1cfcf5cab28cbc83476b0d4bf25e1175"/>
-   <h3>📥 入库啦</h3>
-   <p>你想看的<b>《迷途之子!!!!!》第 1 季</b> E01 到家啦！</p>
-   <tg-button-row align="left">
-   <tg-button type="url" style="success" url="https://emby.example.com/web/index.html#!/item?id=224207">在 Emby 中观看</tg-button>
-   </tg-button-row>
+   <h3>MoviePilot 通知</h3>
+   <p>MoviePilot 原生整理入库通知 · 《迷途之子!!!!!》</p>
 >> MoviePilot transfers 迷途之子!!!!! (themoviedb/224207) S01E08
+>> MoviePilot produces a native notification
 << sendRichMessage chat=1001 message=3
-   <img src="url-f1d1c3e9142d5b6cb0aec97f314112cb1cfcf5cab28cbc83476b0d4bf25e1175"/>
-   <h3>📥 入库啦</h3>
-   <p>你想看的<b>《迷途之子!!!!!》第 1 季</b> E08 到家啦！</p>
-   <tg-button-row align="left">
-   <tg-button type="url" style="success" url="https://emby.example.com/web/index.html#!/item?id=224207">在 Emby 中观看</tg-button>
-   </tg-button-row>
+   <h3>MoviePilot 通知</h3>
+   <p>MoviePilot 原生整理入库通知 · 《迷途之子!!!!!》</p>
 >> user 1001 in chat 1001: /search 迷途之子
 -> MoviePilot GET /api/v1/media/search?count=10&title=迷途之子&type=media
 << sendRichMessage chat=1001 message=4

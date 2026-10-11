@@ -111,6 +111,7 @@ type transfer struct {
 // cause are recorded on the Telegram side instead.
 type fakeMoviePilot struct {
 	*httptest.Server
+	native *nativeMP
 	t      *testing.T
 	tr     *transcript
 	routes map[string]route
@@ -148,6 +149,7 @@ func newFakeMoviePilot(t *testing.T, tr *transcript, routes map[string]route) *f
 	all := maps.Clone(idleServer)
 	maps.Copy(all, routes)
 	f := &fakeMoviePilot{t: t, tr: tr, routes: all, polled: make(chan struct{}), deleted: map[downloadKey]bool{}, states: map[int]string{}}
+	f.native = newNativeMP()
 	f.Server = httptest.NewServer(http.HandlerFunc(f.serve))
 	return f
 }
@@ -194,7 +196,7 @@ func (f *fakeMoviePilot) serve(w http.ResponseWriter, r *http.Request) {
 	if isTransfers {
 		f.markPolled()
 	}
-	if !isPolled(r) {
+	if !isPolled(r) && !strings.HasPrefix(r.URL.Path, nativePrefix) {
 		f.record(r)
 	}
 	if r.Header.Get("X-API-KEY") != mpAPIKey {
@@ -205,6 +207,9 @@ func (f *fakeMoviePilot) serve(w http.ResponseWriter, r *http.Request) {
 }
 
 func (f *fakeMoviePilot) serveAuthenticated(w http.ResponseWriter, r *http.Request) {
+	if f.native.serve(w, r) {
+		return
+	}
 	switch {
 	case r.Method == http.MethodGet && r.URL.Path == transferPath:
 		f.serveTransfers(w, r)

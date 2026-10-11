@@ -1,6 +1,7 @@
 package e2e
 
 import (
+	"fmt"
 	"strings"
 	"testing"
 	"time"
@@ -50,9 +51,10 @@ func TestForumConversationKeepsItsTopic(t *testing.T) {
 	h.transfers()
 	h.restart()
 	media := show{title: "深渊无间", year: "2026", id: "301489"}
-	h.arrives(group, media.file("S01", "E05"))
+	h.transfers(media.file("S01", "E05"))
+	h.nativeNotice(nativeMessage{Title: "MP 原生入库通知", Text: "第 5 集已整理", Recipient: nativeRecipient{Kind: "channel", Chat: fmt.Sprint(group), Topic: firstTopic}})
 	h.shows(3, "入库")
-	h.shows(3, "tg://user?id=1001")
+
 	h.showsInTopic(3, firstTopic)
 	h.tr.verify(t)
 }

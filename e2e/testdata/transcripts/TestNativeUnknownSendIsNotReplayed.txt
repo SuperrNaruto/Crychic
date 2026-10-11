@@ -1,0 +1,10 @@
+>> MoviePilot produces a native notification
+<< sendRichMessage chat=1001 message=1
+   <h3>MP 未知发送</h3>
+   <p>发送响应丢失</p>
+<< sendRichMessage response lost after display
+>> Crychic restarts
+>> MoviePilot produces a native notification
+<< sendRichMessage chat=1001 message=2
+   <h3>MP 后续通知</h3>
+   <p>继续处理新消息</p>

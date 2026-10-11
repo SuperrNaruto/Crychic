@@ -54,7 +54,7 @@ func (w watch) requestRecord() flow.RequestRecord {
 		Key: w.key(), SubscriptionID: w.SubscriptionID, Download: w.Download, IsDownload: w.Download != "",
 		Target: flow.Target{Media: w.media(), Season: w.Season, StartEpisode: w.Start, BestVersion: w.BestVersion},
 		Total:  w.Total, Delivered: slices.Clone(w.Delivered), MovieDelivered: w.MovieDelivered,
-		Pending: w.ArrivedAt != nil, Unmapped: w.Unmapped,
+		Unmapped: w.Unmapped,
 	}
 }
 

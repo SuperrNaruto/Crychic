@@ -4,7 +4,6 @@ import (
 	"maps"
 	"strings"
 	"testing"
-	"time"
 )
 
 const reusedSubscriptionID = 1
@@ -58,7 +57,7 @@ type arrivalCheck struct {
 func noticeAt(h *harness, want arrivalCheck) {
 	h.t.Helper()
 	msg, ok := h.tg.message(want.message)
-	if !ok || msg.chat != want.chat || !strings.Contains(msg.text, want.title) || !strings.Contains(msg.text, "📥 入库啦") {
+	if !ok || msg.chat != want.chat || !strings.Contains(msg.text, want.title) || !strings.Contains(msg.text, "MoviePilot 通知") {
 		h.t.Errorf("arrival %d: want %q in chat %d, got chat %d text %q", want.message, want.title, want.chat, msg.chat, msg.text)
 	}
 }
@@ -66,46 +65,10 @@ func noticeAt(h *harness, want arrivalCheck) {
 // Reused ids must not merge targets, recipients or library waits. Both
 // requests survive restart; MyGO is visible first while Dune waits for the
 // library scan, then each requester hears only about their own title.
-func TestReusedSubscriptionKeepsBothArrivals(t *testing.T) {
-	const mygoNotice, duneNotice = 3, 4
-	h := pendingReusedSubscriptions(t, scenario{lagging: true})
-	h.mp.setRoute(libraryShowPath, ok(writeFixture(t, map[string][]int{"1": {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13}})))
-	h.restart()
-	h.transfers(duneFile(), mygo.file("S01", "E01-E13"))
-	noticeAt(h, arrivalCheck{message: mygoNotice, chat: bob, title: mygo.title})
-	h.catchUp(alice)
-	noticeAt(h, arrivalCheck{message: duneNotice, chat: alice, title: "《沙丘》"})
-	h.transfers()
-	h.tr.verify(t)
-}
 
 // Cancelling the replacement subscription drops only its own watch; the
 // older download still arrives for its original requester.
-func TestCancelReusedSubscriptionKeepsOldArrival(t *testing.T) {
-	const subscriptions, duneNotice = 3, 4
-	h := pendingReusedSubscriptions(t, scenario{})
-	h.say(bob, bob, "/subscribe")
-	h.tap(bob, subscriptions, "取消订阅")
-	h.tap(bob, subscriptions, "1")
-	h.tap(bob, subscriptions, "确认取消")
-	h.transfers(mygo.file("S01", "E01-E13"), duneFile())
-	noticeAt(h, arrivalCheck{message: duneNotice, chat: alice, title: "《沙丘》"})
-	h.tr.verify(t)
-}
 
 // An unrelated subscription occupying the old id cannot keep an orphaned
 // watch alive beyond its 72-hour grace. The replacement stays active and
 // still notifies its requester after that grace.
-func TestReusedSubscriptionDoesNotKeepOldWatchAlive(t *testing.T) {
-	const activityCheck = 2 * time.Hour
-	const beyondOrphanGrace = 4 * 24 * time.Hour
-	const mygoNotice = 3
-	h := pendingReusedSubscriptions(t, scenario{})
-	h.advance(activityCheck)
-	h.transfers()
-	h.advance(beyondOrphanGrace)
-	h.transfers()
-	h.transfers(duneFile(), mygo.file("S01", "E01-E13"))
-	noticeAt(h, arrivalCheck{message: mygoNotice, chat: bob, title: mygo.title})
-	h.tr.verify(t)
-}

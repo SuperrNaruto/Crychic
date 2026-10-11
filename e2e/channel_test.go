@@ -29,12 +29,12 @@ func channelArrival(t *testing.T, destination string) {
 	}})
 	h.say(alice, alice, "/search 沙丘")
 	h.tap(alice, 1, duneMovie)
-	h.shows(1, "通知频道")
+	h.shows(1, "通知由 MoviePilot")
 	h.say(bob, group, "/search 沙丘")
 	h.tap(bob, 2, duneMovie)
 	h.restart()
 	h.arrives(noticeChannel, duneFile())
-	h.shows(3, "在 Emby 中观看")
+	h.shows(3, "MoviePilot 原生")
 	h.transfers(duneFile()) // a later copy must not repeat the notice
 	h.tr.verify(t)
 }

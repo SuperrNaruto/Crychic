@@ -170,14 +170,11 @@
    <tr><td><b>第 2 季</b></td><td>✅ 已订阅</td></tr>
    <tr><td><b>第 3 季</b></td><td>✅ 已订阅</td></tr>
    </table>
-   <p>入库后我会在通知频道告诉你！</p>
+   <p>通知由 MoviePilot 按设置发送，可在 /requests 核对到货哦～</p>
    [返回 | 1:bk:0] [首页 | 1:o:0] [关闭 | 1:c:0]
 << answerCallbackQuery
 >> MoviePilot transfers 绝命毒师 (themoviedb/1396) S03E01
+>> MoviePilot produces a native notification
 << sendRichMessage chat=-1001234567890 message=2
-   <img src="url-1bc43c78f90216151f38c5364e20d05ed84bcd8927d87d91cbd1c655434f0dd9"/>
-   <h3>📥 入库啦</h3>
-   <p>你想看的<b>《绝命毒师》第 3 季</b> E01 到家啦！</p>
-   <tg-button-row align="left">
-   <tg-button type="url" style="success" url="https://emby.example.com/web/index.html#!/item?id=1396">在 Emby 中观看</tg-button>
-   </tg-button-row>
+   <h3>MoviePilot 通知</h3>
+   <p>MoviePilot 原生整理入库通知 · 《绝命毒师》</p>

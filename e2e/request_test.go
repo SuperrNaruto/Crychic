@@ -391,9 +391,9 @@ func TestSubscribeSeveralSeasons(t *testing.T) {
 	h.tap(alice, 1, "订阅所选 2 季")
 	h.shows(1, "<td><b>第 2 季</b></td><td>✅ 已订阅</td>")
 	h.shows(1, "<td><b>第 3 季</b></td><td>✅ 已订阅</td>")
-	h.shows(1, "通知频道")
+	h.shows(1, "通知由 MoviePilot")
 	h.arrives(noticeChannel, breakingBad.file("S03", "E01"))
-	h.shows(2, "第 3 季")
+	h.shows(2, "MoviePilot 原生")
 	h.tr.verify(t)
 }
 

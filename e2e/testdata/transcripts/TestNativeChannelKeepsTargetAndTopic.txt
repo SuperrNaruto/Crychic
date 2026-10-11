@@ -1,0 +1,13 @@
+>> user 1001 in chat -500 topic 17: /start
+<< sendRichMessage chat=-500 message=1 topic=17
+   <img src="file-d620fc3c5f168f03372b7fd77d4572d577b95fa1f410d95e2b60e5799f0d2315"/>
+   <h3>🎬 Crychic</h3>
+   <p>想看什么告诉我呀～我帮你找片、订阅，入库了第一时间喊你！私聊直接发片名就能搜哦 (๑•̀ㅂ•́)و✧</p>
+   [搜索 | 1:h:0] [发现 | 1:h:1]
+   [我的订阅 | 1:h:2] [最新入库 | 1:h:3]
+   [任务进度 | 1:h:4] [追剧日历 | 1:h:5]
+   [我的请求 | 1:h:6]
+>> MoviePilot produces a native notification
+<< sendRichMessage chat=-500 message=2 topic=17
+   <h3>MP 频道通知</h3>
+   <p>使用 MP 指定目标</p>

@@ -18,5 +18,4 @@ services:
       CRYCHIC_MOVIEPILOT_COOKIE: ${CRYCHIC_MOVIEPILOT_COOKIE:-}
       CRYCHIC_TELEGRAM_TOKEN: ${CRYCHIC_TELEGRAM_TOKEN}
       CRYCHIC_TELEGRAM_ALLOWED_USERS: "123456789"
-      # Optional: channel ID (-100...) or @channelusername; bot must be able to post.
-      CRYCHIC_TELEGRAM_NOTIFY_CHAT_ID: ${CRYCHIC_TELEGRAM_NOTIFY_CHAT_ID:-}
+      # Native notifications use the MP custom crychic channel and plugin settings.

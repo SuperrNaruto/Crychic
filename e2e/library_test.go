@@ -61,7 +61,7 @@ func TestPartlyHeldSeasonCompletesWithLibrary(t *testing.T) {
 	h.shows(1, "媒体库已有 E01–E12")
 	h.tap(alice, 1, "从第 1 集开始")
 	h.arrives(alice, mygo.file("S01", "E13"))
-	h.shows(2, "这一季你要的剧集全部到齐啦")
+	h.shows(2, "MoviePilot 原生")
 	h.tr.verify(t)
 }
 

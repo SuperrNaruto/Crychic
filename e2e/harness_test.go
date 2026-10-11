@@ -111,6 +111,9 @@ func start(t *testing.T, sc scenario) *harness {
 	h.launch()
 	h.wait(registered, "registering the command menu")
 	h.wait(mp.polled, "the notifier's first poll")
+	if sc.apiKey == mpAPIKey {
+		h.wait(mp.native.baseline, "native notification baseline")
+	}
 	t.Cleanup(func() {
 		h.stop()
 		tg.Close()
@@ -165,10 +168,16 @@ func (h *harness) advance(elapsed time.Duration) {
 // bot to post a notice in chat.
 func (h *harness) arrives(chat int64, records ...transfer) {
 	h.t.Helper()
-	h.logTransfers(records)
-	done := h.tg.expect(fmt.Sprintf("send:%d", chat))
-	h.mp.add(records...)
-	h.wait(done, "an arrival notice")
+	h.transfers(records...)
+	recipient := nativeRecipient{Kind: "channel", Chat: strconv.FormatInt(chat, 10)}
+	if chat > 0 {
+		recipient.Kind, recipient.User = "personal", recipient.Chat
+	}
+	text := "MoviePilot 原生整理入库通知"
+	if len(records) > 0 {
+		text += " · 《" + records[0].Title + "》"
+	}
+	h.nativeNotice(nativeMessage{Title: "MoviePilot 通知", Text: text, Recipient: recipient})
 }
 
 // transfers adds records to MoviePilot's transfer history and waits until

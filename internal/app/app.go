@@ -7,7 +7,6 @@ import (
 	"log/slog"
 	"net/http"
 	"path/filepath"
-	"strconv"
 	"sync"
 	"time"
 
@@ -27,7 +26,6 @@ const (
 	imageTimeout    = 10 * time.Second
 	// stateFile holds requests awaiting arrival, inside the data dir.
 	stateFile = "requests.json"
-	decimal   = 10
 )
 
 // Deps are what the app takes from its host besides configuration.
@@ -43,48 +41,34 @@ type Deps struct {
 func Run(ctx context.Context, cfg config.Config, deps Deps) error {
 	log, now := deps.Log, deps.Now
 	transport := newTransport()
-	images := deps.Images
-	if images == nil {
-		images = &http.Client{Timeout: imageTimeout, Transport: transport}
-	}
 	backend := moviePilot(cfg, transport)
-	tg, err := telegram.New(telegram.Config{
-		Token:        cfg.TelegramToken,
-		APIURL:       cfg.TelegramAPIURL,
-		AllowedUsers: cfg.TelegramAllowed,
-		FollowEvery:  cfg.FollowEvery,
-		HTTPClient:   &http.Client{Timeout: telegramTimeout, Transport: transport},
-		ImageClient:  images,
-		Log:          log,
-	})
+	tg, err := telegramBot(cfg, transport, deps)
 	if err != nil {
 		return err
 	}
 	notifier, err := notify.New(notify.Options{
-		Feed:        backend,
-		Sender:      tg,
-		Path:        filepath.Join(cfg.DataDir, stateFile),
-		Interval:    cfg.NotifyInterval,
-		Quiet:       cfg.NotifyQuiet,
-		Destination: cfg.TelegramNotifyChat,
-		LibraryWait: cfg.LibraryWait,
-		Stall:       cfg.NotifyStall,
-		Digest:      notify.Schedule(cfg.NotifyDigest),
-		DigestTo:    privateChats(cfg.TelegramAllowed),
-		Now:         now,
-		Log:         log,
+		Feed:     backend,
+		Path:     filepath.Join(cfg.DataDir, stateFile),
+		Interval: cfg.NotifyInterval,
+		Now:      now,
+		Log:      log,
 	})
 	if err != nil {
 		return err
 	}
+	native, err := nativeNotifications(cfg, notify.NativeOptions{Feed: backend, Sender: tg, Log: log})
+	if err != nil {
+		return err
+	}
+	warnRetiredNotify(cfg, log)
 	calendar := bangumi.New(cfg.BangumiAPIURL, &http.Client{Timeout: backendTimeout, Transport: transport})
 	engine := flow.New(flow.Options{
 		RunContext: ctx,
 		Backend:    backend, Calendar: calendar, Watcher: notifier, Log: log, Now: now,
-		NoticeInChannel: cfg.TelegramNotifyChat != "",
 	})
 	var wg sync.WaitGroup
 	wg.Go(func() { notifier.Run(ctx) })
+	wg.Go(func() { native.Run(ctx) })
 	tg.Run(ctx, engine)
 	engine.Wait()
 	wg.Wait()
@@ -98,12 +82,27 @@ func moviePilot(cfg config.Config, transport *http.Transport) *moviepilot.Client
 	})
 }
 
-// privateChats are the whitelisted users' private chats with the bot,
-// where a weekly digest goes when no notify channel is set.
-func privateChats(users []int64) []flow.Actor {
-	chats := make([]flow.Actor, 0, len(users))
-	for _, id := range users {
-		chats = append(chats, flow.Actor{UserID: id, Address: strconv.FormatInt(id, decimal)})
+func telegramBot(cfg config.Config, transport *http.Transport, deps Deps) (*telegram.Bot, error) {
+	images := deps.Images
+	if images == nil {
+		images = &http.Client{Timeout: imageTimeout, Transport: transport}
 	}
-	return chats
+	return telegram.New(telegram.Config{
+		Token: cfg.TelegramToken, APIURL: cfg.TelegramAPIURL, AllowedUsers: cfg.TelegramAllowed,
+		FollowEvery: cfg.FollowEvery, HTTPClient: &http.Client{Timeout: telegramTimeout, Transport: transport},
+		ImageClient: images, Log: deps.Log,
+	})
+}
+
+func nativeNotifications(cfg config.Config, opts notify.NativeOptions) (*notify.NativeConsumer, error) {
+	opts.Path = filepath.Join(cfg.DataDir, "native-notifications.json")
+	opts.RetryEvery = cfg.NotifyInterval
+	opts.Secrets = []string{cfg.MoviePilotAPIKey, cfg.TelegramToken, cfg.MoviePilotCookie}
+	return notify.NewNative(opts)
+}
+
+func warnRetiredNotify(cfg config.Config, log *slog.Logger) {
+	for _, name := range cfg.RetiredNotifyVars {
+		log.Warn("retired notification setting ignored", "name", name)
+	}
 }

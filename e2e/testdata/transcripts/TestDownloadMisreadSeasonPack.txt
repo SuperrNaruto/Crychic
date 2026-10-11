@@ -188,20 +188,16 @@
    <footer><i>BanG Dream! It&#39;s MyGO!!!!!</i> · 2023 · 电视剧 · ⭐ 8.0 · 动画 / 剧情 · 共 1 季 13 集 · 主演：羊宫妃那、立石凛、青木阳菜</footer>
    <blockquote expandable>“你能，和我组一辈子乐队吗？”……高一的春末，羽丘女子学园的所有人都加入了乐队，晚入学的爱音为了尽快融入班级，急急忙忙地寻找着乐队成员。这时她得知，「羽丘的不可思议女孩」灯还没有加入乐队，于是爱音不由自主地向她打起了招呼，但是……这是遍体鳞伤又狼狈不堪的，我们的＜音乐呐喊＞。迷失方向也无所谓，在迷茫中前进吧！</blockquote>
    <hr/>
-   <p>✅ 开始下载《迷途之子!!!!!》第 1 季啦，入库了我第一时间叫你！ ヾ(≧▽≦*)o</p>
+   <p>✅ 开始下载《迷途之子!!!!!》第 1 季啦，通知由 MoviePilot 按设置发送，可在 /requests 核对到货哦～ ヾ(≧▽≦*)o</p>
    [返回 | 1:bk:0] [首页 | 1:o:0] [关闭 | 1:c:0]
 << answerCallbackQuery
 >> Crychic restarts
 >> MoviePilot transfers 迷途之子!!!!! (themoviedb/224207) S01E02-E08
 >> MoviePilot transfers 迷途之子!!!!! (themoviedb/224207) S01E10-E13
+>> MoviePilot produces a native notification
 << sendRichMessage chat=1001 message=2
-   <img src="url-f1d1c3e9142d5b6cb0aec97f314112cb1cfcf5cab28cbc83476b0d4bf25e1175"/>
-   <h3>📥 入库啦</h3>
-   <p>你想看的<b>《迷途之子!!!!!》第 1 季</b> E02–E08、E10–E13 到家啦！<br>
-   加上媒体库已有的，这一季的剧集全部到齐啦 ヾ(≧▽≦*)o</p>
-   <tg-button-row align="left">
-   <tg-button type="url" style="success" url="https://emby.example.com/web/index.html#!/item?id=224207">在 Emby 中观看</tg-button>
-   </tg-button-row>
+   <h3>MoviePilot 通知</h3>
+   <p>MoviePilot 原生整理入库通知 · 《迷途之子!!!!!》</p>
 >> user 1001 in chat 1001: /requests
 -> MoviePilot GET /api/v1/history/transfer?count=50&page=1&status=false
 << sendRichMessage chat=1001 message=3
@@ -228,14 +224,10 @@
 >> Crychic restarts
 >> MoviePilot transfers 迷途之子!!!!! (themoviedb/224207) S01E01
 >> MoviePilot transfers 迷途之子!!!!! (themoviedb/224207) S01E09
+>> MoviePilot produces a native notification
 << sendRichMessage chat=1001 message=4
-   <img src="url-f1d1c3e9142d5b6cb0aec97f314112cb1cfcf5cab28cbc83476b0d4bf25e1175"/>
-   <h3>📥 入库啦</h3>
-   <p>你想看的<b>《迷途之子!!!!!》第 1 季</b> E01、E09 到家啦！<br>
-   加上媒体库已有的，这一季的剧集全部到齐啦 ヾ(≧▽≦*)o</p>
-   <tg-button-row align="left">
-   <tg-button type="url" style="success" url="https://emby.example.com/web/index.html#!/item?id=224207">在 Emby 中观看</tg-button>
-   </tg-button-row>
+   <h3>MoviePilot 通知</h3>
+   <p>MoviePilot 原生整理入库通知 · 《迷途之子!!!!!》</p>
 >> user 1001 in chat 1001: /requests
 << sendRichMessage chat=1001 message=5
    <h3>📋 我的请求 · 跟踪中</h3>

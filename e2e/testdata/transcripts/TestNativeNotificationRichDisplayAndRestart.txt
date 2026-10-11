@@ -1,0 +1,12 @@
+>> MoviePilot produces a native notification
+<< sendRichMessage chat=1001 message=1
+   <img src="url-ae95e58ec03e202c035279fd7b770ee9063e24e22f246ec568120ac5a90252ea"/>
+   <h3>MP &lt;通知&gt;</h3>
+   <p>整理完成<br>
+   &lt;不可信标签&gt;<br>
+   <a href="https://example.test/watch/1">查看详情</a></p>
+>> Crychic restarts
+>> MoviePilot produces a native notification
+<< sendRichMessage chat=1001 message=2
+   <h3>MP 新通知</h3>
+   <p>重启后继续接收</p>

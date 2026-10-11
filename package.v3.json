@@ -1,0 +1,12 @@
+{
+  "Crychic": {
+    "name": "Crychic",
+    "description": "MP 自定义通知渠道，持久长轮询接入现有 Crychic 机器人。",
+    "labels": "消息通知",
+    "version": "1.0.0",
+    "author": "Crychic",
+    "level": 1,
+    "system_version": ">=3.1.4",
+    "history": {"v1.0.0": "原生自定义渠道、持久安全投影及专用长轮询。"}
+  }
+}

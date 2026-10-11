@@ -77,6 +77,7 @@ Go 聊天机器人；通过 MoviePilot v3 搜索媒体、订阅或下载选中�
 | `internal/bangumi/` | `internal/bangumi/AGENTS.md` | 日历与简介接口边界、身份字段和降级 |
 | `internal/app/` | `internal/app/AGENTS.md` | 唯一装配点、共享传输与退出等待 |
 | `internal/config/` | `internal/config/AGENTS.md` | 环境配置、白名单与默认值语义 |
+| `plugins.v3/crychic/` | `plugins.v3/crychic/AGENTS.md` | 原生自定义渠道、宿主适配、持久安全投影与真实宿主验收 |
 | `e2e/` | `e2e/AGENTS.md` | 行为缺口、真实 fake、交互入口、脱敏录制、并发与时钟、transcript 比对及更新 |
 
 ## 按需详情导航

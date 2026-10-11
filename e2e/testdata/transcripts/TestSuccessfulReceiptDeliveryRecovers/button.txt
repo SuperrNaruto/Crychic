@@ -23,5 +23,5 @@
    <h3>🎬 无海报影片</h3>
    <footer>电影</footer>
    <hr/>
-   <p>✅ 帮你订好《无海报影片》啦，入库了我第一时间叫你！ ヾ(≧▽≦*)o</p>
+   <p>✅ 帮你订好《无海报影片》啦，通知由 MoviePilot 按设置发送，可在 /requests 核对到货哦～ ヾ(≧▽≦*)o</p>
 << answerCallbackQuery notice="操作已经处理啦，正在恢复显示结果，稍等一下哦～"

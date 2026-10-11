@@ -71,17 +71,14 @@
    <footer><i>Breaking Bad</i> · 2008 · 电视剧 · ⭐ 9.0 · 剧情 / 犯罪 · 共 5 季 62 集 · 主演：布莱恩·克兰斯顿、亚伦·保尔、安娜·冈</footer>
    <blockquote expandable>高中化学教师沃尔特·怀特被诊断患有晚期癌症，为保障家人经济生活，他与学生杰西制毒贩毒，并逐渐坠落至万劫不复的深渊。</blockquote>
    <hr/>
-   <p>✅ 帮你订好《绝命毒师》第 2 季啦，入库了我第一时间叫你！ ヾ(≧▽≦*)o</p>
+   <p>✅ 帮你订好《绝命毒师》第 2 季啦，通知由 MoviePilot 按设置发送，可在 /requests 核对到货哦～ ヾ(≧▽≦*)o</p>
    [返回 | 1:bk:0] [首页 | 1:o:0] [关闭 | 1:c:0]
 << answerCallbackQuery
 >> MoviePilot transfers 绝命毒师 (themoviedb/1396) S02E01
+>> MoviePilot produces a native notification
 << sendRichMessage chat=-500 message=2
-   <img src="url-1bc43c78f90216151f38c5364e20d05ed84bcd8927d87d91cbd1c655434f0dd9"/>
-   <h3>📥 入库啦</h3>
-   <p><a href="tg://user?id=1001">1001</a> 你想看的<b>《绝命毒师》第 2 季</b> E01 到家啦！</p>
-   <tg-button-row align="left">
-   <tg-button type="url" style="success" url="https://emby.example.com/web/index.html#!/item?id=1396">在 Emby 中观看</tg-button>
-   </tg-button-row>
+   <h3>MoviePilot 通知</h3>
+   <p>MoviePilot 原生整理入库通知 · 《绝命毒师》</p>
 >> user 1001 in chat 1001: /requests
 -> MoviePilot GET /api/v1/history/transfer?count=50&page=1&status=false
 -> MoviePilot GET /api/v1/subscribe/
@@ -107,14 +104,10 @@
    [首页 | 2:o:0] [关闭 | 2:c:0]
 << answerCallbackQuery
 >> MoviePilot transfers 绝命毒师 (themoviedb/1396) S02E02-E13
+>> MoviePilot produces a native notification
 << sendRichMessage chat=-500 message=4
-   <img src="url-1bc43c78f90216151f38c5364e20d05ed84bcd8927d87d91cbd1c655434f0dd9"/>
-   <h3>📥 入库啦</h3>
-   <p><a href="tg://user?id=1001">1001</a> 你想看的<b>《绝命毒师》第 2 季</b> E02–E13 到家啦！<br>
-   这一季你要的剧集全部到齐啦 ヾ(≧▽≦*)o</p>
-   <tg-button-row align="left">
-   <tg-button type="url" style="success" url="https://emby.example.com/web/index.html#!/item?id=1396">在 Emby 中观看</tg-button>
-   </tg-button-row>
+   <h3>MoviePilot 通知</h3>
+   <p>MoviePilot 原生整理入库通知 · 《绝命毒师》</p>
 >> Crychic restarts with 50 prior completion records; the transfer cursor is unchanged
 >> user 1001 in chat 1001: /requests
 -> MoviePilot GET /api/v1/history/transfer?count=50&page=1&status=false
@@ -391,18 +384,14 @@
    <footer><i>Breaking Bad</i> · 2008 · 电视剧 · ⭐ 9.0 · 剧情 / 犯罪 · 共 5 季 62 集 · 主演：布莱恩·克兰斯顿、亚伦·保尔、安娜·冈</footer>
    <blockquote expandable>高中化学教师沃尔特·怀特被诊断患有晚期癌症，为保障家人经济生活，他与学生杰西制毒贩毒，并逐渐坠落至万劫不复的深渊。</blockquote>
    <hr/>
-   <p>✅ 帮你订好《绝命毒师》第 3 季啦，入库了我第一时间叫你！ ヾ(≧▽≦*)o</p>
+   <p>✅ 帮你订好《绝命毒师》第 3 季啦，通知由 MoviePilot 按设置发送，可在 /requests 核对到货哦～ ヾ(≧▽≦*)o</p>
    [返回 | 4:bk:0] [首页 | 4:o:0] [关闭 | 4:c:0]
 << answerCallbackQuery
 >> MoviePilot transfers 绝命毒师 (themoviedb/1396) S03E01-E13
+>> MoviePilot produces a native notification
 << sendRichMessage chat=1001 message=7
-   <img src="url-1bc43c78f90216151f38c5364e20d05ed84bcd8927d87d91cbd1c655434f0dd9"/>
-   <h3>📥 入库啦</h3>
-   <p>你想看的<b>《绝命毒师》第 3 季</b> E01–E13 到家啦！<br>
-   这一季你要的剧集全部到齐啦 ヾ(≧▽≦*)o</p>
-   <tg-button-row align="left">
-   <tg-button type="url" style="success" url="https://emby.example.com/web/index.html#!/item?id=1396">在 Emby 中观看</tg-button>
-   </tg-button-row>
+   <h3>MoviePilot 通知</h3>
+   <p>MoviePilot 原生整理入库通知 · 《绝命毒师》</p>
 >> user 1001 taps 3:rq:2 on message 5
 << editMessageText chat=1001 message=5
    <h3>📋 我的请求 · 最近完成</h3>

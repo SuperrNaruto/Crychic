@@ -323,7 +323,7 @@
    <tr><td><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 02 [WebRip 1080p HEVC-10bit AAC]</b></td><td>⚠️ 任务添加失败</td></tr>
    <tr><td><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 03 [WebRip 1080p HEVC-10bit AAC]</b></td><td>⚠️ 没能确认</td></tr>
    </table>
-   <p>✅ 开始下载 1 个资源啦，入库了我第一时间叫你！ ヾ(≧▽≦*)o<br>
+   <p>✅ 开始下载 1 个资源啦，通知由 MoviePilot 按设置发送，可在 /requests 核对到货哦～ ヾ(≧▽≦*)o<br>
    标着「没能确认」的资源不知道有没有开始下载…先用 /tasks 看一眼，确认没在下再来找我哦。</p>
    [返回 | 1:bk:0] [首页 | 1:o:0] [关闭 | 1:c:0]
 >> user 1001 taps 1:bk:0 on message 1

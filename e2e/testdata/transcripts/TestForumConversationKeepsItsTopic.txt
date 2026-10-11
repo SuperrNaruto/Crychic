@@ -94,7 +94,7 @@
    <br>
    李成与刑侦队长赵干哲、退休老刑警辛吉然联手重启尘封八年的悬案。小城之内人人藏有秘密，多方嫌疑人互相博弈。随着调查深入，层层揭开旧案背后交织的亲情、恩怨与人性抉择，在正义与私刑的边界之间，探寻深渊之下的残酷真相。</blockquote>
    <hr/>
-   <p>✅ 帮你订好《深渊无间》第 1 季（从第 5 集开始）啦，入库了我第一时间叫你！ ヾ(≧▽≦*)o</p>
+   <p>✅ 帮你订好《深渊无间》第 1 季（从第 5 集开始）啦，通知由 MoviePilot 按设置发送，可在 /requests 核对到货哦～ ヾ(≧▽≦*)o</p>
 << answerCallbackQuery
 >> user 1001 in chat -500 topic 77 quoting message 2: 深渊无间
 -> MoviePilot GET /api/v1/media/search?count=10&title=深渊无间&type=media
@@ -126,9 +126,7 @@
 << answerCallbackQuery
 >> Crychic restarts
 >> MoviePilot transfers 深渊无间 (themoviedb/301489) S01E05
+>> MoviePilot produces a native notification
 << sendRichMessage chat=-500 message=3 topic=42
-   <h3>📥 入库啦</h3>
-   <p><a href="tg://user?id=1001">1001</a> 你想看的<b>《深渊无间》第 1 季</b> E05 到家啦！</p>
-   <tg-button-row align="left">
-   <tg-button type="url" style="success" url="https://emby.example.com/web/index.html#!/item?id=301489">在 Emby 中观看</tg-button>
-   </tg-button-row>
+   <h3>MP 原生入库通知</h3>
+   <p>第 5 集已整理</p>

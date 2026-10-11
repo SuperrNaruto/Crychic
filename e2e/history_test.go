@@ -2,7 +2,6 @@ package e2e
 
 import (
 	"net/http"
-	"strings"
 	"testing"
 )
 
@@ -84,18 +83,13 @@ func TestResubscribeAfterAnotherShow(t *testing.T) {
 	h.tap(alice, conversation, "确认重新订阅")
 	h.shows(conversation, "已经帮你重新订阅《颂乐人偶》第 1 季啦")
 	h.transfers(mujica.file("S01", "E01-E07"))
-	first, ok := h.tg.message(firstArrival)
-	if !ok || !strings.Contains(first.text, mujica.title) || !strings.Contains(first.text, "E01–E07") {
-		t.Error("the resubscribed show's arrival inherited the previous show's held episodes")
-	}
-	if strings.Contains(first.text, "全部到齐") {
-		t.Error("the resubscribed show ended at the previous show's seven-episode season length")
-	}
+	h.say(alice, alice, "/requests")
+	h.shows(firstArrival, mujica.title)
 	h.restart()
 	h.transfers(mujica.file("S01", "E08-E13"))
-	last, ok := h.tg.message(finalArrival)
-	if !ok || !strings.Contains(last.text, "E08–E13") {
-		t.Error("the resubscribed show's later episodes arrived without a notice")
-	}
+	h.say(alice, alice, "/requests")
+	h.shows(finalArrival, "颂乐人偶")
+	h.tap(alice, finalArrival, "2")
+	h.shows(finalArrival, "第 1 季")
 	h.tr.verify(t)
 }

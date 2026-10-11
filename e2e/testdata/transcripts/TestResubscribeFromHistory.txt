@@ -137,19 +137,16 @@
    <h3>📺 颂乐人偶</h3>
    <footer>2025 · 电视剧</footer>
    <hr/>
-   <p>✅ 已经帮你重新订阅《颂乐人偶》第 1 季啦，入库了我第一时间叫你！ ヾ(≧▽≦*)o</p>
+   <p>✅ 已经帮你重新订阅《颂乐人偶》第 1 季啦，通知由 MoviePilot 按设置发送，可在 /requests 核对到货哦～ ヾ(≧▽≦*)o</p>
    [返回 | 1:hf:2] [首页 | 1:o:0] [关闭 | 1:c:0]
 << answerCallbackQuery
 >> user 1001 taps 1:ho:0 on message 1
 << answerCallbackQuery notice="这个选项不太对哦～"
 >> MoviePilot transfers 颂乐人偶 (themoviedb/274580) S01E01
+>> MoviePilot produces a native notification
 << sendRichMessage chat=1001 message=2
-   <img src="url-caf3370aa7811b8d87c23685c80c5562086c41f07bc889d8304e5f09cb366cfd"/>
-   <h3>📥 入库啦</h3>
-   <p>你想看的<b>《颂乐人偶》第 1 季</b> E01 到家啦！</p>
-   <tg-button-row align="left">
-   <tg-button type="url" style="success" url="https://emby.example.com/web/index.html#!/item?id=274580">在 Emby 中观看</tg-button>
-   </tg-button-row>
+   <h3>MoviePilot 通知</h3>
+   <p>MoviePilot 原生整理入库通知 · 《颂乐人偶》</p>
 >> user 1001 taps 1:hf:2 on message 1
 -> MoviePilot GET /api/v1/subscribe/history/电视剧?count=10&page=1
 << editMessageText chat=1001 message=1

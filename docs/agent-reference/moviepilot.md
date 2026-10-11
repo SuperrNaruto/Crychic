@@ -207,3 +207,9 @@ guessing
 
 原资料的上游路径还包括 `app/api/response.py`（统一响应封装）与
 `chain/subscribe/completion.py`（订阅取得集数）。版本变更时核对对应源码，不在真实服务上制造订阅或下载来验证。
+
+## 原生自定义通知接入
+
+原生通知使用 `/api/v1/plugin/Crychic/status`、`notifications` 和 `ack`，复用 API key，不发资源 Cookie、不跟随重定向、不回显错误响应。独立超时 35 秒覆盖 25 秒长轮询，每批最多 32 条；协议缺失或范围不完整不推进。ACK 只写插件消费进度，不代表平台发送成功。
+
+本次匹配最新 MP v3.1.4 的自定义渠道、公开插件 SDK、自有数据库与窄范围 `_MessageBase`/durable 事件身份适配。Context7 主线资料仅作导航，实际契约用固定版本源码及隔离的官方镜像端到端验证。源码入口为 `app/sdk/plugin/base.py`、`app/sdk/database.py`、`app/modules/__init__.py`、`app/chain/_messaging.py` 和前端通知配置页面。见 [通知详情](notifications.md)。

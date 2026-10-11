@@ -67,7 +67,7 @@ func TestDownloadPickedMovieRelease(t *testing.T) {
 	file := duneFile()
 	file.Hash = addedHash
 	h.arrives(alice, file)
-	h.shows(2, "入库啦")
+	h.shows(2, "MoviePilot 原生")
 	h.neverShowsSiteCredentials()
 	h.tr.verify(t)
 }
@@ -104,13 +104,13 @@ func TestDownloadPickedSeasonRelease(t *testing.T) {
 	first, rest := mygo.file("S01", "E01"), mygo.file("S01", "E02-E13")
 	first.Hash, rest.Hash = addedHash, addedHash
 	h.arrives(alice, first)
-	h.shows(2, "E01 到家啦")
+	h.shows(2, "MoviePilot 原生")
 	if strings.Contains(mustMessage(h, 2).text, "全部到齐") {
 		t.Error("existing library copies complete a new whole-season download before it arrives")
 	}
 	h.arrives(alice, rest)
-	h.shows(3, "E02–E13 到家啦")
-	h.shows(3, "这次下载的剧集全部到齐啦")
+	h.shows(3, "MoviePilot 原生")
+	h.shows(3, "MoviePilot 原生")
 	h.neverShowsSiteCredentials()
 	h.tr.verify(t)
 }
@@ -169,8 +169,8 @@ func checkMisreadPackArrivals(h *harness) {
 	first, last := mygo.file("S01", "E02-E08"), mygo.file("S01", "E10-E13")
 	first.Hash, last.Hash = addedHash, addedHash
 	h.arrives(alice, first, last)
-	h.shows(2, "E02–E08、E10–E13 到家啦")
-	h.shows(2, "加上媒体库已有的，这一季的剧集全部到齐啦")
+	h.shows(2, "MoviePilot 原生")
+	h.shows(2, "MoviePilot 原生")
 	h.say(alice, alice, "/requests")
 	h.tap(alice, 3, "最近完成")
 	h.shows(3, "还没有完成记录")
@@ -178,7 +178,7 @@ func checkMisreadPackArrivals(h *harness) {
 	firstHeld, ninthHeld := mygo.file("S01", "E01"), mygo.file("S01", "E09")
 	firstHeld.Hash, ninthHeld.Hash = addedHash, addedHash
 	h.arrives(alice, firstHeld, ninthHeld)
-	h.shows(4, "E01、E09 到家啦")
+	h.shows(4, "MoviePilot 原生")
 	h.say(alice, alice, "/requests")
 	h.tap(alice, 5, "最近完成")
 	h.tap(alice, 5, "1")

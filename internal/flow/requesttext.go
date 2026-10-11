@@ -66,8 +66,6 @@ func (d requestDetail) downloadState() string {
 		return "下载状态暂时无法确认"
 	case len(d.progress.downloads) > 0:
 		return progress(d.progress.downloads[0])
-	case d.record.Pending:
-		return "已记录整理结果 · 等待结算"
 	default:
 		return "暂无可确认的下载任务 · 到货待核对"
 	}
@@ -117,9 +115,6 @@ func (d requestDetail) detailText() Text {
 	}
 	if d.subscriptionFound {
 		text = append(text, Line(Plain(subScope(d.progress.sub))), Line(Strong("最近搜索 "), Plain(subExecutionState(d.progress.sub.Execution))))
-	}
-	if d.record.Pending {
-		text = append(text, Line(Plain("已记录新整理结果，仍在等待通知结算或媒体库核对。")))
 	}
 	if d.record.SubscriptionID > 0 && !d.subscriptionFound && d.subErr == nil {
 		text = append(text, Line(Plain("关闭订阅不代表到货，下载和整理仍可能继续哦～")))
