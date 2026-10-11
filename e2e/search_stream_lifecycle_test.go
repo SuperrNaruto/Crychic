@@ -65,7 +65,7 @@ func TestStreamBatchSelectionCannotReuseEarlierConfirmation(t *testing.T) {
 	h.tap(alice, 1, "做种")
 	h.tap(alice, 1, "2")
 	h.tapData(alice, 1, stale)
-	h.shows(1, "Dune.2021.1080p")
+	h.shows(1, "Dune.2021.2160p.WEB-DL") // still the release now shown as 2 after sorting
 	h.tap(alice, 1, "返回")
 	h.tap(alice, 1, "多选…")
 	h.tap(alice, 1, "2")
@@ -82,7 +82,7 @@ func TestStreamBatchSelectionCannotReuseEarlierConfirmation(t *testing.T) {
 
 // Candidate facts may change during final filtering. An accepted detail view
 // stays pinned to what was picked and requires an explicit return/reselection.
-func TestStreamChangedCandidateKeepsOldDetailAndNumber(t *testing.T) {
+func TestStreamChangedCandidateKeepsOldDetail(t *testing.T) {
 	h, s := streamingMovie(t)
 	startStream(h, s)
 	previewStream(h, s)
@@ -97,7 +97,7 @@ func TestStreamChangedCandidateKeepsOldDetailAndNumber(t *testing.T) {
 	h.shows(1, "58.2 GiB")
 	h.shows(1, "已不在最终结果")
 	h.tap(alice, 1, "返回")
-	h.tap(alice, 1, "3")
+	h.tap(alice, 1, "1")
 	h.shows(1, "2.0 GiB")
 	h.tap(alice, 1, downloadIt)
 	h.shows(1, "开始下载《沙丘》")

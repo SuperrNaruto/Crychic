@@ -89,12 +89,12 @@
 << answerCallbackQuery notice="这是别人的请求哦，不能替 TA 点～"
 << editMessageText chat=-500 message=1 topic=42
    <h3>🔍 《沙丘》的资源</h3>
-   <ol start="2">
-   <li value="2"><b>Dune.2021.1080p.BluRay.x264.DTS-HD.MA.5.1-CHD</b><br>
+   <ol start="1">
+   <li value="1"><b>Dune.2021.1080p.BluRay.x264.DTS-HD.MA.5.1-CHD</b><br>
    <i>站点乙 · 14.6 GiB · 做种 132</i></li>
    </ol>
-   <footer>共 1 个，搜索完成，已按 MoviePilot 的优先级排列；编号保留原资源身份。点「重新搜索资源」会再次访问站点，可能重复访问站点。 点编号看详情～</footer>
-   [2 | 1:tp:1]
+   <footer>共 1 个，搜索完成，已按 MoviePilot 的优先级排列。点「重新搜索资源」会再次访问站点，可能重复访问站点。 点编号看详情～</footer>
+   [1 | 1:tp:1]
    [·默认· | 1:to:0] [做种 | 1:to:1] [时间 | 1:to:2] [大小 | 1:to:3] [站点 | 1:to:4]
    [重新搜索资源 | 1:te:0]
    [返回 | 1:bk:0] [取消 | 1:x:0]

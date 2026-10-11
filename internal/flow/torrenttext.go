@@ -43,9 +43,6 @@ func torrentList(sess session, target Target) listView {
 	view.menu = append(view.menu, grid(onwardRow(sess), menuColumns)...)
 	view.menu = append(view.menu, streamSearchMenu(sess)...)
 	for n, i := range shown {
-		if sess.streaming {
-			n = i
-		}
 		view.entries = append(view.entries, releaseEntry(sess, n+1, i))
 	}
 	return view

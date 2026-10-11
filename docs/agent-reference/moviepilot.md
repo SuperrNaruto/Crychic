@@ -90,7 +90,7 @@ removed.
 
 `sse.go` 按完整帧读取 UTF-8，支持 BOM、CR/LF/CRLF、心跳注释和多行 data，EOF 不补发缺少空行的帧。`streamresults.go` 将早期候选与最终匹配分开，按 `replace_batch` 的连续批次和总数核对，收到完整 `done` 后一次发布终态；半批、缺终态、错误帧或超时均保留不完整状态。每帧上限 8 MiB，每个搜索阶段最多 10000 个结果，超限按不完整处理，不静默截断。[帧与批次](https://github.com/jxxghp/MoviePilot/blob/v3.1.1/app/api/endpoints/search.py#L97-L447)
 
-早期候选可能没有媒体身份，投影为 `Unverified`，不把搜索目标填回 `media_info`。最终资源核对来源、ID、类型与已知季号，只接受已匹配内容。稳定身份使用资源定位及选择字段的摘要，动态做种数与优先级不改变编号；原始下载记录仍只存在 `Torrent.Record`，不显示或保存。[候选和终态](https://github.com/jxxghp/MoviePilot/blob/v3.1.1/app/chain/search/execution.py#L129-L244)、[最终匹配投影](https://github.com/jxxghp/MoviePilot/blob/v3.1.1/app/chain/search/result.py#L250-L262)
+早期候选可能没有媒体身份，投影为 `Unverified`，不把搜索目标填回 `media_info`。最终资源核对来源、ID、类型与已知季号，只接受已匹配内容。稳定身份使用资源定位及选择字段的摘要，动态做种数与优先级不改变该身份；原始下载记录仍只存在 `Torrent.Record`，不显示或保存。[候选和终态](https://github.com/jxxghp/MoviePilot/blob/v3.1.1/app/chain/search/execution.py#L129-L244)、[最终匹配投影](https://github.com/jxxghp/MoviePilot/blob/v3.1.1/app/chain/search/result.py#L250-L262)
 
 同一搜索只有一个请求，不自动重连或改发 JSON。Go 会重试可重放 GET，SSE 请求因此使用不可重建的空 Body 禁止已发请求重放，同时保持空 GET 语义；首字节丢失由外部 fake 验证。Go 模块为 1.25，本次工具链为 1.26.0，两版本相关分支已对照源码。[Go 1.25 请求重放判定](https://github.com/golang/go/blob/go1.25.0/src/net/http/request.go#L1534-L1547)、[HTTP/2 重试](https://github.com/golang/go/blob/go1.25.0/src/net/http/h2_bundle.go#L7988-L8017)
 

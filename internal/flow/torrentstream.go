@@ -126,7 +126,7 @@ func streamStatus(sess session) string {
 	if len(sess.torrentOrder) == 0 {
 		return "没有匹配的资源哦～ " + msgTorrentRepeat
 	}
-	return "搜索完成，已按 MoviePilot 的优先级排列；编号保留原资源身份。" + msgTorrentRepeat
+	return "搜索完成，已按 MoviePilot 的优先级排列。" + msgTorrentRepeat
 }
 
 // Validate the exact displayed record against the latest completed snapshot.

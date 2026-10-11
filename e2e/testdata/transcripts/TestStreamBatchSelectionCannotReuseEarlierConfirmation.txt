@@ -73,7 +73,7 @@
    <li value="3"><b>Dune.2021.2160p.WEB-DL.H265.DDP5.1-ADWeb</b><br>
    <i>站点丙 · 18.1 GiB · 做种 48 · 2X免费</i></li>
    </ol>
-   <footer>共 3 个，搜索完成，已按 MoviePilot 的优先级排列；编号保留原资源身份。点「重新搜索资源」会再次访问站点，可能重复访问站点。 点编号看详情～</footer>
+   <footer>共 3 个，搜索完成，已按 MoviePilot 的优先级排列。点「重新搜索资源」会再次访问站点，可能重复访问站点。 点编号看详情～</footer>
    [1 | 1:tp:0] [2 | 1:tp:1] [3 | 1:tp:2]
    [·默认· | 1:to:0] [做种 | 1:to:1] [时间 | 1:to:2] [大小 | 1:to:3] [站点 | 1:to:4]
    [筛选站点 | 1:tf:0] [多选… | 1:tm:0]
@@ -113,7 +113,7 @@
    <li value="3"><b>Dune.2021.2160p.WEB-DL.H265.DDP5.1-ADWeb</b><br>
    <i>站点丙 · 18.1 GiB · 做种 48 · 2X免费</i></li>
    </ol>
-   <footer>共 3 个，搜索完成，已按 MoviePilot 的优先级排列；编号保留原资源身份。点「重新搜索资源」会再次访问站点，可能重复访问站点。 点编号看详情～</footer>
+   <footer>共 3 个，搜索完成，已按 MoviePilot 的优先级排列。点「重新搜索资源」会再次访问站点，可能重复访问站点。 点编号看详情～</footer>
    [1 | 1:tp:0] [2 | 1:tp:1] [3 | 1:tp:2]
    [·默认· | 1:to:0] [做种 | 1:to:1] [时间 | 1:to:2] [大小 | 1:to:3] [站点 | 1:to:4]
    [筛选站点 | 1:tf:0] [多选… | 1:tm:0]
@@ -123,40 +123,40 @@
 >> user 1001 taps 1:to:1 on message 1
 << editMessageText chat=1001 message=1
    <h3>🔍 《沙丘》的资源</h3>
-   <ol start="2">
-   <li value="2"><b>Dune.2021.1080p.BluRay.x264.DTS-HD.MA.5.1-CHD</b><br>
+   <ol start="1">
+   <li value="1"><b>Dune.2021.1080p.BluRay.x264.DTS-HD.MA.5.1-CHD</b><br>
    <i>站点乙 · 14.6 GiB · 做种 132</i></li>
-   <li value="3"><b>Dune.2021.2160p.WEB-DL.H265.DDP5.1-ADWeb</b><br>
+   <li value="2"><b>Dune.2021.2160p.WEB-DL.H265.DDP5.1-ADWeb</b><br>
    <i>站点丙 · 18.1 GiB · 做种 48 · 2X免费</i></li>
-   <li value="1"><b>Dune.2021.2160p.UHD.BluRay.REMUX.HDR.HEVC.DTS-HD.MA.5.1-FROGE</b><br>
+   <li value="3"><b>Dune.2021.2160p.UHD.BluRay.REMUX.HDR.HEVC.DTS-HD.MA.5.1-FROGE</b><br>
    <i>站点甲 · 58.2 GiB · 做种 25 · 免费 · H&amp;R</i></li>
    </ol>
-   <footer>共 3 个，搜索完成，已按 MoviePilot 的优先级排列；编号保留原资源身份。点「重新搜索资源」会再次访问站点，可能重复访问站点。 点编号看详情～</footer>
-   [2 | 1:tp:1] [3 | 1:tp:2] [1 | 1:tp:0]
+   <footer>共 3 个，搜索完成，已按 MoviePilot 的优先级排列。点「重新搜索资源」会再次访问站点，可能重复访问站点。 点编号看详情～</footer>
+   [1 | 1:tp:1] [2 | 1:tp:2] [3 | 1:tp:0]
    [默认 | 1:to:0] [·做种· | 1:to:1] [时间 | 1:to:2] [大小 | 1:to:3] [站点 | 1:to:4]
    [筛选站点 | 1:tf:0] [多选… | 1:tm:0]
    [重新搜索资源 | 1:te:0]
    [返回 | 1:bk:0] [取消 | 1:x:0]
 << answerCallbackQuery
->> user 1001 taps 1:tp:1 on message 1
+>> user 1001 taps 1:tp:2 on message 1
 << editMessageText chat=1001 message=1
    <img src="url-ae95e58ec03e202c035279fd7b770ee9063e24e22f246ec568120ac5a90252ea"/>
    <h3>🎬 <a href="https://www.themoviedb.org/movie/438631">沙丘</a></h3>
    <footer><i>Dune</i> · 2021 · 电影 · ⭐ 7.8 · 科幻 / 冒险 · 156 分钟 · 主演：提莫西·查拉梅、丽贝卡·弗格森、奥斯卡·伊萨克</footer>
    <blockquote expandable>电影《沙丘》为观众呈现了一段神秘而感人至深的英雄之旅。天赋异禀的少年保罗·厄崔迪（提莫西·查拉梅 饰）被命运指引，为了保卫自己的家族和人民，决心前往浩瀚宇宙间最危险的星球，开启一场惊心动魄的冒险。与此同时，各路势力为了抢夺这颗星球上一种能够释放人类最大潜力的珍贵资源而纷纷加入战场。最终，唯有那些能够战胜内心恐惧的人才能生存下去。</blockquote>
    <hr/>
-   <p><b>Dune.2021.1080p.BluRay.x264.DTS-HD.MA.5.1-CHD</b></p>
-   <footer>沙丘 / Dune 1080p 蓝光</footer>
+   <p><b>Dune.2021.2160p.WEB-DL.H265.DDP5.1-ADWeb</b></p>
+   <footer>沙丘 4K WEB-DL</footer>
    <table bordered compact>
-   <tr><th>站点</th><th>大小</th><th>做种</th></tr>
-   <tr><td>站点乙</td><td>14.6 GiB</td><td>132</td></tr>
+   <tr><th>站点</th><th>大小</th><th>做种</th><th>促销</th></tr>
+   <tr><td>站点丙</td><td>18.1 GiB</td><td>48</td><td>2X免费</td></tr>
    </table>
    <table bordered compact>
    <tr><th>分辨率</th><th>版本</th><th>编码</th><th>制作组</th></tr>
-   <tr><td>1080p</td><td>BluRay</td><td>x264</td><td>CHD</td></tr>
+   <tr><td>2160p</td><td>WEB-DL</td><td>x265</td><td>ADWeb</td></tr>
    </table>
    <p><b>要下载这个资源吗？</b></p>
-   [确认下载 | 1:td:1]
+   [确认下载 | 1:td:2]
    [刷新结果 | 1:tu:0]
    [返回 | 1:bk:0] [取消 | 1:x:0]
 << answerCallbackQuery
@@ -165,16 +165,16 @@
 >> user 1001 taps 1:bk:0 on message 1
 << editMessageText chat=1001 message=1
    <h3>🔍 《沙丘》的资源</h3>
-   <ol start="2">
-   <li value="2"><b>Dune.2021.1080p.BluRay.x264.DTS-HD.MA.5.1-CHD</b><br>
+   <ol start="1">
+   <li value="1"><b>Dune.2021.1080p.BluRay.x264.DTS-HD.MA.5.1-CHD</b><br>
    <i>站点乙 · 14.6 GiB · 做种 132</i></li>
-   <li value="3"><b>Dune.2021.2160p.WEB-DL.H265.DDP5.1-ADWeb</b><br>
+   <li value="2"><b>Dune.2021.2160p.WEB-DL.H265.DDP5.1-ADWeb</b><br>
    <i>站点丙 · 18.1 GiB · 做种 48 · 2X免费</i></li>
-   <li value="1"><b>Dune.2021.2160p.UHD.BluRay.REMUX.HDR.HEVC.DTS-HD.MA.5.1-FROGE</b><br>
+   <li value="3"><b>Dune.2021.2160p.UHD.BluRay.REMUX.HDR.HEVC.DTS-HD.MA.5.1-FROGE</b><br>
    <i>站点甲 · 58.2 GiB · 做种 25 · 免费 · H&amp;R</i></li>
    </ol>
-   <footer>共 3 个，搜索完成，已按 MoviePilot 的优先级排列；编号保留原资源身份。点「重新搜索资源」会再次访问站点，可能重复访问站点。 点编号看详情～</footer>
-   [2 | 1:tp:1] [3 | 1:tp:2] [1 | 1:tp:0]
+   <footer>共 3 个，搜索完成，已按 MoviePilot 的优先级排列。点「重新搜索资源」会再次访问站点，可能重复访问站点。 点编号看详情～</footer>
+   [1 | 1:tp:1] [2 | 1:tp:2] [3 | 1:tp:0]
    [默认 | 1:to:0] [·做种· | 1:to:1] [时间 | 1:to:2] [大小 | 1:to:3] [站点 | 1:to:4]
    [筛选站点 | 1:tf:0] [多选… | 1:tm:0]
    [重新搜索资源 | 1:te:0]
@@ -183,36 +183,17 @@
 >> user 1001 taps 1:tm:0 on message 1
 << editMessageText chat=1001 message=1
    <h3>🔍 《沙丘》的资源</h3>
-   <ol start="2">
-   <li value="2"><b>Dune.2021.1080p.BluRay.x264.DTS-HD.MA.5.1-CHD</b><br>
+   <ol start="1">
+   <li value="1"><b>Dune.2021.1080p.BluRay.x264.DTS-HD.MA.5.1-CHD</b><br>
    <i>站点乙 · 14.6 GiB · 做种 132</i></li>
-   <li value="3"><b>Dune.2021.2160p.WEB-DL.H265.DDP5.1-ADWeb</b><br>
+   <li value="2"><b>Dune.2021.2160p.WEB-DL.H265.DDP5.1-ADWeb</b><br>
    <i>站点丙 · 18.1 GiB · 做种 48 · 2X免费</i></li>
-   <li value="1"><b>Dune.2021.2160p.UHD.BluRay.REMUX.HDR.HEVC.DTS-HD.MA.5.1-FROGE</b><br>
+   <li value="3"><b>Dune.2021.2160p.UHD.BluRay.REMUX.HDR.HEVC.DTS-HD.MA.5.1-FROGE</b><br>
    <i>站点甲 · 58.2 GiB · 做种 25 · 免费 · H&amp;R</i></li>
    </ol>
-   <footer>共 3 个，搜索完成，已按 MoviePilot 的优先级排列；编号保留原资源身份。点「重新搜索资源」会再次访问站点，可能重复访问站点。 已选 0 个，点编号勾选，再点一次取消～</footer>
-   [2 | 1:tk:1] [3 | 1:tk:2] [1 | 1:tk:0]
+   <footer>共 3 个，搜索完成，已按 MoviePilot 的优先级排列。点「重新搜索资源」会再次访问站点，可能重复访问站点。 已选 0 个，点编号勾选，再点一次取消～</footer>
+   [1 | 1:tk:1] [2 | 1:tk:2] [3 | 1:tk:0]
    [下载所选 0 个 | 1:tb:0]
-   [默认 | 1:to:0] [·做种· | 1:to:1] [时间 | 1:to:2] [大小 | 1:to:3] [站点 | 1:to:4]
-   [筛选站点 | 1:tf:0]
-   [重新搜索资源 | 1:te:0]
-   [返回 | 1:bk:0] [取消 | 1:x:0]
-<< answerCallbackQuery
->> user 1001 taps 1:tk:1 on message 1
-<< editMessageText chat=1001 message=1
-   <h3>🔍 《沙丘》的资源</h3>
-   <ol start="2">
-   <li value="2"><b>Dune.2021.1080p.BluRay.x264.DTS-HD.MA.5.1-CHD</b><br>
-   <i>站点乙 · 14.6 GiB · 做种 132 · <mark>已选</mark></i></li>
-   <li value="3"><b>Dune.2021.2160p.WEB-DL.H265.DDP5.1-ADWeb</b><br>
-   <i>站点丙 · 18.1 GiB · 做种 48 · 2X免费</i></li>
-   <li value="1"><b>Dune.2021.2160p.UHD.BluRay.REMUX.HDR.HEVC.DTS-HD.MA.5.1-FROGE</b><br>
-   <i>站点甲 · 58.2 GiB · 做种 25 · 免费 · H&amp;R</i></li>
-   </ol>
-   <footer>共 3 个，搜索完成，已按 MoviePilot 的优先级排列；编号保留原资源身份。点「重新搜索资源」会再次访问站点，可能重复访问站点。 已选 1 个，点编号勾选，再点一次取消～</footer>
-   [✓ 2 | 1:tk:1] [3 | 1:tk:2] [1 | 1:tk:0]
-   [下载所选 1 个 | 1:tb:0]
    [默认 | 1:to:0] [·做种· | 1:to:1] [时间 | 1:to:2] [大小 | 1:to:3] [站点 | 1:to:4]
    [筛选站点 | 1:tf:0]
    [重新搜索资源 | 1:te:0]
@@ -221,16 +202,35 @@
 >> user 1001 taps 1:tk:2 on message 1
 << editMessageText chat=1001 message=1
    <h3>🔍 《沙丘》的资源</h3>
-   <ol start="2">
-   <li value="2"><b>Dune.2021.1080p.BluRay.x264.DTS-HD.MA.5.1-CHD</b><br>
-   <i>站点乙 · 14.6 GiB · 做种 132 · <mark>已选</mark></i></li>
-   <li value="3"><b>Dune.2021.2160p.WEB-DL.H265.DDP5.1-ADWeb</b><br>
+   <ol start="1">
+   <li value="1"><b>Dune.2021.1080p.BluRay.x264.DTS-HD.MA.5.1-CHD</b><br>
+   <i>站点乙 · 14.6 GiB · 做种 132</i></li>
+   <li value="2"><b>Dune.2021.2160p.WEB-DL.H265.DDP5.1-ADWeb</b><br>
    <i>站点丙 · 18.1 GiB · 做种 48 · 2X免费 · <mark>已选</mark></i></li>
-   <li value="1"><b>Dune.2021.2160p.UHD.BluRay.REMUX.HDR.HEVC.DTS-HD.MA.5.1-FROGE</b><br>
+   <li value="3"><b>Dune.2021.2160p.UHD.BluRay.REMUX.HDR.HEVC.DTS-HD.MA.5.1-FROGE</b><br>
    <i>站点甲 · 58.2 GiB · 做种 25 · 免费 · H&amp;R</i></li>
    </ol>
-   <footer>共 3 个，搜索完成，已按 MoviePilot 的优先级排列；编号保留原资源身份。点「重新搜索资源」会再次访问站点，可能重复访问站点。 已选 2 个，点编号勾选，再点一次取消～</footer>
-   [✓ 2 | 1:tk:1] [✓ 3 | 1:tk:2] [1 | 1:tk:0]
+   <footer>共 3 个，搜索完成，已按 MoviePilot 的优先级排列。点「重新搜索资源」会再次访问站点，可能重复访问站点。 已选 1 个，点编号勾选，再点一次取消～</footer>
+   [1 | 1:tk:1] [✓ 2 | 1:tk:2] [3 | 1:tk:0]
+   [下载所选 1 个 | 1:tb:0]
+   [默认 | 1:to:0] [·做种· | 1:to:1] [时间 | 1:to:2] [大小 | 1:to:3] [站点 | 1:to:4]
+   [筛选站点 | 1:tf:0]
+   [重新搜索资源 | 1:te:0]
+   [返回 | 1:bk:0] [取消 | 1:x:0]
+<< answerCallbackQuery
+>> user 1001 taps 1:tk:0 on message 1
+<< editMessageText chat=1001 message=1
+   <h3>🔍 《沙丘》的资源</h3>
+   <ol start="1">
+   <li value="1"><b>Dune.2021.1080p.BluRay.x264.DTS-HD.MA.5.1-CHD</b><br>
+   <i>站点乙 · 14.6 GiB · 做种 132</i></li>
+   <li value="2"><b>Dune.2021.2160p.WEB-DL.H265.DDP5.1-ADWeb</b><br>
+   <i>站点丙 · 18.1 GiB · 做种 48 · 2X免费 · <mark>已选</mark></i></li>
+   <li value="3"><b>Dune.2021.2160p.UHD.BluRay.REMUX.HDR.HEVC.DTS-HD.MA.5.1-FROGE</b><br>
+   <i>站点甲 · 58.2 GiB · 做种 25 · 免费 · H&amp;R · <mark>已选</mark></i></li>
+   </ol>
+   <footer>共 3 个，搜索完成，已按 MoviePilot 的优先级排列。点「重新搜索资源」会再次访问站点，可能重复访问站点。 已选 2 个，点编号勾选，再点一次取消～</footer>
+   [1 | 1:tk:1] [✓ 2 | 1:tk:2] [✓ 3 | 1:tk:0]
    [下载所选 2 个 | 1:tb:0]
    [默认 | 1:to:0] [·做种· | 1:to:1] [时间 | 1:to:2] [大小 | 1:to:3] [站点 | 1:to:4]
    [筛选站点 | 1:tf:0]
@@ -246,10 +246,11 @@
    <hr/>
    <table bordered compact>
    <tr><th>资源</th><th>站点</th><th>大小</th></tr>
-   <tr><td><b>Dune.2021.1080p.BluRay.x264.DTS-HD.MA.5.1-CHD</b></td><td>站点乙</td><td>14.6 GiB</td></tr>
+   <tr><td><b>Dune.2021.2160p.UHD.BluRay.REMUX.HDR.HEVC.DTS-HD.MA.5.1-FROGE</b></td><td>站点甲</td><td>58.2 GiB</td></tr>
    <tr><td><b>Dune.2021.2160p.WEB-DL.H265.DDP5.1-ADWeb</b></td><td>站点丙</td><td>18.1 GiB</td></tr>
    </table>
-   <p>一共 32.7 GiB<br>
+   <p>一共 76.3 GiB<br>
+   ⚠️ 其中有 H&amp;R 资源，下完要保种够时间，不然站点会记过哦。<br>
    <b>要下载这 2 个资源吗？</b></p>
    [确认下载 | 1:tz:0]
    [返回 | 1:bk:0] [取消 | 1:x:0]
@@ -264,14 +265,14 @@
    <p><b>正在提交 0/2</b></p>
    <table bordered compact>
    <tr><th>资源</th><th>结果</th></tr>
-   <tr><td><b>Dune.2021.1080p.BluRay.x264.DTS-HD.MA.5.1-CHD</b></td><td>提交中</td></tr>
+   <tr><td><b>Dune.2021.2160p.UHD.BluRay.REMUX.HDR.HEVC.DTS-HD.MA.5.1-FROGE</b></td><td>提交中</td></tr>
    <tr><td><b>Dune.2021.2160p.WEB-DL.H265.DDP5.1-ADWeb</b></td><td>等待提交</td></tr>
    </table>
    <footer>当前一项会等到结果或超时；已创建的下载会照常保留哦～</footer>
    [停止后续提交 | 1:bs:4]
 << answerCallbackQuery
 -> MoviePilot POST /api/v1/download/
-   media_in 沙丘, torrent_in Dune.2021.1080p.BluRay.x264.DTS-HD.MA.5.1-CHD with the search result's site credentials
+   media_in 沙丘, torrent_in Dune.2021.2160p.UHD.BluRay.REMUX.HDR.HEVC.DTS-HD.MA.5.1-FROGE with the search result's site credentials
 << editMessageText chat=1001 message=1
    <img src="url-ae95e58ec03e202c035279fd7b770ee9063e24e22f246ec568120ac5a90252ea"/>
    <h3>🎬 <a href="https://www.themoviedb.org/movie/438631">沙丘</a></h3>
@@ -281,7 +282,7 @@
    <p><b>正在提交 1/2</b></p>
    <table bordered compact>
    <tr><th>资源</th><th>结果</th></tr>
-   <tr><td><b>Dune.2021.1080p.BluRay.x264.DTS-HD.MA.5.1-CHD</b></td><td>✅ 开始下载</td></tr>
+   <tr><td><b>Dune.2021.2160p.UHD.BluRay.REMUX.HDR.HEVC.DTS-HD.MA.5.1-FROGE</b></td><td>✅ 开始下载</td></tr>
    <tr><td><b>Dune.2021.2160p.WEB-DL.H265.DDP5.1-ADWeb</b></td><td>提交中</td></tr>
    </table>
    <footer>当前一项会等到结果或超时；已创建的下载会照常保留哦～</footer>
@@ -297,7 +298,7 @@
    <p><b>《沙丘》的下载结果来啦：</b></p>
    <table bordered compact>
    <tr><th>资源</th><th>结果</th></tr>
-   <tr><td><b>Dune.2021.1080p.BluRay.x264.DTS-HD.MA.5.1-CHD</b></td><td>✅ 开始下载</td></tr>
+   <tr><td><b>Dune.2021.2160p.UHD.BluRay.REMUX.HDR.HEVC.DTS-HD.MA.5.1-FROGE</b></td><td>✅ 开始下载</td></tr>
    <tr><td><b>Dune.2021.2160p.WEB-DL.H265.DDP5.1-ADWeb</b></td><td>✅ 开始下载</td></tr>
    </table>
    <p>✅ 开始下载 2 个资源啦，通知由 MoviePilot 按设置发送哦～ ヾ(≧▽≦*)o</p>

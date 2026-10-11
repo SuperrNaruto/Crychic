@@ -75,8 +75,8 @@ func TestStreamSearchKeepsIdentityAndWaitsForFinalMatch(t *testing.T) {
 	h.tap(alice, 1, "刷新结果")
 	h.shows(1, "已不在最终结果")
 	h.tap(alice, 1, "返回")
-	h.shows(1, `<li value="2"><b>Dune.2021.1080p`)
-	h.tap(alice, 1, "2")
+	h.shows(1, `<li value="1"><b>Dune.2021.1080p`)
+	h.tap(alice, 1, "1")
 	confirm, _ := findButton(mustMessage(h, 1).rows, downloadIt)
 	h.tap(alice, 1, downloadIt)
 	h.tapData(alice, 1, confirm)
@@ -116,7 +116,7 @@ func TestStreamSearchRetriesOnlyExplicitlyAndRecoversDelivery(t *testing.T) {
 	startStream(h, last)
 	finishStream(h, last, []int{1})
 	batchShows(h, 1, "搜索完成")
-	h.tap(alice, 1, "4") // earlier generations used 1–3; navigation cannot recycle them
+	h.tap(alice, 1, "1") // labels restart per list; buttons keep each generation's own release identity
 	h.tap(alice, 1, downloadIt)
 	h.shows(1, "开始下载《沙丘》啦")
 	h.streamCount(3)
