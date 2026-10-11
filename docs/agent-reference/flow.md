@@ -114,7 +114,7 @@ indices stable
 
 Button data is `<session>:<action>:<arg>` and must stay ≤ 64 bytes (Telegram limit). Guarded write buttons
 (`needsTicket`: `finishing`'s `ok`, `y`, `td`, `tz`, `bo`, plus subscription `sp`, `sr`, `z`, `uw`, `qc`, `qy`
-and download `kq`, `ks`) carry a fourth
+and download `kq`, `ks`; series `jy` is in `finishing`) carry a fourth
 part, a ticket `navigate` hands the shown screen (`ticketed`); only a press with the shown screen's ticket
 writes, and 返回 restores a screen with its ticket, so a stale 确认 from an earlier pick of the same list never
 confirms the next pick. Subscription mutations do not enter `finishing`, which controls request navigation. An
@@ -290,6 +290,10 @@ warning that its files go too and, when a subscription of the same media and sea
 subscription will not fetch it again; 确认删除 (`ky`) clears the download to confirm before the write, relays a
 refusal and points an unknown result to `/tasks`; `internal/telegram/follow.go`
 re-asks the flow every `CRYCHIC_PROGRESS_INTERVAL` and edits only on change
+
+`seriesplan.go`: 同系列 tags each part (`Block.Tag`) with its state and offers 补齐缺少的作品… (`jq`, forward) to tick
+missing parts (`jt`, same-level) and subscribe them (`jy`, finishing and ticketed), see
+[发现参考](discovery.md#相关推荐与同系列)
 
 `groups.go`: a TMDB show's season picker offers 剧集组… (`eg`, forward) listing groups with seasons and episodes;
 `ep` (forward) reads the group's seasons (`/media/group/seasons/{id}`, episode counts zero dropped) and shows them

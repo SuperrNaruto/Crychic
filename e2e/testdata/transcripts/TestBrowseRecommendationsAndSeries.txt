@@ -134,6 +134,7 @@
 -> MoviePilot GET /api/v1/media/search?count=10&title=沙丘&type=collection
 -> MoviePilot GET /api/v1/media/search?count=10&title=沙丘2&type=collection
 -> MoviePilot GET /api/v1/tmdb/collection/726871
+-> MoviePilot GET /api/v1/subscribe/
 << editMessageText chat=1001 message=1
    <tg-slideshow>
    <img src="url-ae95e58ec03e202c035279fd7b770ee9063e24e22f246ec568120ac5a90252ea"/>
@@ -142,23 +143,24 @@
    </tg-slideshow>
    <h3>🎬「沙丘2」的同系列作品</h3>
    <ol start="1">
-   <li value="1"><details><summary><b>沙丘</b> · <i>2021 · ⭐ 7.8</i></summary>
+   <li value="1"><details><summary><b>沙丘</b> · <i>2021 · ⭐ 7.8 · <mark>未获取</mark></i></summary>
    <p>电影《沙丘》为观众呈现了一段神秘而感人至深的英雄之旅。天赋异禀的少年保罗·厄崔迪（提莫西·查拉梅 饰）被命运指引，为了保卫自己的家族和人民，决心前往浩瀚宇宙间最危险的星球，开启一场惊心动魄的冒险。与此同时，各路势力为了抢夺这颗星球上一种能够释放人类最大潜力的珍贵资源而纷纷加入战场。最终，唯有那些能够战胜内心恐惧的人才能生存下去。</p>
    <p><a href="https://www.themoviedb.org/movie/438631">查看详情页</a></p>
    </details>
    </li>
-   <li value="2"><details><summary><b>沙丘2</b> · <i>2024 · ⭐ 8.1</i></summary>
+   <li value="2"><details><summary><b>沙丘2</b> · <i>2024 · ⭐ 8.1 · <mark>未获取</mark></i></summary>
    <p>《沙丘2》承接第一部剧情，讲述保罗·厄崔迪（提莫西·查拉梅 Timothée Chalamet 饰）被帕迪沙皇帝和哈克南人联手灭族后，在厄拉科斯星球遇到弗雷曼女战士契妮（赞达亚 Zendaya 饰）以及加入弗雷曼人后展开的传奇旅程。保罗与让他家破人亡的阴谋家们开战，同时面临着一生所爱与已知宇宙命运的两难选择。</p>
    <p><a href="https://www.themoviedb.org/movie/693134">查看详情页</a></p>
    </details>
    </li>
-   <li value="3"><details><summary><b>沙丘3</b> · <i>2026</i></summary>
+   <li value="3"><details><summary><b>沙丘3</b> · <i>2026 · <mark>未获取</mark></i></summary>
    <p>保罗·厄崔迪成为宇宙皇帝后，虽拥有预知未来的能力，却无法阻止以他之名发动的圣战席卷星系。在权力、信仰与个人命运的夹缝中，他逐渐走向无法回头的抉择与代价。</p>
    <p><a href="https://www.themoviedb.org/movie/1170608">查看详情页</a></p>
    </details>
    </li>
    </ol>
    [1 | 1:m:0] [2 | 1:m:1] [3 | 1:m:2]
+   [补齐缺少的作品… | 1:jq:0]
    [返回 | 1:bk:0] [取消 | 1:x:0]
 << answerCallbackQuery
 >> user 1001 taps 1:m:0 on message 1

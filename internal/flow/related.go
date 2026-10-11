@@ -67,6 +67,11 @@ func (e *Engine) browse(ctx context.Context, sess session, series bool) Reply {
 	}
 	sess.results, sess.download = found[:min(len(found), limit)], false
 	sess.seasons, sess.library, sess.target, sess.chosen, sess.focus = nil, Library{}, nil, nil, nil
+	sess.partStates, sess.wanted = nil, nil
+	if series {
+		sess.partStates = e.seriesStates(ctx, sess.results)
+		return e.listPages(sess, seriesView(sess, heading))
+	}
 	return e.listPages(sess, relatedView(sess, heading))
 }
 

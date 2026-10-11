@@ -40,7 +40,7 @@ func TestDownloadIntentStopsAtRelatedMedia(t *testing.T) {
 		duneLookup: ok("subscription_none.json"), duneTorrents: searchingSites("torrents_dune.json"),
 		duneRecommend: ok("recommend_dune.json"), dunePartTwoDetails: ok("detail_dune_part_two.json"),
 		dunePartTwoLookup: ok("subscription_none.json"), duneCollection: ok("collection_dune.json"),
-		collectionSearch("沙丘"): ok("collections_dune.json"),
+		collectionSearch("沙丘"): ok("collections_dune.json"), subsPath: ok("subscriptions_none.json"),
 	}})
 	h.say(alice, alice, "下载 沙丘")
 	h.searchTorrents(alice, 1, duneMovie)

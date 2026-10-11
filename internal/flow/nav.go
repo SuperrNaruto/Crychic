@@ -44,7 +44,7 @@ var forward = map[string]bool{
 	actionTorrentPlan: true,
 	actionCast:        true, actionCastPerson: true, actionWorkPick: true,
 	actionFilter: true, actionFilterRun: true,
-	actionGroups: true, actionGroupPick: true,
+	actionGroups: true, actionGroupPick: true, actionSeriesPlan: true,
 }
 
 var sameLevel = map[string]bool{
@@ -64,6 +64,7 @@ var sameLevel = map[string]bool{
 	actionSubConflictPick: true, actionSubConflictKeep: true, actionSubConflictAdopt: true,
 	actionSubConflictDone: true, actionSubConflictReload: true,
 	actionFilterKind: true, actionFilterField: true, actionFilterSet: true, actionFilterMore: true,
+	actionSeriesTick: true,
 }
 
 // listPicks are the forward steps that pick from a list.
@@ -73,7 +74,7 @@ var listPicks = map[string]bool{actionMedia: true, actionChartPick: true, action
 // leads back to that list afterwards, so browsing goes on from there.
 var finishing = map[string]bool{
 	actionConfirm: true, actionSubscribed: true, actionTorrentGet: true, actionTorrentBatchGet: true,
-	actionUpgradeConfirm: true,
+	actionUpgradeConfirm: true, actionSeriesGet: true,
 }
 
 // needsTicket also binds subscription and download control mutations to

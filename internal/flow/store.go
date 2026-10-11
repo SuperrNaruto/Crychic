@@ -54,6 +54,8 @@ type session struct {
 	filter       discoverFilter // condition search being edited; zero until opened
 	groups       []EpisodeGroup // the picked show's usable episode groups
 	group        EpisodeGroup   // the group seasons are numbered by; zero for standard seasons
+	partStates   []partState    // where each listed series part stands, by index into results
+	wanted       []int          // indices of the series parts ticked to subscribe
 	noted        []bool         // picks already given a link and synopsis
 	subs         []Subscription
 	subEdit      *subscriptionEdit

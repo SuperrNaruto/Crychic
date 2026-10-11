@@ -23,6 +23,7 @@ func TestBrowseRecommendationsAndSeries(t *testing.T) {
 		collectionSearch("沙丘"): ok("collections_dune.json"),
 		duneCollection:         ok("collection_dune.json"),
 		subscribePath:          ok("subscribe_created.json"),
+		subsPath:               ok("subscriptions_none.json"),
 	}})
 	h.say(alice, alice, "/search 沙丘")
 	h.tap(alice, 1, duneMovie)

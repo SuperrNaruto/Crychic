@@ -57,6 +57,8 @@ their stems (沙丘2 → 沙丘, `Dune: Part Two` → `Dune`), searches every na
 per name at once (`/api/v1/tmdb/collection/{id}`), and takes the first listing the movie in name order (a
 failed read before it is the answer); a series named unlike its films (哈利·波特与魔法石) is not found.
 
+`internal/flow/seriesplan.go`（第 10 项）：同系列列表在同一 5 秒展示预算内读取一次订阅列表、一次下载列表，并以最多 4 个并发逐部读取媒体库（电影 `notexists`）。状态优先级为已入库、下载中、已订阅／已暂停订阅、未获取；任一决定所需的读取失败或超时即为「状态未知」，只有未获取可勾选。`jq` 前进到勾选页，`jt` 同级切换，`jy` 属于 `finishing` 并绑定当前票据：先消费勾选，再逐部 `FindSubscription` 后最多写一次，已在订阅中的跳过，结果表逐部列出；不持久化库存或完成历史。
+
 相关列表的进入、返回、下载意图清除与空结果 notice 规则见 [会话参考](flow.md#相关推荐)。
 
 ## 条件找片与演职人员
