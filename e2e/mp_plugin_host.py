@@ -28,9 +28,11 @@ from app.db.oper.user import UserOper
 from app.runtime.settings import get_runtime_setting
 from app.application.chain.context import get_chain_runtime_context
 from app.runtime.extensions.module.manager import ModuleManager
+from app.startup.initializers.command import configure_command_runtime, stop_command
 
 PORT = 18181
 ROOT = f"http://127.0.0.1:{PORT}/api/v1/plugin/Crychic/"
+PLUGIN_ROOT = f"http://127.0.0.1:{PORT}/api/v1/plugin/"
 TOKEN = "crychic-fixture-api-key"
 CONSUMER = "a" * 32
 TRACE = []
@@ -70,18 +72,18 @@ class SQLObservation:
                 self.lease_updates += 1
 
 
-def http_reply(path, *, body=None):
+def http_reply(path, *, body=None, root=ROOT, method=None):
     """保留认证 HTTP 结果，用于核验明确拒绝。"""
     data = None if body is None else json.dumps(body).encode()
-    request = urllib.request.Request(ROOT + path, data=data,
+    request = urllib.request.Request(root + path, data=data, method=method,
                                     headers={"X-API-KEY": TOKEN, "Content-Type": "application/json"})
     with urllib.request.urlopen(request, timeout=HTTP_TIMEOUT) as response:
         return json.load(response)
 
 
-def http_call(path, *, body=None):
+def http_call(path, *, body=None, root=ROOT):
     """走宿主真实插件认证和 HTTP 路由。"""
-    value = http_reply(path, body=body)
+    value = http_reply(path, body=body, root=root)
     if not value.get("success"):
         raise RuntimeError("fixture API rejected")
     return value["data"]
@@ -89,6 +91,7 @@ def http_call(path, *, body=None):
 
 def setup_plugin():
     """用原生配置服务与插件管理器启动候选源码。"""
+    configure_command_runtime()
     config = get_configured_system_config()
     users = UserOper()
     name = get_runtime_setting("SUPERUSER")
@@ -113,6 +116,7 @@ async def exercise():
     cursor = dict(consumer_id=CONSUMER, channel_id=status["channel_id"],
                   stream_id=status["stream_id"], sequence=status["head"])
     await asyncio.to_thread(http_call, "ack", body=cursor)
+    await configuration_guidance()
     chain = SystemChain()
     chain.post_message(Message(mtype=MessageType.Plugin, title="Native fixture", text="HTTP boundary"))
     query = "notifications?after=0&wait=0&consumer_id=" + CONSUMER
@@ -143,6 +147,82 @@ def poll_query(cursor, *, wait=0, consumer=CONSUMER):
     """构造包含固定源身份的非破坏读取请求。"""
     return "notifications?" + urlencode(dict(after=cursor["sequence"], wait=wait, consumer_id=consumer,
            channel_id=cursor["channel_id"], stream_id=cursor["stream_id"]))
+
+
+def form_fields(nodes):
+    """遍历公开表单协议取得可配置字段，不读取内部实现。"""
+    fields = {}
+    for node in nodes:
+        props = node.get("props", {})
+        if props.get("model"):
+            fields[props["model"]] = props
+        fields.update(form_fields(node.get("content", [])))
+    return fields
+
+
+async def read_guidance():
+    """读取宿主真实配置及详情端点，检查渲染模式与敏感信息。"""
+    saved = dict(get_plugin_manager().get_plugin_config("Crychic"))
+    channels = json.dumps(get_configured_system_config().get(SystemConfigKey.Notifications))
+    form = await asyncio.to_thread(http_call, "form/Crychic", root=PLUGIN_ROOT)
+    page = await asyncio.to_thread(http_call, "page/Crychic", root=PLUGIN_ROOT)
+    if get_plugin_manager().get_plugin_config("Crychic") != saved:
+        raise RuntimeError("UI reads changed saved plugin parameters")
+    if json.dumps(get_configured_system_config().get(SystemConfigKey.Notifications)) != channels:
+        raise RuntimeError("UI reads created or changed native notification channels")
+    if form.get("render_mode") != "vuetify" or not form.get("conf") or not page.get("page"):
+        raise RuntimeError("guided configuration did not reach the public host UI contract")
+    if TOKEN in json.dumps([form, page]):
+        raise RuntimeError("configuration guidance exposed an API credential")
+    return form
+
+
+def channel_values(form):
+    """从宿主公开表单取得选择所绑定的稳定渠道值。"""
+    field = form_fields(form["conf"])["channel_id"]
+    return {item["value"] for item in field.get("items", [])}
+
+
+def source_progress(status):
+    """只比较公开协议的来源和持久进度，忽略无关状态扩展。"""
+    return tuple(status[key] for key in ("channel_id", "stream_id", "head"))
+
+
+async def configuration_guidance():
+    """单条、多条及空渠道目录通过认证 HTTP 验证，原设置最终恢复。"""
+    config = get_configured_system_config()
+    rows = config.get(SystemConfigKey.Notifications)
+    original = get_plugin_manager().get_plugin_config("Crychic")
+    before = await asyncio.to_thread(http_call, "status")
+    form = await read_guidance()
+    if form["model"].get("default_target") != "1001" or not form["model"].get("enabled"):
+        raise RuntimeError("opening guided form replaced the saved configuration")
+    if channel_values(form) != {"", "fixture-channel"}:
+        raise RuntimeError("guided form does not expose native channel choices")
+    try:
+        extra = [dict(rows[0], id="fixture-second", name="SecondCrychic"),
+                 dict(rows[0], id="fixture-other", name="OtherChannel", type="fixture-other", enabled=False)]
+        config.set(SystemConfigKey.Notifications, rows + extra)
+        multiple = await read_guidance()
+        if channel_values(multiple) != {"", "fixture-channel", "fixture-second"}:
+            raise RuntimeError("multiple native channels cannot be explicitly selected")
+        result = await asyncio.to_thread(http_reply, "Crychic", root=PLUGIN_ROOT, method="PUT",
+                  body=dict(original, channel_id="fixture-channel"))
+        selected = await read_guidance()
+        if not result.get("success") or selected["model"].get("channel_id") != "fixture-channel":
+            raise RuntimeError("selected channel ID was not saved and reloaded")
+        config.set(SystemConfigKey.Notifications, [])
+        empty = await read_guidance()
+        if not form_fields(empty["conf"])["channel_id"].get("disabled"):
+            raise RuntimeError("missing channel directory offered a misleading choice")
+    finally:
+        config.set(SystemConfigKey.Notifications, rows)
+        await asyncio.to_thread(http_reply, "Crychic", root=PLUGIN_ROOT, method="PUT", body=original)
+    after = await asyncio.to_thread(http_call, "status")
+    if source_progress(after) != source_progress(before) or get_plugin_manager().get_plugin_config("Crychic") != original:
+        raise RuntimeError("reading configuration guidance changed queue progress or settings")
+    TRACE.append("guided host form -> native channel choices; explicit selection saves and reloads")
+    TRACE.append("guided UI reads -> saved settings preserved; no notification, reset or credential disclosure")
 
 
 async def safe_url_projection(chain, cursor):
@@ -353,6 +433,7 @@ async def main():
         finally:
             server.should_exit = True
             await task
+            stop_command()
 
 
 if __name__ == "__main__":

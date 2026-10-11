@@ -8,6 +8,7 @@ from app.sdk.logging import logger
 from app.sdk.plugin import _PluginBase
 from app.sdk.services import NotificationHelper
 from .adapter import EVENT_KEY, EventIdentity, NotificationMixin, Policy
+from .configuration import CHANNEL_TYPE, configuration_form, setup_steps
 from .models import Pending, Progress, Receipt
 from .projection import project, recipient
 from .store import Outbox
@@ -15,7 +16,6 @@ from .store import Outbox
 MAX_WAIT = 25
 DISCONNECT_INTERVAL = 1
 RECHECK_INTERVAL = 5
-CHANNEL_TYPE = "crychic"
 
 
 class Crychic(_PluginBase):
@@ -23,7 +23,7 @@ class Crychic(_PluginBase):
 
     plugin_name = "Crychic"
     plugin_desc = "MP 自定义通知渠道，持久长轮询接入现有 Crychic 机器人。"
-    plugin_version = "1.0.1"
+    plugin_version = "1.1.0"
     plugin_author = "Crychic"
     plugin_config_prefix = "crychic_"
     plugin_order = 100
@@ -158,15 +158,11 @@ class Crychic(_PluginBase):
 
     def get_form(self):
         """渠道类型开关和业务受众仍由 MP 原生页面配置。"""
-        fields = [("enabled", "启用接入", "VSwitch"), ("channel_id", "自定义渠道 ID（单条可留空）", "VTextField"),
-                  ("default_target", "默认 Telegram 目标（仅默认通知范围）", "VTextField"),
-                  ("topic_id", "默认目标的话题 ID", "VTextField")]
-        form = [dict(component=kind, props=dict(model=name, label=label)) for name, label, kind in fields]
-        return [dict(component="VForm", content=form)], dict(enabled=False, channel_id="", default_target="", topic_id=0)
+        return configuration_form()
 
     def get_page(self):
         """展示不含凭据的配置说明。"""
-        return [dict(component="VAlert", props=dict(text="在 MP 通知页面新增自定义类型 crychic；不要新增 Telegram 机器人。"))]
+        return setup_steps()
 
     @staticmethod
     def get_command():
