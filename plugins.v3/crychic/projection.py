@@ -4,12 +4,14 @@ import hashlib
 import json
 import re
 import uuid
-from urllib.parse import parse_qs, urlsplit
+from urllib.parse import parse_qs, unquote, urlsplit
 
 MAX_TEXT = 16384
 MAX_TITLE = 512
 SENSITIVE = re.compile(r"(?i)(api[_-]?key|token|cookie|passkey|password|authorization)\s*[:=]\s*\S+|(?:^|\s)(?:/[\w.-]+){2,}\S*|[A-Za-z]:\\\S+")
 CHANNEL = re.compile(r"^@[A-Za-z0-9_]+$")
+SENSITIVE_URL_PARTS = ("key", "token", "pass", "cookie", "authorization", "secret", "credential", "signature")
+SENSITIVE_URL_KEYS = ("auth", "sig")
 
 
 def safe_text(value, *, limit, secrets=()):
@@ -24,14 +26,41 @@ def safe_text(value, *, limit, secrets=()):
     return text
 
 
-def safe_url(value):
+def decoded_url(raw):
+    """展开百分号编码供安全检查，展示仍保留原始安全 URL。"""
+    decoded = unquote(raw)
+    while decoded != raw:
+        raw, decoded = decoded, unquote(decoded)
+    return decoded
+
+
+def known_url_secret(raw, decoded, secrets):
+    """已知凭据检查同时覆盖原始与编码后的地址。"""
+    return any(str(secret) in decoded or str(secret) in raw for secret in secrets if secret)
+
+
+def sensitive_url_fields(parts):
+    """空敏感参数也拒绝，片段中的认证参数同样不能持久化。"""
+    fields = parse_qs(parts.query, keep_blank_values=True)
+    fields.update(parse_qs(parts.fragment, keep_blank_values=True))
+    keys = [key.lower() for key in fields]
+    return any(key in SENSITIVE_URL_KEYS or any(word in key for word in SENSITIVE_URL_PARTS) for key in keys)
+
+
+def safe_url(value, *, secrets=()):
     """只保留无需凭据的 HTTP 地址，不转发带密钥的图片或链接。"""
     raw = str(value or "")
-    parts = urlsplit(raw)
-    if parts.scheme not in ("http", "https") or not parts.hostname or parts.username:
+    decoded = decoded_url(raw)
+    if known_url_secret(raw, decoded, secrets):
         return ""
-    keys = [key.lower() for key in parse_qs(parts.query)]
-    if any(any(word in key for word in ("key", "token", "pass", "cookie")) for key in keys):
+    try:
+        parts = urlsplit(raw)
+        decoded_parts = urlsplit(decoded)
+    except ValueError:
+        return ""
+    if parts.scheme not in ("http", "https") or not parts.hostname or parts.username is not None:
+        return ""
+    if sensitive_url_fields(decoded_parts):
         return ""
     return raw
 
@@ -67,4 +96,4 @@ def project(message, target, *, channel, event_key=None, secrets=()):
     return dict(id=identity, platform="telegram", recipient=target,
                 title=safe_text(message.title, limit=MAX_TITLE, secrets=secrets),
                 text=safe_text(text, limit=MAX_TEXT, secrets=secrets),
-                image=safe_url(message.image), link=safe_url(message.link))
+                image=safe_url(message.image, secrets=secrets), link=safe_url(message.link, secrets=secrets))

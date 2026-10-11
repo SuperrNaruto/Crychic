@@ -13,7 +13,8 @@ from .projection import project, recipient
 from .store import Outbox
 
 MAX_WAIT = 25
-WAKE_INTERVAL = 0.25
+DISCONNECT_INTERVAL = 1
+RECHECK_INTERVAL = 5
 CHANNEL_TYPE = "crychic"
 
 
@@ -22,7 +23,7 @@ class Crychic(_PluginBase):
 
     plugin_name = "Crychic"
     plugin_desc = "MP 自定义通知渠道，持久长轮询接入现有 Crychic 机器人。"
-    plugin_version = "1.0.0"
+    plugin_version = "1.0.1"
     plugin_author = "Crychic"
     plugin_config_prefix = "crychic_"
     plugin_order = 100
@@ -33,7 +34,9 @@ class Crychic(_PluginBase):
         self.stop_service()
         self.config = dict(config or {})
         self.enabled = bool(self.config.get("enabled", False))
-        self.outbox = Outbox(self.get_database)
+        previous = getattr(self, "outbox", None)
+        self.outbox = Outbox(self.get_database, secrets=(getattr(settings, "API_TOKEN", ""),),
+                             lock=previous.lock if previous else None)
         self.identity = EventIdentity()
         self.compatible = self.check_compatibility()
         if self.enabled and self.compatible:
@@ -112,19 +115,36 @@ class Crychic(_PluginBase):
                             channel_id: str, stream_id: str, wait: int = MAX_WAIT, limit: int = 32):
         """长轮询不删除正文，退出与断线及时结束等待。"""
         query = dict(after=after, consumer_id=consumer_id, channel_id=channel_id, stream_id=stream_id)
-        elapsed = 0.0
         try:
-            while self.get_state() and elapsed <= min(max(wait, 0), MAX_WAIT):
-                if await request.is_disconnected():
-                    return dict(success=False, code="disconnected", data=None)
-                data = await asyncio.to_thread(self.outbox.read, self.channel().id, query)
-                if data["messages"] or elapsed >= min(max(wait, 0), MAX_WAIT):
-                    return dict(success=True, data=data)
-                await asyncio.sleep(WAKE_INTERVAL)
-                elapsed += WAKE_INTERVAL
+            return await self.wait_notifications(request, query, wait=wait)
         except Exception:
-            pass
+            return dict(success=False, code="native_unavailable", data=None)
+
+    async def wait_notifications(self, request, query, *, wait):
+        """入队唤醒与低频核对分开，真实期限包含数据库等待。"""
+        loop = asyncio.get_running_loop()
+        outbox = self.outbox
+        deadline = loop.time() + min(max(wait, 0), MAX_WAIT)
+        next_read, changed = 0, True
+        while self.get_state() and self.outbox is outbox:
+            if await request.is_disconnected():
+                return dict(success=False, code="disconnected", data=None)
+            if changed or loop.time() >= next_read:
+                version = outbox.version()
+                data = await asyncio.to_thread(self.read_notifications, outbox, query)
+                next_read = loop.time() + RECHECK_INTERVAL
+                if not self.get_state() or self.outbox is not outbox:
+                    break
+            remaining = deadline - loop.time()
+            if data["messages"] or remaining <= 0:
+                return dict(success=True, data=data)
+            delay = min(DISCONNECT_INTERVAL, next_read - loop.time(), remaining)
+            changed = await asyncio.to_thread(outbox.wait, version, max(delay, 0))
         return dict(success=False, code="native_unavailable", data=None)
+
+    def read_notifications(self, outbox, query):
+        """在线程内核验当前渠道并打开独立数据库会话。"""
+        return outbox.read(self.channel().id, query)
 
     async def ack(self, request: Request):
         """只确认消费进度，不声明外部投递或业务操作成功。"""
@@ -156,6 +176,9 @@ class Crychic(_PluginBase):
     def stop_service(self):
         """停接入与等待，保留持久队列，不关闭宿主数据库引擎。"""
         self.enabled = False
+        outbox = getattr(self, "outbox", None)
+        if outbox:
+            outbox.close()
         identity = getattr(self, "identity", None)
         if identity:
             identity.stop()

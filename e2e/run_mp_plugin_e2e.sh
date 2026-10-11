@@ -19,4 +19,5 @@ if [[ ${1:-} == --update ]]; then
   cp "$log.trace" e2e/testdata/transcripts/MPPluginNativeHost.txt
 fi
 diff -u e2e/testdata/transcripts/MPPluginNativeHost.txt "$log.trace"
+grep '^CRYCHIC_PLUGIN_METRIC ' "$log"
 printf 'MP native plugin E2E passed\n'
