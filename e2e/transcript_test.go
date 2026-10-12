@@ -199,8 +199,16 @@ func buttonLines(rows [][]button) string {
 			if j > 0 {
 				b.WriteString(" ")
 			}
-			fmt.Fprintf(&b, "[%s | %s]", btn.Text, btn.CallbackData)
+			b.WriteString(renderButton(btn))
 		}
 	}
 	return b.String()
+}
+
+// renderButton prints a button as [label | data], plus its colour when set.
+func renderButton(btn button) string {
+	if btn.Style == "" {
+		return fmt.Sprintf("[%s | %s]", btn.Text, btn.CallbackData)
+	}
+	return fmt.Sprintf("[%s | %s | %s]", btn.Text, btn.CallbackData, btn.Style)
 }

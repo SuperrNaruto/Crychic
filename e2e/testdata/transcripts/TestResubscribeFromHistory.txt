@@ -87,7 +87,7 @@
    <hr/>
    <p><b>要重新订阅《颂乐人偶》第 1 季吗？</b><br>
    会沿用上次的订阅设置哦。</p>
-   [确认重新订阅 | 1:ho:0]
+   [确认重新订阅 | 1:ho:0 | primary]
    [返回 | 1:bk:0] [取消 | 1:x:0]
 << answerCallbackQuery
 >> user 1001 taps 1:bk:0 on message 1
@@ -124,7 +124,7 @@
    <hr/>
    <p><b>要重新订阅《颂乐人偶》第 1 季吗？</b><br>
    会沿用上次的订阅设置哦。</p>
-   [确认重新订阅 | 1:ho:0]
+   [确认重新订阅 | 1:ho:0 | primary]
    [返回 | 1:bk:0] [取消 | 1:x:0]
 << answerCallbackQuery
 >> user 1001 taps 1:ho:0 on message 1
@@ -193,7 +193,7 @@
    <hr/>
    <p><b>要重新订阅《沙丘》吗？</b><br>
    会沿用上次的订阅设置哦。</p>
-   [确认重新订阅 | 1:ho:0]
+   [确认重新订阅 | 1:ho:0 | primary]
    [返回 | 1:bk:0] [取消 | 1:x:0]
 << answerCallbackQuery
 >> user 1001 taps 1:ho:0 on message 1

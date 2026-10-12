@@ -24,7 +24,7 @@ func (e *Engine) subSearchConfirmation(sess session, sub Subscription, problem s
 		text = append(text, Line(Plain(problem)))
 	}
 	return Reply{Text: text, Image: sub.Poster, Buttons: [][]Button{
-		{{Label: "确认搜索", Data: data(sess.id, actionSubSearchStart, sub.ID)}},
+		{{Label: "确认搜索", Data: data(sess.id, actionSubSearchStart, sub.ID), Style: StylePrimary}},
 		{backTo(sess.id, actionRefreshSubDetail, sub.ID)},
 	}}
 }
@@ -121,7 +121,7 @@ func subSearchStopConfirmation(sess session) Reply {
 	run := sess.subSearch
 	text := Lines(Heading(Plain("🔍 停止本次搜索")), Line(Strong(taskName(truncate(run.base.Title, listTitleRunes), run.base.Season))), Line(Plain(msgStopWarning)))
 	return Reply{Text: text, Image: run.base.Poster, Buttons: [][]Button{
-		{{Label: "确认停止搜索", Data: data(sess.id, actionSubSearchCancel, run.sequence)}},
+		{{Label: "确认停止搜索", Data: data(sess.id, actionSubSearchCancel, run.sequence), Style: StyleDanger}},
 		{backTo(sess.id, actionSubSearchRead, run.sequence)},
 	}}
 }

@@ -89,7 +89,7 @@
    <hr/>
    <p><b>要重新订阅《碧蓝之海》第 1 季（从第 5 集开始）吗？</b><br>
    会沿用上次的订阅设置哦。</p>
-   [确认重新订阅 | 1:ho:10]
+   [确认重新订阅 | 1:ho:10 | primary]
    [返回 | 1:bk:0] [取消 | 1:x:0]
 << answerCallbackQuery
 >> user 1001 taps 1:ho:10 on message 1

@@ -134,6 +134,8 @@ subscription writes do not. All clients share one transport keeping 16 idle conn
 A `Reply` with `Notice` must not edit the message (another group member tapping your buttons)
 
 命令发送用 `sendRichMessage`，按钮编辑用带 `rich_message` 的 `editMessageText`，`answerCallbackQuery` 在编辑完成或编辑已运行 `answerLead`（`telegram.Config.AnswerLead`，默认 50ms）时发出，以先到者为准；Notice 不编辑，直接回答。2026-10-12 线上计时：「返回」flow 0ms，编辑约 380ms，原先串行的回答约 340ms，到 Telegram RTT 约 160ms；并行后每次按下省掉约一次回答往返。超过 500ms 的按下记 `slow button press`（只记动作码与分段耗时），海报准备超过 200ms 另记一行。
+内联键盘按钮把 `flow.Button.Style` 映射为 Bot API 的 `style`（`primary` 蓝、`danger` 红，零值为默认色）。
+
 `internal/telegram/lanes.go` 串行每条消息的状态变更及编辑；初始发送尚未返回时，已经显示的按钮也必须可用。
 
 开启 follow 的初始发送和 typed edit 与按钮编辑共用语义；图像显示身份和响应先后由 [E2E 参考](e2e.md#消息顺序与图像身份) 中的 fake 覆盖。

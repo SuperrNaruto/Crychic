@@ -89,7 +89,7 @@ func (e *Engine) askBatch(sess session) Reply {
 		text = append(text, Callout(Plain(msgBatchHitAndRun)))
 	}
 	text = append(text, Line(Strong(fmt.Sprintf(msgBatchAsk, len(sess.batch)))))
-	buttons := [][]Button{{{Label: msgDownloadLabel, Data: data(sess.id, actionTorrentBatchGet, 0)}}, {cancelButton(sess.id)}}
+	buttons := [][]Button{{{Label: msgDownloadLabel, Data: data(sess.id, actionTorrentBatchGet, 0), Style: StylePrimary}}, {cancelButton(sess.id)}}
 	return sess.picked.replyLines(text, buttons)
 }
 

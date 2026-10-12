@@ -27,7 +27,7 @@
    <h3>📚 取消订阅</h3>
    <p><b>真的要取消订阅《绝命毒师》第 2 季吗？</b><br>
    取消后 MoviePilot 会停止为它搜索下载哦。</p>
-   [确认取消 | 1:z:1]
+   [确认取消 | 1:z:1 | danger]
    [返回 | 1:bk:0]
 << answerCallbackQuery
 >> user 1001 taps 1:bk:0 on message 1
@@ -70,7 +70,7 @@
    <h3>📚 取消订阅</h3>
    <p><b>真的要取消订阅《绝命毒师》第 2 季吗？</b><br>
    取消后 MoviePilot 会停止为它搜索下载哦。</p>
-   [确认取消 | 1:z:1]
+   [确认取消 | 1:z:1 | danger]
    [返回 | 1:bk:0]
 << answerCallbackQuery
 >> user 1001 taps 1:z:1 on message 1

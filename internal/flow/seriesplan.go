@@ -159,7 +159,7 @@ func (e *Engine) partPicker(sess session) Reply {
 		}
 		ticks = append(ticks, Button{Label: label, Data: data(sess.id, actionSeriesTick, i)})
 	}
-	get := Button{Label: fmt.Sprintf("订阅所选 %d 部", len(sess.wanted)), Data: data(sess.id, actionSeriesGet, 0)}
+	get := Button{Label: fmt.Sprintf("订阅所选 %d 部", len(sess.wanted)), Data: data(sess.id, actionSeriesGet, 0), Style: StylePrimary}
 	rows := append(grid(ticks, gridColumns), []Button{get}, []Button{cancelButton(sess.id)})
 	return Reply{Text: text, Buttons: rows}
 }

@@ -112,7 +112,7 @@ func (e *Engine) askToggle(ctx context.Context, sess session, index int, pause b
 	words := wordsFor(pause)
 	view := downloadView(d)
 	view.Text = append(view.Text, Divider(), Line(Strong(words.ask)), Line(Plain(words.keep)))
-	view.Buttons = [][]Button{{{Label: words.confirm, Data: data(sess.id, confirmAction(pause), index)}}, {tasksBack(sess.id)}}
+	view.Buttons = [][]Button{{{Label: words.confirm, Data: data(sess.id, confirmAction(pause), index), Style: StylePrimary}}, {tasksBack(sess.id)}}
 	return view
 }
 

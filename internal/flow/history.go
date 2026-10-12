@@ -215,7 +215,7 @@ func (e *Engine) pickPast(ctx context.Context, sess session, index int) Reply {
 	sess.target = &target
 	e.store.put(sess)
 	question := Line(Strong(fmt.Sprintf("要重新订阅%s吗？", targetName(target))))
-	rows := [][]Button{{{Label: msgResubscribeLabel, Data: data(sess.id, actionResubscribe, index)}}, {cancelButton(sess.id)}}
+	rows := [][]Button{{{Label: msgResubscribeLabel, Data: data(sess.id, actionResubscribe, index), Style: StylePrimary}}, {cancelButton(sess.id)}}
 	return card{Media: ps.Media}.replyLines(Lines(question, Line(Plain(msgResubscribeNote))), rows)
 }
 

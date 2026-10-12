@@ -432,10 +432,21 @@ func keyboard(rows [][]flow.Button) models.ReplyMarkup {
 	for i, row := range rows {
 		kb[i] = make([]models.InlineKeyboardButton, len(row))
 		for j, btn := range row {
-			kb[i][j] = models.InlineKeyboardButton{Text: btn.Label, CallbackData: btn.Data}
+			kb[i][j] = models.InlineKeyboardButton{Text: btn.Label, CallbackData: btn.Data, Style: buttonStyle(btn.Style)}
 		}
 	}
 	return &models.InlineKeyboardMarkup{InlineKeyboard: kb}
+}
+
+// buttonStyle maps a semantic flow style to Telegram's button colour.
+func buttonStyle(style flow.ButtonStyle) string {
+	switch style {
+	case flow.StylePrimary:
+		return "primary"
+	case flow.StyleDanger:
+		return "danger"
+	}
+	return ""
 }
 
 // parseCommand splits "/search@SomeBot dune part two" into its command and

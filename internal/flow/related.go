@@ -34,7 +34,12 @@ func relatedRow(sess session) []Button {
 	if sess.focus != nil && sess.focus.EpisodeGroup == "" {
 		row = append(row, torrentButton(sess.id)) // resources are searched by standard seasons
 	}
-	row = append(row, Button{Label: "相似推荐", Data: data(sess.id, actionRelated, 0)})
+	return append(row, browseOnRow(sess)...)
+}
+
+// browseOnRow browses on to other media: 相似推荐, 同系列, 演职人员.
+func browseOnRow(sess session) []Button {
+	row := []Button{{Label: "相似推荐", Data: data(sess.id, actionRelated, 0)}}
 	if sess.picked.Media.Kind == Movie {
 		row = append(row, Button{Label: "同系列", Data: data(sess.id, actionSeries, 0)})
 	}

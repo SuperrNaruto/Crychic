@@ -207,7 +207,7 @@ func askCancel(sess session, index int) Reply {
 	return Reply{
 		Text:    Lines(Heading(Plain(msgCancelTitle)), Line(Strong(question)), Line(Plain(msgCancelEffect))),
 		Image:   s.Poster,
-		Buttons: [][]Button{{{Label: "确认取消", Data: data(sess.id, actionUnsubscribe, s.ID)}}},
+		Buttons: [][]Button{{{Label: "确认取消", Data: data(sess.id, actionUnsubscribe, s.ID), Style: StyleDanger}}},
 	}
 }
 

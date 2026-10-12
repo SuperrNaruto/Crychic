@@ -57,7 +57,7 @@ func (e *Engine) askUpgrade(ctx context.Context, sess session) Reply {
 // upgradeCard asks to confirm target as an upgrade subscription.
 func upgradeCard(sess session, target Target) Reply {
 	question := Line(Strong(fmt.Sprintf("要洗版订阅%s吗？", targetName(target))))
-	confirm := Button{Label: "确认洗版", Data: data(sess.id, actionUpgradeConfirm, 0)}
+	confirm := Button{Label: "确认洗版", Data: data(sess.id, actionUpgradeConfirm, 0), Style: StylePrimary}
 	text := append(append(Lines(question), categoryFact(target)...), Line(Plain(msgUpgradeExplain)))
 	return sess.picked.replyLines(text, [][]Button{{confirm}, categoryRow(sess), {cancelButton(sess.id)}})
 }

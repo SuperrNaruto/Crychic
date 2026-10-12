@@ -193,7 +193,7 @@ func (e *Engine) reviewSubEdit(sess session) Reply {
 	}
 	edit.field, sess.subEdit = editReview, &edit
 	e.store.put(sess)
-	return Reply{Text: text, Image: edit.base.Poster, Buttons: [][]Button{{{Label: "确认保存", Data: data(sess.id, actionSubEditSave, edit.base.ID)}}}}
+	return Reply{Text: text, Image: edit.base.Poster, Buttons: [][]Button{{{Label: "确认保存", Data: data(sess.id, actionSubEditSave, edit.base.ID), Style: StylePrimary}}}}
 }
 
 func (edit subscriptionEdit) draftText(field int) string {

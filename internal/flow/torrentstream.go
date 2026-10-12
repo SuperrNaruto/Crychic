@@ -110,7 +110,7 @@ func streamTorrentCard(sess session, index int) Reply {
 		text = append(text, Line(Plain(msgTorrentChanged)))
 	default:
 		text = append(text, Line(Strong(msgTorrentAsk)))
-		rows = append(rows, []Button{{Label: msgDownloadLabel, Data: data(sess.id, actionTorrentGet, index)}})
+		rows = append(rows, []Button{{Label: msgDownloadLabel, Data: data(sess.id, actionTorrentGet, index), Style: StylePrimary}})
 	}
 	rows = append(rows, []Button{{Label: "刷新结果", Data: data(sess.id, actionTorrentRefresh, 0)}}, []Button{cancelButton(sess.id)})
 	return sess.picked.replyLines(text, rows)

@@ -71,7 +71,7 @@ func (e *Engine) tickBox(sess session) Reply {
 		seasons = append(seasons, s)
 		ticks = append(ticks, Button{Label: label, Data: data(sess.id, actionTick, s.Number)})
 	}
-	subscribe := Button{Label: fmt.Sprintf("订阅所选 %d 季", len(sess.chosen)), Data: data(sess.id, actionSubscribed, 0)}
+	subscribe := Button{Label: fmt.Sprintf("订阅所选 %d 季", len(sess.chosen)), Data: data(sess.id, actionSubscribed, 0), Style: StylePrimary}
 	rows := append(grid(ticks, seasonColumns), []Button{subscribe}, []Button{cancelButton(sess.id)})
 	return sess.picked.replyLines(sess.seasonChecklist(msgPickSeasons, seasons, sess.chosen), rows)
 }

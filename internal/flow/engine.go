@@ -452,12 +452,13 @@ func (e *Engine) targetCard(sess session, sub subscription) (session, Reply) {
 
 // confirmCard asks for the final go-ahead on a fully specified target.
 func confirmCard(sess session, target Target) Reply {
-	confirm := Button{Label: "确认订阅", Data: data(sess.id, actionConfirm, target.StartEpisode)}
+	confirm := Button{Label: "确认订阅", Data: data(sess.id, actionConfirm, target.StartEpisode), Style: StylePrimary}
 	question := Line(Strong(fmt.Sprintf("要订阅%s吗？", targetName(target))))
-	rows := [][]Button{{confirm}, categoryRow(sess)}
+	choices := categoryRow(sess)
 	if target.Season == nil {
-		rows = append(rows, upgradeRow(sess)) // a season's upgrade is offered with its start choices
+		choices = append(choices, upgradeRow(sess)...) // a season's upgrade is offered with its start choices
 	}
+	rows := [][]Button{{confirm}, choices}
 	return sess.picked.replyLines(append(Lines(question), categoryFact(target)...), append(rows, onward(sess)...))
 }
 
@@ -518,12 +519,14 @@ func parseData(raw string) (id uint64, p press, ok bool) {
 	return id, p, errID == nil && errArg == nil
 }
 
-// onward are a card's last rows: browse on from it (搜索资源, 相似推荐,
-// 同系列), then 取消.
+// onward are a card's last rows: the resource search (搜索资源 beside
+// 选择搜索站点), then browsing on (相似推荐, 同系列, 演职人员), then 取消.
 func onward(sess session) [][]Button {
-	rows := [][]Button{relatedRow(sess)}
-	if scope := searchScopeRow(sess); len(scope) > 0 {
-		rows = append(rows, scope)
+	var rows [][]Button
+	for _, row := range [][]Button{searchRow(sess), browseOnRow(sess)} {
+		if len(row) > 0 {
+			rows = append(rows, row)
+		}
 	}
 	return append(rows, []Button{cancelButton(sess.id)})
 }

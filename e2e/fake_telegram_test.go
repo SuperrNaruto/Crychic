@@ -22,6 +22,7 @@ const (
 type button struct {
 	Text         string `json:"text"`
 	CallbackData string `json:"callback_data"`
+	Style        string `json:"style"`
 }
 
 // message is a message on screen: a rich message (text is its HTML,

@@ -74,8 +74,8 @@
    <hr/>
    <p>✅ 《沙丘》已经在媒体库里啦，直接去看吧～</p>
    [洗版订阅 | 1:bv:0]
-   [搜索资源 | 1:ts:0] [相似推荐 | 1:r:0] [同系列 | 1:n:0] [演职人员 | 1:ca:0]
-   [选择搜索站点 | 1:ss:0]
+   [搜索资源 | 1:ts:0] [选择搜索站点 | 1:ss:0]
+   [相似推荐 | 1:r:0] [同系列 | 1:n:0] [演职人员 | 1:ca:0]
    [返回 | 1:bk:0] [取消 | 1:x:0]
 << answerCallbackQuery
 >> user 1001 taps 1:ts:0 on message 1
@@ -126,7 +126,7 @@
    </table>
    <blockquote>⚠️ 这是 H&amp;R 资源，下完要保种够时间，不然站点会记过哦。</blockquote>
    <p><b>要下载这个资源吗？</b></p>
-   [确认下载 | 1:td:0]
+   [确认下载 | 1:td:0 | primary]
    [返回 | 1:bk:0] [取消 | 1:x:0]
 << answerCallbackQuery
 >> user 1001 taps 1:td:0 on message 1

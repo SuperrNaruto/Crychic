@@ -12,8 +12,18 @@ Flow choice buttons only choose: no emoji, no titles or facts in choice labels. 
 (`menuColumns`)
 
 Button rows run in one order: choices (numbers and their pager, seasons, 确认X on a row of its own), switches
-(电视剧/电影, weekdays; the shown one marked `·X·` by `markShown`), onward actions (搜索资源/相似推荐/同系列 via `onward`,
-订阅历史, 重新搜索 on its own row), and last the one navigation row
+(电视剧/电影, weekdays; the shown one marked `·X·` by `markShown`), onward actions (via `onward`: 搜索资源 beside
+选择搜索站点 on one row, then 相似推荐/同系列/演职人员 on their own row; 订阅历史, 重新搜索 on its own row), and last the
+one navigation row. Confirm cards pack their optional choices onto one row: a season's start choices are
+[从第 1 集开始] / [指定起始集…][选择分类…][洗版订阅] / [搜索资源][选择搜索站点] / [相似推荐][演职人员] / [返回][取消]; the movie
+card is [确认订阅] / [选择分类…][洗版订阅] / the same onward rows. An absent button just shrinks its row, and no row is
+ever empty
+
+Button colours (`flow.Button.Style`, rendered by Telegram's `style`): `StylePrimary` (blue) marks the one
+button of a screen that commits a request or write (确认订阅, 从第 1 集开始, 确认洗版, 确认下载, 确认重新订阅, 订阅所选
+N 季/部, 确认保存, 确认搜索, 开始搜索, 确认暂停/恢复, 缺集方案和批量的确认下载); `StyleDanger` (red) marks the one
+destructive commit (确认删除, 确认取消, 放弃修改, 确认停止搜索). Navigation (返回, 取消, 首页, 关闭), menu buttons that
+only lead to a confirm screen (下载所选 N 个, 停止本次搜索, 停止后续提交) and number picks stay uncoloured
 
 Navigation has one vocabulary. A request (search, subscribe, download, resubscribe) ends with 取消; a browsing
 screen (lists, details, charts, task views) ends with `browseRow`: 首页 then 关闭 (`c`, generic). Every way back

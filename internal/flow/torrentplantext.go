@@ -25,7 +25,7 @@ func torrentPlanList(sess session, notice string) listView {
 		view.entries = append(view.entries, listEntry{text: Lines(item)})
 	}
 	if len(plan.batch) > 0 {
-		view.menu = append([][]Button{{{Label: msgDownloadLabel, Data: data(sess.id, actionTorrentBatchGet, 0)}}}, view.menu...)
+		view.menu = append([][]Button{{{Label: msgDownloadLabel, Data: data(sess.id, actionTorrentBatchGet, 0), Style: StylePrimary}}}, view.menu...)
 	}
 	view.note = fmt.Sprintf("建议 %d 个资源；确认后下载完整资源，已有或重叠的文件也会一并下载。尚未入库的下载未计入，请先用 /tasks 核对。", len(plan.batch))
 	return view

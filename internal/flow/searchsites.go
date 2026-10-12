@@ -54,7 +54,7 @@ func (e *Engine) siteScope(sess session) Reply {
 		note:    "先选择要访问的站点，再点开始搜索；筛选已有结果请用「筛选站点」哦～",
 		menu: [][]Button{
 			{{Label: markShown(msgAllSites, len(sess.searchSites) == 0), Data: data(sess.id, actionSearchAll, 0)}},
-			{{Label: "开始搜索", Data: data(sess.id, actionSearchStart, 0)}},
+			{{Label: "开始搜索", Data: data(sess.id, actionSearchStart, 0), Style: StylePrimary}},
 		},
 		footer: []Button{cancelButton(sess.id)},
 	}
@@ -71,9 +71,10 @@ func (e *Engine) siteScope(sess session) Reply {
 	return e.listPages(sess, view)
 }
 
-func searchScopeRow(sess session) []Button {
+// searchRow pairs 搜索资源 with the site choice for the card's target.
+func searchRow(sess session) []Button {
 	if sess.focus == nil || sess.focus.EpisodeGroup != "" {
 		return nil
 	}
-	return []Button{{Label: msgSearchSites, Data: data(sess.id, actionSearchSites, 0)}}
+	return []Button{torrentButton(sess.id), {Label: msgSearchSites, Data: data(sess.id, actionSearchSites, 0)}}
 }

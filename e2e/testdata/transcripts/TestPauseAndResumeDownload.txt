@@ -33,7 +33,7 @@
    <hr/>
    <p><b>⏸️ 要暂停这个下载吗？</b><br>
    已经下载的部分都留着，之后点「恢复下载」就能接着下～</p>
-   [确认暂停 | 1:kq:1]
+   [确认暂停 | 1:kq:1 | primary]
    [返回 | 1:l:0]
 << answerCallbackQuery
 >> user 1001 taps 1:kq:1 on message 1
@@ -64,7 +64,7 @@
    <hr/>
    <p><b>⬇️ 要恢复这个下载吗？</b><br>
    下载器会从暂停的地方接着下～</p>
-   [确认恢复 | 1:ks:1]
+   [确认恢复 | 1:ks:1 | primary]
    [返回 | 1:l:0]
 << answerCallbackQuery
 >> user 1001 taps 1:ks:1 on message 1

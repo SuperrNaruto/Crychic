@@ -9,7 +9,7 @@
 `e2e/harness_test.go` - `start`, `say`, `answer`, `answerQuoting`, `chatter`, `tap`, `tapData`, `shows`,
 `arrives`, `transfers`, `reports`, `restart`
 
-`e2e/testdata/transcripts/*.txt` - golden transcripts, one per scenario
+`e2e/testdata/transcripts/*.txt` - golden transcripts, one per scenario（按钮渲染为 `[标签 | 数据]`，带颜色的按钮追加 ` | primary` 或 ` | danger`）
 
 `h.tr.verify(t)` 在普通运行中检查消息标题并比较已提交 transcript，只有 `-update` 才写 golden。未通过标题检查时即使更新了文件，测试仍失败；不能用更新跳过行为判断。
 

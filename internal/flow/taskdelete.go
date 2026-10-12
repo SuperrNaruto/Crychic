@@ -61,7 +61,7 @@ func (e *Engine) askDelete(ctx context.Context, sess session, index int) Reply {
 	if e.subscribed(ctx, d) {
 		view.Text = append(view.Text, Line(Plain(msgDeleteSub)))
 	}
-	view.Buttons = [][]Button{{{Label: msgDeleteLabel, Data: data(sess.id, actionDelete, index)}}, {tasksBack(sess.id)}}
+	view.Buttons = [][]Button{{{Label: msgDeleteLabel, Data: data(sess.id, actionDelete, index), Style: StyleDanger}}, {tasksBack(sess.id)}}
 	return view
 }
 

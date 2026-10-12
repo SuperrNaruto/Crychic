@@ -50,12 +50,10 @@
    <blockquote expandable>高中化学教师沃尔特·怀特被诊断患有晚期癌症，为保障家人经济生活，他与学生杰西制毒贩毒，并逐渐坠落至万劫不复的深渊。</blockquote>
    <hr/>
    <p><b>要订阅《绝命毒师》第 2 季（共 13 集）吗？</b></p>
-   [从第 1 集开始 | 1:ok:0]
-   [指定起始集… | 1:e:0]
-   [选择分类… | 1:cg:0]
-   [洗版订阅 | 1:bv:0]
-   [搜索资源 | 1:ts:0] [相似推荐 | 1:r:0] [演职人员 | 1:ca:0]
-   [选择搜索站点 | 1:ss:0]
+   [从第 1 集开始 | 1:ok:0 | primary]
+   [指定起始集… | 1:e:0] [选择分类… | 1:cg:0] [洗版订阅 | 1:bv:0]
+   [搜索资源 | 1:ts:0] [选择搜索站点 | 1:ss:0]
+   [相似推荐 | 1:r:0] [演职人员 | 1:ca:0]
    [返回 | 1:bk:0] [取消 | 1:x:0]
 << answerCallbackQuery
 >> user 1001 taps 1:ok:0 on message 1
@@ -187,7 +185,7 @@
    改为 · 2160p / 4K</p>
    <blockquote>后台后续调度会使用新条件，并可能搜索下载。</blockquote>
    <footer>只提交上述改动，已取得集数、缺集数和洗版优先级保持原样；到货情况以媒体库为准。</footer>
-   [确认保存 | 2:uw:1]
+   [确认保存 | 2:uw:1 | primary]
    [返回 | 2:bk:0]
 << answerCallbackQuery
 >> user 1001 taps 2:uw:1 on message 2
@@ -309,7 +307,7 @@
    改为 · 2160p / 4K</p>
    <blockquote>后台后续调度会使用新条件，并可能搜索下载。</blockquote>
    <footer>只提交上述改动，已取得集数、缺集数和洗版优先级保持原样；到货情况以媒体库为准。</footer>
-   [确认保存 | 2:uw:1]
+   [确认保存 | 2:uw:1 | primary]
    [返回 | 2:bk:0]
 << answerCallbackQuery
 >> user 1001 taps 2:uw:1 on message 2
@@ -431,7 +429,7 @@
    改为 · 2160p / 4K</p>
    <blockquote>后台后续调度会使用新条件，并可能搜索下载。</blockquote>
    <footer>只提交上述改动，已取得集数、缺集数和洗版优先级保持原样；到货情况以媒体库为准。</footer>
-   [确认保存 | 2:uw:1]
+   [确认保存 | 2:uw:1 | primary]
    [返回 | 2:bk:0]
 << answerCallbackQuery
 >> user 1001 taps 2:uw:1 on message 2
@@ -553,7 +551,7 @@
    改为 · 2160p / 4K</p>
    <blockquote>后台后续调度会使用新条件，并可能搜索下载。</blockquote>
    <footer>只提交上述改动，已取得集数、缺集数和洗版优先级保持原样；到货情况以媒体库为准。</footer>
-   [确认保存 | 2:uw:1]
+   [确认保存 | 2:uw:1 | primary]
    [返回 | 2:bk:0]
 << answerCallbackQuery
 >> user 1001 taps 2:uw:1 on message 2
@@ -675,7 +673,7 @@
    改为 · 2160p / 4K</p>
    <blockquote>后台后续调度会使用新条件，并可能搜索下载。</blockquote>
    <footer>只提交上述改动，已取得集数、缺集数和洗版优先级保持原样；到货情况以媒体库为准。</footer>
-   [确认保存 | 2:uw:1]
+   [确认保存 | 2:uw:1 | primary]
    [返回 | 2:bk:0]
 << answerCallbackQuery
 >> user 1001 taps 2:uw:1 on message 2
@@ -797,7 +795,7 @@
    改为 · 2160p / 4K</p>
    <blockquote>后台后续调度会使用新条件，并可能搜索下载。</blockquote>
    <footer>只提交上述改动，已取得集数、缺集数和洗版优先级保持原样；到货情况以媒体库为准。</footer>
-   [确认保存 | 2:uw:1]
+   [确认保存 | 2:uw:1 | primary]
    [返回 | 2:bk:0]
 << answerCallbackQuery
 >> user 1001 taps 2:uw:1 on message 2
@@ -919,7 +917,7 @@
    改为 · 2160p / 4K</p>
    <blockquote>后台后续调度会使用新条件，并可能搜索下载。</blockquote>
    <footer>只提交上述改动，已取得集数、缺集数和洗版优先级保持原样；到货情况以媒体库为准。</footer>
-   [确认保存 | 2:uw:1]
+   [确认保存 | 2:uw:1 | primary]
    [返回 | 2:bk:0]
 << answerCallbackQuery
 >> user 1001 taps 2:uw:1 on message 2

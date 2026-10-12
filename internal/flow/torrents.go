@@ -133,7 +133,7 @@ func (e *Engine) pickTorrent(sess session, index int) Reply {
 		text = append(text, Callout(Plain(msgHitAndRun)))
 	}
 	text = append(text, Line(Strong(msgTorrentAsk)))
-	rows := [][]Button{{{Label: msgDownloadLabel, Data: data(sess.id, actionTorrentGet, index)}}, {cancelButton(sess.id)}}
+	rows := [][]Button{{{Label: msgDownloadLabel, Data: data(sess.id, actionTorrentGet, index), Style: StylePrimary}}, {cancelButton(sess.id)}}
 	return sess.picked.replyLines(text, rows)
 }
 

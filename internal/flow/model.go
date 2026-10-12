@@ -462,7 +462,19 @@ type Notice struct {
 type Button struct {
 	Label string
 	Data  string
+	Style ButtonStyle
 }
+
+// ButtonStyle is the semantic colour a platform may give a button; the zero
+// value is the platform default.
+type ButtonStyle uint8
+
+const (
+	// StylePrimary marks the one button that commits a request or write.
+	StylePrimary ButtonStyle = iota + 1
+	// StyleDanger marks the one button that commits a destructive action.
+	StyleDanger
+)
 
 // Banner names a bundled image for the home menu; empty means none.
 type Banner string
