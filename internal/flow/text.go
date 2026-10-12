@@ -158,6 +158,15 @@ func joinNonEmpty(sep string, parts ...string) string {
 
 // targetName is how a subscription is referred to, e.g. 《沙丘》,
 // 《绝命毒师》第 2 季 or 《名侦探柯南》第 1 季（从第 500 集开始）.
+// groupNote names a target's episode group; history records carry only
+// its ID.
+func groupNote(name string) string {
+	if name == "" {
+		return "按剧集组编排"
+	}
+	return fmt.Sprintf("剧集组「%s」", name)
+}
+
 func targetName(t Target) string {
 	name := fmt.Sprintf("《%s》", t.Media.Title)
 	if t.Season == nil {
@@ -166,7 +175,7 @@ func targetName(t Target) string {
 	name = fmt.Sprintf("%s第 %d 季", name, *t.Season)
 	var notes []string
 	if t.EpisodeGroup != "" {
-		notes = append(notes, fmt.Sprintf("剧集组「%s」", t.GroupName))
+		notes = append(notes, groupNote(t.GroupName))
 	}
 	if t.StartEpisode > 0 {
 		notes = append(notes, fmt.Sprintf("从第 %d 集开始", t.StartEpisode))

@@ -245,7 +245,7 @@ superuser 读全部记录，只按 `date desc`（秒级字符串，无 ID 次序
 为同范围精确总数（`app/api/endpoints/subscribe.py` 的 `subscribe_history`、`app/db/models/subscribehistory.py`）。
 订阅完成时插入新记录（`app/application/subscription/complete.py`），会把旧记录推到下一页；网页删除或数据清理会让未读
 记录上移。媒体身份可整体为空（`MEDIA_IDENTITY_CHECK_SQL` 允许两者都为 NULL）。客户端把 `X-Total-Count` 缺失或非法读成
-未知（`call.total`），无身份记录按 ID 列入 `HistoryPage.Unlisted`。Crychic 自 2026-10-11 起不再读取整理历史（`/api/v1/history/transfer`，含失败记录）或单个订阅（`GET /api/v1/subscribe/{id}`）；这两类读取只服务已删除的本地请求归属。订阅、下载和整理列表的 `data: null` 视为来源未读到，不当作成功空列表。历史契约仍可参考 [历史端点](https://github.com/jxxghp/MoviePilot/blob/v3.1.3/app/api/endpoints/history.py#L512-L542)。
+未知（`call.total`），无身份记录按 ID 列入 `HistoryPage.Unlisted`。记录带 `episode_group`（模型第 110 行），客户端投影到 `PastSubscription.EpisodeGroup`；重新订阅的查重与确认按该剧集组的季，写入仍原样回传记录。Crychic 自 2026-10-11 起不再读取整理历史（`/api/v1/history/transfer`，含失败记录）或单个订阅（`GET /api/v1/subscribe/{id}`）；这两类读取只服务已删除的本地请求归属。订阅、下载和整理列表的 `data: null` 视为来源未读到，不当作成功空列表。历史契约仍可参考 [历史端点](https://github.com/jxxghp/MoviePilot/blob/v3.1.3/app/api/endpoints/history.py#L512-L542)。
 
 When MoviePilot behavior is unclear, read its source (`app/api/endpoints/{media,subscribe}.py`) instead of
 guessing

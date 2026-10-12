@@ -194,7 +194,7 @@ func pastEntry(n int, ps PastSubscription) Block {
 }
 
 func pastTarget(ps PastSubscription) Target {
-	return Target{Media: ps.Media, Season: ps.Season, StartEpisode: ps.StartEpisode}
+	return Target{Media: ps.Media, Season: ps.Season, StartEpisode: ps.StartEpisode, EpisodeGroup: ps.EpisodeGroup}
 }
 
 // pickPast asks before subscribing past index again, unless it is already
@@ -243,7 +243,8 @@ func (e *Engine) resubscribe(ctx context.Context, sess session, index int) Reply
 // samePick reports whether the confirmable target is past, so a button left
 // from an earlier pick cannot subscribe something else.
 func samePick(t Target, ps PastSubscription) bool {
-	return t.Media.Source == ps.Media.Source && t.Media.ID == ps.Media.ID && seasonOf(t.Season) == seasonOf(ps.Season)
+	return t.Media.Source == ps.Media.Source && t.Media.ID == ps.Media.ID && seasonOf(t.Season) == seasonOf(ps.Season) &&
+		t.EpisodeGroup == ps.EpisodeGroup
 }
 
 // noSeason stands for a movie's missing season, unlike any season number.

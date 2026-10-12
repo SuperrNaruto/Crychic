@@ -1,0 +1,36 @@
+>> user 1001 in chat 1001: /subscribe
+-> MoviePilot GET /api/v1/subscribe/
+<< sendRichMessage chat=1001 message=1
+   <h3>📚 订阅清单 · 电视剧（1）</h3>
+   <ol start="1">
+   <li value="1"><b>《鬼灭之刃》第 2 季</b><br>
+   <i>订阅中 · 缺 13/13 集</i></li>
+   </ol>
+   [1 | 1:sd:9]
+   [·电视剧· | 1:sf:2] [电影 | 1:sf:1]
+   [取消订阅 | 1:sc:0] [订阅历史 | 1:hs:2]
+   [首页 | 1:o:0] [关闭 | 1:c:0]
+>> user 1001 taps 1:hs:2 on message 1
+-> MoviePilot GET /api/v1/subscribe/history/电视剧?count=10&page=1
+<< editMessageText chat=1001 message=1
+   <h3>📚 订阅历史 · 电视剧</h3>
+   <ol start="1">
+   <li value="1"><b>《鬼灭之刃》第 2 季</b><br>
+   <i>2019 · 2026-10-06 22:36</i></li>
+   </ol>
+   <footer>共 1 条。点编号可以重新订阅哦。</footer>
+   [1 | 1:hp:0]
+   [·电视剧· | 1:hf:2] [电影 | 1:hf:1]
+   [返回 | 1:j:0] [首页 | 1:o:0] [关闭 | 1:c:0]
+<< answerCallbackQuery
+>> user 1001 taps 1:hp:0 on message 1
+-> MoviePilot GET /api/v1/subscribe/
+<< editMessageText chat=1001 message=1
+   <h3>📺 鬼灭之刃</h3>
+   <footer>2019 · 电视剧</footer>
+   <hr/>
+   <p><b>要重新订阅《鬼灭之刃》第 2 季（按剧集组编排）吗？</b><br>
+   会沿用上次的订阅设置哦。</p>
+   [确认重新订阅 | 1:ho:0]
+   [返回 | 1:bk:0] [取消 | 1:x:0]
+<< answerCallbackQuery

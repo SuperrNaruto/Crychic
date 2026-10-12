@@ -265,6 +265,7 @@ type PastSubscription struct {
 	Media        Media
 	Season       *int
 	StartEpisode int
+	EpisodeGroup string // TMDB episode group numbering Season; "" for standard seasons
 	Date         string // when it entered the history, as the backend words it
 	Record       []byte
 }

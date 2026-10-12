@@ -55,6 +55,26 @@ func TestResubscribeFromHistory(t *testing.T) {
 	h.tr.verify(t)
 }
 
+// A past subscription numbered by an episode group is asked about as that
+// group's season, so the standard season's subscription does not stand in
+// for it.
+func TestResubscribeGroupSeasonBesideStandardOne(t *testing.T) {
+	past := map[string]any{
+		"id": 9, "name": "鬼灭之刃", "year": "2019", "type": "电视剧", "season": 2, "start_episode": 0,
+		"media_source": "themoviedb", "media_id": "85937", "date": "2026-10-06 22:36:35",
+		"episode_group": "66c6dcd6cd3639e51ad7ec9f",
+	}
+	h := start(t, scenario{routes: map[string]route{
+		subsPath: ok(standardKimetsuSeason2(t)), tvHistory: ok(writeFixture(t, []any{past})),
+		kimetsuLookup: ok(writeFixture(t, kimetsuSeason2(t, nil))),
+	}})
+	h.say(alice, alice, "/subscribe")
+	h.tap(alice, 1, "订阅历史")
+	h.tap(alice, 1, "1")
+	h.shows(1, "要重新订阅《鬼灭之刃》第 2 季（按剧集组编排）吗？")
+	h.tr.verify(t)
+}
+
 // Older history is read a page at a time and appended under its own
 // numbers. A record without a media identity is counted but not listed and
 // still makes its page full; one a newly finished subscription pushes onto

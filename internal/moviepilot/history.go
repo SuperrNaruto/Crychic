@@ -19,6 +19,7 @@ type historyRecord struct {
 	MediaID      string `json:"media_id"`
 	Season       *int   `json:"season"`
 	StartEpisode int    `json:"start_episode"`
+	EpisodeGroup string `json:"episode_group"`
 	Poster       string `json:"poster"`
 	Date         string `json:"date"`
 }
@@ -47,7 +48,8 @@ func (c *Client) SubscriptionHistory(ctx context.Context, q flow.HistoryQuery) (
 			continue
 		}
 		page.Past = append(page.Past, flow.PastSubscription{
-			ID: r.ID, Season: r.Season, StartEpisode: r.StartEpisode, Date: r.Date, Record: record,
+			ID: r.ID, Season: r.Season, StartEpisode: r.StartEpisode, EpisodeGroup: r.EpisodeGroup,
+			Date: r.Date, Record: record,
 			Media: flow.Media{
 				Source: r.MediaSource, ID: r.MediaID, Title: r.Name, Year: r.Year,
 				Kind: q.Kind, PosterURL: posterURL(r.Poster),
