@@ -332,9 +332,10 @@ both stop following, read the download afresh and ask on a card with 确认暂�
 The confirm code carries the direction, the ticket binds it to the shown screen, and the asked target
 (`session.toggle`) is consumed before anything else. The download is read again right before the one write:
 gone, already in the asked state, or without one known instance (`InstanceAmbiguous`) shows it as it is and
-writes nothing. A task without one known instance offers neither pause/resume nor 删除任务. The receipt says
-MoviePilot accepted it and offers only 查看任务 (`k`), a read; a refusal is relayed, an unknown result points
-to the same read, never a retry
+writes nothing. A task without one known instance offers neither pause/resume nor 删除任务. An accepted
+write goes straight to the task followed live, as 查看任务 (`k`) would (owner's choice 2026-10-12), with a
+footer that it was submitted; the downloader's state reaches the view by the read and the follow refreshes.
+A refusal is relayed, an unknown result offers only 查看任务, a read, never a retry
 
 `internal/flow/latest.go` - `/newly_added`: newest media server items (20 per server) linked to their web
 page, grouped by kind in the order kinds first appear, one line each with the year; a list entry's `section`

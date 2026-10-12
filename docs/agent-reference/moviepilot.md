@@ -151,7 +151,7 @@ hash 多实例时不提供控制。响应 `data` 为 `{hash, downloader, results
 hash 和实例匹配，否则按结果未知处理。
 
 下载器对不存在的 hash 也报告成功（qBittorrent `torrents_pause/resume` 无异常即真），未配置或停用的实例使该项
-失败。因此确认前和写入前都重读 `GET /api/v1/download/`，写后只给只读「查看任务」。qBittorrent 的
+失败。因此确认前和写入前都重读 `GET /api/v1/download/`，受理后直接显示重新读取的实时任务视图，未知结果只给只读「查看任务」。qBittorrent 的
 `downloading` 过滤包含 `StoppedDownloading`（qBittorrent `TorrentImpl::isDownloading`），暂停的未完成任务仍以
 `state=paused` 留在列表中，可以恢复；Transmission 的列表只取 `downloading`/`download_pending`，暂停后任务离开
 列表，恢复需到 MP 或下载器中进行。2026-10-12 只读查询 `/api/v1/download/clients`，目标部署只有一个 qBittorrent。

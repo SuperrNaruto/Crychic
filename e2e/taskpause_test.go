@@ -14,9 +14,9 @@ const (
 )
 
 // A download on a nondefault instance is paused and resumed there, each
-// after its own confirmation. The receipt only leads to a read of the task,
-// which shows the state the downloader reports; a stale confirmation from
-// before the write sends nothing.
+// after its own confirmation. An accepted write shows the task live, in the
+// state the downloader reports; a stale confirmation from before the write
+// sends nothing.
 func TestPauseAndResumeDownload(t *testing.T) {
 	h := start(t, scenario{routes: map[string]route{downloadsPath: ok(twoDownloaders(t))}})
 	h.say(alice, alice, "/tasks")
@@ -26,14 +26,12 @@ func TestPauseAndResumeDownload(t *testing.T) {
 	confirm, _ := findButton(mustMessage(h, 1).rows, confirmPause)
 	h.tap(alice, 1, confirmPause)
 	h.shows(1, "已提交暂停")
-	h.tapData(alice, 1, confirm)
-	h.tap(alice, 1, viewTask)
 	h.shows(1, "已暂停 0%")
+	h.tapData(alice, 1, confirm)
 	h.tap(alice, 1, resumeIt)
 	h.shows(1, "要恢复这个下载吗")
 	h.tap(alice, 1, "确认恢复")
 	h.shows(1, "已提交恢复")
-	h.tap(alice, 1, viewTask)
 	h.shows(1, "<h3>⬇️ 《迷途之子!!!!!》")
 	h.tr.verify(t)
 }

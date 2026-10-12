@@ -9,7 +9,6 @@ const (
 	actionResume    = "ks" // arg: index; resumes it once (ticketed)
 
 	labelViewTask       = "查看任务"
-	msgToggleCheck      = "MoviePilot 已经收下啦，点「查看任务」看看下载器里的实际状态～"
 	msgControlElsewhere = "这个任务在 MoviePilot 里对应的下载器不唯一，暂停、恢复和删除请到 MoviePilot 里操作哦～"
 )
 
@@ -35,7 +34,7 @@ type toggleWords struct {
 }
 
 var pauseWords = toggleWords{
-	title: "暂停下载", button: "暂停下载", confirm: "确认暂停", done: "✅ 已提交暂停",
+	title: "暂停下载", button: "暂停下载", confirm: "确认暂停", done: "已提交暂停，下载器的状态会自动刷新到这里～",
 	ask:     "⏸️ 要暂停这个下载吗？",
 	keep:    "已经下载的部分都留着，之后点「恢复下载」就能接着下～",
 	already: "它已经是暂停状态啦～",
@@ -43,7 +42,7 @@ var pauseWords = toggleWords{
 }
 
 var resumeWords = toggleWords{
-	title: "恢复下载", button: "恢复下载", confirm: "确认恢复", done: "✅ 已提交恢复",
+	title: "恢复下载", button: "恢复下载", confirm: "确认恢复", done: "已提交恢复，下载器的状态会自动刷新到这里～",
 	ask:     "⬇️ 要恢复这个下载吗？",
 	keep:    "下载器会从暂停的地方接着下～",
 	already: "它已经在下载啦～",
@@ -120,7 +119,7 @@ func (e *Engine) askToggle(ctx context.Context, sess session, index int, pause b
 // toggleDownload pauses or resumes download index once. The asked target is
 // consumed before anything else, so a second tap only flashes a notice; the
 // download is read again right before the write, because the downloader
-// accepts a hash it no longer holds.
+// accepts a hash it no longer holds. An accepted write shows the task live.
 func (e *Engine) toggleDownload(ctx context.Context, sess session, index int, pause bool) Reply {
 	asked := sess.toggle
 	if !sess.isDownload(index) || asked == nil || asked.pause != pause || asked.DownloadRef != sess.tasks[index].downloadRef() {
@@ -140,8 +139,10 @@ func (e *Engine) toggleDownload(ctx context.Context, sess session, index int, pa
 		reply.Buttons = taskRows(sess, check)
 		return reply
 	}
-	done := Lines(Heading(Plain(words.done)), Line(Plain(msgToggleCheck)))
-	return Reply{Text: done, Buttons: taskRows(sess, check)}
+	sess.follow = following{on: true, until: e.now().Add(FollowFor)}
+	live := e.refresh(ctx, sess, index)
+	live.Text = append(live.Text, Remark(words.done))
+	return live
 }
 
 // controllable reads download index afresh and returns it when it can be
