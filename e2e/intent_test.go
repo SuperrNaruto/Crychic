@@ -63,6 +63,27 @@ func TestDownloadIntentStopsAtRelatedMedia(t *testing.T) {
 	h.shows(1, "《沙丘》的资源")
 	h.tr.verify(t)
 }
+
+// A title searched with 下载 leaves its download intent behind when its
+// seasons are numbered by an episode group: resources are searched by
+// standard seasons only, so the group season waits for a request.
+func TestDownloadIntentStopsAtEpisodeGroup(t *testing.T) {
+	h := start(t, scenario{routes: map[string]route{
+		searchPath: ok("search_kimetsu.json"), kimetsuDetails: ok("detail_kimetsu.json"),
+		seasonsPath: ok("seasons_kimetsu.json"), kimetsuGroups: ok("groups_kimetsu.json"),
+		kimetsuWikiSeasons: ok("group_seasons_kimetsu.json"), subsPath: ok("subscriptions_none.json"),
+	}})
+	h.say(alice, alice, "下载 鬼灭之刃")
+	h.tap(alice, 1, "剧集组…")
+	h.tap(alice, 1, kimetsuWikiGroup)
+	h.tap(alice, 1, kimetsuGroupSeason2)
+	h.shows(1, "剧集组「Wikpedia / News」")
+	if strings.Contains(h.tr.String(), "GET /api/v1/search/media/") {
+		t.Fatal("a group season searched its resources without being asked")
+	}
+	h.tr.verify(t)
+}
+
 // Works listed from a person's credits are not searched for resources just
 // because the title the cast was opened from was searched with 下载.
 func TestDownloadIntentStopsAtPersonWorks(t *testing.T) {

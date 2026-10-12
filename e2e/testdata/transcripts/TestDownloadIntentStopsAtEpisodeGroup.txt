@@ -1,0 +1,112 @@
+>> user 1001 in chat 1001: 下载 鬼灭之刃
+-> MoviePilot GET /api/v1/media/search?count=10&title=鬼灭之刃&type=media
+-> MoviePilot GET /api/v1/media/85937?media_source=themoviedb&type_name=电视剧
+-> MoviePilot GET /api/v1/media/seasons?media_id=85937&media_source=themoviedb
+<< sendRichMessage chat=1001 message=1
+   <img src="url-79cfdb9e3a1c17d9d2aa44f68c7d81660c8d80ab97beaf1b91b7ab51e6a32f99"/>
+   <h3>📺 <a href="https://www.themoviedb.org/tv/85937">鬼灭之刃</a></h3>
+   <footer><i>鬼滅の刃</i> · 2019 · 电视剧 · ⭐ 8.6 · 动画 / 动作冒险 / Sci-Fi &amp; Fantasy · 共 5 季 63 集 · 主演：花江夏树、鬼头明里、下野纮</footer>
+   <blockquote expandable>时值日本大正时期。<br>
+   <br>
+   传说太阳下山后，有恶鬼出没吃人。亦有猎鬼人斩杀恶鬼、保护人们。<br>
+   <br>
+   卖炭少年炭治郎，他那平凡而幸福的日常生活，在家人遭到恶鬼袭击的那一天发生了剧变。母亲与四个弟弟妹妹惨遭杀害，而与他一起生还的妹妹祢豆子亦异变成凶暴的鬼。<br>
+   <br>
+   在猎鬼人的指引下，立志成为猎鬼人的炭治郎与变成鬼却尚存理智的祢豆子踏上了旅程。通过艰苦的剑术修行与赌命试炼，炭治郎成为了猎鬼人组织“鬼杀队”的一员。<br>
+   <br>
+   为了让妹妹祢豆子变回人类，为了讨伐杀害家人的恶鬼，为了斩断悲伤的连锁，少年与鬼的战斗不曾停歇。<br>
+   <br>
+   幸福被破坏之时，总是弥漫着鲜血的味道。纵然我身俱灭，定将恶鬼斩杀！血风剑戟冒险谭，开幕！</blockquote>
+   <hr/>
+   <p><b>想订哪一季呀？</b></p>
+   <table bordered compact>
+   <tr><th>季</th><th>集数</th></tr>
+   <tr><td><b>特别篇</b></td><td>18 集</td></tr>
+   <tr><td><b>第 1 季</b></td><td>26 集</td></tr>
+   <tr><td><b>第 2 季</b></td><td>7 集</td></tr>
+   <tr><td><b>第 3 季</b></td><td>11 集</td></tr>
+   <tr><td><b>第 4 季</b></td><td>11 集</td></tr>
+   <tr><td><b>第 5 季</b></td><td>8 集</td></tr>
+   </table>
+   [特别篇 | 1:s:0] [第 1 季 | 1:s:1] [第 2 季 | 1:s:2]
+   [第 3 季 | 1:s:3] [第 4 季 | 1:s:4] [第 5 季 | 1:s:5]
+   [多选季… | 1:a:0]
+   [剧集组… | 1:eg:0]
+   [相似推荐 | 1:r:0] [演职人员 | 1:ca:0]
+   [重新搜索 | 1:rs:0]
+   [取消 | 1:x:0]
+>> user 1001 taps 1:eg:0 on message 1
+-> MoviePilot GET /api/v1/media/groups/85937
+<< editMessageText chat=1001 message=1
+   <h3>🗂️「鬼灭之刃」的剧集组</h3>
+   <ol start="1">
+   <li value="1"><b>Single season format</b><br>
+   <i>绝对顺序 · 1 季 · 63 集</i></li>
+   <li value="2"><b>Crunchyroll without Mugen Train Arc</b><br>
+   <i>数字发行 · 3 季 · 48 集</i></li>
+   <li value="3"><b>Story Arcs</b><br>
+   <i>故事线 · 9 季 · 55 集</i></li>
+   <li value="4"><b>Wikpedia / News</b><br>
+   <i>制作顺序 · 4 季 · 63 集</i></li>
+   </ol>
+   <footer>按剧集组订阅时，季和集按该组的编排计算；入库和下载情况请到媒体库与 /tasks 核对。</footer>
+   [1 | 1:ep:0] [2 | 1:ep:1] [3 | 1:ep:2] [4 | 1:ep:3]
+   [返回 | 1:bk:0] [取消 | 1:x:0]
+<< answerCallbackQuery
+>> user 1001 taps 1:ep:3 on message 1
+-> MoviePilot GET /api/v1/media/group/seasons/66c6dcd6cd3639e51ad7ec9f
+<< editMessageText chat=1001 message=1
+   <img src="url-79cfdb9e3a1c17d9d2aa44f68c7d81660c8d80ab97beaf1b91b7ab51e6a32f99"/>
+   <h3>📺 <a href="https://www.themoviedb.org/tv/85937">鬼灭之刃</a></h3>
+   <footer><i>鬼滅の刃</i> · 2019 · 电视剧 · ⭐ 8.6 · 动画 / 动作冒险 / Sci-Fi &amp; Fantasy · 共 5 季 63 集 · 主演：花江夏树、鬼头明里、下野纮</footer>
+   <blockquote expandable>时值日本大正时期。<br>
+   <br>
+   传说太阳下山后，有恶鬼出没吃人。亦有猎鬼人斩杀恶鬼、保护人们。<br>
+   <br>
+   卖炭少年炭治郎，他那平凡而幸福的日常生活，在家人遭到恶鬼袭击的那一天发生了剧变。母亲与四个弟弟妹妹惨遭杀害，而与他一起生还的妹妹祢豆子亦异变成凶暴的鬼。<br>
+   <br>
+   在猎鬼人的指引下，立志成为猎鬼人的炭治郎与变成鬼却尚存理智的祢豆子踏上了旅程。通过艰苦的剑术修行与赌命试炼，炭治郎成为了猎鬼人组织“鬼杀队”的一员。<br>
+   <br>
+   为了让妹妹祢豆子变回人类，为了讨伐杀害家人的恶鬼，为了斩断悲伤的连锁，少年与鬼的战斗不曾停歇。<br>
+   <br>
+   幸福被破坏之时，总是弥漫着鲜血的味道。纵然我身俱灭，定将恶鬼斩杀！血风剑戟冒险谭，开幕！</blockquote>
+   <hr/>
+   <p>ℹ️ 按剧集组分季时，入库情况请到媒体库核对～<br>
+   <b>按剧集组「Wikpedia / News」的编排，想订哪一季呀？</b></p>
+   <table bordered compact>
+   <tr><th>季</th><th>集数</th></tr>
+   <tr><td><b>第 1 季</b></td><td>26 集</td></tr>
+   <tr><td><b>第 2 季</b></td><td>18 集</td></tr>
+   <tr><td><b>第 3 季</b></td><td>11 集</td></tr>
+   <tr><td><b>第 4 季</b></td><td>8 集</td></tr>
+   </table>
+   [第 1 季 | 1:s:1] [第 2 季 | 1:s:2] [第 3 季 | 1:s:3]
+   [第 4 季 | 1:s:4]
+   [相似推荐 | 1:r:0] [演职人员 | 1:ca:0]
+   [返回 | 1:bk:0] [取消 | 1:x:0]
+<< answerCallbackQuery
+>> user 1001 taps 1:s:2 on message 1
+-> MoviePilot GET /api/v1/subscribe/
+<< editMessageText chat=1001 message=1
+   <img src="url-79cfdb9e3a1c17d9d2aa44f68c7d81660c8d80ab97beaf1b91b7ab51e6a32f99"/>
+   <h3>📺 <a href="https://www.themoviedb.org/tv/85937">鬼灭之刃</a></h3>
+   <footer><i>鬼滅の刃</i> · 2019 · 电视剧 · ⭐ 8.6 · 动画 / 动作冒险 / Sci-Fi &amp; Fantasy · 共 5 季 63 集 · 主演：花江夏树、鬼头明里、下野纮</footer>
+   <blockquote expandable>时值日本大正时期。<br>
+   <br>
+   传说太阳下山后，有恶鬼出没吃人。亦有猎鬼人斩杀恶鬼、保护人们。<br>
+   <br>
+   卖炭少年炭治郎，他那平凡而幸福的日常生活，在家人遭到恶鬼袭击的那一天发生了剧变。母亲与四个弟弟妹妹惨遭杀害，而与他一起生还的妹妹祢豆子亦异变成凶暴的鬼。<br>
+   <br>
+   在猎鬼人的指引下，立志成为猎鬼人的炭治郎与变成鬼却尚存理智的祢豆子踏上了旅程。通过艰苦的剑术修行与赌命试炼，炭治郎成为了猎鬼人组织“鬼杀队”的一员。<br>
+   <br>
+   为了让妹妹祢豆子变回人类，为了讨伐杀害家人的恶鬼，为了斩断悲伤的连锁，少年与鬼的战斗不曾停歇。<br>
+   <br>
+   幸福被破坏之时，总是弥漫着鲜血的味道。纵然我身俱灭，定将恶鬼斩杀！血风剑戟冒险谭，开幕！</blockquote>
+   <hr/>
+   <p>ℹ️ 按剧集组分季时，入库情况请到媒体库核对～<br>
+   <b>要订阅《鬼灭之刃》第 2 季（剧集组「Wikpedia / News」）（共 18 集）吗？</b></p>
+   [从第 1 集开始 | 1:ok:0]
+   [指定起始集… | 1:e:0]
+   [相似推荐 | 1:r:0] [演职人员 | 1:ca:0]
+   [返回 | 1:bk:0] [取消 | 1:x:0]
+<< answerCallbackQuery

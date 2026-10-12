@@ -29,6 +29,9 @@ func splitIntent(term string, download bool) (title string, wantsDownload bool) 
 // the releases, as if 搜索资源 had been pressed on it: navigate records it
 // (skipped) in place of the search under way.
 func (e *Engine) huntNow(sess session, card Reply) Reply {
+	if sess.focus != nil && sess.focus.EpisodeGroup != "" {
+		return card
+	}
 	sess.skipped = &card
 	return e.searching(sess, actionTorrentRun)
 }

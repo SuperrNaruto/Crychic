@@ -57,7 +57,7 @@ func torrentButton(id uint64) Button {
 // seconds, so the platform asks how it is going (run) as the reply's
 // refresh.
 func (e *Engine) searching(sess session, run string) Reply {
-	if sess.focus == nil {
+	if sess.focus == nil || sess.focus.EpisodeGroup != "" { // resources are searched by standard seasons
 		return Reply{Notice: msgInvalidChoice}
 	}
 	sess.hunt.stop()

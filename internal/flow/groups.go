@@ -92,6 +92,7 @@ func (e *Engine) pickGroup(ctx context.Context, sess session, g EpisodeGroup) Re
 		return Reply{Notice: msgGroupEmpty}
 	}
 	sess.group, sess.library, sess.picked.LibraryUnknown = g, Library{}, true
+	sess.download = false // resources are searched by standard seasons only
 	sess.picked.LibraryNote = msgGroupLibrary
 	return e.showSeasons(ctx, sess, seasonRead{seasons: seasons})
 }
