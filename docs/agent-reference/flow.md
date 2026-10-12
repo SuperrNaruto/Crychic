@@ -213,8 +213,15 @@ replacement.
 
 ## 历史与洗版
 
-`internal/flow/history.go` - 订阅历史 (`hs` from the subscription list, `hf` switches kind): the kind's newest 10
-past subscriptions (`GET /api/v1/subscribe/history/{电视剧|电影}?page=1&count=10`); a pick (`hp`) already
+`internal/flow/history.go` - 订阅历史 (`hs` from the subscription list, `hf` switches kind and reads page 1 afresh):
+the kind's past subscriptions newest first, 10 per upstream page (`GET /api/v1/subscribe/history/{电视剧|电影}?page=N&count=10`).
+更多历史 (`hm`, same level) appends the next upstream page under continuing numbers and shows the display page
+holding the first new record; records already listed (by history ID) are not repeated, since a subscription that
+finishes meanwhile pushes older records onto the next page. The note gives the latest `X-Total-Count`, how many are
+listed and how many lack a media identity (counted by ID, never listed); 更多历史 shows while the last page read was
+full (unlisted records count) and short of the total. Records newly added at the top appear when the history is
+opened again; a record deleted elsewhere between reads can shift one unread record past the offset, which the
+counts then show. A pick (`hp`) already
 subscribed only flashes a notice (lookup failure still asks), otherwise a card asks; 确认重新订阅 (`ho`) posts the
 history record back unchanged like MoviePilot's WebUI (MoviePilot drops its id/state fields and keeps its
 settings); the receipt only says MoviePilot sends notifications by its own settings

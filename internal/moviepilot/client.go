@@ -317,6 +317,7 @@ type call struct {
 	body    any
 	timeout time.Duration // 0 uses callTimeout
 	secret  bool
+	total   *int // receives a collection's X-Total-Count, -1 when absent
 }
 
 func (c *Client) do(ctx context.Context, cl call, out any) error {
@@ -341,7 +342,23 @@ func (c *Client) do(ctx context.Context, cl call, out any) error {
 		}
 		return &statusError{call: cl.method + " " + cl.path, code: resp.StatusCode, body: string(snippet)}
 	}
-	return decodeResponse(resp, cl, out)
+	if err := decodeResponse(resp, cl, out); err != nil {
+		return err
+	}
+	if cl.total != nil {
+		*cl.total = collectionTotal(resp.Header)
+	}
+	return nil
+}
+
+// collectionTotal is the whole collection's size MoviePilot reports beside
+// one page of it, or -1 when the header is missing or malformed.
+func collectionTotal(header http.Header) int {
+	total, err := strconv.Atoi(header.Get("X-Total-Count"))
+	if err != nil || total < 0 {
+		return -1
+	}
+	return total
 }
 
 func decodeResponse(resp *http.Response, cl call, out any) error {

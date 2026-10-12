@@ -269,6 +269,23 @@ type PastSubscription struct {
 	Record       []byte
 }
 
+// HistoryQuery asks for page (from 1) of a kind's subscription history,
+// Count records a page.
+type HistoryQuery struct {
+	Kind  Kind
+	Page  int
+	Count int
+}
+
+// HistoryPage is one page of subscription history. Unlisted are the ids of
+// the page's records left out of Past for lacking a media identity; Total
+// is the backend's count of the whole history, -1 when unknown.
+type HistoryPage struct {
+	Past     []PastSubscription
+	Unlisted []int
+	Total    int
+}
+
 // Torrent is one release a resource search found on the indexer sites,
 // with the facts shown to pick it. Record is the backend's own copy of it,
 // handed back unchanged to Download; it carries site credentials, so it is
@@ -343,9 +360,9 @@ type Backend interface {
 	SearchSubscription(ctx context.Context, sub Subscription) (SubscriptionSearchReceipt, error)
 	SubscriptionSearchBatch(ctx context.Context, id string) (SubscriptionSearchBatch, error)
 	CancelSubscriptionSearch(ctx context.Context, id string) error
-	// SubscriptionHistory lists at most count past subscriptions of kind,
+	// SubscriptionHistory reads one page of past subscriptions of a kind,
 	// newest first.
-	SubscriptionHistory(ctx context.Context, kind Kind, count int) ([]PastSubscription, error)
+	SubscriptionHistory(ctx context.Context, q HistoryQuery) (HistoryPage, error)
 	// Resubscribe subscribes past again with its own settings and returns
 	// the new subscription's id.
 	Resubscribe(ctx context.Context, past PastSubscription) (int, error)

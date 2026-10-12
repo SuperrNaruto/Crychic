@@ -52,7 +52,7 @@ var sameLevel = map[string]bool{
 	actionSubSearchFollow: true, actionSubSearchPause: true, actionSubSearchStop: true, actionSubSearchCancel: true,
 	actionTorrentPlanRefresh: true,
 	actionTick:               true, actionChartPage: true, actionWeekday: true, actionPage: true, answered: true,
-	actionRetry: true, actionSubsKind: true, actionHistoryKind: true, actionRefreshSubDetail: true,
+	actionRetry: true, actionSubsKind: true, actionHistoryKind: true, actionHistoryMore: true, actionRefreshSubDetail: true,
 	actionPauseSub: true, actionResumeSub: true,
 	actionTorrentAgain: true, actionTorrentSort: true, actionTorrentSites: true, actionTorrentSite: true,
 	actionTorrentTick: true, actionTorrentMissing: true,

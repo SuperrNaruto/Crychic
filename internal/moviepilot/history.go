@@ -23,34 +23,38 @@ type historyRecord struct {
 	Date         string `json:"date"`
 }
 
-// SubscriptionHistory reads MoviePilot's subscription history of one kind,
-// newest first. Records without a media identity cannot be subscribed again
-// and are left out.
-func (c *Client) SubscriptionHistory(ctx context.Context, kind flow.Kind, count int) ([]flow.PastSubscription, error) {
-	query := url.Values{"page": {"1"}, "count": {strconv.Itoa(count)}}
+// SubscriptionHistory reads one page of MoviePilot's subscription history
+// of a kind, newest first, with the whole history's size. Records without a
+// media identity cannot be subscribed again and are left out of Past,
+// counted by id in Unlisted.
+func (c *Client) SubscriptionHistory(ctx context.Context, q flow.HistoryQuery) (flow.HistoryPage, error) {
+	query := url.Values{"page": {strconv.Itoa(q.Page)}, "count": {strconv.Itoa(q.Count)}}
 	var raw []json.RawMessage
-	call := call{method: http.MethodGet, path: "/api/v1/subscribe/history/" + kindType(kind), query: query}
+	page := flow.HistoryPage{Total: -1}
+	call := call{method: http.MethodGet, path: "/api/v1/subscribe/history/" + kindType(q.Kind), query: query, total: &page.Total}
 	if err := c.do(ctx, call, &raw); err != nil {
-		return nil, err
+		return flow.HistoryPage{}, err
 	}
-	out := make([]flow.PastSubscription, 0, min(len(raw), count))
-	for _, record := range raw[:min(len(raw), count)] {
+	raw = raw[:min(len(raw), q.Count)]
+	page.Past = make([]flow.PastSubscription, 0, len(raw))
+	for _, record := range raw {
 		var r historyRecord
 		if err := json.Unmarshal(record, &r); err != nil {
-			return nil, err
+			return flow.HistoryPage{}, err
 		}
 		if r.MediaSource == "" || r.MediaID == "" {
+			page.Unlisted = append(page.Unlisted, r.ID)
 			continue
 		}
-		out = append(out, flow.PastSubscription{
+		page.Past = append(page.Past, flow.PastSubscription{
 			ID: r.ID, Season: r.Season, StartEpisode: r.StartEpisode, Date: r.Date, Record: record,
 			Media: flow.Media{
 				Source: r.MediaSource, ID: r.MediaID, Title: r.Name, Year: r.Year,
-				Kind: kind, PosterURL: posterURL(r.Poster),
+				Kind: q.Kind, PosterURL: posterURL(r.Poster),
 			},
 		})
 	}
-	return out, nil
+	return page, nil
 }
 
 // Resubscribe posts a history record back as a new subscription, the way

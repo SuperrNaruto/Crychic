@@ -4,27 +4,54 @@ import (
 	"context"
 	"fmt"
 	"slices"
+	"strings"
 )
 
 const (
 	actionHistory     = "hs" // arg: Kind; opens the subscription history
 	actionHistoryKind = "hf" // arg: Kind; switches the history to that kind
+	actionHistoryMore = "hm" // reads the history's next upstream page
 	actionHistoryPick = "hp" // arg: index into session past; asks to subscribe again
 	actionResubscribe = "ho" // arg: index into session past; subscribes it again
 
-	// historyCount is how many of a kind's newest past subscriptions show.
+	// historyCount is how many past subscriptions one upstream page holds.
 	historyCount = 10
 	// dateMinutes trims MoviePilot's "2006-01-02 15:04:05" to the minute.
 	dateMinutes = len("2006-01-02 15:04")
 
 	msgHistoryTitle     = "📚 订阅历史"
 	msgNoHistory        = "还没有%s订阅历史哦～"
-	msgHistoryNote      = "最近 10 条，点编号可以重新订阅哦。"
+	msgHistoryPick      = "点编号可以重新订阅"
+	msgHistoryMoreHint  = "，点「更多历史」看更早的"
 	msgHistoryFailed    = "暂时查不到订阅历史，稍后再点一次试试吧～"
 	msgAlreadyAgain     = "它已经在订阅中啦～"
 	msgResubscribeNote  = "会沿用上次的订阅设置哦。"
 	msgResubscribeLabel = "确认重新订阅"
+	labelHistoryMore    = "更多历史"
 )
+
+// pastPaging is how far the shown subscription history has been read.
+type pastPaging struct {
+	page     int   // upstream pages read
+	more     bool  // the last page read was full and short of the total
+	total    int   // the backend's latest count of the kind's history, -1 when unknown
+	unlisted []int // ids of records read without a media identity
+}
+
+// read is p once page number n has been read.
+func (p pastPaging) read(n int, page HistoryPage) pastPaging {
+	unlisted := slices.Clone(p.unlisted)
+	for _, id := range page.Unlisted {
+		if !slices.Contains(unlisted, id) {
+			unlisted = append(unlisted, id)
+		}
+	}
+	full := len(page.Past)+len(page.Unlisted) >= historyCount
+	return pastPaging{
+		page: n, total: page.Total, unlisted: unlisted,
+		more: full && (page.Total < 0 || n*historyCount < page.Total),
+	}
+}
 
 // chooseHistory applies the subscription history actions; ok is false for
 // others.
@@ -35,6 +62,8 @@ func (e *Engine) chooseHistory(ctx context.Context, sess session, p press) (Repl
 			return Reply{Notice: msgInvalidChoice}, true
 		}
 		return e.history(ctx, sess, Kind(p.arg)), true
+	case actionHistoryMore:
+		return e.moreHistory(ctx, sess), true
 	case actionHistoryPick:
 		return e.pickPast(ctx, sess, p.arg), true
 	case actionResubscribe:
@@ -43,35 +72,112 @@ func (e *Engine) chooseHistory(ctx context.Context, sess session, p press) (Repl
 	return Reply{}, false
 }
 
-// history lists kind's newest past subscriptions; a failed read keeps the
-// screen and says so.
+// history lists the first page of kind's past subscriptions, newest first;
+// a failed read keeps the screen and says so.
 func (e *Engine) history(ctx context.Context, sess session, kind Kind) Reply {
-	past, err := e.backend.SubscriptionHistory(ctx, kind, historyCount)
+	page, err := e.backend.SubscriptionHistory(ctx, HistoryQuery{Kind: kind, Page: 1, Count: historyCount})
 	if err != nil {
-		e.log.Warn("subscription history unavailable", "kind", kind, "err", err)
-		if message, safe := UserMessage(err); safe {
-			return Reply{Notice: message}
-		}
-		return Reply{Notice: msgHistoryFailed}
+		return e.historyFailed(kind, err)
 	}
-	sess.kind, sess.past, sess.target = kind, past, nil
+	sess.kind, sess.past, sess.target = kind, page.Past, nil
+	sess.pastPages = pastPaging{}.read(1, page)
+	return e.listPages(sess, historyView(sess))
+}
+
+// moreHistory appends the next upstream page and shows the page holding its
+// first new record. Records listed already keep their numbers; one that a
+// newly finished subscription pushed onto the next page is not listed twice.
+func (e *Engine) moreHistory(ctx context.Context, sess session) Reply {
+	if !sess.pastPages.more {
+		return Reply{Notice: msgInvalidChoice}
+	}
+	next := sess.pastPages.page + 1
+	page, err := e.backend.SubscriptionHistory(ctx, HistoryQuery{Kind: sess.kind, Page: next, Count: historyCount})
+	if err != nil {
+		return e.historyFailed(sess.kind, err)
+	}
+	first := len(sess.past)
+	past := slices.Clone(sess.past)
+	for _, ps := range page.Past {
+		if !slices.ContainsFunc(past, func(p PastSubscription) bool { return p.ID == ps.ID }) {
+			past = append(past, ps)
+		}
+	}
+	sess.past, sess.pastPages = past, sess.pastPages.read(next, page)
+	// With nothing new, the page of the last record listed stays in view.
+	holds := data(sess.id, actionHistoryPick, min(first, len(past)-1))
+	return e.listPageWith(sess, historyView(sess), holds)
+}
+
+func (e *Engine) historyFailed(kind Kind, err error) Reply {
+	e.log.Warn("subscription history unavailable", "kind", kind, "err", err)
+	if message, safe := UserMessage(err); safe {
+		return Reply{Notice: message}
+	}
+	return Reply{Notice: msgHistoryFailed}
+}
+
+// historyView lists the history read so far, numbered in reading order.
+func historyView(sess session) listView {
 	view := listView{
-		heading: Heading(Plain(fmt.Sprintf("%s · %s", msgHistoryTitle, kind))),
-		note:    msgHistoryNote,
-		menu:    [][]Button{kindRow(sess.id, actionHistoryKind, kind)},
+		heading: Heading(Plain(fmt.Sprintf("%s · %s", msgHistoryTitle, sess.kind))),
+		note:    historyNote(sess),
+		menu:    [][]Button{kindRow(sess.id, actionHistoryKind, sess.kind)},
 		footer:  append([]Button{backTo(sess.id, actionSubs, 0)}, browseRow(sess.id)...),
 	}
-	for i, ps := range past {
+	if sess.pastPages.more {
+		view.menu = slices.Insert(view.menu, 0, []Button{{Label: labelHistoryMore, Data: data(sess.id, actionHistoryMore, 0)}})
+	}
+	for i, ps := range sess.past {
 		view.entries = append(view.entries, listEntry{
 			text:    Lines(pastEntry(i+1, ps)),
 			buttons: []Button{{Label: fmt.Sprint(i + 1), Data: data(sess.id, actionHistoryPick, i)}},
 		})
 	}
-	if len(past) == 0 {
-		view.note = ""
-		view.entries = []listEntry{{text: Sentence(fmt.Sprintf(msgNoHistory, kind))}}
+	if len(sess.past) == 0 && view.note == "" {
+		view.entries = []listEntry{{text: Sentence(fmt.Sprintf(msgNoHistory, sess.kind))}}
 	}
-	return e.listPages(sess, view)
+	return view
+}
+
+// historyNote is e.g. "共 12 条，已列出 10 条。点编号可以重新订阅，点「更多历史」
+// 看更早的哦。"; empty for a history with nothing in it.
+func historyNote(sess session) string {
+	p, listed := sess.pastPages, len(sess.past)
+	if listed == 0 && len(p.unlisted) == 0 && !p.more {
+		return ""
+	}
+	hint := ""
+	if listed > 0 {
+		hint = msgHistoryPick
+	}
+	if p.more {
+		hint += msgHistoryMoreHint
+	}
+	if hint != "" {
+		hint = strings.TrimPrefix(hint, "，") + "哦。"
+	}
+	return historyCounts(p, listed) + hint
+}
+
+// historyCounts is e.g. "共 12 条，已列出 9 条（1 条缺少媒体信息）。", the listed
+// count shown while it differs from the total or more may follow.
+func historyCounts(p pastPaging, listed int) string {
+	var counts []string
+	if p.total >= 0 {
+		counts = append(counts, fmt.Sprintf("共 %d 条", p.total))
+	}
+	if p.more || (p.total >= 0 && listed != p.total) {
+		counts = append(counts, fmt.Sprintf("已列出 %d 条", listed))
+	}
+	note := strings.Join(counts, "，")
+	if n := len(p.unlisted); n > 0 {
+		note += fmt.Sprintf("（%d 条缺少媒体信息）", n)
+	}
+	if note == "" {
+		return ""
+	}
+	return note + "。"
 }
 
 // pastEntry is e.g. "1. **《颂乐人偶》第 1 季**" over "_2025 · 2026-10-06 22:36_".

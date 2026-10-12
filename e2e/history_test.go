@@ -9,6 +9,7 @@ const (
 	tvHistory    = "GET /api/v1/subscribe/history/电视剧"
 	movieHistory = "GET /api/v1/subscribe/history/电影"
 	mujicaLookup = "GET /api/v1/subscribe/media/274580"
+	blueLookup   = "GET /api/v1/subscribe/media/79166"
 )
 
 var mujica = show{"颂乐人偶", "2025", "274580", "https://image.tmdb.org/t/p/w500/xixekXvcCSZS1jXhFrYUzpCrLL6.jpg"}
@@ -51,5 +52,33 @@ func TestResubscribeFromHistory(t *testing.T) {
 	h.tap(alice, 1, "1")
 	h.tap(alice, 1, "确认重新订阅")
 	h.shows(1, "/subscribe")
+	h.tr.verify(t)
+}
+
+// Older history is read a page at a time and appended under its own
+// numbers. A record without a media identity is counted but not listed and
+// still makes its page full; one a newly finished subscription pushes onto
+// the next page is listed once; the last short page ends the reading. An
+// older record is posted back as MoviePilot recorded it.
+func TestBrowseOlderHistory(t *testing.T) {
+	h := start(t, scenario{routes: map[string]route{
+		subsPath:      ok("subscriptions.json"),
+		tvHistory:     ok("subscribe_history_tv_long.json"),
+		mygoLookup:    ok("subscription_existing.json"),
+		blueLookup:    ok("subscription_none.json"),
+		subscribePath: ok("subscribe_created.json"),
+	}})
+	h.say(alice, alice, "/subscribe")
+	h.tap(alice, 1, "订阅历史")
+	h.shows(1, "共 12 条，已列出 9 条")
+	h.mp.setRoute(tvHistory, ok("subscribe_history_tv_grown.json"))
+	h.tap(alice, 1, "更多历史")
+	h.shows(1, "共 13 条，已列出 11 条")
+	h.tap(alice, 1, "10")
+	h.tap(alice, 1, "11")
+	h.tap(alice, 1, "确认重新订阅")
+	h.shows(1, "已经帮你重新订阅《碧蓝之海》第 1 季（从第 5 集开始）啦")
+	h.tap(alice, 1, "返回")
+	h.shows(1, "订阅历史 · 电视剧")
 	h.tr.verify(t)
 }

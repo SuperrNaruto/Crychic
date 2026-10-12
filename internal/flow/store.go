@@ -63,6 +63,7 @@ type session struct {
 	editOptions  int                      // option generations never rewind when navigating back
 	kind         Kind                     // the kind of subscription or history shown
 	past         []PastSubscription
+	pastPages    pastPaging // how far past has been read
 	tasks        []taskRef
 	follow       following
 	doomed       *DownloadRef    // the download and instance asked to be deleted

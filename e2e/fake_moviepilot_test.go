@@ -185,6 +185,7 @@ func (f *fakeMoviePilot) serveAuthenticated(w http.ResponseWriter, r *http.Reque
 	case f.setsSubscriptionState(w, r):
 	case f.editsSubscription(w, r):
 	case f.servesSubscriptionExecution(w, r):
+	case f.servesHistory(w, r):
 	default:
 		f.serveRoute(w, r)
 	}
