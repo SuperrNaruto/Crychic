@@ -155,6 +155,8 @@ func (f *fakeTelegram) serveMethod(w http.ResponseWriter, r *http.Request, metho
 		f.answer(w, r)
 	case "answerInlineQuery":
 		f.answerInline(w, r)
+	case "sendChatAction":
+		f.chatAction(w, r)
 	case "setMyCommands":
 		f.setCommands(r)
 		reply(w, true, nil)

@@ -57,6 +57,12 @@ without requiring one poster transport representation. Scenarios default `answer
 that order; `TestSlowEditAnswersAlongside` sets a 1ms lead and `holdNextRequest` keeps the edit from being
 applied, so the press must be answered before the edit shows.
 
+`sendChatAction` is accepted by the fake (chat must exist, a topic must belong to a forum, only `typing`) and
+recorded as `<< sendChatAction chat=N [topic=T] typing`. Scenarios disable the typing action by default
+(`noTyping`) so `-race` timing never adds lines; `scenario.typingLead` enables it, and `TestSlowSearchShowsTyping`
+holds the title search (`holdCalls`), waits on `expect("action:<chat>")`, then releases it, so the transcript
+shows the action before the reply in a private chat and a forum topic.
+
 `loseNextResponse` stores a displayed message but returns an incomplete HTTP body, distinguishing unknown
 send results from explicit media refusals. `rejectNextEdit` can return Telegram's 429 with `retry_after`;
 delivery scenarios verify the deadline and retained file_id, as well as successful-receipt recovery without

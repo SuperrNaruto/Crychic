@@ -39,6 +39,9 @@ type Deps struct {
 	// SubsGrace is how long search results wait for the subscription list
 	// behind their marks; zero uses the flow's default.
 	SubsGrace time.Duration
+	// TypingLead is how long a typed search or command runs before the chat
+	// shows "typing…"; zero uses the bot's default, negative disables it.
+	TypingLead time.Duration
 }
 
 // Run serves the Telegram bot and native notices until ctx is cancelled.
@@ -82,7 +85,7 @@ func telegramBot(cfg config.Config, transport *http.Transport, deps Deps) (*tele
 	}
 	return telegram.New(telegram.Config{
 		Token: cfg.TelegramToken, APIURL: cfg.TelegramAPIURL, AllowedUsers: cfg.TelegramAllowed,
-		FollowEvery: cfg.FollowEvery, AnswerLead: deps.AnswerLead, HTTPClient: &http.Client{Timeout: telegramTimeout, Transport: transport},
+		FollowEvery: cfg.FollowEvery, AnswerLead: deps.AnswerLead, TypingLead: deps.TypingLead, HTTPClient: &http.Client{Timeout: telegramTimeout, Transport: transport},
 		ImageClient: images, Log: deps.Log,
 	})
 }

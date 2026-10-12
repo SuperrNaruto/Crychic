@@ -37,6 +37,8 @@ const (
 	// subsMarksGrace lets the fake's subscription list always arrive in
 	// time for the marks, however slow a -race run is.
 	subsMarksGrace = actionTimeout
+	// noTyping keeps "typing…" out of every scenario that does not test it.
+	noTyping = -time.Nanosecond
 )
 
 // epoch is when every scenario starts, a Monday noon in China, so the
@@ -61,6 +63,9 @@ type scenario struct {
 	// answerLead is how long a press's edit runs before its answer goes
 	// alongside; empty waits for the edit, keeping their order fixed.
 	answerLead time.Duration
+	// typingLead is how long a typed search runs before the chat shows
+	// "typing…"; empty disables it, keeping other transcripts free of it.
+	typingLead time.Duration
 }
 
 type harness struct {
@@ -72,6 +77,7 @@ type harness struct {
 	img    *fakeImages
 	cfg    config.Config
 	lead   time.Duration // the scenario's answerLead
+	typing time.Duration // the scenario's typingLead
 	began  time.Time     // real time at epoch; restarts keep the clock going
 	stop   func()
 	nextCB int
@@ -115,6 +121,7 @@ func start(t *testing.T, sc scenario) *harness {
 	}
 	h := &harness{t: t, tr: tr, tg: tg, mp: mp, bgm: bgm, img: newFakeImages(t), cfg: cfg, began: time.Now()}
 	h.lead = cmp.Or(sc.answerLead, orderedAnswers)
+	h.typing = cmp.Or(sc.typingLead, noTyping)
 	registered := tg.expect(commandsKey)
 	h.launch()
 	h.wait(registered, "registering the command menu")
@@ -147,7 +154,7 @@ func (h *harness) launch() {
 	log := slog.New(slog.NewTextHandler(testWriter{h.t}, nil))
 	now := func() time.Time { return epoch.Add(time.Since(h.began) + time.Duration(h.offset.Load())) }
 	go func() {
-		stopped <- app.Run(ctx, h.cfg, app.Deps{Log: log, Now: now, Images: h.img.client(), AnswerLead: h.lead, SubsGrace: subsMarksGrace})
+		stopped <- app.Run(ctx, h.cfg, app.Deps{Log: log, Now: now, Images: h.img.client(), AnswerLead: h.lead, SubsGrace: subsMarksGrace, TypingLead: h.typing})
 	}()
 	h.stop = func() {
 		cancel()

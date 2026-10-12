@@ -62,7 +62,9 @@ func (a *adapter) onText(ctx context.Context, msg *models.Message) {
 		return
 	}
 	if msg.Chat.Type == models.ChatTypePrivate {
+		stopTyping := a.typing(ctx, msg)
 		reply := a.flow.Start(ctx, messageActor(msg), msg.Text)
+		stopTyping()
 		a.replyTo(ctx, msg, reply)
 	}
 }

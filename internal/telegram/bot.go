@@ -77,6 +77,7 @@ type Config struct {
 	APIURL       string
 	AllowedUsers []int64
 	FollowEvery  time.Duration // how often a live reply (flow.Reply.Follow) refreshes
+	TypingLead   time.Duration // how long a new message's work runs before the chat shows "typing…"; zero is defaultTypingLead, negative never shows it
 	AnswerLead   time.Duration // how long a press's edit runs before its answer goes alongside; zero is defaultAnswerLead
 	HTTPClient   *http.Client
 	ImageClient  *http.Client // downloads posters Telegram cannot fetch itself
@@ -89,6 +90,7 @@ type adapter struct {
 	log         *slog.Logger
 	followEvery time.Duration
 	answerLead  time.Duration
+	typingLead  time.Duration
 	posters     *posters
 	runCtx      context.Context
 	api         *bot.Bot // set once connected, before any update arrives
@@ -135,8 +137,8 @@ func New(cfg Config) (*Bot, error) {
 	}
 	a := &adapter{
 		allowed: allowed, log: cfg.Log, followEvery: cfg.FollowEvery, posters: newPosters(cfg.ImageClient, cfg.Log),
-		answerLead: cmp.Or(cfg.AnswerLead, defaultAnswerLead),
-		pending:    map[inputKey]pendingInput{}, followers: map[messageKey]*follower{}, lanes: map[messageKey]*messageLane{},
+		answerLead: cmp.Or(cfg.AnswerLead, defaultAnswerLead), typingLead: cmp.Or(cfg.TypingLead, defaultTypingLead),
+		pending: map[inputKey]pendingInput{}, followers: map[messageKey]*follower{}, lanes: map[messageKey]*messageLane{},
 		inline:  inlineSearches{running: map[int64]inlineSearch{}},
 		initial: map[*initialReply]struct{}{},
 	}
@@ -280,7 +282,9 @@ func (a *adapter) onMessage(ctx context.Context, b *bot.Bot, msg *models.Message
 			delete(a.pending, inputOf(msg))
 			a.mu.Unlock()
 		}
+		stopTyping := a.typing(ctx, msg)
 		reply = run(ctx, messageActor(msg), arg)
+		stopTyping()
 	}
 	a.replyTo(ctx, msg, reply)
 }
