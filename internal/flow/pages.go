@@ -105,9 +105,6 @@ func placeEntry(page *Reply, entry listEntry, opens bool) {
 		page.Text = append(page.Text, Group(entry.section))
 	}
 	page.Text = append(page.Text, entry.text...)
-	if entry.poster != "" {
-		page.Gallery = append(page.Gallery, entry.poster)
-	}
 }
 
 func textSize(text Text) int {

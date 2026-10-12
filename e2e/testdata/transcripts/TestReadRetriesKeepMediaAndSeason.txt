@@ -1,16 +1,6 @@
 >> user 1001 in chat 1001: 名侦探柯南
 -> MoviePilot GET /api/v1/media/search?count=10&title=名侦探柯南&type=media
 << sendRichMessage chat=1001 message=1
-   <tg-slideshow>
-   <img src="url-7ca1018dcbd7e9db2629bc08168d35247b2cf8ab2703868e1e1423650f00c642"/>
-   <img src="url-a75f3db1874d7b349a22247c4af78ef42fd919964d472df98a8f2129023c4889"/>
-   <img src="url-496032c688752600dc90312f473a62c226a9bfbb9ddd3295050168cb5e2a8fe1"/>
-   <img src="url-55c239354e7ca97d9c22f7d8420902e1613b2da4cb077ebb8e1db8a6b1e88348"/>
-   <img src="url-e0c74abd89db53f9cd57f2054bd45368851fbe4055b9b9416c7b4116e009c71a"/>
-   <img src="url-799a675a8c6fb8f785ca49347a3a2cb137d7d783967df65c749542f78881814f"/>
-   <img src="url-f4037a8511671265a82b5521be06f233c07d8a33cc3ef5ab2d6c1c4b9109bffc"/>
-   <img src="url-b2c2433aada3a77dcaf4706365bb5a306f9c2b6348ca07539bcd43273d303781"/>
-   </tg-slideshow>
    <h3>🔍 帮你找到这些「名侦探柯南」啦</h3>
    <ol start="1">
    <li value="1"><b>名侦探柯南</b><br>
@@ -51,16 +41,6 @@
 << answerCallbackQuery
 >> user 1001 taps 1:bk:0 on message 1
 << editMessageText chat=1001 message=1
-   <tg-slideshow>
-   <img src="url-7ca1018dcbd7e9db2629bc08168d35247b2cf8ab2703868e1e1423650f00c642"/>
-   <img src="url-a75f3db1874d7b349a22247c4af78ef42fd919964d472df98a8f2129023c4889"/>
-   <img src="url-496032c688752600dc90312f473a62c226a9bfbb9ddd3295050168cb5e2a8fe1"/>
-   <img src="url-55c239354e7ca97d9c22f7d8420902e1613b2da4cb077ebb8e1db8a6b1e88348"/>
-   <img src="url-e0c74abd89db53f9cd57f2054bd45368851fbe4055b9b9416c7b4116e009c71a"/>
-   <img src="url-799a675a8c6fb8f785ca49347a3a2cb137d7d783967df65c749542f78881814f"/>
-   <img src="url-f4037a8511671265a82b5521be06f233c07d8a33cc3ef5ab2d6c1c4b9109bffc"/>
-   <img src="url-b2c2433aada3a77dcaf4706365bb5a306f9c2b6348ca07539bcd43273d303781"/>
-   </tg-slideshow>
    <h3>🔍 帮你找到这些「名侦探柯南」啦</h3>
    <ol start="1">
    <li value="1"><b>名侦探柯南</b><br>

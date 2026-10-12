@@ -87,7 +87,7 @@ README 的旧测试段只列两个 fake；资源搜索流实施时已同步为 T
 | 101 | 根常驻真实系统禁写与 PT 搜索禁令。 |
 | 67-68、102-114 | [测试目录规则](../../e2e/AGENTS.md) 与 [E2E 参考](e2e.md)：verify、tap、协议、图像、时钟与录制来源。 |
 | 118-121 | [MoviePilot 参考](moviepilot.md)：superuser、中文类型、响应 envelope、空订阅 null ID。 |
-| 122 | Telegram 参考：rich、gallery、file_id、失效退化、Douban、预算、banner、旧图选择与旧照片迁移。 |
+| 122 | Telegram 参考：rich、file_id、失效退化、Douban、预算、banner、旧图选择与旧照片迁移。 |
 | 123-124 | MoviePilot 参考：w500、cosmetic details、director 混合字段不展示。 |
 | 125 | 会话参考：start_episode、只追新集、同季条件与消费目标前的范围校验。 |
 | 126-131 | Telegram 参考：命令 scope、other_bot、topic、allowed_updates、Follow、pending 重投及输入过期。 |

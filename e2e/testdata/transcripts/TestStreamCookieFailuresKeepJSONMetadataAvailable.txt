@@ -1,16 +1,6 @@
 >> user 1001 in chat 1001: /search 沙丘
 -> MoviePilot GET /api/v1/media/search?count=10&title=沙丘&type=media
 << sendRichMessage chat=1001 message=1
-   <tg-slideshow>
-   <img src="url-ae95e58ec03e202c035279fd7b770ee9063e24e22f246ec568120ac5a90252ea"/>
-   <img src="url-7ea76e3b74f0f1bba01161bd2446775a7fe7657b009df91fca57cb760c60208f"/>
-   <img src="url-e887bdb9df0034573d9e03f6507d8e8b7862bda8362f968e4349554493678ff8"/>
-   <img src="url-0603bc04eba9f23ccb0da918da40cefdcc9533bb920a16af3d7323b8954288fe"/>
-   <img src="url-f3924e4dafb7c35392e3de6d3fbfd5e540d3fcfe78dd69b758e7319101e217fe"/>
-   <img src="url-cfc61103a56e8781300f998571c8194d0958754710eb781ed3beae7e5eae3dc2"/>
-   <img src="url-d03384b6cc307585edcd449cb20296ce3fa11071866b554add8f77be947e6c17"/>
-   <img src="url-f6bf48e37249a47a3abcd09ca8c92f0ab0f5d0f1d21a40918902154571cda459"/>
-   </tg-slideshow>
    <h3>🔍 帮你找到这些「沙丘」啦</h3>
    <ol start="1">
    <li value="1"><b>沙丘</b><br>
@@ -91,16 +81,6 @@
 >> user 1001 in chat 1001: /search 沙丘
 -> MoviePilot GET /api/v1/media/search?count=10&title=沙丘&type=media
 << sendRichMessage chat=1001 message=2
-   <tg-slideshow>
-   <img src="url-ae95e58ec03e202c035279fd7b770ee9063e24e22f246ec568120ac5a90252ea"/>
-   <img src="url-7ea76e3b74f0f1bba01161bd2446775a7fe7657b009df91fca57cb760c60208f"/>
-   <img src="url-e887bdb9df0034573d9e03f6507d8e8b7862bda8362f968e4349554493678ff8"/>
-   <img src="url-0603bc04eba9f23ccb0da918da40cefdcc9533bb920a16af3d7323b8954288fe"/>
-   <img src="url-f3924e4dafb7c35392e3de6d3fbfd5e540d3fcfe78dd69b758e7319101e217fe"/>
-   <img src="url-cfc61103a56e8781300f998571c8194d0958754710eb781ed3beae7e5eae3dc2"/>
-   <img src="url-d03384b6cc307585edcd449cb20296ce3fa11071866b554add8f77be947e6c17"/>
-   <img src="url-f6bf48e37249a47a3abcd09ca8c92f0ab0f5d0f1d21a40918902154571cda459"/>
-   </tg-slideshow>
    <h3>🔍 帮你找到这些「沙丘」啦</h3>
    <ol start="1">
    <li value="1"><b>沙丘</b><br>
@@ -137,16 +117,6 @@
 >> user 1001 taps 3:d:2 on message 3
 -> MoviePilot GET /api/v1/recommend/douban_tv_hot
 << editMessageText chat=1001 message=3
-   <tg-slideshow>
-   <img src="file-f5f6d5b17cb11ee11cf44ed25dc5348adfece286572dcdf0710170dad1dbc6e7"/>
-   <img src="file-d0c17bfb01db79c614953c1154317caaa4ee7dcd4b586f18038a899719b9d99f"/>
-   <img src="file-66a056afde763621e3149ad5de08f246d87c04694be04a641f06cef4c60a88b2"/>
-   <img src="file-83960d583ad829fd76e9b053d6d6856cb254bf022cb264fe5e433730a1dbc897"/>
-   <img src="file-be1494efdb6f9510421bf70153fb72d24808f6a29197435abae9cc29f71b8013"/>
-   <img src="file-9d36627e87010d1801261bb8c7fba9c783ecfdc4bfa161ac25c6a804e7e47bbb"/>
-   <img src="file-e3b7ec8154b63bc06c1d29034d9405de2d5e86d5189a55cdf4c4c6ee41d290ea"/>
-   <img src="file-35170920dd0a9b2d107b55aed682088b1b42f8d3a92029659eb76f73c591ed81"/>
-   </tg-slideshow>
    <h3>📺 豆瓣热门剧集</h3>
    <ol start="1">
    <li value="1"><details><summary><b>深渊无间</b> · <i>2026 · ⭐ 7.3</i></summary>
@@ -227,13 +197,6 @@
 -> Bangumi GET /v0/subjects/614640
 -> Bangumi GET /v0/subjects/624923
 << editMessageText chat=1001 message=3
-   <tg-slideshow>
-   <img src="url-9e933bf5741fa03634fce27465541914f4e0cf39e7fcf8d057c5ec37f440e44e"/>
-   <img src="url-f53af7615ce6819bbdd59697dd9b649bdcc352865663df144eeb3671fd53bcbf"/>
-   <img src="url-8b4da0bfb9bef543c926e6becb55dbe1f6486c5500e33bf11b6a5e765fdcc79a"/>
-   <img src="url-1e587b41d0d73fe6cc2b07531bd80e9249742d8ec1f424b0a52bc6c4798e507f"/>
-   <img src="url-2b4fc794a6be040a03bec7b01b69c10df760cde0840d66da010be9f15a1c2c26"/>
-   </tg-slideshow>
    <h3>🎌 新番放送 · 星期一（今天）</h3>
    <h4>2026-10-05 首播</h4>
    <ol start="1">

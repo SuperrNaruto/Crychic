@@ -57,15 +57,15 @@ home. The bot calls `getMe` itself at start (library check skipped) to learn its
 `internal/telegram/rich.go` - renders `flow.Text` as a Telegram rich message (Bot API 10.1 rich HTML:
 `h3`/`h4`, `p` with `br`, `ol`/`li value`, `blockquote expandable` (card synopsis), plain `blockquote` (`Callout`, consecutive lines joined by `br`), top-level `details`/`summary` (`Fold`, closed), `li` > `details`/`summary`
 (an entry with a body; closed by default, the summary keeps name and facts), `table bordered striped compact`, `ul`
-with `input type=checkbox`, `mark`, `tg-button-row`/`tg-button type=url`, `tg-slideshow` (gallery), `footer`
+with `input type=checkbox`, `mark`, `tg-button-row`/`tg-button type=url`, `footer`
 (remarks, and `Small` print mid-message: rich HTML has no font size below headings, and the owner chose a
 footer over `h6`/`sub` on a live sample), `hr`, `img`), escaping everything
 
 Ordinary bot messages use `sendRichMessage`; edits pass `rich_message`, and the library's empty `text` field
 is accepted. Inline articles use the classic HTML exception described above. Media
-posters are an `<img>` block on top; search result, chart, 相似推荐 and 同系列 pages carry their entries' posters as
-`Reply.Gallery`, a `<tg-slideshow>` on top in list order (Telegram shows no per-slide captions, so slides
-carry no text). Telegram fetches posters itself the first time; every poster's `file_id` is then read from
+posters are an `<img>` block on top; list pages (search results, charts, 相似推荐, 同系列, 演职人员作品) carry no
+poster block: slides had no numbers to match entries and eight Douban posters cost about 2.4s to upload
+(主人 2026-10-13 决定去掉)。Telegram fetches posters itself the first time; the poster's `file_id` is then read from
 Telegram's copy of the message and later messages send it by `file_id` (`tg://photo?id=pN` media; transcripts
 normalize to the displayed image identity), so Telegram need not fetch it again. Only an explicit invalid
 file identifier or failed image-URL rejection forgets reused file_ids and retries with fresh posters, then

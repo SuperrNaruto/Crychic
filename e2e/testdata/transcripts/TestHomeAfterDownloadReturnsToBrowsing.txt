@@ -1,10 +1,6 @@
 >> user 1001 in chat 1001: 下载 沙丘
 -> MoviePilot GET /api/v1/media/search?count=10&title=沙丘&type=media
 << sendRichMessage chat=1001 message=1
-   <tg-slideshow>
-   <img src="url-ae95e58ec03e202c035279fd7b770ee9063e24e22f246ec568120ac5a90252ea"/>
-   <img src="url-0603bc04eba9f23ccb0da918da40cefdcc9533bb920a16af3d7323b8954288fe"/>
-   </tg-slideshow>
    <h3>🔍 帮你找到这些「沙丘」啦</h3>
    <ol start="1">
    <li value="1"><b>沙丘</b><br>
@@ -101,9 +97,6 @@
 >> user 1001 taps 1:d:0 on message 1
 -> MoviePilot GET /api/v1/recommend/tmdb_trending
 << editMessageText chat=1001 message=1
-   <tg-slideshow>
-   <img src="url-9dcf3aeeac8a98b1293ba6367ee4f3cd4e8245d6977d04b01f16ba84a90b2192"/>
-   </tg-slideshow>
    <h3>🔥 TMDB 流行趋势</h3>
    <ol start="1">
    <li value="1"><details><summary><b>挖掘者</b> · <i>2026 · ⭐ 7.5</i></summary>

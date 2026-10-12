@@ -9,16 +9,6 @@
 >> user 1001 taps 1:d:0 on message 1
 -> MoviePilot GET /api/v1/recommend/tmdb_trending
 << editMessageText chat=1001 message=1
-   <tg-slideshow>
-   <img src="url-9dcf3aeeac8a98b1293ba6367ee4f3cd4e8245d6977d04b01f16ba84a90b2192"/>
-   <img src="url-dcad966dbca57c5ddbfd7d685e5aa39e97272d57f0fac264e890e4fca7cefce3"/>
-   <img src="url-06abdbfb48bc97e564c24d0bd760fdf89689edbe3b0b6547723d81f82665a7a4"/>
-   <img src="url-2b85c6da0a26b04a8f1d39d3f6bd2615e76c5298432c5a1fa03f57e3e0a04696"/>
-   <img src="url-6699a89aa92f54efa7fcd1b444da5532900bcbe696d98fb4e886ec861f45e61b"/>
-   <img src="url-6565e988e134eafbda92eae419d92dde4f5e8ce5651bddb5137bf5a1cd07cc2d"/>
-   <img src="url-d511ae90fd303db4dea76257fa64b8752df754c2bcea7c8290ce68117e24bd58"/>
-   <img src="url-ae96557eefddf17644431620427f3ce7632a64a7a76c3f63ee32bfcd13d5beca"/>
-   </tg-slideshow>
    <h3>🔥 TMDB 流行趋势</h3>
    <ol start="1">
    <li value="1"><details><summary><b>挖掘者</b> · <i>2026 · 电影 · ⭐ 7.5</i></summary>
@@ -78,16 +68,6 @@
 << answerCallbackQuery
 >> user 1001 taps 1:bk:0 on message 1
 << editMessageText chat=1001 message=1
-   <tg-slideshow>
-   <img src="url-9dcf3aeeac8a98b1293ba6367ee4f3cd4e8245d6977d04b01f16ba84a90b2192"/>
-   <img src="url-dcad966dbca57c5ddbfd7d685e5aa39e97272d57f0fac264e890e4fca7cefce3"/>
-   <img src="url-06abdbfb48bc97e564c24d0bd760fdf89689edbe3b0b6547723d81f82665a7a4"/>
-   <img src="url-2b85c6da0a26b04a8f1d39d3f6bd2615e76c5298432c5a1fa03f57e3e0a04696"/>
-   <img src="url-6699a89aa92f54efa7fcd1b444da5532900bcbe696d98fb4e886ec861f45e61b"/>
-   <img src="url-6565e988e134eafbda92eae419d92dde4f5e8ce5651bddb5137bf5a1cd07cc2d"/>
-   <img src="url-d511ae90fd303db4dea76257fa64b8752df754c2bcea7c8290ce68117e24bd58"/>
-   <img src="url-ae96557eefddf17644431620427f3ce7632a64a7a76c3f63ee32bfcd13d5beca"/>
-   </tg-slideshow>
    <h3>🔥 TMDB 流行趋势</h3>
    <ol start="1">
    <li value="1"><details><summary><b>挖掘者</b> · <i>2026 · 电影 · ⭐ 7.5</i></summary>
@@ -147,16 +127,6 @@
 << answerCallbackQuery
 >> user 1001 taps 1:bk:0 on message 1
 << editMessageText chat=1001 message=1
-   <tg-slideshow>
-   <img src="url-9dcf3aeeac8a98b1293ba6367ee4f3cd4e8245d6977d04b01f16ba84a90b2192"/>
-   <img src="url-dcad966dbca57c5ddbfd7d685e5aa39e97272d57f0fac264e890e4fca7cefce3"/>
-   <img src="url-06abdbfb48bc97e564c24d0bd760fdf89689edbe3b0b6547723d81f82665a7a4"/>
-   <img src="url-2b85c6da0a26b04a8f1d39d3f6bd2615e76c5298432c5a1fa03f57e3e0a04696"/>
-   <img src="url-6699a89aa92f54efa7fcd1b444da5532900bcbe696d98fb4e886ec861f45e61b"/>
-   <img src="url-6565e988e134eafbda92eae419d92dde4f5e8ce5651bddb5137bf5a1cd07cc2d"/>
-   <img src="url-d511ae90fd303db4dea76257fa64b8752df754c2bcea7c8290ce68117e24bd58"/>
-   <img src="url-ae96557eefddf17644431620427f3ce7632a64a7a76c3f63ee32bfcd13d5beca"/>
-   </tg-slideshow>
    <h3>🔥 TMDB 流行趋势</h3>
    <ol start="1">
    <li value="1"><details><summary><b>挖掘者</b> · <i>2026 · 电影 · ⭐ 7.5</i></summary>
@@ -242,16 +212,6 @@
 << answerCallbackQuery
 >> user 1001 taps 1:bk:0 on message 1
 << editMessageText chat=1001 message=1
-   <tg-slideshow>
-   <img src="url-9dcf3aeeac8a98b1293ba6367ee4f3cd4e8245d6977d04b01f16ba84a90b2192"/>
-   <img src="url-dcad966dbca57c5ddbfd7d685e5aa39e97272d57f0fac264e890e4fca7cefce3"/>
-   <img src="url-06abdbfb48bc97e564c24d0bd760fdf89689edbe3b0b6547723d81f82665a7a4"/>
-   <img src="url-2b85c6da0a26b04a8f1d39d3f6bd2615e76c5298432c5a1fa03f57e3e0a04696"/>
-   <img src="url-6699a89aa92f54efa7fcd1b444da5532900bcbe696d98fb4e886ec861f45e61b"/>
-   <img src="url-6565e988e134eafbda92eae419d92dde4f5e8ce5651bddb5137bf5a1cd07cc2d"/>
-   <img src="url-d511ae90fd303db4dea76257fa64b8752df754c2bcea7c8290ce68117e24bd58"/>
-   <img src="url-ae96557eefddf17644431620427f3ce7632a64a7a76c3f63ee32bfcd13d5beca"/>
-   </tg-slideshow>
    <h3>🔥 TMDB 流行趋势</h3>
    <ol start="1">
    <li value="1"><details><summary><b>挖掘者</b> · <i>2026 · 电影 · ⭐ 7.5</i></summary>
@@ -334,16 +294,6 @@
 << answerCallbackQuery
 >> user 1001 taps 1:bk:0 on message 1
 << editMessageText chat=1001 message=1
-   <tg-slideshow>
-   <img src="url-9dcf3aeeac8a98b1293ba6367ee4f3cd4e8245d6977d04b01f16ba84a90b2192"/>
-   <img src="url-dcad966dbca57c5ddbfd7d685e5aa39e97272d57f0fac264e890e4fca7cefce3"/>
-   <img src="url-06abdbfb48bc97e564c24d0bd760fdf89689edbe3b0b6547723d81f82665a7a4"/>
-   <img src="url-2b85c6da0a26b04a8f1d39d3f6bd2615e76c5298432c5a1fa03f57e3e0a04696"/>
-   <img src="url-6699a89aa92f54efa7fcd1b444da5532900bcbe696d98fb4e886ec861f45e61b"/>
-   <img src="url-6565e988e134eafbda92eae419d92dde4f5e8ce5651bddb5137bf5a1cd07cc2d"/>
-   <img src="url-d511ae90fd303db4dea76257fa64b8752df754c2bcea7c8290ce68117e24bd58"/>
-   <img src="url-ae96557eefddf17644431620427f3ce7632a64a7a76c3f63ee32bfcd13d5beca"/>
-   </tg-slideshow>
    <h3>🔥 TMDB 流行趋势</h3>
    <ol start="1">
    <li value="1"><details><summary><b>挖掘者</b> · <i>2026 · 电影 · ⭐ 7.5</i></summary>

@@ -46,12 +46,6 @@
 >> user 1001 taps 1:cw:3 on message 1
 -> MoviePilot GET /api/v1/bangumi/person/credits/24387
 << editMessageText chat=1001 message=1
-   <tg-slideshow>
-   <img src="url-bb8bdc31933cb3825ed9a59e79aab8bdd18e56bd1a1266f363073d02faa6769c"/>
-   <img src="url-9d49e37f9aa3c86c6be4b7a08049d5bff9170dcb13684dd10e109ed969136756"/>
-   <img src="url-43cdb2e6983b5d3b2db32d72e9e390697bf378837f41cde2cb663b166dad83f5"/>
-   <img src="url-4f72242179194dd0c1bb4374a1ead93995bdb2433a4be470be8c675a10dc8834"/>
-   </tg-slideshow>
    <h3>🎭 大塚紗英 的作品</h3>
    <ol start="1">
    <li value="1"><a href="https://bgm.tv/subject/341295"><b>スター街道</b></a></li>

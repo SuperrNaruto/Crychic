@@ -1,11 +1,6 @@
 >> user 1001 in chat 1001: 下载 迷途之子
 -> MoviePilot GET /api/v1/media/search?count=10&title=迷途之子&type=media
 << sendRichMessage chat=1001 message=1
-   <tg-slideshow>
-   <img src="url-f1d1c3e9142d5b6cb0aec97f314112cb1cfcf5cab28cbc83476b0d4bf25e1175"/>
-   <img src="url-44a615cb1b3392e18000efaa5466a08a1de0492229bb298c2282bef3ea8229c5"/>
-   <img src="url-0a63e69bacb326890000e11c26f5f27bb907de22c0b7522f5de59851ace7f2c6"/>
-   </tg-slideshow>
    <h3>🔍 帮你找到这些「迷途之子」啦</h3>
    <ol start="1">
    <li value="1"><b>迷途之子!!!!!</b><br>
@@ -119,11 +114,6 @@
 >> user 1001 in chat 1001: 订阅：迷途之子
 -> MoviePilot GET /api/v1/media/search?count=10&title=迷途之子&type=media
 << sendRichMessage chat=1001 message=2
-   <tg-slideshow>
-   <img src="url-f1d1c3e9142d5b6cb0aec97f314112cb1cfcf5cab28cbc83476b0d4bf25e1175"/>
-   <img src="url-44a615cb1b3392e18000efaa5466a08a1de0492229bb298c2282bef3ea8229c5"/>
-   <img src="url-0a63e69bacb326890000e11c26f5f27bb907de22c0b7522f5de59851ace7f2c6"/>
-   </tg-slideshow>
    <h3>🔍 帮你找到这些「迷途之子」啦</h3>
    <ol start="1">
    <li value="1"><b>迷途之子!!!!!</b><br>

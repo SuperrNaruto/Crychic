@@ -16,26 +16,12 @@ func richMessage(reply flow.Reply) *models.InputRichMessage {
 	return &models.InputRichMessage{HTML: renderReply(reply)}
 }
 
-// renderReply is reply as rich HTML: its poster, or its gallery as a
-// slideshow, above the text.
+// renderReply is reply as rich HTML: its poster above the text.
 func renderReply(reply flow.Reply) string {
-	return renderRich(reply.Text, mediaHTML(reply.Image, reply.Gallery))
-}
-
-func mediaHTML(image string, gallery []string) string {
-	if image != "" {
-		return imgTag(image)
+	if reply.Image == "" {
+		return renderRich(reply.Text, "")
 	}
-	if len(gallery) == 0 {
-		return ""
-	}
-	var b strings.Builder
-	b.WriteString("<tg-slideshow>")
-	for _, url := range gallery {
-		b.WriteString(imgTag(url))
-	}
-	b.WriteString("</tg-slideshow>")
-	return b.String()
+	return renderRich(reply.Text, imgTag(reply.Image))
 }
 
 func imgTag(url string) string { return `<img src="` + html.EscapeString(url) + `"/>` }

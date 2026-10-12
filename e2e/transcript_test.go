@@ -175,18 +175,13 @@ func untitledMessages(transcript string) []string {
 
 // firstContent is a message body's first line after its posters.
 func firstContent(body []string) string {
-	inGallery := false
 	for _, line := range body {
 		content, ok := strings.CutPrefix(line, "   ")
 		if !ok {
 			return ""
 		}
 		switch {
-		case content == "<tg-slideshow>":
-			inGallery = true
-		case content == "</tg-slideshow>":
-			inGallery = false
-		case inGallery, strings.HasPrefix(content, "<img "):
+		case strings.HasPrefix(content, "<img "):
 		default:
 			return content
 		}

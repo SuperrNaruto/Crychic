@@ -270,21 +270,6 @@
 >> user 1001 taps 1:ys:0 on message 1
 -> MoviePilot GET /api/v1/discover/tmdb_tvs?page=1&release_date=2025-10-05&sort_by=vote_average.desc&vote_average=0&vote_count=100&with_genres=16&with_original_language=ja
 << editMessageText chat=1001 message=1
-   <tg-slideshow>
-   <img src="url-6ea40f597a6f3a985ac6a47ff51e2c88f762504cee4cd5e18ded2eb6cd2f1996"/>
-   <img src="url-c661f14d7a5405dbd08152f19bca791027e3fbe68ae3fffa7a603251407add29"/>
-   <img src="url-1f6f10ea99084a063ca49f0f0bde44fd22aee75261aa253461615b208cc7fc91"/>
-   <img src="url-2dcc3fcc1a644b2af33cdd9835173a177ecab5e825b03884cfccb616fd05074c"/>
-   <img src="url-18c3a7a1b8fbd47318a3dbc7e288811031db63940fe127b9503add981fc315a3"/>
-   <img src="url-e00a05aa17c4d74d21e5fab4eb92f2336a7a8c57ebbc73c563c5ae6c31d36fba"/>
-   <img src="url-bc82b0d3db084e79d86607e1a3e01a307da152b6f3c904b6d629baa7ef30762f"/>
-   <img src="url-d1794cfa9a2e71f89b11530505068c9b1c82fc259f90a00dd01e877c08120508"/>
-   <img src="url-9826f635b42e5b27b933f7713b354a77fa833768a2b40e874d04c83aca5f185f"/>
-   <img src="url-9058ba62ea45d9e1dc1035931fb069bd9bc26b928a9ba9fce70164b9d039f7e5"/>
-   <img src="url-e54b2b6fa4e5395c6a786e0165e0130880b17e26e6a901f97a59670c6d88bb73"/>
-   <img src="url-dade608fbb28f3ebf77e46e779e2951dce1b8fd231650de86f5d32e9e15aecb9"/>
-   <img src="url-752b3eae7981d2fff534e4d8e69de9818822893c8aa75736885884012e1866b9"/>
-   </tg-slideshow>
    <h3>🎯 找到的作品</h3>
    <ol start="1">
    <li value="1"><details><summary><b>电锯人 总集篇</b> · <i>2025 · ⭐ 9.2</i></summary>
@@ -380,18 +365,6 @@
 >> user 1001 taps 1:ym:0 on message 1
 -> MoviePilot GET /api/v1/discover/tmdb_tvs?page=2&release_date=2025-10-05&sort_by=vote_average.desc&vote_average=0&vote_count=100&with_genres=16&with_original_language=ja
 << editMessageText chat=1001 message=1
-   <tg-slideshow>
-   <img src="url-2355a9a05d3383c3cd812e05f8a2a59cd4bf077d5bf3e4a86e4ac0834abc89da"/>
-   <img src="url-4fc38dad4c3ea31ba8d9a576ee517ad4ff052aa8669d53f25b7b3eed5b5870df"/>
-   <img src="url-cb8b4a78025370c60dd6a90ea1ec41ef8ed1c33eaebc4f2d80bbf9c69128dbcc"/>
-   <img src="url-79cfdb9e3a1c17d9d2aa44f68c7d81660c8d80ab97beaf1b91b7ab51e6a32f99"/>
-   <img src="url-8cbe670cf4f62516cc3462ad11b25f7f11af46b9b4ce6ddedad11c016207297d"/>
-   <img src="url-325b78f247f7fc22afb64f66aee6c2240e24304eaeac74cfcd74ec7eebac2ccd"/>
-   <img src="url-519daca5ad8a992ea9ac7800c6d30e8aef0226d136f57366d4405c9209f5a0f2"/>
-   <img src="url-2306660f310695f2a41530223e1765a98595f4ad0d2ed585d69ec50ba0023e45"/>
-   <img src="url-5c91ecabb7bb2808975b85b1a34ada22f936dbf72874087619966f1d8459753a"/>
-   <img src="url-a68062345cad53781e7debdd067b0a8066d4fdbc1e64a32cdfc773889f1c0403"/>
-   </tg-slideshow>
    <h3>🎯 找到的作品</h3>
    <ol start="14">
    <li value="14"><details><summary><b>灌篮高手</b> · <i>1993 · ⭐ 8.7</i></summary>

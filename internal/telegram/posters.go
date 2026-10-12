@@ -167,7 +167,7 @@ func shownPosters(reply flow.Reply) []string {
 	if reply.Image != "" {
 		return []string{reply.Image}
 	}
-	return reply.Gallery
+	return nil
 }
 
 func withPosters(reply flow.Reply, urls []string) flow.Reply {
@@ -176,9 +176,7 @@ func withPosters(reply flow.Reply, urls []string) flow.Reply {
 		if len(urls) > 0 {
 			reply.Image = urls[0]
 		}
-		return reply
 	}
-	reply.Gallery = urls
 	return reply
 }
 
@@ -287,25 +285,17 @@ func (p *posters) sent(o outgoing, msg *models.Message, err error) {
 	}
 }
 
-// headerPhotos are the file_ids of the poster or slideshow topping a
-// message, in order, each in its largest size.
+// headerPhotos are the file_ids of the poster topping a message, in its
+// largest size.
 func headerPhotos(blocks []models.RichBlock) []string {
 	if len(blocks) == 0 {
 		return nil
 	}
-	top := []models.RichBlock{blocks[0]}
-	if s := blocks[0].RichBlockSlideshow; s != nil {
-		top = s.Blocks
+	top := blocks[0].RichBlockPhoto
+	if top == nil || len(top.Photo) == 0 {
+		return nil
 	}
-	var ids []string
-	for _, b := range top {
-		if b.RichBlockPhoto == nil || len(b.RichBlockPhoto.Photo) == 0 {
-			return ids
-		}
-		sizes := b.RichBlockPhoto.Photo
-		ids = append(ids, sizes[len(sizes)-1].FileID)
-	}
-	return ids
+	return []string{top.Photo[len(top.Photo)-1].FileID}
 }
 
 func (p *posters) lookup(raw string) (string, bool) {

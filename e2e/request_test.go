@@ -118,7 +118,7 @@ func TestUnreachablePosterKeepsTheCard(t *testing.T) {
 }
 
 // After a callback completes, Telegram can refuse its cached poster. The
-// gallery then retries by URL, and the next card reuses the recovered file_id.
+// card then retries by URL, and the next card reuses the recovered file_id.
 func TestRefusedPosterFileIsSentAfresh(t *testing.T) {
 	h := start(t, scenario{routes: map[string]route{
 		searchPath:  ok("search_dune.json"),
@@ -129,7 +129,9 @@ func TestRefusedPosterFileIsSentAfresh(t *testing.T) {
 	h.tap(alice, 1, duneMovie)
 	h.tg.forgetFiles()
 	h.tap(alice, 1, "返回")
+	h.tap(alice, 1, duneMovie)
 	h.shows(1, `<img src="`+dunePoster+`"/>`)
+	h.tap(alice, 1, "返回")
 	h.tap(alice, 1, duneMovie)
 	h.shows(1, "要订阅《沙丘》")
 	media := mustMessage(h, 1).media

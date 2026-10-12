@@ -1,12 +1,6 @@
 >> user 1001 in chat 1001: /search 绝命毒师
 -> MoviePilot GET /api/v1/media/search?count=10&title=绝命毒师&type=media
 << sendRichMessage chat=1001 message=1
-   <tg-slideshow>
-   <img src="url-1bc43c78f90216151f38c5364e20d05ed84bcd8927d87d91cbd1c655434f0dd9"/>
-   <img src="url-28c93f139490e6c84cfe65e9822bfbe8cc45ac79bdfb688c2e137815b0b7ecfb"/>
-   <img src="url-e155c85f351d7c82c1155073e6634f9d4b6459f65bee451e4e0e0dc5f9c75e44"/>
-   <img src="url-d920f8c03ea5e84a555e0ef29619d9cc70e0724c154e427ef51d015e575b42bb"/>
-   </tg-slideshow>
    <h3>🔍 帮你找到这些「绝命毒师」啦</h3>
    <ol start="1">
    <li value="1"><b>绝命毒师</b><br>

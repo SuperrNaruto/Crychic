@@ -28,13 +28,6 @@
 -> Bangumi GET /v0/subjects/614640
 -> Bangumi GET /v0/subjects/624923
 << editMessageText chat=1001 message=1
-   <tg-slideshow>
-   <img src="url-9e933bf5741fa03634fce27465541914f4e0cf39e7fcf8d057c5ec37f440e44e"/>
-   <img src="url-f53af7615ce6819bbdd59697dd9b649bdcc352865663df144eeb3671fd53bcbf"/>
-   <img src="url-8b4da0bfb9bef543c926e6becb55dbe1f6486c5500e33bf11b6a5e765fdcc79a"/>
-   <img src="url-1e587b41d0d73fe6cc2b07531bd80e9249742d8ec1f424b0a52bc6c4798e507f"/>
-   <img src="url-2b4fc794a6be040a03bec7b01b69c10df760cde0840d66da010be9f15a1c2c26"/>
-   </tg-slideshow>
    <h3>🎌 新番放送 · 星期一（今天）</h3>
    <h4>2026-10-05 首播</h4>
    <ol start="1">
@@ -107,11 +100,6 @@
 -> MoviePilot GET /api/v1/bangumi/555605
 -> Bangumi GET /v0/subjects/536270
 << editMessageText chat=1001 message=1
-   <tg-slideshow>
-   <img src="url-405878f6dad0081343c216620a25b8d9d48c3d9e09ca3f35b9d7d796d6c7d7bf"/>
-   <img src="url-856963c99d6a40fd069802f30781c2376d9bf54aa29d635ee179b973e2c697f9"/>
-   <img src="url-9cb26c37c1a7bea29d6758a4c4b219278fcce26efff58fa9ee0450ab986e4096"/>
-   </tg-slideshow>
    <h3>🎌 新番放送 · 星期日</h3>
    <h4>2026-10-04 首播</h4>
    <ol start="1">
@@ -185,11 +173,6 @@
 << answerCallbackQuery
 >> user 1001 taps 1:bk:0 on message 1
 << editMessageText chat=1001 message=1
-   <tg-slideshow>
-   <img src="url-405878f6dad0081343c216620a25b8d9d48c3d9e09ca3f35b9d7d796d6c7d7bf"/>
-   <img src="url-856963c99d6a40fd069802f30781c2376d9bf54aa29d635ee179b973e2c697f9"/>
-   <img src="url-9cb26c37c1a7bea29d6758a4c4b219278fcce26efff58fa9ee0450ab986e4096"/>
-   </tg-slideshow>
    <h3>🎌 新番放送 · 星期日</h3>
    <h4>2026-10-04 首播</h4>
    <ol start="1">

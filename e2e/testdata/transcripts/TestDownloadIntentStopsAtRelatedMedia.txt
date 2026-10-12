@@ -1,16 +1,6 @@
 >> user 1001 in chat 1001: 下载 沙丘
 -> MoviePilot GET /api/v1/media/search?count=10&title=沙丘&type=media
 << sendRichMessage chat=1001 message=1
-   <tg-slideshow>
-   <img src="url-ae95e58ec03e202c035279fd7b770ee9063e24e22f246ec568120ac5a90252ea"/>
-   <img src="url-7ea76e3b74f0f1bba01161bd2446775a7fe7657b009df91fca57cb760c60208f"/>
-   <img src="url-e887bdb9df0034573d9e03f6507d8e8b7862bda8362f968e4349554493678ff8"/>
-   <img src="url-0603bc04eba9f23ccb0da918da40cefdcc9533bb920a16af3d7323b8954288fe"/>
-   <img src="url-f3924e4dafb7c35392e3de6d3fbfd5e540d3fcfe78dd69b758e7319101e217fe"/>
-   <img src="url-cfc61103a56e8781300f998571c8194d0958754710eb781ed3beae7e5eae3dc2"/>
-   <img src="url-d03384b6cc307585edcd449cb20296ce3fa11071866b554add8f77be947e6c17"/>
-   <img src="url-f6bf48e37249a47a3abcd09ca8c92f0ab0f5d0f1d21a40918902154571cda459"/>
-   </tg-slideshow>
    <h3>🔍 帮你找到这些「沙丘」啦</h3>
    <ol start="1">
    <li value="1"><b>沙丘</b><br>
@@ -85,16 +75,6 @@
 >> user 1001 taps 1:r:0 on message 1
 -> MoviePilot GET /api/v1/tmdb/recommend/438631/电影
 << editMessageText chat=1001 message=1
-   <tg-slideshow>
-   <img src="url-0603bc04eba9f23ccb0da918da40cefdcc9533bb920a16af3d7323b8954288fe"/>
-   <img src="url-b4b827777ebf2b197a226717546dab1ae67b8264f532a0489906c02a38569c78"/>
-   <img src="url-dcbd9b8b695b4e242ae3afb3228eba9e52fad3efcdcaae6e35701f0b062034ce"/>
-   <img src="url-edaed72a99c176d794ca4c19d49fc4c438cf38ecba30539e50b9a54ae489b007"/>
-   <img src="url-0b1574863c8b04694311bcd33209b9d7eb6c2f2bca5bfc96a8a712bcbaedeb9f"/>
-   <img src="url-d1ac6684cf65c91dbd409ffb742c06dca48f3ffadd71ac340ef330bab8dbc616"/>
-   <img src="url-e6564ed59314a1b66799f6a3ea13be56d9832b20725c6eb720a3ea7efd6a0079"/>
-   <img src="url-5484d9eebaef1bdb1ee80b9e97cbe8d94e5dd752dafd0d98a404bb67a13aa91a"/>
-   </tg-slideshow>
    <h3>🔍 喜欢《沙丘》的话，也许会喜欢这些～</h3>
    <ol start="1">
    <li value="1"><details><summary><b>沙丘2</b> · <i>2024 · ⭐ 8.1</i></summary>
@@ -161,16 +141,6 @@
 << answerCallbackQuery
 >> user 1001 taps 1:bk:0 on message 1
 << editMessageText chat=1001 message=1
-   <tg-slideshow>
-   <img src="url-0603bc04eba9f23ccb0da918da40cefdcc9533bb920a16af3d7323b8954288fe"/>
-   <img src="url-b4b827777ebf2b197a226717546dab1ae67b8264f532a0489906c02a38569c78"/>
-   <img src="url-dcbd9b8b695b4e242ae3afb3228eba9e52fad3efcdcaae6e35701f0b062034ce"/>
-   <img src="url-edaed72a99c176d794ca4c19d49fc4c438cf38ecba30539e50b9a54ae489b007"/>
-   <img src="url-0b1574863c8b04694311bcd33209b9d7eb6c2f2bca5bfc96a8a712bcbaedeb9f"/>
-   <img src="url-d1ac6684cf65c91dbd409ffb742c06dca48f3ffadd71ac340ef330bab8dbc616"/>
-   <img src="url-e6564ed59314a1b66799f6a3ea13be56d9832b20725c6eb720a3ea7efd6a0079"/>
-   <img src="url-5484d9eebaef1bdb1ee80b9e97cbe8d94e5dd752dafd0d98a404bb67a13aa91a"/>
-   </tg-slideshow>
    <h3>🔍 喜欢《沙丘》的话，也许会喜欢这些～</h3>
    <ol start="1">
    <li value="1"><details><summary><b>沙丘2</b> · <i>2024 · ⭐ 8.1</i></summary>
@@ -239,11 +209,6 @@
 -> MoviePilot GET /api/v1/tmdb/collection/726871
 -> MoviePilot GET /api/v1/subscribe/
 << editMessageText chat=1001 message=1
-   <tg-slideshow>
-   <img src="url-ae95e58ec03e202c035279fd7b770ee9063e24e22f246ec568120ac5a90252ea"/>
-   <img src="url-0603bc04eba9f23ccb0da918da40cefdcc9533bb920a16af3d7323b8954288fe"/>
-   <img src="url-f3924e4dafb7c35392e3de6d3fbfd5e540d3fcfe78dd69b758e7319101e217fe"/>
-   </tg-slideshow>
    <h3>🎬 《沙丘》的同系列作品</h3>
    <ol start="1">
    <li value="1"><details><summary><b>沙丘</b> · <i>2021 · ⭐ 7.8 · <mark>未获取</mark></i></summary>
@@ -285,11 +250,6 @@
 << answerCallbackQuery
 >> user 1001 taps 1:bk:0 on message 1
 << editMessageText chat=1001 message=1
-   <tg-slideshow>
-   <img src="url-ae95e58ec03e202c035279fd7b770ee9063e24e22f246ec568120ac5a90252ea"/>
-   <img src="url-0603bc04eba9f23ccb0da918da40cefdcc9533bb920a16af3d7323b8954288fe"/>
-   <img src="url-f3924e4dafb7c35392e3de6d3fbfd5e540d3fcfe78dd69b758e7319101e217fe"/>
-   </tg-slideshow>
    <h3>🎬 《沙丘》的同系列作品</h3>
    <ol start="1">
    <li value="1"><details><summary><b>沙丘</b> · <i>2021 · ⭐ 7.8 · <mark>未获取</mark></i></summary>
@@ -329,16 +289,6 @@
 << answerCallbackQuery
 >> user 1001 taps 1:bk:0 on message 1
 << editMessageText chat=1001 message=1
-   <tg-slideshow>
-   <img src="url-ae95e58ec03e202c035279fd7b770ee9063e24e22f246ec568120ac5a90252ea"/>
-   <img src="url-7ea76e3b74f0f1bba01161bd2446775a7fe7657b009df91fca57cb760c60208f"/>
-   <img src="url-e887bdb9df0034573d9e03f6507d8e8b7862bda8362f968e4349554493678ff8"/>
-   <img src="url-0603bc04eba9f23ccb0da918da40cefdcc9533bb920a16af3d7323b8954288fe"/>
-   <img src="url-f3924e4dafb7c35392e3de6d3fbfd5e540d3fcfe78dd69b758e7319101e217fe"/>
-   <img src="url-cfc61103a56e8781300f998571c8194d0958754710eb781ed3beae7e5eae3dc2"/>
-   <img src="url-d03384b6cc307585edcd449cb20296ce3fa11071866b554add8f77be947e6c17"/>
-   <img src="url-f6bf48e37249a47a3abcd09ca8c92f0ab0f5d0f1d21a40918902154571cda459"/>
-   </tg-slideshow>
    <h3>🔍 帮你找到这些「沙丘」啦</h3>
    <ol start="1">
    <li value="1"><b>沙丘</b><br>

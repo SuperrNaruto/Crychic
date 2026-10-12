@@ -21,23 +21,14 @@ type photo struct {
 	reused        bool // sent by file_id instead of uploaded
 }
 
-var (
-	imageSrc  = regexp.MustCompile(`<img src="([^"]*)"/>`)
-	slideshow = regexp.MustCompile(`^<tg-slideshow>(.*?)</tg-slideshow>`)
-)
+var imageSrc = regexp.MustCompile(`<img src="([^"]*)"/>`)
 
-// headerBlocks are the photo or slideshow topping a rich message as
-// Telegram returns them, each photo with the file_id it was stored under;
+// headerBlocks are the photo topping a rich message as Telegram returns
+// it, with the file_id it was stored under;
 // the fake leaves out the text blocks, which the bot never reads back.
 func (m message) headerBlocks() []any {
 	var srcs []string
-	show := slideshow.FindStringSubmatch(m.text)
-	switch {
-	case show != nil:
-		for _, s := range imageSrc.FindAllStringSubmatch(show[1], -1) {
-			srcs = append(srcs, s[1])
-		}
-	case strings.HasPrefix(m.text, "<img "):
+	if strings.HasPrefix(m.text, "<img ") {
 		srcs = []string{imageSrc.FindStringSubmatch(m.text)[1]}
 	}
 	photos := []any{}
@@ -45,9 +36,6 @@ func (m message) headerBlocks() []any {
 		photos = append(photos, map[string]any{"type": "photo", "photo": []map[string]any{{
 			"file_id": m.fileOf(src), "file_unique_id": m.fileOf(src), "width": posterWidth, "height": posterHeight,
 		}}})
-	}
-	if show != nil {
-		return []any{map[string]any{"type": "slideshow", "blocks": photos}}
 	}
 	return photos
 }
@@ -225,8 +213,7 @@ var (
 		"ol": false, "li": false, "blockquote": false, "footer": false,
 		"details": false, "summary": false, "ul": false, "mark": false,
 		"table": false, "tr": false, "th": false, "td": false, "tg-button-row": false, "tg-button": false,
-		"tg-slideshow": false,
-		"br":           true, "hr": true, "img": true, "input": true,
+		"br": true, "hr": true, "img": true, "input": true,
 	}
 )
 
@@ -256,7 +243,7 @@ func checkRichHTML(markup string) error {
 }
 
 // richLines lays rich HTML out a block or line break per transcript line.
-var richBreak = regexp.MustCompile(`(</h[1-6]>|</p>|</li>|</ol>|</blockquote>|</summary>|</details>|<ul>|</ul>|</tr>|<table [^>]*>|</table>|<tg-button-row [^>]*>|</tg-button>|</tg-button-row>|</footer>|<hr/>|<img [^>]*/>|<tg-slideshow>|</tg-slideshow>|<ol [^>]*>|<br>)`)
+var richBreak = regexp.MustCompile(`(</h[1-6]>|</p>|</li>|</ol>|</blockquote>|</summary>|</details>|<ul>|</ul>|</tr>|<table [^>]*>|</table>|<tg-button-row [^>]*>|</tg-button>|</tg-button-row>|</footer>|<hr/>|<img [^>]*/>|<ol [^>]*>|<br>)`)
 
 func richLines(markup string) []string {
 	return strings.Split(strings.TrimSuffix(richBreak.ReplaceAllString(markup, "$1\n"), "\n"), "\n")

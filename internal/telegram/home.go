@@ -15,7 +15,7 @@ const (
 	notModified = "message is not modified"
 )
 
-// content is a reply as rich message content: its poster, gallery or
+// content is a reply as rich message content: its poster or
 // bundled home banner by URL, file_id or upload as prepared.
 func content(o outgoing) *models.InputRichMessage {
 	rich := richMessage(o.reply)
@@ -24,14 +24,12 @@ func content(o outgoing) *models.InputRichMessage {
 }
 
 // withoutPoster is reply minus the posters Telegram failed to fetch, so the
-// message still goes out; edits that change nothing are not retried. Telegram
-// does not say which gallery poster failed, so the whole gallery goes.
+// message still goes out; edits that change nothing are not retried.
 func withoutPoster(reply flow.Reply, err error) (flow.Reply, bool) {
-	posters := reply.Image != "" || len(reply.Gallery) > 0
-	if !posters || !rejectedPoster(err) {
+	if reply.Image == "" || !rejectedPoster(err) {
 		return reply, false
 	}
-	reply.Image, reply.Gallery = "", nil
+	reply.Image = ""
 	return reply, true
 }
 
@@ -63,7 +61,7 @@ func (a *adapter) deliver(ctx context.Context, reply flow.Reply, try func(outgoi
 		a.posters.sent(out, msg, err)
 	}
 	if bare, retry := withoutPoster(reply, err); retry {
-		a.log.Warn("poster rejected, sending without it", "image", reply.Image, "gallery", len(reply.Gallery), "err", err)
+		a.log.Warn("poster rejected, sending without it", "image", reply.Image, "err", err)
 		msg, err = try(outgoing{reply: bare})
 	}
 	return msg, err
