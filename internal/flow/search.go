@@ -33,6 +33,7 @@ func (e *Engine) searchTyped(ctx context.Context, sess session, typed string) Re
 
 func (e *Engine) search(ctx context.Context, sess session, term string) Reply {
 	sess.query = term
+	subs := e.startSubs(ctx)
 	results, err := e.backend.Search(ctx, term)
 	if err != nil {
 		return e.readFailure(sess, recovery{step: readSearch}, err)
@@ -48,18 +49,20 @@ func (e *Engine) search(ctx context.Context, sess session, term string) Reply {
 		return reply
 	}
 	if len(results) == 1 {
+		sess.pendingSubs = subs
 		reply := e.pickMedia(ctx, sess, 0)
 		if _, live := e.store.get(sess.id); live {
 			reply = withResearch(reply, sess.id)
 		}
 		return reply
 	}
-	return e.resultList(sess, term)
+	return e.resultList(sess, term, subs.wait(ctx))
 }
 
 // resultList keeps every returned result reachable, with stable numbers
-// and the same content budget as other lists.
-func (e *Engine) resultList(sess session, term string) Reply {
+// and the same content budget as other lists. Subscribed titles carry a tag
+// from subs, the list read beside the search.
+func (e *Engine) resultList(sess session, term string, subs []Subscription) Reply {
 	view := listView{
 		heading:   Heading(Plain(fmt.Sprintf("🔍 帮你找到这些「%s」啦", term))),
 		pageItems: searchPageItems,
@@ -69,8 +72,10 @@ func (e *Engine) resultList(sess session, term string) Reply {
 	for i, m := range sess.results {
 		m.Title = truncate(m.Title, listTitleRunes)
 		m.OriginalTitle = truncate(m.OriginalTitle, listTitleRunes)
+		block := resultEntry(i+1, m)
+		block.Tag = resultMark(subs, sess.results[i])
 		view.entries = append(view.entries, listEntry{
-			text:    Lines(resultEntry(i+1, m)),
+			text:    Lines(block),
 			buttons: []Button{{Label: fmt.Sprint(i + 1), Data: data(sess.id, actionMedia, i)}},
 			poster:  m.PosterURL,
 		})

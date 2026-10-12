@@ -1,11 +1,13 @@
 >> user 1001 in chat 1001: /search 不存在的电影
 -> MoviePilot GET /api/v1/media/search?count=10&title=不存在的电影&type=media
+-> MoviePilot GET /api/v1/subscribe/
 << sendRichMessage chat=1001 message=1
    <h3>🔍 呜…什么都没找到</h3>
    <p>翻遍了也没找到「不存在的电影」(｡•́︿•̀｡) 换个名字直接回复我，再搜搜看呀？</p>
    [取消 | 1:x:0]
 >> user 1001 in chat 1001: 沙丘
 -> MoviePilot GET /api/v1/media/search?count=10&title=沙丘&type=media
+-> MoviePilot GET /api/v1/subscribe/
 << editMessageText chat=1001 message=1
    <h3>🔍 帮你找到这些「沙丘」啦</h3>
    <ol start="1">

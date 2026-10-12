@@ -1,6 +1,7 @@
 >> user 1001 in chat 1001: 无海报影片
 -> MoviePilot GET /api/v1/media/search?count=10&title=无海报影片&type=media
 -> MoviePilot GET /api/v1/media/42?media_source=themoviedb&type_name=电影
+-> MoviePilot GET /api/v1/subscribe/
 -> MoviePilot GET /api/v1/subscribe/media/42?media_source=themoviedb&mtype=电影&title=无海报影片
 << sendRichMessage chat=1001 message=1
    <h3>🎬 无海报影片</h3>

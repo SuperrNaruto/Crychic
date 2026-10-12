@@ -62,6 +62,7 @@
 -> MoviePilot GET /api/v1/media/search?count=10&title=深渊无间&type=media
 -> MoviePilot GET /api/v1/media/301489?media_source=themoviedb&type_name=电视剧
 -> MoviePilot GET /api/v1/media/seasons?media_id=301489&media_source=themoviedb
+-> MoviePilot GET /api/v1/subscribe/
 -> MoviePilot GET /api/v1/subscribe/media/301489?media_source=themoviedb&mtype=电视剧&season=1&title=深渊无间&year=2026
 << editMessageText chat=1001 message=1
    <img src="url-0e877991e89f96e869fc23915b46aa7b8cc2c3b8ece9f4109ee50677841933f4"/>
@@ -162,6 +163,7 @@
 << answerCallbackQuery
 >> user 1001 taps 2:i:9 on message 2
 -> MoviePilot GET /api/v1/media/search?count=10&title=流人 第六季&type=media
+-> MoviePilot GET /api/v1/subscribe/
 << editMessageText chat=1001 message=2
    <h3>🔍 帮你找到这些「流人 第六季」啦</h3>
    <ol start="1">
@@ -199,6 +201,7 @@
 << answerCallbackQuery
 >> user 1001 taps 2:i:9 on message 2
 -> MoviePilot GET /api/v1/media/search?count=10&title=流人 第六季&type=media
+-> MoviePilot GET /api/v1/subscribe/
 << editMessageText chat=1001 message=2
    <h3>🔍 帮你找到这些「流人 第六季」啦</h3>
    <ol start="1">

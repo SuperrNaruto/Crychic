@@ -1,5 +1,6 @@
 >> user 1001 in chat 1001: 无海报影片
 -> MoviePilot GET /api/v1/media/search?count=10&title=无海报影片&type=media
+-> MoviePilot GET /api/v1/subscribe/
 << sendRichMessage chat=1001 message=1
    <h3>🔍 帮你找到这些「无海报影片」啦</h3>
    <ol start="1">

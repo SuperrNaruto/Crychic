@@ -2,6 +2,7 @@
 -> MoviePilot GET /api/v1/media/search?count=10&title=MyGO&type=media
 -> MoviePilot GET /api/v1/media/428735?media_source=bangumi&type_name=电视剧
 -> MoviePilot GET /api/v1/media/seasons?media_id=428735&media_source=bangumi
+-> MoviePilot GET /api/v1/subscribe/
 -> MoviePilot GET /api/v1/subscribe/media/428735?media_source=bangumi&mtype=电视剧&season=1&title=BanG Dream! It's MyGO!!!!!&year=2023
 << sendRichMessage chat=1001 message=1
    <img src="url-ab5025b66c21f7b35c97e207b7896c1c1b7c568db4965185643f4375850845d7"/>
@@ -56,6 +57,7 @@
 << answerCallbackQuery
 >> user 1001 taps 1:cp:0 on message 1
 -> MoviePilot GET /api/v1/media/search?count=10&title=スター街道&type=media
+-> MoviePilot GET /api/v1/subscribe/
 << editMessageText chat=1001 message=1
    <h3>🔍 呜…什么都没找到</h3>
    <p>没找到「スター街道」能订阅的条目 (｡•́︿•̀｡) 用 /search 换个名字搜搜吧～</p>

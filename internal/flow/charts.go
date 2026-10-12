@@ -319,6 +319,7 @@ func pager(id uint64, page, pages int) []Button {
 // carry, so the pick is looked up by title: a sure match goes straight on,
 // otherwise the user chooses among the search results.
 func (e *Engine) pickFromChart(ctx context.Context, sess session, pick Media) Reply {
+	subs := e.startSubs(ctx)
 	results, err := e.chartSearch(ctx, pick)
 	if err != nil {
 		reply := titled("🔍 搜索", e.failure("search", err))
@@ -333,10 +334,11 @@ func (e *Engine) pickFromChart(ctx context.Context, sess session, pick Media) Re
 	}
 	sess.results = results[:min(len(results), MaxResults)]
 	if i, ok := sameMedia(sess.results, pick); ok {
+		sess.pendingSubs = subs
 		return e.pickMedia(ctx, sess, i)
 	}
 	e.store.put(sess)
-	reply := e.resultList(sess, pick.Title)
+	reply := e.resultList(sess, pick.Title, subs.wait(ctx))
 	reply.Text = append(reply.Text, Remark(msgNoExactPick))
 	return reply
 }

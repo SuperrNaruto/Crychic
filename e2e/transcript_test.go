@@ -95,9 +95,11 @@ func readRoute(line string) string {
 	}
 	path, query, _ := strings.Cut(path, "?")
 	if path == subscriptionPath {
-		// Subscription reads can overlap other concurrent reads. Only adjacent
-		// reads share this group; writes and user interactions remain ordered.
-		return service + " subscription reads"
+		// The subscription list is read beside searches, details and
+		// seasons for the marks on results and seasons, and beside other
+		// subscription reads. Only adjacent reads share this group; writes
+		// and user interactions remain ordered.
+		return lookups
 	}
 	if strings.Contains(query, "type=collection") {
 		// a movie's series is searched by all its names at once
@@ -115,10 +117,11 @@ func readRoute(line string) string {
 }
 
 // readOrder sorts lookups as a pick made one at a time reads them: media
-// searches, then MoviePilot Bangumi details, then media details. Direct Bangumi
+// searches, then MoviePilot Bangumi details, then media details, then the
+// subscription list read for marks. Direct Bangumi
 // fallback is a separate read group, so its order after MoviePilot is preserved.
 func readOrder(line string) string {
-	for rank, marker := range []string{mediaRoute + "search", bangumiRoute, mediaRoute} {
+	for rank, marker := range []string{mediaRoute + "search", bangumiRoute, mediaRoute, subscriptionPath} {
 		if strings.Contains(line, marker) {
 			return strconv.Itoa(rank) + line
 		}

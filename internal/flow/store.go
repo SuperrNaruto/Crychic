@@ -19,6 +19,7 @@ type session struct {
 	download      bool   // the search began with 下载: a chosen target searches resources at once
 	retry         recovery
 	results       []Media
+	pendingSubs   *subsRead // subscription list read begun beside a search; consumed by the pick that follows
 	picked        card
 	seasons       []Season
 	library       Library

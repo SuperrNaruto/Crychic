@@ -1,10 +1,11 @@
 >> user 1001 in chat 1001: /search 绝命毒师
 -> MoviePilot GET /api/v1/media/search?count=10&title=绝命毒师&type=media
+-> MoviePilot GET /api/v1/subscribe/
 << sendRichMessage chat=1001 message=1
    <h3>🔍 帮你找到这些「绝命毒师」啦</h3>
    <ol start="1">
    <li value="1"><b>绝命毒师</b><br>
-   <i>Breaking Bad · 2008 · 电视剧 · ⭐ 9.0 · TMDB</i></li>
+   <i>Breaking Bad · 2008 · 电视剧 · ⭐ 9.0 · TMDB · <mark>已订阅第 2、3 季</mark></i></li>
    <li value="2"><b>续命之徒：绝命毒师电影</b><br>
    <i>El Camino: A Breaking Bad Movie · 2019 · 电影 · ⭐ 7.1 · TMDB</i></li>
    <li value="3"><b>绝不折中：绝命毒师最终季制作记录</b><br>
@@ -18,6 +19,7 @@
 >> user 1001 taps 1:m:0 on message 1
 -> MoviePilot GET /api/v1/media/1396?media_source=themoviedb&type_name=电视剧
 -> MoviePilot GET /api/v1/media/seasons?media_id=1396&media_source=themoviedb
+-> MoviePilot GET /api/v1/subscribe/
 << editMessageText chat=1001 message=1
    <img src="url-1bc43c78f90216151f38c5364e20d05ed84bcd8927d87d91cbd1c655434f0dd9"/>
    <h3>📺 <a href="https://www.themoviedb.org/tv/1396">绝命毒师</a></h3>
@@ -26,13 +28,13 @@
    <hr/>
    <p><b>想订哪一季呀？</b></p>
    <table bordered striped compact>
-   <tr><th>季</th><th>集数</th></tr>
-   <tr><td><b>特别篇</b></td><td>9 集</td></tr>
-   <tr><td><b>第 1 季</b></td><td>7 集</td></tr>
-   <tr><td><b>第 2 季</b></td><td>13 集</td></tr>
-   <tr><td><b>第 3 季</b></td><td>13 集</td></tr>
-   <tr><td><b>第 4 季</b></td><td>13 集</td></tr>
-   <tr><td><b>第 5 季</b></td><td>16 集</td></tr>
+   <tr><th>季</th><th>集数</th><th>订阅</th></tr>
+   <tr><td><b>特别篇</b></td><td>9 集</td><td></td></tr>
+   <tr><td><b>第 1 季</b></td><td>7 集</td><td></td></tr>
+   <tr><td><b>第 2 季</b></td><td>13 集</td><td>已订阅</td></tr>
+   <tr><td><b>第 3 季</b></td><td>13 集</td><td>已订阅</td></tr>
+   <tr><td><b>第 4 季</b></td><td>13 集</td><td></td></tr>
+   <tr><td><b>第 5 季</b></td><td>16 集</td><td></td></tr>
    </table>
    [特别篇 | 1:s:0] [第 1 季 | 1:s:1] [第 2 季 | 1:s:2]
    [第 3 季 | 1:s:3] [第 4 季 | 1:s:4] [第 5 季 | 1:s:5]
@@ -70,11 +72,12 @@
 << answerCallbackQuery
 >> user 1001 in chat 1001: /search 绝命毒师
 -> MoviePilot GET /api/v1/media/search?count=10&title=绝命毒师&type=media
+-> MoviePilot GET /api/v1/subscribe/
 << sendRichMessage chat=1001 message=2
    <h3>🔍 帮你找到这些「绝命毒师」啦</h3>
    <ol start="1">
    <li value="1"><b>绝命毒师</b><br>
-   <i>Breaking Bad · 2008 · 电视剧 · ⭐ 9.0 · TMDB</i></li>
+   <i>Breaking Bad · 2008 · 电视剧 · ⭐ 9.0 · TMDB · <mark>已订阅第 2、3 季</mark></i></li>
    <li value="2"><b>续命之徒：绝命毒师电影</b><br>
    <i>El Camino: A Breaking Bad Movie · 2019 · 电影 · ⭐ 7.1 · TMDB</i></li>
    <li value="3"><b>绝不折中：绝命毒师最终季制作记录</b><br>
@@ -88,6 +91,7 @@
 >> user 1001 taps 2:m:0 on message 2
 -> MoviePilot GET /api/v1/media/1396?media_source=themoviedb&type_name=电视剧
 -> MoviePilot GET /api/v1/media/seasons?media_id=1396&media_source=themoviedb
+-> MoviePilot GET /api/v1/subscribe/
 << editMessageText chat=1001 message=2
    <img src="url-1bc43c78f90216151f38c5364e20d05ed84bcd8927d87d91cbd1c655434f0dd9"/>
    <h3>📺 <a href="https://www.themoviedb.org/tv/1396">绝命毒师</a></h3>
@@ -96,13 +100,13 @@
    <hr/>
    <p><b>想订哪一季呀？</b></p>
    <table bordered striped compact>
-   <tr><th>季</th><th>集数</th></tr>
-   <tr><td><b>特别篇</b></td><td>9 集</td></tr>
-   <tr><td><b>第 1 季</b></td><td>7 集</td></tr>
-   <tr><td><b>第 2 季</b></td><td>13 集</td></tr>
-   <tr><td><b>第 3 季</b></td><td>13 集</td></tr>
-   <tr><td><b>第 4 季</b></td><td>13 集</td></tr>
-   <tr><td><b>第 5 季</b></td><td>16 集</td></tr>
+   <tr><th>季</th><th>集数</th><th>订阅</th></tr>
+   <tr><td><b>特别篇</b></td><td>9 集</td><td></td></tr>
+   <tr><td><b>第 1 季</b></td><td>7 集</td><td></td></tr>
+   <tr><td><b>第 2 季</b></td><td>13 集</td><td>已订阅</td></tr>
+   <tr><td><b>第 3 季</b></td><td>13 集</td><td>已订阅</td></tr>
+   <tr><td><b>第 4 季</b></td><td>13 集</td><td></td></tr>
+   <tr><td><b>第 5 季</b></td><td>16 集</td><td></td></tr>
    </table>
    [特别篇 | 2:s:0] [第 1 季 | 2:s:1] [第 2 季 | 2:s:2]
    [第 3 季 | 2:s:3] [第 4 季 | 2:s:4] [第 5 季 | 2:s:5]

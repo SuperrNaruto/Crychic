@@ -1,17 +1,20 @@
 >> user 1001 in chat 1001: 下载 沙邱
 -> MoviePilot GET /api/v1/media/search?count=10&title=沙邱&type=media
+-> MoviePilot GET /api/v1/subscribe/
 << sendRichMessage chat=1001 message=1
    <h3>🔍 呜…什么都没找到</h3>
    <p>翻遍了也没找到「沙邱」(｡•́︿•̀｡) 换个名字直接回复我，再搜搜看呀？</p>
    [取消 | 1:x:0]
 >> user 1001 in chat 1001: 沙球
 -> MoviePilot GET /api/v1/media/search?count=10&title=沙球&type=media
+-> MoviePilot GET /api/v1/subscribe/
 << editMessageText chat=1001 message=1
    <h3>🔍 呜…什么都没找到</h3>
    <p>翻遍了也没找到「沙球」(｡•́︿•̀｡) 换个名字直接回复我，再搜搜看呀？</p>
    [取消 | 2:x:0]
 >> user 1001 in chat 1001: 沙丘
 -> MoviePilot GET /api/v1/media/search?count=10&title=沙丘&type=media
+-> MoviePilot GET /api/v1/subscribe/
 << editMessageText chat=1001 message=1
    <h3>🔍 帮你找到这些「沙丘」啦</h3>
    <ol start="1">
@@ -74,12 +77,14 @@
 << answerCallbackQuery
 >> user 1001 in chat 1001: 下载 沙邱
 -> MoviePilot GET /api/v1/media/search?count=10&title=沙邱&type=media
+-> MoviePilot GET /api/v1/subscribe/
 << sendRichMessage chat=1001 message=2
    <h3>🔍 呜…什么都没找到</h3>
    <p>翻遍了也没找到「沙邱」(｡•́︿•̀｡) 换个名字直接回复我，再搜搜看呀？</p>
    [取消 | 4:x:0]
 >> user 1001 in chat 1001: 搜索 沙丘
 -> MoviePilot GET /api/v1/media/search?count=10&title=沙丘&type=media
+-> MoviePilot GET /api/v1/subscribe/
 << editMessageText chat=1001 message=2
    <h3>🔍 帮你找到这些「沙丘」啦</h3>
    <ol start="1">

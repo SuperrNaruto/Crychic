@@ -88,7 +88,8 @@ latest reads are polled, so they stay out of transcripts. Notices come only from
 Fake routes are keyed by path, so a scenario needing two searches swaps `searchPath` with `h.mp.setRoute`, or
 answers per title with `scenario.searches`. Reads the bot makes at once (calendar lookups) arrive in any
 order, so the transcript sorts each run of consecutive reads of one route (`transcript.settle`; media searches
-and details count as one route, searches first; the calendar's TMDB season reads count as one route too)
+and details count as one route, searches first, and so does the subscription list read beside them for
+subscribed marks, last; the calendar's TMDB season reads count as one route too)
 
 The fake answers collection searches per title (`collectionSearch(title)`, `[]` otherwise, like MoviePilot),
 and the transcript sorts them like other simultaneous reads
@@ -123,6 +124,8 @@ changing real timer cadence
 `myrequests*_test.go` 与失败历史 fake 随 `/requests` 于 2026-10-11 删除；订阅、下载与整理进度由订阅详情和任务场景覆盖。
 
 `seriesplan_test.go` 经 `/search` 卡片的同系列覆盖状态标注（订阅列表 503 时只信媒体库、未知不可勾选；恢复后已入库/已订阅/未获取）、勾选一次写入与旧确认票据。沙丘2 的订阅由 `subscriptions.json` 首条改写合成；`TestBrowseRecommendationsAndSeries` 与 `TestDownloadIntentStopsAtRelatedMedia` 补上空订阅列表路由，使原场景保持正常状态。
+
+`subscribed_marks_test.go` 经真实 `/search` 入口验证搜索结果标注已订阅电影、已暂停电影与剧集已订阅/已暂停季，选季表的「订阅」列（剧集组订阅不标注标准季），以及订阅列表读取失败时结果与季表都不带标记。订阅行由 `subscriptions.json` 首条改写合成。其余搜索 transcript 因并行读取订阅列表多一行 `GET /api/v1/subscribe/`，未配置该路由的场景得到 404 并显示无标记。
 
 `groups_test.go` 经真实 `/search` 入口按剧集组订阅：空组不列出、组内季号与集数、标准第 2 季订阅不被当作组内第 2 季、组内第 2 季订阅也不被当作标准第 2 季（`TestStandardSeasonIgnoresGroupSubscription`）、下载意图在选剧集组时停下且不发起资源搜索（`TestDownloadIntentStopsAtEpisodeGroup`）、标准分季功能不提供、POST 携带 `episode_group`。`search_kimetsu.json`、`detail_kimetsu.json`、`seasons_kimetsu.json`、`groups_kimetsu.json` 与 `group_seasons_kimetsu.json` 为 2026-10-12 只读录制并裁剪；标准第 2 季订阅由 `subscriptions.json` 首条改写合成。
 

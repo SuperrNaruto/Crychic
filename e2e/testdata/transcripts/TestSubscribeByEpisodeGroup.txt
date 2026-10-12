@@ -2,6 +2,7 @@
 -> MoviePilot GET /api/v1/media/search?count=10&title=鬼灭之刃&type=media
 -> MoviePilot GET /api/v1/media/85937?media_source=themoviedb&type_name=电视剧
 -> MoviePilot GET /api/v1/media/seasons?media_id=85937&media_source=themoviedb
+-> MoviePilot GET /api/v1/subscribe/
 << sendRichMessage chat=1001 message=1
    <img src="url-79cfdb9e3a1c17d9d2aa44f68c7d81660c8d80ab97beaf1b91b7ab51e6a32f99"/>
    <h3>📺 <a href="https://www.themoviedb.org/tv/85937">鬼灭之刃</a></h3>
@@ -20,13 +21,13 @@
    <hr/>
    <p><b>想订哪一季呀？</b></p>
    <table bordered striped compact>
-   <tr><th>季</th><th>集数</th></tr>
-   <tr><td><b>特别篇</b></td><td>18 集</td></tr>
-   <tr><td><b>第 1 季</b></td><td>26 集</td></tr>
-   <tr><td><b>第 2 季</b></td><td>7 集</td></tr>
-   <tr><td><b>第 3 季</b></td><td>11 集</td></tr>
-   <tr><td><b>第 4 季</b></td><td>11 集</td></tr>
-   <tr><td><b>第 5 季</b></td><td>8 集</td></tr>
+   <tr><th>季</th><th>集数</th><th>订阅</th></tr>
+   <tr><td><b>特别篇</b></td><td>18 集</td><td></td></tr>
+   <tr><td><b>第 1 季</b></td><td>26 集</td><td></td></tr>
+   <tr><td><b>第 2 季</b></td><td>7 集</td><td>已订阅</td></tr>
+   <tr><td><b>第 3 季</b></td><td>11 集</td><td></td></tr>
+   <tr><td><b>第 4 季</b></td><td>11 集</td><td></td></tr>
+   <tr><td><b>第 5 季</b></td><td>8 集</td><td></td></tr>
    </table>
    [特别篇 | 1:s:0] [第 1 季 | 1:s:1] [第 2 季 | 1:s:2]
    [第 3 季 | 1:s:3] [第 4 季 | 1:s:4] [第 5 季 | 1:s:5]

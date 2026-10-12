@@ -14,7 +14,7 @@ const (
 )
 
 // seasonHead names the season picker's table columns.
-var seasonHead = []string{"季", "集数", "入库"}
+var seasonHead = []string{"季", "集数", "入库", "订阅"}
 
 // card is the picked media with everything known about it.
 type card struct {
@@ -208,11 +208,11 @@ func seasonName(number int) string {
 }
 
 // seasonTable asks question above a table of the seasons: name, episode
-// count and what the library holds.
-func (sess session) seasonTable(question string, seasons []Season) Text {
+// count, what the library holds and which are subscribed (marks, by season).
+func (sess session) seasonTable(question string, seasons []Season, marks map[int]string) Text {
 	rows := make([][]Span, 0, len(seasons))
 	for _, s := range seasons {
-		rows = append(rows, []Span{Strong(seasonName(s.Number)), Plain(episodeCount(s)), Plain(sess.seasonHeld(s))})
+		rows = append(rows, []Span{Strong(seasonName(s.Number)), Plain(episodeCount(s)), Plain(sess.seasonHeld(s)), Plain(marks[s.Number])})
 	}
 	return Lines(Line(Strong(question)), Table(seasonHead, rows...))
 }

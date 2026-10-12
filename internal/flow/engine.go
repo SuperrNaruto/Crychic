@@ -263,6 +263,8 @@ func (e *Engine) pickMedia(ctx context.Context, sess session, index int) Reply {
 		return Reply{Notice: msgInvalidChoice}
 	}
 	media := sess.results[index]
+	subs := sess.pendingSubs
+	sess.pendingSubs = nil
 	sess.target, sess.seasons, sess.chosen, sess.retry, sess.focus = nil, nil, nil, recovery{}, nil
 	sess.group, sess.groups = EpisodeGroup{}, nil
 	if media.Kind == Movie {
@@ -274,23 +276,30 @@ func (e *Engine) pickMedia(ctx context.Context, sess session, index int) Reply {
 	}
 	// A show's seasons are read alongside the card's metadata: both wait
 	// on TMDB through MoviePilot, so the pick costs one round trip.
+	if subs == nil {
+		subs = e.startSubs(ctx)
+	}
 	var seasons []Season
 	var err error
 	var wg sync.WaitGroup
 	wg.Go(func() { seasons, err = e.backend.Seasons(ctx, media) })
 	e.enrich(ctx, &sess, media)
 	wg.Wait()
-	return e.showSeasons(ctx, sess, seasonRead{seasons, err})
+	return e.showSeasons(ctx, sess, seasonRead{seasons: seasons, err: err, subs: subs.wait(ctx)})
 }
 
 func (e *Engine) offerSeasons(ctx context.Context, sess session) Reply {
+	subs := e.startSubs(ctx)
 	seasons, err := e.backend.Seasons(ctx, sess.picked.Media)
-	return e.showSeasons(ctx, sess, seasonRead{seasons, err})
+	return e.showSeasons(ctx, sess, seasonRead{seasons: seasons, err: err, subs: subs.wait(ctx)})
 }
 
+// seasonRead is the seasons just read, with the subscription list when it
+// arrived in time to mark them.
 type seasonRead struct {
 	seasons []Season
 	err     error
+	subs    []Subscription
 }
 
 // showSeasons offers the seasons just read, or the read's failure.
@@ -319,11 +328,11 @@ func (e *Engine) showSeasons(ctx context.Context, sess session, read seasonRead)
 		rows = append(rows, []Button{{Label: labelGroups, Data: data(sess.id, actionGroups, 0)}})
 	}
 	rows = append(rows, relatedRow(sess), []Button{cancelButton(sess.id)})
-	question := msgPickSeason
+	question, marks := msgPickSeason, seasonMarks(read.subs, sess.picked.Media)
 	if sess.group.ID != "" {
-		question = fmt.Sprintf("按剧集组「%s」的编排，%s", sess.group.Name, msgPickSeason)
+		question, marks = fmt.Sprintf("按剧集组「%s」的编排，%s", sess.group.Name, msgPickSeason), nil
 	}
-	return sess.picked.replyLines(sess.seasonTable(question, seasons), rows)
+	return sess.picked.replyLines(sess.seasonTable(question, seasons, marks), rows)
 }
 
 // impliedSeason is the season a show's pick already names: the one its

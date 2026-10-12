@@ -61,6 +61,7 @@
 >> user 1001 taps 1:i:0 on message 1
 -> MoviePilot GET /api/v1/media/search?count=10&title=Digger&type=media
 -> MoviePilot GET /api/v1/media/search?count=10&title=挖掘者&type=media
+-> MoviePilot GET /api/v1/subscribe/
 << editMessageText chat=1001 message=1
    <h3>🔍 呜…什么都没找到</h3>
    <p>没找到「挖掘者」能订阅的条目 (｡•́︿•̀｡) 用 /search 换个名字搜搜吧～</p>
@@ -120,6 +121,7 @@
 >> user 1001 taps 1:i:0 on message 1
 -> MoviePilot GET /api/v1/media/search?count=10&title=Digger&type=media
 -> MoviePilot GET /api/v1/media/search?count=10&title=挖掘者&type=media
+-> MoviePilot GET /api/v1/subscribe/
 << editMessageText chat=1001 message=1
    <h3>🔍 搜索</h3>
    <blockquote>⚠️ MoviePilot 好像打了个盹，稍后再来找我吧 (´-ω-`)</blockquote>
@@ -180,6 +182,7 @@
 -> MoviePilot GET /api/v1/media/search?count=10&title=Digger&type=media
 -> MoviePilot GET /api/v1/media/search?count=10&title=挖掘者&type=media
 -> MoviePilot GET /api/v1/media/1248832?media_source=themoviedb&type_name=电影
+-> MoviePilot GET /api/v1/subscribe/
 -> MoviePilot GET /api/v1/subscribe/media/1248832?media_source=themoviedb&mtype=电影&title=挖掘者&year=2026
 << editMessageText chat=1001 message=1
    <img src="url-9dcf3aeeac8a98b1293ba6367ee4f3cd4e8245d6977d04b01f16ba84a90b2192"/>
@@ -263,6 +266,7 @@
 -> MoviePilot GET /api/v1/media/search?count=10&title=Digger&type=media
 -> MoviePilot GET /api/v1/media/search?count=10&title=挖掘者&type=media
 -> MoviePilot GET /api/v1/media/1248832?media_source=themoviedb&type_name=电影
+-> MoviePilot GET /api/v1/subscribe/
 -> MoviePilot GET /api/v1/subscribe/media/1248832?media_source=themoviedb&mtype=电影&title=挖掘者&year=2026
 << editMessageText chat=1001 message=1
    <img src="url-9dcf3aeeac8a98b1293ba6367ee4f3cd4e8245d6977d04b01f16ba84a90b2192"/>
