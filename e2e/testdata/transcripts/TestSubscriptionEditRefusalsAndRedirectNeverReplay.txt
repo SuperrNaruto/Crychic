@@ -31,7 +31,7 @@
    <blockquote expandable>高中化学教师沃尔特·怀特被诊断患有晚期癌症，为保障家人经济生活，他与学生杰西制毒贩毒，并逐渐坠落至万劫不复的深渊。</blockquote>
    <hr/>
    <p><b>想订哪一季呀？</b></p>
-   <table bordered compact>
+   <table bordered striped compact>
    <tr><th>季</th><th>集数</th></tr>
    <tr><td><b>特别篇</b></td><td>9 集</td></tr>
    <tr><td><b>第 1 季</b></td><td>7 集</td></tr>
@@ -104,7 +104,7 @@
    <p><b>订阅刷新 </b>约 19分钟后（浏览站点最新种子）<br>
    <b>定时搜索 </b>未开启</p>
    <h4>入库与任务</h4>
-   <table bordered compact>
+   <table bordered striped compact>
    <tr><th>集数</th><th>媒体库</th><th>下载与整理</th></tr>
    <tr><td>E01–E13</td><td>未入库</td><td>暂无任务记录</td></tr>
    </table>
@@ -218,7 +218,7 @@
    <p><b>订阅刷新 </b>约 19分钟后（浏览站点最新种子）<br>
    <b>定时搜索 </b>未开启</p>
    <h4>入库与任务</h4>
-   <table bordered compact>
+   <table bordered striped compact>
    <tr><th>集数</th><th>媒体库</th><th>下载与整理</th></tr>
    <tr><td>E01–E13</td><td>未入库</td><td>暂无任务记录</td></tr>
    </table>
@@ -333,7 +333,7 @@
    <p><b>订阅刷新 </b>约 19分钟后（浏览站点最新种子）<br>
    <b>定时搜索 </b>未开启</p>
    <h4>入库与任务</h4>
-   <table bordered compact>
+   <table bordered striped compact>
    <tr><th>集数</th><th>媒体库</th><th>下载与整理</th></tr>
    <tr><td>E01–E13</td><td>未入库</td><td>暂无任务记录</td></tr>
    </table>
@@ -448,7 +448,7 @@
    <p><b>订阅刷新 </b>约 19分钟后（浏览站点最新种子）<br>
    <b>定时搜索 </b>未开启</p>
    <h4>入库与任务</h4>
-   <table bordered compact>
+   <table bordered striped compact>
    <tr><th>集数</th><th>媒体库</th><th>下载与整理</th></tr>
    <tr><td>E01–E13</td><td>未入库</td><td>暂无任务记录</td></tr>
    </table>
@@ -563,7 +563,7 @@
    <p><b>订阅刷新 </b>约 19分钟后（浏览站点最新种子）<br>
    <b>定时搜索 </b>未开启</p>
    <h4>入库与任务</h4>
-   <table bordered compact>
+   <table bordered striped compact>
    <tr><th>集数</th><th>媒体库</th><th>下载与整理</th></tr>
    <tr><td>E01–E13</td><td>未入库</td><td>暂无任务记录</td></tr>
    </table>
@@ -678,7 +678,7 @@
    <p><b>订阅刷新 </b>约 19分钟后（浏览站点最新种子）<br>
    <b>定时搜索 </b>未开启</p>
    <h4>入库与任务</h4>
-   <table bordered compact>
+   <table bordered striped compact>
    <tr><th>集数</th><th>媒体库</th><th>下载与整理</th></tr>
    <tr><td>E01–E13</td><td>未入库</td><td>暂无任务记录</td></tr>
    </table>
@@ -793,7 +793,7 @@
    <p><b>订阅刷新 </b>约 19分钟后（浏览站点最新种子）<br>
    <b>定时搜索 </b>未开启</p>
    <h4>入库与任务</h4>
-   <table bordered compact>
+   <table bordered striped compact>
    <tr><th>集数</th><th>媒体库</th><th>下载与整理</th></tr>
    <tr><td>E01–E13</td><td>未入库</td><td>暂无任务记录</td></tr>
    </table>

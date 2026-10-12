@@ -28,7 +28,7 @@
    <blockquote expandable>“你能，和我组一辈子乐队吗？”……高一的春末，羽丘女子学园的所有人都加入了乐队，晚入学的爱音为了尽快融入班级，急急忙忙地寻找着乐队成员。这时她得知，「羽丘的不可思议女孩」灯还没有加入乐队，于是爱音不由自主地向她打起了招呼，但是……这是遍体鳞伤又狼狈不堪的，我们的＜音乐呐喊＞。迷失方向也无所谓，在迷茫中前进吧！</blockquote>
    <hr/>
    <p><b>想订哪一季呀？</b></p>
-   <table bordered compact>
+   <table bordered striped compact>
    <tr><th>季</th><th>集数</th><th>入库</th></tr>
    <tr><td><b>特别篇</b></td><td>3 集</td><td></td></tr>
    <tr><td><b>第 1 季</b></td><td>13 集</td><td>已有 11 集</td></tr>
@@ -142,7 +142,7 @@
 << editMessageText chat=1001 message=1
    <h3>缺集方案 · 《迷途之子!!!!!》第 1 季</h3>
    <p>按 MoviePilot 本次返回的库存与资源识别范围计算，种子里的实际文件以下载结果为准。</p>
-   <table bordered compact>
+   <table bordered striped compact>
    <tr><th>项目</th><th>集数</th></tr>
    <tr><td>所需范围</td><td>E01–E13</td></tr>
    <tr><td>本次库存</td><td>E01、E04–E13（11 集）</td></tr>
@@ -233,7 +233,7 @@
 << editMessageText chat=1001 message=1
    <h3>缺集方案 · 《迷途之子!!!!!》第 1 季</h3>
    <p>按 MoviePilot 本次返回的库存与资源识别范围计算，种子里的实际文件以下载结果为准。</p>
-   <table bordered compact>
+   <table bordered striped compact>
    <tr><th>项目</th><th>集数</th></tr>
    <tr><td>所需范围</td><td>E01–E13</td></tr>
    <tr><td>本次库存</td><td>E01、E04–E13（11 集）</td></tr>
@@ -266,7 +266,7 @@
    <blockquote expandable>“你能，和我组一辈子乐队吗？”……高一的春末，羽丘女子学园的所有人都加入了乐队，晚入学的爱音为了尽快融入班级，急急忙忙地寻找着乐队成员。这时她得知，「羽丘的不可思议女孩」灯还没有加入乐队，于是爱音不由自主地向她打起了招呼，但是……这是遍体鳞伤又狼狈不堪的，我们的＜音乐呐喊＞。迷失方向也无所谓，在迷茫中前进吧！</blockquote>
    <hr/>
    <p><b>正在提交 0/1</b></p>
-   <table bordered compact>
+   <table bordered striped compact>
    <tr><th>资源</th><th>结果</th></tr>
    <tr><td><b>MyGO.S01.E02.1080p-WinnerEarly</b></td><td>提交中</td></tr>
    </table>
@@ -282,7 +282,7 @@
    <blockquote expandable>“你能，和我组一辈子乐队吗？”……高一的春末，羽丘女子学园的所有人都加入了乐队，晚入学的爱音为了尽快融入班级，急急忙忙地寻找着乐队成员。这时她得知，「羽丘的不可思议女孩」灯还没有加入乐队，于是爱音不由自主地向她打起了招呼，但是……这是遍体鳞伤又狼狈不堪的，我们的＜音乐呐喊＞。迷失方向也无所谓，在迷茫中前进吧！</blockquote>
    <hr/>
    <p><b>《迷途之子!!!!!》第 1 季的下载结果来啦：</b></p>
-   <table bordered compact>
+   <table bordered striped compact>
    <tr><th>资源</th><th>结果</th></tr>
    <tr><td><b>MyGO.S01.E02.1080p-WinnerEarly</b></td><td>✅ 开始下载</td></tr>
    </table>

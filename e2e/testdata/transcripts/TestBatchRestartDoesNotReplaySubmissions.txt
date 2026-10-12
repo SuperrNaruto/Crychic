@@ -28,7 +28,7 @@
    <blockquote expandable>“你能，和我组一辈子乐队吗？”……高一的春末，羽丘女子学园的所有人都加入了乐队，晚入学的爱音为了尽快融入班级，急急忙忙地寻找着乐队成员。这时她得知，「羽丘的不可思议女孩」灯还没有加入乐队，于是爱音不由自主地向她打起了招呼，但是……这是遍体鳞伤又狼狈不堪的，我们的＜音乐呐喊＞。迷失方向也无所谓，在迷茫中前进吧！</blockquote>
    <hr/>
    <p><b>想订哪一季呀？</b></p>
-   <table bordered compact>
+   <table bordered striped compact>
    <tr><th>季</th><th>集数</th></tr>
    <tr><td><b>特别篇</b></td><td>3 集</td></tr>
    <tr><td><b>第 1 季</b></td><td>13 集</td></tr>
@@ -230,7 +230,7 @@
    <footer><i>BanG Dream! It&#39;s MyGO!!!!!</i> · 2023 · 电视剧 · ⭐ 8.0 · 动画 / 剧情 · 共 1 季 13 集 · 主演：羊宫妃那、立石凛、青木阳菜</footer>
    <blockquote expandable>“你能，和我组一辈子乐队吗？”……高一的春末，羽丘女子学园的所有人都加入了乐队，晚入学的爱音为了尽快融入班级，急急忙忙地寻找着乐队成员。这时她得知，「羽丘的不可思议女孩」灯还没有加入乐队，于是爱音不由自主地向她打起了招呼，但是……这是遍体鳞伤又狼狈不堪的，我们的＜音乐呐喊＞。迷失方向也无所谓，在迷茫中前进吧！</blockquote>
    <hr/>
-   <table bordered compact>
+   <table bordered striped compact>
    <tr><th>资源</th><th>集</th><th>站点</th><th>大小</th></tr>
    <tr><td><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 01 [WebRip 1080p HEVC-10bit AAC]</b></td><td>E01</td><td>站点丁</td><td>512.0 MiB</td></tr>
    <tr><td><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 02 [WebRip 1080p HEVC-10bit AAC]</b></td><td>E02</td><td>站点丁</td><td>512.0 MiB</td></tr>
@@ -249,7 +249,7 @@
    <blockquote expandable>“你能，和我组一辈子乐队吗？”……高一的春末，羽丘女子学园的所有人都加入了乐队，晚入学的爱音为了尽快融入班级，急急忙忙地寻找着乐队成员。这时她得知，「羽丘的不可思议女孩」灯还没有加入乐队，于是爱音不由自主地向她打起了招呼，但是……这是遍体鳞伤又狼狈不堪的，我们的＜音乐呐喊＞。迷失方向也无所谓，在迷茫中前进吧！</blockquote>
    <hr/>
    <p><b>正在提交 0/3</b></p>
-   <table bordered compact>
+   <table bordered striped compact>
    <tr><th>资源</th><th>结果</th></tr>
    <tr><td><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 01 [WebRip 1080p HEVC-10bit AAC]</b></td><td>提交中</td></tr>
    <tr><td><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 02 [WebRip 1080p HEVC-10bit AAC]</b></td><td>等待提交</td></tr>

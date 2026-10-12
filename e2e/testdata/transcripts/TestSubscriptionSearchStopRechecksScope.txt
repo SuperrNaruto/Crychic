@@ -51,7 +51,7 @@
    <p><b>订阅刷新 </b>约 19分钟后（浏览站点最新种子）<br>
    <b>定时搜索 </b>未开启</p>
    <h4>入库与任务</h4>
-   <table bordered compact>
+   <table bordered striped compact>
    <tr><th>内容</th><th>媒体库</th><th>下载与整理</th></tr>
    <tr><td>电影</td><td>未入库</td><td>暂无任务记录</td></tr>
    </table>
@@ -81,7 +81,7 @@
    <p><b>《无海报影片》</b><br>
    已提交一次单订阅搜索，以下只跟踪本次新建批次哦～</p>
    <h4>本次批次</h4>
-   <table bordered compact>
+   <table bordered striped compact>
    <tr><th>项目</th><th>状态</th></tr>
    <tr><td>批次状态</td><td>排队中</td></tr>
    <tr><td>当前阶段</td><td>排队中</td></tr>
@@ -105,7 +105,7 @@
    <p><b>《无海报影片》</b><br>
    已提交一次单订阅搜索，以下只跟踪本次新建批次哦～</p>
    <h4>本次批次</h4>
-   <table bordered compact>
+   <table bordered striped compact>
    <tr><th>项目</th><th>状态</th></tr>
    <tr><td>批次状态</td><td>排队中</td></tr>
    <tr><td>当前阶段</td><td>排队中</td></tr>
@@ -138,7 +138,7 @@
    <p><b>《无海报影片》</b><br>
    已提交一次单订阅搜索，以下只跟踪本次新建批次哦～</p>
    <h4>上次核实的批次状态（可能已变化）</h4>
-   <table bordered compact>
+   <table bordered striped compact>
    <tr><th>项目</th><th>状态</th></tr>
    <tr><td>批次状态</td><td>排队中</td></tr>
    <tr><td>当前阶段</td><td>排队中</td></tr>
@@ -162,7 +162,7 @@
    <p><b>《无海报影片》</b><br>
    已提交一次单订阅搜索，以下只跟踪本次新建批次哦～</p>
    <h4>本次批次</h4>
-   <table bordered compact>
+   <table bordered striped compact>
    <tr><th>项目</th><th>状态</th></tr>
    <tr><td>批次状态</td><td>排队中</td></tr>
    <tr><td>当前阶段</td><td>排队中</td></tr>
@@ -198,7 +198,7 @@
    <p><b>《无海报影片》</b><br>
    已提交一次单订阅搜索，以下只跟踪本次新建批次哦～</p>
    <h4>本次批次</h4>
-   <table bordered compact>
+   <table bordered striped compact>
    <tr><th>项目</th><th>状态</th></tr>
    <tr><td>批次状态</td><td>排队中</td></tr>
    <tr><td>当前阶段</td><td>排队中</td></tr>
@@ -231,7 +231,7 @@
    <p><b>《无海报影片》</b><br>
    已提交一次单订阅搜索，以下只跟踪本次新建批次哦～</p>
    <h4>本次批次</h4>
-   <table bordered compact>
+   <table bordered striped compact>
    <tr><th>项目</th><th>状态</th></tr>
    <tr><td>批次状态</td><td>搜索结束</td></tr>
    <tr><td>当前阶段</td><td>搜索结束</td></tr>

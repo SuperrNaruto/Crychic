@@ -19,7 +19,7 @@
    幸福被破坏之时，总是弥漫着鲜血的味道。纵然我身俱灭，定将恶鬼斩杀！血风剑戟冒险谭，开幕！</blockquote>
    <hr/>
    <p><b>想订哪一季呀？</b></p>
-   <table bordered compact>
+   <table bordered striped compact>
    <tr><th>季</th><th>集数</th></tr>
    <tr><td><b>特别篇</b></td><td>18 集</td></tr>
    <tr><td><b>第 1 季</b></td><td>26 集</td></tr>

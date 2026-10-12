@@ -26,7 +26,7 @@
 << editMessageText chat=1001 message=1
    <img src="url-f1d1c3e9142d5b6cb0aec97f314112cb1cfcf5cab28cbc83476b0d4bf25e1175"/>
    <h3>⬇️ 《迷途之子!!!!!》第 1 季 E10–E12</h3>
-   <table bordered compact>
+   <table bordered striped compact>
    <tr><th>大小</th><th>进度</th></tr>
    <tr><td>17.5 GiB</td><td>0%</td></tr>
    </table>
@@ -38,7 +38,7 @@
 << editMessageText chat=1001 message=1
    <img src="url-f1d1c3e9142d5b6cb0aec97f314112cb1cfcf5cab28cbc83476b0d4bf25e1175"/>
    <h3>⬇️ 《迷途之子!!!!!》第 1 季 E10–E12</h3>
-   <table bordered compact>
+   <table bordered striped compact>
    <tr><th>大小</th><th>进度</th><th>速度</th><th>剩余</th></tr>
    <tr><td>17.5 GiB</td><td>43%</td><td>3.1MB/s</td><td>5分12秒</td></tr>
    </table>
@@ -49,7 +49,7 @@
 << editMessageText chat=1001 message=1
    <img src="url-f1d1c3e9142d5b6cb0aec97f314112cb1cfcf5cab28cbc83476b0d4bf25e1175"/>
    <h3>⬇️ 《迷途之子!!!!!》第 1 季 E10–E12</h3>
-   <table bordered compact>
+   <table bordered striped compact>
    <tr><th>大小</th><th>进度</th><th>速度</th><th>剩余</th></tr>
    <tr><td>17.5 GiB</td><td>43%</td><td>3.1MB/s</td><td>5分12秒</td></tr>
    </table>
@@ -77,7 +77,7 @@
 << editMessageText chat=1001 message=1
    <img src="url-f1d1c3e9142d5b6cb0aec97f314112cb1cfcf5cab28cbc83476b0d4bf25e1175"/>
    <h3>⬇️ 《迷途之子!!!!!》第 1 季 E10–E12</h3>
-   <table bordered compact>
+   <table bordered striped compact>
    <tr><th>大小</th><th>进度</th><th>速度</th><th>剩余</th></tr>
    <tr><td>17.5 GiB</td><td>43%</td><td>3.1MB/s</td><td>5分12秒</td></tr>
    </table>

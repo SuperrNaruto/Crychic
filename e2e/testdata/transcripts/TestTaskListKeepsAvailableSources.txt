@@ -14,7 +14,7 @@
 << editMessageText chat=1001 message=1
    <img src="url-f1d1c3e9142d5b6cb0aec97f314112cb1cfcf5cab28cbc83476b0d4bf25e1175"/>
    <h3>⬇️ 《迷途之子!!!!!》第 1 季 E10–E12</h3>
-   <table bordered compact>
+   <table bordered striped compact>
    <tr><th>大小</th><th>进度</th></tr>
    <tr><td>17.5 GiB</td><td>0%</td></tr>
    </table>
@@ -53,7 +53,7 @@
    <img src="url-caf3370aa7811b8d87c23685c80c5562086c41f07bc889d8304e5f09cb366cfd"/>
    <h3>📦 《颂乐人偶》第 1 季</h3>
    <p>已整理 0/2 个文件</p>
-   <table bordered compact>
+   <table bordered striped compact>
    <tr><th>集</th><th>状态</th></tr>
    <tr><td>E13</td><td>▶️ 整理中</td></tr>
    <tr><td>E12</td><td>⏳ 等待中</td></tr>

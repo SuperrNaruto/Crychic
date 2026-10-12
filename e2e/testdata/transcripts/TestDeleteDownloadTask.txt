@@ -90,11 +90,11 @@
    <hr/>
    <p><b>Dune.2021.1080p.BluRay.x264.DTS-HD.MA.5.1-CHD</b></p>
    <footer>沙丘 / Dune 1080p 蓝光</footer>
-   <table bordered compact>
+   <table bordered striped compact>
    <tr><th>站点</th><th>大小</th><th>做种</th></tr>
    <tr><td>站点乙</td><td>14.6 GiB</td><td>132</td></tr>
    </table>
-   <table bordered compact>
+   <table bordered striped compact>
    <tr><th>分辨率</th><th>版本</th><th>编码</th><th>制作组</th></tr>
    <tr><td>1080p</td><td>BluRay</td><td>x264</td><td>CHD</td></tr>
    </table>
@@ -130,7 +130,7 @@
 << editMessageText chat=1001 message=2
    <img src="url-ae95e58ec03e202c035279fd7b770ee9063e24e22f246ec568120ac5a90252ea"/>
    <h3>⬇️ 《沙丘》</h3>
-   <table bordered compact>
+   <table bordered striped compact>
    <tr><th>大小</th><th>进度</th><th>速度</th><th>剩余</th></tr>
    <tr><td>14.6 GiB</td><td>12%</td><td>8.2MB/s</td><td>27分40秒</td></tr>
    </table>
@@ -143,7 +143,7 @@
 << editMessageText chat=1001 message=2
    <img src="url-ae95e58ec03e202c035279fd7b770ee9063e24e22f246ec568120ac5a90252ea"/>
    <h3>⬇️ 《沙丘》</h3>
-   <table bordered compact>
+   <table bordered striped compact>
    <tr><th>大小</th><th>进度</th><th>速度</th><th>剩余</th></tr>
    <tr><td>14.6 GiB</td><td>12%</td><td>8.2MB/s</td><td>27分40秒</td></tr>
    </table>
@@ -179,7 +179,7 @@
 << editMessageText chat=1001 message=2
    <img src="url-f1d1c3e9142d5b6cb0aec97f314112cb1cfcf5cab28cbc83476b0d4bf25e1175"/>
    <h3>⬇️ 《迷途之子!!!!!》第 1 季 E10–E12</h3>
-   <table bordered compact>
+   <table bordered striped compact>
    <tr><th>大小</th><th>进度</th></tr>
    <tr><td>17.5 GiB</td><td>0%</td></tr>
    </table>
@@ -192,7 +192,7 @@
 << editMessageText chat=1001 message=2
    <img src="url-f1d1c3e9142d5b6cb0aec97f314112cb1cfcf5cab28cbc83476b0d4bf25e1175"/>
    <h3>⬇️ 《迷途之子!!!!!》第 1 季 E10–E12</h3>
-   <table bordered compact>
+   <table bordered striped compact>
    <tr><th>大小</th><th>进度</th></tr>
    <tr><td>17.5 GiB</td><td>0%</td></tr>
    </table>

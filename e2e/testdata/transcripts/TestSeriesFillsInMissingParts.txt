@@ -158,7 +158,7 @@
    {"name":"沙丘3","year":"2026","type":"电影","media_source":"themoviedb","media_id":"1170608"}
 << editMessageText chat=1001 message=1
    <h3>🎬 同系列补齐结果</h3>
-   <table bordered compact>
+   <table bordered striped compact>
    <tr><th>作品</th><th>结果</th></tr>
    <tr><td><b>《沙丘3》</b></td><td>✅ 已订阅</td></tr>
    </table>

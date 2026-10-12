@@ -159,7 +159,7 @@ func (w *richWriter) tick(b flow.Block) {
 // renderTable is a compact bordered table, the column names on top.
 func renderTable(b flow.Block) string {
 	var t strings.Builder
-	t.WriteString("<table bordered compact><tr>")
+	t.WriteString("<table bordered striped compact><tr>")
 	for _, name := range b.Head {
 		t.WriteString("<th>" + html.EscapeString(name) + "</th>")
 	}

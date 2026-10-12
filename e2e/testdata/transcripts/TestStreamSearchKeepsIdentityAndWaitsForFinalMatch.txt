@@ -86,11 +86,11 @@
    <hr/>
    <p><b>Dune.2021.2160p.UHD.BluRay.REMUX.HDR.HEVC.DTS-HD.MA.5.1-FROGE</b></p>
    <footer>沙丘 | 4K原盘REMUX</footer>
-   <table bordered compact>
+   <table bordered striped compact>
    <tr><th>站点</th><th>大小</th><th>做种</th><th>促销</th></tr>
    <tr><td>站点甲</td><td>58.2 GiB</td><td>25</td><td>免费</td></tr>
    </table>
-   <table bordered compact>
+   <table bordered striped compact>
    <tr><th>分辨率</th><th>版本</th><th>编码</th><th>制作组</th></tr>
    <tr><td>2160p</td><td>UHD BluRay REMUX</td><td>x265</td><td>FROGE</td></tr>
    </table>
@@ -111,11 +111,11 @@
    <hr/>
    <p><b>Dune.2021.2160p.UHD.BluRay.REMUX.HDR.HEVC.DTS-HD.MA.5.1-FROGE</b></p>
    <footer>沙丘 | 4K原盘REMUX</footer>
-   <table bordered compact>
+   <table bordered striped compact>
    <tr><th>站点</th><th>大小</th><th>做种</th><th>促销</th></tr>
    <tr><td>站点甲</td><td>58.2 GiB</td><td>25</td><td>免费</td></tr>
    </table>
-   <table bordered compact>
+   <table bordered striped compact>
    <tr><th>分辨率</th><th>版本</th><th>编码</th><th>制作组</th></tr>
    <tr><td>2160p</td><td>UHD BluRay REMUX</td><td>x265</td><td>FROGE</td></tr>
    </table>
@@ -133,11 +133,11 @@
    <hr/>
    <p><b>Dune.2021.2160p.UHD.BluRay.REMUX.HDR.HEVC.DTS-HD.MA.5.1-FROGE</b></p>
    <footer>沙丘 | 4K原盘REMUX</footer>
-   <table bordered compact>
+   <table bordered striped compact>
    <tr><th>站点</th><th>大小</th><th>做种</th><th>促销</th></tr>
    <tr><td>站点甲</td><td>58.2 GiB</td><td>25</td><td>免费</td></tr>
    </table>
-   <table bordered compact>
+   <table bordered striped compact>
    <tr><th>分辨率</th><th>版本</th><th>编码</th><th>制作组</th></tr>
    <tr><td>2160p</td><td>UHD BluRay REMUX</td><td>x265</td><td>FROGE</td></tr>
    </table>
@@ -172,11 +172,11 @@
    <hr/>
    <p><b>Dune.2021.1080p.BluRay.x264.DTS-HD.MA.5.1-CHD</b></p>
    <footer>沙丘 / Dune 1080p 蓝光</footer>
-   <table bordered compact>
+   <table bordered striped compact>
    <tr><th>站点</th><th>大小</th><th>做种</th></tr>
    <tr><td>站点乙</td><td>14.6 GiB</td><td>132</td></tr>
    </table>
-   <table bordered compact>
+   <table bordered striped compact>
    <tr><th>分辨率</th><th>版本</th><th>编码</th><th>制作组</th></tr>
    <tr><td>1080p</td><td>BluRay</td><td>x264</td><td>CHD</td></tr>
    </table>

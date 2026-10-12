@@ -19,7 +19,7 @@
    幸福被破坏之时，总是弥漫着鲜血的味道。纵然我身俱灭，定将恶鬼斩杀！血风剑戟冒险谭，开幕！</blockquote>
    <hr/>
    <p><b>想订哪一季呀？</b></p>
-   <table bordered compact>
+   <table bordered striped compact>
    <tr><th>季</th><th>集数</th></tr>
    <tr><td><b>特别篇</b></td><td>18 集</td></tr>
    <tr><td><b>第 1 季</b></td><td>26 集</td></tr>
@@ -73,7 +73,7 @@
    <hr/>
    <p>ℹ️ 按剧集组分季时，入库情况请到媒体库核对～<br>
    <b>按剧集组「Wikpedia / News」的编排，想订哪一季呀？</b></p>
-   <table bordered compact>
+   <table bordered striped compact>
    <tr><th>季</th><th>集数</th></tr>
    <tr><td><b>第 1 季</b></td><td>26 集</td></tr>
    <tr><td><b>第 2 季</b></td><td>18 集</td></tr>

@@ -31,7 +31,7 @@
    <p><b>订阅刷新 </b>约 19分钟后（浏览站点最新种子）<br>
    <b>定时搜索 </b>未开启</p>
    <h4>入库与任务</h4>
-   <table bordered compact>
+   <table bordered striped compact>
    <tr><th>集数</th><th>媒体库</th><th>下载与整理</th></tr>
    <tr><td>E02</td><td>未入库</td><td>整理中</td></tr>
    <tr><td>E03</td><td>已入库</td><td>整理中</td></tr>
@@ -57,7 +57,7 @@
 << editMessageText chat=1001 message=2
    <h3>📦 《绝命毒师》第 2 季</h3>
    <p>已整理 0/1 个文件</p>
-   <table bordered compact>
+   <table bordered striped compact>
    <tr><th>集</th><th>状态</th></tr>
    <tr><td>E02–E03</td><td>▶️ 整理中</td></tr>
    </table>

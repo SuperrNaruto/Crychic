@@ -28,7 +28,7 @@
    <blockquote expandable>“你能，和我组一辈子乐队吗？”……高一的春末，羽丘女子学园的所有人都加入了乐队，晚入学的爱音为了尽快融入班级，急急忙忙地寻找着乐队成员。这时她得知，「羽丘的不可思议女孩」灯还没有加入乐队，于是爱音不由自主地向她打起了招呼，但是……这是遍体鳞伤又狼狈不堪的，我们的＜音乐呐喊＞。迷失方向也无所谓，在迷茫中前进吧！</blockquote>
    <hr/>
    <p><b>想订哪一季呀？</b></p>
-   <table bordered compact>
+   <table bordered striped compact>
    <tr><th>季</th><th>集数</th><th>入库</th></tr>
    <tr><td><b>特别篇</b></td><td>3 集</td><td></td></tr>
    <tr><td><b>第 1 季</b></td><td>13 集</td><td>已入库</td></tr>
@@ -129,11 +129,11 @@
    <hr/>
    <p><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 08 [WebRip 1080p HEVC-10bit AAC]</b></p>
    <footer>迷途之子!!!!! 第8集</footer>
-   <table bordered compact>
+   <table bordered striped compact>
    <tr><th>站点</th><th>大小</th><th>做种</th></tr>
    <tr><td>站点丁</td><td>512.0 MiB</td><td>18</td></tr>
    </table>
-   <table bordered compact>
+   <table bordered striped compact>
    <tr><th>分辨率</th><th>版本</th><th>编码</th><th>制作组</th></tr>
    <tr><td>1080p</td><td>WebRip</td><td>x265</td><td>LoliHouse</td></tr>
    </table>
@@ -211,11 +211,11 @@
    <hr/>
    <p><b>BanG.Dream.It&#39;s.MyGO.S01.2023.1080p.BluRay.x265.FLAC-VCB</b></p>
    <footer>迷途之子!!!!! 第一季 全13集 BDRip</footer>
-   <table bordered compact>
+   <table bordered striped compact>
    <tr><th>站点</th><th>大小</th><th>做种</th><th>促销</th></tr>
    <tr><td>站点甲</td><td>21.4 GiB</td><td>40</td><td>免费</td></tr>
    </table>
-   <table bordered compact>
+   <table bordered striped compact>
    <tr><th>分辨率</th><th>版本</th><th>编码</th><th>制作组</th></tr>
    <tr><td>1080p</td><td>BluRay</td><td>x265</td><td>VCB</td></tr>
    </table>
