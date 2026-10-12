@@ -26,6 +26,7 @@ type listView struct {
 	menu      [][]Button // rows above the footer on every page
 	footer    []Button
 	note      string
+	notes     Text   // blocks after the note, on every page
 	pageItems int    // zero uses the default; search pages use fewer entries
 	source    string // list provenance for navigation across subscription details
 }
@@ -87,6 +88,7 @@ func paged(id uint64, view listView) []Reply {
 		if view.note != "" {
 			pages[i].Text = append(pages[i].Text, Remark(view.note))
 		}
+		pages[i].Text = append(pages[i].Text, view.notes...)
 		if len(pages) > 1 {
 			pages[i].Text = append(pages[i].Text, Remark(fmt.Sprintf("第 %d/%d 页", i+1, len(pages))))
 			pages[i].Buttons = append(pages[i].Buttons, listPager(id, i, len(pages)))

@@ -38,7 +38,7 @@
 >> user 1001 taps 1:eg:0 on message 1
 -> MoviePilot GET /api/v1/media/groups/85937
 << editMessageText chat=1001 message=1
-   <h3>🗂️「鬼灭之刃」的剧集组</h3>
+   <h3>🗂️ 《鬼灭之刃》的剧集组</h3>
    <ol start="1">
    <li value="1"><b>Single season format</b><br>
    <i>绝对顺序 · 1 季 · 63 集</i></li>
@@ -71,8 +71,8 @@
    <br>
    幸福被破坏之时，总是弥漫着鲜血的味道。纵然我身俱灭，定将恶鬼斩杀！血风剑戟冒险谭，开幕！</blockquote>
    <hr/>
-   <p>ℹ️ 按剧集组分季时，入库情况请到媒体库核对～<br>
-   <b>按剧集组「Wikpedia / News」的编排，想订哪一季呀？</b></p>
+   <blockquote>ℹ️ 按剧集组分季时，入库情况请到媒体库核对～</blockquote>
+   <p><b>按剧集组「Wikpedia / News」的编排，想订哪一季呀？</b></p>
    <table bordered striped compact>
    <tr><th>季</th><th>集数</th></tr>
    <tr><td><b>第 1 季</b></td><td>26 集</td></tr>
@@ -103,8 +103,8 @@
    <br>
    幸福被破坏之时，总是弥漫着鲜血的味道。纵然我身俱灭，定将恶鬼斩杀！血风剑戟冒险谭，开幕！</blockquote>
    <hr/>
-   <p>ℹ️ 按剧集组分季时，入库情况请到媒体库核对～<br>
-   <b>要订阅《鬼灭之刃》第 2 季（剧集组「Wikpedia / News」）（共 18 集）吗？</b></p>
+   <blockquote>ℹ️ 按剧集组分季时，入库情况请到媒体库核对～</blockquote>
+   <p><b>要订阅《鬼灭之刃》第 2 季（剧集组「Wikpedia / News」）（共 18 集）吗？</b></p>
    [从第 1 集开始 | 1:ok:0]
    [指定起始集… | 1:e:0]
    [相似推荐 | 1:r:0] [演职人员 | 1:ca:0]
@@ -129,6 +129,6 @@
    <br>
    幸福被破坏之时，总是弥漫着鲜血的味道。纵然我身俱灭，定将恶鬼斩杀！血风剑戟冒险谭，开幕！</blockquote>
    <hr/>
-   <p>ℹ️ 按剧集组分季时，入库情况请到媒体库核对～<br>
-   ✅ 帮你订好《鬼灭之刃》第 2 季（剧集组「Wikpedia / News」）啦，通知由 MoviePilot 按设置发送哦～ ヾ(≧▽≦*)o</p>
+   <blockquote>ℹ️ 按剧集组分季时，入库情况请到媒体库核对～</blockquote>
+   <p>✅ 帮你订好《鬼灭之刃》第 2 季（剧集组「Wikpedia / News」）啦，通知由 MoviePilot 按设置发送哦～ ヾ(≧▽≦*)o</p>
 << answerCallbackQuery

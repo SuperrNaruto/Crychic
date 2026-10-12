@@ -141,7 +141,7 @@ func (e *Engine) partPicker(sess session) Reply {
 		return Reply{Notice: msgInvalidChoice}
 	}
 	e.store.put(sess)
-	text := Lines(Heading(Plain(fmt.Sprintf("🎬 补齐「%s」的同系列", sess.picked.Media.Title))), Line(Strong(msgPickParts)))
+	text := Lines(Heading(Plain(fmt.Sprintf("🎬 补齐《%s》的同系列", sess.picked.Media.Title))), Line(Strong(msgPickParts)))
 	var ticks []Button
 	for i, m := range sess.results {
 		if sess.partStates[i] != partMissing {

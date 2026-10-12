@@ -2,6 +2,9 @@ package flow
 
 import "slices"
 
+// msgFoldSummary is the summary of every folded explanation.
+const msgFoldSummary = "说明"
+
 // Text is formatted message content described by meaning, not markup;
 // each platform adapter renders it in its own syntax and does the escaping.
 type Text []Block
@@ -37,6 +40,12 @@ const (
 	// Fine is a line of secondary facts in small print; consecutive lines
 	// form one block.
 	Fine
+	// Alert is a status or warning line inside a message; consecutive
+	// lines form one quote.
+	Alert
+	// Folded is an explanation closed behind its Spans summary; its Body
+	// opens on demand.
+	Folded
 )
 
 // Block is one structural piece of a message.
@@ -47,7 +56,7 @@ type Block struct {
 	Facts  string   // Item only: secondary facts, e.g. "Dune · 2021 · 电影"
 	Tag    string   // Item only: a fact singled out after the others, e.g. 你请求的
 	Brief  bool     // Item only: the facts follow the name on its line
-	Body   Text     // Item only: shown once the reader opens the entry by its name
+	Body   Text     // Item and Folded: shown once the reader opens the entry or its summary
 	Head   []string // Tabular only
 	Rows   [][]Span // Tabular only: a span per cell
 	On     bool     // Tick only
@@ -123,6 +132,18 @@ func Open(label, url string) Block {
 // Small is a line of secondary facts in small print, e.g. a card's year,
 // kind and rating.
 func Small(spans ...Span) Block { return Block{Kind: Fine, Spans: spans} }
+
+// Callout is a status or warning line (keep its emoji inside); consecutive
+// callouts form one quote. Never use it in headings, notices, table cells,
+// entry bodies or notifications.
+func Callout(spans ...Span) Block { return Block{Kind: Alert, Spans: spans} }
+
+// Fold closes an explanation behind the summary until the reader opens it.
+// Only explanation whose safety or status meaning is also visible elsewhere
+// on the screen may be folded, and never on a screen edited by Reply.Follow.
+func Fold(summary string, body Text) Block {
+	return Block{Kind: Folded, Spans: []Span{Plain(summary)}, Body: body}
+}
 
 // Lines builds a Text.
 func Lines(blocks ...Block) Text { return blocks }

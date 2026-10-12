@@ -80,7 +80,7 @@
 >> user 1001 taps 1:pl:0 on message 1
 -> MoviePilot GET /api/v1/media/seasons?media_id=224207&media_source=themoviedb
 << editMessageText chat=-500 message=1 topic=42
-   <h3>缺集方案 · 《迷途之子!!!!!》第 1 季</h3>
+   <h3>🔍 缺集方案 · 《迷途之子!!!!!》第 1 季</h3>
    <p>按 MoviePilot 本次返回的库存与资源识别范围计算，种子里的实际文件以下载结果为准。</p>
    <table bordered striped compact>
    <tr><th>项目</th><th>集数</th></tr>
@@ -93,9 +93,11 @@
    <tr><td>方案内重叠</td><td>无</td></tr>
    <tr><td>起始集以前</td><td>无</td></tr>
    </table>
-   <p>总大小 1.0 GiB<br>
-   ⚠️ 1 个资源未报告做种，不能保证可以下载。</p>
-   <footer>优先多补缺集，同覆盖时优先无 H&amp;R、少重复、已知且较小体积，最后按 MoviePilot 优先级；这是建议方案。确认前会再核对一次库存，之后的变化以 MoviePilot 为准。</footer>
+   <p>总大小 1.0 GiB</p>
+   <blockquote>⚠️ 1 个资源未报告做种，不能保证可以下载。</blockquote>
+   <details><summary>说明</summary>
+   <p>优先多补缺集，同覆盖时优先无 H&amp;R、少重复、已知且较小体积，最后按 MoviePilot 优先级；这是建议方案。确认前会再核对一次库存，之后的变化以 MoviePilot 为准。</p>
+   </details>
    <ol start="1">
    <li value="1"><b>MyGO.S01.E02.1080p-IsolatedTwo</b><br>
    <i>站点甲 · 1.0 GiB · 做种 0 · E02</i></li>
@@ -120,7 +122,7 @@
 >> user 1001 taps 1:pc:0 on message 1
 -> MoviePilot GET /api/v1/media/seasons?media_id=224207&media_source=themoviedb
 << editMessageText chat=-500 message=1 topic=42
-   <h3>缺集方案 · 《迷途之子!!!!!》第 1 季</h3>
+   <h3>🔍 缺集方案 · 《迷途之子!!!!!》第 1 季</h3>
    <p>按 MoviePilot 本次返回的库存与资源识别范围计算，种子里的实际文件以下载结果为准。</p>
    <table bordered striped compact>
    <tr><th>项目</th><th>集数</th></tr>
@@ -133,9 +135,11 @@
    <tr><td>方案内重叠</td><td>无</td></tr>
    <tr><td>起始集以前</td><td>无</td></tr>
    </table>
-   <p>总大小 1.0 GiB<br>
-   ⚠️ 1 个资源未报告做种，不能保证可以下载。</p>
-   <footer>优先多补缺集，同覆盖时优先无 H&amp;R、少重复、已知且较小体积，最后按 MoviePilot 优先级；这是建议方案。确认前会再核对一次库存，之后的变化以 MoviePilot 为准。</footer>
+   <p>总大小 1.0 GiB</p>
+   <blockquote>⚠️ 1 个资源未报告做种，不能保证可以下载。</blockquote>
+   <details><summary>说明</summary>
+   <p>优先多补缺集，同覆盖时优先无 H&amp;R、少重复、已知且较小体积，最后按 MoviePilot 优先级；这是建议方案。确认前会再核对一次库存，之后的变化以 MoviePilot 为准。</p>
+   </details>
    <ol start="1">
    <li value="1"><b>MyGO.S01.E02.1080p-IsolatedTwo</b><br>
    <i>站点甲 · 1.0 GiB · 做种 0 · E02</i></li>

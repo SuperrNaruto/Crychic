@@ -10,8 +10,8 @@ const (
 	actionUpgradeConfirm = "bo" // subscribes it as an upgrade
 
 	msgUpgradeExplain    = "洗版会按 MoviePilot 订阅规则的优先级一直找更好的版本，下到最高优先级才结束；媒体库里已有的也会再下一遍哦～"
-	msgUpgradeSubscribed = "ℹ️ 这个已经订阅上啦，要洗版得在 MoviePilot 里改这个订阅哦～"
-	msgUpgradeUnchecked  = "⚠️ MoviePilot 暂时没告诉我订阅状态，稍后再点一次吧～"
+	msgUpgradeSubscribed = "这个已经订阅上啦，要洗版得在 MoviePilot 里改这个订阅哦～"
+	msgUpgradeUnchecked  = "MoviePilot 暂时没告诉我订阅状态，稍后再点一次吧～"
 )
 
 // chooseUpgrade applies the steps of an upgrade subscription.

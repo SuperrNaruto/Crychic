@@ -120,7 +120,7 @@
 >> user 1001 taps 1:pl:0 on message 1
 -> MoviePilot GET /api/v1/media/seasons?media_id=224207&media_source=themoviedb
 << editMessageText chat=1001 message=1
-   <h3>缺集方案 · 《迷途之子!!!!!》第 1 季（从第 3 集开始）</h3>
+   <h3>🔍 缺集方案 · 《迷途之子!!!!!》第 1 季（从第 3 集开始）</h3>
    <p>按 MoviePilot 本次返回的库存与资源识别范围计算，种子里的实际文件以下载结果为准。</p>
    <table bordered striped compact>
    <tr><th>项目</th><th>集数</th></tr>
@@ -133,11 +133,13 @@
    <tr><td>方案内重叠</td><td>无</td></tr>
    <tr><td>起始集以前</td><td>E01（1 集）</td></tr>
    </table>
-   <p>总大小 20.0 GiB<br>
-   <b>⚠️ 本次未返回本季库存，请先核对媒体库连接与扫描状态；空结果也可能是媒体库异常。</b><br>
-   ⚠️ 20 个资源未报告做种，不能保证可以下载。<br>
-   一次最多建议 20 个资源，达到上限后仍缺的集数已列出。</p>
-   <footer>优先多补缺集，同覆盖时优先无 H&amp;R、少重复、已知且较小体积，最后按 MoviePilot 优先级；这是建议方案。确认前会再核对一次库存，之后的变化以 MoviePilot 为准。</footer>
+   <p>总大小 20.0 GiB</p>
+   <blockquote><b>⚠️ 本次未返回本季库存，请先核对媒体库连接与扫描状态；空结果也可能是媒体库异常。</b><br>
+   ⚠️ 20 个资源未报告做种，不能保证可以下载。</blockquote>
+   <p>一次最多建议 20 个资源，达到上限后仍缺的集数已列出。</p>
+   <details><summary>说明</summary>
+   <p>优先多补缺集，同覆盖时优先无 H&amp;R、少重复、已知且较小体积，最后按 MoviePilot 优先级；这是建议方案。确认前会再核对一次库存，之后的变化以 MoviePilot 为准。</p>
+   </details>
    <ol start="1">
    <li value="1"><b>MyGO.S01.E01.E03.E04.1080p-BeforeStart</b><br>
    <i>站点甲 · 1.0 GiB · 做种 0 · E01、E03–E04</i></li>
@@ -185,7 +187,7 @@
 << answerCallbackQuery
 >> user 1001 taps 1:p:1 on message 1
 << editMessageText chat=1001 message=1
-   <h3>缺集方案 · 《迷途之子!!!!!》第 1 季（从第 3 集开始）</h3>
+   <h3>🔍 缺集方案 · 《迷途之子!!!!!》第 1 季（从第 3 集开始）</h3>
    <ol start="19">
    <li value="19"><b>MyGO.S01.E22.1080p-Single22</b><br>
    <i>站点甲 · 1.0 GiB · 做种 0 · E22</i></li>
@@ -202,7 +204,7 @@
 >> user 1001 taps 1:pc:0 on message 1
 -> MoviePilot GET /api/v1/media/seasons?media_id=224207&media_source=themoviedb
 << editMessageText chat=1001 message=1
-   <h3>缺集方案 · 《迷途之子!!!!!》第 1 季（从第 3 集开始）</h3>
+   <h3>🔍 缺集方案 · 《迷途之子!!!!!》第 1 季（从第 3 集开始）</h3>
    <p>季集范围不确定；需要明确的起始集和季总集数，且一季最多支持 100 集，请先在 MoviePilot 核对哦。</p>
    [重新计算 | 1:pc:0]
    [返回 | 1:bk:0] [取消 | 1:x:0]

@@ -34,7 +34,7 @@ type toggleWords struct {
 }
 
 var pauseWords = toggleWords{
-	title: "暂停下载", button: "暂停下载", confirm: "确认暂停", done: "已提交暂停，下载器的状态会自动刷新到这里～",
+	title: "📋 暂停下载", button: "暂停下载", confirm: "确认暂停", done: "已提交暂停，下载器的状态会自动刷新到这里～",
 	ask:     "⏸️ 要暂停这个下载吗？",
 	keep:    "已经下载的部分都留着，之后点「恢复下载」就能接着下～",
 	already: "它已经是暂停状态啦～",
@@ -42,7 +42,7 @@ var pauseWords = toggleWords{
 }
 
 var resumeWords = toggleWords{
-	title: "恢复下载", button: "恢复下载", confirm: "确认恢复", done: "已提交恢复，下载器的状态会自动刷新到这里～",
+	title: "📋 恢复下载", button: "恢复下载", confirm: "确认恢复", done: "已提交恢复，下载器的状态会自动刷新到这里～",
 	ask:     "⬇️ 要恢复这个下载吗？",
 	keep:    "下载器会从暂停的地方接着下～",
 	already: "它已经在下载啦～",

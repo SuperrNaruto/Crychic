@@ -60,25 +60,34 @@ func renderRich(text flow.Text, media string) string {
 // consecutive lines or items continue it.
 type richWriter struct {
 	strings.Builder
-	open string // "p", "footer", "ol" or "ul" while one is open
+	open string // "p", "footer", "blockquote", "ol" or "ul" while one is open
+}
+
+// lineTags are the blocks whose consecutive lines share one element.
+var lineTags = map[flow.BlockKind]string{flow.Para: "p", flow.Fine: "footer", flow.Alert: "blockquote"}
+
+// spanTags wrap a block's spans in one element of their own.
+var spanTags = map[flow.BlockKind][2]string{
+	flow.Title:   {"<h3>", "</h3>"},
+	flow.Section: {"<h4>", "</h4>"},
+	flow.Quoted:  {"<blockquote expandable>", "</blockquote>"},
+	flow.Note:    {"<footer>", "</footer>"},
 }
 
 func (w *richWriter) add(b flow.Block) {
+	if tag, ok := lineTags[b.Kind]; ok {
+		w.line(tag, b.Spans)
+		return
+	}
+	if tags, ok := spanTags[b.Kind]; ok {
+		w.block(tags[0] + renderSpans(b.Spans) + tags[1])
+		return
+	}
 	switch b.Kind {
-	case flow.Para:
-		w.line("p", b.Spans)
-	case flow.Fine:
-		w.line("footer", b.Spans)
+	case flow.Folded:
+		w.block("<details><summary>" + renderSpans(b.Spans) + "</summary>" + renderRich(b.Body, "") + "</details>")
 	case flow.Item:
 		w.item(b)
-	case flow.Title:
-		w.block("<h3>" + renderSpans(b.Spans) + "</h3>")
-	case flow.Section:
-		w.block("<h4>" + renderSpans(b.Spans) + "</h4>")
-	case flow.Quoted:
-		w.block("<blockquote expandable>" + renderSpans(b.Spans) + "</blockquote>")
-	case flow.Note:
-		w.block("<footer>" + renderSpans(b.Spans) + "</footer>")
 	case flow.Rule:
 		w.block("<hr/>")
 	case flow.Tick:
@@ -92,7 +101,7 @@ func (w *richWriter) add(b flow.Block) {
 	}
 }
 
-// line continues the open paragraph (p) or small print (footer); an
+// line continues the open paragraph (p), small print (footer) or callout (blockquote); an
 // empty line ends it.
 func (w *richWriter) line(tag string, spans []flow.Span) {
 	if len(spans) == 0 {

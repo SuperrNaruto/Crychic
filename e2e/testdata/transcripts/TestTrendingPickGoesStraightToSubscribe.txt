@@ -72,7 +72,7 @@
 -> MoviePilot GET /api/v1/media/search?count=10&title=Digger&type=media
 -> MoviePilot GET /api/v1/media/search?count=10&title=挖掘者&type=media
 << editMessageText chat=1001 message=1
-   <h3>🔍 没找到</h3>
+   <h3>🔍 呜…什么都没找到</h3>
    <p>没找到「挖掘者」能订阅的条目 (｡•́︿•̀｡) 用 /search 换个名字搜搜吧～</p>
    [返回 | 1:bk:0] [首页 | 1:o:0] [关闭 | 1:c:0]
 << answerCallbackQuery
@@ -142,7 +142,7 @@
 -> MoviePilot GET /api/v1/media/search?count=10&title=挖掘者&type=media
 << editMessageText chat=1001 message=1
    <h3>🔍 搜索</h3>
-   <p>⚠️ MoviePilot 好像打了个盹，稍后再来找我吧 (´-ω-`)</p>
+   <blockquote>⚠️ MoviePilot 好像打了个盹，稍后再来找我吧 (´-ω-`)</blockquote>
    [返回 | 1:bk:0] [首页 | 1:o:0] [关闭 | 1:c:0]
 << answerCallbackQuery
 >> user 1001 taps 1:bk:0 on message 1

@@ -338,7 +338,7 @@ func (e *Engine) pickFromChart(ctx context.Context, sess session, pick Media) Re
 	}
 	if len(results) == 0 {
 		return Reply{
-			Text:    Lines(Heading(Plain("🔍 没找到")), Line(Plain(fmt.Sprintf("没找到「%s」能订阅的条目 (｡•́︿•̀｡) 用 /search 换个名字搜搜吧～", pick.Title)))),
+			Text:    Lines(Heading(Plain("🔍 呜…什么都没找到")), Line(Plain(fmt.Sprintf("没找到「%s」能订阅的条目 (｡•́︿•̀｡) 用 /search 换个名字搜搜吧～", pick.Title)))),
 			Buttons: [][]Button{browseRow(sess.id)},
 		}
 	}

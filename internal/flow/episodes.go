@@ -46,7 +46,11 @@ func askStart(sess session, problem string) Reply {
 	if count := sess.episodeCount(*sess.target.Season); count > 0 {
 		prompt += fmt.Sprintf("（1–%d）", count)
 	}
-	reply := sess.picked.reply(Line(Plain(problem+prompt+"～")), [][]Button{{cancelButton(sess.id)}})
+	message := Lines(Line(Plain(prompt + "～")))
+	if problem != "" {
+		message = append(Lines(Callout(Plain(problem))), message...)
+	}
+	reply := sess.picked.replyLines(message, [][]Button{{cancelButton(sess.id)}})
 	reply.Input = data(sess.id, actionAskFrom, 0)
 	return reply
 }

@@ -61,7 +61,7 @@ func (e *Engine) castList(ctx context.Context, sess session) Reply {
 		return Reply{Notice: msgNoCast}
 	}
 	sess.people = people[:min(len(people), maxCredits)]
-	view := listView{heading: Heading(Plain(fmt.Sprintf("🎭「%s」的演职人员", media.Title))), footer: browseRow(sess.id)}
+	view := listView{heading: Heading(Plain(fmt.Sprintf("🎭 《%s》的演职人员", media.Title))), footer: browseRow(sess.id)}
 	for i, p := range sess.people {
 		view.entries = append(view.entries, listEntry{
 			text:    Lines(entry(i+1, Strong(p.Name), truncate(p.Role, listTitleRunes))),

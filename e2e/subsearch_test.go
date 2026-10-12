@@ -80,7 +80,7 @@ func TestSubscriptionSearchAfterEditingTracksOneBatch(t *testing.T) {
 	})
 	h.tap(alice, editMessage, "刷新")
 	h.shows(editMessage, "搜索结束")
-	h.shows(editMessage, "只说明这次搜索执行完了")
+	h.shows(editMessage, "后台搜索照常进行")
 	h.tap(alice, editMessage, "返回")
 	h.shows(editMessage, "订阅详情")
 	h.tap(alice, editMessage, "查看本次搜索")

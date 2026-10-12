@@ -64,7 +64,7 @@
 >> user 1001 taps 2:ue:1 on message 2
 -> MoviePilot GET /api/v1/subscribe/
 << editMessageText chat=1001 message=2
-   <h3>编辑订阅条件</h3>
+   <h3>📚 编辑订阅条件</h3>
    <p><b>《无海报影片》</b><br>
    没有未保存的修改，选一项开始编辑吧～<br>
    <b>分辨率 </b>不限（未设置）<br>
@@ -75,7 +75,9 @@
    <b>包含条件 </b>不限（未设置）<br>
    <b>排除条件 </b>不限（未设置）<br>
    <b>洗版模式 </b>普通订阅</p>
-   <footer>只保存后续匹配条件，已有下载保持原样；要补搜请用「立即搜索」。原有后台表达式请到 MoviePilot 查看。</footer>
+   <details><summary>说明</summary>
+   <p>只保存后续匹配条件，已有下载保持原样；要补搜请用「立即搜索」。原有后台表达式请到 MoviePilot 查看。</p>
+   </details>
    [分辨率 | 2:uf:2] [资源类型 | 2:uf:1]
    [画面格式 | 2:uf:3] [规则组 | 2:uf:4]
    [站点 | 2:uf:5] [包含条件 | 2:uf:6]
@@ -85,7 +87,7 @@
 << answerCallbackQuery
 >> user 1001 taps 2:uf:9 on message 2
 << editMessageText chat=1001 message=2
-   <h3>编辑订阅条件 · 洗版模式</h3>
+   <h3>📚 编辑订阅条件 · 洗版模式</h3>
    <p>当前 · 普通订阅</p>
    <ol start="1">
    <li value="1"><b>普通订阅</b><br>
@@ -99,7 +101,7 @@
 << answerCallbackQuery
 >> user 1001 taps 2:uv:10002 on message 2
 << editMessageText chat=1001 message=2
-   <h3>编辑订阅条件</h3>
+   <h3>📚 编辑订阅条件</h3>
    <p><b>《无海报影片》</b><br>
    有 1 项未保存。查看修改并确认后才会生效哦～<br>
    <b>分辨率 </b>不限（未设置）<br>
@@ -110,7 +112,9 @@
    <b>包含条件 </b>不限（未设置）<br>
    <b>排除条件 </b>不限（未设置）<br>
    <b>洗版模式（已修改） </b>洗版订阅</p>
-   <footer>只保存后续匹配条件，已有下载保持原样；要补搜请用「立即搜索」。原有后台表达式请到 MoviePilot 查看。</footer>
+   <details><summary>说明</summary>
+   <p>只保存后续匹配条件，已有下载保持原样；要补搜请用「立即搜索」。原有后台表达式请到 MoviePilot 查看。</p>
+   </details>
    [分辨率 | 2:uf:2] [资源类型 | 2:uf:1]
    [画面格式 | 2:uf:3] [规则组 | 2:uf:4]
    [站点 | 2:uf:5] [包含条件 | 2:uf:6]
@@ -120,13 +124,14 @@
 << answerCallbackQuery
 >> user 1001 taps 2:uq:0 on message 2
 << editMessageText chat=1001 message=2
-   <h3>确认修改订阅条件</h3>
+   <h3>📚 确认修改订阅条件</h3>
    <p><b>《无海报影片》</b></p>
    <h4>洗版模式</h4>
    <p>原来 · 普通订阅<br>
    改为 · 洗版订阅<br>
    生效规则组 · 沿用全局洗版规则组</p>
-   <footer>只提交上述改动，已取得集数、缺集数和洗版优先级保持原样；到货情况以媒体库为准。后台后续调度会使用新条件，并可能搜索下载。</footer>
+   <blockquote>后台后续调度会使用新条件，并可能搜索下载。</blockquote>
+   <footer>只提交上述改动，已取得集数、缺集数和洗版优先级保持原样；到货情况以媒体库为准。</footer>
    [确认保存 | 2:uw:1]
    [返回 | 2:bk:0]
 << answerCallbackQuery

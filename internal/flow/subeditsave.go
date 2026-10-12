@@ -35,10 +35,10 @@ func (e *Engine) saveSubEdit(ctx context.Context, sess session, id int) Reply {
 	err := e.backend.UpdateSubscription(ctx, SubscriptionUpdate{ID: id, Before: edit.base.conditions(), After: edit.draft})
 	if err != nil {
 		if message, safe := UserMessage(err); safe {
-			return subEditReceipt(sess, edit.base, subEditOutcome{"未保存订阅条件", message})
+			return subEditReceipt(sess, edit.base, subEditOutcome{"📚 未保存订阅条件", message})
 		}
 		e.log.Warn("subscription edit outcome unknown", "subscription", id)
-		return subEditReceipt(sess, edit.base, subEditOutcome{"保存结果待核对", msgSubEditUnknown})
+		return subEditReceipt(sess, edit.base, subEditOutcome{"📚 保存结果待核对", msgSubEditUnknown})
 	}
 	return e.readSavedSubEdit(ctx, sess, edit)
 }
@@ -50,10 +50,10 @@ func (edit subscriptionEdit) confirmable(id int) bool {
 func (e *Engine) readSavedSubEdit(ctx context.Context, sess session, edit subscriptionEdit) Reply {
 	current, notice := e.editableSubscription(ctx, edit.base)
 	if notice != "" {
-		return subEditReceipt(sess, edit.base, subEditOutcome{"修改已受理，等待读取", "MoviePilot 已确认保存，但暂时读不到当前条件；请点「核对结果」，不要重复提交哦～"})
+		return subEditReceipt(sess, edit.base, subEditOutcome{"📚 修改已受理，等待读取", "MoviePilot 已确认保存，但暂时读不到当前条件；请点「核对结果」，不要重复提交哦～"})
 	}
 	if !current.conditions().same(edit.draft) {
-		return subEditReceipt(sess, current, subEditOutcome{"修改已受理，条件又有变化", "MoviePilot 已确认保存，但当前条件与刚提交的草稿不同，请刷新核对哦～"})
+		return subEditReceipt(sess, current, subEditOutcome{"📚 修改已受理，条件又有变化", "MoviePilot 已确认保存，但当前条件与刚提交的草稿不同，请刷新核对哦～"})
 	}
 	return subEditReceipt(sess, current, subEditOutcome{"✅ 订阅条件已保存", "后续会按当前条件匹配；现有下载和进度保持原样，要补搜请在订阅详情点「立即搜索」哦～"})
 }

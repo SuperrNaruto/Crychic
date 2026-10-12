@@ -61,7 +61,7 @@ func (e *Engine) groupList(ctx context.Context, sess session) Reply {
 		return Reply{Notice: msgNoGroups}
 	}
 	sess.groups = groups
-	heading := fmt.Sprintf("🗂️「%s」的剧集组", sess.picked.Media.Title)
+	heading := fmt.Sprintf("🗂️ 《%s》的剧集组", sess.picked.Media.Title)
 	view := listView{heading: Heading(Plain(heading)), footer: []Button{cancelButton(sess.id)}}
 	for i, g := range groups {
 		facts := []string{groupTypes[g.Type], fmt.Sprintf("%d 季", g.Seasons), fmt.Sprintf("%d 集", g.Episodes)}

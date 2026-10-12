@@ -73,7 +73,7 @@
    <li value="3"><b>Dune.2021.2160p.WEB-DL.H265.DDP5.1-ADWeb</b><br>
    <i>站点丙 · 18.1 GiB · 做种 48 · 2X免费</i></li>
    </ol>
-   <footer>共 3 个，搜索完成，已按 MoviePilot 的优先级排列。点「重新搜索资源」会再次访问站点，可能重复访问站点。 点编号看详情～</footer>
+   <footer>共 3 个，搜索完成，已按 MoviePilot 的优先级排列。点「重新搜索资源」会再次访问站点。点编号看详情～</footer>
    [1 | 1:tp:0] [2 | 1:tp:1] [3 | 1:tp:2]
    [·默认· | 1:to:0] [做种 | 1:to:1] [时间 | 1:to:2] [大小 | 1:to:3] [站点 | 1:to:4]
    [筛选站点 | 1:tf:0] [组合筛选 | 1:ti:0]
@@ -97,8 +97,8 @@
    <tr><th>分辨率</th><th>版本</th><th>编码</th><th>制作组</th></tr>
    <tr><td>2160p</td><td>UHD BluRay REMUX</td><td>x265</td><td>FROGE</td></tr>
    </table>
-   <p>⚠️ 这是 H&amp;R 资源，下完要保种够时间，不然站点会记过哦。<br>
-   <b>要下载这个资源吗？</b></p>
+   <blockquote>⚠️ 这是 H&amp;R 资源，下完要保种够时间，不然站点会记过哦。</blockquote>
+   <p><b>要下载这个资源吗？</b></p>
    [确认下载 | 1:td:0]
    [刷新结果 | 1:tu:0]
    [返回 | 1:bk:0] [取消 | 1:x:0]
@@ -114,7 +114,7 @@
    <li value="3"><b>Dune.2021.2160p.WEB-DL.H265.DDP5.1-ADWeb</b><br>
    <i>站点丙 · 18.1 GiB · 做种 48 · 2X免费</i></li>
    </ol>
-   <footer>共 3 个，搜索完成，已按 MoviePilot 的优先级排列。点「重新搜索资源」会再次访问站点，可能重复访问站点。 点编号看详情～</footer>
+   <footer>共 3 个，搜索完成，已按 MoviePilot 的优先级排列。点「重新搜索资源」会再次访问站点。点编号看详情～</footer>
    [1 | 1:tp:0] [2 | 1:tp:1] [3 | 1:tp:2]
    [·默认· | 1:to:0] [做种 | 1:to:1] [时间 | 1:to:2] [大小 | 1:to:3] [站点 | 1:to:4]
    [筛选站点 | 1:tf:0] [组合筛选 | 1:ti:0]
@@ -133,7 +133,7 @@
    <li value="3"><b>Dune.2021.2160p.UHD.BluRay.REMUX.HDR.HEVC.DTS-HD.MA.5.1-FROGE</b><br>
    <i>站点甲 · 58.2 GiB · 做种 25 · 免费 · H&amp;R</i></li>
    </ol>
-   <footer>共 3 个，搜索完成，已按 MoviePilot 的优先级排列。点「重新搜索资源」会再次访问站点，可能重复访问站点。 点编号看详情～</footer>
+   <footer>共 3 个，搜索完成，已按 MoviePilot 的优先级排列。点「重新搜索资源」会再次访问站点。点编号看详情～</footer>
    [1 | 1:tp:1] [2 | 1:tp:2] [3 | 1:tp:0]
    [默认 | 1:to:0] [·做种· | 1:to:1] [时间 | 1:to:2] [大小 | 1:to:3] [站点 | 1:to:4]
    [筛选站点 | 1:tf:0] [组合筛选 | 1:ti:0]
@@ -176,7 +176,7 @@
    <li value="3"><b>Dune.2021.2160p.UHD.BluRay.REMUX.HDR.HEVC.DTS-HD.MA.5.1-FROGE</b><br>
    <i>站点甲 · 58.2 GiB · 做种 25 · 免费 · H&amp;R</i></li>
    </ol>
-   <footer>共 3 个，搜索完成，已按 MoviePilot 的优先级排列。点「重新搜索资源」会再次访问站点，可能重复访问站点。 点编号看详情～</footer>
+   <footer>共 3 个，搜索完成，已按 MoviePilot 的优先级排列。点「重新搜索资源」会再次访问站点。点编号看详情～</footer>
    [1 | 1:tp:1] [2 | 1:tp:2] [3 | 1:tp:0]
    [默认 | 1:to:0] [·做种· | 1:to:1] [时间 | 1:to:2] [大小 | 1:to:3] [站点 | 1:to:4]
    [筛选站点 | 1:tf:0] [组合筛选 | 1:ti:0]
@@ -195,7 +195,7 @@
    <li value="3"><b>Dune.2021.2160p.UHD.BluRay.REMUX.HDR.HEVC.DTS-HD.MA.5.1-FROGE</b><br>
    <i>站点甲 · 58.2 GiB · 做种 25 · 免费 · H&amp;R</i></li>
    </ol>
-   <footer>共 3 个，搜索完成，已按 MoviePilot 的优先级排列。点「重新搜索资源」会再次访问站点，可能重复访问站点。 已选 0 个，点编号勾选，再点一次取消～</footer>
+   <footer>共 3 个，搜索完成，已按 MoviePilot 的优先级排列。点「重新搜索资源」会再次访问站点。已选 0 个，点编号勾选，再点一次取消～</footer>
    [1 | 1:tk:1] [2 | 1:tk:2] [3 | 1:tk:0]
    [下载所选 0 个 | 1:tb:0]
    [默认 | 1:to:0] [·做种· | 1:to:1] [时间 | 1:to:2] [大小 | 1:to:3] [站点 | 1:to:4]
@@ -214,7 +214,7 @@
    <li value="3"><b>Dune.2021.2160p.UHD.BluRay.REMUX.HDR.HEVC.DTS-HD.MA.5.1-FROGE</b><br>
    <i>站点甲 · 58.2 GiB · 做种 25 · 免费 · H&amp;R</i></li>
    </ol>
-   <footer>共 3 个，搜索完成，已按 MoviePilot 的优先级排列。点「重新搜索资源」会再次访问站点，可能重复访问站点。 已选 1 个，点编号勾选，再点一次取消～</footer>
+   <footer>共 3 个，搜索完成，已按 MoviePilot 的优先级排列。点「重新搜索资源」会再次访问站点。已选 1 个，点编号勾选，再点一次取消～</footer>
    [1 | 1:tk:1] [✓ 2 | 1:tk:2] [3 | 1:tk:0]
    [下载所选 1 个 | 1:tb:0]
    [默认 | 1:to:0] [·做种· | 1:to:1] [时间 | 1:to:2] [大小 | 1:to:3] [站点 | 1:to:4]
@@ -233,7 +233,7 @@
    <li value="3"><b>Dune.2021.2160p.UHD.BluRay.REMUX.HDR.HEVC.DTS-HD.MA.5.1-FROGE</b><br>
    <i>站点甲 · 58.2 GiB · 做种 25 · 免费 · H&amp;R · <mark>已选</mark></i></li>
    </ol>
-   <footer>共 3 个，搜索完成，已按 MoviePilot 的优先级排列。点「重新搜索资源」会再次访问站点，可能重复访问站点。 已选 2 个，点编号勾选，再点一次取消～</footer>
+   <footer>共 3 个，搜索完成，已按 MoviePilot 的优先级排列。点「重新搜索资源」会再次访问站点。已选 2 个，点编号勾选，再点一次取消～</footer>
    [1 | 1:tk:1] [✓ 2 | 1:tk:2] [✓ 3 | 1:tk:0]
    [下载所选 2 个 | 1:tb:0]
    [默认 | 1:to:0] [·做种· | 1:to:1] [时间 | 1:to:2] [大小 | 1:to:3] [站点 | 1:to:4]
@@ -253,9 +253,9 @@
    <tr><td><b>Dune.2021.2160p.UHD.BluRay.REMUX.HDR.HEVC.DTS-HD.MA.5.1-FROGE</b></td><td>站点甲</td><td>58.2 GiB</td></tr>
    <tr><td><b>Dune.2021.2160p.WEB-DL.H265.DDP5.1-ADWeb</b></td><td>站点丙</td><td>18.1 GiB</td></tr>
    </table>
-   <p>一共 76.3 GiB<br>
-   ⚠️ 其中有 H&amp;R 资源，下完要保种够时间，不然站点会记过哦。<br>
-   <b>要下载这 2 个资源吗？</b></p>
+   <p>一共 76.3 GiB</p>
+   <blockquote>⚠️ 其中有 H&amp;R 资源，下完要保种够时间，不然站点会记过哦。</blockquote>
+   <p><b>要下载这 2 个资源吗？</b></p>
    [确认下载 | 1:tz:0]
    [返回 | 1:bk:0] [取消 | 1:x:0]
 << answerCallbackQuery

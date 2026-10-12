@@ -35,9 +35,9 @@ func (c card) replyLines(message Text, buttons [][]Button) Reply {
 	text := append(c.text(), Divider())
 	switch {
 	case c.LibraryNote != "":
-		text = append(text, Line(Plain(c.LibraryNote)))
+		text = append(text, Callout(Plain(c.LibraryNote)))
 	case c.LibraryUnknown:
-		text = append(text, Line(Plain("⚠️ 暂时看不到媒体库里有没有它…")))
+		text = append(text, Callout(Plain("⚠️ 暂时看不到媒体库里有没有它…")))
 	}
 	text = append(text, message...)
 	return Reply{Text: text, Image: c.Media.PosterURL, Buttons: buttons}

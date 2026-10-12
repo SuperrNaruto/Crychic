@@ -18,7 +18,7 @@ const (
 	actionSubEditDiscard = "ud"
 	actionSubEditCheck   = "uy"
 
-	msgSubEditTitle = "编辑订阅条件"
+	msgSubEditTitle = "📚 编辑订阅条件"
 )
 
 type subscriptionEdit struct {

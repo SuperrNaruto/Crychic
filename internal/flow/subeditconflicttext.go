@@ -9,7 +9,7 @@ func (e *Engine) subEditConflictOverview(sess session) Reply {
 	sess.editOptions++
 	edit.options, sess.pages = sess.editOptions, nil
 	e.store.put(sess)
-	text := edit.heading("后台条件已变化 · 草稿已保留")
+	text := edit.heading("📚 后台条件已变化 · 草稿已保留")
 	text = append(text, Line(Plain("尚未保存。需要选择的冲突按编号处理；未修改的字段将沿用后台新值，其他草稿不变。点「完成处理」接受这些差异后再确认保存哦～")))
 	buttons := []Button{}
 	for _, field := range subEditFields {
@@ -57,7 +57,7 @@ func (e *Engine) subEditConflictField(sess session, field int) Reply {
 	edit := sess.subEdit
 	edit.options, edit.conflict.field = sess.editOptions, field
 	e.store.put(sess)
-	text := edit.heading("选择冲突处理方式")
+	text := edit.heading("📚 选择冲突处理方式")
 	text = append(text, edit.conflictFieldText("", field)...)
 	text = append(text, Remark("这里只决定草稿如何继续，保存仍要最后确认；未知后台表达式请到 MoviePilot 查看。"))
 	return Reply{Text: text, Buttons: [][]Button{

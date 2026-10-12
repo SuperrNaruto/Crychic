@@ -130,7 +130,7 @@ func (e *Engine) pickTorrent(sess session, index int) Reply {
 	t := sess.torrents[index]
 	text := torrentCard(t)
 	if t.HitAndRun {
-		text = append(text, Line(Plain(msgHitAndRun)))
+		text = append(text, Callout(Plain(msgHitAndRun)))
 	}
 	text = append(text, Line(Strong(msgTorrentAsk)))
 	rows := [][]Button{{{Label: msgDownloadLabel, Data: data(sess.id, actionTorrentGet, index)}}, {cancelButton(sess.id)}}

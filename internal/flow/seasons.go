@@ -143,5 +143,5 @@ func failureText(err error) string {
 	if msg, ok := UserMessage(err); ok {
 		return strings.TrimSuffix(msg, "。")
 	}
-	return strings.TrimPrefix(strings.TrimSuffix(msgBackendDown, "。"), "⚠️ ")
+	return msgBackendUnavailable
 }

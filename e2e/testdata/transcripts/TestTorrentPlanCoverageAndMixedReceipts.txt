@@ -99,7 +99,7 @@
 >> user 1001 taps 1:pl:0 on message 1
 -> MoviePilot GET /api/v1/media/seasons?media_id=224207&media_source=themoviedb
 << editMessageText chat=1001 message=1
-   <h3>缺集方案 · 《迷途之子!!!!!》第 1 季</h3>
+   <h3>🔍 缺集方案 · 《迷途之子!!!!!》第 1 季</h3>
    <p>按 MoviePilot 本次返回的库存与资源识别范围计算，种子里的实际文件以下载结果为准。</p>
    <table bordered striped compact>
    <tr><th>项目</th><th>集数</th></tr>
@@ -112,11 +112,13 @@
    <tr><td>方案内重叠</td><td>E03（1 集）</td></tr>
    <tr><td>起始集以前</td><td>无</td></tr>
    </table>
-   <p>已知大小 3.0 GiB；另有 1 个资源大小未知，总大小未知。<br>
-   ⚠️ H&amp;R 资源 1 个；下完需要满足站点保种要求，免费资源同样要保种哦。<br>
-   ⚠️ 1 个资源未报告做种，不能保证可以下载。<br>
-   已排除 11 个身份或集数范围不确定的资源；不推断未知整包、多季或特殊剧集组的覆盖。</p>
-   <footer>优先多补缺集，同覆盖时优先无 H&amp;R、少重复、已知且较小体积，最后按 MoviePilot 优先级；这是建议方案。确认前会再核对一次库存，之后的变化以 MoviePilot 为准。</footer>
+   <p>已知大小 3.0 GiB；另有 1 个资源大小未知，总大小未知。</p>
+   <blockquote>⚠️ H&amp;R 资源 1 个；下完需要满足站点保种要求，免费资源同样要保种哦。<br>
+   ⚠️ 1 个资源未报告做种，不能保证可以下载。</blockquote>
+   <p>已排除 11 个身份或集数范围不确定的资源；不推断未知整包、多季或特殊剧集组的覆盖。</p>
+   <details><summary>说明</summary>
+   <p>优先多补缺集，同覆盖时优先无 H&amp;R、少重复、已知且较小体积，最后按 MoviePilot 优先级；这是建议方案。确认前会再核对一次库存，之后的变化以 MoviePilot 为准。</p>
+   </details>
    <ol start="1">
    <li value="1"><b>MyGO.S01.E01.E03.E04.1080p-CoverA</b><br>
    <i>站点甲 · 3.0 GiB · 做种 10 · E01、E03–E04</i></li>

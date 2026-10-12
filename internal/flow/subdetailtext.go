@@ -32,7 +32,7 @@ func (d subscriptionDetail) view() listView {
 	rows, omitted, ambiguous := d.progressRows()
 	view := listView{
 		heading: Heading(Plain(msgSubDetailTitle + " · " + taskName(truncate(s.Title, listTitleRunes), s.Season))),
-		image:   s.Poster, pageItems: subDetailPageItems, note: d.progressNote(omitted, ambiguous),
+		image:   s.Poster, pageItems: subDetailPageItems, notes: d.progressNote(omitted, ambiguous),
 	}
 	if len(rows) == 0 {
 		text := append(d.settingsText(), Group("入库与任务"), Line(Plain("还没有可展示的单集信息哦～")))
@@ -154,26 +154,38 @@ func subSetting(raw string) string {
 	return truncate(strings.Join(strings.Fields(raw), " "), subSettingRunes)
 }
 
-func (d subscriptionDetail) progressNote(omitted int, ambiguous bool) string {
-	notes := []string{"这里只查询状态，点击刷新查看最新状态哦～"}
-	if slices.ContainsFunc(d.downloads, func(item Download) bool {
-		return d.sameMedia(item.Kind, item.Source, item.MediaID) && d.sameSeason(item.Season)
-	}) {
-		notes = append(notes, "下载百分比是关联任务整个种子的进度。")
-	}
+// progressNote is what follows the episode list: read failures as callouts,
+// the omitted count as a remark and the explanations folded.
+func (d subscriptionDetail) progressNote(omitted int, ambiguous bool) Text {
+	var text Text
 	for _, read := range []struct {
 		name string
 		err  error
 	}{{"媒体库", d.libraryErr}, {"下载进度", d.downloadsErr}, {"整理进度", d.transfersErr}} {
 		if read.err != nil {
-			notes = append(notes, read.name+"暂时无法确认。")
+			text = append(text, Callout(Plain("⚠️ "+read.name+"暂时无法确认。")))
 		}
 	}
-	if ambiguous {
-		notes = append(notes, "另有季或集数不明的关联任务，未归入单集。")
-	}
+	note := "这里只查询状态，点击刷新查看最新状态哦～"
 	if omitted > 0 {
-		notes = append(notes, fmt.Sprintf("还有 %d 集未列出，完整情况请到 MoviePilot 查看。", omitted))
+		note = fmt.Sprintf("还有 %d 集未列出，完整情况请到 MoviePilot 查看。\n%s", omitted, note)
 	}
-	return strings.Join(notes, "\n")
+	text = append(text, Remark(note))
+	if explanation := d.progressExplanation(ambiguous); len(explanation) > 0 {
+		text = append(text, Fold(msgFoldSummary, explanation))
+	}
+	return text
+}
+
+func (d subscriptionDetail) progressExplanation(ambiguous bool) Text {
+	var text Text
+	if slices.ContainsFunc(d.downloads, func(item Download) bool {
+		return d.sameMedia(item.Kind, item.Source, item.MediaID) && d.sameSeason(item.Season)
+	}) {
+		text = append(text, Line(Plain("下载百分比是关联任务整个种子的进度。")))
+	}
+	if ambiguous {
+		text = append(text, Line(Plain("另有季或集数不明的关联任务，未归入单集。")))
+	}
+	return text
 }

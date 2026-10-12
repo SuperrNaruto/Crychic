@@ -7,7 +7,7 @@ func torrentPlanList(sess session, notice string) listView {
 	target := *sess.focus
 	target.Media.Title = truncate(target.Media.Title, listTitleRunes)
 	view := listView{
-		heading: Heading(Plain(msgTorrentPlan + " · " + targetName(target))),
+		heading: Heading(Plain("🔍 " + msgTorrentPlan + " · " + targetName(target))),
 		source:  torrentPlanView, footer: []Button{cancelButton(sess.id)},
 		menu: [][]Button{{{Label: msgPlanRecalculate, Data: data(sess.id, actionTorrentPlanRefresh, 0)}}},
 	}
@@ -62,13 +62,13 @@ func planRange(episodes []int) string {
 func planRisks(plan torrentPlan) Text {
 	text := Lines(Line(Plain(planSize(plan))))
 	if len(plan.scope.held) == 0 {
-		text = append(text, Line(Strong("⚠️ 本次未返回本季库存，请先核对媒体库连接与扫描状态；空结果也可能是媒体库异常。")))
+		text = append(text, Callout(Strong("⚠️ 本次未返回本季库存，请先核对媒体库连接与扫描状态；空结果也可能是媒体库异常。")))
 	}
 	if plan.hitAndRun > 0 {
-		text = append(text, Line(Plain(fmt.Sprintf("⚠️ H&R 资源 %d 个；下完需要满足站点保种要求，免费资源同样要保种哦。", plan.hitAndRun))))
+		text = append(text, Callout(Plain(fmt.Sprintf("⚠️ H&R 资源 %d 个；下完需要满足站点保种要求，免费资源同样要保种哦。", plan.hitAndRun))))
 	}
 	if plan.unseeded > 0 {
-		text = append(text, Line(Plain(fmt.Sprintf("⚠️ %d 个资源未报告做种，不能保证可以下载。", plan.unseeded))))
+		text = append(text, Callout(Plain(fmt.Sprintf("⚠️ %d 个资源未报告做种，不能保证可以下载。", plan.unseeded))))
 	}
 	if plan.excluded > 0 {
 		text = append(text, Line(Plain(fmt.Sprintf("已排除 %d 个身份或集数范围不确定的资源；不推断未知整包、多季或特殊剧集组的覆盖。", plan.excluded))))
@@ -76,7 +76,7 @@ func planRisks(plan torrentPlan) Text {
 	if plan.limited {
 		text = append(text, Line(Plain(fmt.Sprintf("一次最多建议 %d 个资源，达到上限后仍缺的集数已列出。", maxTickedReleases))))
 	}
-	return append(text, Remark("优先多补缺集，同覆盖时优先无 H&R、少重复、已知且较小体积，最后按 MoviePilot 优先级；这是建议方案。确认前会再核对一次库存，之后的变化以 MoviePilot 为准。"))
+	return append(text, Fold(msgFoldSummary, Sentence("优先多补缺集，同覆盖时优先无 H&R、少重复、已知且较小体积，最后按 MoviePilot 优先级；这是建议方案。确认前会再核对一次库存，之后的变化以 MoviePilot 为准。")))
 }
 
 func planSize(plan torrentPlan) string {

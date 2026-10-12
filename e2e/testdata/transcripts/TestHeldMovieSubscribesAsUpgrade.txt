@@ -52,7 +52,7 @@
 << answerCallbackQuery
 >> user 1001 taps 1:bv:0 on message 1
 -> MoviePilot GET /api/v1/subscribe/media/438631?media_source=themoviedb&mtype=电影&title=沙丘&year=2021
-<< answerCallbackQuery notice="ℹ️ 这个已经订阅上啦，要洗版得在 MoviePilot 里改这个订阅哦～"
+<< answerCallbackQuery notice="这个已经订阅上啦，要洗版得在 MoviePilot 里改这个订阅哦～"
 >> user 1001 taps 1:bv:0 on message 1
 -> MoviePilot GET /api/v1/subscribe/media/438631?media_source=themoviedb&mtype=电影&title=沙丘&year=2021
 << editMessageText chat=1001 message=1

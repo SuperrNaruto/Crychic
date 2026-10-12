@@ -21,7 +21,7 @@ func TestHeldMovieSubscribesAsUpgrade(t *testing.T) {
 	h.tap(alice, 1, duneMovie)
 	h.shows(1, "已经在媒体库里啦")
 	h.tap(alice, 1, "洗版订阅")
-	if !strings.Contains(h.tr.String(), `notice="ℹ️ 这个已经订阅上啦`) {
+	if !strings.Contains(h.tr.String(), `notice="这个已经订阅上啦`) {
 		t.Error("an upgrade was offered over an existing subscription")
 	}
 	h.mp.setRoute(duneLookup, ok("subscription_none.json"))

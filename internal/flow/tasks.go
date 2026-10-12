@@ -99,7 +99,7 @@ func (e *Engine) refresh(ctx context.Context, sess session, index int) Reply {
 	}
 	if err != nil {
 		e.log.Warn("task refresh failed", "task", sess.tasks[index].id, "err", err)
-		view = withWarning(sess.follow.last, msgRefreshFailed)
+		view = withAlert(sess.follow.last, msgRefreshFailed)
 	}
 	if gone {
 		sess.follow.on = false
@@ -167,6 +167,12 @@ func pausedView(sess session, index int, why string) Reply {
 // withWarning appends a note to a view without touching the original.
 func withWarning(view Reply, note string) Reply {
 	text := append(append(Text{}, view.Text...), Remark(note))
+	return Reply{Text: text, Image: view.Image}
+}
+
+// withAlert appends a warning callout to a view without touching the original.
+func withAlert(view Reply, warning string) Reply {
+	text := append(append(Text{}, view.Text...), Callout(Plain(warning)))
 	return Reply{Text: text, Image: view.Image}
 }
 

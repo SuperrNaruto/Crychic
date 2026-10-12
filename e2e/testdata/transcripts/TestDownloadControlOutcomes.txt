@@ -38,8 +38,8 @@
 -> MoviePilot PATCH /api/v1/download/5c1d0a2e8f3b4c6d7e8f9a0b1c2d3e4f5a6b7c8d
    {"action":"stop","downloader":"qBittorrent-offline"}
 << editMessageText chat=1001 message=1
-   <h3>暂停下载</h3>
-   <p>⚠️ MoviePilot 没能暂停这个下载，请到 MoviePilot 核对任务哦～</p>
+   <h3>📋 暂停下载</h3>
+   <blockquote>⚠️ MoviePilot 没能暂停这个下载，请到 MoviePilot 核对任务哦～</blockquote>
    [查看任务 | 1:k:0]
    [返回 | 1:l:0] [首页 | 1:o:0] [关闭 | 1:c:0]
 << answerCallbackQuery
@@ -84,7 +84,7 @@
 -> MoviePilot PATCH /api/v1/download/5c1d0a2e8f3b4c6d7e8f9a0b1c2d3e4f5a6b7c8d
    {"action":"stop","downloader":"qBittorrent"}
 << editMessageText chat=1001 message=1
-   <h3>暂停下载</h3>
+   <h3>📋 暂停下载</h3>
    <p>呜，没能确认有没有暂停…点「查看任务」看看实际状态吧～</p>
    [查看任务 | 1:k:0]
    [返回 | 1:l:0] [首页 | 1:o:0] [关闭 | 1:c:0]
@@ -119,7 +119,7 @@
 -> MoviePilot PATCH /api/v1/download/5c1d0a2e8f3b4c6d7e8f9a0b1c2d3e4f5a6b7c8d
    {"action":"stop","downloader":"qBittorrent"}
 << editMessageText chat=1001 message=1
-   <h3>暂停下载</h3>
+   <h3>📋 暂停下载</h3>
    <p>呜，没能确认有没有暂停…点「查看任务」看看实际状态吧～</p>
    [查看任务 | 1:k:0]
    [返回 | 1:l:0] [首页 | 1:o:0] [关闭 | 1:c:0]

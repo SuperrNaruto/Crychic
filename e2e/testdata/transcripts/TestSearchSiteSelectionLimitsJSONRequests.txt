@@ -54,7 +54,7 @@
 << answerCallbackQuery
 >> user 1001 taps 1:ss:0 on message 1
 -> MoviePilot GET /api/v1/site/media/电影
-<< answerCallbackQuery notice="⚠️ 暂时读不到可搜索站点，没有开始资源搜索哦～"
+<< answerCallbackQuery notice="暂时读不到可搜索站点，没有开始资源搜索哦～"
 >> user 1001 taps 1:ss:0 on message 1
 -> MoviePilot GET /api/v1/site/media/电影
 << answerCallbackQuery notice="没有可搜索的站点，尚未开始搜索哦～"

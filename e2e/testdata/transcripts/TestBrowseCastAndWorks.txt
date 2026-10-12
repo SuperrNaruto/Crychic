@@ -55,7 +55,7 @@
 >> user 1001 taps 1:ca:0 on message 1
 -> MoviePilot GET /api/v1/tmdb/credits/438631/电影
 << editMessageText chat=1001 message=1
-   <h3>🎭「沙丘」的演职人员</h3>
+   <h3>🎭 《沙丘》的演职人员</h3>
    <ol start="1">
    <li value="1"><b>提莫西·查拉梅</b><br>
    <i>Paul Atreides</i></li>

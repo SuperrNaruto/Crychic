@@ -28,15 +28,17 @@ const (
 )
 
 const (
-	msgUsage         = "要在 /search 后面带上片名哦，比如 /search 沙丘～"
-	msgExpired       = "⌛ 这个请求过期啦，重新 /search 一下吧～"
-	msgNotYours      = "这是别人的请求哦，不能替 TA 点～"
-	msgBackendDown   = "⚠️ MoviePilot 好像打了个盹，稍后再来找我吧 (´-ω-`)"
-	msgCancelled     = "好哒，已经取消啦～"
-	msgNoSeasons     = "呜，没查到这部剧有哪几季…"
-	msgPickSeason    = "想订哪一季呀？"
-	msgInvalidChoice = "这个选项不太对哦～"
-	msgWillNotify    = "通知由 MoviePilot 按设置发送哦～"
+	msgUsage       = "要在 /search 后面带上片名哦，比如 /search 沙丘～"
+	msgExpired     = "⌛ 这个请求过期啦，重新 /search 一下吧～"
+	msgNotYours    = "这是别人的请求哦，不能替 TA 点～"
+	msgBackendDown = "⚠️ MoviePilot 好像打了个盹，稍后再来找我吧 (´-ω-`)"
+	// msgBackendUnavailable is the emoji-free, kaomoji-free form for toasts and table cells.
+	msgBackendUnavailable = "MoviePilot 暂时没有响应，稍后再试吧"
+	msgCancelled          = "好哒，已经取消啦～"
+	msgNoSeasons          = "呜，没查到这部剧有哪几季…"
+	msgPickSeason         = "想订哪一季呀？"
+	msgInvalidChoice      = "这个选项不太对哦～"
+	msgWillNotify         = "通知由 MoviePilot 按设置发送哦～"
 )
 
 // Options configures an Engine.
@@ -435,7 +437,7 @@ func (e *Engine) targetCard(sess session, sub subscription) (session, Reply) {
 			state = "已订阅，目前已暂停哦"
 		}
 		status := fmt.Sprintf("ℹ️ %s%s%s", targetName(target), state, noticeEnding)
-		return sess, sess.picked.reply(Line(Plain(status)), onward(sess))
+		return sess, sess.picked.reply(Callout(Plain(status)), onward(sess))
 	}
 	sess.target = &target
 	e.store.put(sess)
@@ -485,10 +487,10 @@ const noticeEnding = "，" + msgWillNotify
 
 func (e *Engine) failure(step string, err error) Reply {
 	if msg, ok := UserMessage(err); ok {
-		return Reply{Text: Sentence("⚠️ " + msg)}
+		return Reply{Text: Lines(Callout(Plain("⚠️ " + msg)))}
 	}
 	e.log.Error("backend call failed", "step", step, "err", err)
-	return Reply{Text: Sentence(msgBackendDown)}
+	return Reply{Text: Lines(Callout(Plain(msgBackendDown)))}
 }
 
 func data(id uint64, action string, arg int) string {

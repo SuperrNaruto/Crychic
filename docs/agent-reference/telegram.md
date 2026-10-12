@@ -55,7 +55,7 @@ home. The bot calls `getMe` itself at start (library check skipped) to learn its
 ## 富文本海报与旧消息
 
 `internal/telegram/rich.go` - renders `flow.Text` as a Telegram rich message (Bot API 10.1 rich HTML:
-`h3`/`h4`, `p` with `br`, `ol`/`li value`, `blockquote expandable` (card synopsis), `li` > `details`/`summary`
+`h3`/`h4`, `p` with `br`, `ol`/`li value`, `blockquote expandable` (card synopsis), plain `blockquote` (`Callout`, consecutive lines joined by `br`), top-level `details`/`summary` (`Fold`, closed), `li` > `details`/`summary`
 (an entry with a body; closed by default, the summary keeps name and facts), `table bordered striped compact`, `ul`
 with `input type=checkbox`, `mark`, `tg-button-row`/`tg-button type=url`, `tg-slideshow` (gallery), `footer`
 (remarks, and `Small` print mid-message: rich HTML has no font size below headings, and the owner chose a

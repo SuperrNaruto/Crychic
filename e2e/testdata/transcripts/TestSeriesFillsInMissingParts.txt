@@ -62,7 +62,7 @@
    <img src="url-0603bc04eba9f23ccb0da918da40cefdcc9533bb920a16af3d7323b8954288fe"/>
    <img src="url-f3924e4dafb7c35392e3de6d3fbfd5e540d3fcfe78dd69b758e7319101e217fe"/>
    </tg-slideshow>
-   <h3>🎬「沙丘」的同系列作品</h3>
+   <h3>🎬 《沙丘》的同系列作品</h3>
    <ol start="1">
    <li value="1"><details><summary><b>沙丘</b> · <i>2021 · ⭐ 7.8 · <mark>已入库</mark></i></summary>
    <p>电影《沙丘》为观众呈现了一段神秘而感人至深的英雄之旅。天赋异禀的少年保罗·厄崔迪（提莫西·查拉梅 饰）被命运指引，为了保卫自己的家族和人民，决心前往浩瀚宇宙间最危险的星球，开启一场惊心动魄的冒险。与此同时，各路势力为了抢夺这颗星球上一种能够释放人类最大潜力的珍贵资源而纷纷加入战场。最终，唯有那些能够战胜内心恐惧的人才能生存下去。</p>
@@ -108,7 +108,7 @@
    <img src="url-0603bc04eba9f23ccb0da918da40cefdcc9533bb920a16af3d7323b8954288fe"/>
    <img src="url-f3924e4dafb7c35392e3de6d3fbfd5e540d3fcfe78dd69b758e7319101e217fe"/>
    </tg-slideshow>
-   <h3>🎬「沙丘」的同系列作品</h3>
+   <h3>🎬 《沙丘》的同系列作品</h3>
    <ol start="1">
    <li value="1"><details><summary><b>沙丘</b> · <i>2021 · ⭐ 7.8 · <mark>已入库</mark></i></summary>
    <p>电影《沙丘》为观众呈现了一段神秘而感人至深的英雄之旅。天赋异禀的少年保罗·厄崔迪（提莫西·查拉梅 饰）被命运指引，为了保卫自己的家族和人民，决心前往浩瀚宇宙间最危险的星球，开启一场惊心动魄的冒险。与此同时，各路势力为了抢夺这颗星球上一种能够释放人类最大潜力的珍贵资源而纷纷加入战场。最终，唯有那些能够战胜内心恐惧的人才能生存下去。</p>
@@ -132,7 +132,7 @@
 << answerCallbackQuery
 >> user 1001 taps 1:jq:0 on message 1
 << editMessageText chat=1001 message=1
-   <h3>🎬 补齐「沙丘」的同系列</h3>
+   <h3>🎬 补齐《沙丘》的同系列</h3>
    <p><b>想补哪几部呀？可以多选，确认后逐部订阅～</b></p>
    <ul>
    <li><input type="checkbox"><b>3. 沙丘3</b> · 2026</li>
@@ -143,7 +143,7 @@
 << answerCallbackQuery
 >> user 1001 taps 1:jt:2 on message 1
 << editMessageText chat=1001 message=1
-   <h3>🎬 补齐「沙丘」的同系列</h3>
+   <h3>🎬 补齐《沙丘》的同系列</h3>
    <p><b>想补哪几部呀？可以多选，确认后逐部订阅～</b></p>
    <ul>
    <li><input type="checkbox" checked><b>3. 沙丘3</b> · 2026</li>

@@ -63,8 +63,8 @@
    <tr><th>分辨率</th><th>版本</th><th>编码</th><th>制作组</th></tr>
    <tr><td>2160p</td><td>UHD BluRay REMUX</td><td>x265</td><td>FROGE</td></tr>
    </table>
-   <p>⚠️ 这是 H&amp;R 资源，下完要保种够时间，不然站点会记过哦。<br>
-   <b>要下载这个资源吗？</b></p>
+   <blockquote>⚠️ 这是 H&amp;R 资源，下完要保种够时间，不然站点会记过哦。</blockquote>
+   <p><b>要下载这个资源吗？</b></p>
    [确认下载 | 1:td:0]
    [返回 | 1:bk:0] [取消 | 1:x:0]
 << answerCallbackQuery

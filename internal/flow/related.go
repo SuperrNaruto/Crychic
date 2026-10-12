@@ -53,10 +53,10 @@ func (e *Engine) browse(ctx context.Context, sess session, series bool) Reply {
 		return Reply{Notice: msgInvalidChoice}
 	}
 	list, limit, empty := e.backend.Related, MaxResults, msgNoRelated
-	heading := fmt.Sprintf("🔍 喜欢「%s」的话，也许会喜欢这些～", media.Title)
+	heading := fmt.Sprintf("🔍 喜欢《%s》的话，也许会喜欢这些～", media.Title)
 	if series {
 		list, limit, empty = e.backend.Series, maxSeriesParts, msgNoSeries
-		heading = fmt.Sprintf("🎬「%s」的同系列作品", media.Title)
+		heading = fmt.Sprintf("🎬 《%s》的同系列作品", media.Title)
 	}
 	found, err := list(ctx, media)
 	if err != nil {
@@ -93,8 +93,8 @@ func relatedView(sess session, heading string) listView {
 // notice is failure for a step that keeps the conversation as it was.
 func (e *Engine) notice(step string, err error) Reply {
 	if msg, ok := UserMessage(err); ok {
-		return Reply{Notice: "⚠️ " + msg}
+		return Reply{Notice: msg}
 	}
 	e.log.Error("backend call failed", "step", step, "err", err)
-	return Reply{Notice: msgBackendDown}
+	return Reply{Notice: msgBackendUnavailable}
 }

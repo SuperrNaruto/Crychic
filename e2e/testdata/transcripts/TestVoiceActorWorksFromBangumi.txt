@@ -28,7 +28,7 @@
 >> user 1001 taps 1:ca:0 on message 1
 -> MoviePilot GET /api/v1/bangumi/credits/428735
 << editMessageText chat=1001 message=1
-   <h3>🎭「BanG Dream! It&#39;s MyGO!!!!!」的演职人员</h3>
+   <h3>🎭 《BanG Dream! It&#39;s MyGO!!!!!》的演职人员</h3>
    <ol start="1">
    <li value="1"><b>矢方美紀</b><br>
    <i>ナレーション</i></li>
@@ -64,7 +64,7 @@
 >> user 1001 taps 1:cp:0 on message 1
 -> MoviePilot GET /api/v1/media/search?count=10&title=スター街道&type=media
 << editMessageText chat=1001 message=1
-   <h3>🔍 没找到</h3>
+   <h3>🔍 呜…什么都没找到</h3>
    <p>没找到「スター街道」能订阅的条目 (｡•́︿•̀｡) 用 /search 换个名字搜搜吧～</p>
    [返回 | 1:bk:0] [首页 | 1:o:0] [关闭 | 1:c:0]
 << answerCallbackQuery

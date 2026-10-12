@@ -33,9 +33,37 @@ dates are `Group`s, page numbers and refresh state are `Remark`s (footer), a med
 and a media card is separated from its question by a `Divider`
 
 User-facing copy is `flow.Text` built with `Strong`/`Emphasis`/`Mono`/`Linked`/`Quote`; never put platform
-markup in flow strings, adapters render and escape. Emoji sparingly: 🔍 search, 🎬/📺 card, ✅ done, ℹ️ already
-subscribed, ⬇️/⏸️ download progress, 📦 transfer job (⏳ ▶️ ✅ ⚠️ per file), 📋 task list, 📥 arrival, ⚠️ errors, ⌛
-expired, 🚫 refused
+markup in flow strings, adapters render and escape. Emoji sparingly, one scene emoji per ordinary heading, from
+this table only:
+
+| Emoji | Scene |
+| --- | --- |
+| 🔍 | search, results, 缺集方案, 停止本次搜索, 立即搜索订阅, filters, sites, empty results (🔍 呜…什么都没找到) |
+| 🎬 / 📺 | a movie card / a TV card; 🎬 also the help screen, 同系列作品 and 补齐同系列 |
+| 📚 | subscriptions: list, detail, history, cancel, and the whole subscription-edit family (menu, field pickers, 确认修改订阅条件, conflict, leave, 保存结果待核对, 订阅修改核对结果, 修改已受理…); the saved outcome stays ✅ 订阅条件已保存 |
+| 📋 | 正在忙的任务 and 暂停下载 / 恢复下载 / 删除下载任务 confirm and failure screens |
+| ⬇️ / ⏸️ | a download's live view heading (downloading / paused) |
+| 📦 | a transfer job (per file ⏳ ▶️ ✅ ⚠️) |
+| 📥 | an arrival notice |
+| ✅ | done: subscribed, cancelled subscription, deleted, saved |
+| ℹ️ / ⚠️ | a Callout line: already subscribed / a warning or failure; also table cell states |
+| ⌛ | expired |
+| 🚫 | refused (no permission) |
+| 🔥 🎌 🎯 🎭 🗂️ 🆕 📅 🎟️ | 发现好片 and chart icons (🔥 trending, 📺 shows, 🎬 movies, 🎟️ 正在热映, 🎌 新番放送), 条件找片 (🎯), 演职人员 and a person's works (🎭), 剧集组 (🗂️), 新鲜入库 (🆕), 追剧日历 (📅) |
+
+已关闭 and 已取消 are the neutral terminal exception: no emoji. Media names in headings and sentences use 《》;
+「」 stays for text the user typed and for button names. Toasts (`Reply.Notice`) carry no emoji and no kaomoji;
+table cells and facts use the neutral `msgBackendUnavailable` instead of `msgBackendDown`.
+
+`flow.Callout` and `flow.Fold` (rendered as a plain `<blockquote>` and a closed top-level `<details>`, summary
+说明). A Callout is an in-message status or warning line (⚠️/ℹ️ stays inside it): consecutive lines form one
+quote; never in headings, toasts, table cells, entry bodies or notifications (the requester mention needs a
+`Para`). Pre-write risk notes on confirm screens are Callouts. A Fold holds explanation only: whatever it says
+about safety or status must also be visible elsewhere on the screen (the edit-menu note repeats on the confirm
+screen, subscription-detail read failures are Callouts and the omitted count a Remark beside the folded
+explanation). Never fold on a screen edited by `Reply.Follow`; those keep a short visible Remark. Safety text on
+confirmation screens, page numbers, 更新时间, refresh state and 点编号… hints stay visible. How a Callout and a
+Fold look in the Telegram client is pending the owner's live check
 
 Voice: the bot is cheerful and cute, calls itself 我 and the user 你, ends sentences with 啦/哦/呀/～. At most one
 kaomoji per message, only on home, success, empty/failed results and arrival notices (never in headings,
@@ -54,7 +82,8 @@ Errors safe to show users are `*flow.UserError`; others get logged and shown as 
 
 `internal/flow/rich.go` - `flow.Text`: blocks by meaning (`Heading`, `Line` paragraphs, numbered `entry` items
 (a `Body` folds behind the name), `Group` section heads, `Quote`, `Table` (columns empty in every row are
-dropped), `Ticked` checklist lines, `Open` link button, `Small` print, `Remark` notes, `Divider`) of spans
+dropped), `Ticked` checklist lines, `Open` link button, `Small` print, `Remark` notes, `Callout` status/warning
+lines, `Fold` (summary plus a `Body`, counted by `textSize`), `Divider`) of spans
 (bold, italic, code, link); an entry's `Tag` is a highlighted fact
 
 平台标签与 HTML 渲染见 [Telegram 参考](telegram.md#富文本海报与旧消息)。原有页码、标题、颜文字与图像呈现契约保留，不因拆文档而修改。

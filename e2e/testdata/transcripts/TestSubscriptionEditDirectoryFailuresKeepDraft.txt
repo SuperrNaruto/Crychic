@@ -117,7 +117,7 @@
 >> user 1001 taps 2:ue:1 on message 2
 -> MoviePilot GET /api/v1/subscribe/
 << editMessageText chat=1001 message=2
-   <h3>编辑订阅条件</h3>
+   <h3>📚 编辑订阅条件</h3>
    <p><b>《绝命毒师》第 2 季</b><br>
    没有未保存的修改，选一项开始编辑吧～<br>
    <b>分辨率 </b>1080p<br>
@@ -129,7 +129,9 @@
    <b>排除条件 </b>已设置（内容不在聊天中展开）<br>
    <b>起始集 </b>从第 1 集开始<br>
    <b>洗版模式 </b>普通订阅</p>
-   <footer>只保存后续匹配条件，已有下载保持原样；要补搜请用「立即搜索」。原有后台表达式请到 MoviePilot 查看。</footer>
+   <details><summary>说明</summary>
+   <p>只保存后续匹配条件，已有下载保持原样；要补搜请用「立即搜索」。原有后台表达式请到 MoviePilot 查看。</p>
+   </details>
    [分辨率 | 2:uf:2] [资源类型 | 2:uf:1]
    [画面格式 | 2:uf:3] [规则组 | 2:uf:4]
    [站点 | 2:uf:5] [包含条件 | 2:uf:6]
@@ -140,7 +142,7 @@
 << answerCallbackQuery
 >> user 1001 taps 2:uf:1 on message 2
 << editMessageText chat=1001 message=2
-   <h3>编辑订阅条件 · 资源类型</h3>
+   <h3>📚 编辑订阅条件 · 资源类型</h3>
    <p>当前 · WEB-DL</p>
    <ol start="1">
    <li value="1"><b>WEB-DL / WEBRip</b></li>
@@ -155,7 +157,7 @@
 << answerCallbackQuery
 >> user 1001 taps 2:uc:1 on message 2
 << editMessageText chat=1001 message=2
-   <h3>编辑订阅条件</h3>
+   <h3>📚 编辑订阅条件</h3>
    <p><b>《绝命毒师》第 2 季</b><br>
    有 1 项未保存。查看修改并确认后才会生效哦～<br>
    <b>分辨率 </b>1080p<br>
@@ -167,7 +169,9 @@
    <b>排除条件 </b>已设置（内容不在聊天中展开）<br>
    <b>起始集 </b>从第 1 集开始<br>
    <b>洗版模式 </b>普通订阅</p>
-   <footer>只保存后续匹配条件，已有下载保持原样；要补搜请用「立即搜索」。原有后台表达式请到 MoviePilot 查看。</footer>
+   <details><summary>说明</summary>
+   <p>只保存后续匹配条件，已有下载保持原样；要补搜请用「立即搜索」。原有后台表达式请到 MoviePilot 查看。</p>
+   </details>
    [分辨率 | 2:uf:2] [资源类型 | 2:uf:1]
    [画面格式 | 2:uf:3] [规则组 | 2:uf:4]
    [站点 | 2:uf:5] [包含条件 | 2:uf:6]
@@ -202,11 +206,11 @@
 << answerCallbackQuery notice="暂时读不到完整规则组，草稿还在，没有保存修改哦～"
 >> user 1001 taps 2:uf:5 on message 2
 -> MoviePilot GET /api/v1/site/media/电视剧
-<< answerCallbackQuery notice="⚠️ 暂时读不到订阅站点，草稿还在，没有保存修改哦～"
+<< answerCallbackQuery notice="暂时读不到订阅站点，草稿还在，没有保存修改哦～"
 >> user 1001 taps 2:uf:5 on message 2
 -> MoviePilot GET /api/v1/site/media/电视剧
 << editMessageText chat=1001 message=2
-   <h3>编辑订阅条件 · 站点</h3>
+   <h3>📚 编辑订阅条件 · 站点</h3>
    <p>当前没有可选项哦～可以保留原值或明确恢复默认设置。</p>
    <footer>选择已记入草稿，尚未保存；完成选择或返回都会保留勾选。最终确认后才写入 MoviePilot，选择期间只读取站点列表。</footer>
    [默认站点 | 2:uc:2]
@@ -216,7 +220,7 @@
 << answerCallbackQuery
 >> user 1001 taps 2:bk:0 on message 2
 << editMessageText chat=1001 message=2
-   <h3>编辑订阅条件</h3>
+   <h3>📚 编辑订阅条件</h3>
    <p><b>《绝命毒师》第 2 季</b><br>
    有 1 项未保存。查看修改并确认后才会生效哦～<br>
    <b>分辨率 </b>1080p<br>
@@ -228,7 +232,9 @@
    <b>排除条件 </b>已设置（内容不在聊天中展开）<br>
    <b>起始集 </b>从第 1 集开始<br>
    <b>洗版模式 </b>普通订阅</p>
-   <footer>只保存后续匹配条件，已有下载保持原样；要补搜请用「立即搜索」。原有后台表达式请到 MoviePilot 查看。</footer>
+   <details><summary>说明</summary>
+   <p>只保存后续匹配条件，已有下载保持原样；要补搜请用「立即搜索」。原有后台表达式请到 MoviePilot 查看。</p>
+   </details>
    [分辨率 | 2:uf:2] [资源类型 | 2:uf:1]
    [画面格式 | 2:uf:3] [规则组 | 2:uf:4]
    [站点 | 2:uf:5] [包含条件 | 2:uf:6]
@@ -240,7 +246,7 @@
 >> user 1001 taps 2:uf:5 on message 2
 -> MoviePilot GET /api/v1/site/media/电视剧
 << editMessageText chat=1001 message=2
-   <h3>编辑订阅条件 · 站点</h3>
+   <h3>📚 编辑订阅条件 · 站点</h3>
    <ol start="1">
    <li value="1"><b>站点甲</b><br>
    <i><mark>已选</mark></i></li>
@@ -255,7 +261,7 @@
 << answerCallbackQuery
 >> user 1001 taps 2:uv:30002 on message 2
 << editMessageText chat=1001 message=2
-   <h3>编辑订阅条件 · 站点</h3>
+   <h3>📚 编辑订阅条件 · 站点</h3>
    <ol start="1">
    <li value="1"><b>站点甲</b><br>
    <i><mark>已选</mark></i></li>
@@ -271,7 +277,7 @@
 << answerCallbackQuery
 >> user 1001 taps 2:ua:3 on message 2
 << editMessageText chat=1001 message=2
-   <h3>编辑订阅条件</h3>
+   <h3>📚 编辑订阅条件</h3>
    <p><b>《绝命毒师》第 2 季</b><br>
    有 2 项未保存。查看修改并确认后才会生效哦～<br>
    <b>分辨率 </b>1080p<br>
@@ -283,7 +289,9 @@
    <b>排除条件 </b>已设置（内容不在聊天中展开）<br>
    <b>起始集 </b>从第 1 集开始<br>
    <b>洗版模式 </b>普通订阅</p>
-   <footer>只保存后续匹配条件，已有下载保持原样；要补搜请用「立即搜索」。原有后台表达式请到 MoviePilot 查看。</footer>
+   <details><summary>说明</summary>
+   <p>只保存后续匹配条件，已有下载保持原样；要补搜请用「立即搜索」。原有后台表达式请到 MoviePilot 查看。</p>
+   </details>
    [分辨率 | 2:uf:2] [资源类型 | 2:uf:1]
    [画面格式 | 2:uf:3] [规则组 | 2:uf:4]
    [站点 | 2:uf:5] [包含条件 | 2:uf:6]
@@ -294,7 +302,7 @@
 << answerCallbackQuery
 >> user 1001 taps 2:uq:0 on message 2
 << editMessageText chat=1001 message=2
-   <h3>确认修改订阅条件</h3>
+   <h3>📚 确认修改订阅条件</h3>
    <p><b>《绝命毒师》第 2 季</b></p>
    <h4>资源类型</h4>
    <p>原来 · WEB-DL<br>
@@ -302,7 +310,8 @@
    <h4>站点</h4>
    <p>原来 · 已选 1 个站点 · 站点甲<br>
    改为 · 已选 2 个站点 · 站点甲 · 站点乙</p>
-   <footer>只提交上述改动，已取得集数、缺集数和洗版优先级保持原样；到货情况以媒体库为准。后台后续调度会使用新条件，并可能搜索下载。</footer>
+   <blockquote>后台后续调度会使用新条件，并可能搜索下载。</blockquote>
+   <footer>只提交上述改动，已取得集数、缺集数和洗版优先级保持原样；到货情况以媒体库为准。</footer>
    [确认保存 | 2:uw:1]
    [返回 | 2:bk:0]
 << answerCallbackQuery

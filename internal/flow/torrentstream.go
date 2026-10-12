@@ -14,7 +14,7 @@ const (
 	torrentBatchView   = "torrent-batch"
 	msgTorrentPartial  = "搜索尚未完成，当前是未经最终匹配的候选；可以浏览，暂不能下载哦～"
 	msgTorrentChanged  = "这个资源已不在最终结果中或内容有变化，请返回列表重新选择哦～"
-	msgTorrentRepeat   = "点「重新搜索资源」会再次访问站点，可能重复访问站点。"
+	msgTorrentRepeat   = "点「重新搜索资源」会再次访问站点。"
 )
 
 func (e *Engine) prepareHunt(sess session) session {
@@ -98,14 +98,14 @@ func streamTorrentCard(sess session, index int) Reply {
 	t := sess.torrents[index]
 	text := torrentCard(t)
 	if t.HitAndRun {
-		text = append(text, Line(Plain(msgHitAndRun)))
+		text = append(text, Callout(Plain(msgHitAndRun)))
 	}
 	var rows [][]Button
 	switch {
 	case !sess.searchDone:
 		text = append(text, Line(Plain(msgTorrentPartial)))
 	case !sess.searchFinal || sess.searchErr != nil:
-		text = append(text, Line(Plain(streamStatus(sess))))
+		text = append(text, Callout(Plain(streamStatus(sess))))
 	case t.Unverified || !slices.Contains(sess.torrentOrder, index):
 		text = append(text, Line(Plain(msgTorrentChanged)))
 	default:
@@ -122,10 +122,10 @@ func streamStatus(sess session) string {
 	}
 	if sess.searchErr != nil || !sess.searchFinal {
 		message, _ := UserMessage(sess.searchErr)
-		return "⚠️ 结果不完整。" + message + " " + msgTorrentRepeat
+		return "⚠️ 结果不完整。" + message + msgTorrentRepeat
 	}
 	if len(sess.torrentOrder) == 0 {
-		return "没有匹配的资源哦～ " + msgTorrentRepeat
+		return "没有匹配的资源哦～" + msgTorrentRepeat
 	}
 	return "搜索完成，已按 MoviePilot 的优先级排列。" + msgTorrentRepeat
 }
@@ -154,5 +154,5 @@ func (sess session) completedSearch() bool {
 func (p huntProgress) complete() bool { return p.done && p.final && p.err == nil }
 
 func streamNote(sess session, total int) string {
-	return fmt.Sprintf("%s，%s %s", releaseCount(sess, total), streamStatus(sess), listHint(sess))
+	return fmt.Sprintf("%s，%s%s", releaseCount(sess, total), streamStatus(sess), listHint(sess))
 }

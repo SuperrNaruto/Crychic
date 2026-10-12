@@ -7,6 +7,7 @@ import (
 
 const (
 	msgSearchWarning = "确认后会访问站点，并可能按执行时的订阅条件自动下载资源；正在处理的搜索可能被后台合并。这是一次真实的站点搜索哦～"
+	msgSearchReceipt = "这里只留最近一次搜索回执；后台搜索照常进行，离开或关闭这里也一样；已提交的下载会保留，进度请用 /tasks 和订阅详情核对哦～"
 	msgStopWarning   = "只请求停止本次搜索里还没提交下载的工作；已提交的下载和订阅都会保留。已发出的站点请求可能还要一会儿才结束哦～"
 )
 
@@ -15,7 +16,7 @@ func (e *Engine) subSearchConfirmation(sess session, sub Subscription, problem s
 	sess.pages, sess.listing = nil, ""
 	e.store.put(sess)
 	text := Lines(Heading(Plain("🔍 立即搜索订阅")), Line(Strong(taskName(truncate(sub.Title, listTitleRunes), sub.Season))),
-		Line(Plain(subScope(sub))), Line(Strong("规格 "), Plain(subSpecifications(sub))), Divider(), Line(Plain(msgSearchWarning)))
+		Line(Plain(subScope(sub))), Line(Strong("规格 "), Plain(subSpecifications(sub))), Divider(), Callout(Plain(msgSearchWarning)))
 	if sub.State == statePaused {
 		text = append(text, Line(Plain("这条订阅已暂停；本次仍会搜索，订阅保持暂停。要停止已受理的搜索，请用「停止本次搜索」。")))
 	}
@@ -38,8 +39,7 @@ func subSearchView(sess session) Reply {
 	if run.problem != "" {
 		text = append(text, Line(Plain(run.problem)))
 	}
-	text = append(text, Remark("搜索结束只说明这次搜索执行完了；已提交的下载会保留，资源、下载和入库情况请用 /tasks 和订阅详情核对哦～"))
-	text = append(text, Remark("只保留当前会话最近一次搜索回执；返回、停止刷新、关闭或重启机器人后，后台搜索照常进行。"))
+	text = append(text, Remark(msgSearchReceipt))
 	if run.on {
 		text = append(text, Remark(msgFollowing))
 	} else if run.last != nil && run.last.active() {
@@ -119,7 +119,7 @@ func subSearchRows(sess session) [][]Button {
 
 func subSearchStopConfirmation(sess session) Reply {
 	run := sess.subSearch
-	text := Lines(Heading(Plain("停止本次搜索")), Line(Strong(taskName(truncate(run.base.Title, listTitleRunes), run.base.Season))), Line(Plain(msgStopWarning)))
+	text := Lines(Heading(Plain("🔍 停止本次搜索")), Line(Strong(taskName(truncate(run.base.Title, listTitleRunes), run.base.Season))), Line(Plain(msgStopWarning)))
 	return Reply{Text: text, Image: run.base.Poster, Buttons: [][]Button{
 		{{Label: "确认停止搜索", Data: data(sess.id, actionSubSearchCancel, run.sequence)}},
 		{backTo(sess.id, actionSubSearchRead, run.sequence)},

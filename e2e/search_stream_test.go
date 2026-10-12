@@ -102,7 +102,7 @@ func TestStreamSearchRetriesOnlyExplicitlyAndRecoversDelivery(t *testing.T) {
 	close(s.frames)
 	h.wait(failed, "a failed terminal search edit")
 	batchShows(h, 1, "结果不完整")
-	h.shows(1, "可能重复访问站点")
+	h.shows(1, "会再次访问站点")
 	h.streamCount(1)
 	next := h.mp.stream(duneStream)
 	h.tap(alice, 1, "重新搜索资源")
