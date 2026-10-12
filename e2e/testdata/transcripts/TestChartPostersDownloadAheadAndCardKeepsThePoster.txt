@@ -62,6 +62,7 @@
 -> MoviePilot GET /api/v1/media/search?count=10&title=深渊无间&type=media
 -> MoviePilot GET /api/v1/media/36576514?media_source=douban&type_name=电视剧
 -> MoviePilot GET /api/v1/media/seasons?media_id=36576514&media_source=douban
+-> MoviePilot GET /api/v1/subscribe/
 -> MoviePilot GET /api/v1/subscribe/media/36576514?media_source=douban&mtype=电视剧&season=1&title=深渊无间&year=2026
 << editMessageText chat=1001 message=1
    <img src="file-f5f6d5b17cb11ee11cf44ed25dc5348adfece286572dcdf0710170dad1dbc6e7"/>
