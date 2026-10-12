@@ -1,7 +1,7 @@
 >> user 1001 in chat 1001: 沙丘
--> MoviePilot GET /api/v1/subscribe/
 << sendChatAction chat=1001 typing
 -> MoviePilot GET /api/v1/media/search?count=10&title=沙丘&type=media
+-> MoviePilot GET /api/v1/subscribe/
 << sendRichMessage chat=1001 message=1
    <h3>🔍 帮你找到这些「沙丘」啦</h3>
    <ol start="1">
@@ -29,9 +29,9 @@
    [重新搜索 | 1:rs:0]
    [取消 | 1:x:0]
 >> user 1001 in chat -500 topic 17: /search 沙丘
--> MoviePilot GET /api/v1/subscribe/
 << sendChatAction chat=-500 topic=17 typing
 -> MoviePilot GET /api/v1/media/search?count=10&title=沙丘&type=media
+-> MoviePilot GET /api/v1/subscribe/
 << sendRichMessage chat=-500 message=2 topic=17
    <h3>🔍 帮你找到这些「沙丘」啦</h3>
    <ol start="1">

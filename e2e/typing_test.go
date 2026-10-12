@@ -22,11 +22,14 @@ func TestSlowSearchShowsTyping(t *testing.T) {
 	h.tr.verify(t)
 }
 
-// sayWhileSearchHeld sends m, holds MoviePilot's title search until the chat
-// shows the typing action, then lets the reply through.
+// sayWhileSearchHeld sends m, holds MoviePilot's title search and the
+// subscription list read beside it until the chat shows the typing action,
+// then lets them through one after the other, so the transcript keeps one
+// order.
 func (h *harness) sayWhileSearchHeld(m chatMessage) {
 	h.t.Helper()
 	held := h.mp.holdCalls(searchPath, 1)[0]
+	subs := h.mp.holdCalls(subsPath, 1)[0]
 	typing := h.tg.expect(fmt.Sprintf("action:%d", m.chat))
 	where := fmt.Sprintf("chat %d", m.chat)
 	if m.thread > 0 {
@@ -36,6 +39,9 @@ func (h *harness) sayWhileSearchHeld(m chatMessage) {
 	done := h.tg.push(m.update(), fmt.Sprintf("send:%d", m.chat))
 	h.wait(held.entered, "the held search")
 	h.wait(typing, "the typing action")
+	h.wait(subs.entered, "the subscription list read")
+	subs.allow()
+	h.wait(subs.exited, "the subscription list read")
 	held.allow()
 	h.wait(done, m.text)
 }
