@@ -46,7 +46,7 @@ func (c card) replyLines(message Text, buttons [][]Button) Reply {
 // text renders e.g.
 //
 //	# 🎬 沙丘                       heading, title linked to its page
-//	_Dune_ · 2021 · 电影 · ⭐ 7.8 · 科幻 / 冒险 · 156 分钟 · 主演：…   small print
+//	_Dune_ · 2021 · 电影 · ⭐ 7.8 · TMDB · 科幻 / 冒险 · 156 分钟 · 主演：…   small print
 //	> synopsis, collapsed
 func (c card) text() Text {
 	m := c.Media
@@ -66,7 +66,7 @@ func (c card) text() Text {
 }
 
 // smallPrint is the card's facts on one line of small print: original
-// title, year, kind, rating, genres, length and cast.
+// title, year, kind, rating, source, genres, length and cast.
 func (c card) smallPrint() Block {
 	m, d := c.Media, c.Details
 	var spans []Span
@@ -77,7 +77,8 @@ func (c card) smallPrint() Block {
 	if len(d.Cast) > 0 {
 		cast = "主演：" + strings.Join(d.Cast[:min(len(d.Cast), maxCast)], "、")
 	}
-	facts := joinNonEmpty(" · ", m.Year, m.Kind.String(), rating(m.Rating), strings.Join(d.Genres, " / "), length(d), cast)
+	facts := joinNonEmpty(" · ", m.Year, m.Kind.String(), rating(m.Rating), sourceName(m.Source),
+		strings.Join(d.Genres, " / "), length(d), cast)
 	if facts != "" && len(spans) > 0 {
 		facts = " · " + facts
 	}
@@ -120,13 +121,25 @@ func entry(n int, name Span, facts ...string) Block {
 }
 
 // resultEntry is one numbered search result: **沙丘**, then
-// _Dune · 2021 · 电影 · ⭐ 7.8_ below.
+// _Dune · 2021 · 电影 · ⭐ 7.8 · TMDB_ below.
 func resultEntry(n int, m Media) Block {
 	original := ""
 	if m.OriginalTitle != m.Title {
 		original = m.OriginalTitle
 	}
-	return entry(n, Strong(m.Title), original, m.Year, m.Kind.String(), rating(m.Rating))
+	return entry(n, Strong(m.Title), original, m.Year, m.Kind.String(), rating(m.Rating), sourceName(m.Source))
+}
+
+// sourceNames label the media sources MoviePilot recognizes; the rating
+// beside the label comes from that source.
+var sourceNames = map[string]string{tmdbSource: "TMDB", "douban": "豆瓣", bangumiSource: "Bangumi"}
+
+// sourceName labels a media source, keeping an unrecognized one as given.
+func sourceName(source string) string {
+	if name, ok := sourceNames[source]; ok {
+		return name
+	}
+	return source
 }
 
 func length(d Details) string {

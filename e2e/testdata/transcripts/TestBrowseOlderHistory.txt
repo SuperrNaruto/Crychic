@@ -85,7 +85,7 @@
 << editMessageText chat=1001 message=1
    <img src="url-590aa727efa2e78808d96e5d005f73b804d9d506985ff36a5e55a63ac28258be"/>
    <h3>📺 碧蓝之海</h3>
-   <footer>2018 · 电视剧</footer>
+   <footer>2018 · 电视剧 · TMDB</footer>
    <hr/>
    <p><b>要重新订阅《碧蓝之海》第 1 季（从第 5 集开始）吗？</b><br>
    会沿用上次的订阅设置哦。</p>
@@ -98,7 +98,7 @@
 << editMessageText chat=1001 message=1
    <img src="url-590aa727efa2e78808d96e5d005f73b804d9d506985ff36a5e55a63ac28258be"/>
    <h3>📺 碧蓝之海</h3>
-   <footer>2018 · 电视剧</footer>
+   <footer>2018 · 电视剧 · TMDB</footer>
    <hr/>
    <p>✅ 已经帮你重新订阅《碧蓝之海》第 1 季（从第 5 集开始）啦，通知由 MoviePilot 按设置发送哦～ ヾ(≧▽≦*)o</p>
    [返回 | 1:hf:2] [首页 | 1:o:0] [关闭 | 1:c:0]

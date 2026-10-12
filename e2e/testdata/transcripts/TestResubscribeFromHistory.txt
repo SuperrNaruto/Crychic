@@ -83,7 +83,7 @@
 << editMessageText chat=1001 message=1
    <img src="url-caf3370aa7811b8d87c23685c80c5562086c41f07bc889d8304e5f09cb366cfd"/>
    <h3>📺 颂乐人偶</h3>
-   <footer>2025 · 电视剧</footer>
+   <footer>2025 · 电视剧 · TMDB</footer>
    <hr/>
    <p><b>要重新订阅《颂乐人偶》第 1 季吗？</b><br>
    会沿用上次的订阅设置哦。</p>
@@ -120,7 +120,7 @@
 << editMessageText chat=1001 message=1
    <img src="url-caf3370aa7811b8d87c23685c80c5562086c41f07bc889d8304e5f09cb366cfd"/>
    <h3>📺 颂乐人偶</h3>
-   <footer>2025 · 电视剧</footer>
+   <footer>2025 · 电视剧 · TMDB</footer>
    <hr/>
    <p><b>要重新订阅《颂乐人偶》第 1 季吗？</b><br>
    会沿用上次的订阅设置哦。</p>
@@ -133,7 +133,7 @@
 << editMessageText chat=1001 message=1
    <img src="url-caf3370aa7811b8d87c23685c80c5562086c41f07bc889d8304e5f09cb366cfd"/>
    <h3>📺 颂乐人偶</h3>
-   <footer>2025 · 电视剧</footer>
+   <footer>2025 · 电视剧 · TMDB</footer>
    <hr/>
    <p>✅ 已经帮你重新订阅《颂乐人偶》第 1 季啦，通知由 MoviePilot 按设置发送哦～ ヾ(≧▽≦*)o</p>
    [返回 | 1:hf:2] [首页 | 1:o:0] [关闭 | 1:c:0]
@@ -189,7 +189,7 @@
 << editMessageText chat=1001 message=1
    <img src="url-ae95e58ec03e202c035279fd7b770ee9063e24e22f246ec568120ac5a90252ea"/>
    <h3>🎬 沙丘</h3>
-   <footer>2021 · 电影</footer>
+   <footer>2021 · 电影 · TMDB</footer>
    <hr/>
    <p><b>要重新订阅《沙丘》吗？</b><br>
    会沿用上次的订阅设置哦。</p>
@@ -202,7 +202,7 @@
 << editMessageText chat=1001 message=1
    <img src="url-ae95e58ec03e202c035279fd7b770ee9063e24e22f246ec568120ac5a90252ea"/>
    <h3>🎬 沙丘</h3>
-   <footer>2021 · 电影</footer>
+   <footer>2021 · 电影 · TMDB</footer>
    <hr/>
    <blockquote>⚠️ 呜，没能确认订阅有没有成功…先用 /subscribe 看一眼，确认没订上再来找我哦。</blockquote>
    [返回 | 1:hf:1] [首页 | 1:o:0] [关闭 | 1:c:0]

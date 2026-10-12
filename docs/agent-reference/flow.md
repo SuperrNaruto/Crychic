@@ -25,11 +25,11 @@ Data with columns (season picker, multi-season results, a task's files or progre
 multi-season picker shows its ticks as `Ticked` lines
 
 Numbered list entries are `flow.entry` (an `Item` block): bold name, then facts (original title, year, kind,
-rating, state, progress) in italics below it (chart/related `Brief` entries put facts beside the name
+rating, source, state, progress) in italics below it (chart/related `Brief` entries put facts beside the name
 instead; so do latest items and subscription lists, 8 a page, owner's choice 2026-10-12), rendered as `<li value="n">` so numbers match the buttons on every page. Each ordinary bot message
 opens with a `Heading`; inline articles use their separate classic HTML format; list sections and calendar
 dates are `Group`s, page numbers and refresh state are `Remark`s (footer), a media card's original title, year
-/ kind / rating, genres / length and cast share one line of `Small` print (joined by ` · `) under its heading,
+/ kind / rating / source, genres / length and cast share one line of `Small` print (joined by ` · `) under its heading,
 and a media card is separated from its question by a `Divider`
 
 User-facing copy is `flow.Text` built with `Strong`/`Emphasis`/`Mono`/`Linked`/`Quote`; never put platform
@@ -99,7 +99,8 @@ not (`huntNow`), except a target numbered by an episode group (picking a group c
 `searching` refuse group targets; 返回 restores the title's intent), and a person's works list clears it too; `navigate` records the skipped card (`session.skipped`) in place of the search under way like
 any step's screen, so 返回 leads to it from the releases and a download of a list pick leads back to that list),
 page 8 at a time, open unique results directly, and replace a query under a fresh session ID;
-`internal/flow/text.go` - result lines and media cards
+`internal/flow/text.go` - result lines and media cards; search results and cards name the media source
+(TMDB / 豆瓣 / Bangumi, an unknown source as given) after the rating, whose source it is (owner's request 2026-10-12)
 
 `internal/flow/home.go` - `/start` home menu (`features`), typed title search; 首页 clears the previous title's
 download intent, so subsequent discovery picks ask to subscribe normally; a feature with nothing to list

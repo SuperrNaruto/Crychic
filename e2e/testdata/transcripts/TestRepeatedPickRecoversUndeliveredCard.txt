@@ -4,9 +4,9 @@
    <h3>🔍 帮你找到这些「无海报影片」啦</h3>
    <ol start="1">
    <li value="1"><b>无海报影片</b><br>
-   <i>电影</i></li>
+   <i>电影 · TMDB</i></li>
    <li value="2"><b>另一部影片</b><br>
-   <i>电影</i></li>
+   <i>电影 · TMDB</i></li>
    </ol>
    [1 | 1:m:0] [2 | 1:m:1]
    [重新搜索 | 1:rs:0]
@@ -19,7 +19,7 @@
 >> user 1001 taps 1:m:0 on message 1
 << editMessageText chat=1001 message=1
    <h3>🎬 无海报影片</h3>
-   <footer>电影</footer>
+   <footer>电影 · TMDB</footer>
    <hr/>
    <p><b>要订阅《无海报影片》吗？</b></p>
    [确认订阅 | 1:ok:0]
@@ -33,9 +33,9 @@
    <h3>🔍 帮你找到这些「无海报影片」啦</h3>
    <ol start="1">
    <li value="1"><b>无海报影片</b><br>
-   <i>电影</i></li>
+   <i>电影 · TMDB</i></li>
    <li value="2"><b>另一部影片</b><br>
-   <i>电影</i></li>
+   <i>电影 · TMDB</i></li>
    </ol>
    [1 | 1:m:0] [2 | 1:m:1]
    [重新搜索 | 1:rs:0]

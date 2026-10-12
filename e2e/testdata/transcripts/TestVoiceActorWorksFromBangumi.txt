@@ -6,7 +6,7 @@
 << sendRichMessage chat=1001 message=1
    <img src="url-ab5025b66c21f7b35c97e207b7896c1c1b7c568db4965185643f4375850845d7"/>
    <h3>📺 <a href="https://bgm.tv/subject/428735">BanG Dream! It&#39;s MyGO!!!!!</a></h3>
-   <footer>2023 · 电视剧 · ⭐ 7.9 · BanGDream / 原创 / 音乐 · 共 1 季 14 集 · 主演：矢方美紀、仲田ありさ、愛美</footer>
+   <footer>2023 · 电视剧 · ⭐ 7.9 · Bangumi · BanGDream / 原创 / 音乐 · 共 1 季 14 集 · 主演：矢方美紀、仲田ありさ、愛美</footer>
    <blockquote expandable>「能一辈子和我搞乐队吗？」<br>
    <br>
    在高一的春季即将结束之时，羽丘女子学园里人人都在参加乐队活动。<br>

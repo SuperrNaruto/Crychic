@@ -5,7 +5,7 @@
 << sendRichMessage chat=1001 message=1
    <img src="url-79cfdb9e3a1c17d9d2aa44f68c7d81660c8d80ab97beaf1b91b7ab51e6a32f99"/>
    <h3>📺 <a href="https://www.themoviedb.org/tv/85937">鬼灭之刃</a></h3>
-   <footer><i>鬼滅の刃</i> · 2019 · 电视剧 · ⭐ 8.6 · 动画 / 动作冒险 / Sci-Fi &amp; Fantasy · 共 5 季 63 集 · 主演：花江夏树、鬼头明里、下野纮</footer>
+   <footer><i>鬼滅の刃</i> · 2019 · 电视剧 · ⭐ 8.6 · TMDB · 动画 / 动作冒险 / Sci-Fi &amp; Fantasy · 共 5 季 63 集 · 主演：花江夏树、鬼头明里、下野纮</footer>
    <blockquote expandable>时值日本大正时期。<br>
    <br>
    传说太阳下山后，有恶鬼出没吃人。亦有猎鬼人斩杀恶鬼、保护人们。<br>
@@ -41,7 +41,7 @@
 << editMessageText chat=1001 message=1
    <img src="url-79cfdb9e3a1c17d9d2aa44f68c7d81660c8d80ab97beaf1b91b7ab51e6a32f99"/>
    <h3>📺 <a href="https://www.themoviedb.org/tv/85937">鬼灭之刃</a></h3>
-   <footer><i>鬼滅の刃</i> · 2019 · 电视剧 · ⭐ 8.6 · 动画 / 动作冒险 / Sci-Fi &amp; Fantasy · 共 5 季 63 集 · 主演：花江夏树、鬼头明里、下野纮</footer>
+   <footer><i>鬼滅の刃</i> · 2019 · 电视剧 · ⭐ 8.6 · TMDB · 动画 / 动作冒险 / Sci-Fi &amp; Fantasy · 共 5 季 63 集 · 主演：花江夏树、鬼头明里、下野纮</footer>
    <blockquote expandable>时值日本大正时期。<br>
    <br>
    传说太阳下山后，有恶鬼出没吃人。亦有猎鬼人斩杀恶鬼、保护人们。<br>

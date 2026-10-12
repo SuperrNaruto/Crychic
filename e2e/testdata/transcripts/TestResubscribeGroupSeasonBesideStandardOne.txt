@@ -26,7 +26,7 @@
 -> MoviePilot GET /api/v1/subscribe/
 << editMessageText chat=1001 message=1
    <h3>📺 鬼灭之刃</h3>
-   <footer>2019 · 电视剧</footer>
+   <footer>2019 · 电视剧 · TMDB</footer>
    <hr/>
    <p><b>要重新订阅《鬼灭之刃》第 2 季（按剧集组编排）吗？</b><br>
    会沿用上次的订阅设置哦。</p>

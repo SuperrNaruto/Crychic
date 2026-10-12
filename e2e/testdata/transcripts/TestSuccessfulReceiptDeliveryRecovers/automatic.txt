@@ -4,7 +4,7 @@
 -> MoviePilot GET /api/v1/subscribe/media/42?media_source=themoviedb&mtype=电影&title=无海报影片
 << sendRichMessage chat=1001 message=1
    <h3>🎬 无海报影片</h3>
-   <footer>电影</footer>
+   <footer>电影 · TMDB</footer>
    <hr/>
    <p><b>要订阅《无海报影片》吗？</b></p>
    [确认订阅 | 1:ok:0]
@@ -20,6 +20,6 @@
 << answerCallbackQuery
 << editMessageText chat=1001 message=1
    <h3>🎬 无海报影片</h3>
-   <footer>电影</footer>
+   <footer>电影 · TMDB</footer>
    <hr/>
    <p>✅ 帮你订好《无海报影片》啦，通知由 MoviePilot 按设置发送哦～ ヾ(≧▽≦*)o</p>
