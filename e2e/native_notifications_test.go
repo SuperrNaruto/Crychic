@@ -92,12 +92,14 @@ func TestNativeTransferFailureHidesServerPaths(t *testing.T) {
 	text := "失败阶段：整理\n源文件：/downloads/My Show (2024)/S01E02.mkv\n目标路径：/媒体/剧集/My Show\n" +
 		"原因：目标已存在\n如果按钮不可用，可回复：\n/redo 12"
 	h.nativeNotice(personalNative("My Show S01E02 入库失败！", text))
-	h.nativeNotice(personalNative("My Show 入库失败（2 个文件）", "失败文件：2 个\n源文件：/downloads/a.mkv、/downloads/b.mkv\n移动/srv/media/c.mkv 失败"))
-	for _, path := range []string{"/downloads", "/媒体", "/srv"} {
+	h.nativeNotice(personalNative("My Show 入库失败（2 个文件）", "失败文件：2 个\n源文件：/downloads/a.mkv、/downloads/b.mkv\n"+
+		"原因：媒体库根目录：/srv/My Show (2024)/c.mkv 不可写\n音轨 国语/粤语/英语，无法写入 (/srv/media/d.mkv)"))
+	for _, path := range []string{"/downloads", "/媒体", "/srv", "My Show (2024)"} {
 		if strings.Contains(h.tr.String(), path) {
 			t.Fatalf("server path %s reached the chat", path)
 		}
 	}
 	h.shows(1, "/redo 12")
+	h.shows(2, "国语/粤语/英语")
 	h.tr.verify(t)
 }

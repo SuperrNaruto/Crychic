@@ -79,7 +79,7 @@ id（电影与剧集不同）、13 种语言和排序键取自 MP 官方 TMDB �
 `/api/v1/tmdb/credits/{id}/{电影|电视剧}`，角色取 `character`；Bangumi 读 `/api/v1/bangumi/credits/{id}`，是番剧配音
 人物，`character` 为空，角色取 `career`（角色名）。豆瓣演职员需要另外核验，本版不提供。`cw` 读
 `/api/v1/{tmdb|bangumi}/person/credits/{person_id}`：TMDB 按日期倒序，Bangumi 没有年份且同一条目按角色重复出现，
-客户端按来源与 ID 去重。作品与条件找片结果都放进 `session.picks`，由 `cp` 走与榜单相同的 `pickFromChart`：TMDB
+客户端按来源、ID 与类型去重（TMDB 电影与剧集的 ID 各自编号，同号可能是两部作品）。进入作品列表清除前一标题的下载意图，返回恢复原标题状态。作品与条件找片结果都放进 `session.picks`，由 `cp` 走与榜单相同的 `pickFromChart`：TMDB
 作品按身份直接对上，其他来源按标题搜索，对不上时说明而不猜测。
 
 ## 并发与可恢复元数据

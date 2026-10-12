@@ -11,9 +11,9 @@ MAX_TITLE = 512
 MAX_URL = 4096
 SENSITIVE = re.compile(r"(?i)(api[_-]?key|token|cookie|passkey|password|authorization)\s*[:=]\s*\S+|[A-Za-z]:\\\S+")
 # 原生整理通知以「源文件：/…」等标签给出路径，标签后整行可能含空格，因此整段隐藏。
-LABELED_PATH = re.compile(r"(源文件|源目录|源路径|目标路径|目标目录|文件路径|路径)\s*[:：]\s*[^\n]+")
-# 路径可紧贴中文或标点；字母数字后的「1/2/3」与 URL 中的「//」不构成路径起点。
-POSIX_PATH = re.compile(r"(^|[^A-Za-z0-9_./-])(?:/[^\s/、，,;；)）\]】」\"']+){2,}/?", re.MULTILINE)
+LABELED_PATH = re.compile(r"(源文件|目录|路径)[ \t]*[:：][ \t]*[^\n]+")
+# 路径起点为行首、空白或标点；「国语/粤语」「1/2/3」与 URL 中的「//」不算路径。
+POSIX_PATH = re.compile(r"(^|[\s:：、，,;；(（\[【「\"'=])(?:/[^\s/、，,;；)）\]】」\"']+){2,}/?", re.MULTILINE)
 CHANNEL = re.compile(r"^@[A-Za-z0-9_]+$")
 SENSITIVE_URL_PARTS = ("key", "token", "pass", "cookie", "authorization", "secret", "credential", "signature")
 SENSITIVE_URL_KEYS = ("auth", "sig")

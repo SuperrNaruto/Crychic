@@ -17,11 +17,11 @@ var sensitiveNativeText = regexp.MustCompile(`(?i)(api[_-]?key|token|cookie|pass
 
 // labeledNativePath hides the whole value after MoviePilot's 「源文件：」-style
 // labels, since a path there may contain spaces.
-var labeledNativePath = regexp.MustCompile(`(源文件|源目录|源路径|目标路径|目标目录|文件路径|路径)\s*[:：]\s*[^\n]+`)
+var labeledNativePath = regexp.MustCompile(`(源文件|目录|路径)[ \t]*[:：][ \t]*[^\n]+`)
 
-// nativePath finds paths right after Chinese text or punctuation; "1/2/3"
-// after a digit and the "//" inside a URL do not start one.
-var nativePath = regexp.MustCompile(`(?m)(^|[^A-Za-z0-9_./-])(?:/[^\s/、，,;；)）\]】」"']+){2,}/?`)
+// nativePath finds paths starting a line or after a space or punctuation;
+// "国语/粤语", "1/2/3" and the "//" inside a URL do not start one.
+var nativePath = regexp.MustCompile(`(?m)(^|[\s:：、，,;；(（\[【「"'=])(?:/[^\s/、，,;；)）\]】」"']+){2,}/?`)
 var nativeChannelName = regexp.MustCompile(`^@[A-Za-z0-9_]+$`)
 
 func nativeNotice(message NativeMessage) (flow.Notice, error) {

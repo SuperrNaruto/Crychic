@@ -66,7 +66,8 @@ returned results (a leading 订阅/搜索/下载 plus optional colon or space is
 `intent.go`; read where a title is typed (`searchTyped`; 重试 repeats the bare search; correcting a title keeps
 its download intent unless an explicit 订阅/搜索/下载 prefix overrides it); 下载 sets `session.download`, so
 `confirmation` and `held` start the resource search as soon as a target is chosen, already in the library or
-not (`huntNow`); `navigate` records the skipped card (`session.skipped`) in place of the search under way like
+not (`huntNow`), except a target numbered by an episode group (picking a group clears the intent, and `huntNow` and
+`searching` refuse group targets; 返回 restores the title's intent), and a person's works list clears it too; `navigate` records the skipped card (`session.skipped`) in place of the search under way like
 any step's screen, so 返回 leads to it from the releases and a download of a list pick leads back to that list),
 page 8 at a time, open unique results directly, and replace a query under a fresh session ID;
 `internal/flow/text.go` - result lines and media cards
@@ -313,7 +314,8 @@ missing parts (`jt`, same-level) and subscribe them (`jy`, finishing and tickete
 `ep` (forward) reads the group's seasons (`/media/group/seasons/{id}`, episode counts zero dropped) and shows them
 through the ordinary season picker with `session.group` set. Targets carry `EpisodeGroup` and its name; under
 a group the library is replaced by a note, downloads are not matched (`Target.has`), and multi-season, the
-next-episode start, 搜索资源, 选择搜索站点 and 洗版 are left out because they work in standard seasons. A new
+next-episode start, 搜索资源, 选择搜索站点 and 洗版 are left out because they work in standard seasons; picking a
+group also drops the 下载 intent, since resources would be searched by the standard season. A new
 media pick clears the group
 
 `discoverfilter.go` and `people.go`: the condition search panel (`ya`, same-level `yk`/`yf`/`yo`, forward
