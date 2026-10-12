@@ -88,7 +88,7 @@ removed.
 
 `searchstream.go` 只向 `GET /api/v1/search/media/{id}/stream` 发送资源 Cookie，JSON 仍使用 API Key。专用 client 复用 app transport，清空 Cookie jar，拒绝全部重定向，错误不携带响应正文或目标 URL。配置只接受未加引号的资源令牌值，公开域名要求 HTTPS；不会签发、续期或持久化 Cookie。[v3.1.1 认证](https://github.com/jxxghp/MoviePilot/blob/v3.1.1/app/adapters/web/security/access.py#L176-L301)
 
-`sse.go` 按完整帧读取 UTF-8，支持 BOM、CR/LF/CRLF、心跳注释和多行 data，EOF 不补发缺少空行的帧。`streamresults.go` 将早期候选与最终匹配分开，按 `replace_batch` 的连续批次和总数核对，收到完整 `done` 后一次发布终态；半批、缺终态、错误帧或超时均保留不完整状态。每帧上限 8 MiB，每个搜索阶段最多 10000 个结果，超限按不完整处理，不静默截断。[帧与批次](https://github.com/jxxghp/MoviePilot/blob/v3.1.1/app/api/endpoints/search.py#L97-L447)
+`sse.go` 按完整帧读取 UTF-8，支持 BOM、CR/LF/CRLF、心跳注释和多行 data，EOF 不补发缺少空行的帧。`streamresults.go` 将早期候选与最终匹配分开，按 `replace_batch` 的连续批次和总数核对，收到完整 `done` 后一次发布终态；`replace` 与 `done` 至少一处给出 `total_items`（v3.1.4 的 `done` 总会给出），给出的总数都须等于最终结果数。半批、缺终态、缺总数、错误帧或超时均保留不完整状态。每帧上限 8 MiB，每个搜索阶段最多 10000 个结果，超限按不完整处理，不静默截断。[帧与批次](https://github.com/jxxghp/MoviePilot/blob/v3.1.1/app/api/endpoints/search.py#L97-L447)
 
 早期候选可能没有媒体身份，投影为 `Unverified`，不把搜索目标填回 `media_info`。最终资源核对来源、ID、类型与已知季号，只接受已匹配内容。稳定身份使用资源定位及选择字段的摘要，动态做种数与优先级不改变该身份；原始下载记录仍只存在 `Torrent.Record`，不显示或保存。[候选和终态](https://github.com/jxxghp/MoviePilot/blob/v3.1.1/app/chain/search/execution.py#L129-L244)、[最终匹配投影](https://github.com/jxxghp/MoviePilot/blob/v3.1.1/app/chain/search/result.py#L250-L262)
 

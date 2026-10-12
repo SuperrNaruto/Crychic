@@ -23,6 +23,7 @@ func TestStreamProtocolFailuresAndEmptyCompletion(t *testing.T) {
 		{"invalid JSON", "data: {not valid JSON}\n\n"},
 		{"missing final replace batch", "data: {\"type\":\"replace\",\"items\":[],\"replace_batch\":true,\"batch_index\":0,\"batch_count\":2}\n\ndata: {\"type\":\"done\",\"stage\":\"done\"}\n\n"},
 		{"done carrying an incomplete batch", "data: {\"type\":\"done\",\"stage\":\"done\",\"items\":[],\"replace_batch\":true,\"batch_index\":0,\"batch_count\":2}\n\n"},
+		{"no reported total", "data: {\"type\":\"replace\",\"items\":[],\"total_items\":null}\n\ndata: {\"type\":\"done\",\"stage\":\"done\"}\n\n"},
 	}
 	for i, tc := range cases {
 		s := first

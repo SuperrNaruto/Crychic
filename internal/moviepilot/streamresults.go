@@ -143,13 +143,22 @@ func (s *streamResults) finish(event searchEvent) (flow.TorrentSnapshot, bool, e
 			return flow.TorrentSnapshot{}, false, err
 		}
 	}
-	if s.expected != nil && *s.expected != s.rawFinal {
-		return flow.TorrentSnapshot{}, false, errSSEProtocol
-	}
-	if event.Total != nil && *event.Total != s.rawFinal {
+	if !s.totalsVerified(event) {
 		return flow.TorrentSnapshot{}, false, errSSEProtocol
 	}
 	return flow.TorrentSnapshot{Items: slices.Clone(s.final), Final: true}, true, nil
+}
+
+// totalsVerified needs at least one reported total, and every reported total
+// to match the final list; without one the result stays incomplete.
+func (s *streamResults) totalsVerified(event searchEvent) bool {
+	if s.expected == nil && event.Total == nil {
+		return false
+	}
+	if s.expected != nil && *s.expected != s.rawFinal {
+		return false
+	}
+	return event.Total == nil || *event.Total == s.rawFinal
 }
 
 func plainCompletion(event searchEvent) bool {
