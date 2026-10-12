@@ -244,7 +244,13 @@ func (c *Client) FindSubscription(ctx context.Context, t flow.Target) (flow.Subs
 	if err := c.do(ctx, call{method: http.MethodGet, path: path, query: q}, &sub); err != nil {
 		return flow.Subscription{}, err
 	}
-	return sub.subscription(), nil
+	found := sub.subscription()
+	if found.EpisodeGroup != "" {
+		// the lookup filters by season only, so a group's subscription may
+		// have answered for a standard season: compare the full list
+		return c.findGroupSubscription(ctx, t)
+	}
+	return found, nil
 }
 
 func deref(p *int) int {

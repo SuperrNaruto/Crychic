@@ -56,9 +56,10 @@ func (c *Client) GroupSeasons(ctx context.Context, group string) ([]flow.Season,
 }
 
 // findGroupSubscription looks for a subscription to t's season in t's
-// episode group. MoviePilot's lookup by media filters by season number
-// only, so a subscription in standard seasons or another group would pass
-// for this one; the full list carries each subscription's group.
+// episode group; an empty group means standard seasons. MoviePilot's lookup
+// by media filters by season number only, so a subscription in standard
+// seasons or another group would pass for this one; the full list carries
+// each subscription's group.
 func (c *Client) findGroupSubscription(ctx context.Context, t flow.Target) (flow.Subscription, error) {
 	subs, err := c.Subscriptions(ctx)
 	if err != nil {

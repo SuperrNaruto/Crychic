@@ -10,6 +10,7 @@ import (
 
 const (
 	kimetsuDetails      = "GET /api/v1/media/85937"
+	kimetsuLookup       = "GET /api/v1/subscribe/media/85937"
 	kimetsuGroups       = "GET /api/v1/media/groups/85937"
 	kimetsuWikiSeasons  = "GET /api/v1/media/group/seasons/66c6dcd6cd3639e51ad7ec9f"
 	kimetsuWikiGroup    = "4" // Wikpedia / News once the empty Crunchyroll group is left out
@@ -48,9 +49,30 @@ func TestSubscribeByEpisodeGroup(t *testing.T) {
 	h.tr.verify(t)
 }
 
+// A subscription in an episode group is not the standard season's, though
+// MoviePilot's lookup by media answers with it for the season number alone.
+func TestStandardSeasonIgnoresGroupSubscription(t *testing.T) {
+	record := kimetsuSeason2(t, "66c6dcd6cd3639e51ad7ec9f")
+	h := start(t, scenario{routes: map[string]route{
+		searchPath: ok("search_kimetsu.json"), kimetsuDetails: ok("detail_kimetsu.json"),
+		seasonsPath: ok("seasons_kimetsu.json"), subsPath: ok(writeFixture(t, []any{record})),
+		kimetsuLookup: ok(writeFixture(t, record)),
+	}})
+	h.say(alice, alice, "/search 鬼灭之刃")
+	h.tap(alice, 1, kimetsuGroupSeason2)
+	h.shows(1, "要订阅《鬼灭之刃》第 2 季")
+	h.tr.verify(t)
+}
+
 // standardKimetsuSeason2 is the subscription list with 鬼灭之刃's standard
 // season 2 subscribed.
 func standardKimetsuSeason2(t *testing.T) string {
+	return writeFixture(t, []any{kimetsuSeason2(t, nil)})
+}
+
+// kimetsuSeason2 is a subscription to 鬼灭之刃's season 2 numbered by group
+// (nil for standard seasons).
+func kimetsuSeason2(t *testing.T, group any) map[string]any {
 	t.Helper()
 	raw, err := os.ReadFile(filepath.Join("testdata", "moviepilot", "subscriptions.json"))
 	if err != nil {
@@ -61,6 +83,6 @@ func standardKimetsuSeason2(t *testing.T) string {
 		t.Fatal(err)
 	}
 	sub := env.Data[0]
-	sub["id"], sub["name"], sub["media_id"], sub["year"], sub["episode_group"] = 9, "鬼灭之刃", "85937", "2019", nil
-	return writeFixture(t, env.Data)
+	sub["id"], sub["name"], sub["media_id"], sub["year"], sub["episode_group"] = 9, "鬼灭之刃", "85937", "2019", group
+	return sub
 }

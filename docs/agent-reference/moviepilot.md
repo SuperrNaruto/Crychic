@@ -237,7 +237,8 @@ download post) never quotes MoviePilot's error answer, which can echo the reques
 episode_count}`，`type` 为 TMDB 的 1 首播、2 绝对、3 DVD、4 数字、5 故事线、6 制作、7 电视；也会有 0 季 0 集的空组。
 `GET /api/v1/media/group/seasons/{id}` 返回组内季号、名称和集数。`POST /api/v1/subscribe/` 的公开字段含
 `episode_group`，创建时 MP 按该组重新识别并计算总集数，查重按媒体、季与剧集组。`GET /api/v1/subscribe/media/{id}`
-只按季号过滤、不看剧集组，因此带剧集组的目标改为读取完整订阅列表，按来源、ID、季与剧集组匹配。
+只按季号过滤、不看剧集组，因此带剧集组的目标改为读取完整订阅列表，按来源、ID、季与剧集组匹配；标准季目标若
+查到的订阅带剧集组，同样改读完整列表，以空剧集组匹配。
 
 订阅历史（2026-10-12 对照 v3.1.4）：`GET /api/v1/subscribe/history/{mtype}` 接受 `page`（默认 1）与 `count`（默认 30），
 superuser 读全部记录，只按 `date desc`（秒级字符串，无 ID 次序）排序并用 offset 分页；响应头 `X-Total-Count`
