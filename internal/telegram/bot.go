@@ -166,6 +166,7 @@ func New(cfg Config) (*Bot, error) {
 func (b *Bot) Run(ctx context.Context, f flow.Conversation) {
 	b.adapter.flow = f
 	b.adapter.runCtx = ctx
+	b.adapter.posters.bind(ctx, &b.adapter.work)
 	b.registerCommands(ctx)
 	b.log.Info("telegram bot started")
 	b.api.Start(ctx)
@@ -314,8 +315,10 @@ func (a *adapter) start(ctx context.Context, actor flow.Actor, arg string) flow.
 
 // onCallback answers the query once the flow has decided, so the client's
 // spinner covers the backend round trip and the answer can carry a notice.
-// A press that edits answers when its edit lands or after answerLead,
-// whichever comes first, so a slow edit does not also wait for the answer.
+// A press that edits first warms its reply's hotlinked posters (at most
+// warmBudget), so the spinner covers their download, then answers when its
+// edit lands or after answerLead, whichever comes first, so a slow edit does
+// not also wait for the answer.
 // The owner's press stops the message's follower before waiting for the
 // message: a refresh may be a long backend call (a resource search) holding it.
 func (a *adapter) onCallback(ctx context.Context, _ *bot.Bot, cq *models.CallbackQuery) {
@@ -337,6 +340,8 @@ func (a *adapter) onCallback(ctx context.Context, _ *bot.Bot, cq *models.Callbac
 	watch.lap("flow")
 	if reply.Notice == "" && cq.Message.Message != nil {
 		a.supersedeInitial(callbackKey(cq))
+		a.posters.warm(ctx, reply)
+		watch.lap("posters")
 		a.showAnswering(ctx, cq, reply)
 		watch.lap("show")
 		return

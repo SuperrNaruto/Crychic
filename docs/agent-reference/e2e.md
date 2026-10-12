@@ -68,7 +68,7 @@ and terminate/restart during an in-flight write. No internal flow state is mocke
 the recorded progress and terminal receipt, including mixed success/refusal/unknown outcomes.
 
 `fakeImages` is Douban's image host: 418 without the Douban referer, 403 to Go's default User-Agent, a tiny
-JPEG per path otherwise, `h.img.setMissing(path)` answers 404; `app.Deps.Images` routes poster downloads to
+JPEG per path otherwise, `h.img.setMissing(path)` answers 404; `h.img.downloads(path)` counts requests, `firstRequest(path)` is a barrier closed at a path's first request, `hold(path)` keeps answering until released or the client disconnects (`TestChartPostersDownloadAheadAndCardKeepsThePoster` uses them: background prefetch is asserted through counters, never recorded in transcripts, and a restart with a held download must finish quickly; `search_abyss_douban.json` is a synthetic Douban-sourced search result shaped after a read-only look at MoviePilot's title search); `app.Deps.Images` routes poster downloads to
 it. The fake Telegram hands out a file_id per upload, returns the top photo with its file_id,
 accepts known file_ids only, and records each displayed image by its complete stable identity via
 `message.seen()` (URL hash or uploaded-byte SHA-256), not its URL/upload/file_id transport; the cache recovery

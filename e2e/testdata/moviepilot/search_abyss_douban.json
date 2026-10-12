@@ -1,0 +1,22 @@
+{
+  "success": true,
+  "message": "",
+  "data": [
+    {
+      "media_source": "douban",
+      "media_id": "36576514",
+      "type": "电视剧",
+      "title": "深渊无间",
+      "year": "2026",
+      "title_year": "深渊无间 (2026)",
+      "tmdb_id": null,
+      "original_title": null,
+      "release_date": null,
+      "poster_path": "https://qnmob3-sign.doubanio.com/view/photo/l_ratio_poster/public/p2931762705.webp?sa_cv=synthetic",
+      "vote_average": 8.0,
+      "category": "",
+      "detail_link": "https://movie.douban.com/subject/36576514",
+      "overview": "2026 / 中国大陆 / 剧情 悬疑 犯罪 / 刘海波 / 任嘉伦 秦俊杰"
+    }
+  ]
+}

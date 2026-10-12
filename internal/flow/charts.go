@@ -200,7 +200,16 @@ func (e *Engine) chartPage(ctx context.Context, sess session, page int) Reply {
 		rows = append(rows, weekdayRow(sess.id, sess.day))
 	}
 	rows = append(rows, append([]Button{backTo(sess.id, actionCharts, 0)}, browseRow(sess.id)...))
-	return Reply{Text: text, Buttons: rows}
+	return Reply{Text: text, Buttons: rows, Prefetch: pickPosters(sess.picks[at.first:at.end])}
+}
+
+// pickPosters are the posters of picks that have one.
+func pickPosters(picks []Media) []string {
+	var urls []string
+	for _, m := range picks {
+		urls = withPoster(urls, m.PosterURL)
+	}
+	return urls
 }
 
 func emptyNote(c chart) string {
@@ -335,12 +344,21 @@ func (e *Engine) pickFromChart(ctx context.Context, sess session, pick Media) Re
 	sess.results = results[:min(len(results), MaxResults)]
 	if i, ok := sameMedia(sess.results, pick); ok {
 		sess.pendingSubs = subs
+		keepPoster(&sess.results[i], pick)
 		return e.pickMedia(ctx, sess, i)
 	}
 	e.store.put(sess)
 	reply := e.resultList(sess, pick.Title, subs.wait(ctx))
 	reply.Text = append(reply.Text, Remark(msgNoExactPick))
 	return reply
+}
+
+// keepPoster gives a result that is the pick itself the pick's poster, the
+// one the chart page already fetched ahead.
+func keepPoster(result *Media, pick Media) {
+	if result.Source == pick.Source && result.ID == pick.ID && pick.PosterURL != "" {
+		result.PosterURL = pick.PosterURL
+	}
 }
 
 // chartSearch searches pick by its title, else by its original title. Both

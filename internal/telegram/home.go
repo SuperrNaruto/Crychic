@@ -64,6 +64,9 @@ func (a *adapter) deliver(ctx context.Context, reply flow.Reply, try func(outgoi
 		a.log.Warn("poster rejected, sending without it", "image", reply.Image, "err", err)
 		msg, err = try(outgoing{reply: bare})
 	}
+	if err == nil {
+		a.posters.prefetch(reply.Prefetch)
+	}
 	return msg, err
 }
 

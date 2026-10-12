@@ -77,7 +77,14 @@ result is unknown is not resent: it may already be visible. Douban images (`*.do
 charts and 正在热映) answer 418 without a Douban referer, so Telegram cannot fetch them:
 `internal/telegram/posters.go` downloads them with the referer and its own User-Agent (`img3` answers 403 to
 Go's default one; 5 s budget, 5 MB cap, 4 at a time), uploads them as `attach://` media (file_ids: memory
-only, LRU of 1000, gone on restart); a poster that fails to download is dropped alone. MoviePilot's WebUI
+only, LRU of 1000, gone on restart); a poster that fails to download is dropped alone. Downloaded bytes wait in a second in-memory LRU
+(`posterbytes.go`: at most 32 posters and 16 MB, successes only, dropped once a file_id is learnt); one download
+per URL runs at a time, on the bot's own context rather than a caller's, and later requests for it join the
+flight. Reply.Prefetch (the poster URLs of a list page's entries, not displayed) is downloaded in the background
+(2 at a time, separate from the 4 of a message being sent) after the page is sent or edited, so a later pick
+finds the bytes; a chart pick whose search result is the same Douban media (Source and ID) keeps the chart
+item's poster for its card so that prefetched poster is the one uploaded (MoviePilot's title search otherwise
+returns another signed Douban URL or a TMDB one, which Telegram fetches itself) MoviePilot's WebUI
 shows them through its own image proxy (`/api/v1/system/img`), which Telegram cannot reach. Rich HTML
 collapses newlines, so the renderer turns them into `<br>`. The home menu alone sets `Reply.Banner`
 (`flow.BannerHome`; every name in `flow.Banners` needs a bundled JPEG or the bot stops at start); the banner
@@ -133,7 +140,7 @@ subscription writes do not. All clients share one transport keeping 16 idle conn
 
 A `Reply` with `Notice` must not edit the message (another group member tapping your buttons)
 
-命令发送用 `sendRichMessage`，按钮编辑用带 `rich_message` 的 `editMessageText`，`answerCallbackQuery` 在编辑完成或编辑已运行 `answerLead`（`telegram.Config.AnswerLead`，默认 50ms）时发出，以先到者为准；Notice 不编辑，直接回答。2026-10-12 线上计时：「返回」flow 0ms，编辑约 380ms，原先串行的回答约 340ms，到 Telegram RTT 约 160ms；并行后每次按下省掉约一次回答往返。超过 500ms 的按下记 `slow button press`（只记动作码与分段耗时），海报准备超过 200ms 另记一行。
+命令发送用 `sendRichMessage`，按钮编辑用带 `rich_message` 的 `editMessageText`，需编辑的按下在回答前先预热回复的防盗链海报（`warmBudget` 2s，下载进入字节缓存；超时则放弃等待，下载继续供编辑加入），客户端转圈因此覆盖海报下载（线上实测 Douban 海报下载 1.4–3.7s）；随后 `answerCallbackQuery` 在编辑完成或编辑已运行 `answerLead`（`telegram.Config.AnswerLead`，默认 50ms）时发出，以先到者为准；Notice 不编辑，直接回答。2026-10-12 线上计时：「返回」flow 0ms，编辑约 380ms，原先串行的回答约 340ms，到 Telegram RTT 约 160ms；并行后每次按下省掉约一次回答往返。超过 500ms 的按下记 `slow button press`（只记动作码与分段耗时，含 `posters` 预热段），海报准备超过 200ms 另记一行。
 内联键盘按钮把 `flow.Button.Style` 映射为 Bot API 的 `style`（`primary` 蓝、`danger` 红，零值为默认色）。
 
 `internal/telegram/lanes.go` 串行每条消息的状态变更及编辑；初始发送尚未返回时，已经显示的按钮也必须可用。

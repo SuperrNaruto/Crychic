@@ -1,0 +1,150 @@
+>> user 1001 in chat 1001: /trending
+<< sendRichMessage chat=1001 message=1
+   <h3>🔥 发现好片</h3>
+   <p>今天想逛哪个榜单呀？</p>
+   [TMDB 流行趋势 | 1:d:0] [豆瓣热门电影 | 1:d:1]
+   [豆瓣热门剧集 | 1:d:2] [正在热映 | 1:d:3]
+   [新番放送 | 1:d:4] [条件找片 | 1:ya:0]
+   [首页 | 1:o:0] [关闭 | 1:c:0]
+>> user 1001 taps 1:d:2 on message 1
+-> MoviePilot GET /api/v1/recommend/douban_tv_hot
+<< editMessageText chat=1001 message=1
+   <h3>📺 豆瓣热门剧集</h3>
+   <ol start="1">
+   <li value="1"><details><summary><b>深渊无间</b> · <i>2026 · ⭐ 7.3</i></summary>
+   <p>中国大陆 / 剧情 悬疑 犯罪 / 刘海波 / 任嘉伦 秦俊杰</p>
+   <p><a href="https://movie.douban.com/subject/36576514">查看详情页</a></p>
+   </details>
+   </li>
+   <li value="2"><details><summary><b>兰香如故</b> · <i>2026 · ⭐ 7.5</i></summary>
+   <p>中国大陆 / 剧情 爱情 古装 / 黄颖湘 陈丹 / 谭松韵 刘学义</p>
+   <p><a href="https://movie.douban.com/subject/36449295">查看详情页</a></p>
+   </details>
+   </li>
+   <li value="3"><details><summary><b>早春晴朗</b> · <i>2026 · ⭐ 6.7</i></summary>
+   <p>中国大陆 / 剧情 爱情 / 蒋继正 / 井柏然 孙千</p>
+   <p><a href="https://movie.douban.com/subject/36660844">查看详情页</a></p>
+   </details>
+   </li>
+   <li value="4"><details><summary><b>现在不是出轨的问题</b> · <i>2026 · ⭐ 8.7</i></summary>
+   <p>韩国 / 剧情 喜剧 惊悚 犯罪 / 李昌熙 / 金惠秀 金志勋</p>
+   <p><a href="https://movie.douban.com/subject/37501131">查看详情页</a></p>
+   </details>
+   </li>
+   <li value="5"><details><summary><b>交锋</b> · <i>2026 · ⭐ 7.3</i></summary>
+   <p>中国大陆 / 剧情 / 姚晓峰 / 王凯 周依然</p>
+   <p><a href="https://movie.douban.com/subject/36314809">查看详情页</a></p>
+   </details>
+   </li>
+   <li value="6"><details><summary><b>一瓯春</b> · <i>2026 · ⭐ 5.4</i></summary>
+   <p>中国大陆 / 爱情 古装 / 潘安子 / 许凯 周也</p>
+   <p><a href="https://movie.douban.com/subject/35644140">查看详情页</a></p>
+   </details>
+   </li>
+   <li value="7"><details><summary><b>冬城猎凶</b> · <i>2026 · ⭐ 7.1</i></summary>
+   <p>中国大陆 / 剧情 犯罪 / 翁子光 徐忱 / 王阳 万茜</p>
+   <p><a href="https://movie.douban.com/subject/37264799">查看详情页</a></p>
+   </details>
+   </li>
+   <li value="8"><details><summary><b>直到T恤干透</b> · <i>2026 · ⭐ 7.4</i></summary>
+   <p>日本 / 剧情 爱情 悬疑 / 土井裕泰 / 苍井优 中岛步</p>
+   <p><a href="https://movie.douban.com/subject/38462800">查看详情页</a></p>
+   </details>
+   </li>
+   </ol>
+   <footer>第 1/2 页</footer>
+   [1 | 1:i:0] [2 | 1:i:1] [3 | 1:i:2] [4 | 1:i:3]
+   [5 | 1:i:4] [6 | 1:i:5] [7 | 1:i:6] [8 | 1:i:7]
+   [下一页 › | 1:g:1]
+   [返回 | 1:b:0] [首页 | 1:o:0] [关闭 | 1:c:0]
+<< answerCallbackQuery
+>> user 1001 taps 1:i:0 on message 1
+-> MoviePilot GET /api/v1/media/search?count=10&title=深渊无间&type=media
+-> MoviePilot GET /api/v1/media/36576514?media_source=douban&type_name=电视剧
+-> MoviePilot GET /api/v1/media/seasons?media_id=36576514&media_source=douban
+-> MoviePilot GET /api/v1/subscribe/media/36576514?media_source=douban&mtype=电视剧&season=1&title=深渊无间&year=2026
+<< editMessageText chat=1001 message=1
+   <img src="file-f5f6d5b17cb11ee11cf44ed25dc5348adfece286572dcdf0710170dad1dbc6e7"/>
+   <h3>📺 <a href="https://movie.douban.com/subject/36576514">深渊无间</a></h3>
+   <footer>2026 · 电视剧 · ⭐ 8.0 · 豆瓣 · 悬疑 / 剧情 / 犯罪 · 共 1 季 16 集 · 主演：任嘉伦、秦俊杰、王砚辉</footer>
+   <blockquote expandable>2026 / 中国大陆 / 剧情 悬疑 犯罪 / 刘海波 / 任嘉伦 秦俊杰</blockquote>
+   <hr/>
+   <p><b>要订阅《深渊无间》第 1 季（共 16 集）吗？</b></p>
+   [从第 1 集开始 | 1:ok:0 | primary]
+   [指定起始集… | 1:e:0] [选择分类… | 1:cg:0] [洗版订阅 | 1:bv:0]
+   [搜索资源 | 1:ts:0] [选择搜索站点 | 1:ss:0]
+   [相似推荐 | 1:r:0]
+   [返回 | 1:bk:0] [取消 | 1:x:0]
+<< answerCallbackQuery
+>> user 1001 taps 1:bk:0 on message 1
+<< editMessageText chat=1001 message=1
+   <h3>📺 豆瓣热门剧集</h3>
+   <ol start="1">
+   <li value="1"><details><summary><b>深渊无间</b> · <i>2026 · ⭐ 7.3</i></summary>
+   <p>中国大陆 / 剧情 悬疑 犯罪 / 刘海波 / 任嘉伦 秦俊杰</p>
+   <p><a href="https://movie.douban.com/subject/36576514">查看详情页</a></p>
+   </details>
+   </li>
+   <li value="2"><details><summary><b>兰香如故</b> · <i>2026 · ⭐ 7.5</i></summary>
+   <p>中国大陆 / 剧情 爱情 古装 / 黄颖湘 陈丹 / 谭松韵 刘学义</p>
+   <p><a href="https://movie.douban.com/subject/36449295">查看详情页</a></p>
+   </details>
+   </li>
+   <li value="3"><details><summary><b>早春晴朗</b> · <i>2026 · ⭐ 6.7</i></summary>
+   <p>中国大陆 / 剧情 爱情 / 蒋继正 / 井柏然 孙千</p>
+   <p><a href="https://movie.douban.com/subject/36660844">查看详情页</a></p>
+   </details>
+   </li>
+   <li value="4"><details><summary><b>现在不是出轨的问题</b> · <i>2026 · ⭐ 8.7</i></summary>
+   <p>韩国 / 剧情 喜剧 惊悚 犯罪 / 李昌熙 / 金惠秀 金志勋</p>
+   <p><a href="https://movie.douban.com/subject/37501131">查看详情页</a></p>
+   </details>
+   </li>
+   <li value="5"><details><summary><b>交锋</b> · <i>2026 · ⭐ 7.3</i></summary>
+   <p>中国大陆 / 剧情 / 姚晓峰 / 王凯 周依然</p>
+   <p><a href="https://movie.douban.com/subject/36314809">查看详情页</a></p>
+   </details>
+   </li>
+   <li value="6"><details><summary><b>一瓯春</b> · <i>2026 · ⭐ 5.4</i></summary>
+   <p>中国大陆 / 爱情 古装 / 潘安子 / 许凯 周也</p>
+   <p><a href="https://movie.douban.com/subject/35644140">查看详情页</a></p>
+   </details>
+   </li>
+   <li value="7"><details><summary><b>冬城猎凶</b> · <i>2026 · ⭐ 7.1</i></summary>
+   <p>中国大陆 / 剧情 犯罪 / 翁子光 徐忱 / 王阳 万茜</p>
+   <p><a href="https://movie.douban.com/subject/37264799">查看详情页</a></p>
+   </details>
+   </li>
+   <li value="8"><details><summary><b>直到T恤干透</b> · <i>2026 · ⭐ 7.4</i></summary>
+   <p>日本 / 剧情 爱情 悬疑 / 土井裕泰 / 苍井优 中岛步</p>
+   <p><a href="https://movie.douban.com/subject/38462800">查看详情页</a></p>
+   </details>
+   </li>
+   </ol>
+   <footer>第 1/2 页</footer>
+   [1 | 1:i:0] [2 | 1:i:1] [3 | 1:i:2] [4 | 1:i:3]
+   [5 | 1:i:4] [6 | 1:i:5] [7 | 1:i:6] [8 | 1:i:7]
+   [下一页 › | 1:g:1]
+   [返回 | 1:b:0] [首页 | 1:o:0] [关闭 | 1:c:0]
+<< answerCallbackQuery
+>> user 1001 taps 1:g:1 on message 1
+<< editMessageText chat=1001 message=1
+   <h3>📺 豆瓣热门剧集</h3>
+   <ol start="9">
+   <li value="9"><details><summary><b>花开锦绣</b> · <i>2026 · ⭐ 7.2</i></summary>
+   <p>中国大陆 / 剧情 古装 / 邓科 / 丁禹兮 邓恩熙</p>
+   <p><a href="https://movie.douban.com/subject/36810153">查看详情页</a></p>
+   </details>
+   </li>
+   <li value="10"><details><summary><b>流人 第六季</b> · <i>2026 · ⭐ 9.2</i></summary>
+   <p>英国 美国 / 剧情 惊悚 / 亚当·兰道 / 加里·奥德曼 克里斯汀·斯科特·托马斯</p>
+   <p><a href="https://movie.douban.com/subject/36689816">查看详情页</a></p>
+   </details>
+   </li>
+   </ol>
+   <footer>第 2/2 页</footer>
+   [9 | 1:i:8] [10 | 1:i:9]
+   [‹ 上一页 | 1:g:0]
+   [返回 | 1:b:0] [首页 | 1:o:0] [关闭 | 1:c:0]
+<< answerCallbackQuery
+>> Crychic restarts

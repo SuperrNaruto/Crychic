@@ -15,7 +15,7 @@ const (
 type listEntry struct {
 	text    Text
 	buttons []Button
-	poster  string // shown in the page's gallery when set
+	poster  string // prefetched with the page when set
 	section string // a Group above the entry when it opens a page or a new section
 }
 
@@ -81,6 +81,7 @@ func paged(id uint64, view listView) []Reply {
 		last := len(pages) - 1
 		placeEntry(&pages[last], entry, items == 0 || entry.section != section)
 		buttons[last] = append(buttons[last], entry.buttons...)
+		pages[last].Prefetch = withPoster(pages[last].Prefetch, entry.poster)
 		used, items, section = used+size, items+1, entry.section
 	}
 	for i := range pages {
@@ -96,6 +97,14 @@ func paged(id uint64, view listView) []Reply {
 		pages[i].Buttons = append(append(pages[i].Buttons, view.menu...), view.footer)
 	}
 	return pages
+}
+
+// withPoster appends poster to urls when there is one.
+func withPoster(urls []string, poster string) []string {
+	if poster == "" {
+		return urls
+	}
+	return append(urls, poster)
 }
 
 // placeEntry adds entry to page, under its section's Group when it opens

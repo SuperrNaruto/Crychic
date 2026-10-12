@@ -32,11 +32,15 @@ type fakeImages struct {
 	t *testing.T
 
 	mu      sync.Mutex
-	missing map[string]bool // paths answering 404
+	missing map[string]bool          // paths answering 404
+	hits    map[string]int           // requests received per path
+	reached map[string]chan struct{} // closed at a path's first request
+	held    map[string]chan struct{} // paths whose answer waits for release
 }
 
 func newFakeImages(t *testing.T) *fakeImages {
-	f := &fakeImages{t: t, missing: map[string]bool{}}
+	f := &fakeImages{t: t, missing: map[string]bool{}, hits: map[string]int{},
+		reached: map[string]chan struct{}{}, held: map[string]chan struct{}{}}
 	f.Server = httptest.NewServer(f)
 	return f
 }
@@ -48,11 +52,58 @@ func (f *fakeImages) setMissing(path string) {
 	f.missing[path] = true
 }
 
+// downloads is how many requests the poster at path has received.
+func (f *fakeImages) downloads(path string) int {
+	f.mu.Lock()
+	defer f.mu.Unlock()
+	return f.hits[path]
+}
+
+// firstRequest closes when the poster at path receives its first request.
+func (f *fakeImages) firstRequest(path string) <-chan struct{} {
+	f.mu.Lock()
+	defer f.mu.Unlock()
+	return f.reachedLocked(path)
+}
+
+func (f *fakeImages) reachedLocked(path string) chan struct{} {
+	if f.reached[path] == nil {
+		f.reached[path] = make(chan struct{})
+	}
+	return f.reached[path]
+}
+
+// hold keeps answering the poster at path until the returned release is
+// called, or until the client gives up.
+func (f *fakeImages) hold(path string) (release func()) {
+	gate := make(chan struct{})
+	f.mu.Lock()
+	f.held[path] = gate
+	f.mu.Unlock()
+	var once sync.Once
+	return func() { once.Do(func() { close(gate) }) }
+}
+
+// arrive counts a request and wakes whoever waits for the path's first.
+func (f *fakeImages) arrive(path string) (missing bool, gate chan struct{}) {
+	f.mu.Lock()
+	defer f.mu.Unlock()
+	if f.hits[path]++; f.hits[path] == 1 {
+		close(f.reachedLocked(path))
+	}
+	return f.missing[path], f.held[path]
+}
+
 func (f *fakeImages) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	assertNoResourceCredentials(f.t, r)
-	f.mu.Lock()
-	missing := f.missing[r.URL.Path]
-	f.mu.Unlock()
+	missing, gate := f.arrive(r.URL.Path)
+	if gate != nil {
+		select {
+		case <-gate:
+		case <-r.Context().Done():
+			return
+		}
+	}
 	switch {
 	case !strings.HasSuffix(r.Header.Get(forwardedHost), ".doubanio.com"):
 		http.Error(w, "only Douban's image host is faked", http.StatusBadGateway)

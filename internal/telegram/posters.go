@@ -82,6 +82,7 @@ func refererFor(raw string) (string, bool) {
 type posters struct {
 	client *http.Client
 	log    *slog.Logger
+	bytes  *posterBytes
 
 	mu    sync.Mutex
 	ids   map[string]*list.Element // poster URL → element holding a cached
@@ -91,7 +92,7 @@ type posters struct {
 type cached struct{ url, fileID string }
 
 func newPosters(client *http.Client, log *slog.Logger) *posters {
-	return &posters{client: client, log: log, ids: map[string]*list.Element{}, order: list.New()}
+	return &posters{client: client, log: log, bytes: newPosterBytes(), ids: map[string]*list.Element{}, order: list.New()}
 }
 
 // outgoing is a reply ready to send: hotlinked posters are replaced by
@@ -209,11 +210,17 @@ func (p *posters) missing(urls []string) []string {
 }
 
 func (p *posters) fetchAll(ctx context.Context, urls []string) map[string][]byte {
+	return p.fetchWithin(ctx, urls, posterBudget)
+}
+
+// fetchWithin waits up to budget for the posters at urls; failures are
+// logged by the download itself.
+func (p *posters) fetchWithin(ctx context.Context, urls []string, budget time.Duration) map[string][]byte {
 	got := map[string][]byte{}
 	if len(urls) == 0 {
 		return got
 	}
-	ctx, cancel := context.WithTimeout(ctx, posterBudget)
+	ctx, cancel := context.WithTimeout(ctx, budget)
 	defer cancel()
 	var mu sync.Mutex
 	var wg sync.WaitGroup
@@ -222,9 +229,8 @@ func (p *posters) fetchAll(ctx context.Context, urls []string) map[string][]byte
 		wg.Go(func() {
 			slots <- struct{}{}
 			defer func() { <-slots }()
-			data, err := p.fetch(ctx, raw)
+			data, err := p.download(ctx, raw)
 			if err != nil {
-				p.log.Warn("poster download failed", "image", raw, "err", err)
 				return
 			}
 			mu.Lock()
@@ -312,6 +318,7 @@ func (p *posters) lookup(raw string) (string, bool) {
 func (p *posters) remember(raw, fileID string) {
 	p.mu.Lock()
 	defer p.mu.Unlock()
+	p.bytes.drop(raw)
 	if el, ok := p.ids[raw]; ok {
 		el.Value = cached{url: raw, fileID: fileID}
 		p.order.MoveToFront(el)

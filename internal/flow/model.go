@@ -505,6 +505,9 @@ type Reply struct {
 	// Wake closes for the first usable snapshot or the terminal result.
 	// Intermediate snapshots still use the platform's normal Follow cadence.
 	Wake <-chan struct{}
+	// Prefetch are poster URLs of the entries a list page shows, not
+	// displayed: a platform may fetch them ahead of the user opening one.
+	Prefetch []string
 }
 
 // TorrentSearch fixes the media and upstream site scope for one search.
