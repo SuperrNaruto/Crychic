@@ -72,6 +72,9 @@ func subscriptionPatch(update flow.SubscriptionUpdate) map[string]any {
 	if before.BestVersionFull != after.BestVersionFull {
 		body["best_version_full"] = enabledNumber(after.BestVersionFull)
 	}
+	if !before.SameCategory(after) {
+		body["media_category_id"] = after.CategoryID // "" returns to automatic
+	}
 	return body
 }
 

@@ -61,6 +61,11 @@ func (d subscriptionDetail) settingsText() Text {
 		Line(Plain(subScope(s))),
 		Line(Strong("规格 "), Plain(subSpecifications(s))),
 		Line(Strong("规则组 "), Plain(cmp.Or(subSetting(strings.Join(s.FilterGroups, " · ")), d.globalGroups()))),
+	)
+	if s.Category != "" {
+		text = append(text, Line(Strong("分类 "), Plain(subSetting(s.Category))))
+	}
+	text = append(text,
 		Group("最近一次搜索"),
 		Line(Strong("最近搜索 "), Plain(subTime(s.LastSearch))),
 		Line(Strong("执行状态 "), Plain(subExecutionState(s.Execution))),

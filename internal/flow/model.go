@@ -95,6 +95,9 @@ type Target struct {
 	BestVersion  bool   // explicitly requests MoviePilot's upgrade subscription
 	EpisodeGroup string // TMDB episode group numbering Season; "" for standard seasons
 	GroupName    string // the group's name, for copy only
+	// CategoryID overrides MoviePilot's automatic classification, "" for
+	// automatic; CategoryName is its display text.
+	CategoryID, CategoryName string
 }
 
 // EpisodeGroup is a TMDB episode group: another numbering of a show's
@@ -223,7 +226,14 @@ type Subscription struct {
 	// EpisodeGroup is the TMDB episode group whose seasons the subscription
 	// counts in, "" for the show's own seasons.
 	EpisodeGroup string
+	// CategoryID is the media category override, "" when classification is
+	// automatic; Category is the stored path text, shown only. A legacy row
+	// can carry a path without an ID.
+	CategoryID, Category string
 }
+
+// SubscriptionCategory is an enabled media category a subscription can use.
+type SubscriptionCategory struct{ ID, Name string }
 
 // ShowSeason is a season of a show, numbered in EpisodeGroup's seasons when
 // one is set (a subscription's custom 剧集组), else the show's own.
@@ -355,6 +365,8 @@ type Backend interface {
 	// SubscriptionRules reads safe metadata for existing rule groups only.
 	SubscriptionRules(ctx context.Context) ([]SubscriptionRuleGroup, error)
 	SubscriptionSites(ctx context.Context, kind Kind) ([]SearchSite, error)
+	// SubscriptionCategories lists the enabled categories of a media kind.
+	SubscriptionCategories(ctx context.Context, kind Kind) ([]SubscriptionCategory, error)
 	// UpdateSubscription sends the explicitly changed fields once.
 	UpdateSubscription(ctx context.Context, update SubscriptionUpdate) error
 	// SearchSubscription explicitly enqueues one subscription's search.

@@ -61,6 +61,7 @@ type session struct {
 	subs          []Subscription
 	subEdit       *subscriptionEdit
 	subReceipt    *subscriptionEditReceipt // immutable, read-only; never a write target
+	categoryPick  *categoryPicker          // the options one opening of the category picker fixed
 	editOptions   int                      // option generations never rewind when navigating back
 	filterOffers  int                      // release filter offer generations, which never rewind either
 	kind          Kind                     // the kind of subscription or history shown

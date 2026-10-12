@@ -36,6 +36,8 @@ type subscriptionRecord struct {
 	Exclude         string   `json:"exclude"`
 	LastSearch      string   `json:"last_search"`
 	EpisodeGroup    string   `json:"episode_group"`
+	CategoryID      *string  `json:"media_category_id"`
+	Category        *string  `json:"media_category"`
 	Execution       *struct {
 		State   string `json:"state"`
 		NextRun string `json:"next_run_at"`
@@ -72,7 +74,7 @@ func (r subscriptionRecord) subscription() flow.Subscription {
 		Quality: r.Quality, Resolution: r.Resolution, Effect: r.Effect,
 		FilterGroups: r.FilterGroups, BestVersion: r.BestVersion != 0, LastSearch: subscriptionTime(r.LastSearch),
 		BestVersionFull: r.BestVersionFull != 0, Sites: r.Sites, Include: r.Include, Exclude: r.Exclude,
-		EpisodeGroup: r.EpisodeGroup,
+		EpisodeGroup: r.EpisodeGroup, CategoryID: derefString(r.CategoryID), Category: derefString(r.Category),
 	}
 	if r.Execution != nil {
 		s.Execution = &flow.SubscriptionExecution{
@@ -115,4 +117,11 @@ func (c *Client) Unsubscribe(ctx context.Context, id int) error {
 		return nil
 	}
 	return err
+}
+
+func derefString(s *string) string {
+	if s == nil {
+		return ""
+	}
+	return *s
 }

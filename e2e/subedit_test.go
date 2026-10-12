@@ -22,11 +22,16 @@ func editableBreakingSeason() map[string]any {
 
 func subscriptionEditor(t *testing.T) *harness {
 	t.Helper()
+	return subscriptionEditorFor(t, editableBreakingSeason())
+}
+
+func subscriptionEditorFor(t *testing.T, row map[string]any) *harness {
+	t.Helper()
 	h := start(t, scenario{quiet: "0s", routes: map[string]route{
 		searchPath: ok("search_breaking_bad.json"), breakDetails: ok("detail_breaking_bad.json"),
 		seasonsPath: ok("seasons_breaking_bad.json"), breakingQuery: ok("subscription_none.json"),
 		subscribePath: ok("subscribe_created.json"),
-		subsPath:      ok(writeFixture(t, []map[string]any{editableBreakingSeason()})),
+		subsPath:      ok(writeFixture(t, []map[string]any{row})),
 	}})
 	h.say(alice, alice, "/search 绝命毒师")
 	h.tap(alice, 1, "1")

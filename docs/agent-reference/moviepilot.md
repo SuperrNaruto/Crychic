@@ -203,6 +203,17 @@ private-looking error to prove it is not shown
 
 更新使用 API key，无资源 Cookie；复用禁止重定向的 client 与共享 transport，防止 307/308 重放和认证外送。拒绝信息固定投影，不展示写请求或响应原文；未知 HTTP 状态、408、解码错误或缺少 `success` 均按结果未知处理。成功后只读核对，绝不自动再次 PUT。当前模块声明 Go 1.25，验证工具链为 1.26.0；Context7 虽指定 Go 1.25，仍给出主线 JSON v2 片段，不能用其 `omitempty` 语义解释本项目 JSON v1，已另外读取安装工具链的 `encoding/json` 与 `net/http` 源码。
 
+## v3.1.4 订阅分类核验
+
+源码基线 `https://github.com/jxxghp/MoviePilot/blob/v3.1.4/app/...`。订阅可以用 `media_category_id` 覆盖自动分类（例如豆瓣来源的动画被归为国产剧而不是国漫）。
+
+- 分类列表：`GET /api/v1/media/classification/policy`，信封 `data` 含 `schema_version`、`revision`、`mode`、`categories[{id,name,media_type,enabled,path[],parent_id}]`、`rules`、`fallbacks`。`media_type` 为「电影」「电视剧」「音乐」；没有生效的策略时接口报错。`SubscriptionCategories` 只保留启用且 `media_type` 与目标媒体类型一致的项，按策略顺序，丢弃空 ID／名称；除音乐的 `Album / Compilation`（path 为 `["Album","Compilation"]`）外 `path == [name]`。解析器接受任何启用的分类 ID，不检查 `parent_id`。
+- 订阅行（列表、`/subscribe/{id}`、`/subscribe/media/{id}`）带 `media_category_id` 与 `media_category`：后者是写入时的路径快照（以「/」连接），自动分类时两者为 null；旧行可能只有路径没有 ID。Crychic 的分类对比只看 ID，两侧都没有 ID 时比较路径文本（`SubscriptionConditions.SameCategory`），所以策略名与行路径不同不会造成假冲突。
+- 更新：`PUT /api/v1/subscribe/` 为 `exclude_unset` 部分更新。`media_category_id: ""` 同时清除 ID 与路径（回到自动）；有效 ID 保存 ID 与其路径；未知、停用或媒体类型不符的 ID 返回 HTTP 200 `{success:false,message:"订阅分类设置无效，请重新选择分类后重试"}`；不带分类键则不动、不校验。Crychic 仅在分类对比不同时发送该键。
+- 创建：`POST /api/v1/subscribe/` 接受同一字段，校验和失败信息相同（`app/application/subscription/write.py:389` 规范化，`reference.py:248` 校验）。Crychic 只在用户选了分类时发送，默认不带该键。
+- 效果链：`chain/subscribe/metadata.py:71` → `chain/download/history.py:105` → `chain/transfer/records.py:45`。覆盖影响之后订阅的搜索、下载与整理目录；已下载或已整理的文件留在原处。
+- 订阅历史记录同样保存 `media_category_id`/`media_category`，「重新订阅」原样回传历史记录，因此沿用过去的分类（与 WebUI 相同）；这部分代码保持不变。
+
 ## 单订阅搜索与执行批次
 
 `POST /api/v1/subscribe/search/{subscribe_id}?type={电影|电视剧}` 只提交一个既有订阅，无请求体。使用 API key，不需要资源 Cookie。`data` 包含 `batch_id`、`batch_ids`、`target_count`、`queued_count`、`ongoing_count` 和 `single`；HTTP 成功或有批次 ID 都不足以证明本次新建了批次。

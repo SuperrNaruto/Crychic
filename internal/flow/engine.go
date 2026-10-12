@@ -219,7 +219,7 @@ func (e *Engine) choose(ctx context.Context, sess session, p press) Reply {
 }
 
 func (e *Engine) chooseAction(ctx context.Context, sess session, p press) Reply {
-	for _, choose := range []chooser{e.chooseHome, e.chooseRequest, e.chooseSeasons, e.chooseTask, e.chooseChart, e.chooseSubs, e.chooseSubDetail, e.chooseSubPause, e.chooseSubEdit, e.chooseSubSearch, e.chooseHistory, e.chooseRelated, e.choosePeople, e.chooseFilter, e.chooseGroups, e.chooseSeriesPlan, e.chooseTorrents, e.chooseSearchSites, e.chooseTorrentView, e.chooseTorrentFilter, e.chooseTorrentBatch, e.chooseTorrentPlan, e.chooseDelete, e.chooseToggle, e.chooseUpgrade} {
+	for _, choose := range []chooser{e.chooseHome, e.chooseRequest, e.chooseSeasons, e.chooseTask, e.chooseChart, e.chooseSubs, e.chooseSubDetail, e.chooseSubPause, e.chooseSubEdit, e.chooseSubSearch, e.chooseHistory, e.chooseRelated, e.choosePeople, e.chooseFilter, e.chooseGroups, e.chooseSeriesPlan, e.chooseTorrents, e.chooseSearchSites, e.chooseTorrentView, e.chooseTorrentFilter, e.chooseTorrentBatch, e.chooseTorrentPlan, e.chooseDelete, e.chooseToggle, e.chooseUpgrade, e.chooseCategory} {
 		if reply, ok := choose(ctx, sess, p); ok {
 			return e.navigate(sess, p.action, reply)
 		}
@@ -451,11 +451,11 @@ func (e *Engine) targetCard(sess session, sub subscription) (session, Reply) {
 func confirmCard(sess session, target Target) Reply {
 	confirm := Button{Label: "确认订阅", Data: data(sess.id, actionConfirm, target.StartEpisode)}
 	question := Line(Strong(fmt.Sprintf("要订阅%s吗？", targetName(target))))
-	rows := [][]Button{{confirm}}
+	rows := [][]Button{{confirm}, categoryRow(sess)}
 	if target.Season == nil {
 		rows = append(rows, upgradeRow(sess)) // a season's upgrade is offered with its start choices
 	}
-	return sess.picked.reply(question, append(rows, onward(sess)...))
+	return sess.picked.replyLines(append(Lines(question), categoryFact(target)...), append(rows, onward(sess)...))
 }
 
 // confirm subscribes from episode from (0 for movies or the season start).

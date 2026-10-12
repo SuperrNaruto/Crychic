@@ -17,6 +17,7 @@ const (
 	editExclude
 	editStart
 	editUpgrade
+	editCategory
 	editReview
 	editConflicts
 )
@@ -27,7 +28,7 @@ var subEditFields = []struct {
 }{
 	{editResolution, "分辨率"}, {editQuality, "资源类型"}, {editEffect, "画面格式"},
 	{editGroups, "规则组"}, {editSites, "站点"}, {editInclude, "包含条件"},
-	{editExclude, "排除条件"}, {editStart, "起始集"}, {editUpgrade, "洗版模式"},
+	{editExclude, "排除条件"}, {editStart, "起始集"}, {editUpgrade, "洗版模式"}, {editCategory, "分类"},
 }
 
 func editFieldName(id int) string {
@@ -68,7 +69,7 @@ func (e *Engine) subEditMenu(sess session) Reply {
 	}
 	rows := grid(buttons, menuColumns)
 	rows = append(rows, []Button{{Label: "查看修改", Data: data(sess.id, actionSubEditReview, 0)}}, []Button{cancelButton(sess.id)})
-	text = append(text, Fold(msgFoldSummary, Sentence("只保存后续匹配条件，已有下载保持原样；要补搜请用「立即搜索」。原有后台表达式请到 MoviePilot 查看。")))
+	text = append(text, Fold(msgFoldSummary, Sentence("只保存后续匹配条件和分类，已有下载与已整理的文件保持原样；要补搜请用「立即搜索」。原有后台表达式请到 MoviePilot 查看。")))
 	return Reply{Text: text, Image: edit.base.Poster, Buttons: rows}
 }
 
@@ -106,6 +107,8 @@ func (edit subscriptionEdit) valueText(value SubscriptionConditions, field int) 
 		return fmt.Sprintf("从第 %d 集开始", max(value.StartEpisode, 1))
 	case editUpgrade:
 		return upgradeText(value, edit.base.Kind)
+	case editCategory:
+		return categoryText(value)
 	}
 	return "未知"
 }
@@ -115,6 +118,13 @@ func conditionText(expression string) string {
 		return "不限（未设置）"
 	}
 	return "已设置（内容不在聊天中展开）"
+}
+
+func categoryText(value SubscriptionConditions) string {
+	if value.Category == "" {
+		return "自动"
+	}
+	return subSetting(value.Category)
 }
 
 func upgradeText(value SubscriptionConditions, kind Kind) string {
@@ -178,6 +188,9 @@ func (e *Engine) reviewSubEdit(sess session) Reply {
 	}
 	text = append(text, Callout(Plain("后台后续调度会使用新条件，并可能搜索下载。")),
 		Remark("只提交上述改动，已取得集数、缺集数和洗版优先级保持原样；到货情况以媒体库为准。"))
+	if !before.SameCategory(edit.draft) {
+		text = append(text, Remark(msgCategoryApplies))
+	}
 	edit.field, sess.subEdit = editReview, &edit
 	e.store.put(sess)
 	return Reply{Text: text, Image: edit.base.Poster, Buttons: [][]Button{{{Label: "确认保存", Data: data(sess.id, actionSubEditSave, edit.base.ID)}}}}

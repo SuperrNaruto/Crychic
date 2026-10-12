@@ -275,13 +275,15 @@ type subscribeBody struct {
 	// EpisodeGroup numbers Season by a TMDB episode group; MoviePilot then
 	// reads the season's episodes in that group.
 	EpisodeGroup string `json:"episode_group,omitempty"`
+	// MediaCategoryID overrides the automatic classification; omitted, MoviePilot classifies.
+	MediaCategoryID string `json:"media_category_id,omitempty"`
 }
 
 func (c *Client) Subscribe(ctx context.Context, t flow.Target) (int, error) {
 	body := subscribeBody{
 		Name: t.Media.Title, Year: t.Media.Year, Type: kindType(t.Media.Kind),
 		MediaSource: t.Media.Source, MediaID: t.Media.ID, Season: t.Season,
-		StartEpisode: t.StartEpisode, EpisodeGroup: t.EpisodeGroup,
+		StartEpisode: t.StartEpisode, EpisodeGroup: t.EpisodeGroup, MediaCategoryID: t.CategoryID,
 	}
 	if t.BestVersion {
 		body.BestVersion = 1

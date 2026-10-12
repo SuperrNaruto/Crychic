@@ -39,6 +39,7 @@ var forward = map[string]bool{
 	actionHistory: true, actionHistoryPick: true, actionSubDetail: true,
 	actionTorrentRun: true, actionTorrentPick: true, actionTorrentMulti: true, actionTorrentBatch: true,
 	actionUpgrade:     true,
+	actionCategory:    true,
 	actionSearchSites: true,
 	actionSubEdit:     true,
 	actionTorrentPlan: true,
@@ -65,7 +66,7 @@ var sameLevel = map[string]bool{
 	actionSubConflictPick: true, actionSubConflictKeep: true, actionSubConflictAdopt: true,
 	actionSubConflictDone: true, actionSubConflictReload: true,
 	actionFilterKind: true, actionFilterField: true, actionFilterSet: true, actionFilterMore: true,
-	actionSeriesTick: true,
+	actionSeriesTick: true, actionCategoryPick: true,
 }
 
 // listPicks are the forward steps that pick from a list.

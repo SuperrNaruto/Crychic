@@ -228,6 +228,8 @@ replacement.
 
 `uw` 绑定当前屏幕票据，写前消费草稿并移除编辑历史，同时保存独立的只读 `session.subReceipt`。`subeditcheck.go` 比较本次实际修改的每个字段，显示与期望一致／仍为原值／其他值／未知；未知身份或读取失败均不猜测。包含／排除原文不展开。核对及返回只能持有不可提交的摘要，不能把旧确认恢复成草稿；摘要只保留本会话最近一次提交，仍遵守 TTL，不持久化。
 
+「分类」是又一个可选字段（`subeditcategory.go`）：打开字段页时才读取 MoviePilot 的分类策略（`SubscriptionCategories`，读取失败只给提示并保留草稿），按订阅媒体类型列出启用的分类，选项携带本次打开的代次，翻页复用 `listPages`。「自动」沿用清空动作 `uc`（保存时发 `media_category_id: ""`），选择编号回到菜单；`恢复原值` 同时恢复旧行的路径文本。菜单、预览、冲突与核对都用 `SubscriptionConditions.SameCategory` 比较：任一侧有分类 ID 时只比 ID，两侧都没有时比路径文本。预览带「新分类用于之后的下载与整理，已整理的文件保留在原目录」。订阅详情只在已设置分类时显示「分类」。
+
 写结果未知（含超时、半响应、缺少 `success`、跳转）不能重试。明确成功后再读当前订阅；当前读失败只提示稍后核对。回执及同会话对应详情提供「核对结果」，仅只读比较当前值，不能据相等追认当时请求成功，不承诺客户端预检是后端原子 compare-and-write。
 
 ### 单订阅立即搜索与执行跟踪
@@ -263,6 +265,12 @@ start episode; it reads the target's subscription again (MoviePilot's create ans
 the existing row unchanged, `exist_ok=True`), so an existing one or a failed read only flashes a notice; 确认洗版
 (`bo`, ticketed, `finishing`) posts the whole target with `best_version: 1` once (omitted otherwise, so
 MoviePilot's per-kind default config applies to ordinary subscriptions)
+
+### 创建订阅时选择分类
+
+`categorypick.go`：电影确认卡、季的起始集选择和洗版确认卡在选择行之后、导航之前有可选的「选择分类…」（`cg`，forward）；不选时与以往完全一致，默认自动分类且请求不带 `media_category_id`。`cg` 读取目标媒体类型的分类并打开选择屏幕（标题带 🎬／📺），选项按钮 `ch` 的参数为「打开代次 × 10000 + 序号」，序号 0 为「自动」；代次来自不随返回回退的 `session.editOptions`。选择后弹出历史栈顶的原确认卡，复制目标（不改共享指针）写入 `CategoryID/CategoryName`，用纯渲染函数以同级步骤重画同一张确认卡（`categoryCard`：洗版目标画洗版确认，未指定起始集的季画起始集选择，其余画确认卡），不经 `confirmation`，因此不会重新触发 `huntNow` 或重读订阅；新卡片重新签发票据，旧卡片的「确认订阅」票据失效，返回去向与旧卡片相同。卡片在已选分类时多一行「分类 …」。洗版确认（`askUpgrade`）沿用卡片已选的分类。
+
+多选季、同系列补齐与订阅历史的重新订阅不提供分类选择：前两者保持自动，重新订阅沿用历史记录自身的分类。分类读不到时只提示 MoviePilot 的分类暂时读不到，自动分类照常使用。
 
 ## 资源搜索筛选与批量下载
 
@@ -404,6 +412,7 @@ history `hs`/`hf`/`hm`/`hp`/`ho`, calendar weekday is `w`, generic list paging i
 订阅编辑为 `ue/uf/uv/uc/ua/uq/uw/ui`，依次对应入口、字段、选择、清空、返回菜单、预览、确认写入和 typed input。
 交互增强为 `uo/ud/uy`（恢复原值、确认放弃、只读核对）及 `up/uk/ub/ug/ur`（冲突字段、保留草稿、采用后台、完成处理、重新读取）。
 缺集方案为 `pl/pc`（生成／重新计算），确认复用 `tz`；确认发现库存变化时按只读 `pc` 更新屏幕。
+创建时的分类选择为 `cg/ch`（打开选择屏幕／选择，选择为同级步骤，不写入）。
 单订阅搜索为 `qs/qc`（确认页／提交），`qv/qr/qf/qu`（打开或继续刷新／手动读取／Follow 读取／停止刷新），`qx/qy`（停止确认页／提交停止）。只有 `qc/qy` 写入并绑定当前票据，所有动作只接受当前页面的按钮或 Follow。
 
 这是现有动作的导航索引；新增动作时核对源码中的全部 handler，不能把该表当作无需核验的注册中心。

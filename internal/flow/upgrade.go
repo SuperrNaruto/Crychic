@@ -39,7 +39,8 @@ func (e *Engine) askUpgrade(ctx context.Context, sess session) Reply {
 	if sess.focus == nil {
 		return Reply{Notice: msgInvalidChoice}
 	}
-	target := Target{Media: sess.focus.Media, Season: sess.focus.Season, BestVersion: true}
+	target := Target{Media: sess.focus.Media, Season: sess.focus.Season, BestVersion: true,
+		CategoryID: sess.focus.CategoryID, CategoryName: sess.focus.CategoryName}
 	existing, err := e.backend.FindSubscription(ctx, target)
 	if err != nil {
 		e.log.Warn("subscription check for upgrade failed", "media", target.Media.ID, "err", err)
@@ -50,9 +51,15 @@ func (e *Engine) askUpgrade(ctx context.Context, sess session) Reply {
 	}
 	sess.target = &target
 	e.store.put(sess)
+	return upgradeCard(sess, target)
+}
+
+// upgradeCard asks to confirm target as an upgrade subscription.
+func upgradeCard(sess session, target Target) Reply {
 	question := Line(Strong(fmt.Sprintf("要洗版订阅%s吗？", targetName(target))))
 	confirm := Button{Label: "确认洗版", Data: data(sess.id, actionUpgradeConfirm, 0)}
-	return sess.picked.replyLines(Lines(question, Line(Plain(msgUpgradeExplain))), [][]Button{{confirm}, {cancelButton(sess.id)}})
+	text := append(append(Lines(question), categoryFact(target)...), Line(Plain(msgUpgradeExplain)))
+	return sess.picked.replyLines(text, [][]Button{{confirm}, categoryRow(sess), {cancelButton(sess.id)}})
 }
 
 // confirmUpgrade writes the upgrade subscription once, like confirm.

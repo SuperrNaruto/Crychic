@@ -61,6 +61,8 @@ func (e *Engine) openSubEditField(ctx context.Context, sess session, field int) 
 	switch field {
 	case editGroups, editSites:
 		return e.readSubEditChoices(ctx, sess)
+	case editCategory:
+		return e.readSubEditCategories(ctx, sess)
 	case editInclude, editExclude, editStart:
 		e.store.put(sess)
 		return subEditPrompt(sess, "")
@@ -104,6 +106,9 @@ func (e *Engine) pickSubEdit(sess session, index int) Reply {
 	edit := sess.subEdit
 	if edit.field == editGroups || edit.field == editSites {
 		return e.toggleSubEditChoice(sess, index)
+	}
+	if edit.field == editCategory {
+		return e.pickSubEditCategory(sess, index)
 	}
 	if edit.field == editUpgrade {
 		if !edit.setUpgrade(index) {
@@ -163,6 +168,9 @@ func (e *Engine) clearSubEdit(sess session) Reply {
 		return e.subEditDirectory(sess, "")
 	case editQuality, editResolution, editEffect, editInclude, editExclude:
 		edit.setExpression("")
+		return e.subEditMenu(sess)
+	case editCategory:
+		edit.draft.CategoryID, edit.draft.Category = "", ""
 		return e.subEditMenu(sess)
 	}
 	return Reply{Notice: msgInvalidChoice}

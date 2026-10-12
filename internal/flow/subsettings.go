@@ -13,6 +13,7 @@ type SubscriptionConditions struct {
 	Sites                        []int
 	StartEpisode                 int
 	BestVersion, BestVersionFull bool
+	CategoryID, Category         string
 }
 
 func (s Subscription) conditions() SubscriptionConditions {
@@ -21,6 +22,7 @@ func (s Subscription) conditions() SubscriptionConditions {
 		Include: s.Include, Exclude: s.Exclude,
 		FilterGroups: slices.Clone(s.FilterGroups), Sites: slices.Clone(s.Sites),
 		StartEpisode: s.StartEpisode, BestVersion: s.BestVersion, BestVersionFull: s.BestVersionFull,
+		CategoryID: s.CategoryID, Category: s.Category,
 	}
 }
 
@@ -28,7 +30,18 @@ func (s SubscriptionConditions) same(other SubscriptionConditions) bool {
 	return s.Quality == other.Quality && s.Resolution == other.Resolution && s.Effect == other.Effect &&
 		s.Include == other.Include && s.Exclude == other.Exclude && s.StartEpisode == other.StartEpisode &&
 		s.BestVersion == other.BestVersion && s.BestVersionFull == other.BestVersionFull &&
-		slices.Equal(s.FilterGroups, other.FilterGroups) && slices.Equal(s.Sites, other.Sites)
+		slices.Equal(s.FilterGroups, other.FilterGroups) && slices.Equal(s.Sites, other.Sites) &&
+		s.SameCategory(other)
+}
+
+// SameCategory is the one comparison rule for the media category: IDs decide
+// when either side has one (the policy's name can differ from the row's path
+// snapshot); two automatic-or-legacy sides compare the stored path text.
+func (s SubscriptionConditions) SameCategory(other SubscriptionConditions) bool {
+	if s.CategoryID != "" || other.CategoryID != "" {
+		return s.CategoryID == other.CategoryID
+	}
+	return s.Category == other.Category
 }
 
 func (s SubscriptionConditions) changedField(other SubscriptionConditions, field int) bool {
@@ -49,6 +62,8 @@ func (s SubscriptionConditions) changedField(other SubscriptionConditions, field
 		return s.Exclude != other.Exclude
 	case editStart:
 		return s.StartEpisode != other.StartEpisode
+	case editCategory:
+		return !s.SameCategory(other)
 	case editUpgrade:
 		return subscriptionUpgrade{s.BestVersion, s.BestVersionFull} != (subscriptionUpgrade{other.BestVersion, other.BestVersionFull})
 	}
@@ -73,6 +88,8 @@ func (s *SubscriptionConditions) copyField(from SubscriptionConditions, field in
 		s.Exclude = from.Exclude
 	case editStart:
 		s.StartEpisode = from.StartEpisode
+	case editCategory:
+		s.CategoryID, s.Category = from.CategoryID, from.Category
 	case editUpgrade:
 		s.BestVersion, s.BestVersionFull = from.BestVersion, from.BestVersionFull
 	}

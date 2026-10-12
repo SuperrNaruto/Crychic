@@ -135,6 +135,8 @@ changing real timer cadence
 
 `subedit*_test.go` 经真实 `/subscribe` 详情和输入流程验证条件草稿、最小 PUT、null/空集合、并发修改、目录解析与规则摘要、旧编号/票据、401/403、拒绝/408/半响应/缺失成功标记/重定向、投递重试、话题、过期、重启及编辑后的到货。`fake_subedit_test.go` 按 v3.1.1 更新模型只应用明确字段，不重写未提交设置；允许“已提交但丢响应”和“已保存但后续读取不可用”。`subscribe_upgrade_groups.json` 为合成的洗版全局规则配置。
 
+`classification_policy.json` 是按 v3.1.4 分类策略形状合成的资料（含停用分类与音乐 `Album / Compilation`），不是真实录制；`fake_categories_test.go` 按源码语义校验创建与更新的 `media_category_id`（未知、停用、类型不符返回 HTTP 200 的 `订阅分类设置无效…`，空串清除 ID 与路径，有效 ID 写入路径快照）。`category_test.go` 的两个场景经 `/search` 选分类（含旧确认票据与旧选项代次）和 `/subscribe` 编辑旧路径分类后核对结果。
+
 `holdSubscriptionRead` 在 fake 已读取并序列化旧订阅后阻塞 HTTP 响应，与通用 `holdCalls` 的请求入站屏障不同。它验证本地编辑完成以后，陈旧的通知读取不会覆盖起始集和洗版模式，也不会错误推进整理游标。固定 transcript 记录用户可见结果，目录定义、后台路径和敏感旧条件不进入产物。
 
 `subedit_ux_test.go` 通过真实聊天入口覆盖退出草稿保护、继续输入与放弃后订阅控制、单字段恢复、只读逐字段核对、后台冲突保留与采用后台、处理期间再次变更、最新起始集上限。每个场景保留不重复 PUT、陈旧按钮无效和敏感文本不泄露的断言。既有目录变更场景扩展为保留其他草稿并完成重新选择；条件 PUT 计数按完整路由行计算，不能把暂停路由误算为条件更新。

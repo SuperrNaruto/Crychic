@@ -16,7 +16,7 @@ func startChoices(sess session, season int) Reply {
 		label := fmt.Sprintf("只追新集（第 %d 集起）", next.Number)
 		rows[0] = append(rows[0], Button{Label: label, Data: data(sess.id, actionConfirm, next.Number)})
 	}
-	rows = append(rows, []Button{{Label: "指定起始集…", Data: data(sess.id, actionAskFrom, 0)}})
+	rows = append(rows, []Button{{Label: "指定起始集…", Data: data(sess.id, actionAskFrom, 0)}}, categoryRow(sess))
 	if sess.group.ID == "" {
 		rows = append(rows, upgradeRow(sess)) // an upgrade subscribes standard seasons
 	}
@@ -33,7 +33,7 @@ func startChoices(sess session, season int) Reply {
 		total = "（" + strings.Join(facts, "，") + "）"
 	}
 	question := fmt.Sprintf("要订阅%s%s吗？", targetName(*sess.target), total)
-	return sess.picked.reply(Line(Strong(question)), rows)
+	return sess.picked.replyLines(append(Lines(Line(Strong(question))), categoryFact(*sess.target)...), rows)
 }
 
 // askStart prompts for a typed start episode; problem explains why the

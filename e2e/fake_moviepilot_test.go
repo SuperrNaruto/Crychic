@@ -54,7 +54,8 @@ var idleServer = map[string]route{
 	clientsPath:    ok("mediaserver_clients.json"),
 	ruleGroupsPath: ok("subscribe_filter_groups.json"),
 	"GET /api/v1/system/setting/BestVersionFilterRuleGroups": ok("subscribe_upgrade_groups.json"),
-	schedulePath: ok("schedule.json"),
+	schedulePath:             ok("schedule.json"),
+	classificationPolicyPath: ok(policyFixture),
 }
 
 // polledPaths are read over and over, by live task views and by the
@@ -183,6 +184,7 @@ func (f *fakeMoviePilot) serveAuthenticated(w http.ResponseWriter, r *http.Reque
 	case f.deletesDownload(w, r):
 	case f.controlsDownload(w, r):
 	case f.setsSubscriptionState(w, r):
+	case f.checksCategory(w, r):
 	case f.editsSubscription(w, r):
 	case f.servesSubscriptionExecution(w, r):
 	case f.servesHistory(w, r):

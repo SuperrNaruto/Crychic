@@ -1,0 +1,27 @@
+{
+  "success": true,
+  "message": null,
+  "data": {
+    "schema_version": 1,
+    "revision": "synthetic-1",
+    "mode": "custom",
+    "categories": [
+      {"id": "movie.animation", "name": "动画电影", "media_type": "电影", "enabled": true, "path": ["动画电影"], "parent_id": null},
+      {"id": "movie.chinese", "name": "华语电影", "media_type": "电影", "enabled": true, "path": ["华语电影"], "parent_id": null},
+      {"id": "movie.foreign", "name": "外语电影", "media_type": "电影", "enabled": true, "path": ["外语电影"], "parent_id": null},
+      {"id": "tv.dongman.cn", "name": "国漫", "media_type": "电视剧", "enabled": true, "path": ["国漫"], "parent_id": null},
+      {"id": "tv.dongman.jp", "name": "日番", "media_type": "电视剧", "enabled": true, "path": ["日番"], "parent_id": null},
+      {"id": "tv.documentary", "name": "纪录片", "media_type": "电视剧", "enabled": true, "path": ["纪录片"], "parent_id": null},
+      {"id": "tv.kids", "name": "儿童", "media_type": "电视剧", "enabled": true, "path": ["儿童"], "parent_id": null},
+      {"id": "tv.variety", "name": "综艺", "media_type": "电视剧", "enabled": true, "path": ["综艺"], "parent_id": null},
+      {"id": "tv.chinese", "name": "国产剧", "media_type": "电视剧", "enabled": true, "path": ["国产剧"], "parent_id": null},
+      {"id": "tv.western", "name": "欧美剧", "media_type": "电视剧", "enabled": true, "path": ["欧美剧"], "parent_id": null},
+      {"id": "tv.asian", "name": "日韩剧", "media_type": "电视剧", "enabled": true, "path": ["日韩剧"], "parent_id": null},
+      {"id": "tv.legacy", "name": "旧分类", "media_type": "电视剧", "enabled": false, "path": ["旧分类"], "parent_id": null},
+      {"id": "tv.uncategorized", "name": "未分类", "media_type": "电视剧", "enabled": true, "path": ["未分类"], "parent_id": null},
+      {"id": "music.compilation", "name": "Album / Compilation", "media_type": "音乐", "enabled": true, "path": ["Album", "Compilation"], "parent_id": "music.album"}
+    ],
+    "rules": [],
+    "fallbacks": {}
+  }
+}

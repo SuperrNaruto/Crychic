@@ -1,0 +1,212 @@
+>> user 1001 in chat 1001: /search 名侦探柯南
+-> MoviePilot GET /api/v1/media/search?count=10&title=名侦探柯南&type=media
+<< sendRichMessage chat=1001 message=1
+   <tg-slideshow>
+   <img src="url-7ca1018dcbd7e9db2629bc08168d35247b2cf8ab2703868e1e1423650f00c642"/>
+   <img src="url-a75f3db1874d7b349a22247c4af78ef42fd919964d472df98a8f2129023c4889"/>
+   <img src="url-496032c688752600dc90312f473a62c226a9bfbb9ddd3295050168cb5e2a8fe1"/>
+   <img src="url-55c239354e7ca97d9c22f7d8420902e1613b2da4cb077ebb8e1db8a6b1e88348"/>
+   <img src="url-e0c74abd89db53f9cd57f2054bd45368851fbe4055b9b9416c7b4116e009c71a"/>
+   <img src="url-799a675a8c6fb8f785ca49347a3a2cb137d7d783967df65c749542f78881814f"/>
+   <img src="url-f4037a8511671265a82b5521be06f233c07d8a33cc3ef5ab2d6c1c4b9109bffc"/>
+   <img src="url-b2c2433aada3a77dcaf4706365bb5a306f9c2b6348ca07539bcd43273d303781"/>
+   </tg-slideshow>
+   <h3>🔍 帮你找到这些「名侦探柯南」啦</h3>
+   <ol start="1">
+   <li value="1"><b>名侦探柯南</b><br>
+   <i>名探偵コナン · 1996 · 电视剧 · ⭐ 8.0 · TMDB</i></li>
+   <li value="2"><b>名侦探柯南粤语版</b><br>
+   <i>1998 · 电视剧 · TMDB</i></li>
+   <li value="3"><b>名侦探柯南（中配）</b><br>
+   <i>1996 · 电视剧 · ⭐ 9.3 · TMDB</i></li>
+   <li value="4"><b>名侦探柯南：高速公路的堕天使</b><br>
+   <i>名探偵コナン ハイウェイの堕天使 · 2026 · 电影 · ⭐ 7.4 · TMDB</i></li>
+   <li value="5"><b>名侦探柯南：独眼的残像</b><br>
+   <i>名探偵コナン 隻眼の残像 · 2025 · 电影 · ⭐ 7.2 · TMDB</i></li>
+   <li value="6"><b>名侦探柯南：绝海的侦探</b><br>
+   <i>名探偵コナン・絶海の探偵 · 2013 · 电影 · ⭐ 6.6 · TMDB</i></li>
+   <li value="7"><b>名侦探柯南：零的日常</b><br>
+   <i>名探偵コナン ゼロの日常 · 2022 · 电视剧 · ⭐ 6.7 · TMDB</i></li>
+   <li value="8"><b>名侦探柯南：黑铁的鱼影</b><br>
+   <i>名探偵コナン 黒鉄の魚影（サブマリン） · 2023 · 电影 · ⭐ 7.0 · TMDB</i></li>
+   </ol>
+   <footer>第 1/2 页</footer>
+   [1 | 1:m:0] [2 | 1:m:1] [3 | 1:m:2] [4 | 1:m:3]
+   [5 | 1:m:4] [6 | 1:m:5] [7 | 1:m:6] [8 | 1:m:7]
+   [下一页 › | 1:p:1]
+   [重新搜索 | 1:rs:0]
+   [取消 | 1:x:0]
+>> user 1001 taps 1:m:0 on message 1
+-> MoviePilot GET /api/v1/media/30983?media_source=themoviedb&type_name=电视剧
+-> MoviePilot GET /api/v1/media/seasons?media_id=30983&media_source=themoviedb
+<< editMessageText chat=1001 message=1
+   <img src="url-7ca1018dcbd7e9db2629bc08168d35247b2cf8ab2703868e1e1423650f00c642"/>
+   <h3>📺 <a href="https://www.themoviedb.org/tv/30983">名侦探柯南</a></h3>
+   <footer><i>名探偵コナン</i> · 1996 · 电视剧 · ⭐ 8.0 · TMDB · 动画 / 犯罪 / 悬疑 / 喜剧 · 共 1 季 1216 集 · 主演：高山南、山口胜平、山崎和佳奈</footer>
+   <blockquote expandable>高中生侦探工藤新一与毛利兰在游乐园游玩时发现两个行动诡异的黑衣男子，便跟踪他们，不料被灌下一种叫「APTX4869」的神秘毒药，然而因为药物副作用，新一的身体竟回到孩童状态。为不使周围的人受到牵连，他化名为「江户川柯南」，寄住在毛利兰家中，用阿笠博士发明的手表型麻醉枪让毛利小五郎睡着，接着用蝴蝶结变声器模仿他的声音来进行推理，解决了许多案件，并一直寻找着黑衣组织的人的下落，希望有朝一日将其绳之以法，并变回原来的样子。</blockquote>
+   <hr/>
+   <p><b>想订哪一季呀？</b></p>
+   <table bordered striped compact>
+   <tr><th>季</th><th>集数</th></tr>
+   <tr><td><b>特别篇</b></td><td>35 集</td></tr>
+   <tr><td><b>第 1 季</b></td><td>1216 集</td></tr>
+   </table>
+   [特别篇 | 1:s:0] [第 1 季 | 1:s:1]
+   [多选季… | 1:a:0]
+   [剧集组… | 1:eg:0]
+   [相似推荐 | 1:r:0] [演职人员 | 1:ca:0]
+   [返回 | 1:bk:0] [取消 | 1:x:0]
+<< answerCallbackQuery
+>> user 1001 taps 1:s:1 on message 1
+-> MoviePilot GET /api/v1/subscribe/media/30983?media_source=themoviedb&mtype=电视剧&season=1&title=名侦探柯南&year=1996
+<< editMessageText chat=1001 message=1
+   <img src="url-7ca1018dcbd7e9db2629bc08168d35247b2cf8ab2703868e1e1423650f00c642"/>
+   <h3>📺 <a href="https://www.themoviedb.org/tv/30983">名侦探柯南</a></h3>
+   <footer><i>名探偵コナン</i> · 1996 · 电视剧 · ⭐ 8.0 · TMDB · 动画 / 犯罪 / 悬疑 / 喜剧 · 共 1 季 1216 集 · 主演：高山南、山口胜平、山崎和佳奈</footer>
+   <blockquote expandable>高中生侦探工藤新一与毛利兰在游乐园游玩时发现两个行动诡异的黑衣男子，便跟踪他们，不料被灌下一种叫「APTX4869」的神秘毒药，然而因为药物副作用，新一的身体竟回到孩童状态。为不使周围的人受到牵连，他化名为「江户川柯南」，寄住在毛利兰家中，用阿笠博士发明的手表型麻醉枪让毛利小五郎睡着，接着用蝴蝶结变声器模仿他的声音来进行推理，解决了许多案件，并一直寻找着黑衣组织的人的下落，希望有朝一日将其绳之以法，并变回原来的样子。</blockquote>
+   <hr/>
+   <p><b>要订阅《名侦探柯南》第 1 季（共 1216 集）吗？</b></p>
+   [从第 1 集开始 | 1:ok:0] [只追新集（第 1216 集起） | 1:ok:1216]
+   [指定起始集… | 1:e:0]
+   [选择分类… | 1:cg:0]
+   [洗版订阅 | 1:bv:0]
+   [搜索资源 | 1:ts:0] [相似推荐 | 1:r:0] [演职人员 | 1:ca:0]
+   [选择搜索站点 | 1:ss:0]
+   [返回 | 1:bk:0] [取消 | 1:x:0]
+<< answerCallbackQuery
+>> user 1001 taps 1:cg:0 on message 1
+-> MoviePilot GET /api/v1/media/classification/policy
+<< editMessageText chat=1001 message=1
+   <img src="url-7ca1018dcbd7e9db2629bc08168d35247b2cf8ab2703868e1e1423650f00c642"/>
+   <h3>📺 选择订阅分类</h3>
+   <p><b>《名侦探柯南》第 1 季</b><br>
+   当前 · 自动</p>
+   <ol start="1">
+   <li value="1"><b>国漫</b></li>
+   <li value="2"><b>日番</b></li>
+   <li value="3"><b>纪录片</b></li>
+   <li value="4"><b>儿童</b></li>
+   <li value="5"><b>综艺</b></li>
+   <li value="6"><b>国产剧</b></li>
+   <li value="7"><b>欧美剧</b></li>
+   <li value="8"><b>日韩剧</b></li>
+   <li value="9"><b>未分类</b></li>
+   </ol>
+   <footer>分类可选，不选时由 MoviePilot 按规则自动分类。</footer>
+   [1 | 1:ch:10001] [2 | 1:ch:10002] [3 | 1:ch:10003] [4 | 1:ch:10004]
+   [5 | 1:ch:10005] [6 | 1:ch:10006] [7 | 1:ch:10007] [8 | 1:ch:10008]
+   [9 | 1:ch:10009]
+   [自动 | 1:ch:10000]
+   [返回 | 1:bk:0] [取消 | 1:x:0]
+<< answerCallbackQuery
+>> user 1001 taps 1:ch:10001 on message 1
+<< editMessageText chat=1001 message=1
+   <img src="url-7ca1018dcbd7e9db2629bc08168d35247b2cf8ab2703868e1e1423650f00c642"/>
+   <h3>📺 <a href="https://www.themoviedb.org/tv/30983">名侦探柯南</a></h3>
+   <footer><i>名探偵コナン</i> · 1996 · 电视剧 · ⭐ 8.0 · TMDB · 动画 / 犯罪 / 悬疑 / 喜剧 · 共 1 季 1216 集 · 主演：高山南、山口胜平、山崎和佳奈</footer>
+   <blockquote expandable>高中生侦探工藤新一与毛利兰在游乐园游玩时发现两个行动诡异的黑衣男子，便跟踪他们，不料被灌下一种叫「APTX4869」的神秘毒药，然而因为药物副作用，新一的身体竟回到孩童状态。为不使周围的人受到牵连，他化名为「江户川柯南」，寄住在毛利兰家中，用阿笠博士发明的手表型麻醉枪让毛利小五郎睡着，接着用蝴蝶结变声器模仿他的声音来进行推理，解决了许多案件，并一直寻找着黑衣组织的人的下落，希望有朝一日将其绳之以法，并变回原来的样子。</blockquote>
+   <hr/>
+   <p><b>要订阅《名侦探柯南》第 1 季（共 1216 集）吗？</b><br>
+   <b>分类 </b>国漫</p>
+   [从第 1 集开始 | 1:ok:0] [只追新集（第 1216 集起） | 1:ok:1216]
+   [指定起始集… | 1:e:0]
+   [选择分类… | 1:cg:0]
+   [洗版订阅 | 1:bv:0]
+   [搜索资源 | 1:ts:0] [相似推荐 | 1:r:0] [演职人员 | 1:ca:0]
+   [选择搜索站点 | 1:ss:0]
+   [返回 | 1:bk:0] [取消 | 1:x:0]
+<< answerCallbackQuery
+>> user 1001 taps 1:ok:0 on message 1
+<< answerCallbackQuery notice="这个选项不太对哦～"
+>> user 1001 taps 1:bk:0 on message 1
+<< editMessageText chat=1001 message=1
+   <img src="url-7ca1018dcbd7e9db2629bc08168d35247b2cf8ab2703868e1e1423650f00c642"/>
+   <h3>📺 <a href="https://www.themoviedb.org/tv/30983">名侦探柯南</a></h3>
+   <footer><i>名探偵コナン</i> · 1996 · 电视剧 · ⭐ 8.0 · TMDB · 动画 / 犯罪 / 悬疑 / 喜剧 · 共 1 季 1216 集 · 主演：高山南、山口胜平、山崎和佳奈</footer>
+   <blockquote expandable>高中生侦探工藤新一与毛利兰在游乐园游玩时发现两个行动诡异的黑衣男子，便跟踪他们，不料被灌下一种叫「APTX4869」的神秘毒药，然而因为药物副作用，新一的身体竟回到孩童状态。为不使周围的人受到牵连，他化名为「江户川柯南」，寄住在毛利兰家中，用阿笠博士发明的手表型麻醉枪让毛利小五郎睡着，接着用蝴蝶结变声器模仿他的声音来进行推理，解决了许多案件，并一直寻找着黑衣组织的人的下落，希望有朝一日将其绳之以法，并变回原来的样子。</blockquote>
+   <hr/>
+   <p><b>想订哪一季呀？</b></p>
+   <table bordered striped compact>
+   <tr><th>季</th><th>集数</th></tr>
+   <tr><td><b>特别篇</b></td><td>35 集</td></tr>
+   <tr><td><b>第 1 季</b></td><td>1216 集</td></tr>
+   </table>
+   [特别篇 | 1:s:0] [第 1 季 | 1:s:1]
+   [多选季… | 1:a:0]
+   [剧集组… | 1:eg:0]
+   [相似推荐 | 1:r:0] [演职人员 | 1:ca:0]
+   [返回 | 1:bk:0] [取消 | 1:x:0]
+<< answerCallbackQuery
+>> user 1001 taps 1:s:1 on message 1
+-> MoviePilot GET /api/v1/subscribe/media/30983?media_source=themoviedb&mtype=电视剧&season=1&title=名侦探柯南&year=1996
+<< editMessageText chat=1001 message=1
+   <img src="url-7ca1018dcbd7e9db2629bc08168d35247b2cf8ab2703868e1e1423650f00c642"/>
+   <h3>📺 <a href="https://www.themoviedb.org/tv/30983">名侦探柯南</a></h3>
+   <footer><i>名探偵コナン</i> · 1996 · 电视剧 · ⭐ 8.0 · TMDB · 动画 / 犯罪 / 悬疑 / 喜剧 · 共 1 季 1216 集 · 主演：高山南、山口胜平、山崎和佳奈</footer>
+   <blockquote expandable>高中生侦探工藤新一与毛利兰在游乐园游玩时发现两个行动诡异的黑衣男子，便跟踪他们，不料被灌下一种叫「APTX4869」的神秘毒药，然而因为药物副作用，新一的身体竟回到孩童状态。为不使周围的人受到牵连，他化名为「江户川柯南」，寄住在毛利兰家中，用阿笠博士发明的手表型麻醉枪让毛利小五郎睡着，接着用蝴蝶结变声器模仿他的声音来进行推理，解决了许多案件，并一直寻找着黑衣组织的人的下落，希望有朝一日将其绳之以法，并变回原来的样子。</blockquote>
+   <hr/>
+   <p><b>要订阅《名侦探柯南》第 1 季（共 1216 集）吗？</b></p>
+   [从第 1 集开始 | 1:ok:0] [只追新集（第 1216 集起） | 1:ok:1216]
+   [指定起始集… | 1:e:0]
+   [选择分类… | 1:cg:0]
+   [洗版订阅 | 1:bv:0]
+   [搜索资源 | 1:ts:0] [相似推荐 | 1:r:0] [演职人员 | 1:ca:0]
+   [选择搜索站点 | 1:ss:0]
+   [返回 | 1:bk:0] [取消 | 1:x:0]
+<< answerCallbackQuery
+>> user 1001 taps 1:cg:0 on message 1
+-> MoviePilot GET /api/v1/media/classification/policy
+<< editMessageText chat=1001 message=1
+   <img src="url-7ca1018dcbd7e9db2629bc08168d35247b2cf8ab2703868e1e1423650f00c642"/>
+   <h3>📺 选择订阅分类</h3>
+   <p><b>《名侦探柯南》第 1 季</b><br>
+   当前 · 自动</p>
+   <ol start="1">
+   <li value="1"><b>国漫</b></li>
+   <li value="2"><b>日番</b></li>
+   <li value="3"><b>纪录片</b></li>
+   <li value="4"><b>儿童</b></li>
+   <li value="5"><b>综艺</b></li>
+   <li value="6"><b>国产剧</b></li>
+   <li value="7"><b>欧美剧</b></li>
+   <li value="8"><b>日韩剧</b></li>
+   <li value="9"><b>未分类</b></li>
+   </ol>
+   <footer>分类可选，不选时由 MoviePilot 按规则自动分类。</footer>
+   [1 | 1:ch:20001] [2 | 1:ch:20002] [3 | 1:ch:20003] [4 | 1:ch:20004]
+   [5 | 1:ch:20005] [6 | 1:ch:20006] [7 | 1:ch:20007] [8 | 1:ch:20008]
+   [9 | 1:ch:20009]
+   [自动 | 1:ch:20000]
+   [返回 | 1:bk:0] [取消 | 1:x:0]
+<< answerCallbackQuery
+>> user 1001 taps 1:ch:10002 on message 1
+<< answerCallbackQuery notice="这个选项不太对哦～"
+>> user 1001 taps 1:ch:20001 on message 1
+<< editMessageText chat=1001 message=1
+   <img src="url-7ca1018dcbd7e9db2629bc08168d35247b2cf8ab2703868e1e1423650f00c642"/>
+   <h3>📺 <a href="https://www.themoviedb.org/tv/30983">名侦探柯南</a></h3>
+   <footer><i>名探偵コナン</i> · 1996 · 电视剧 · ⭐ 8.0 · TMDB · 动画 / 犯罪 / 悬疑 / 喜剧 · 共 1 季 1216 集 · 主演：高山南、山口胜平、山崎和佳奈</footer>
+   <blockquote expandable>高中生侦探工藤新一与毛利兰在游乐园游玩时发现两个行动诡异的黑衣男子，便跟踪他们，不料被灌下一种叫「APTX4869」的神秘毒药，然而因为药物副作用，新一的身体竟回到孩童状态。为不使周围的人受到牵连，他化名为「江户川柯南」，寄住在毛利兰家中，用阿笠博士发明的手表型麻醉枪让毛利小五郎睡着，接着用蝴蝶结变声器模仿他的声音来进行推理，解决了许多案件，并一直寻找着黑衣组织的人的下落，希望有朝一日将其绳之以法，并变回原来的样子。</blockquote>
+   <hr/>
+   <p><b>要订阅《名侦探柯南》第 1 季（共 1216 集）吗？</b><br>
+   <b>分类 </b>国漫</p>
+   [从第 1 集开始 | 1:ok:0] [只追新集（第 1216 集起） | 1:ok:1216]
+   [指定起始集… | 1:e:0]
+   [选择分类… | 1:cg:0]
+   [洗版订阅 | 1:bv:0]
+   [搜索资源 | 1:ts:0] [相似推荐 | 1:r:0] [演职人员 | 1:ca:0]
+   [选择搜索站点 | 1:ss:0]
+   [返回 | 1:bk:0] [取消 | 1:x:0]
+<< answerCallbackQuery
+>> user 1001 taps 1:ok:0 on message 1
+-> MoviePilot POST /api/v1/subscribe/
+   {"name":"名侦探柯南","year":"1996","type":"电视剧","media_source":"themoviedb","media_id":"30983","season":1,"media_category_id":"tv.dongman.cn"}
+<< editMessageText chat=1001 message=1
+   <img src="url-7ca1018dcbd7e9db2629bc08168d35247b2cf8ab2703868e1e1423650f00c642"/>
+   <h3>📺 <a href="https://www.themoviedb.org/tv/30983">名侦探柯南</a></h3>
+   <footer><i>名探偵コナン</i> · 1996 · 电视剧 · ⭐ 8.0 · TMDB · 动画 / 犯罪 / 悬疑 / 喜剧 · 共 1 季 1216 集 · 主演：高山南、山口胜平、山崎和佳奈</footer>
+   <blockquote expandable>高中生侦探工藤新一与毛利兰在游乐园游玩时发现两个行动诡异的黑衣男子，便跟踪他们，不料被灌下一种叫「APTX4869」的神秘毒药，然而因为药物副作用，新一的身体竟回到孩童状态。为不使周围的人受到牵连，他化名为「江户川柯南」，寄住在毛利兰家中，用阿笠博士发明的手表型麻醉枪让毛利小五郎睡着，接着用蝴蝶结变声器模仿他的声音来进行推理，解决了许多案件，并一直寻找着黑衣组织的人的下落，希望有朝一日将其绳之以法，并变回原来的样子。</blockquote>
+   <hr/>
+   <p>✅ 帮你订好《名侦探柯南》第 1 季啦，通知由 MoviePilot 按设置发送哦～ ヾ(≧▽≦*)o</p>
+   [返回 | 1:bk:0] [首页 | 1:o:0] [关闭 | 1:c:0]
+<< answerCallbackQuery

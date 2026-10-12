@@ -53,6 +53,10 @@ func (f *fakeMoviePilot) editsSubscription(w http.ResponseWriter, r *http.Reques
 		return true
 	}
 	id, _ := patch["id"].(float64)
+	if f.categoryRefused(int(id), patch) {
+		refuseCategory(w)
+		return true
+	}
 	if !f.applySubscriptionEdit(int(id), patch) {
 		writeEnvelope(w, http.StatusOK, `{"success":false,"message":"订阅不存在","data":null}`)
 		return true
@@ -78,6 +82,7 @@ func (f *fakeMoviePilot) applySubscriptionEdit(id int, patch map[string]any) boo
 	for _, key := range []string{"id", "state", "note", "lack_episode", "current_priority", "episode_priority", "date", "username"} {
 		delete(fields, key)
 	}
+	stored := f.storedCategory(id, patch)
 	f.mu.Lock()
 	defer f.mu.Unlock()
 	if f.edited == nil {
@@ -87,6 +92,7 @@ func (f *fakeMoviePilot) applySubscriptionEdit(id int, patch map[string]any) boo
 		f.edited[id] = map[string]any{}
 	}
 	maps.Copy(f.edited[id], fields)
+	maps.Copy(f.edited[id], stored)
 	f.editPatches = append(f.editPatches, maps.Clone(patch))
 	return true
 }

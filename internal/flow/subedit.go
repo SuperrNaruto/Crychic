@@ -27,6 +27,7 @@ type subscriptionEdit struct {
 	field        int
 	groups       []SubscriptionRuleGroup
 	sites        []SearchSite
+	categories   []SubscriptionCategory
 	includeWords string
 	excludeWords string
 	options      int // current option-screen generation
