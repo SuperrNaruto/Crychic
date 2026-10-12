@@ -62,6 +62,7 @@ type session struct {
 	subEdit       *subscriptionEdit
 	subReceipt    *subscriptionEditReceipt // immutable, read-only; never a write target
 	editOptions   int                      // option generations never rewind when navigating back
+	filterOffers  int                      // release filter offer generations, which never rewind either
 	kind          Kind                     // the kind of subscription or history shown
 	past          []PastSubscription
 	pastPages     pastPaging // how far past has been read
@@ -141,6 +142,7 @@ func (s *store) put(sess session) {
 	sess.hunts = max(sess.hunts, current.hunts)
 	sess.torrentIDs = max(sess.torrentIDs, current.torrentIDs, len(sess.torrents))
 	sess.editOptions = max(sess.editOptions, current.editOptions)
+	sess.filterOffers = max(sess.filterOffers, current.filterOffers)
 	s.sessions[sess.id] = sess
 }
 

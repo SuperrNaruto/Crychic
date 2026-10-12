@@ -212,6 +212,7 @@ func (e *Engine) back(ctx context.Context, sess session) Reply {
 	restored.hunts = max(sess.hunts, restored.hunts)
 	restored.torrentIDs = max(sess.torrentIDs, restored.torrentIDs)
 	restored.editOptions = max(sess.editOptions, restored.editOptions)
+	restored.filterOffers = max(sess.filterOffers, restored.filterOffers)
 	restored.subReceipt = sess.subReceipt
 	restored.subSearch = sess.subSearch
 	if sess.streaming && restored.searchView == torrentListView && sess.hunt == restored.hunt {

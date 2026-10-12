@@ -11,11 +11,14 @@ import (
 const (
 	actionTorrentFilter      = "ti" // shows the combined release filter
 	actionTorrentFilterField = "tj" // arg: index into releaseFields; offers its values
-	actionTorrentFilterTick  = "tl" // arg: index into the offered values; ticks or unticks it
+	actionTorrentFilterTick  = "tl" // arg: the offer's generation × filterOfferBase + index into its values; ticks or unticks it
 	actionTorrentFilterClear = "tn" // arg: 0 clears every field, else 1 + the field to clear
 
 	fieldColumns = 3
-	bytesPerGiB  = 1 << 30
+	// filterOfferBase exceeds any number of offered values, so a tick's arg
+	// carries the generation of the field opening it was offered by.
+	filterOfferBase = 100000
+	bytesPerGiB     = 1 << 30
 
 	msgReleaseFilter = "组合筛选"
 	msgAnyValue      = "不限"
@@ -96,6 +99,7 @@ type releaseFilter struct {
 	picked  [][]string // by field; nil leaves the field open
 	open    int        // field whose values show, plus one; 0 when none
 	offered []string   // the open field's values as offered, which ticks index
+	offer   int        // generation of offered; a tick from another opening is stale
 }
 
 func (f releaseFilter) active() bool {
@@ -150,6 +154,9 @@ func (e *Engine) chooseTorrentFilter(_ context.Context, sess session, p press) (
 	if sess.streaming && sess.hunt != nil {
 		sess = syncedHunt(sess, sess.hunt.read())
 	}
+	if p.action == actionTorrentFilterField {
+		sess.filterOffers++
+	}
 	f, ok := nextFilter(sess, p)
 	if !ok {
 		return Reply{Notice: msgInvalidChoice}, true
@@ -167,18 +174,25 @@ func nextFilter(sess session, p press) (releaseFilter, bool) {
 		if p.arg < 0 || p.arg >= len(releaseFields) {
 			return f, false
 		}
-		f.open, f.offered = p.arg+1, offeredValues(sess, p.arg)
+		f.open, f.offered, f.offer = p.arg+1, offeredValues(sess, p.arg), sess.filterOffers
 	case actionTorrentFilterTick:
-		if f.open == 0 || p.arg < 0 || p.arg >= len(f.offered) {
-			return f, false
-		}
-		f = f.with(f.open-1, toggledValue(f.ticked(f.open-1), f.offered[p.arg]))
+		return f.tick(p.arg)
 	case actionTorrentFilterClear:
 		f = f.cleared(p.arg)
 	default:
 		f.open, f.offered = 0, nil
 	}
 	return f, true
+}
+
+// tick toggles the value arg picks among the open field's offered values;
+// ok is false for a button from another field or an earlier opening.
+func (f releaseFilter) tick(arg int) (releaseFilter, bool) {
+	index := arg % filterOfferBase
+	if f.open == 0 || arg < 0 || arg/filterOfferBase != f.offer || index >= len(f.offered) {
+		return f, false
+	}
+	return f.with(f.open-1, toggledValue(f.ticked(f.open-1), f.offered[index])), true
 }
 
 func torrentFilterAction(action string) bool {
@@ -301,7 +315,7 @@ func valueEntries(sess session, field int) []listEntry {
 			item.Tag, label = msgTickedTag, "✓ "+label
 		}
 		entries = append(entries, listEntry{
-			text: Lines(item), buttons: []Button{{Label: label, Data: data(sess.id, actionTorrentFilterTick, i)}},
+			text: Lines(item), buttons: []Button{{Label: label, Data: data(sess.id, actionTorrentFilterTick, sess.releaseFilter.offer*filterOfferBase+i)}},
 		})
 	}
 	return entries

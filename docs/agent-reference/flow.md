@@ -251,7 +251,8 @@ saying how many seconds it has run (from `Now`, so `h.advance` moves it) until t
 releases list in MoviePilot's order (8 a page, number buttons `tp` carrying each release's own index),
 re-sortable like the WebUI (`torrentsort.go`: 默认/做种/时间/大小/站点, `to`, same-level) and filtered to one site (筛选站点
 `tf` lists sites with counts, `tw` picks one or all; its 返回 re-shows the list); 组合筛选 (`torrentfilter.go`, `ti`
-panel, `tj` opens a field and fixes its offered values, `tl` ticks one of them, `tn` clears a field or all; all
+panel, `tj` opens a field and fixes its offered values, `tl` ticks one of them (its arg carries that opening's generation, from a session counter 返回 never rewinds, so
+a button from another field or an earlier opening is refused), `tn` clears a field or all; all
 same-level, 返回 re-shows the list) narrows by 分辨率/编码/制作组/大小/促销/H&R like the WebUI's filterForm: values
 come from the results, ticks within a field widen, fields narrow each other, an empty value (and MP's 未知
 promotion) is offered as 未知, and each value's count is what it would show under the site, missing and other
