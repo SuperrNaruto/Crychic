@@ -1,6 +1,7 @@
 package flow
 
 import (
+	"cmp"
 	"context"
 	"fmt"
 	"log/slog"
@@ -48,27 +49,32 @@ type Options struct {
 	Calendar   Calendar
 	Log        *slog.Logger
 	Now        func() time.Time
+	// SubsGrace is how long a finished search waits for the subscription
+	// list behind its marks; zero uses defaultSubsGrace.
+	SubsGrace time.Duration
 }
 
 // Engine runs request conversations against a Backend.
 type Engine struct {
-	runCtx   context.Context
-	work     sync.WaitGroup
-	backend  Backend
-	calendar Calendar
-	log      *slog.Logger
-	now      func() time.Time
-	store    *store
+	runCtx    context.Context
+	work      sync.WaitGroup
+	backend   Backend
+	calendar  Calendar
+	log       *slog.Logger
+	now       func() time.Time
+	store     *store
+	subsGrace time.Duration
 }
 
 func New(opts Options) *Engine {
 	return &Engine{
-		runCtx:   opts.RunContext,
-		backend:  opts.Backend,
-		calendar: opts.Calendar,
-		log:      opts.Log,
-		now:      opts.Now,
-		store:    newStore(opts.Now, SessionTTL),
+		runCtx:    opts.RunContext,
+		backend:   opts.Backend,
+		calendar:  opts.Calendar,
+		log:       opts.Log,
+		now:       opts.Now,
+		store:     newStore(opts.Now, SessionTTL),
+		subsGrace: cmp.Or(opts.SubsGrace, defaultSubsGrace),
 	}
 }
 

@@ -34,6 +34,9 @@ const (
 	// orderedAnswers outlasts any wait for an action, so every fake edit
 	// lands before its press is answered.
 	orderedAnswers = 2 * actionTimeout
+	// subsMarksGrace lets the fake's subscription list always arrive in
+	// time for the marks, however slow a -race run is.
+	subsMarksGrace = actionTimeout
 )
 
 // epoch is when every scenario starts, a Monday noon in China, so the
@@ -144,7 +147,7 @@ func (h *harness) launch() {
 	log := slog.New(slog.NewTextHandler(testWriter{h.t}, nil))
 	now := func() time.Time { return epoch.Add(time.Since(h.began) + time.Duration(h.offset.Load())) }
 	go func() {
-		stopped <- app.Run(ctx, h.cfg, app.Deps{Log: log, Now: now, Images: h.img.client(), AnswerLead: h.lead})
+		stopped <- app.Run(ctx, h.cfg, app.Deps{Log: log, Now: now, Images: h.img.client(), AnswerLead: h.lead, SubsGrace: subsMarksGrace})
 	}()
 	h.stop = func() {
 		cancel()

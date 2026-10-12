@@ -36,6 +36,9 @@ type Deps struct {
 	// AnswerLead is how long a button press's edit runs before the press is
 	// answered alongside it; zero uses the bot's default.
 	AnswerLead time.Duration
+	// SubsGrace is how long search results wait for the subscription list
+	// behind their marks; zero uses the flow's default.
+	SubsGrace time.Duration
 }
 
 // Run serves the Telegram bot and native notices until ctx is cancelled.
@@ -55,7 +58,7 @@ func Run(ctx context.Context, cfg config.Config, deps Deps) error {
 	calendar := bangumi.New(cfg.BangumiAPIURL, &http.Client{Timeout: backendTimeout, Transport: transport})
 	engine := flow.New(flow.Options{
 		RunContext: ctx,
-		Backend:    backend, Calendar: calendar, Log: log, Now: now,
+		Backend:    backend, Calendar: calendar, Log: log, Now: now, SubsGrace: deps.SubsGrace,
 	})
 	var wg sync.WaitGroup
 	wg.Go(func() { native.Run(ctx) })

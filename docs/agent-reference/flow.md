@@ -100,7 +100,7 @@ lines, `Fold` (summary plus a `Body`, counted by `textSize`), `Divider`) of span
 
 ## 搜索意图与首页
 
-搜索结果与选季表预先标出已订阅（`subsmarks.go`）：普通搜索与图表选片回退的结果列表（不含 inline 查询）与选季表在搜索或季读取的同时读取 `Backend.Subscriptions()`，宽限 `subsGrace`（300ms）内未返回或读取失败则不显示任何标记，不声称未订阅。只做正面标注，不写「未订阅」。身份取来源、媒体 ID 与类型（剧集另加季），标准季排除剧集组订阅，与 `FindSubscription` 一致；确认时仍以 `FindSubscription` 为准。电影在榜单条目的高亮 Tag 写「已订阅」或「已暂停」；剧集写「已订阅第 1、2 季」，暂停的另列「已暂停第 3 季」，二者以「，」连接，特别篇写作「特别篇」。选季表增加「订阅」列，单元格为「已订阅」「已暂停」或空，整列为空时由表格自动省略；剧集组季号不同于标准季，选剧集组后的季表不标注。唯一结果直接打开卡片时复用搜索同时发起的那次读取。
+搜索结果与选季表预先标出已订阅（`subsmarks.go`）：普通搜索与图表选片回退的结果列表（不含 inline 查询）与选季表在搜索或季读取的同时读取 `Backend.Subscriptions()`，宽限（`flow.Options.SubsGrace`，默认 `defaultSubsGrace` 300ms；e2e 经 `app.Deps.SubsGrace` 放宽到 `actionTimeout`，避免 -race 下标记随时序缺失）内未返回或读取失败则不显示任何标记，不声称未订阅。只做正面标注，不写「未订阅」。身份取来源、媒体 ID 与类型（剧集另加季），标准季排除剧集组订阅，与 `FindSubscription` 一致；确认时仍以 `FindSubscription` 为准。电影在榜单条目的高亮 Tag 写「已订阅」或「已暂停」；剧集写「已订阅第 1、2 季」，暂停的另列「已暂停第 3 季」，二者以「，」连接，特别篇写作「特别篇」。选季表增加「订阅」列，单元格为「已订阅」「已暂停」或空，整列为空时由表格自动省略；剧集组季号不同于标准季，选剧集组后的季表不标注。唯一结果直接打开卡片时复用搜索同时发起的那次读取。
 
 `internal/flow/engine.go` - conversation choices; `internal/flow/search.go` - ordinary searches retain all
 returned results (a leading 订阅/搜索/下载 plus optional colon or space is stripped like MoviePilot's own bot,

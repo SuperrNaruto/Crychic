@@ -9,9 +9,10 @@ import (
 )
 
 const (
-	// subsGrace is how long a finished search or season read waits for the
-	// subscription list; the marks are cosmetic and never hold a reply back.
-	subsGrace = 300 * time.Millisecond
+	// defaultSubsGrace is how long a finished search or season read waits
+	// for the subscription list; the marks are cosmetic and never hold a
+	// reply back for longer.
+	defaultSubsGrace = 300 * time.Millisecond
 
 	markSubscribed = "已订阅"
 	markPaused     = "已暂停"
@@ -19,14 +20,15 @@ const (
 
 // subsRead is a subscription-list read running beside other reads.
 type subsRead struct {
-	done chan []Subscription
+	done  chan []Subscription
+	grace time.Duration
 }
 
 // startSubs reads the subscription list in the background, bounded by the
 // cosmetic timeout and the request's own context. A failed read yields no
 // list, so no marks show.
 func (e *Engine) startSubs(ctx context.Context) *subsRead {
-	r := &subsRead{done: make(chan []Subscription, 1)}
+	r := &subsRead{done: make(chan []Subscription, 1), grace: e.subsGrace}
 	go func() {
 		ctx, cancel := context.WithTimeout(ctx, cosmeticTimeout)
 		defer cancel()
@@ -45,7 +47,7 @@ func (r *subsRead) wait(ctx context.Context) []Subscription {
 	if r == nil {
 		return nil
 	}
-	timer := time.NewTimer(subsGrace)
+	timer := time.NewTimer(r.grace)
 	defer timer.Stop()
 	select {
 	case subs := <-r.done:
