@@ -19,7 +19,7 @@
 默认由 MP 的 API-key 依赖保护，无匿名入口。四个接口均使用 `{success,data}`，失败只返回固定安全代码。
 
 - `GET /api/v1/plugin/Crychic/status` 返回协议版本、渠道、稳定 stream 和 head。
-- `GET /api/v1/plugin/Crychic/notifications` 接受 `after`、`consumer_id`、`channel_id`、`stream_id` 和 `wait`；最长等待 25 秒，每批最多 32 条，读取不删除记录。
+- `GET /api/v1/plugin/Crychic/notifications` 接受 `after`、`consumer_id`、`channel_id`、`stream_id` 和 `wait`；最长等待 25 秒，每批最多 32 条，且编码后不超过 1 MiB（首条总返回，按顺序取连续前缀），读取不删除记录。图片与链接超过 4096 字符时不转发。
 - `POST /api/v1/plugin/Crychic/ack` 接受同一来源与消费身份、`sequence`；幂等确认并清理安全投影，不宣称 Telegram 发送成功。
 - `GET /api/v1/plugin/Crychic/transfer-progress`（v1.2.0）返回整理队列中运行文件的进度，`data.files` 每项为 `media_source`、`media_id`、`season`、`begin_episode`、`end_episode`、`download_hash`、`downloader`、`active` 与 `percent`。只要求插件已启用，与通知渠道配置无关；失败代码为 `progress_unavailable`。
 

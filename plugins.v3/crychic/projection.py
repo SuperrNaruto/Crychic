@@ -8,6 +8,7 @@ from urllib.parse import parse_qs, unquote, urlsplit
 
 MAX_TEXT = 16384
 MAX_TITLE = 512
+MAX_URL = 4096
 SENSITIVE = re.compile(r"(?i)(api[_-]?key|token|cookie|passkey|password|authorization)\s*[:=]\s*\S+|[A-Za-z]:\\\S+")
 # 原生整理通知以「源文件：/…」等标签给出路径，标签后整行可能含空格，因此整段隐藏。
 LABELED_PATH = re.compile(r"(源文件|源目录|源路径|目标路径|目标目录|文件路径|路径)\s*[:：]\s*[^\n]+")
@@ -59,8 +60,10 @@ def sensitive_url_fields(parts):
 
 
 def safe_url(value, *, secrets=()):
-    """只保留无需凭据的 HTTP 地址，不转发带密钥的图片或链接。"""
+    """只保留无需凭据且长度有限的 HTTP 地址，不转发带密钥的图片或链接。"""
     raw = str(value or "")
+    if len(raw) > MAX_URL:
+        return ""
     decoded = decoded_url(raw)
     if known_url_secret(raw, decoded, secrets):
         return ""

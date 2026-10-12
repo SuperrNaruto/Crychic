@@ -53,6 +53,9 @@ WAIT_SLACK = 0.5
 POLL_COMPLETION_BUDGET = 2
 LONG_WAIT = 25
 FAILED_SOURCE = "/fixture-downloads"
+GO_RESPONSE_LIMIT = 2 << 20
+MAX_TEXT_CHARS = 16384
+LARGE_NOTICES = 33
 FAILED_TARGET = "/fixture-library"
 
 
@@ -145,6 +148,7 @@ async def exercise():
     await persistence_and_identity(chain, cursor)
     await safe_url_projection(chain, cursor)
     await transfer_failure_paths(chain, cursor)
+    await large_batches(chain, cursor)
     await idle_polling(cursor)
     await polling_lifecycle(chain, cursor)
     await failure_isolation(chain, cursor)
@@ -350,6 +354,36 @@ async def transfer_failure_paths(chain, cursor):
         cursor["sequence"] = item["sequence"]
         await asyncio.to_thread(http_call, "ack", body=cursor)
     TRACE.append("native transfer failure paths -> hidden at capture; legacy stored paths hidden on read")
+
+
+def sized_poll(cursor):
+    """读取原始响应字节数，与 Go 消费端的整个响应上限比较。"""
+    request = urllib.request.Request(ROOT + poll_query(cursor), headers={"X-API-KEY": TOKEN})
+    with urllib.request.urlopen(request, timeout=HTTP_TIMEOUT) as response:
+        raw = response.read()
+    value = json.loads(raw)
+    if not value.get("success"):
+        raise RuntimeError("fixture API rejected")
+    return len(raw), value["data"]
+
+
+async def large_batches(chain, cursor):
+    """每条均为允许的最长四字节正文；按批读取都在消费端上限内且不丢顺序。"""
+    for index in range(LARGE_NOTICES):
+        chain.post_message_strict(Message(mtype=MessageType.Plugin, title=f"Large {index}",
+                                          text="😀" * MAX_TEXT_CHARS), event_key=f"fixture-large-{index}")
+    titles, batches = [], 0
+    while len(titles) < LARGE_NOTICES:
+        size, batch = await asyncio.to_thread(sized_poll, cursor)
+        if size > GO_RESPONSE_LIMIT or not batch["messages"]:
+            raise RuntimeError("long notices exceeded the consumer response limit")
+        titles += [item["title"] for item in batch["messages"]]
+        cursor["sequence"] = batch["messages"][-1]["sequence"]
+        await asyncio.to_thread(http_call, "ack", body=cursor)
+        batches += 1
+    if titles != [f"Large {index}" for index in range(LARGE_NOTICES)] or batches < 2:
+        raise RuntimeError("byte-limited batches lost order or were not split")
+    TRACE.append("maximum-size notices -> consecutive batches within consumer byte limit; order kept")
 
 
 async def idle_polling(cursor):

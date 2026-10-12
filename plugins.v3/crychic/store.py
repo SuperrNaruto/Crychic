@@ -13,6 +13,8 @@ META_KEY = "native"
 LEASE_SECONDS = 60
 LEASE_RENEW_MARGIN = LEASE_SECONDS / 2
 MAX_BATCH = 32
+# 消费端整个响应上限 2 MiB；批次按编码后字节取连续前缀，留足包裹余量。
+BATCH_BYTES = 1 << 20
 
 
 class Outbox:
@@ -111,6 +113,17 @@ class Outbox:
             row.payload = payload
         return item
 
+    @staticmethod
+    def within_budget(items):
+        """按编码后字节返回连续前缀；首条总在其中，单条大小已由入队上限约束。"""
+        batch, size = [], 0
+        for item in items:
+            size += len(json.dumps(item, ensure_ascii=False).encode())
+            if batch and size > BATCH_BYTES:
+                break
+            batch.append(item)
+        return batch
+
     def read(self, channel, query):
         """非破坏读取完整连续范围，不在读取时删除记录。"""
         with self.lock, self.database().session() as session, session.begin():
@@ -120,7 +133,7 @@ class Outbox:
             if after < meta.consumed or after > meta.head:
                 raise ValueError("cursor_invalid")
             statement = select(Pending).where(Pending.sequence > after).order_by(Pending.sequence).limit(MAX_BATCH)
-            items = [self.safe_item(row) for row in session.scalars(statement)]
+            items = self.within_budget(self.safe_item(row) for row in session.scalars(statement))
             expected = after
             for item in items:
                 expected += 1
