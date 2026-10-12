@@ -138,5 +138,5 @@
 >> MoviePilot transfers 沙丘 (themoviedb/438631)
 >> MoviePilot produces a native notification
 << sendRichMessage chat=1002 message=4
-   <h3>MoviePilot 通知</h3>
+   <h3>🔔 MoviePilot 通知</h3>
    <p>MoviePilot 原生整理入库通知 · 《沙丘》</p>

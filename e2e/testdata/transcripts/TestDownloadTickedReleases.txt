@@ -472,12 +472,12 @@
 >> MoviePilot transfers 迷途之子!!!!! (themoviedb/224207) S01E01
 >> MoviePilot produces a native notification
 << sendRichMessage chat=1001 message=2
-   <h3>MoviePilot 通知</h3>
+   <h3>🔔 MoviePilot 通知</h3>
    <p>MoviePilot 原生整理入库通知 · 《迷途之子!!!!!》</p>
 >> MoviePilot transfers 迷途之子!!!!! (themoviedb/224207) S01E08
 >> MoviePilot produces a native notification
 << sendRichMessage chat=1001 message=3
-   <h3>MoviePilot 通知</h3>
+   <h3>🔔 MoviePilot 通知</h3>
    <p>MoviePilot 原生整理入库通知 · 《迷途之子!!!!!》</p>
 >> user 1001 in chat 1001: /search 迷途之子
 -> MoviePilot GET /api/v1/media/search?count=10&title=迷途之子&type=media

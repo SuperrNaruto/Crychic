@@ -143,7 +143,7 @@
 >> MoviePilot transfers 颂乐人偶 (themoviedb/274580) S01E01
 >> MoviePilot produces a native notification
 << sendRichMessage chat=1001 message=2
-   <h3>MoviePilot 通知</h3>
+   <h3>🔔 MoviePilot 通知</h3>
    <p>MoviePilot 原生整理入库通知 · 《颂乐人偶》</p>
 >> user 1001 taps 1:hf:2 on message 1
 -> MoviePilot GET /api/v1/subscribe/history/电视剧?count=10&page=1

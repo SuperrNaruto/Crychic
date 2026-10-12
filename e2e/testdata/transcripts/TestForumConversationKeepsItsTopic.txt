@@ -126,5 +126,5 @@
 >> MoviePilot transfers 深渊无间 (themoviedb/301489) S01E05
 >> MoviePilot produces a native notification
 << sendRichMessage chat=-500 message=3 topic=42
-   <h3>MP 原生入库通知</h3>
+   <h3>📥 MP 原生入库通知</h3>
    <p>第 5 集已整理</p>

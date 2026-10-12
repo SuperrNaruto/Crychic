@@ -1,16 +1,22 @@
 >> MoviePilot produces a native notification
 << sendRichMessage chat=1001 message=1
-   <h3>My Show S01E02 入库失败！</h3>
-   <p>失败阶段：整理<br>
-   源文件：[已隐藏]<br>
-   目标路径：[已隐藏]<br>
-   原因：目标已存在<br>
-   如果按钮不可用，可回复：<br>
+   <h3>⚠️ My Show S01E02 入库失败！</h3>
+   <table bordered striped compact>
+   <tr><th>项目</th><th>内容</th></tr>
+   <tr><td>失败阶段</td><td>整理</td></tr>
+   <tr><td>源文件</td><td>[已隐藏]</td></tr>
+   <tr><td>目标路径</td><td>[已隐藏]</td></tr>
+   <tr><td>原因</td><td>目标已存在</td></tr>
+   </table>
+   <p>如果按钮不可用，可回复：<br>
    /redo 12</p>
 >> MoviePilot produces a native notification
 << sendRichMessage chat=1001 message=2
-   <h3>My Show 入库失败（2 个文件）</h3>
-   <p>失败文件：2 个<br>
-   源文件：[已隐藏]<br>
-   原因：媒体库根目录：[已隐藏]<br>
-   音轨 国语/粤语/英语，无法写入 ([已隐藏])</p>
+   <h3>⚠️ My Show 入库失败（2 个文件）</h3>
+   <table bordered striped compact>
+   <tr><th>项目</th><th>内容</th></tr>
+   <tr><td>失败文件</td><td>2 个</td></tr>
+   <tr><td>源文件</td><td>[已隐藏]</td></tr>
+   <tr><td>原因</td><td>媒体库根目录：[已隐藏]</td></tr>
+   </table>
+   <p>音轨 国语/粤语/英语，无法写入 ([已隐藏])</p>

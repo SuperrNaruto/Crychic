@@ -8,5 +8,5 @@
    [任务进度 | 1:h:4] [追剧日历 | 1:h:5]
 >> MoviePilot produces a native notification
 << sendRichMessage chat=-500 message=2 topic=17
-   <h3>MP 频道通知</h3>
+   <h3>🔔 MP 频道通知</h3>
    <p>使用 MP 指定目标</p>

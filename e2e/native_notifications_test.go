@@ -26,14 +26,18 @@ func personalNative(title, text string) nativeMessage {
 
 func TestNativeNotificationRichDisplayAndRestart(t *testing.T) {
 	h := start(t, scenario{})
-	message := personalNative("MP <通知>", "整理完成\n<不可信标签>")
+	// MoviePilot's 入库 template joins facts with 「，」; 简介 keeps its own commas.
+	message := personalNative("沙丘 (2021) <已入库>",
+		"类型：电影，类别：<外语电影>，质量：WEB-DL 1080p，共1个文件，大小：12.3G\n整理完成\n简介：沙漠，香料，命运")
 	message.Image, message.Link = dunePoster, "https://example.test/watch/1"
 	h.nativeNotice(message)
-	h.shows(1, "MP &lt;通知&gt;")
-	h.shows(1, "&lt;不可信标签&gt;")
+	h.shows(1, "📥 沙丘 (2021) &lt;已入库&gt;")
+	h.shows(1, "<td>&lt;外语电影&gt;</td>")
+	h.shows(1, "<td></td><td>共1个文件</td>")
+	h.shows(1, "<td>沙漠，香料，命运</td>")
 	h.restart()
 	h.nativeNotice(personalNative("MP 新通知", "重启后继续接收"))
-	if strings.Count(h.tr.String(), "<h3>MP &lt;通知&gt;</h3>") != 1 {
+	if strings.Count(h.tr.String(), "<h3>📥 沙丘 (2021) &lt;已入库&gt;</h3>") != 1 {
 		t.Fatal("native notice replayed")
 	}
 	raw, err := os.ReadFile(filepath.Join(h.cfg.DataDir, "native-notifications.json"))
@@ -61,7 +65,7 @@ func TestNativeUnknownSendIsNotReplayed(t *testing.T) {
 	h.nativeNotice(personalNative("MP 未知发送", "发送响应丢失"))
 	h.restart()
 	h.nativeNotice(personalNative("MP 后续通知", "继续处理新消息"))
-	if strings.Count(h.tr.String(), "<h3>MP 未知发送</h3>") != 1 {
+	if strings.Count(h.tr.String(), "<h3>🔔 MP 未知发送</h3>") != 1 {
 		t.Fatal("unknown delivery was replayed")
 	}
 	h.tr.verify(t)

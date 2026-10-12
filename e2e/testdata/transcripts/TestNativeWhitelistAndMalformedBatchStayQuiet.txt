@@ -1,6 +1,6 @@
 >> MoviePilot produces a native notification
 << sendRichMessage chat=1001 message=1
-   <h3>MP 允许用户</h3>
+   <h3>🔔 MP 允许用户</h3>
    <p>仅允许用户收到</p>
 >> user 1001 in chat 1001: /start
 << sendRichMessage chat=1001 message=2

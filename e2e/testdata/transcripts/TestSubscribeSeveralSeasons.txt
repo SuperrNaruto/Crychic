@@ -177,5 +177,5 @@
 >> MoviePilot transfers 绝命毒师 (themoviedb/1396) S03E01
 >> MoviePilot produces a native notification
 << sendRichMessage chat=-1001234567890 message=2
-   <h3>MoviePilot 通知</h3>
+   <h3>🔔 MoviePilot 通知</h3>
    <p>MoviePilot 原生整理入库通知 · 《绝命毒师》</p>

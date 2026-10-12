@@ -44,7 +44,7 @@ this table only:
 | 📋 | 正在忙的任务 and 暂停下载 / 恢复下载 / 删除下载任务 confirm and failure screens |
 | ⬇️ / ⏸️ | a download's live view heading (downloading / paused) |
 | 📦 | a transfer job (per file ⏳ ▶️ ✅ ⚠️) |
-| 📥 | an arrival notice |
+| 📥 / 🔔 | an arrival notice / any other MoviePilot notice; MP notice headings pick ⚠️ 📥 ⬇️ 📚 🔔 from the title's words, see [通知详情](notifications.md#受众与展示) |
 | ✅ | done: subscribed, cancelled subscription, deleted, saved |
 | ℹ️ / ⚠️ | a Callout line: already subscribed / a warning or failure; also table cell states |
 | ⌛ | expired |

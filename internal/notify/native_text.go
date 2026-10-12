@@ -36,10 +36,7 @@ func nativeNotice(message NativeMessage) (flow.Notice, error) {
 	if title == "" {
 		title = "MoviePilot 通知"
 	}
-	text := flow.Lines(flow.Heading(flow.Plain(title)))
-	for _, line := range strings.Split(redactNative(message.Text), "\n") {
-		text = append(text, flow.Line(flow.Plain(line)))
-	}
+	text := append(flow.Lines(nativeHeading(title)), nativeBody(redactNative(message.Text))...)
 	if safeNativeURL(message.Link) {
 		text = append(text, flow.Line(flow.Linked(flow.Plain("查看详情"), message.Link)))
 	}
