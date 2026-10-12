@@ -95,7 +95,8 @@ func personID(raw any) string {
 }
 
 // PersonWorks lists the media a TMDB or Bangumi person is credited on, each
-// once; Bangumi repeats a work for every role.
+// once; Bangumi repeats a work for every role. A movie and a show can share
+// an ID, so the kind is part of a work's identity.
 func (c *Client) PersonWorks(ctx context.Context, p flow.Person) ([]flow.Media, error) {
 	if p.Source != sourceTMDB && p.Source != sourceBangumi {
 		return nil, nil
@@ -106,10 +107,14 @@ func (c *Client) PersonWorks(ctx context.Context, p flow.Person) ([]flow.Media, 
 	if err != nil {
 		return nil, err
 	}
-	seen := map[string]bool{}
+	type workKey struct {
+		source, id string
+		kind       flow.Kind
+	}
+	seen := map[workKey]bool{}
 	out := works[:0]
 	for _, m := range works {
-		if key := m.Source + "/" + m.ID; !seen[key] {
+		if key := (workKey{m.Source, m.ID, m.Kind}); !seen[key] {
 			seen[key] = true
 			out = append(out, m)
 		}
