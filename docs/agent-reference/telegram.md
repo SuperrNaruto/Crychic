@@ -81,10 +81,10 @@ only, LRU of 1000, gone on restart); a poster that fails to download is dropped 
 (`posterbytes.go`: at most 32 posters and 16 MB, successes only, dropped once a file_id is learnt); one download
 per URL runs at a time, on the bot's own context rather than a caller's, and later requests for it join the
 flight. Reply.Prefetch (the poster URLs of a list page's entries, not displayed) is downloaded in the background
-(2 at a time, separate from the 4 of a message being sent) after the page is sent or edited, so a later pick
+(at most 2 at a time across the bot, sharing `prefetchFetches` slots, separate from the 4 of a message being sent) after the page is sent or edited, so a later pick
 finds the bytes; a chart pick whose search result is the same Douban media (Source and ID) keeps the chart
 item's poster for its card so that prefetched poster is the one uploaded (MoviePilot's title search otherwise
-returns another signed Douban URL or a TMDB one, which Telegram fetches itself) MoviePilot's WebUI
+returns another signed Douban URL or a TMDB one, which Telegram fetches itself). Downloads and prefetchers are counted on the poster cache's own WaitGroup, which `Bot.Run` waits for after its handlers; none starts once the bot has stopped. MoviePilot's WebUI
 shows them through its own image proxy (`/api/v1/system/img`), which Telegram cannot reach. Rich HTML
 collapses newlines, so the renderer turns them into `<br>`. The home menu alone sets `Reply.Banner`
 (`flow.BannerHome`; every name in `flow.Banners` needs a bundled JPEG or the bot stops at start); the banner
@@ -145,6 +145,6 @@ A `Reply` with `Notice` must not edit the message (another group member tapping 
 
 `internal/telegram/lanes.go` 串行每条消息的状态变更及编辑；初始发送尚未返回时，已经显示的按钮也必须可用。
 
-白名单用户的命令和私聊标题搜索（回复为新消息）在 flow 运行满 `telegram.Config.TypingLead`（`app.Deps.TypingLead`；零为 300ms，负值关闭）后发 `sendChatAction`（`typing`，带原话题的 `message_thread_id`），Telegram 最长显示 5 秒或到机器人下一条消息，故每 4s 续发；`internal/telegram/typing.go` 的 goroutine 计入 Run 等待的工作，回复发送前先停止并等在途的 `sendChatAction` 返回（不取消），所以动作不会晚于回复到达。失败只记日志，不展示。callback 按下与编辑 pending 提问的 typed answer 不发（它们已有 spinner 或编辑可见）。
+白名单用户的命令和私聊标题搜索（回复为新消息，包括提问过期后未引用文字直接新搜）在 flow 运行满 `telegram.Config.TypingLead`（`app.Deps.TypingLead`；零为 300ms，负值关闭）后发 `sendChatAction`（`typing`，带原话题的 `message_thread_id`），Telegram 最长显示 5 秒或到机器人下一条消息，故每 4s 续发；`internal/telegram/typing.go` 的 goroutine 计入 Run 等待的工作，回复发送前先停止并等在途的 `sendChatAction` 返回（不取消），所以动作不会晚于回复到达。失败只记日志，不展示。callback 按下与编辑 pending 提问的 typed answer 不发（它们已有 spinner 或编辑可见）。
 
 开启 follow 的初始发送和 typed edit 与按钮编辑共用语义；图像显示身份和响应先后由 [E2E 参考](e2e.md#消息顺序与图像身份) 中的 fake 覆盖。

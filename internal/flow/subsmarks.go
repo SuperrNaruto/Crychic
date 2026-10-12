@@ -25,11 +25,11 @@ type subsRead struct {
 }
 
 // startSubs reads the subscription list in the background, bounded by the
-// cosmetic timeout and the request's own context. A failed read yields no
+// cosmetic timeout and the request's own context; Engine.Wait waits for it. A failed read yields no
 // list, so no marks show.
 func (e *Engine) startSubs(ctx context.Context) *subsRead {
 	r := &subsRead{done: make(chan []Subscription, 1), grace: e.subsGrace}
-	go func() {
+	e.work.Go(func() {
 		ctx, cancel := context.WithTimeout(ctx, cosmeticTimeout)
 		defer cancel()
 		subs, err := e.backend.Subscriptions(ctx)
@@ -38,7 +38,7 @@ func (e *Engine) startSubs(ctx context.Context) *subsRead {
 			subs = nil
 		}
 		r.done <- subs
-	}()
+	})
 	return r
 }
 

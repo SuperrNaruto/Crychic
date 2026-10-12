@@ -47,23 +47,47 @@ type posterBytes struct {
 	size    int
 	flights map[string]*flight
 
-	base context.Context // ends the downloads when the bot stops
-	work *sync.WaitGroup // counts the downloads, which Bot.Run waits for
+	base   context.Context // ends the downloads when the bot stops
+	work   sync.WaitGroup  // counts the downloads and prefetchers; Bot.Run waits for them
+	closed bool            // set by wait: nothing more is counted on work
+	sem    chan struct{}   // prefetchFetches slots shared by every prefetch
 }
 
 func newPosterBytes() *posterBytes {
 	return &posterBytes{
 		entries: map[string]*list.Element{}, order: list.New(), flights: map[string]*flight{},
-		base: context.Background(), work: &sync.WaitGroup{},
+		base: context.Background(), sem: make(chan struct{}, prefetchFetches),
 	}
 }
 
-// bind ties downloads to the bot's run: they end with ctx and work waits
-// for them.
-func (p *posters) bind(ctx context.Context, work *sync.WaitGroup) {
+// bind ties downloads to the bot's run: they end with ctx, and none
+// starts once it has ended.
+func (p *posters) bind(ctx context.Context) {
 	p.bytes.mu.Lock()
 	defer p.bytes.mu.Unlock()
-	p.bytes.base, p.bytes.work = ctx, work
+	p.bytes.base = ctx
+}
+
+// wait returns once every download and prefetcher has finished; none
+// starts after it is called.
+func (p *posters) wait() {
+	p.bytes.mu.Lock()
+	p.bytes.closed = true
+	p.bytes.mu.Unlock()
+	p.bytes.work.Wait()
+}
+
+// startLocked counts one more goroutine on work, unless the bot has
+// stopped; b.mu is held, so every Add precedes wait's Wait.
+func (b *posterBytes) startLocked() error {
+	if b.closed {
+		return context.Canceled
+	}
+	if err := b.base.Err(); err != nil {
+		return err
+	}
+	b.work.Add(1)
+	return nil
 }
 
 // download returns the poster at raw, from the cache, an earlier download
@@ -93,8 +117,12 @@ func (b *posterBytes) join(raw string, run func(context.Context, string, *flight
 		return f, nil, false
 	}
 	f := &flight{done: make(chan struct{})}
+	if err := b.startLocked(); err != nil {
+		f.err = err
+		close(f.done)
+		return f, nil, false
+	}
 	b.flights[raw] = f
-	b.work.Add(1)
 	go run(b.base, raw, f)
 	return f, nil, false
 }
@@ -152,31 +180,38 @@ func (p *posters) warm(ctx context.Context, reply flow.Reply) {
 	p.fetchWithin(ctx, urls, warmBudget)
 }
 
-// prefetch downloads hotlinked posters ahead of their being shown, a few
-// at a time, until all are done or the bot stops.
+// prefetch downloads hotlinked posters ahead of their being shown, at most
+// prefetchFetches at a time across the bot, until all are done or the bot
+// stops.
 func (p *posters) prefetch(urls []string) {
 	todo := p.missing(dedupe(urls))
 	if len(todo) == 0 {
 		return
 	}
-	queue := make(chan string, len(todo))
+	b := p.bytes
 	for _, raw := range todo {
-		queue <- raw
+		b.mu.Lock()
+		err, base := b.startLocked(), b.base
+		b.mu.Unlock()
+		if err != nil {
+			return
+		}
+		go func() {
+			defer b.work.Done()
+			p.prefetchOne(base, raw)
+		}()
 	}
-	close(queue)
-	p.bytes.mu.Lock()
-	base, work := p.bytes.base, p.bytes.work
-	p.bytes.mu.Unlock()
-	for range min(prefetchFetches, len(todo)) {
-		work.Go(func() {
-			for raw := range queue {
-				if base.Err() != nil {
-					return
-				}
-				_, _ = p.download(base, raw)
-			}
-		})
+}
+
+// prefetchOne downloads raw once one of the shared prefetch slots is free.
+func (p *posters) prefetchOne(base context.Context, raw string) {
+	select {
+	case p.bytes.sem <- struct{}{}:
+	case <-base.Done():
+		return
 	}
+	defer func() { <-p.bytes.sem }()
+	_, _ = p.download(base, raw)
 }
 
 func dedupe(urls []string) []string {

@@ -168,11 +168,12 @@ func New(cfg Config) (*Bot, error) {
 func (b *Bot) Run(ctx context.Context, f flow.Conversation) {
 	b.adapter.flow = f
 	b.adapter.runCtx = ctx
-	b.adapter.posters.bind(ctx, &b.adapter.work)
+	b.adapter.posters.bind(ctx)
 	b.registerCommands(ctx)
 	b.log.Info("telegram bot started")
 	b.api.Start(ctx)
 	b.adapter.drain()
+	b.adapter.posters.wait()
 }
 
 // drain waits for the handlers and followers still running when polling

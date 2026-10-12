@@ -88,7 +88,10 @@ func (a *adapter) answerText(ctx context.Context, msg *models.Message, p pending
 		a.mu.Lock()
 		delete(a.pending, key)
 		a.mu.Unlock()
-		a.replyTo(ctx, msg, a.flow.Start(ctx, actor, msg.Text))
+		stopTyping := a.typing(ctx, msg)
+		started := a.flow.Start(ctx, actor, msg.Text)
+		stopTyping()
+		a.replyTo(ctx, msg, started)
 		return
 	}
 	if reply.Notice != "" {
