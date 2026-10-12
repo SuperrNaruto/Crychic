@@ -75,6 +75,7 @@
 >> Crychic restarts
 >> user 1001 taps 1:h:0 on message 1
 << editMessageText chat=1001 message=1
-   <h3>⌛ 过期啦</h3>
-   <p>这个菜单睡着啦，发 /start 叫醒我吧～</p>
+   <h3>🔍 搜索</h3>
+   <p>想找哪部呀？直接回复片名告诉我～</p>
+   [首页 | 2:o:0] [取消 | 2:x:0]
 << answerCallbackQuery

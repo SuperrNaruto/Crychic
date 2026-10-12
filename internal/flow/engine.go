@@ -94,6 +94,9 @@ func (e *Engine) Choose(ctx context.Context, actor Actor, raw string) Reply {
 	sess, unlock, ok := e.lockSession(ctx, actor, id)
 	defer unlock()
 	if !ok {
+		if reply, revived := e.revive(ctx, actor, p); revived {
+			return reply
+		}
 		return expired(p.action)
 	}
 	if sess.owner.UserID != actor.UserID || sess.owner.Address != actor.Address {

@@ -174,3 +174,43 @@ func manyNavigationDownloads(t *testing.T, count int) string {
 	}
 	return writeFixture(t, downloads)
 }
+
+// After 10 idle minutes or a restart, a private chat's home and list
+// buttons reopen their page in place with a fresh session whose own buttons
+// work. A group keeps the expiry text, and a request or confirm button of
+// an expired conversation never writes.
+func TestExpiredBrowsingReopensInPrivateChats(t *testing.T) {
+	h := start(t, scenario{routes: map[string]route{
+		subsPath:      ok("subscriptions.json"),
+		searchPath:    ok("search_dune.json"),
+		duneDetails:   ok("detail_dune.json"),
+		duneLookup:    ok("subscription_none.json"),
+		subscribePath: ok("subscribe_created.json"),
+	}})
+	h.say(alice, alice, "/start")
+	h.say(alice, group, "/start")
+	h.say(alice, alice, "沙丘")
+	h.tap(alice, 3, duneMovie)
+	confirm, _ := findButton(mustMessage(h, 3).rows, "确认订阅")
+	h.restart()
+
+	h.tap(alice, 1, "我的订阅")
+	h.shows(1, "订阅清单")
+	h.restart()
+	h.tap(alice, 1, "电影")
+	h.shows(1, "订阅清单 · 电影")
+	h.restart()
+	h.tap(alice, 1, "首页")
+	h.shows(1, "Crychic")
+	h.restart()
+	h.tap(alice, 1, "我的订阅")
+	h.tap(alice, 1, "1")
+	h.tap(alice, 2, "搜索")
+	h.shows(2, "这个菜单睡着啦")
+	h.tapData(alice, 3, confirm)
+	h.shows(3, "过期啦")
+	if writes := strings.Count(h.tr.String(), subscribePath); writes != 0 {
+		t.Fatalf("an expired confirm button wrote %d subscriptions", writes)
+	}
+	h.tr.verify(t)
+}

@@ -153,6 +153,13 @@ expired button only has its action to go on: task-specific actions point to `/ta
 actions to `/subscribe`; ambiguous 返回/翻页 (`bk`/`p`) point to `/start` to reopen the relevant feature rather
 than claiming the page was a search
 
+私聊里的无状态浏览按钮例外（`internal/flow/revive.go`）：会话缺失或过期且 `Actor.Private` 时，`o`（首页）、
+`h:N`（首页功能，按键入命令处理，`menu=false`，空列表渲染成消息而不是只闪 Notice，否则过期消息的死按钮会留着）、
+`c`（关闭）、`l`（任务列表）、`j`（订阅列表）、`sf`（订阅分类，显示该分类）、`b`（发现菜单）在新会话里重新打开，
+经 `shown` 记录屏幕，所以新页面上的前进按钮按常规通过 `availableScreenChoice`。带票据的按钮、请求、确认、翻页 `p`、
+返回 `bk`、写入、订阅编辑/搜索和批量按钮仍给原过期提示；群聊、话题群与不可访问的消息同样保持原提示；
+ctx 已取消（关闭中）也不复活。`Actor.Private` 由适配器置位，不在 flow 里比较 Address 与 UserID
+
 ## 只读恢复与未知写结果
 
 `internal/flow/recovery.go` - failed search, season and subscription reads keep their session and offer a

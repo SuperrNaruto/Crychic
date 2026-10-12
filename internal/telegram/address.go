@@ -56,6 +56,23 @@ func destinationOf(msg *models.Message) destination {
 	return to
 }
 
+// callbackActor is the presser as an actor; Private only when the pressed
+// message is accessible and sits in a private chat, never from the fallback
+// destination callbackDestination uses for an inaccessible message.
+func callbackActor(cq *models.CallbackQuery) flow.Actor {
+	actor := actorOf(cq.From, callbackDestination(cq))
+	msg := cq.Message.Message
+	actor.Private = msg != nil && msg.Chat.Type == models.ChatTypePrivate
+	return actor
+}
+
+// messageActor is the sender as an actor, Private in a private chat.
+func messageActor(msg *models.Message) flow.Actor {
+	actor := actorOf(*msg.From, destinationOf(msg))
+	actor.Private = msg.Chat.Type == models.ChatTypePrivate
+	return actor
+}
+
 func callbackDestination(cq *models.CallbackQuery) destination {
 	if msg := cq.Message.Message; msg != nil {
 		return destinationOf(msg)

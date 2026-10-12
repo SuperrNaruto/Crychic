@@ -412,7 +412,8 @@ func TestCommandMenuIsRegistered(t *testing.T) {
 	h.tr.verify(t)
 }
 
-// The home menu leads to every feature; searching from it takes a typed title.
+// The home menu leads to every feature; searching from it takes a typed title,
+// and after a restart the press reopens that prompt in a private chat.
 func TestHomeSearchTakesATypedTitle(t *testing.T) {
 	h := start(t, scenario{routes: map[string]route{searchPath: ok("search_dune.json")}})
 	h.say(alice, alice, "/start")
@@ -429,7 +430,7 @@ func TestHomeSearchTakesATypedTitle(t *testing.T) {
 	h.tap(alice, 1, "首页")
 	h.restart()
 	h.tap(alice, 1, "搜索")
-	h.shows(1, "这个菜单睡着啦")
+	h.shows(1, "想找哪部呀")
 	h.tr.verify(t)
 }
 
@@ -442,7 +443,7 @@ func TestOldHomePhotoIsReplaced(t *testing.T) {
 	if _, ok := h.tg.message(old); ok {
 		t.Fatal("the old home photo must be removed")
 	}
-	h.shows(old+1, "这个菜单睡着啦")
+	h.shows(old+1, "想找哪部呀")
 	h.tr.verify(t)
 }
 

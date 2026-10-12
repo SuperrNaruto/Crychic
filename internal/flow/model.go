@@ -439,10 +439,14 @@ type Calendar interface {
 
 // Actor is the chat user driving a conversation, in platform terms.
 // Address is where the platform can reach them later (opaque to flow).
+// Private is set by a platform only when the action really comes from a
+// one-to-one chat with the user, where stateless browsing buttons of an
+// expired conversation reopen their page.
 type Actor struct {
 	UserID  int64
 	Name    string
 	Address string
+	Private bool
 }
 
 // Notice is a message sent to someone outside any conversation, e.g. an

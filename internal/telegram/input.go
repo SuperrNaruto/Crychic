@@ -62,7 +62,7 @@ func (a *adapter) onText(ctx context.Context, msg *models.Message) {
 		return
 	}
 	if msg.Chat.Type == models.ChatTypePrivate {
-		reply := a.flow.Start(ctx, actorOf(*msg.From, destinationOf(msg)), msg.Text)
+		reply := a.flow.Start(ctx, messageActor(msg), msg.Text)
 		a.replyTo(ctx, msg, reply)
 	}
 }
@@ -80,7 +80,7 @@ func (a *adapter) answerText(ctx context.Context, msg *models.Message, p pending
 	if current != p || !a.acceptsAnswer(ctx, msg, p) {
 		return
 	}
-	actor := actorOf(*msg.From, destinationOf(msg))
+	actor := messageActor(msg)
 	reply := a.flow.Answer(ctx, actor, flow.Typed{Input: p.input, Text: msg.Text})
 	if reply.Expired && msg.Chat.Type == models.ChatTypePrivate && msg.ReplyToMessage == nil {
 		a.mu.Lock()

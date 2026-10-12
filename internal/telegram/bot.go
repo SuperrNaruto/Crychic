@@ -279,7 +279,7 @@ func (a *adapter) onMessage(ctx context.Context, b *bot.Bot, msg *models.Message
 			delete(a.pending, inputOf(msg))
 			a.mu.Unlock()
 		}
-		reply = run(ctx, actorOf(*msg.From, destinationOf(msg)), arg)
+		reply = run(ctx, messageActor(msg), arg)
 	}
 	a.replyTo(ctx, msg, reply)
 }
@@ -379,7 +379,7 @@ func (a *adapter) callbackReply(ctx context.Context, cq *models.CallbackQuery, s
 	if a.recoverCallback(ctx, stopped, cq.Data) {
 		return flow.Reply{Notice: msgDelivering}
 	}
-	return a.flow.Choose(ctx, actorOf(cq.From, callbackDestination(cq)), cq.Data)
+	return a.flow.Choose(ctx, callbackActor(cq), cq.Data)
 }
 
 // callbackChat is the chat a button was pressed in.

@@ -61,7 +61,7 @@ func (e *Engine) chooseHome(ctx context.Context, sess session, p press) (Reply, 
 		return e.home(sess), true
 	case actionClose:
 		e.store.take(sess.id)
-		return Reply{Text: Lines(Heading(Plain("已关闭")), Line(Plain(msgClosed)))}, true
+		return closedReply(), true
 	case actionFeature:
 		features := e.features()
 		if p.arg < 0 || p.arg >= len(features) {
@@ -71,6 +71,10 @@ func (e *Engine) chooseHome(ctx context.Context, sess session, p press) (Reply, 
 		return features[p.arg].open(ctx, sess), true
 	}
 	return Reply{}, false
+}
+
+func closedReply() Reply {
+	return Reply{Text: Lines(Heading(Plain("已关闭")), Line(Plain(msgClosed)))}
 }
 
 // askTitle prompts for a title to search for.

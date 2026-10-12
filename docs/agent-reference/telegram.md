@@ -22,6 +22,9 @@ Explicit commands for another bot (`/search@other_bot`) are ignored before dispa
 destinations persist in `Actor.Address` as `chat/topic`; ordinary numeric addresses and channel usernames
 remain compatible. Only a positive `message_thread_id` on `is_topic_message` selects a forum topic. Commands,
 callbacks, typed answers and notices preserve it; pending input is keyed by chat, user and topic.
+`Actor.Private` is set (`callbackActor`/`messageActor`) only when the message really sits in a private chat; a
+callback whose message is inaccessible falls back to the user's ID as destination but is not private, so it
+never revives an expired page.
 
 `internal/telegram/input.go` - unquoted private text answers the newest pending prompt; an explicit reply must
 quote that prompt in every chat. A mismatched private reply gets a warning without editing either conversation
