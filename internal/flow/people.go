@@ -81,7 +81,7 @@ func (e *Engine) personWorks(ctx context.Context, sess session, p Person) Reply 
 	if len(works) == 0 {
 		return Reply{Notice: msgNoWorks}
 	}
-	sess.picks = works[:min(len(works), maxWorks)]
+	sess.picks, sess.download = works[:min(len(works), maxWorks)], false
 	return e.listPages(sess, pickView(sess, fmt.Sprintf("🎭 %s 的作品", p.Name)))
 }
 

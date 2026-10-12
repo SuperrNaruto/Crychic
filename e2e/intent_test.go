@@ -63,3 +63,27 @@ func TestDownloadIntentStopsAtRelatedMedia(t *testing.T) {
 	h.shows(1, "《沙丘》的资源")
 	h.tr.verify(t)
 }
+// Works listed from a person's credits are not searched for resources just
+// because the title the cast was opened from was searched with 下载.
+func TestDownloadIntentStopsAtPersonWorks(t *testing.T) {
+	p := start(t, scenario{
+		routes: map[string]route{
+			searchPath: ok("search_dune.json"), duneDetails: ok("detail_dune.json"), duneLookup: ok("subscription_none.json"),
+			duneCredits: ok("credits_dune.json"), chalametWorks: ok("person_works_tmdb.json"),
+			dunePartTwoDetails: ok("detail_dune_part_two.json"), dunePartTwoLookup: ok("subscription_none.json"),
+			duneTorrents: searchingSites("torrents_dune.json"),
+		},
+		searches: map[string]string{"沙丘2": "search_dune.json"},
+	})
+	p.say(alice, alice, "下载 沙丘")
+	p.searchTorrents(alice, 1, duneMovie)
+	p.tap(alice, 1, "返回")
+	p.tap(alice, 1, castLabel)
+	p.tap(alice, 1, "1")
+	p.tap(alice, 1, chalametDune2)
+	p.shows(1, "要订阅")
+	if strings.Count(p.tr.String(), "GET /api/v1/search/media/") != 1 {
+		t.Fatal("a person's work searched its resources without being asked")
+	}
+	p.tr.verify(t)
+}
