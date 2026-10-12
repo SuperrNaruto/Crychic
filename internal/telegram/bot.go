@@ -136,7 +136,7 @@ func New(cfg Config) (*Bot, error) {
 	a := &adapter{
 		allowed: allowed, log: cfg.Log, followEvery: cfg.FollowEvery, posters: newPosters(cfg.ImageClient, cfg.Log),
 		answerLead: cmp.Or(cfg.AnswerLead, defaultAnswerLead),
-		pending: map[inputKey]pendingInput{}, followers: map[messageKey]*follower{}, lanes: map[messageKey]*messageLane{},
+		pending:    map[inputKey]pendingInput{}, followers: map[messageKey]*follower{}, lanes: map[messageKey]*messageLane{},
 		inline:  inlineSearches{running: map[int64]inlineSearch{}},
 		initial: map[*initialReply]struct{}{},
 	}
