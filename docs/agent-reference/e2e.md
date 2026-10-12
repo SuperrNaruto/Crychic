@@ -52,7 +52,10 @@ replacement. The fake likewise answers each added download with its own hash (`a
 `h.tg.holdNextResponse(method)` delays a response after the fake displays its message; release is idempotent
 and cancellation ends the wait. `TestSubscribeMovie` presses a result before releasing the initial send, so
 callbacks must work before the sender learns poster file_ids; the transcript records this delivery ordering
-without requiring one poster transport representation.
+without requiring one poster transport representation. Scenarios default `answerLead` to `orderedAnswers`
+(longer than any action wait), so a fake edit always lands before its press is answered and transcripts keep
+that order; `TestSlowEditAnswersAlongside` sets a 1ms lead and `holdNextRequest` keeps the edit from being
+applied, so the press must be answered before the edit shows.
 
 `loseNextResponse` stores a displayed message but returns an incomplete HTTP body, distinguishing unknown
 send results from explicit media refusals. `rejectNextEdit` can return Telegram's 429 with `retry_after`;

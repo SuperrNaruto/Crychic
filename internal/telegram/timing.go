@@ -6,6 +6,9 @@ import (
 )
 
 const (
+	// defaultAnswerLead lets a quick edit land before its press is answered,
+	// keeping the two in order, while a slow one is answered alongside.
+	defaultAnswerLead = 50 * time.Millisecond
 	// slowPress is how long a button press may take, from receipt to its
 	// answer, before its stages are logged.
 	slowPress = 500 * time.Millisecond

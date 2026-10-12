@@ -3,6 +3,7 @@
 package telegram
 
 import (
+	"cmp"
 	"context"
 	"fmt"
 	"log/slog"
@@ -76,6 +77,7 @@ type Config struct {
 	APIURL       string
 	AllowedUsers []int64
 	FollowEvery  time.Duration // how often a live reply (flow.Reply.Follow) refreshes
+	AnswerLead   time.Duration // how long a press's edit runs before its answer goes alongside; zero is defaultAnswerLead
 	HTTPClient   *http.Client
 	ImageClient  *http.Client // downloads posters Telegram cannot fetch itself
 	Log          *slog.Logger
@@ -86,6 +88,7 @@ type adapter struct {
 	allowed     map[int64]bool
 	log         *slog.Logger
 	followEvery time.Duration
+	answerLead  time.Duration
 	posters     *posters
 	runCtx      context.Context
 	api         *bot.Bot // set once connected, before any update arrives
@@ -132,6 +135,7 @@ func New(cfg Config) (*Bot, error) {
 	}
 	a := &adapter{
 		allowed: allowed, log: cfg.Log, followEvery: cfg.FollowEvery, posters: newPosters(cfg.ImageClient, cfg.Log),
+		answerLead: cmp.Or(cfg.AnswerLead, defaultAnswerLead),
 		pending: map[inputKey]pendingInput{}, followers: map[messageKey]*follower{}, lanes: map[messageKey]*messageLane{},
 		inline:  inlineSearches{running: map[int64]inlineSearch{}},
 		initial: map[*initialReply]struct{}{},
@@ -308,11 +312,13 @@ func (a *adapter) start(ctx context.Context, actor flow.Actor, arg string) flow.
 	return a.flow.Open(ctx, actor, arg)
 }
 
-// onCallback answers the query last, so the client's spinner covers the
-// backend round trip and the answer can carry a notice. The owner's press
-// stops the message's follower before waiting for the message: a refresh
-// may be a long backend call (a resource search) holding it.
-func (a *adapter) onCallback(ctx context.Context, b *bot.Bot, cq *models.CallbackQuery) {
+// onCallback answers the query once the flow has decided, so the client's
+// spinner covers the backend round trip and the answer can carry a notice.
+// A press that edits answers when its edit lands or after answerLead,
+// whichever comes first, so a slow edit does not also wait for the answer.
+// The owner's press stops the message's follower before waiting for the
+// message: a refresh may be a long backend call (a resource search) holding it.
+func (a *adapter) onCallback(ctx context.Context, _ *bot.Bot, cq *models.CallbackQuery) {
 	watch := newStopwatch()
 	defer a.logSlowPress(watch, cq.Data)
 	actor := actorOf(cq.From, callbackDestination(cq))
@@ -331,16 +337,38 @@ func (a *adapter) onCallback(ctx context.Context, b *bot.Bot, cq *models.Callbac
 	watch.lap("flow")
 	if reply.Notice == "" && cq.Message.Message != nil {
 		a.supersedeInitial(callbackKey(cq))
-		a.showCallback(ctx, cq, reply)
-	} else if reply.Notice != "" {
+		a.showAnswering(ctx, cq, reply)
+		watch.lap("show")
+		return
+	}
+	if reply.Notice != "" {
 		a.resumeFollower(stopped)
 	}
-	watch.lap("show")
-	_, err := b.AnswerCallbackQuery(ctx, &bot.AnswerCallbackQueryParams{
-		CallbackQueryID: cq.ID,
-		Text:            reply.Notice,
-	})
+	a.answer(ctx, cq.ID, reply.Notice)
 	watch.lap("answer")
+}
+
+// showAnswering shows reply and answers the press alongside the edit
+// once it has run for answerLead; both have finished when it returns.
+func (a *adapter) showAnswering(ctx context.Context, cq *models.CallbackQuery, reply flow.Reply) {
+	shown := make(chan struct{})
+	var answered sync.WaitGroup
+	answered.Go(func() {
+		lead := time.NewTimer(a.answerLead)
+		defer lead.Stop()
+		select {
+		case <-shown:
+		case <-lead.C:
+		}
+		a.answer(ctx, cq.ID, "")
+	})
+	a.showCallback(ctx, cq, reply)
+	close(shown)
+	answered.Wait()
+}
+
+func (a *adapter) answer(ctx context.Context, id, notice string) {
+	_, err := a.api.AnswerCallbackQuery(ctx, &bot.AnswerCallbackQueryParams{CallbackQueryID: id, Text: notice})
 	a.logFailure("answerCallbackQuery", err)
 }
 

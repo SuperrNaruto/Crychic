@@ -54,7 +54,7 @@ e2e/                 # behavior tests: real app vs fake Telegram Bot API + fake 
 
 Data flow: Telegram update → `telegram.adapter` → `flow.Engine.Start/Choose` → `flow.Backend` (MoviePilot) →
 `flow.Reply` → `sendRichMessage` (command) or `editMessageText` with `rich_message` (button) →
-`answerCallbackQuery` last.
+`answerCallbackQuery` once the edit lands or has run for `answerLead`, whichever is first.
 
 平台不得被 flow 导入；具体依赖只在 app 装配，main 与 E2E 共用入口。平台只负责输入、渲染与投递；通知由 MP 原生渠道产生。
 

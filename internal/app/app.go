@@ -33,6 +33,9 @@ type Deps struct {
 	// Images downloads posters chat platforms cannot fetch themselves;
 	// nil uses a plain client.
 	Images *http.Client
+	// AnswerLead is how long a button press's edit runs before the press is
+	// answered alongside it; zero uses the bot's default.
+	AnswerLead time.Duration
 }
 
 // Run serves the Telegram bot and native notices until ctx is cancelled.
@@ -76,7 +79,7 @@ func telegramBot(cfg config.Config, transport *http.Transport, deps Deps) (*tele
 	}
 	return telegram.New(telegram.Config{
 		Token: cfg.TelegramToken, APIURL: cfg.TelegramAPIURL, AllowedUsers: cfg.TelegramAllowed,
-		FollowEvery: cfg.FollowEvery, HTTPClient: &http.Client{Timeout: telegramTimeout, Transport: transport},
+		FollowEvery: cfg.FollowEvery, AnswerLead: deps.AnswerLead, HTTPClient: &http.Client{Timeout: telegramTimeout, Transport: transport},
 		ImageClient: images, Log: deps.Log,
 	})
 }

@@ -69,6 +69,22 @@ func TestRepeatedPickKeepsOneBackStep(t *testing.T) {
 	h.tr.verify(t)
 }
 
+// A slow edit does not hold its press's answer: the spinner stops while
+// Telegram is still applying the edit, so the press returns before it shows.
+func TestSlowEditAnswersAlongside(t *testing.T) {
+	h := start(t, scenario{answerLead: time.Millisecond, routes: map[string]route{
+		searchPath: ok("search_dune.json"), duneDetails: ok("detail_dune.json"), duneLookup: ok("subscription_none.json"),
+	}})
+	h.say(alice, alice, "沙丘")
+	apply := h.tg.holdNextRequest("editMessageText")
+	shown := h.tg.expect("edit:1")
+	h.tap(alice, 1, duneMovie)
+	apply()
+	h.wait(shown, "the held card edit")
+	h.shows(1, "要订阅《沙丘》吗")
+	h.tr.verify(t)
+}
+
 // Pausing or resuming updates the list returned to from details, keeping
 // the filter and page where the user opened the subscription.
 func TestSubscriptionStateReturnsToCurrentList(t *testing.T) {

@@ -4,6 +4,7 @@
 package e2e
 
 import (
+	"cmp"
 	"context"
 	"fmt"
 	"log/slog"
@@ -30,6 +31,9 @@ const (
 	notifyQuiet = "300ms"
 	// progressInterval keeps live task views refreshing fast enough for tests.
 	progressInterval = "100ms"
+	// orderedAnswers outlasts any wait for an action, so every fake edit
+	// lands before its press is answered.
+	orderedAnswers = 2 * actionTimeout
 )
 
 // epoch is when every scenario starts, a Monday noon in China, so the
@@ -51,6 +55,9 @@ type scenario struct {
 	// searches answers a search for one title with its own fixture; other
 	// titles get the searchPath route.
 	searches map[string]string
+	// answerLead is how long a press's edit runs before its answer goes
+	// alongside; empty waits for the edit, keeping their order fixed.
+	answerLead time.Duration
 }
 
 type harness struct {
@@ -61,7 +68,8 @@ type harness struct {
 	bgm    *fakeBangumi
 	img    *fakeImages
 	cfg    config.Config
-	began  time.Time // real time at epoch; restarts keep the clock going
+	lead   time.Duration // the scenario's answerLead
+	began  time.Time     // real time at epoch; restarts keep the clock going
 	stop   func()
 	nextCB int
 	offset atomic.Int64 // simulated elapsed time, in nanoseconds
@@ -103,6 +111,7 @@ func start(t *testing.T, sc scenario) *harness {
 		t.Fatal(err)
 	}
 	h := &harness{t: t, tr: tr, tg: tg, mp: mp, bgm: bgm, img: newFakeImages(t), cfg: cfg, began: time.Now()}
+	h.lead = cmp.Or(sc.answerLead, orderedAnswers)
 	registered := tg.expect(commandsKey)
 	h.launch()
 	h.wait(registered, "registering the command menu")
@@ -134,7 +143,9 @@ func (h *harness) launch() {
 	stopped := make(chan error, 1)
 	log := slog.New(slog.NewTextHandler(testWriter{h.t}, nil))
 	now := func() time.Time { return epoch.Add(time.Since(h.began) + time.Duration(h.offset.Load())) }
-	go func() { stopped <- app.Run(ctx, h.cfg, app.Deps{Log: log, Now: now, Images: h.img.client()}) }()
+	go func() {
+		stopped <- app.Run(ctx, h.cfg, app.Deps{Log: log, Now: now, Images: h.img.client(), AnswerLead: h.lead})
+	}()
 	h.stop = func() {
 		cancel()
 		if err := <-stopped; err != nil {

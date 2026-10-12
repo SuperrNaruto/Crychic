@@ -54,3 +54,32 @@ func (f *fakeTelegram) waitResponse(ctx context.Context, method string) bool {
 	}
 	return false
 }
+
+// holdNextRequest models Telegram being slow to apply a request: it is
+// neither displayed nor answered until release.
+func (f *fakeTelegram) holdNextRequest(method string) func() {
+	f.mu.Lock()
+	defer f.mu.Unlock()
+	hold := &responseHold{method: method, done: make(chan struct{})}
+	f.request = hold
+	f.tr.add(">> Telegram holds the next " + method + " request before applying it")
+	return sync.OnceFunc(func() {
+		f.tr.add(">> Telegram applies the held " + method + " request")
+		close(hold.done)
+	})
+}
+
+func (f *fakeTelegram) awaitRequest(ctx context.Context, method string) {
+	f.mu.Lock()
+	hold := f.request
+	if hold == nil || hold.method != method {
+		f.mu.Unlock()
+		return
+	}
+	f.request = nil
+	f.mu.Unlock()
+	select {
+	case <-hold.done:
+	case <-ctx.Done():
+	}
+}

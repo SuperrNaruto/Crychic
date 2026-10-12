@@ -58,6 +58,7 @@ type fakeTelegram struct {
 	forums    map[int64]bool
 	failure   *editFailure
 	response  *responseHold
+	request   *responseHold // a request applied only once released
 	stall     string
 	stalled   chan struct{}
 	badImage  string          // an image URL Telegram fails to fetch
@@ -133,6 +134,7 @@ func (f *fakeTelegram) serve(w http.ResponseWriter, r *http.Request) {
 	if f.wait(r, method) {
 		return
 	}
+	f.awaitRequest(r.Context(), method)
 	if f.rejectEdit(w, r, method) {
 		return
 	}
