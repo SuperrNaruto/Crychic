@@ -61,8 +61,9 @@ func TestNativeChannelKeepsTargetAndTopic(t *testing.T) {
 
 func TestNativeUnknownSendIsNotReplayed(t *testing.T) {
 	h := start(t, scenario{})
-	h.tg.loseNextResponse("sendRichMessage")
+	lost := h.tg.loseNextResponse("sendRichMessage")
 	h.nativeNotice(personalNative("MP 未知发送", "发送响应丢失"))
+	h.wait(lost, "the lost response after displaying the native notice")
 	h.restart()
 	h.nativeNotice(personalNative("MP 后续通知", "继续处理新消息"))
 	if strings.Count(h.tr.String(), "<h3>🔔 MP 未知发送</h3>") != 1 {
