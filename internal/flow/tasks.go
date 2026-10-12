@@ -223,7 +223,7 @@ func expired(action string) Reply {
 	case actionMedia, actionSeason, actionConfirm, actionAskFrom, actionCancel, actionMulti, actionTick, actionSubscribed,
 		actionRelated, actionSeries, actionResearch, actionRetry, actionCast, actionCastPerson, actionWorkPick, actionGroups, actionGroupPick, actionSeriesPlan, actionSeriesTick, actionSeriesGet,
 		actionTorrents, actionTorrentRun, actionTorrentRetry, actionTorrentAgain, actionTorrentPick, actionTorrentGet,
-		actionTorrentSort, actionTorrentSites, actionTorrentSite, actionTorrentMissing,
+		actionTorrentView, actionTorrentList, actionTorrentSort, actionTorrentSites, actionTorrentSite, actionTorrentMissing,
 		actionTorrentMulti, actionTorrentTick, actionTorrentBatch, actionTorrentBatchGet, actionUpgrade, actionUpgradeConfirm:
 		return expiredText(msgExpired)
 	}

@@ -55,7 +55,7 @@ var sameLevel = map[string]bool{
 	actionTick:               true, actionChartPage: true, actionWeekday: true, actionPage: true, answered: true,
 	actionRetry: true, actionSubsKind: true, actionHistoryKind: true, actionHistoryMore: true, actionRefreshSubDetail: true,
 	actionPauseSub: true, actionResumeSub: true,
-	actionTorrentAgain: true, actionTorrentSort: true, actionTorrentSites: true, actionTorrentSite: true,
+	actionTorrentAgain: true, actionTorrentView: true, actionTorrentList: true, actionTorrentSort: true, actionTorrentSites: true, actionTorrentSite: true,
 	actionTorrentTick: true, actionTorrentMissing: true,
 	actionTorrentFilter: true, actionTorrentFilterField: true, actionTorrentFilterTick: true, actionTorrentFilterClear: true,
 	actionTorrentRefresh: true, actionTorrentResearch: true,
@@ -243,7 +243,7 @@ func (e *Engine) back(ctx context.Context, sess session) Reply {
 func torrentScreenAction(action string) bool {
 	switch action {
 	case actionTorrentRun, actionTorrentAgain, actionTorrentRefresh, actionTorrentResearch,
-		actionTorrentPick, actionTorrentGet, actionTorrentSort, actionTorrentSites,
+		actionTorrentPick, actionTorrentGet, actionTorrentView, actionTorrentList, actionTorrentSort, actionTorrentSites,
 		actionTorrentSite, actionTorrentMissing, actionTorrentMulti, actionTorrentTick,
 		actionTorrentFilter, actionTorrentFilterField, actionTorrentFilterTick, actionTorrentFilterClear,
 		actionTorrentBatch, actionTorrentBatchGet, actionTorrentPlan, actionTorrentPlanRefresh, actionPage, actionBack:

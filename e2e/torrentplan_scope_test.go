@@ -13,8 +13,10 @@ func TestTorrentPlanSiteScopeAndStableSelection(t *testing.T) {
 	planLibrary(h, []int{1, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13})
 	h.say(alice, alice, "/search 迷途之子")
 	openPlanResources(h, 1)
+	h.tap(alice, 1, sortFilter)
 	h.tap(alice, 1, "筛选站点")
 	h.tap(alice, 1, "站点甲")
+	h.tap(alice, 1, "返回")
 	if strings.Contains(mustMessage(h, 1).text, "WinnerEarly") {
 		t.Fatal("the winning candidate must start outside the current page")
 	}
@@ -23,7 +25,9 @@ func TestTorrentPlanSiteScopeAndStableSelection(t *testing.T) {
 	h.shows(1, "E03")
 	stale, _ := findButton(mustMessage(h, 1).rows, downloadIt)
 	h.tap(alice, 1, "返回")
+	h.tap(alice, 1, sortFilter)
 	h.tap(alice, 1, "做种")
+	h.tap(alice, 1, "返回")
 	h.tap(alice, 1, missingPlan)
 	h.shows(1, "WinnerEarly")
 	for _, excluded := range []string{"ForeignSite", "WinnerLate", "HRCheap", "RepeatSmall", "UnknownSize", "Larger"} {

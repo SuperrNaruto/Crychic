@@ -5,15 +5,19 @@ import (
 	"context"
 	"fmt"
 	"slices"
+	"strings"
 )
 
 const (
-	actionTorrentSort  = "to" // arg: index into torrentSorts; shows the releases in that order
+	actionTorrentView  = "tv" // opens 排序与筛选
+	actionTorrentSort  = "tc" // arg: index into torrentSorts; picks the order on 排序与筛选
+	actionTorrentList  = "ta" // shows the release list as sorted and filtered now
 	actionTorrentSites = "tf" // lists the releases' sites to show one of them
 	actionTorrentSite  = "tw" // arg: 0 for every site, else 1 + index into the sites
 
 	siteColumns = 3
 
+	msgSortFilter = "排序与筛选"
 	msgAllSites   = "全部站点"
 	msgPickSite   = "只看哪个站点的资源呀？"
 	msgSiteFilter = "筛选站点"
@@ -50,35 +54,111 @@ func newerFirst(a, b Torrent) int {
 	return cmp.Compare(b.Published, a.Published)
 }
 
-// chooseTorrentView applies the sort and filters of the release list;
-// ok is false for other actions.
+// chooseTorrentView applies the sort and filters of the release list on
+// 排序与筛选, which every step but 返回 redraws in place; ok is false for
+// other actions.
 func (e *Engine) chooseTorrentView(_ context.Context, sess session, p press) (Reply, bool) {
 	switch p.action {
+	case actionTorrentView:
+		return e.sortFilterPanel(sess), true
+	case actionTorrentList:
+		return e.releases(sess), true
 	case actionTorrentSort:
 		if p.arg < 0 || p.arg >= len(torrentSorts) {
 			return Reply{Notice: msgInvalidChoice}, true
 		}
 		sess.torrentSort = p.arg
-		return e.releases(sess), true
+		return e.sortFilterPanel(sess), true
 	case actionTorrentSites:
 		sess.searchView = torrentFilterView
 		e.store.put(sess)
 		return sitePicker(sess), true
 	case actionTorrentSite:
-		sites := torrentSites(sess.activeResources())
-		if p.arg < 0 || p.arg > len(sites) {
-			return Reply{Notice: msgInvalidChoice}, true
-		}
-		sess.torrentSite = ""
-		if p.arg > 0 {
-			sess.torrentSite = sites[p.arg-1].name
-		}
-		return e.releases(sess), true
+		return e.pickSite(sess, p.arg), true
 	case actionTorrentMissing:
 		sess.missingOnly = p.arg == 1
-		return e.releases(sess), true
+		return e.sortFilterPanel(sess), true
 	}
 	return Reply{}, false
+}
+
+// pickSite shows only the releases of site arg (0 for every site) and goes
+// back to 排序与筛选.
+func (e *Engine) pickSite(sess session, arg int) Reply {
+	sites := torrentSites(sess.activeResources())
+	if arg < 0 || arg > len(sites) {
+		return Reply{Notice: msgInvalidChoice}
+	}
+	sess.torrentSite = ""
+	if arg > 0 {
+		sess.torrentSite = sites[arg-1].name
+	}
+	return e.sortFilterPanel(sess)
+}
+
+// sortFilterPanel shows the current order and filters of the releases with
+// the controls to change them; 返回 shows the list as it is by then.
+func (e *Engine) sortFilterPanel(sess session) Reply {
+	if sess.focus == nil || len(sess.torrents) == 0 {
+		return Reply{Notice: msgInvalidChoice}
+	}
+	if sess.streaming && sess.hunt != nil {
+		sess = syncedHunt(sess, sess.hunt.read())
+	}
+	sess.searchView = torrentFilterView
+	return e.listPages(sess, sortFilterView(sess))
+}
+
+func sortFilterView(sess session) listView {
+	order := torrentSorts[sess.torrentSort]
+	view := listView{
+		heading: Heading(Plain("🔍 " + msgSortFilter)),
+		note:    releaseCount(sess, len(sess.shownTorrents())) + "，调好后点「返回」看结果～",
+		entries: []listEntry{
+			{text: Lines(Line(Strong("排序："), Plain(order.label+"，"+order.note)))},
+			{text: Lines(Line(Strong("筛选："), Plain(filterText(sess))))},
+		},
+		menu:   [][]Button{sortRow(sess)},
+		footer: []Button{backTo(sess.id, actionTorrentList, 0), cancelButton(sess.id)},
+	}
+	if row := missingSwitch(sess); len(row) > 0 {
+		view.menu = append(view.menu, row)
+	}
+	if row := filterRow(sess); len(row) > 0 {
+		view.menu = append(view.menu, row)
+	}
+	return view
+}
+
+// filterText names the active conditions, 不限 when there are none.
+func filterText(sess session) string {
+	var parts []string
+	if sess.torrentSite != "" {
+		parts = append(parts, "站点 "+sess.torrentSite)
+	}
+	if sess.missingOnly {
+		parts = append(parts, msgMissingOnly)
+	}
+	if sess.releaseFilter.active() {
+		parts = append(parts, sess.releaseFilter.summary())
+	}
+	if len(parts) == 0 {
+		return msgAnyValue
+	}
+	return strings.Join(parts, " · ")
+}
+
+// filterRow offers the site filter, when there is more than one site, and
+// the combined filter.
+func filterRow(sess session) []Button {
+	var row []Button
+	if sess.torrentSite != "" || len(torrentSites(sess.activeResources())) > 1 {
+		row = append(row, Button{Label: msgSiteFilter, Data: data(sess.id, actionTorrentSites, 0)})
+	}
+	if sess.releaseFilter.active() || len(sess.activeTorrents()) > 1 {
+		row = append(row, Button{Label: msgReleaseFilter, Data: data(sess.id, actionTorrentFilter, 0)})
+	}
+	return row
 }
 
 // releases lists the session's releases as sorted and filtered now.
@@ -166,8 +246,8 @@ func torrentSites(torrents []Torrent) []siteCount {
 	return sites
 }
 
-// sitePicker offers each site of the releases, and every site; 返回 shows
-// the list as it was.
+// sitePicker offers each site of the releases, and every site; 返回 goes
+// back to 排序与筛选.
 func sitePicker(sess session) Reply {
 	sites := torrentSites(sess.activeResources())
 	text := Lines(Heading(Plain("🔍 "+msgSiteFilter)), Line(Strong(msgPickSite)))
@@ -177,6 +257,6 @@ func sitePicker(sess session) Reply {
 		buttons = append(buttons, Button{Label: markShown(s.name, s.name == sess.torrentSite), Data: data(sess.id, actionTorrentSite, i+1)})
 	}
 	rows := grid(buttons, siteColumns)
-	rows = append(rows, []Button{backTo(sess.id, actionTorrentSort, sess.torrentSort), cancelButton(sess.id)})
+	rows = append(rows, []Button{backTo(sess.id, actionTorrentView, 0), cancelButton(sess.id)})
 	return Reply{Text: text, Buttons: rows}
 }

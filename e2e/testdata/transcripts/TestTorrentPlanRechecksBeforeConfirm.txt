@@ -70,9 +70,7 @@
    </ol>
    <footer>共 2 个，按 MoviePilot 的优先级排好啦，点编号看详情～</footer>
    [1 | 1:tp:0] [2 | 1:tp:1]
-   [·默认· | 1:to:0] [做种 | 1:to:1] [时间 | 1:to:2] [大小 | 1:to:3] [站点 | 1:to:4]
-   [组合筛选 | 1:ti:0] [多选… | 1:tm:0]
-   [缺集方案 | 1:pl:0]
+   [排序与筛选… | 1:tv:0] [多选… | 1:tm:0] [缺集方案 | 1:pl:0]
    [返回 | 1:bk:0] [取消 | 1:x:0]
 >> user 1001 taps 1:pl:0 on message 1
 -> MoviePilot GET /api/v1/media/seasons?media_id=224207&media_source=themoviedb

@@ -85,10 +85,7 @@
    [1 | 1:tp:0] [2 | 1:tp:1] [3 | 1:tp:2] [4 | 1:tp:3]
    [5 | 1:tp:4] [6 | 1:tp:5] [7 | 1:tp:6] [8 | 1:tp:7]
    [下一页 › | 1:p:1]
-   [·默认· | 1:to:0] [做种 | 1:to:1] [时间 | 1:to:2] [大小 | 1:to:3] [站点 | 1:to:4]
-   [只看缺集 | 1:tx:1]
-   [筛选站点 | 1:tf:0] [组合筛选 | 1:ti:0]
-   [多选… | 1:tm:0] [缺集方案 | 1:pl:0]
+   [排序与筛选… | 1:tv:0] [多选… | 1:tm:0] [缺集方案 | 1:pl:0]
    [返回 | 1:bk:0] [取消 | 1:x:0]
 >> user 1001 taps 1:tm:0 on message 1
 << editMessageText chat=1001 message=1
@@ -117,10 +114,7 @@
    [5 | 1:tk:4] [6 | 1:tk:5] [7 | 1:tk:6] [8 | 1:tk:7]
    [下一页 › | 1:p:1]
    [下载所选 0 个 | 1:tb:0]
-   [·默认· | 1:to:0] [做种 | 1:to:1] [时间 | 1:to:2] [大小 | 1:to:3] [站点 | 1:to:4]
-   [只看缺集 | 1:tx:1]
-   [筛选站点 | 1:tf:0] [组合筛选 | 1:ti:0]
-   [缺集方案 | 1:pl:0]
+   [排序与筛选… | 1:tv:0] [缺集方案 | 1:pl:0]
    [返回 | 1:bk:0] [取消 | 1:x:0]
 << answerCallbackQuery
 >> user 1001 taps 1:tk:1 on message 1
@@ -150,10 +144,7 @@
    [5 | 1:tk:4] [6 | 1:tk:5] [7 | 1:tk:6] [8 | 1:tk:7]
    [下一页 › | 1:p:1]
    [下载所选 1 个 | 1:tb:0]
-   [·默认· | 1:to:0] [做种 | 1:to:1] [时间 | 1:to:2] [大小 | 1:to:3] [站点 | 1:to:4]
-   [只看缺集 | 1:tx:1]
-   [筛选站点 | 1:tf:0] [组合筛选 | 1:ti:0]
-   [缺集方案 | 1:pl:0]
+   [排序与筛选… | 1:tv:0] [缺集方案 | 1:pl:0]
    [返回 | 1:bk:0] [取消 | 1:x:0]
 << answerCallbackQuery
 >> user 1001 taps 1:tk:2 on message 1
@@ -183,10 +174,7 @@
    [5 | 1:tk:4] [6 | 1:tk:5] [7 | 1:tk:6] [8 | 1:tk:7]
    [下一页 › | 1:p:1]
    [下载所选 2 个 | 1:tb:0]
-   [·默认· | 1:to:0] [做种 | 1:to:1] [时间 | 1:to:2] [大小 | 1:to:3] [站点 | 1:to:4]
-   [只看缺集 | 1:tx:1]
-   [筛选站点 | 1:tf:0] [组合筛选 | 1:ti:0]
-   [缺集方案 | 1:pl:0]
+   [排序与筛选… | 1:tv:0] [缺集方案 | 1:pl:0]
    [返回 | 1:bk:0] [取消 | 1:x:0]
 << answerCallbackQuery
 >> user 1001 taps 1:p:1 on message 1
@@ -212,10 +200,7 @@
    [13 | 1:tk:12] [14 | 1:tk:13]
    [‹ 上一页 | 1:p:0]
    [下载所选 2 个 | 1:tb:0]
-   [·默认· | 1:to:0] [做种 | 1:to:1] [时间 | 1:to:2] [大小 | 1:to:3] [站点 | 1:to:4]
-   [只看缺集 | 1:tx:1]
-   [筛选站点 | 1:tf:0] [组合筛选 | 1:ti:0]
-   [缺集方案 | 1:pl:0]
+   [排序与筛选… | 1:tv:0] [缺集方案 | 1:pl:0]
    [返回 | 1:bk:0] [取消 | 1:x:0]
 << answerCallbackQuery
 >> user 1001 taps 1:tk:8 on message 1
@@ -241,46 +226,43 @@
    [13 | 1:tk:12] [14 | 1:tk:13]
    [‹ 上一页 | 1:p:0]
    [下载所选 3 个 | 1:tb:0]
-   [·默认· | 1:to:0] [做种 | 1:to:1] [时间 | 1:to:2] [大小 | 1:to:3] [站点 | 1:to:4]
-   [只看缺集 | 1:tx:1]
-   [筛选站点 | 1:tf:0] [组合筛选 | 1:ti:0]
-   [缺集方案 | 1:pl:0]
+   [排序与筛选… | 1:tv:0] [缺集方案 | 1:pl:0]
    [返回 | 1:bk:0] [取消 | 1:x:0]
 << answerCallbackQuery
->> user 1001 taps 1:to:1 on message 1
+>> user 1001 taps 1:tv:0 on message 1
 << editMessageText chat=1001 message=1
-   <h3>🔍 《迷途之子!!!!!》第 1 季的资源</h3>
-   <ol start="1">
-   <li value="1"><b>BanG.Dream.It&#39;s.MyGO.S01.2023.1080p.BluRay.x265.FLAC-VCB</b><br>
-   <i>站点甲 · 21.4 GiB · 做种 40 · 免费 · 补 E01–E12</i></li>
-   <li value="2"><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 13 [WebRip 1080p HEVC-10bit AAC]</b><br>
-   <i>站点丁 · 512.0 MiB · 做种 23 · E13 · 已都有</i></li>
-   <li value="3"><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 12 [WebRip 1080p HEVC-10bit AAC]</b><br>
-   <i>站点丁 · 512.0 MiB · 做种 22 · E12</i></li>
-   <li value="4"><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 11 [WebRip 1080p HEVC-10bit AAC]</b><br>
-   <i>站点丁 · 512.0 MiB · 做种 21 · E11</i></li>
-   <li value="5"><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 10 [WebRip 1080p HEVC-10bit AAC]</b><br>
-   <i>站点丁 · 512.0 MiB · 做种 20 · E10</i></li>
-   <li value="6"><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 09 [WebRip 1080p HEVC-10bit AAC]</b><br>
-   <i>站点丁 · 512.0 MiB · 做种 19 · E09</i></li>
-   <li value="7"><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 08 [WebRip 1080p HEVC-10bit AAC]</b><br>
-   <i>站点丁 · 512.0 MiB · 做种 18 · E08 · <mark>已选</mark></i></li>
-   <li value="8"><b>[LoliHouse] BanG Dream! It&#39;s MyGO!!!!! - 07 [WebRip 1080p HEVC-10bit AAC]</b><br>
-   <i>站点丁 · 512.0 MiB · 做种 17 · E07</i></li>
-   </ol>
-   <footer>共 14 个，做种人数从多到少，已选 3 个，点编号勾选，再点一次取消～</footer>
-   <footer>第 1/2 页</footer>
-   [1 | 1:tk:0] [2 | 1:tk:13] [3 | 1:tk:12] [4 | 1:tk:11]
-   [5 | 1:tk:10] [6 | 1:tk:9] [✓ 7 | 1:tk:8] [8 | 1:tk:7]
-   [下一页 › | 1:p:1]
-   [下载所选 3 个 | 1:tb:0]
-   [默认 | 1:to:0] [·做种· | 1:to:1] [时间 | 1:to:2] [大小 | 1:to:3] [站点 | 1:to:4]
+   <h3>🔍 排序与筛选</h3>
+   <p><b>排序：</b>默认，按 MoviePilot 的优先级排好啦<br>
+   <b>筛选：</b>不限</p>
+   <footer>共 14 个，调好后点「返回」看结果～</footer>
+   [·默认· | 1:tc:0] [做种 | 1:tc:1] [时间 | 1:tc:2] [大小 | 1:tc:3] [站点 | 1:tc:4]
    [只看缺集 | 1:tx:1]
    [筛选站点 | 1:tf:0] [组合筛选 | 1:ti:0]
-   [缺集方案 | 1:pl:0]
-   [返回 | 1:bk:0] [取消 | 1:x:0]
+   [返回 | 1:ta:0] [取消 | 1:x:0]
 << answerCallbackQuery
->> user 1001 taps 1:to:0 on message 1
+>> user 1001 taps 1:tc:1 on message 1
+<< editMessageText chat=1001 message=1
+   <h3>🔍 排序与筛选</h3>
+   <p><b>排序：</b>做种，做种人数从多到少<br>
+   <b>筛选：</b>不限</p>
+   <footer>共 14 个，调好后点「返回」看结果～</footer>
+   [默认 | 1:tc:0] [·做种· | 1:tc:1] [时间 | 1:tc:2] [大小 | 1:tc:3] [站点 | 1:tc:4]
+   [只看缺集 | 1:tx:1]
+   [筛选站点 | 1:tf:0] [组合筛选 | 1:ti:0]
+   [返回 | 1:ta:0] [取消 | 1:x:0]
+<< answerCallbackQuery
+>> user 1001 taps 1:tc:0 on message 1
+<< editMessageText chat=1001 message=1
+   <h3>🔍 排序与筛选</h3>
+   <p><b>排序：</b>默认，按 MoviePilot 的优先级排好啦<br>
+   <b>筛选：</b>不限</p>
+   <footer>共 14 个，调好后点「返回」看结果～</footer>
+   [·默认· | 1:tc:0] [做种 | 1:tc:1] [时间 | 1:tc:2] [大小 | 1:tc:3] [站点 | 1:tc:4]
+   [只看缺集 | 1:tx:1]
+   [筛选站点 | 1:tf:0] [组合筛选 | 1:ti:0]
+   [返回 | 1:ta:0] [取消 | 1:x:0]
+<< answerCallbackQuery
+>> user 1001 taps 1:ta:0 on message 1
 << editMessageText chat=1001 message=1
    <h3>🔍 《迷途之子!!!!!》第 1 季的资源</h3>
    <ol start="1">
@@ -307,10 +289,7 @@
    [5 | 1:tk:4] [6 | 1:tk:5] [7 | 1:tk:6] [8 | 1:tk:7]
    [下一页 › | 1:p:1]
    [下载所选 3 个 | 1:tb:0]
-   [·默认· | 1:to:0] [做种 | 1:to:1] [时间 | 1:to:2] [大小 | 1:to:3] [站点 | 1:to:4]
-   [只看缺集 | 1:tx:1]
-   [筛选站点 | 1:tf:0] [组合筛选 | 1:ti:0]
-   [缺集方案 | 1:pl:0]
+   [排序与筛选… | 1:tv:0] [缺集方案 | 1:pl:0]
    [返回 | 1:bk:0] [取消 | 1:x:0]
 << answerCallbackQuery
 >> user 1001 taps 1:tk:2 on message 1
@@ -340,10 +319,7 @@
    [5 | 1:tk:4] [6 | 1:tk:5] [7 | 1:tk:6] [8 | 1:tk:7]
    [下一页 › | 1:p:1]
    [下载所选 2 个 | 1:tb:0]
-   [·默认· | 1:to:0] [做种 | 1:to:1] [时间 | 1:to:2] [大小 | 1:to:3] [站点 | 1:to:4]
-   [只看缺集 | 1:tx:1]
-   [筛选站点 | 1:tf:0] [组合筛选 | 1:ti:0]
-   [缺集方案 | 1:pl:0]
+   [排序与筛选… | 1:tv:0] [缺集方案 | 1:pl:0]
    [返回 | 1:bk:0] [取消 | 1:x:0]
 << answerCallbackQuery
 >> user 1001 taps 1:tb:0 on message 1
@@ -390,10 +366,7 @@
    [5 | 1:tk:4] [6 | 1:tk:5] [7 | 1:tk:6] [8 | 1:tk:7]
    [下一页 › | 1:p:1]
    [下载所选 2 个 | 1:tb:0]
-   [·默认· | 1:to:0] [做种 | 1:to:1] [时间 | 1:to:2] [大小 | 1:to:3] [站点 | 1:to:4]
-   [只看缺集 | 1:tx:1]
-   [筛选站点 | 1:tf:0] [组合筛选 | 1:ti:0]
-   [缺集方案 | 1:pl:0]
+   [排序与筛选… | 1:tv:0] [缺集方案 | 1:pl:0]
    [返回 | 1:bk:0] [取消 | 1:x:0]
 << answerCallbackQuery
 >> user 1001 taps 1:tb:0 on message 1
@@ -560,10 +533,7 @@
    [1 | 2:tp:0] [2 | 2:tp:1] [3 | 2:tp:2] [4 | 2:tp:3]
    [5 | 2:tp:4] [6 | 2:tp:5] [7 | 2:tp:6] [8 | 2:tp:7]
    [下一页 › | 2:p:1]
-   [·默认· | 2:to:0] [做种 | 2:to:1] [时间 | 2:to:2] [大小 | 2:to:3] [站点 | 2:to:4]
-   [只看缺集 | 2:tx:1]
-   [筛选站点 | 2:tf:0] [组合筛选 | 2:ti:0]
-   [多选… | 2:tm:0] [缺集方案 | 2:pl:0]
+   [排序与筛选… | 2:tv:0] [多选… | 2:tm:0] [缺集方案 | 2:pl:0]
    [返回 | 2:bk:0] [取消 | 2:x:0]
 >> user 1001 taps 2:tm:0 on message 4
 << editMessageText chat=1001 message=4
@@ -592,10 +562,7 @@
    [5 | 2:tk:4] [6 | 2:tk:5] [7 | 2:tk:6] [8 | 2:tk:7]
    [下一页 › | 2:p:1]
    [下载所选 0 个 | 2:tb:0]
-   [·默认· | 2:to:0] [做种 | 2:to:1] [时间 | 2:to:2] [大小 | 2:to:3] [站点 | 2:to:4]
-   [只看缺集 | 2:tx:1]
-   [筛选站点 | 2:tf:0] [组合筛选 | 2:ti:0]
-   [缺集方案 | 2:pl:0]
+   [排序与筛选… | 2:tv:0] [缺集方案 | 2:pl:0]
    [返回 | 2:bk:0] [取消 | 2:x:0]
 << answerCallbackQuery
 >> user 1001 taps 2:tk:0 on message 4
@@ -625,10 +592,7 @@
    [5 | 2:tk:4] [6 | 2:tk:5] [7 | 2:tk:6] [8 | 2:tk:7]
    [下一页 › | 2:p:1]
    [下载所选 1 个 | 2:tb:0]
-   [·默认· | 2:to:0] [做种 | 2:to:1] [时间 | 2:to:2] [大小 | 2:to:3] [站点 | 2:to:4]
-   [只看缺集 | 2:tx:1]
-   [筛选站点 | 2:tf:0] [组合筛选 | 2:ti:0]
-   [缺集方案 | 2:pl:0]
+   [排序与筛选… | 2:tv:0] [缺集方案 | 2:pl:0]
    [返回 | 2:bk:0] [取消 | 2:x:0]
 << answerCallbackQuery
 >> user 1001 taps 2:tb:0 on message 4

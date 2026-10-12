@@ -36,11 +36,7 @@ func torrentList(sess session, target Target) listView {
 		label := fmt.Sprintf("下载所选 %d 个", len(sess.ticked))
 		view.menu = append(view.menu, []Button{{Label: label, Data: data(sess.id, actionTorrentBatch, 0)}})
 	}
-	view.menu = append(view.menu, sortRow(sess))
-	if row := missingSwitch(sess); len(row) > 0 {
-		view.menu = append(view.menu, row)
-	}
-	view.menu = append(view.menu, grid(onwardRow(sess), menuColumns)...)
+	view.menu = append(view.menu, onwardRow(sess))
 	view.menu = append(view.menu, streamSearchMenu(sess)...)
 	for n, i := range shown {
 		view.entries = append(view.entries, releaseEntry(sess, n+1, i))
@@ -72,16 +68,10 @@ func listHint(sess session) string {
 	return "点编号看详情～"
 }
 
-// onwardRow offers the site filter, when there is more than one site, and
-// ticking several releases, unless they are being ticked.
+// onwardRow offers 排序与筛选…, ticking several releases, unless they are
+// being ticked, and the missing-episode plan, on one row.
 func onwardRow(sess session) []Button {
-	var row []Button
-	if sess.torrentSite != "" || len(torrentSites(sess.activeResources())) > 1 {
-		row = append(row, Button{Label: msgSiteFilter, Data: data(sess.id, actionTorrentSites, 0)})
-	}
-	if sess.releaseFilter.active() || len(sess.activeTorrents()) > 1 {
-		row = append(row, Button{Label: msgReleaseFilter, Data: data(sess.id, actionTorrentFilter, 0)})
-	}
+	row := []Button{{Label: msgSortFilter + "…", Data: data(sess.id, actionTorrentView, 0)}}
 	if !sess.ticking && len(sess.activeTorrents()) > 1 && (!sess.streaming || sess.searchDone && sess.searchFinal) {
 		row = append(row, Button{Label: msgTickReleases, Data: data(sess.id, actionTorrentMulti, 0)})
 	}

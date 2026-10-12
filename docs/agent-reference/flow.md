@@ -305,17 +305,24 @@ the background (`torrenthunt.go`, `session.hunt`; 取消 stops it) and show the 
 `Reply.Follow` (`tg` leads on from the card, `tq` replaces a failure): each refresh only checks the search,
 saying how many seconds it has run (from `Now`, so `h.advance` moves it) until the results replace it;
 releases list in MoviePilot's order (8 a page, number buttons `tp` carrying each release's own index),
-re-sortable like the WebUI (`torrentsort.go`: 默认/做种/时间/大小/站点, `to`, same-level) and filtered to one site (筛选站点
-`tf` lists sites with counts, `tw` picks one or all; its 返回 re-shows the list); 组合筛选 (`torrentfilter.go`, `ti`
+re-sortable like the WebUI and filtered to one site, both behind 排序与筛选… (`torrentsort.go`): the list menu is one
+row [排序与筛选…][多选…][缺集方案] (each only where it applies), and `tv` opens the 排序与筛选 screen, which shows the current
+order and the active conditions (site, 只看缺集, 组合筛选 with the count 符合 N 个，共 M 个) over the sort row 默认/做种/时间/大小/站点
+(`tc`, marked `·X·`), 只看缺集 and [筛选站点][组合筛选]. It is a same-level screen, not a `forward` step: 返回 would restore
+the saved state and roll back a sort chosen there, so every control redraws the screen in place from the session's
+current state, and its own 返回 (`ta`) redraws the list from that state (first page, a streaming list synced with the
+search first). 筛选站点 (`tf` lists sites with counts, `tw` picks one or all) and 组合筛选 return to 排序与筛选; the old
+list-level sort buttons (`to`) no longer exist and a stale one is refused, and while a search streams every one of
+these controls must be on the shown screen; 组合筛选 (`torrentfilter.go`, `ti`
 panel, `tj` opens a field and fixes its offered values, `tl` ticks one of them (its arg carries that opening's generation, from a session counter 返回 never rewinds, so
 a button from another field or an earlier opening is refused), `tn` clears a field or all; all
-same-level, 返回 re-shows the list) narrows by 分辨率/编码/制作组/大小/促销/H&R like the WebUI's filterForm: values
+same-level, 返回 goes back to 排序与筛选) narrows by 分辨率/编码/制作组/大小/促销/H&R like the WebUI's filterForm: values
 come from the results, ticks within a field widen, fields narrow each other, an empty value (and MP's 未知
 promotion) is offered as 未知, and each value's count is what it would show under the site, missing and other
 conditions; the list note says 符合 N 个，共 M 个 with the conditions, a new search clears them, and 缺集方案
 takes only releases inside the current site and combined filters; for a season partly in the
 library (`torrentmissing.go`) each release says what it adds (补 E01-E12 when only part of it is missing, 已都有
-when none) and 只看缺集 (`tx`, arg 1 on / 0 off, same-level, offered while some release adds nothing) hides the
+when none) and 只看缺集 (`tx`, arg 1 on / 0 off, same-level on 排序与筛选, offered while some release adds nothing) hides the
 releases adding nothing; MoviePilot reads episodes from a description only when the title names none, so a
 release whose title names none of its episodes (`Torrent.EpisodesUnsure`, `moviepilot/episodename.go`, which
 ignores audio channels like DDP5.1 and H.264; a whole pack saying 修复第9集章节 reads E09) gets no missing-episode
@@ -421,7 +428,7 @@ own state; nothing found or a failed lookup only flashes a notice and keeps the 
 ## 回调动作索引
 
 Callback action strings are unique across every flow handler. Resource search is `ts`/`tg`/`tr`/`tq`, release
-pick `tp`, ticking releases `tm`/`tk`/`tb`/`tz`, release order `to`, site filter `tf`/`tw`, combined filter `ti`/`tj`/`tl`/`tn`, missing-only
+pick `tp`, ticking releases `tm`/`tk`/`tb`/`tz`, 排序与筛选 `tv` (opens it), release order `tc` (picks, stays on it), list return `ta` (the retired `to` is refused), site filter `tf`/`tw`, combined filter `ti`/`tj`/`tl`/`tn`, missing-only
 filter `tx`, download `td`, download deletion `kd`/`ky`; 洗版订阅 is `bv`/`bo`, subscription return is `j`,
 subscription kind `sf`, shared cancel `sc`, subscription details/refresh `sd`/`su`, pause/resume `sp`/`sr`,
 history `hs`/`hf`/`hm`/`hp`/`ho`, calendar weekday is `w`, generic list paging is `p`, 相似推荐 is `r`, 同系列 is `n`,

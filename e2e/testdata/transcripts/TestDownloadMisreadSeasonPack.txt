@@ -70,9 +70,7 @@
    </ol>
    <footer>共 2 个，按 MoviePilot 的优先级排好啦，点编号看详情～</footer>
    [1 | 1:tp:0] [2 | 1:tp:1]
-   [·默认· | 1:to:0] [做种 | 1:to:1] [时间 | 1:to:2] [大小 | 1:to:3] [站点 | 1:to:4]
-   [组合筛选 | 1:ti:0] [多选… | 1:tm:0]
-   [缺集方案 | 1:pl:0]
+   [排序与筛选… | 1:tv:0] [多选… | 1:tm:0] [缺集方案 | 1:pl:0]
    [返回 | 1:bk:0] [取消 | 1:x:0]
 >> user 1001 taps 1:tm:0 on message 1
 << editMessageText chat=1001 message=1
@@ -86,8 +84,7 @@
    <footer>共 2 个，按 MoviePilot 的优先级排好啦，已选 0 个，点编号勾选，再点一次取消～</footer>
    [1 | 1:tk:0] [2 | 1:tk:1]
    [下载所选 0 个 | 1:tb:0]
-   [·默认· | 1:to:0] [做种 | 1:to:1] [时间 | 1:to:2] [大小 | 1:to:3] [站点 | 1:to:4]
-   [组合筛选 | 1:ti:0] [缺集方案 | 1:pl:0]
+   [排序与筛选… | 1:tv:0] [缺集方案 | 1:pl:0]
    [返回 | 1:bk:0] [取消 | 1:x:0]
 << answerCallbackQuery
 >> user 1001 taps 1:tk:0 on message 1
@@ -102,8 +99,7 @@
    <footer>共 2 个，按 MoviePilot 的优先级排好啦，已选 1 个，点编号勾选，再点一次取消～</footer>
    [✓ 1 | 1:tk:0] [2 | 1:tk:1]
    [下载所选 1 个 | 1:tb:0]
-   [·默认· | 1:to:0] [做种 | 1:to:1] [时间 | 1:to:2] [大小 | 1:to:3] [站点 | 1:to:4]
-   [组合筛选 | 1:ti:0] [缺集方案 | 1:pl:0]
+   [排序与筛选… | 1:tv:0] [缺集方案 | 1:pl:0]
    [返回 | 1:bk:0] [取消 | 1:x:0]
 << answerCallbackQuery
 >> user 1001 taps 1:tb:0 on message 1
@@ -134,8 +130,7 @@
    <footer>共 2 个，按 MoviePilot 的优先级排好啦，已选 1 个，点编号勾选，再点一次取消～</footer>
    [✓ 1 | 1:tk:0] [2 | 1:tk:1]
    [下载所选 1 个 | 1:tb:0]
-   [·默认· | 1:to:0] [做种 | 1:to:1] [时间 | 1:to:2] [大小 | 1:to:3] [站点 | 1:to:4]
-   [组合筛选 | 1:ti:0] [缺集方案 | 1:pl:0]
+   [排序与筛选… | 1:tv:0] [缺集方案 | 1:pl:0]
    [返回 | 1:bk:0] [取消 | 1:x:0]
 << answerCallbackQuery
 >> user 1001 taps 1:bk:0 on message 1
@@ -149,9 +144,7 @@
    </ol>
    <footer>共 2 个，按 MoviePilot 的优先级排好啦，点编号看详情～</footer>
    [1 | 1:tp:0] [2 | 1:tp:1]
-   [·默认· | 1:to:0] [做种 | 1:to:1] [时间 | 1:to:2] [大小 | 1:to:3] [站点 | 1:to:4]
-   [组合筛选 | 1:ti:0] [多选… | 1:tm:0]
-   [缺集方案 | 1:pl:0]
+   [排序与筛选… | 1:tv:0] [多选… | 1:tm:0] [缺集方案 | 1:pl:0]
    [返回 | 1:bk:0] [取消 | 1:x:0]
 << answerCallbackQuery
 >> user 1001 taps 1:tp:0 on message 1

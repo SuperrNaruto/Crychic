@@ -67,10 +67,18 @@
    </ol>
    <footer>共 4 个，按 MoviePilot 的优先级排好啦，点编号看详情～</footer>
    [1 | 1:tp:0] [2 | 1:tp:1] [3 | 1:tp:2] [4 | 1:tp:3]
-   [·默认· | 1:to:0] [做种 | 1:to:1] [时间 | 1:to:2] [大小 | 1:to:3] [站点 | 1:to:4]
-   [筛选站点 | 1:tf:0] [组合筛选 | 1:ti:0]
-   [多选… | 1:tm:0]
+   [排序与筛选… | 1:tv:0] [多选… | 1:tm:0]
    [返回 | 1:bk:0] [取消 | 1:x:0]
+>> user 1001 taps 1:tv:0 on message 1
+<< editMessageText chat=1001 message=1
+   <h3>🔍 排序与筛选</h3>
+   <p><b>排序：</b>默认，按 MoviePilot 的优先级排好啦<br>
+   <b>筛选：</b>不限</p>
+   <footer>共 4 个，调好后点「返回」看结果～</footer>
+   [·默认· | 1:tc:0] [做种 | 1:tc:1] [时间 | 1:tc:2] [大小 | 1:tc:3] [站点 | 1:tc:4]
+   [筛选站点 | 1:tf:0] [组合筛选 | 1:ti:0]
+   [返回 | 1:ta:0] [取消 | 1:x:0]
+<< answerCallbackQuery
 >> user 1001 taps 1:ti:0 on message 1
 << editMessageText chat=1001 message=1
    <h3>🔍 组合筛选</h3>
@@ -80,10 +88,10 @@
    <b>大小：</b>不限<br>
    <b>促销：</b>不限<br>
    <b>H&amp;R：</b>不限</p>
-   <footer>符合 4 个，共 4 个。点条件名选择，选好后点「返回」看结果～</footer>
+   <footer>符合 4 个，共 4 个。点条件名选择，选好后点「返回」回到排序与筛选～</footer>
    [分辨率 | 1:tj:0] [编码 | 1:tj:1] [制作组 | 1:tj:2]
    [大小 | 1:tj:3] [促销 | 1:tj:4] [H&R | 1:tj:5]
-   [返回 | 1:to:0] [取消 | 1:x:0]
+   [返回 | 1:tv:0] [取消 | 1:x:0]
 << answerCallbackQuery
 >> user 1001 taps 1:tj:0 on message 1
 << editMessageText chat=1001 message=1
@@ -96,12 +104,12 @@
    <li value="3"><b>720p</b><br>
    <i>1 个</i></li>
    </ol>
-   <footer>符合 4 个，共 4 个。可以多选，再点一次取消；选好后点「返回」看结果～</footer>
+   <footer>符合 4 个，共 4 个。可以多选，再点一次取消；选好后点「返回」回到排序与筛选～</footer>
    [1 | 1:tl:100000] [2 | 1:tl:100001] [3 | 1:tl:100002]
    [·不限· | 1:tn:1]
    [·分辨率· | 1:tj:0] [编码 | 1:tj:1] [制作组 | 1:tj:2]
    [大小 | 1:tj:3] [促销 | 1:tj:4] [H&R | 1:tj:5]
-   [返回 | 1:to:0] [取消 | 1:x:0]
+   [返回 | 1:tv:0] [取消 | 1:x:0]
 << answerCallbackQuery
 >> user 1001 taps 1:tl:100000 on message 1
 << editMessageText chat=1001 message=1
@@ -114,13 +122,13 @@
    <li value="3"><b>720p</b><br>
    <i>1 个</i></li>
    </ol>
-   <footer>符合 2 个，共 4 个。可以多选，再点一次取消；选好后点「返回」看结果～</footer>
+   <footer>符合 2 个，共 4 个。可以多选，再点一次取消；选好后点「返回」回到排序与筛选～</footer>
    [✓ 1 | 1:tl:100000] [2 | 1:tl:100001] [3 | 1:tl:100002]
    [不限 | 1:tn:1]
    [·分辨率· | 1:tj:0] [编码 | 1:tj:1] [制作组 | 1:tj:2]
    [大小 | 1:tj:3] [促销 | 1:tj:4] [H&R | 1:tj:5]
    [清除全部条件 | 1:tn:0]
-   [返回 | 1:to:0] [取消 | 1:x:0]
+   [返回 | 1:tv:0] [取消 | 1:x:0]
 << answerCallbackQuery
 >> user 1001 taps 1:tj:4 on message 1
 << editMessageText chat=1001 message=1
@@ -133,13 +141,13 @@
    <li value="3"><b>未知</b><br>
    <i>0 个</i></li>
    </ol>
-   <footer>符合 2 个，共 4 个。可以多选，再点一次取消；选好后点「返回」看结果～</footer>
+   <footer>符合 2 个，共 4 个。可以多选，再点一次取消；选好后点「返回」回到排序与筛选～</footer>
    [1 | 1:tl:200000] [2 | 1:tl:200001] [3 | 1:tl:200002]
    [·不限· | 1:tn:5]
    [分辨率 | 1:tj:0] [编码 | 1:tj:1] [制作组 | 1:tj:2]
    [大小 | 1:tj:3] [·促销· | 1:tj:4] [H&R | 1:tj:5]
    [清除全部条件 | 1:tn:0]
-   [返回 | 1:to:0] [取消 | 1:x:0]
+   [返回 | 1:tv:0] [取消 | 1:x:0]
 << answerCallbackQuery
 >> user taps the earlier 分辨率 value button, now under 促销
 >> user 1001 taps 1:tl:100000 on message 1
@@ -155,13 +163,13 @@
    <li value="3"><b>未知</b><br>
    <i>0 个</i></li>
    </ol>
-   <footer>符合 1 个，共 4 个。可以多选，再点一次取消；选好后点「返回」看结果～</footer>
+   <footer>符合 1 个，共 4 个。可以多选，再点一次取消；选好后点「返回」回到排序与筛选～</footer>
    [✓ 1 | 1:tl:200000] [2 | 1:tl:200001] [3 | 1:tl:200002]
    [不限 | 1:tn:5]
    [分辨率 | 1:tj:0] [编码 | 1:tj:1] [制作组 | 1:tj:2]
    [大小 | 1:tj:3] [·促销· | 1:tj:4] [H&R | 1:tj:5]
    [清除全部条件 | 1:tn:0]
-   [返回 | 1:to:0] [取消 | 1:x:0]
+   [返回 | 1:tv:0] [取消 | 1:x:0]
 << answerCallbackQuery
 >> user 1001 taps 1:tl:200001 on message 1
 << editMessageText chat=1001 message=1
@@ -174,13 +182,13 @@
    <li value="3"><b>未知</b><br>
    <i>0 个</i></li>
    </ol>
-   <footer>符合 2 个，共 4 个。可以多选，再点一次取消；选好后点「返回」看结果～</footer>
+   <footer>符合 2 个，共 4 个。可以多选，再点一次取消；选好后点「返回」回到排序与筛选～</footer>
    [✓ 1 | 1:tl:200000] [✓ 2 | 1:tl:200001] [3 | 1:tl:200002]
    [不限 | 1:tn:5]
    [分辨率 | 1:tj:0] [编码 | 1:tj:1] [制作组 | 1:tj:2]
    [大小 | 1:tj:3] [·促销· | 1:tj:4] [H&R | 1:tj:5]
    [清除全部条件 | 1:tn:0]
-   [返回 | 1:to:0] [取消 | 1:x:0]
+   [返回 | 1:tv:0] [取消 | 1:x:0]
 << answerCallbackQuery
 >> user 1001 taps 1:tj:5 on message 1
 << editMessageText chat=1001 message=1
@@ -191,13 +199,13 @@
    <li value="2"><b>H&amp;R</b><br>
    <i>1 个</i></li>
    </ol>
-   <footer>符合 2 个，共 4 个。可以多选，再点一次取消；选好后点「返回」看结果～</footer>
+   <footer>符合 2 个，共 4 个。可以多选，再点一次取消；选好后点「返回」回到排序与筛选～</footer>
    [1 | 1:tl:300000] [2 | 1:tl:300001]
    [·不限· | 1:tn:6]
    [分辨率 | 1:tj:0] [编码 | 1:tj:1] [制作组 | 1:tj:2]
    [大小 | 1:tj:3] [促销 | 1:tj:4] [·H&R· | 1:tj:5]
    [清除全部条件 | 1:tn:0]
-   [返回 | 1:to:0] [取消 | 1:x:0]
+   [返回 | 1:tv:0] [取消 | 1:x:0]
 << answerCallbackQuery
 >> user 1001 taps 1:tl:300000 on message 1
 << editMessageText chat=1001 message=1
@@ -208,13 +216,13 @@
    <li value="2"><b>H&amp;R</b><br>
    <i>1 个</i></li>
    </ol>
-   <footer>符合 1 个，共 4 个。可以多选，再点一次取消；选好后点「返回」看结果～</footer>
+   <footer>符合 1 个，共 4 个。可以多选，再点一次取消；选好后点「返回」回到排序与筛选～</footer>
    [✓ 1 | 1:tl:300000] [2 | 1:tl:300001]
    [不限 | 1:tn:6]
    [分辨率 | 1:tj:0] [编码 | 1:tj:1] [制作组 | 1:tj:2]
    [大小 | 1:tj:3] [促销 | 1:tj:4] [·H&R· | 1:tj:5]
    [清除全部条件 | 1:tn:0]
-   [返回 | 1:to:0] [取消 | 1:x:0]
+   [返回 | 1:tv:0] [取消 | 1:x:0]
 << answerCallbackQuery
 >> user 1001 taps 1:tj:3 on message 1
 << editMessageText chat=1001 message=1
@@ -227,15 +235,25 @@
    <li value="3"><b>30–60 GiB</b><br>
    <i>0 个</i></li>
    </ol>
-   <footer>符合 1 个，共 4 个。可以多选，再点一次取消；选好后点「返回」看结果～</footer>
+   <footer>符合 1 个，共 4 个。可以多选，再点一次取消；选好后点「返回」回到排序与筛选～</footer>
    [1 | 1:tl:400000] [2 | 1:tl:400001] [3 | 1:tl:400002]
    [·不限· | 1:tn:4]
    [分辨率 | 1:tj:0] [编码 | 1:tj:1] [制作组 | 1:tj:2]
    [·大小· | 1:tj:3] [促销 | 1:tj:4] [H&R | 1:tj:5]
    [清除全部条件 | 1:tn:0]
-   [返回 | 1:to:0] [取消 | 1:x:0]
+   [返回 | 1:tv:0] [取消 | 1:x:0]
 << answerCallbackQuery
->> user 1001 taps 1:to:0 on message 1
+>> user 1001 taps 1:tv:0 on message 1
+<< editMessageText chat=1001 message=1
+   <h3>🔍 排序与筛选</h3>
+   <p><b>排序：</b>默认，按 MoviePilot 的优先级排好啦<br>
+   <b>筛选：</b>分辨率 2160p · 促销 2X免费/免费 · H&amp;R 无 H&amp;R</p>
+   <footer>符合 1 个，共 4 个（分辨率 2160p · 促销 2X免费/免费 · H&amp;R 无 H&amp;R），调好后点「返回」看结果～</footer>
+   [·默认· | 1:tc:0] [做种 | 1:tc:1] [时间 | 1:tc:2] [大小 | 1:tc:3] [站点 | 1:tc:4]
+   [筛选站点 | 1:tf:0] [组合筛选 | 1:ti:0]
+   [返回 | 1:ta:0] [取消 | 1:x:0]
+<< answerCallbackQuery
+>> user 1001 taps 1:ta:0 on message 1
 << editMessageText chat=1001 message=1
    <h3>🔍 《沙丘》的资源</h3>
    <ol start="1">
@@ -244,9 +262,7 @@
    </ol>
    <footer>符合 1 个，共 4 个（分辨率 2160p · 促销 2X免费/免费 · H&amp;R 无 H&amp;R），按 MoviePilot 的优先级排好啦，点编号看详情～</footer>
    [1 | 1:tp:2]
-   [·默认· | 1:to:0] [做种 | 1:to:1] [时间 | 1:to:2] [大小 | 1:to:3] [站点 | 1:to:4]
-   [筛选站点 | 1:tf:0] [组合筛选 | 1:ti:0]
-   [多选… | 1:tm:0]
+   [排序与筛选… | 1:tv:0] [多选… | 1:tm:0]
    [返回 | 1:bk:0] [取消 | 1:x:0]
 << answerCallbackQuery
 >> user 1001 taps 1:tp:2 on message 1
@@ -279,10 +295,18 @@
    </ol>
    <footer>符合 1 个，共 4 个（分辨率 2160p · 促销 2X免费/免费 · H&amp;R 无 H&amp;R），按 MoviePilot 的优先级排好啦，点编号看详情～</footer>
    [1 | 1:tp:2]
-   [·默认· | 1:to:0] [做种 | 1:to:1] [时间 | 1:to:2] [大小 | 1:to:3] [站点 | 1:to:4]
-   [筛选站点 | 1:tf:0] [组合筛选 | 1:ti:0]
-   [多选… | 1:tm:0]
+   [排序与筛选… | 1:tv:0] [多选… | 1:tm:0]
    [返回 | 1:bk:0] [取消 | 1:x:0]
+<< answerCallbackQuery
+>> user 1001 taps 1:tv:0 on message 1
+<< editMessageText chat=1001 message=1
+   <h3>🔍 排序与筛选</h3>
+   <p><b>排序：</b>默认，按 MoviePilot 的优先级排好啦<br>
+   <b>筛选：</b>分辨率 2160p · 促销 2X免费/免费 · H&amp;R 无 H&amp;R</p>
+   <footer>符合 1 个，共 4 个（分辨率 2160p · 促销 2X免费/免费 · H&amp;R 无 H&amp;R），调好后点「返回」看结果～</footer>
+   [·默认· | 1:tc:0] [做种 | 1:tc:1] [时间 | 1:tc:2] [大小 | 1:tc:3] [站点 | 1:tc:4]
+   [筛选站点 | 1:tf:0] [组合筛选 | 1:ti:0]
+   [返回 | 1:ta:0] [取消 | 1:x:0]
 << answerCallbackQuery
 >> user 1001 taps 1:ti:0 on message 1
 << editMessageText chat=1001 message=1
@@ -293,11 +317,11 @@
    <b>大小：</b>不限<br>
    <b>促销：</b>2X免费、免费<br>
    <b>H&amp;R：</b>无 H&amp;R</p>
-   <footer>符合 1 个，共 4 个。点条件名选择，选好后点「返回」看结果～</footer>
+   <footer>符合 1 个，共 4 个。点条件名选择，选好后点「返回」回到排序与筛选～</footer>
    [分辨率 | 1:tj:0] [编码 | 1:tj:1] [制作组 | 1:tj:2]
    [大小 | 1:tj:3] [促销 | 1:tj:4] [H&R | 1:tj:5]
    [清除全部条件 | 1:tn:0]
-   [返回 | 1:to:0] [取消 | 1:x:0]
+   [返回 | 1:tv:0] [取消 | 1:x:0]
 << answerCallbackQuery
 >> user 1001 taps 1:tn:0 on message 1
 << editMessageText chat=1001 message=1
@@ -308,12 +332,22 @@
    <b>大小：</b>不限<br>
    <b>促销：</b>不限<br>
    <b>H&amp;R：</b>不限</p>
-   <footer>符合 4 个，共 4 个。点条件名选择，选好后点「返回」看结果～</footer>
+   <footer>符合 4 个，共 4 个。点条件名选择，选好后点「返回」回到排序与筛选～</footer>
    [分辨率 | 1:tj:0] [编码 | 1:tj:1] [制作组 | 1:tj:2]
    [大小 | 1:tj:3] [促销 | 1:tj:4] [H&R | 1:tj:5]
-   [返回 | 1:to:0] [取消 | 1:x:0]
+   [返回 | 1:tv:0] [取消 | 1:x:0]
 << answerCallbackQuery
->> user 1001 taps 1:to:0 on message 1
+>> user 1001 taps 1:tv:0 on message 1
+<< editMessageText chat=1001 message=1
+   <h3>🔍 排序与筛选</h3>
+   <p><b>排序：</b>默认，按 MoviePilot 的优先级排好啦<br>
+   <b>筛选：</b>不限</p>
+   <footer>共 4 个，调好后点「返回」看结果～</footer>
+   [·默认· | 1:tc:0] [做种 | 1:tc:1] [时间 | 1:tc:2] [大小 | 1:tc:3] [站点 | 1:tc:4]
+   [筛选站点 | 1:tf:0] [组合筛选 | 1:ti:0]
+   [返回 | 1:ta:0] [取消 | 1:x:0]
+<< answerCallbackQuery
+>> user 1001 taps 1:ta:0 on message 1
 << editMessageText chat=1001 message=1
    <h3>🔍 《沙丘》的资源</h3>
    <ol start="1">
@@ -328,8 +362,6 @@
    </ol>
    <footer>共 4 个，按 MoviePilot 的优先级排好啦，点编号看详情～</footer>
    [1 | 1:tp:0] [2 | 1:tp:1] [3 | 1:tp:2] [4 | 1:tp:3]
-   [·默认· | 1:to:0] [做种 | 1:to:1] [时间 | 1:to:2] [大小 | 1:to:3] [站点 | 1:to:4]
-   [筛选站点 | 1:tf:0] [组合筛选 | 1:ti:0]
-   [多选… | 1:tm:0]
+   [排序与筛选… | 1:tv:0] [多选… | 1:tm:0]
    [返回 | 1:bk:0] [取消 | 1:x:0]
 << answerCallbackQuery

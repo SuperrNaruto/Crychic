@@ -24,7 +24,7 @@ const (
 	msgAnyValue      = "不限"
 	msgClearFilters  = "清除全部条件"
 	msgUnknownValue  = "未知"
-	msgFilterPick    = "选好后点「返回」看结果～"
+	msgFilterPick    = "选好后点「返回」回到排序与筛选～"
 	msgFilterTicks   = "可以多选，再点一次取消；" + msgFilterPick
 	msgFilterFields  = "点条件名选择，" + msgFilterPick
 )
@@ -266,14 +266,14 @@ func facetCount(sess session, field int, value string) int {
 }
 
 // filterPanel shows each field's ticks, or the open field's values to
-// tick; 返回 shows the list as now filtered.
+// tick; 返回 goes back to 排序与筛选.
 func filterPanel(sess session) listView {
 	f := sess.releaseFilter
 	heading := "🔍 " + msgReleaseFilter
 	note := fmt.Sprintf("符合 %d 个，共 %d 个。", len(sess.shownTorrents()), len(sess.activeTorrents()))
 	view := listView{
 		menu:   [][]Button{},
-		footer: []Button{backTo(sess.id, actionTorrentSort, sess.torrentSort), cancelButton(sess.id)},
+		footer: []Button{backTo(sess.id, actionTorrentView, 0), cancelButton(sess.id)},
 	}
 	if f.open == 0 {
 		view.note = note + msgFilterFields

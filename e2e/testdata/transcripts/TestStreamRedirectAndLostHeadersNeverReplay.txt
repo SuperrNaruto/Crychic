@@ -57,7 +57,7 @@
 << editMessageText chat=1001 message=1
    <h3>🔍 《沙丘》的资源</h3>
    <footer>共 0 个，⚠️ 结果不完整。资源搜索流已中断或返回了无法核验的数据，需要时请手动重新搜索。点「重新搜索资源」会再次访问站点。点编号看详情～</footer>
-   [·默认· | 1:to:0] [做种 | 1:to:1] [时间 | 1:to:2] [大小 | 1:to:3] [站点 | 1:to:4]
+   [排序与筛选… | 1:tv:0]
    [重新搜索资源 | 1:te:0]
    [返回 | 1:bk:0] [取消 | 1:x:0]
 >> SSE transport case: same-origin non-stream redirect
@@ -75,7 +75,7 @@
 << editMessageText chat=1001 message=1
    <h3>🔍 《沙丘》的资源</h3>
    <footer>共 0 个，⚠️ 结果不完整。资源搜索流已中断或返回了无法核验的数据，需要时请手动重新搜索。点「重新搜索资源」会再次访问站点。点编号看详情～</footer>
-   [·默认· | 1:to:0] [做种 | 1:to:1] [时间 | 1:to:2] [大小 | 1:to:3] [站点 | 1:to:4]
+   [排序与筛选… | 1:tv:0]
    [重新搜索资源 | 1:te:0]
    [返回 | 1:bk:0] [取消 | 1:x:0]
 >> SSE transport case: lost response headers
@@ -93,7 +93,7 @@
 << editMessageText chat=1001 message=1
    <h3>🔍 《沙丘》的资源</h3>
    <footer>共 0 个，⚠️ 结果不完整。资源搜索流已中断或返回了无法核验的数据，需要时请手动重新搜索。点「重新搜索资源」会再次访问站点。点编号看详情～</footer>
-   [·默认· | 1:to:0] [做种 | 1:to:1] [时间 | 1:to:2] [大小 | 1:to:3] [站点 | 1:to:4]
+   [排序与筛选… | 1:tv:0]
    [重新搜索资源 | 1:te:0]
    [返回 | 1:bk:0] [取消 | 1:x:0]
 >> SSE transport case: JSON instead of SSE
@@ -111,7 +111,7 @@
 << editMessageText chat=1001 message=1
    <h3>🔍 《沙丘》的资源</h3>
    <footer>共 0 个，⚠️ 结果不完整。资源搜索流已中断或返回了无法核验的数据，需要时请手动重新搜索。点「重新搜索资源」会再次访问站点。点编号看详情～</footer>
-   [·默认· | 1:to:0] [做种 | 1:to:1] [时间 | 1:to:2] [大小 | 1:to:3] [站点 | 1:to:4]
+   [排序与筛选… | 1:tv:0]
    [重新搜索资源 | 1:te:0]
    [返回 | 1:bk:0] [取消 | 1:x:0]
 >> upstream SSE searches verified: 4; no JSON fallback

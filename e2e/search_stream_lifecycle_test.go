@@ -62,7 +62,9 @@ func TestStreamBatchSelectionCannotReuseEarlierConfirmation(t *testing.T) {
 	h.tap(alice, 1, "1")
 	stale, _ := findButton(mustMessage(h, 1).rows, downloadIt)
 	h.tap(alice, 1, "返回")
+	h.tap(alice, 1, sortFilter)
 	h.tap(alice, 1, "做种")
+	h.tap(alice, 1, "返回")
 	h.tap(alice, 1, "2")
 	h.tapData(alice, 1, stale)
 	h.shows(1, "Dune.2021.2160p.WEB-DL") // still the release now shown as 2 after sorting
