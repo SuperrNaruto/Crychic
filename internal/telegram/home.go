@@ -2,6 +2,7 @@ package telegram
 
 import (
 	"context"
+	"time"
 
 	"github.com/go-telegram/bot"
 	"github.com/go-telegram/bot/models"
@@ -48,7 +49,11 @@ func (a *adapter) send(ctx context.Context, to destination, reply flow.Reply) (*
 // If Telegram refuses, it tries once more with the posters sent afresh, as
 // a reused file_id may be what it refused, and then without posters.
 func (a *adapter) deliver(ctx context.Context, reply flow.Reply, try func(outgoing) (*models.Message, error)) (*models.Message, error) {
+	began := time.Now()
 	out := a.posters.prepare(ctx, reply)
+	if took := time.Since(began); took >= slowPosters {
+		a.log.Info("slow poster preparation", "ms", took.Milliseconds(), "uploads", len(out.uploads))
+	}
 	msg, err := try(out)
 	a.posters.sent(out, msg, err)
 	if rejectedPoster(err) && len(out.reuses) > 0 {

@@ -313,6 +313,8 @@ func (a *adapter) start(ctx context.Context, actor flow.Actor, arg string) flow.
 // stops the message's follower before waiting for the message: a refresh
 // may be a long backend call (a resource search) holding it.
 func (a *adapter) onCallback(ctx context.Context, b *bot.Bot, cq *models.CallbackQuery) {
+	watch := newStopwatch()
+	defer a.logSlowPress(watch, cq.Data)
 	actor := actorOf(cq.From, callbackDestination(cq))
 	var stopped *follower
 	if a.allowed[cq.From.ID] {
@@ -324,17 +326,21 @@ func (a *adapter) onCallback(ctx context.Context, b *bot.Bot, cq *models.Callbac
 		return
 	}
 	defer unlock()
+	watch.lap("wait")
 	reply := a.callbackReply(ctx, cq, stopped)
+	watch.lap("flow")
 	if reply.Notice == "" && cq.Message.Message != nil {
 		a.supersedeInitial(callbackKey(cq))
 		a.showCallback(ctx, cq, reply)
 	} else if reply.Notice != "" {
 		a.resumeFollower(stopped)
 	}
+	watch.lap("show")
 	_, err := b.AnswerCallbackQuery(ctx, &bot.AnswerCallbackQueryParams{
 		CallbackQueryID: cq.ID,
 		Text:            reply.Notice,
 	})
+	watch.lap("answer")
 	a.logFailure("answerCallbackQuery", err)
 }
 
