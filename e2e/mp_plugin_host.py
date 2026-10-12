@@ -31,6 +31,7 @@ from app.runtime.extensions.module.manager import ModuleManager
 from app.startup.initializers.command import configure_command_runtime, stop_command
 from app.chain.transfer.facade import TransferChain
 from app.application.transfer.models import TransferTask
+from app.application.transfer.feedback import TransferFailureNotification, render_transfer_failure_notification
 from app.domain.context import MediaInfo
 from app.domain.metainfo import MetaInfo
 from app.runtime.progress import ProgressHelper
@@ -51,6 +52,8 @@ MAX_IDLE_LEASE_UPDATES = 1
 WAIT_SLACK = 0.5
 POLL_COMPLETION_BUDGET = 2
 LONG_WAIT = 25
+FAILED_SOURCE = "/fixture-downloads"
+FAILED_TARGET = "/fixture-library"
 
 
 class SQLObservation:
@@ -141,6 +144,7 @@ async def exercise():
     TRACE.append("duplicate consumption ACK -> one committed checkpoint")
     await persistence_and_identity(chain, cursor)
     await safe_url_projection(chain, cursor)
+    await transfer_failure_paths(chain, cursor)
     await idle_polling(cursor)
     await polling_lifecycle(chain, cursor)
     await failure_isolation(chain, cursor)
@@ -306,6 +310,46 @@ def seed_legacy_urls(image, link):
     with database.session() as session, session.begin():
         session.execute(text("UPDATE pending SET payload=:payload"),
                         dict(payload=json.dumps(payload, ensure_ascii=False)))
+
+
+def failure_notices():
+    """用宿主自己的整理失败渲染器生成单文件与多文件正文，路径均为合成值。"""
+    def notice(name):
+        return TransferFailureNotification(
+            media_title="Fixture Show", season_episode="S01E02", reason="目标已存在", history_id=7,
+            image=None, username=None, source_path=f"{FAILED_SOURCE}/Fixture Show (2024)/{name}",
+            target_path=f"{FAILED_TARGET}/Fixture Show")
+    return [render_transfer_failure_notification([notice("a.mkv")]),
+            render_transfer_failure_notification([notice("a.mkv"), notice("b.mkv")])]
+
+
+def verify_failure_item(item, title):
+    """标题与非路径事实保留，HTTP 与持久记录都不含路径。"""
+    stored = persisted_payload()
+    for value in (item["text"], stored["text"]):
+        if FAILED_SOURCE in value or FAILED_TARGET in value:
+            raise RuntimeError("transfer failure path crossed the plugin boundary")
+    if item["title"] != title or "目标已存在" not in item["text"]:
+        raise RuntimeError("path hiding changed native facts")
+
+
+async def transfer_failure_paths(chain, cursor):
+    """原生整理失败通知的路径紧贴全角冒号；旧队列中的路径读取时修正。"""
+    for index, (title, body) in enumerate(failure_notices()):
+        chain.post_message_strict(Message(mtype=MessageType.Plugin, title=title, text=body),
+                                  event_key=f"fixture-failure-{index}")
+        if FAILED_SOURCE in persisted_payload()["text"]:
+            raise RuntimeError("transfer failure path entered durable storage")
+        database = get_plugin_manager().get_plugin_attr("Crychic", "get_database")()
+        with database.session() as session, session.begin():
+            session.execute(text("UPDATE pending SET payload=:payload"),
+                            dict(payload=json.dumps(dict(persisted_payload(), text=body), ensure_ascii=False)))
+        batch = await asyncio.to_thread(http_call, poll_query(cursor))
+        item = batch["messages"][0]
+        verify_failure_item(item, title)
+        cursor["sequence"] = item["sequence"]
+        await asyncio.to_thread(http_call, "ack", body=cursor)
+    TRACE.append("native transfer failure paths -> hidden at capture; legacy stored paths hidden on read")
 
 
 async def idle_polling(cursor):

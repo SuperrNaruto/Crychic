@@ -13,7 +13,15 @@ import (
 const nativeIDBits = 64
 const nativeDecimal = 10
 
-var sensitiveNativeText = regexp.MustCompile(`(?i)(api[_-]?key|token|cookie|passkey|password|authorization)\s*[:=]\s*\S+|(?:^|\s)(?:/[\w.-]+){2,}\S*|[A-Za-z]:\\\S+`)
+var sensitiveNativeText = regexp.MustCompile(`(?i)(api[_-]?key|token|cookie|passkey|password|authorization)\s*[:=]\s*\S+|[A-Za-z]:\\\S+`)
+
+// labeledNativePath hides the whole value after MoviePilot's 「源文件：」-style
+// labels, since a path there may contain spaces.
+var labeledNativePath = regexp.MustCompile(`(源文件|源目录|源路径|目标路径|目标目录|文件路径|路径)\s*[:：]\s*[^\n]+`)
+
+// nativePath finds paths right after Chinese text or punctuation; "1/2/3"
+// after a digit and the "//" inside a URL do not start one.
+var nativePath = regexp.MustCompile(`(?m)(^|[^A-Za-z0-9_./-])(?:/[^\s/、，,;；)）\]】」"']+){2,}/?`)
 var nativeChannelName = regexp.MustCompile(`^@[A-Za-z0-9_]+$`)
 
 func nativeNotice(message NativeMessage) (flow.Notice, error) {
@@ -24,12 +32,12 @@ func nativeNotice(message NativeMessage) (flow.Notice, error) {
 	if err != nil {
 		return flow.Notice{}, err
 	}
-	title := strings.TrimSpace(sensitiveNativeText.ReplaceAllString(message.Title, "[已隐藏]"))
+	title := strings.TrimSpace(redactNative(message.Title))
 	if title == "" {
 		title = "MoviePilot 通知"
 	}
 	text := flow.Lines(flow.Heading(flow.Plain(title)))
-	for _, line := range strings.Split(sensitiveNativeText.ReplaceAllString(message.Text, "[已隐藏]"), "\n") {
+	for _, line := range strings.Split(redactNative(message.Text), "\n") {
 		text = append(text, flow.Line(flow.Plain(line)))
 	}
 	if safeNativeURL(message.Link) {
@@ -40,6 +48,14 @@ func nativeNotice(message NativeMessage) (flow.Notice, error) {
 		image = message.Image
 	}
 	return flow.Notice{To: actor, Text: text, Image: image}, nil
+}
+
+// redactNative hides credentials and server paths that the plugin may have
+// stored before it learned to hide them.
+func redactNative(text string) string {
+	text = sensitiveNativeText.ReplaceAllString(text, "[已隐藏]")
+	text = labeledNativePath.ReplaceAllString(text, "${1}：[已隐藏]")
+	return nativePath.ReplaceAllString(text, "${1}[已隐藏]")
 }
 
 func (n *NativeConsumer) notice(message NativeMessage) (flow.Notice, error) {

@@ -24,7 +24,7 @@ class Crychic(_PluginBase):
 
     plugin_name = "Crychic"
     plugin_desc = "MP 自定义通知渠道，持久长轮询接入现有 Crychic 机器人，并提供整理进度只读投影。"
-    plugin_version = "1.2.0"
+    plugin_version = "1.2.1"
     plugin_author = "Crychic"
     plugin_config_prefix = "crychic_"
     plugin_order = 100

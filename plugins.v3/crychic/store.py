@@ -6,7 +6,7 @@ import time
 import uuid
 from sqlalchemy import delete, select
 from .models import Pending, Progress, Receipt
-from .projection import safe_url
+from .projection import redact_text, safe_url
 
 PROTOCOL = 1
 META_KEY = "native"
@@ -100,8 +100,10 @@ class Outbox:
             meta.consumer, meta.lease_until = consumer, now + LEASE_SECONDS
 
     def safe_item(self, row):
-        """读取时修正旧队列 URL，保留事件身份、顺序与原生业务事实。"""
+        """读取时修正旧队列的路径与 URL，保留事件身份、顺序与原生业务事实。"""
         item = json.loads(row.payload)
+        for field in ("title", "text"):
+            item[field] = redact_text(item.get(field), secrets=self.secrets)
         for field in ("image", "link"):
             item[field] = safe_url(item.get(field), secrets=self.secrets)
         payload = json.dumps(item, ensure_ascii=False)

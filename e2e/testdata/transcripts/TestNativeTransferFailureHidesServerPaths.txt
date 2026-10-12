@@ -1,0 +1,15 @@
+>> MoviePilot produces a native notification
+<< sendRichMessage chat=1001 message=1
+   <h3>My Show S01E02 入库失败！</h3>
+   <p>失败阶段：整理<br>
+   源文件：[已隐藏]<br>
+   目标路径：[已隐藏]<br>
+   原因：目标已存在<br>
+   如果按钮不可用，可回复：<br>
+   /redo 12</p>
+>> MoviePilot produces a native notification
+<< sendRichMessage chat=1001 message=2
+   <h3>My Show 入库失败（2 个文件）</h3>
+   <p>失败文件：2 个<br>
+   源文件：[已隐藏]<br>
+   移动[已隐藏] 失败</p>

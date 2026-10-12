@@ -169,4 +169,4 @@ summary) and scenarios check never reach a chat; never commit real keys or token
 
 原生通知 HTTP fake 独立于转移历史，h.transfers 不生成通知；h.nativeNotice 明确模拟 MP 的投递记录。h.arrives 仅用于既有媒体交互场景，同时明确产生独立 MP 通知。基线 ACK 是启动屏障。
 
-主场景验证富文本、明确目标和话题、白名单、未知发送、重启、坏批次及只有事实无通知；每个场景结束比对 transcript。`run_mp_plugin_e2e.sh` 在 `--network none` 的官方 MP v3.1.4 镜像中，用合成临时状态启动真实宿主和插件，以认证 HTTP 读写插件状态。验证 native post_message 路由、类型开关、发送时段、durable 身份、持久缓冲及不启动 Telegram 客户端。普通运行比对 MPPluginNativeHost.txt，只有 --update 才更新。
+主场景验证富文本、明确目标和话题、白名单、未知发送、重启、坏批次、整理失败路径隐藏及只有事实无通知；每个场景结束比对 transcript。`run_mp_plugin_e2e.sh` 在 `--network none` 的官方 MP v3.1.4 镜像中，用合成临时状态启动真实宿主和插件，以认证 HTTP 读写插件状态。验证 native post_message 路由、类型开关、发送时段、durable 身份、持久缓冲、宿主渲染的整理失败路径在入队与旧队列读取时隐藏及不启动 Telegram 客户端。普通运行比对 MPPluginNativeHost.txt，只有 --update 才更新。

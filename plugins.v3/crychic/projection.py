@@ -8,19 +8,30 @@ from urllib.parse import parse_qs, unquote, urlsplit
 
 MAX_TEXT = 16384
 MAX_TITLE = 512
-SENSITIVE = re.compile(r"(?i)(api[_-]?key|token|cookie|passkey|password|authorization)\s*[:=]\s*\S+|(?:^|\s)(?:/[\w.-]+){2,}\S*|[A-Za-z]:\\\S+")
+SENSITIVE = re.compile(r"(?i)(api[_-]?key|token|cookie|passkey|password|authorization)\s*[:=]\s*\S+|[A-Za-z]:\\\S+")
+# 原生整理通知以「源文件：/…」等标签给出路径，标签后整行可能含空格，因此整段隐藏。
+LABELED_PATH = re.compile(r"(源文件|源目录|源路径|目标路径|目标目录|文件路径|路径)\s*[:：]\s*[^\n]+")
+# 路径可紧贴中文或标点；字母数字后的「1/2/3」与 URL 中的「//」不构成路径起点。
+POSIX_PATH = re.compile(r"(^|[^A-Za-z0-9_./-])(?:/[^\s/、，,;；)）\]】」\"']+){2,}/?", re.MULTILINE)
 CHANNEL = re.compile(r"^@[A-Za-z0-9_]+$")
 SENSITIVE_URL_PARTS = ("key", "token", "pass", "cookie", "authorization", "secret", "credential", "signature")
 SENSITIVE_URL_KEYS = ("auth", "sig")
 
 
-def safe_text(value, *, limit, secrets=()):
-    """先去除已知凭据与敏感路径，再限定显示大小。"""
+def redact_text(value, *, secrets=()):
+    """去除已知凭据与敏感路径；读取旧队列时同样适用。"""
     text = str(value or "")
     for secret in secrets:
         if secret:
             text = text.replace(str(secret), "[已隐藏]")
     text = SENSITIVE.sub("[已隐藏]", text)
+    text = LABELED_PATH.sub(r"\1：[已隐藏]", text)
+    return POSIX_PATH.sub(r"\1[已隐藏]", text)
+
+
+def safe_text(value, *, limit, secrets=()):
+    """先去除已知凭据与敏感路径，再限定显示大小。"""
+    text = redact_text(value, secrets=secrets)
     if len(text) > limit:
         raise ValueError("notice_too_large")
     return text
