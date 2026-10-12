@@ -26,7 +26,7 @@ multi-season picker shows its ticks as `Ticked` lines
 
 Numbered list entries are `flow.entry` (an `Item` block): bold name, then facts (original title, year, kind,
 rating, state, progress) in italics below it (chart/related `Brief` entries put facts beside the name
-instead), rendered as `<li value="n">` so numbers match the buttons on every page. Each ordinary bot message
+instead; so do latest items and subscription lists, 8 a page, owner's choice 2026-10-12), rendered as `<li value="n">` so numbers match the buttons on every page. Each ordinary bot message
 opens with a `Heading`; inline articles use their separate classic HTML format; list sections and calendar
 dates are `Group`s, page numbers and refresh state are `Remark`s (footer), a media card's original title, year
 / kind / rating, genres / length and cast share one line of `Small` print (joined by ` · `) under its heading,
@@ -336,7 +336,10 @@ writes nothing. A task without one known instance offers neither pause/resume no
 MoviePilot accepted it and offers only 查看任务 (`k`), a read; a refusal is relayed, an unknown result points
 to the same read, never a retry
 
-`internal/flow/latest.go` - `/newly_added`: newest media server items linked to their web page
+`internal/flow/latest.go` - `/newly_added`: newest media server items (20 per server) linked to their web
+page, grouped by kind in the order kinds first appear, one line each with the year; a list entry's `section`
+puts the `Group` above it whenever it opens a page or a new section, so a group continued on the next page is
+headed again. Subscription lines leave the usual 订阅中 unsaid and name other states
 
 List pages budget text and item buttons together (up to 20 entries and 3000 content runes). Large transfer
 views show at most 100 file lines, retaining the full aggregate count and explicitly naming omitted files

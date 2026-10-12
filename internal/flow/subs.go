@@ -25,6 +25,9 @@ const (
 // subKinds are the subscription filters, in button order.
 var subKinds = []Kind{TV, Movie}
 
+// stateSubscribed is the usual state, left unsaid in subscription lists.
+const stateSubscribed = "R"
+
 // stateText words MoviePilot's subscription states.
 var stateText = map[string]string{
 	"N": "待处理",
@@ -106,7 +109,7 @@ func firstKind(subs []Subscription) Kind {
 // subsPage lists the session's subscriptions of its kind; number buttons
 // open read-only details, and one shared button cancels.
 func (e *Engine) subsPage(sess session) Reply {
-	view := listView{source: subscriptionList}
+	view := listView{source: subscriptionList, pageItems: compactPageItems}
 	for _, s := range sess.subs {
 		if s.Kind != sess.kind {
 			continue
@@ -150,7 +153,7 @@ func markShown(label string, shown bool) string {
 
 // cancelPicker numbers the shown kind's subscriptions.
 func (e *Engine) cancelPicker(sess session) Reply {
-	view := listView{heading: Heading(Plain(msgCancelTitle)), note: msgCancelPick, footer: browseRow(sess.id)}
+	view := listView{heading: Heading(Plain(msgCancelTitle)), note: msgCancelPick, footer: browseRow(sess.id), pageItems: compactPageItems}
 	for _, s := range sess.subs {
 		if s.Kind != sess.kind {
 			continue
@@ -168,7 +171,8 @@ func (e *Engine) cancelPicker(sess session) Reply {
 	return e.listPages(sess, view)
 }
 
-// subEntry is e.g. "1. **《绝命毒师》第 2 季**" over "_订阅中 · 缺 3/13 集_".
+// subEntry is one line, e.g. "1. **《绝命毒师》第 2 季** · _缺 3/13 集_",
+// naming the state when it is other than 订阅中.
 func subEntry(n int, s Subscription) Block {
 	missing := ""
 	if s.Kind == TV && s.Lack > 0 {
@@ -177,8 +181,14 @@ func subEntry(n int, s Subscription) Block {
 			missing = fmt.Sprintf("缺 %d/%d 集", s.Lack, s.Total)
 		}
 	}
+	state := stateText[s.State]
+	if s.State == stateSubscribed {
+		state = ""
+	}
 	name := fmt.Sprintf("《%s》%s", s.Title, seasonSuffix(s))
-	return entry(n, Strong(name), stateText[s.State], missing)
+	item := entry(n, Strong(name), state, missing)
+	item.Brief = true
+	return item
 }
 
 // seasonSuffix follows a 《title》, e.g. 第 2 季.

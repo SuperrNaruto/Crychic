@@ -544,11 +544,15 @@ func TestOldConfirmationCannotSubscribeAfterRestart(t *testing.T) {
 	h.tr.verify(t)
 }
 
-// The newest library items link to where they can be watched.
+// The newest library items link to where they can be watched, grouped by
+// kind on one-line pages, a group continued on the next page headed again.
 func TestLatestLinksToTheMediaServer(t *testing.T) {
-	h := start(t, scenario{routes: map[string]route{latestPath: ok("latest.json")}})
+	h := start(t, scenario{routes: map[string]route{latestPath: ok("latest_mixed.json")}})
 	h.say(alice, alice, "/newly_added")
 	h.shows(1, `<a href="https://emby.example.com/web/index.html#!/item?id=118&amp;context=home"><b>《颂乐人偶》</b></a>`)
+	h.tap(alice, 1, "下一页 ›")
+	h.shows(1, "电视剧（9）")
+	h.shows(1, "电影（2）")
 	h.tr.verify(t)
 }
 

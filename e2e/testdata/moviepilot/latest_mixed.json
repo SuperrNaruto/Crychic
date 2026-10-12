@@ -1,0 +1,105 @@
+{
+  "success": true,
+  "message": "",
+  "data": [
+    {
+      "id": "118",
+      "item_id": "118",
+      "title": "颂乐人偶",
+      "subtitle": "2025",
+      "type": "电视剧",
+      "link": "https://emby.example.com/web/index.html#!/item?id=118&context=home",
+      "server_type": "emby"
+    },
+    {
+      "id": "115",
+      "item_id": "115",
+      "title": "迷途之子!!!!!",
+      "subtitle": "2023",
+      "type": "电视剧",
+      "link": "https://emby.example.com/web/index.html#!/item?id=115&context=home",
+      "server_type": "emby"
+    },
+    {
+      "id": "301",
+      "item_id": "301",
+      "title": "沙丘2",
+      "subtitle": "2024",
+      "type": "电影",
+      "link": "https://emby.example.com/web/index.html#!/item?id=301&context=home",
+      "server_type": "emby"
+    },
+    {
+      "id": "38",
+      "item_id": "38",
+      "title": "碧蓝之海",
+      "subtitle": "2018",
+      "type": "电视剧",
+      "link": "https://emby.example.com/web/index.html#!/item?id=38&context=home",
+      "server_type": "emby"
+    },
+    {
+      "id": "37",
+      "item_id": "37",
+      "title": "再见菈菈",
+      "subtitle": "2026",
+      "type": "电视剧",
+      "link": "https://emby.example.com/web/index.html#!/item?id=37&context=home",
+      "server_type": "emby"
+    },
+    {
+      "id": "201",
+      "item_id": "201",
+      "title": "侦探已死",
+      "subtitle": "2021",
+      "type": "电视剧",
+      "link": "https://emby.example.com/web/index.html#!/item?id=201&context=home",
+      "server_type": "emby"
+    },
+    {
+      "id": "202",
+      "item_id": "202",
+      "title": "凡人修仙传",
+      "subtitle": "2020",
+      "type": "电视剧",
+      "link": "https://emby.example.com/web/index.html#!/item?id=202&context=home",
+      "server_type": "emby"
+    },
+    {
+      "id": "302",
+      "item_id": "302",
+      "title": "花束般的恋爱",
+      "subtitle": "2021",
+      "type": "电影",
+      "link": "https://emby.example.com/web/index.html#!/item?id=302&context=home",
+      "server_type": "emby"
+    },
+    {
+      "id": "203",
+      "item_id": "203",
+      "title": "沧元图",
+      "subtitle": "2023",
+      "type": "电视剧",
+      "link": "https://emby.example.com/web/index.html#!/item?id=203&context=home",
+      "server_type": "emby"
+    },
+    {
+      "id": "204",
+      "item_id": "204",
+      "title": "牧神记",
+      "subtitle": "2024",
+      "type": "电视剧",
+      "link": "https://emby.example.com/web/index.html#!/item?id=204&context=home",
+      "server_type": "emby"
+    },
+    {
+      "id": "205",
+      "item_id": "205",
+      "title": "青之箱",
+      "subtitle": "2024",
+      "type": "电视剧",
+      "link": "https://emby.example.com/web/index.html#!/item?id=205&context=home",
+      "server_type": "emby"
+    }
+  ]
+}

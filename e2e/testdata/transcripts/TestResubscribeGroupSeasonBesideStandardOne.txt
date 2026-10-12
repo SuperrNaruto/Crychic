@@ -3,8 +3,7 @@
 << sendRichMessage chat=1001 message=1
    <h3>📚 订阅清单 · 电视剧（1）</h3>
    <ol start="1">
-   <li value="1"><b>《鬼灭之刃》第 2 季</b><br>
-   <i>订阅中 · 缺 13/13 集</i></li>
+   <li value="1"><b>《鬼灭之刃》第 2 季</b> · <i>缺 13/13 集</i></li>
    </ol>
    [1 | 1:sd:9]
    [·电视剧· | 1:sf:2] [电影 | 1:sf:1]

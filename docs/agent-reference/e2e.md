@@ -153,7 +153,8 @@ $KEY" "$MP/api/v1/media/search?title=沙丘&type=media&count=10"`), except `subs
 `server_error.json`, `library_movie_held.json` (the live library holds no movie yet), `subscriptions.json`,
 `subscribe_deleted.json`, `subscribe_gone.json` (no live subscription may be created to record them;
 `subscriptions.json` copies the shape of recorded subscription history); `latest.json` is a live recording
-with the owner's Emby domain replaced by `emby.example.com`; `subscribe_created.json` came from a one-off live
+with the owner's Emby domain replaced by `emby.example.com`, and `latest_mixed.json` extends it with
+synthetic TV and movie items in its shape; `subscribe_created.json` came from a one-off live
 subscription that must not be repeated (see above); `torrents_*.json`, `download_*.json`,
 `downloads_dune_mygo.json` are synthetic, shaped after v3.1.0's `Context.to_dict()` and download endpoint,
 with a fake site cookie and passkey the fake checks come back in `POST /api/v1/download/` (recorded as a

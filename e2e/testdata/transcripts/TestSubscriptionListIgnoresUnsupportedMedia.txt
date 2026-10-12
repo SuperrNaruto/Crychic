@@ -3,8 +3,7 @@
 << sendRichMessage chat=1001 message=1
    <h3>📚 订阅清单 · 电视剧（1）</h3>
    <ol start="1">
-   <li value="1"><b>《迷途之子!!!!!》第 1 季</b><br>
-   <i>订阅中</i></li>
+   <li value="1"><b>《迷途之子!!!!!》第 1 季</b></li>
    </ol>
    [1 | 1:sd:73]
    [·电视剧· | 1:sf:2] [电影 | 1:sf:1]
@@ -14,8 +13,7 @@
 << editMessageText chat=1001 message=1
    <h3>📚 订阅清单 · 电影（1）</h3>
    <ol start="1">
-   <li value="1"><b>《沙丘》</b><br>
-   <i>订阅中</i></li>
+   <li value="1"><b>《沙丘》</b></li>
    </ol>
    [1 | 1:sd:72]
    [电视剧 | 1:sf:2] [·电影· | 1:sf:1]

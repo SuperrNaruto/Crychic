@@ -82,16 +82,17 @@ func TestSubscriptionStateReturnsToCurrentList(t *testing.T) {
 	h.mp.setRoute(subsPath, ok(writeFixture(t, subs)))
 	h.say(alice, alice, "/subscribe")
 	h.tap(alice, 3, "下一页 ›")
+	h.tap(alice, 3, "下一页 ›")
 	h.tap(alice, 3, "21")
 	h.tap(alice, 3, "暂停订阅")
 	h.tap(alice, 3, "返回")
 	h.shows(3, "已暂停")
-	h.shows(3, "第 2/2 页")
+	h.shows(3, "第 3/3 页")
 	h.tap(alice, 3, "21")
 	h.tap(alice, 3, "恢复订阅")
 	h.tap(alice, 3, "返回")
 	h.shows(3, "订阅清单 · 电视剧")
-	h.shows(3, "第 2/2 页")
+	h.shows(3, "第 3/3 页")
 	if strings.Contains(mustMessage(h, 3).text, "已暂停") {
 		t.Fatal("the resumed subscription remains paused in its list")
 	}
@@ -104,7 +105,7 @@ func TestSubscriptionStateReturnsToCurrentList(t *testing.T) {
 	h.shows(3, "已暂停")
 	h.tap(alice, 3, "返回")
 	h.shows(3, "已暂停")
-	h.shows(3, "第 2/2 页")
+	h.shows(3, "第 3/3 页")
 	h.tr.verify(t)
 }
 

@@ -5,6 +5,7 @@ import "fmt"
 const (
 	actionPage       = "p"
 	listPageItems    = 20
+	compactPageItems = 8    // one-line lists: latest items and subscriptions
 	listPageRunes    = 3000 // room for headings and navigation within Telegram's limit
 	listTitleRunes   = 100
 	subscriptionList = "subscriptions"
@@ -15,6 +16,7 @@ type listEntry struct {
 	text    Text
 	buttons []Button
 	poster  string // shown in the page's gallery when set
+	section string // a Group above the entry when it opens a page or a new section
 }
 
 type listView struct {
@@ -68,7 +70,7 @@ func paged(id uint64, view listView) []Reply {
 	}
 	pages := []Reply{{Text: Lines(view.heading), Image: view.image}}
 	buttons := [][]Button{nil}
-	used, items := 0, 0
+	used, items, section := 0, 0, ""
 	for _, entry := range view.entries {
 		size := textSize(entry.text)
 		if items > 0 && (items >= maxItems || used+size > listPageRunes) {
@@ -76,12 +78,9 @@ func paged(id uint64, view listView) []Reply {
 			used, items = 0, 0
 		}
 		last := len(pages) - 1
-		pages[last].Text = append(pages[last].Text, entry.text...)
+		placeEntry(&pages[last], entry, items == 0 || entry.section != section)
 		buttons[last] = append(buttons[last], entry.buttons...)
-		if entry.poster != "" {
-			pages[last].Gallery = append(pages[last].Gallery, entry.poster)
-		}
-		used, items = used+size, items+1
+		used, items, section = used+size, items+1, entry.section
 	}
 	for i := range pages {
 		pages[i].Buttons = grid(buttons[i], gridColumns)
@@ -95,6 +94,18 @@ func paged(id uint64, view listView) []Reply {
 		pages[i].Buttons = append(append(pages[i].Buttons, view.menu...), view.footer)
 	}
 	return pages
+}
+
+// placeEntry adds entry to page, under its section's Group when it opens
+// the page or a new section.
+func placeEntry(page *Reply, entry listEntry, opens bool) {
+	if entry.section != "" && opens {
+		page.Text = append(page.Text, Group(entry.section))
+	}
+	page.Text = append(page.Text, entry.text...)
+	if entry.poster != "" {
+		page.Gallery = append(page.Gallery, entry.poster)
+	}
 }
 
 func textSize(text Text) int {

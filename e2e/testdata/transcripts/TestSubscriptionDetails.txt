@@ -3,10 +3,8 @@
 << sendRichMessage chat=-500 message=1
    <h3>📚 订阅清单 · 电视剧（2）</h3>
    <ol start="1">
-   <li value="1"><b>《绝命毒师》第 2 季</b><br>
-   <i>订阅中 · 缺 9/13 集</i></li>
-   <li value="2"><b>《颂乐人偶》第 1 季</b><br>
-   <i>待定</i></li>
+   <li value="1"><b>《绝命毒师》第 2 季</b> · <i>缺 9/13 集</i></li>
+   <li value="2"><b>《颂乐人偶》第 1 季</b> · <i>待定</i></li>
    </ol>
    [1 | 1:sd:1] [2 | 1:sd:5]
    [·电视剧· | 1:sf:2] [电影 | 1:sf:1]
@@ -90,10 +88,8 @@
 << editMessageText chat=-500 message=1
    <h3>📚 订阅清单 · 电视剧（2）</h3>
    <ol start="1">
-   <li value="1"><b>《绝命毒师》第 2 季</b><br>
-   <i>已暂停 · 缺 9/13 集</i></li>
-   <li value="2"><b>《颂乐人偶》第 1 季</b><br>
-   <i>待定</i></li>
+   <li value="1"><b>《绝命毒师》第 2 季</b> · <i>已暂停 · 缺 9/13 集</i></li>
+   <li value="2"><b>《颂乐人偶》第 1 季</b> · <i>待定</i></li>
    </ol>
    [1 | 1:sd:1] [2 | 1:sd:5]
    [·电视剧· | 1:sf:2] [电影 | 1:sf:1]
@@ -104,8 +100,7 @@
 << editMessageText chat=-500 message=1
    <h3>📚 订阅清单 · 电影（1）</h3>
    <ol start="1">
-   <li value="1"><b>《沙丘》</b><br>
-   <i>待处理</i></li>
+   <li value="1"><b>《沙丘》</b> · <i>待处理</i></li>
    </ol>
    [1 | 1:sd:6]
    [电视剧 | 1:sf:2] [·电影· | 1:sf:1]

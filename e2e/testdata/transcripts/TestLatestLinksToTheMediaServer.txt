@@ -1,14 +1,33 @@
 >> user 1001 in chat 1001: /newly_added
 << sendRichMessage chat=1001 message=1
    <h3>🆕 新鲜入库</h3>
+   <h4>电视剧（9）</h4>
    <ol start="1">
-   <li value="1"><a href="https://emby.example.com/web/index.html#!/item?id=118&amp;context=home"><b>《颂乐人偶》</b></a><br>
-   <i>2025 · 电视剧</i></li>
-   <li value="2"><a href="https://emby.example.com/web/index.html#!/item?id=115&amp;context=home"><b>《迷途之子!!!!!》</b></a><br>
-   <i>2023 · 电视剧</i></li>
-   <li value="3"><a href="https://emby.example.com/web/index.html#!/item?id=38&amp;context=home"><b>《碧蓝之海》</b></a><br>
-   <i>2018 · 电视剧</i></li>
-   <li value="4"><a href="https://emby.example.com/web/index.html#!/item?id=37&amp;context=home"><b>《再见菈菈》</b></a><br>
-   <i>2026 · 电视剧</i></li>
+   <li value="1"><a href="https://emby.example.com/web/index.html#!/item?id=118&amp;context=home"><b>《颂乐人偶》</b></a> · <i>2025</i></li>
+   <li value="2"><a href="https://emby.example.com/web/index.html#!/item?id=115&amp;context=home"><b>《迷途之子!!!!!》</b></a> · <i>2023</i></li>
+   <li value="3"><a href="https://emby.example.com/web/index.html#!/item?id=38&amp;context=home"><b>《碧蓝之海》</b></a> · <i>2018</i></li>
+   <li value="4"><a href="https://emby.example.com/web/index.html#!/item?id=37&amp;context=home"><b>《再见菈菈》</b></a> · <i>2026</i></li>
+   <li value="5"><a href="https://emby.example.com/web/index.html#!/item?id=201&amp;context=home"><b>《侦探已死》</b></a> · <i>2021</i></li>
+   <li value="6"><a href="https://emby.example.com/web/index.html#!/item?id=202&amp;context=home"><b>《凡人修仙传》</b></a> · <i>2020</i></li>
+   <li value="7"><a href="https://emby.example.com/web/index.html#!/item?id=203&amp;context=home"><b>《沧元图》</b></a> · <i>2023</i></li>
+   <li value="8"><a href="https://emby.example.com/web/index.html#!/item?id=204&amp;context=home"><b>《牧神记》</b></a> · <i>2024</i></li>
    </ol>
+   <footer>第 1/2 页</footer>
+   [下一页 › | 1:p:1]
    [首页 | 1:o:0] [关闭 | 1:c:0]
+>> user 1001 taps 1:p:1 on message 1
+<< editMessageText chat=1001 message=1
+   <h3>🆕 新鲜入库</h3>
+   <h4>电视剧（9）</h4>
+   <ol start="9">
+   <li value="9"><a href="https://emby.example.com/web/index.html#!/item?id=205&amp;context=home"><b>《青之箱》</b></a> · <i>2024</i></li>
+   </ol>
+   <h4>电影（2）</h4>
+   <ol start="10">
+   <li value="10"><a href="https://emby.example.com/web/index.html#!/item?id=301&amp;context=home"><b>《沙丘2》</b></a> · <i>2024</i></li>
+   <li value="11"><a href="https://emby.example.com/web/index.html#!/item?id=302&amp;context=home"><b>《花束般的恋爱》</b></a> · <i>2021</i></li>
+   </ol>
+   <footer>第 2/2 页</footer>
+   [‹ 上一页 | 1:p:0]
+   [首页 | 1:o:0] [关闭 | 1:c:0]
+<< answerCallbackQuery

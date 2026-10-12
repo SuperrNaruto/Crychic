@@ -8,6 +8,7 @@ import (
 const (
 	msgLatestTitle = "🆕 新鲜入库"
 	msgNoLatest    = "媒体库最近还没有新东西哦～"
+	msgOtherKind   = "其他"
 )
 
 // Latest lists what reached the media servers most recently.
@@ -30,10 +31,39 @@ func (e *Engine) latest(ctx context.Context, sess session) Reply {
 		text := Lines(Heading(Plain(msgLatestTitle)), Line(Plain(msgNoLatest)))
 		return Reply{Text: text, Buttons: [][]Button{browseRow(sess.id)}}
 	}
-	view := listView{heading: Heading(Plain(msgLatestTitle)), footer: browseRow(sess.id)}
-	for i, it := range items {
-		title := Linked(Strong(fmt.Sprintf("《%s》", truncate(it.Title, listTitleRunes))), it.Link)
-		view.entries = append(view.entries, listEntry{text: Lines(entry(i+1, title, it.Year, it.Kind))})
+	view := listView{
+		heading:   Heading(Plain(msgLatestTitle)),
+		entries:   latestEntries(items),
+		footer:    browseRow(sess.id),
+		pageItems: compactPageItems,
 	}
 	return e.listPages(sess, view)
+}
+
+// latestEntries groups items by kind in the order the kinds first appear,
+// one line each, e.g. "1. 《沙丘》 · 2021" under 电影（3）.
+func latestEntries(items []LibraryItem) []listEntry {
+	var kinds []string
+	byKind := map[string][]LibraryItem{}
+	for _, it := range items {
+		kind := it.Kind
+		if kind == "" {
+			kind = msgOtherKind
+		}
+		if _, seen := byKind[kind]; !seen {
+			kinds = append(kinds, kind)
+		}
+		byKind[kind] = append(byKind[kind], it)
+	}
+	var entries []listEntry
+	for _, kind := range kinds {
+		section := fmt.Sprintf("%s（%d）", kind, len(byKind[kind]))
+		for _, it := range byKind[kind] {
+			title := Linked(Strong(fmt.Sprintf("《%s》", truncate(it.Title, listTitleRunes))), it.Link)
+			item := entry(len(entries)+1, title, it.Year)
+			item.Brief = true
+			entries = append(entries, listEntry{text: Lines(item), section: section})
+		}
+	}
+	return entries
 }

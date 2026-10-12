@@ -27,8 +27,7 @@
 << sendRichMessage chat=1001 message=2
    <h3>📚 订阅清单 · 电影（1）</h3>
    <ol start="1">
-   <li value="1"><b>《无海报影片》</b><br>
-   <i>订阅中</i></li>
+   <li value="1"><b>《无海报影片》</b></li>
    </ol>
    [1 | 2:sd:1]
    [电视剧 | 2:sf:2] [·电影· | 2:sf:1]
