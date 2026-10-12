@@ -56,6 +56,7 @@ var sameLevel = map[string]bool{
 	actionPauseSub: true, actionResumeSub: true,
 	actionTorrentAgain: true, actionTorrentSort: true, actionTorrentSites: true, actionTorrentSite: true,
 	actionTorrentTick: true, actionTorrentMissing: true,
+	actionTorrentFilter: true, actionTorrentFilterField: true, actionTorrentFilterTick: true, actionTorrentFilterClear: true,
 	actionTorrentRefresh: true, actionTorrentResearch: true,
 	actionSearchSite: true, actionSearchAll: true,
 	actionSubEditField: true, actionSubEditPick: true, actionSubEditClear: true,
@@ -242,6 +243,7 @@ func torrentScreenAction(action string) bool {
 	case actionTorrentRun, actionTorrentAgain, actionTorrentRefresh, actionTorrentResearch,
 		actionTorrentPick, actionTorrentGet, actionTorrentSort, actionTorrentSites,
 		actionTorrentSite, actionTorrentMissing, actionTorrentMulti, actionTorrentTick,
+		actionTorrentFilter, actionTorrentFilterField, actionTorrentFilterTick, actionTorrentFilterClear,
 		actionTorrentBatch, actionTorrentBatchGet, actionTorrentPlan, actionTorrentPlanRefresh, actionPage, actionBack:
 		return true
 	}

@@ -250,7 +250,13 @@ the background (`torrenthunt.go`, `session.hunt`; 取消 stops it) and show the 
 saying how many seconds it has run (from `Now`, so `h.advance` moves it) until the results replace it;
 releases list in MoviePilot's order (8 a page, number buttons `tp` carrying each release's own index),
 re-sortable like the WebUI (`torrentsort.go`: 默认/做种/时间/大小/站点, `to`, same-level) and filtered to one site (筛选站点
-`tf` lists sites with counts, `tw` picks one or all; its 返回 re-shows the list); for a season partly in the
+`tf` lists sites with counts, `tw` picks one or all; its 返回 re-shows the list); 组合筛选 (`torrentfilter.go`, `ti`
+panel, `tj` opens a field and fixes its offered values, `tl` ticks one of them, `tn` clears a field or all; all
+same-level, 返回 re-shows the list) narrows by 分辨率/编码/制作组/大小/促销/H&R like the WebUI's filterForm: values
+come from the results, ticks within a field widen, fields narrow each other, an empty value (and MP's 未知
+promotion) is offered as 未知, and each value's count is what it would show under the site, missing and other
+conditions; the list note says 符合 N 个，共 M 个 with the conditions, a new search clears them, and 缺集方案
+takes only releases inside the current site and combined filters; for a season partly in the
 library (`torrentmissing.go`) each release says what it adds (补 E01-E12 when only part of it is missing, 已都有
 when none) and 只看缺集 (`tx`, arg 1 on / 0 off, same-level, offered while some release adds nothing) hides the
 releases adding nothing; MoviePilot reads episodes from a description only when the title names none, so a
@@ -281,7 +287,7 @@ the in-flight call as an unknown result and starts no remaining items. Per-call 
 
 ### 缺集下载方案
 
-`torrentplan.go`、`torrentplanread.go`、`torrentplanselect.go`、`torrentplanmodel.go` 和 `torrentplantext.go` 复用资源结果及批量提交。完整 TV 单季结果提供「缺集方案」，当前站点筛选作用于全部结果而非当前页；显示排序不影响确定性建议。生成与重新计算并行只读媒体库及季信息，共用现有五秒预算，不访问资源搜索端点。
+`torrentplan.go`、`torrentplanread.go`、`torrentplanselect.go`、`torrentplanmodel.go` 和 `torrentplantext.go` 复用资源结果及批量提交。完整 TV 单季结果提供「缺集方案」，当前站点筛选与组合筛选作用于全部结果而非当前页；显示排序不影响确定性建议。生成与重新计算并行只读媒体库及季信息，共用现有五秒预算，不访问资源搜索端点。
 
 所需范围为当前起始集至季末，季总数须明确且不超过 100。只用同来源、ID、类型、明确单季、非空且未越界的可信识别集数；`Unverified`、`EpisodesUnsure`、`RangeUnsure` 均排除，不从空列表推断整季，也不将非默认剧集组映射成普通季。按新增覆盖量、无 H&R、少重复、已知且较小体积、MoviePilot 顺序贪心选取，最多 20 个，不承诺最优或种子文件核验。
 
@@ -353,10 +359,10 @@ own state; nothing found or a failed lookup only flashes a notice and keeps the 
 ## 回调动作索引
 
 Callback action strings are unique across every flow handler. Resource search is `ts`/`tg`/`tr`/`tq`, release
-pick `tp`, ticking releases `tm`/`tk`/`tb`/`tz`, release order `to`, site filter `tf`/`tw`, missing-only
+pick `tp`, ticking releases `tm`/`tk`/`tb`/`tz`, release order `to`, site filter `tf`/`tw`, combined filter `ti`/`tj`/`tl`/`tn`, missing-only
 filter `tx`, download `td`, download deletion `kd`/`ky`; 洗版订阅 is `bv`/`bo`, subscription return is `j`,
 subscription kind `sf`, shared cancel `sc`, subscription details/refresh `sd`/`su`, pause/resume `sp`/`sr`,
-history `hs`/`hf`/`hp`/`ho`, calendar weekday is `w`, generic list paging is `p`, 相似推荐 is `r`, 同系列 is `n`,
+history `hs`/`hf`/`hm`/`hp`/`ho`, calendar weekday is `w`, generic list paging is `p`, 相似推荐 is `r`, 同系列 is `n`,
 重新搜索 is `rs`, read-only 重试 is `rt` and 返回 is `bk`.
 订阅编辑为 `ue/uf/uv/uc/ua/uq/uw/ui`，依次对应入口、字段、选择、清空、返回菜单、预览、确认写入和 typed input。
 交互增强为 `uo/ud/uy`（恢复原值、确认放弃、只读核对）及 `up/uk/ub/ug/ur`（冲突字段、保留草稿、采用后台、完成处理、重新读取）。

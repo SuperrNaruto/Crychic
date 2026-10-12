@@ -33,7 +33,7 @@ func torrentPlanCandidates(sess session, scope torrentPlanScope) ([]torrentPlanC
 	excluded := 0
 	for _, index := range sess.activeTorrents() {
 		release := sess.torrents[index]
-		if sess.torrentSite != "" && siteOf(release) != sess.torrentSite {
+		if (sess.torrentSite != "" && siteOf(release) != sess.torrentSite) || !sess.releaseFilter.passes(release, -1) {
 			continue
 		}
 		candidate := torrentPlanCandidate{index: index, release: release}

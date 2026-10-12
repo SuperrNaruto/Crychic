@@ -257,6 +257,47 @@ func TestSortAndFilterReleases(t *testing.T) {
 	h.tr.verify(t)
 }
 
+// The releases can be narrowed by several facts at once without searching
+// the sites again: ticked values of one fact widen it, facts narrow each
+// other, an unknown value is offered as 未知, and the count beside a value is
+// what ticking it would show under the other facts. A number still opens
+// the release it lists, and clearing the conditions lists every release.
+func TestCombineReleaseFilters(t *testing.T) {
+	h := start(t, scenario{routes: map[string]route{
+		searchPath:   ok("search_dune.json"),
+		duneDetails:  ok("detail_dune.json"),
+		duneLookup:   ok("subscription_none.json"),
+		duneTorrents: searchingSites("torrents_dune.json"),
+	}})
+	h.say(alice, alice, "/search 沙丘")
+	h.tap(alice, 1, duneMovie)
+	h.searchTorrents(alice, 1, searchResources)
+	h.tap(alice, 1, "组合筛选")
+	h.shows(1, "符合 4 个，共 4 个")
+	h.tap(alice, 1, "分辨率")
+	h.shows(1, "2160p")
+	h.tap(alice, 1, "1")
+	h.shows(1, "符合 2 个，共 4 个")
+	h.tap(alice, 1, "促销")
+	h.shows(1, "未知")
+	h.tap(alice, 1, "1")
+	h.tap(alice, 1, "2")
+	h.tap(alice, 1, "H&R")
+	h.tap(alice, 1, "1")
+	h.shows(1, "符合 1 个，共 4 个")
+	h.tap(alice, 1, "大小")
+	h.tap(alice, 1, "返回")
+	h.shows(1, "符合 1 个，共 4 个（分辨率 2160p · 促销 2X免费/免费 · H&amp;R 无 H&amp;R）")
+	h.tap(alice, 1, "1")
+	h.shows(1, "Dune.2021.2160p.WEB-DL")
+	h.tap(alice, 1, "返回")
+	h.tap(alice, 1, "组合筛选")
+	h.tap(alice, 1, "清除全部条件")
+	h.tap(alice, 1, "返回")
+	h.shows(1, "共 4 个")
+	h.tr.verify(t)
+}
+
 // A season partly in the library marks what each release adds to it, and
 // can list only the releases bringing missing episodes, kept across order
 // changes until switched off.

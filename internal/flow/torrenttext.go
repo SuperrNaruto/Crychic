@@ -25,7 +25,7 @@ func torrentList(sess session, target Target) listView {
 	shown := sess.shownTorrents()
 	view := listView{
 		heading:   Heading(Plain(heading)),
-		note:      fmt.Sprintf("共 %d 个，%s，%s", len(shown), torrentSorts[sess.torrentSort].note, listHint(sess)),
+		note:      fmt.Sprintf("%s，%s，%s", releaseCount(sess, len(shown)), torrentSorts[sess.torrentSort].note, listHint(sess)),
 		pageItems: torrentPageItems,
 		footer:    []Button{cancelButton(sess.id)},
 	}
@@ -46,6 +46,15 @@ func torrentList(sess session, target Target) listView {
 		view.entries = append(view.entries, releaseEntry(sess, n+1, i))
 	}
 	return view
+}
+
+// releaseCount is e.g. "共 12 个", or under the combined filter
+// "符合 3 个，共 12 个（分辨率 2160p · 促销 免费）".
+func releaseCount(sess session, shown int) string {
+	if !sess.releaseFilter.active() {
+		return fmt.Sprintf("共 %d 个", shown)
+	}
+	return fmt.Sprintf("符合 %d 个，共 %d 个（%s）", shown, len(sess.activeTorrents()), sess.releaseFilter.summary())
 }
 
 func streamSearchMenu(sess session) [][]Button {
@@ -69,6 +78,9 @@ func onwardRow(sess session) []Button {
 	var row []Button
 	if sess.torrentSite != "" || len(torrentSites(sess.activeResources())) > 1 {
 		row = append(row, Button{Label: msgSiteFilter, Data: data(sess.id, actionTorrentSites, 0)})
+	}
+	if sess.releaseFilter.active() || len(sess.activeTorrents()) > 1 {
+		row = append(row, Button{Label: msgReleaseFilter, Data: data(sess.id, actionTorrentFilter, 0)})
 	}
 	if !sess.ticking && len(sess.activeTorrents()) > 1 && (!sess.streaming || sess.searchDone && sess.searchFinal) {
 		row = append(row, Button{Label: msgTickReleases, Data: data(sess.id, actionTorrentMulti, 0)})

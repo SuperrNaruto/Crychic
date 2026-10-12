@@ -33,6 +33,7 @@ func (e *Engine) prepareHunt(sess session) session {
 	sess.plan = nil
 	sess.ticking, sess.missingOnly, sess.searchDone, sess.searchFinal = false, false, false, false
 	sess.torrentSort, sess.torrentSite, sess.searchErr = 0, "", nil
+	sess.releaseFilter = releaseFilter{}
 	sess.searchView = torrentWaitingView
 	return sess
 }
@@ -153,5 +154,5 @@ func (sess session) completedSearch() bool {
 func (p huntProgress) complete() bool { return p.done && p.final && p.err == nil }
 
 func streamNote(sess session, total int) string {
-	return fmt.Sprintf("共 %d 个，%s %s", total, streamStatus(sess), listHint(sess))
+	return fmt.Sprintf("%s，%s %s", releaseCount(sess, total), streamStatus(sess), listHint(sess))
 }

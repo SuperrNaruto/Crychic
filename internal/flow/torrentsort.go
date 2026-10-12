@@ -95,13 +95,13 @@ func (e *Engine) releases(sess session) Reply {
 }
 
 // shownTorrents are the indices into the session's releases to list: those
-// of the chosen site, bringing missing episodes if asked, in the chosen
-// order.
+// of the chosen site, bringing missing episodes if asked and passing the
+// combined filter, in the chosen order.
 func (sess session) shownTorrents() []int {
 	var shown []int
 	for _, i := range sess.activeTorrents() {
 		t := sess.torrents[i]
-		if (sess.torrentSite == "" || siteOf(t) == sess.torrentSite) && (!sess.missingOnly || sess.fillsMissing(t)) {
+		if sess.listedBySite(t) && sess.releaseFilter.passes(t, -1) {
 			shown = append(shown, i)
 		}
 	}
@@ -109,6 +109,12 @@ func (sess session) shownTorrents() []int {
 		slices.SortStableFunc(shown, func(a, b int) int { return less(sess.torrents[a], sess.torrents[b]) })
 	}
 	return shown
+}
+
+// listedBySite reports whether t is of the chosen site and, if asked,
+// brings missing episodes; the combined filter applies on top.
+func (sess session) listedBySite(t Torrent) bool {
+	return (sess.torrentSite == "" || siteOf(t) == sess.torrentSite) && (!sess.missingOnly || sess.fillsMissing(t))
 }
 
 func (sess session) activeTorrents() []int {

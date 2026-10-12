@@ -125,6 +125,8 @@ changing real timer cadence
 
 `people_test.go` 与 `discoverfilter_test.go` 的 3 个场景经真实 `/search`、`/trending` 入口覆盖 TMDB 演员作品、Bangumi 配音演员（角色名、重复作品去重、对不上时说明）以及条件找片（逐项选择、TMDB 下界参数与日期、翻页去重与原编号、返回保留条件、换类型清空题材、无结果提示）。`credits_dune.json`、`person_works_tmdb.json`、`discover_anime_p1.json`、`credits_mygo_bangumi.json`、`person_works_bangumi.json`、`detail_mygo_bangumi.json` 与 `seasons_mygo_bangumi.json` 是 2026-10-12 从 v3.1.4 只读录制并裁剪的字段；`discover_anime_p2.json` 为真实第 2 页前插入第 1 页末条，模拟 TMDB 排名在翻页间变动；`search_mygo_bangumi.json` 把 `/api/v1/bangumi/428735` 的录制改成搜索结果形状，模拟搜索来源包含 Bangumi 的部署。fake 按 `page` 区分条件找片的后续页（`discoverPage`）。
 
+`torrents_test.go` 的 `TestCombineReleaseFilters` 经 `/search` 卡片覆盖组合筛选：字段内多选、字段间相交、「未知」促销选项、按其他条件计算的选项计数、筛选后编号仍打开对应资源、清除全部条件；全程只有一次资源搜索请求。
+
 `history_test.go` 的 `TestBrowseOlderHistory` 经 `/subscribe` 覆盖订阅历史翻页：无媒体身份的记录计数不列出且仍算满页、翻页间新完成的订阅把上一页末条推到下一页时不重复、短页结束、较早记录原样回传重新订阅、返回重新读取第 1 页。`fake_history_test.go` 按 v3.1.4 语义把路由 fixture 当作该类完整历史，按 `page`/`count` offset 切页并给出 `X-Total-Count`；非 200 路由照常返回。`subscribe_history_tv_long.json` 在原录制 7 条后追加 5 条按同形状合成的较早记录（含一条媒体身份为空），`subscribe_history_tv_grown.json` 再在最前插入一条新完成记录。
 
 `taskprogress_test.go` 的 2 个场景经真实 `/tasks` 跟随整理任务：插件路由缺失（404）时只显示状态，报告后仅对应运行文件显示百分比，他片记录与已完成文件不显示；同一身份的两个运行文件或已结束记录不显示。fake 的插件进度由 `nativeMP.setProgress` 设定，形状按 v1.2.0 插件投影合成，宿主侧形状由 `MPPluginNativeHost.txt` 核对。

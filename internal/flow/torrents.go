@@ -102,6 +102,7 @@ func (e *Engine) searchTorrents(sess session, p press) Reply {
 	sess.hunt, sess.torrents, sess.release = nil, progress.items, nil
 	sess.searchView = ""
 	sess.torrentSort, sess.torrentSite, sess.missingOnly = 0, "", false
+	sess.releaseFilter = releaseFilter{}
 	sess.ticking, sess.ticked, sess.batch = false, nil, nil
 	if progress.err == nil && len(progress.items) > 0 {
 		return e.listPages(sess, torrentList(sess, target))
