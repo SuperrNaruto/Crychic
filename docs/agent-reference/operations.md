@@ -31,7 +31,8 @@ Go 改动执行根指南的 build、vet、gofmt 检查与 race E2E；容器改�
 
 - 只在构建部署镜像时打 tag，不按提交打；部署镜像用该 tag 构建，使线上版本可对应到提交。
 - 0.x 阶段，上一 tag 以来新增能力（新命令、新流程、新接入）或不兼容改动升 minor；修 bug、调整已有功能的布局、文案与交互体验升 patch，按实际改动判断，不按提交前缀（主人 2026-10-12 澄清）；只有文档、CI 等不进二进制的改动不打 tag。
-- 在已提交且检查通过的 HEAD 上打附注 tag（`git tag -a vX.Y.Z -m "Crychic vX.Y.Z"`），交付时报告版本与依据。
+- 在已提交且检查通过的 HEAD 上打附注 tag，交付时报告版本与依据。只打本地 tag 时 CI 不会在该版本上运行，所以 tag 前在同一 HEAD 上跑完 CI 的全部检查：`go build ./cmd/crychic`、`go vet ./...`、`gofmt -l .`、`go test -race ./...`、插件版本一致性、`e2e/run_mp_plugin_e2e.sh` 与 Docker 构建加 `-version`。该 HEAD 的提交检查已含其中几项且之后无改动时可沿用，注明出处。
+- tag 正文第一行为 `Crychic vX.Y.Z`，空一行后逐项写所跑检查与结果，没跑的写明没跑及原因（`git tag -a vX.Y.Z -F <file>`）。
 - 只打本地 tag；push 分支或 tag 仍需主人明确要求。
 - 升 1.0.0、跳号、无法判断是否不兼容时先问主人。
 
