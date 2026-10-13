@@ -21,14 +21,42 @@ var update = flag.Bool("update", false, "rewrite golden transcripts")
 // Each scenario's transcript is committed under testdata/transcripts and is the
 // reviewable, repeatable artifact of the run.
 type transcript struct {
-	mu       sync.Mutex
-	lines    []string
-	sessions map[string]string
+	mu          sync.Mutex
+	lines       []string
+	sessions    map[string]string
+	hide        func(line string) bool
+	hiddenLines []string
+}
+
+// hideReads keeps the reads matching hide out of the transcript and counts
+// them instead, for background work (the calendar's warm-up) whose requests
+// arrive between the user's actions in any order.
+func (tr *transcript) hideReads(hide func(line string) bool) {
+	tr.mu.Lock()
+	defer tr.mu.Unlock()
+	tr.hide = hide
+}
+
+// hiddenReads is how many reads hideReads has kept out, whose line contains part.
+func (tr *transcript) hiddenReads(part string) int {
+	tr.mu.Lock()
+	defer tr.mu.Unlock()
+	n := 0
+	for _, line := range tr.hiddenLines {
+		if strings.Contains(line, part) {
+			n++
+		}
+	}
+	return n
 }
 
 func (tr *transcript) add(head string, body ...string) {
 	tr.mu.Lock()
 	defer tr.mu.Unlock()
+	if tr.hide != nil && tr.hide(head) {
+		tr.hiddenLines = append(tr.hiddenLines, head)
+		return
+	}
 	tr.lines = append(tr.lines, tr.normalize(head))
 	if len(body) == 0 {
 		tr.settle()

@@ -71,7 +71,7 @@ quote; never in headings, toasts, table cells, entry bodies or notifications (th
 `Para`). Pre-write risk notes on confirm screens are Callouts. A Fold holds explanation only: whatever it says
 about safety or status must also be visible elsewhere on the screen (the edit-menu note repeats on the confirm
 screen, subscription-detail read failures are Callouts and the omitted count a Remark beside the folded
-explanation). Never fold on a screen edited by `Reply.Follow`; those keep a short visible Remark. Safety text on
+explanation). Never fold on a screen edited by `Reply.Follow`; those keep a short visible Remark (a calendar page still looking up synopses says 简介补充中…). Safety text on
 confirmation screens, page numbers, 更新时间, refresh state and 点编号… hints stay visible. How a Callout and a
 Fold look in the Telegram client is pending the owner's live check
 
@@ -433,7 +433,7 @@ Callback action strings are unique across every flow handler. Resource search is
 pick `tp`, ticking releases `tm`/`tk`/`tb`/`tz`, 排序与筛选 `tv` (opens it), release order `tc` (picks, stays on it), list return `ta` (the retired `to` is refused), site filter `tf`/`tw`, combined filter `ti`/`tj`/`tl`/`tn`, missing-only
 filter `tx`, download `td`, download deletion `kd`/`ky`; 洗版订阅 is `bv`/`bo`, subscription return is `j`,
 subscription kind `sf`, shared cancel `sc`, subscription details/refresh `sd`/`su`, pause/resume `sp`/`sr`,
-history `hs`/`hf`/`hm`/`hp`/`ho`, calendar weekday is `w`, generic list paging is `p`, 相似推荐 is `r`, 同系列 is `n`,
+history `hs`/`hf`/`hm`/`hp`/`ho`, calendar weekday is `w`, a calendar page's read-only Follow redraw is `gn` (same-level, chart view; accepted only while it is the shown screen's Follow), generic list paging is `p`, 相似推荐 is `r`, 同系列 is `n`,
 重新搜索 is `rs`, read-only 重试 is `rt` and 返回 is `bk`.
 订阅编辑为 `ue/uf/uv/uc/ua/uq/uw/ui`，依次对应入口、字段、选择、清空、返回菜单、预览、确认写入和 typed input。
 交互增强为 `uo/ud/uy`（恢复原值、确认放弃、只读核对）及 `up/uk/ub/ug/ur`（冲突字段、保留草稿、采用后台、完成处理、重新读取）。

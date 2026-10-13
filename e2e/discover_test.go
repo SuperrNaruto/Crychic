@@ -4,7 +4,6 @@ import (
 	"net/http"
 	"strings"
 	"testing"
-	"time"
 )
 
 const (
@@ -93,45 +92,36 @@ func TestCalendarSequelIsItsTMDBShow(t *testing.T) {
 	h.tr.verify(t)
 }
 
-// Two taps while a synopsis retries must not share writable session slices
-// or let the earlier result overwrite a later navigation choice.
+// Taps while a page's synopses are still being looked up join that lookup
+// rather than repeating it, and must not share writable session slices or
+// let an earlier result overwrite a later page; the last page fills in when
+// the lookup ends.
 func TestCalendarRetryOverlappingNavigation(t *testing.T) {
-	h := start(t, scenario{routes: map[string]route{searchPath: ok("empty.json")}})
-	h.bgm.setDown(nuwaID, true)
+	h := start(t, scenario{
+		noteGrace: mondayNoteGrace,
+		progress:  followIdle,
+		routes: map[string]route{
+			searchPath:               ok("empty.json"),
+			bangumiInfoPath + nuwaID: ok(writeFixture(t, map[string]any{"overview": "MoviePilot 返回的女娲简介"})),
+		},
+	})
+	slow := h.mp.holdCalls(bangumiInfoPath+nuwaID, 1)[0]
 	h.say(alice, alice, "/trending")
 	h.tap(alice, 1, "新番放送")
-	const slowLookup = 100 * time.Millisecond
-	entered := h.bgm.delay(nuwaID, slowLookup)
+	h.wait(slow.entered, "the slow synopsis lookup")
 	first := h.press(alice, 1, "·一·")
-	h.wait(entered, "the first synopsis retry")
-	h.waitLookup("title=列女战纪：女娲石记")
 	second := h.press(alice, 1, "·一·")
 	h.wait(first, "the first calendar tap")
 	h.wait(second, "the second calendar tap")
-	h.tap(alice, 1, "二")
-	h.shows(1, "星期二")
-	h.tr.verify(t)
-}
-
-// Observe both reads before the overlapping tap, rather than imposing an
-// arbitrary order between that tap and an independent backend lookup.
-func (h *harness) waitLookup(want string) {
-	h.t.Helper()
-	const checkEvery = time.Millisecond
-	const initialAndRetry = 2
-	deadline := time.After(actionTimeout)
-	tick := time.NewTicker(checkEvery)
-	defer tick.Stop()
-	for {
-		if strings.Count(h.tr.String(), want) >= initialAndRetry {
-			return
-		}
-		select {
-		case <-tick.C:
-		case <-deadline:
-			h.t.Fatal("calendar retry search did not arrive")
-		}
+	h.shows(1, "简介补充中")
+	if got := strings.Count(h.tr.String(), "title=列女战纪：女娲石记"); got != 1 {
+		t.Errorf("the slow pick was searched %d times, want once", got)
 	}
+	filled := h.tg.expect("edit:1")
+	slow.allow()
+	h.wait(filled, "the page filling in")
+	h.shows(1, "MoviePilot 返回的女娲简介")
+	h.tr.verify(t)
 }
 
 // missingDoubanPoster is a chart poster Douban's image host no longer has.
@@ -172,8 +162,7 @@ func TestDoubanPicksAreMatchedByTitle(t *testing.T) {
 // and switches to any other; it groups a day's picks by first air date and
 // links each to its TMDB page with a collapsed synopsis, found by its title or else its original
 // title; a show TMDB lacks, or has no synopsis for, gets Bangumi's, read
-// from Bangumi itself. A synopsis Bangumi failed to give is fetched again
-// when the page shows again.
+// from Bangumi itself.
 func TestAnimeCalendarShowsEachWeekday(t *testing.T) {
 	h := start(t, scenario{
 		routes: map[string]route{
@@ -189,14 +178,12 @@ func TestAnimeCalendarShowsEachWeekday(t *testing.T) {
 			"你好，我是受心上人所托来做恋爱药的魔女。": "search_calendar_majo.json",
 		},
 	})
-	h.bgm.setDown(nuwaID, true)
 	h.say(alice, alice, "/start")
 	h.tap(alice, 1, "发现")
 	h.tap(alice, 1, "新番放送")
 	h.shows(1, "星期一（今天）")
 	h.shows(1, "2026-10-05 首播")
 	h.shows(1, "themoviedb.org/tv/297903")
-	h.bgm.setDown(nuwaID, false)
 	h.tap(alice, 1, "2")
 	h.tap(alice, 1, "返回")
 	h.shows(1, "补天的时代已经过去")

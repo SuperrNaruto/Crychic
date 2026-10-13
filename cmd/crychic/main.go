@@ -39,7 +39,7 @@ func main() {
 	log.Info("crychic starting", "version", v)
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 	defer stop()
-	if err := app.Run(ctx, cfg, app.Deps{Log: log, Now: time.Now}); err != nil {
+	if err := app.Run(ctx, cfg, app.Deps{Log: log, Now: time.Now, CalendarWarm: true}); err != nil {
 		log.Error("crychic stopped", "err", err)
 		os.Exit(1)
 	}

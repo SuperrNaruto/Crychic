@@ -58,7 +58,6 @@ type session struct {
 	group         EpisodeGroup   // the group seasons are numbered by; zero for standard seasons
 	partStates    []partState    // where each listed series part stands, by index into results
 	wanted        []int          // indices of the series parts ticked to subscribe
-	noted         []bool         // picks already given a link and synopsis
 	subs          []Subscription
 	subEdit       *subscriptionEdit
 	subReceipt    *subscriptionEditReceipt // immutable, read-only; never a write target

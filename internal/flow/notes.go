@@ -4,54 +4,126 @@ import (
 	"context"
 	"slices"
 	"sync"
+	"time"
 )
 
 const tmdbSource = "themoviedb"
 
-// annotate gives the picks in at a TMDB identity and link where
-// TMDB has the same show, and a synopsis from TMDB, else from the calendar
-// itself. Calendar picks carry Bangumi ids and no synopsis, while transfer
-// history only carries TMDB ids. It is cosmetic: a failed lookup leaves the
-// pick as it was, and MoviePilot answers an upstream failure with an empty
-// result, so a pick still without synopsis is looked up again the next
-// time its page shows. MoviePilot reads overlap, followed only by missing
-// public synopses; both stages share one cosmetic deadline for the whole page.
-func (e *Engine) annotate(ctx context.Context, sess *session, at span) {
-	ctx, cancel := context.WithTimeout(ctx, cosmeticTimeout)
-	defer cancel()
-	sess.picks, sess.noted = slices.Clone(sess.picks), slices.Clone(sess.noted)
-	if len(sess.noted) != len(sess.picks) {
-		sess.noted = make([]bool, len(sess.picks))
+// A calendar page gives its picks a TMDB identity and link where TMDB has
+// the same show, and a synopsis from TMDB, else from the calendar itself.
+// Calendar picks carry Bangumi ids and no synopsis, while transfer history
+// only carries TMDB ids. It is cosmetic: lookups run in background rounds
+// that remember what they found (noteCache), and a page shows what is known
+// after waiting the grace; the rest follows through Reply.Follow.
+
+// annotate gives the picks of the page at the notes remembered for them. With
+// start, picks without a fresh one are looked up first, waiting at most the
+// grace. The result closes when lookups still running for the page finish,
+// nil when none are.
+func (e *Engine) annotate(ctx context.Context, sess *session, at span, start bool) <-chan struct{} {
+	sess.picks = slices.Clone(sess.picks)
+	window := sess.picks[at.first:at.end]
+	if start {
+		e.awaitNotes(ctx, e.startNotes(window))
 	}
-	picks, noted := sess.picks, sess.noted
-	var wg sync.WaitGroup
-	for i := at.first; i < at.end; i++ {
-		if noted[i] {
-			continue
+	now := e.now()
+	for i, p := range window {
+		if m, ok := e.notes.apply(p, now); ok {
+			window[i] = m
 		}
-		wg.Go(func() {
-			picks[i] = e.note(ctx, picks[i])
-			noted[i] = picks[i].Overview != "" && ctx.Err() == nil
-		})
 	}
-	wg.Wait()
-	e.annotateMissing(ctx, sess, at)
+	return e.joined(e.notes.active(window, now))
 }
 
-// Fallbacks start after the page's MoviePilot reads, preserving provider
-// preference without extending the common deadline or mixing mutable results.
-func (e *Engine) annotateMissing(ctx context.Context, sess *session, at span) {
-	var wg sync.WaitGroup
-	for i := at.first; i < at.end; i++ {
-		if sess.picks[i].Overview != "" || ctx.Err() != nil {
-			continue
+// startNotes looks up the picks without a fresh note in one background
+// round, leaving those another round is on; it returns every round covering
+// them.
+func (e *Engine) startNotes(picks []Media) []*noteRound {
+	cl := e.notes.claim(picks, e.now())
+	if len(cl.mine) > 0 {
+		e.work.Go(func() { e.runNotes(cl.round, cl.mine) })
+	}
+	return cl.covering
+}
+
+// awaitNotes waits for the rounds, at most the grace.
+func (e *Engine) awaitNotes(ctx context.Context, rounds []*noteRound) {
+	done := e.joined(rounds)
+	if done == nil {
+		return
+	}
+	timer := time.NewTimer(e.noteGrace)
+	defer timer.Stop()
+	select {
+	case <-done:
+	case <-timer.C:
+	case <-ctx.Done():
+	}
+}
+
+// joined closes when every round has finished; nil when there are none.
+func (e *Engine) joined(rounds []*noteRound) <-chan struct{} {
+	switch len(rounds) {
+	case 0:
+		return nil
+	case 1:
+		return rounds[0].done
+	}
+	all := make(chan struct{})
+	e.work.Go(func() {
+		for _, r := range rounds {
+			<-r.done
 		}
+		close(all)
+	})
+	return all
+}
+
+// runNotes looks up picks under one cosmetic deadline of the app's own run,
+// so a page closing or a press does not stop what later pages will reuse.
+// Each pick is remembered as soon as its lookup ends; done closes with the
+// last of them.
+func (e *Engine) runNotes(round *noteRound, picks []Media) {
+	ctx, cancel := context.WithTimeout(e.runCtx, cosmeticTimeout)
+	defer cancel()
+	defer close(round.done)
+	e.lookupNotes(ctx, picks)
+}
+
+// lookupNotes reads MoviePilot for every pick at once, then the calendar
+// itself for the synopses still missing, preserving provider preference
+// without extending the common deadline. A pick whose lookup ended before
+// the deadline is done, whether or not it found a synopsis.
+func (e *Engine) lookupNotes(ctx context.Context, picks []Media) {
+	results := make([]noteResult, len(picks))
+	var wg sync.WaitGroup
+	for i, p := range picks {
 		wg.Go(func() {
-			sess.picks[i].Overview = e.summary(ctx, sess.picks[i])
-			sess.noted[i] = sess.picks[i].Overview != "" && ctx.Err() == nil
+			m := e.note(ctx, p)
+			results[i] = noteResult{pick: m, done: m.Overview != "" && ctx.Err() == nil}
+			if results[i].done {
+				e.notes.settle(results[i], e.now())
+			}
 		})
 	}
 	wg.Wait()
+	for i := range results {
+		if results[i].done {
+			continue
+		}
+		wg.Go(func() { e.settleSummary(ctx, &results[i]) })
+	}
+	wg.Wait()
+}
+
+// settleSummary asks the calendar itself for the synopsis r still lacks.
+func (e *Engine) settleSummary(ctx context.Context, r *noteResult) {
+	if ctx.Err() == nil {
+		r.pick.Overview = e.summary(ctx, r.pick)
+		r.done = ctx.Err() == nil
+		r.miss = r.pick.Overview == ""
+	}
+	e.notes.settle(*r, e.now())
 }
 
 // Independent TMDB searches and MoviePilot's Bangumi synopsis overlap. Direct

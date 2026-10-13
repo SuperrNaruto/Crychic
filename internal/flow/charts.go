@@ -15,6 +15,9 @@ const (
 	actionChartPick = "i" // arg: index into the chart's picks
 	actionCharts    = "b" // back to the list of charts
 	actionWeekday   = "w" // arg: calendar weekday, 1 Monday … 7 Sunday
+	// actionChartNotes is a calendar page's Follow: it redraws the page from
+	// the notes known by now, never looking anything up. arg: the page.
+	actionChartNotes = "gn"
 
 	// chartPageSize is how many picks one page shows as buttons.
 	chartPageSize = 8
@@ -31,6 +34,9 @@ const (
 	msgEmptyChart  = "这个榜单暂时空空的～"
 	msgEmptyDay    = "这天没有新番放送哦～"
 	msgDetailPage  = "查看详情页"
+	// msgNotesPending is the remark of a calendar page whose synopses are
+	// still being looked up.
+	msgNotesPending = "简介补充中…"
 
 	daysInWeek = 7
 	// calendarOffset is the time zone "today" is taken in: the bot's users
@@ -72,6 +78,8 @@ func (e *Engine) chooseChart(ctx context.Context, sess session, p press) (Reply,
 		return e.openChart(ctx, sess, p.arg), true
 	case actionChartPage:
 		return e.chartPage(ctx, sess, p.arg), true
+	case actionChartNotes:
+		return e.renderChart(ctx, sess, chartShow{page: sess.page}), true
 	case actionWeekday:
 		if p.arg < 1 || p.arg > daysInWeek {
 			return Reply{Notice: msgInvalidChoice}, true
@@ -112,11 +120,15 @@ func (e *Engine) openChart(ctx context.Context, sess session, index int) Reply {
 		e.store.take(sess.id)
 		return titled(msgCharts, e.failure("discover", err))
 	}
-	sess.chart, sess.picks, sess.noted, sess.day = index, picks, nil, 0
+	sess.chart, sess.picks, sess.day = index, picks, 0
 	if charts[index].aired {
 		sess.day = e.today()
 	}
-	return e.chartPage(ctx, sess, 0)
+	reply := e.chartPage(ctx, sess, 0)
+	if charts[index].aired {
+		e.warmWeek(picks, sess.day)
+	}
+	return reply
 }
 
 // chartPicks lists c's picks; a calendar's are ordered by weekday, then
@@ -168,39 +180,67 @@ func (sess session) view() (lo, hi int) {
 	return lo, hi
 }
 
+// chartShow says how a chart page is drawn: which page, and whether picks
+// without a note are looked up first (a Follow's redraw only reads).
+type chartShow struct {
+	page  int
+	start bool
+}
+
 // chartPage shows page of the picks in view, numbered, with a grid of
 // number buttons to pick one. Calendar picks are annotated first.
 func (e *Engine) chartPage(ctx context.Context, sess session, page int) Reply {
+	return e.renderChart(ctx, sess, chartShow{page: page, start: true})
+}
+
+// renderChart draws the page. A calendar page whose notes are still being
+// looked up after the grace is shown with what is known and followed until
+// they finish; the numbers and buttons never change meanwhile.
+func (e *Engine) renderChart(ctx context.Context, sess session, show chartShow) Reply {
 	lo, hi := sess.view()
 	pages := max((hi-lo+chartPageSize-1)/chartPageSize, 1)
-	if page < 0 || page >= pages {
+	if show.page < 0 || show.page >= pages {
 		return Reply{Notice: msgInvalidChoice}
 	}
 	c := charts[sess.chart]
-	at := span{first: lo + page*chartPageSize, base: lo}
+	at := span{first: lo + show.page*chartPageSize, base: lo}
 	at.end = min(at.first+chartPageSize, hi)
+	var wake <-chan struct{}
 	if c.aired {
-		e.annotate(ctx, &sess, at)
+		wake = e.annotate(ctx, &sess, at, show.start)
 	}
-	sess.page = page
+	sess.page = show.page
 	e.store.put(sess)
 	text := Lines(Heading(Plain(fmt.Sprintf("%s %s%s", c.icon, c.label, e.dayName(sess.day)))))
 	text = append(text, pickLines(at, sess.picks[at.first:at.end], c.aired)...)
 	if hi == lo {
 		text = append(text, Line(Plain(emptyNote(c))))
 	}
+	if wake != nil {
+		text = append(text, Remark(msgNotesPending))
+	}
 	if pages > 1 {
-		text = append(text, Remark(fmt.Sprintf("第 %d/%d 页", page+1, pages)))
+		text = append(text, Remark(fmt.Sprintf("第 %d/%d 页", show.page+1, pages)))
 	}
 	rows := numberGrid(sess.id, at)
-	if nav := pager(sess.id, page, pages); len(nav) > 0 {
+	if nav := pager(sess.id, show.page, pages); len(nav) > 0 {
 		rows = append(rows, nav)
 	}
 	if c.aired {
 		rows = append(rows, weekdayRow(sess.id, sess.day))
 	}
 	rows = append(rows, append([]Button{backTo(sess.id, actionCharts, 0)}, browseRow(sess.id)...))
-	return Reply{Text: text, Buttons: rows, Prefetch: pickPosters(sess.picks[at.first:at.end])}
+	reply := Reply{Text: text, Buttons: rows, Prefetch: pickPosters(sess.picks[at.first:at.end])}
+	if wake != nil {
+		reply.Follow, reply.Wake = data(sess.id, actionChartNotes, show.page), wake
+	}
+	return reply
+}
+
+// followsNotes tells whether reply is a calendar page following its notes.
+func followsNotes(reply Reply) bool {
+	_, p, ok := parseData(reply.Follow)
+	return ok && p.action == actionChartNotes
 }
 
 // pickPosters are the posters of picks that have one.
@@ -329,6 +369,9 @@ func pager(id uint64, page, pages int) []Button {
 // otherwise the user chooses among the search results.
 func (e *Engine) pickFromChart(ctx context.Context, sess session, pick Media) Reply {
 	subs := e.startSubs(ctx)
+	if known, ok := e.notes.apply(pick, e.now()); ok {
+		pick = known
+	}
 	results, err := e.chartSearch(ctx, pick)
 	if err != nil {
 		reply := titled("🔍 搜索", e.failure("search", err))
@@ -345,6 +388,7 @@ func (e *Engine) pickFromChart(ctx context.Context, sess session, pick Media) Re
 	if i, ok := sameMedia(sess.results, pick); ok {
 		sess.pendingSubs = subs
 		keepPoster(&sess.results[i], pick)
+		keepSynopsis(&sess.results[i], pick)
 		return e.pickMedia(ctx, sess, i)
 	}
 	e.store.put(sess)
@@ -358,6 +402,20 @@ func (e *Engine) pickFromChart(ctx context.Context, sess session, pick Media) Re
 func keepPoster(result *Media, pick Media) {
 	if result.Source == pick.Source && result.ID == pick.ID && pick.PosterURL != "" {
 		result.PosterURL = pick.PosterURL
+	}
+}
+
+// keepSynopsis gives a result that is a calendar pick itself the synopsis
+// the calendar page showed, when the result has none; the card then shows it
+// even if its own details cannot be read, and reads them under a shorter
+// budget (calendarCardTimeout).
+func keepSynopsis(result *Media, pick Media) {
+	if pick.CalendarID == "" || pick.Overview == "" {
+		return
+	}
+	result.CalendarID = pick.CalendarID
+	if result.Overview == "" {
+		result.Overview = pick.Overview
 	}
 }
 

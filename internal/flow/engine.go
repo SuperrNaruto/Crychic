@@ -52,6 +52,13 @@ type Options struct {
 	// SubsGrace is how long a finished search waits for the subscription
 	// list behind its marks; zero uses defaultSubsGrace.
 	SubsGrace time.Duration
+	// NoteGrace is how long a calendar page waits for the lookups behind its
+	// synopses and links before it shows what is known and follows up; zero
+	// uses defaultNoteGrace.
+	NoteGrace time.Duration
+	// CalendarWarm fills the notes of the whole week in the background when
+	// the calendar opens, so switching weekday shows them at once.
+	CalendarWarm bool
 }
 
 // Engine runs request conversations against a Backend.
@@ -64,6 +71,10 @@ type Engine struct {
 	now       func() time.Time
 	store     *store
 	subsGrace time.Duration
+	notes     *noteCache
+	noteGrace time.Duration
+
+	calendarWarm bool
 }
 
 func New(opts Options) *Engine {
@@ -75,6 +86,10 @@ func New(opts Options) *Engine {
 		now:       opts.Now,
 		store:     newStore(opts.Now, SessionTTL),
 		subsGrace: cmp.Or(opts.SubsGrace, defaultSubsGrace),
+		notes:     newNoteCache(),
+		noteGrace: cmp.Or(opts.NoteGrace, defaultNoteGrace),
+
+		calendarWarm: opts.CalendarWarm,
 	}
 }
 
@@ -166,6 +181,9 @@ func availableScreenChoice(sess session, raw, action string) bool {
 	}
 	if allowed, handled := availableTorrentChoice(sess, raw, action); handled {
 		return allowed
+	}
+	if action == actionChartNotes {
+		return shown.Follow == raw
 	}
 	if sess.screen.state != nil && len(shown.Buttons) == 0 && shown.Follow == "" {
 		return false

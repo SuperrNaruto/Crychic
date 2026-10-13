@@ -27,7 +27,7 @@ type screen struct {
 }
 
 // chartViews are the steps that show a chart page.
-var chartViews = map[string]bool{actionChart: true, actionChartPage: true, actionWeekday: true}
+var chartViews = map[string]bool{actionChart: true, actionChartPage: true, actionWeekday: true, actionChartNotes: true}
 
 // forward are the steps that lead on from a screen, which 返回 leads back
 // to; same-level steps (paging, ticking, a weekday) only replace the screen,
@@ -52,7 +52,7 @@ var sameLevel = map[string]bool{
 	actionSubSearch: true, actionSubSearchStart: true, actionSubSearchView: true, actionSubSearchRead: true,
 	actionSubSearchFollow: true, actionSubSearchPause: true, actionSubSearchStop: true, actionSubSearchCancel: true,
 	actionTorrentPlanRefresh: true,
-	actionTick:               true, actionChartPage: true, actionWeekday: true, actionPage: true, answered: true,
+	actionTick:               true, actionChartPage: true, actionWeekday: true, actionChartNotes: true, actionPage: true, answered: true,
 	actionRetry: true, actionSubsKind: true, actionHistoryKind: true, actionHistoryMore: true, actionRefreshSubDetail: true,
 	actionPauseSub: true, actionResumeSub: true,
 	actionTorrentAgain: true, actionTorrentView: true, actionTorrentList: true, actionTorrentSort: true, actionTorrentSites: true, actionTorrentSite: true,
@@ -107,7 +107,7 @@ func (e *Engine) navigate(prev session, action string, reply Reply) Reply {
 	if reply.Follow == "" {
 		return e.record(transition{prev: prev, next: next, action: action}, reply)
 	}
-	if (next.streaming && next.searchView == torrentListView) || next.subSearchPage == subSearchStatusPage {
+	if (next.streaming && next.searchView == torrentListView) || next.subSearchPage == subSearchStatusPage || followsNotes(reply) {
 		return e.record(transition{prev: prev, next: next, action: action}, reply)
 	}
 	if skipped := next.skipped; skipped != nil {

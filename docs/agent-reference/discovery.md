@@ -16,10 +16,24 @@ title) for link + identity (same year and kind; a sequel whose search term names
 appends to a TMDB show's title, `flow.SeasonSuffix`, is stripped by `moviepilot` so cards and subscriptions
 name the show 《青之箱》第 1 季), synopsis from TMDB else MoviePilot's `/api/v1/bangumi/{id}`
 (`Backend.BangumiSummary`), with direct `/v0/subjects/{id}` (`flow.Calendar.Summary`, using `Media.CalendarID`)
-only for still-missing synopses. MoviePilot reads of the page overlap; direct fallbacks are a second parallel
-group. Both share one 5-second cosmetic budget. A pick
-found with a synopsis is done for the session, one without is looked up again whenever its page shows
-(MoviePilot answers an upstream failure with an empty `MediaInfo`, HTTP 200, which is why synopses skip it).
+only for still-missing synopses. MoviePilot reads of a round overlap; direct fallbacks are a second parallel
+group. Both share one 5-second cosmetic budget per round. A page does not wait for them: `annotate` (notes.go)
+starts one background round (`Engine.runNotes`, run context, `Engine.work`) for the page's picks without a fresh
+note, waits `Options.NoteGrace` (default 800ms; the e2e harness lets it wait for everything), and renders with what
+the engine-level note cache (`notecache.go`, keyed by `CalendarID`, 512 picks, oldest evicted) holds. Each pick is
+remembered when its own lookup ends: a found synopsis for 6 hours, a finished lookup that found none (HTTP errors
+included, as MoviePilot answers an upstream failure with an empty `MediaInfo`, HTTP 200) for 1 hour; lookups cut
+short by the budget or shutdown are not remembered and the pick is looked up again by the next page that shows it.
+Rounds are deduplicated per `CalendarID`, so overlapping pages and presses join one round. A page still waiting
+after the grace is shown at once with a Remark 简介补充中… and `Reply.Follow` = `gn` (read-only redraw of the page
+from session + cache, never starting a lookup) plus `Reply.Wake` closed when the round ends; the redraw keeps Follow
+while a round covering the page is running and drops it when none is. Entries keep their numbers and buttons,
+only their link and synopsis appear later. Sessions read the cache while rendering and never take writes from rounds.
+`Options.CalendarWarm` (on in production through `app.Deps`; the e2e harness leaves it off) starts, once the aired
+chart opens, one warm that fills the cache for the whole week, three picks per round, beginning with today's weekday,
+skipping fresh or running picks. A calendar pick opened as a card first takes its cached note, so a known TMDB twin
+is searched and matched by identity; its synopsis fills a card whose result has none, and the card's cosmetic reads
+then run under `calendarCardTimeout` (2s) instead of 5s.
 Other charts show the synopsis the chart carries (Douban's is a region / genre / director / cast line); chart
 and related entries are `Brief` (facts on the name's line, ` · ` apart); a chart entry with a synopsis opens
 by its name (`Block.Body`: synopsis, then 查看详情页 link), one without has its name linked
@@ -84,6 +98,6 @@ id（电影与剧集不同）、13 种语言和排序键取自 MP 官方 TMDB �
 
 ## 并发与可恢复元数据
 
-日历注释写入前复制两个可变 slice。完成查询且找到简介的条目在当前会话中缓存；仍无简介或预算到期前未完成的条目再次显示时重新尝试。已取得的结果不会因同页另一个慢条目被丢弃。元数据失败不可抹掉发现列表的返回路径。
+日历注释由引擎级缓存保存（见上，跨会话；找到简介 6 小时，完成但无简介 1 小时），会话渲染前复制可变的 picks slice 并只在渲染时读取缓存。预算到期前未完成的条目不入缓存，下次显示时重新尝试。已取得的结果不会因同页另一个慢条目被丢弃。元数据失败不可抹掉发现列表的返回路径。
 
 并行请求的路由归一化、逐标题假响应与合集候选顺序见 [E2E 参考](e2e.md#并行发现读取)。

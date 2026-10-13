@@ -106,6 +106,18 @@ the provider fallback order while sorting only concurrent requests within a grou
 cover successful MP overview, explicit failure fallback, the shared five-second deadline, and later retry;
 task-list scenarios independently fail/recover downloader and queue responses without any write API call.
 
+## 日历注释场景
+
+`scenario.noteGrace` (harness default `actionTimeout`, like `subsMarksGrace`, so normal calendar pages are complete when shown)
+and `scenario.calendarWarm` (off by default, as its lookups interleave with the transcript) are the only knobs.
+`calendar_notes_test.go`: `TestCalendarPageFollowsItsNotes` holds MoviePilot's Bangumi details (`holdCalls`) under a
+300ms grace and sets `progress` to an hour, so the page shows 简介补充中… with Follow and only the wake-up at the end of
+the round redraws it (`h.tg.expect("edit:1")`), buttons unchanged; `TestCalendarRemembersNotes` shows a day again
+without lookups and advances the clock past the miss TTL (new session, since sessions expire in 10 minutes) to see a
+miss retried while a found synopsis is not; `TestCalendarWarmsTheWeek` hides other days' reads from the transcript
+(`transcript.hideReads`, counted instead) and waits on the count of their direct Bangumi reads, then switches weekday
+and checks no read was made; `TestCalendarCardDoesNotWaitOnSlowDetails` delays the card details beyond the 2s budget.
+
 ## Bangumi 录制与时钟
 
 `e2e/testdata/bangumi/calendar.json` is a trimmed recording of `api.bgm.tv/calendar` (all seven weekday

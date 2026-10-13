@@ -6,10 +6,24 @@ import (
 	"time"
 )
 
-const cosmeticTimeout = 5 * time.Second
+const (
+	cosmeticTimeout = 5 * time.Second
+	// calendarCardTimeout bounds a calendar pick's card reads once the
+	// calendar page has already given it a synopsis: MoviePilot's first,
+	// cold lookups are slow and the card has what it needs without them.
+	calendarCardTimeout = 2 * time.Second
+)
+
+// cardBudget is how long the cosmetic reads of media's card may take.
+func cardBudget(media Media) time.Duration {
+	if media.CalendarID != "" && media.Overview != "" {
+		return calendarCardTimeout
+	}
+	return cosmeticTimeout
+}
 
 func (e *Engine) enrich(ctx context.Context, sess *session, media Media) {
-	ctx, cancel := context.WithTimeout(ctx, cosmeticTimeout)
+	ctx, cancel := context.WithTimeout(ctx, cardBudget(media))
 	defer cancel()
 	var details Details
 	var library Library
