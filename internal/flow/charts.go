@@ -436,14 +436,29 @@ func (e *Engine) chartSearch(ctx context.Context, pick Media) ([]Media, error) {
 	return byOriginal, errOriginal
 }
 
-// sameMedia finds pick among results: by identity, else the one result
-// with its title, year and kind.
+// sameMedia finds pick among results: by identity, else for a calendar pick
+// the one TMDB twin the notes would have given it, else the one result with
+// its title, year and kind. A calendar pick whose note has not run yet (its
+// lookups are few at a time) is thus not made ambiguous by a Douban entry
+// of the same title; the other charts have no twin rule to share.
 func sameMedia(results []Media, pick Media) (int, bool) {
-	found := -1
 	for i, r := range results {
 		if r.Source == pick.Source && r.ID == pick.ID {
 			return i, true
 		}
+	}
+	if pick.CalendarID != "" {
+		if i, ok := twinIndex(pick, results); ok {
+			return i, true
+		}
+	}
+	return uniqueTitle(results, pick)
+}
+
+// uniqueTitle is the one result with pick's title, year and kind.
+func uniqueTitle(results []Media, pick Media) (int, bool) {
+	found := -1
+	for i, r := range results {
 		if r.Title != pick.Title || r.Year != pick.Year || r.Kind != pick.Kind {
 			continue
 		}

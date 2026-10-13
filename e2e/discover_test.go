@@ -195,3 +195,22 @@ func TestAnimeCalendarShowsEachWeekday(t *testing.T) {
 	h.shows(1, "这天没有新番放送")
 	h.tr.verify(t)
 }
+
+// A calendar pick whose note has not found its TMDB show yet is still that
+// show when Douban lists a show of the same title, year and kind: the card
+// opens at once instead of a list asking which one was meant.
+func TestCalendarPickIgnoresDoubanTwin(t *testing.T) {
+	const romelia = "305313"
+	h := start(t, scenario{routes: map[string]route{
+		searchPath:                               {status: http.StatusServiceUnavailable, fixture: "server_error.json"},
+		seasonsPath:                              ok("seasons_mygo.json"),
+		"GET /api/v1/media/" + romelia:           ok("detail_ashi.json"),
+		"GET /api/v1/subscribe/media/" + romelia: ok("subscription_none.json"),
+	}})
+	h.say(alice, alice, "/trending")
+	h.tap(alice, 1, "新番放送")
+	h.mp.setRoute(searchPath, ok("search_calendar_romelia_douban.json"))
+	h.tap(alice, 1, "3")
+	h.shows(1, "想订哪一季呀")
+	h.tr.verify(t)
+}

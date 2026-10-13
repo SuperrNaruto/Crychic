@@ -218,20 +218,11 @@ func (e *Engine) lookup(ctx context.Context, term string) []Media {
 // title is kept too, so a later pick searches by it and matches by id; a
 // sequel keeps its own name (青之箱 第二季), whose search names its season.
 func tmdbTwin(m Media, results []Media) (Media, bool) {
-	var twin *Media
-	for i, r := range results {
-		if !r.twinOf(m) {
-			continue
-		}
-		if twin != nil {
-			return m, false
-		}
-		twin = &results[i]
-	}
-	if twin == nil {
+	i, ok := twinIndex(m, results)
+	if !ok {
 		return m, false
 	}
-	t := *twin
+	t := results[i]
 	t.Released, t.Weekday, t.CalendarID = m.Released, m.Weekday, m.CalendarID
 	if t.Season > 0 {
 		t.Title = m.Title
@@ -240,6 +231,22 @@ func tmdbTwin(m Media, results []Media) (Media, bool) {
 		t.Rating = m.Rating
 	}
 	return t, true
+}
+
+// twinIndex finds the one TMDB result that twins m; none when there is no
+// such result or more than one.
+func twinIndex(m Media, results []Media) (int, bool) {
+	found := -1
+	for i, r := range results {
+		if !r.twinOf(m) {
+			continue
+		}
+		if found >= 0 {
+			return 0, false
+		}
+		found = i
+	}
+	return found, found >= 0
 }
 
 func (r Media) twinOf(m Media) bool {

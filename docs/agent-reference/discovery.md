@@ -38,6 +38,9 @@ only their link and synopsis appear later. Sessions read the cache while renderi
 A calendar pick opened as a card first takes its cached note, so a known TMDB twin
 is searched and matched by identity; its synopsis fills a card whose result has none, and the card's cosmetic reads
 then run under `calendarCardTimeout` (2s) instead of 5s.
+A calendar pick whose note has not run (note lookups are 2 at a time) is matched in the pick's own search results by identity, then by the same
+TMDB twin rule as the notes (`twinIndex`: title / original title, year or sequel season; exactly one TMDB result), and only then by unique
+title+year+kind; so a Douban entry of the same title (幻想水浒传, 2026-10-13) no longer makes it ambiguous. Other charts keep identity, then title+year+kind.
 Other charts show the synopsis the chart carries (Douban's is a region / genre / director / cast line); chart
 and related entries are `Brief` (facts on the name's line, ` · ` apart); a chart entry with a synopsis opens
 by its name (`Block.Body`: synopsis, then 查看详情页 link), one without has its name linked
