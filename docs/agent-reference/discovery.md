@@ -46,7 +46,16 @@ the same time, used only when the title finds nothing) and only taken directly w
 title+year+kind matches, else the user picks. Douban season titles like 「流人 第六季」 often find nothing right.
 MoviePilot's Bangumi calendar (`/api/v1/recommend/bangumi_calendar`) loses the weekday grouping and serves 30
 items a page (Monday to Wednesday), so the bot reads `api.bgm.tv/calendar` itself (summaries there are always
-empty; synopses prefer TMDB and MoviePilot, then direct Bangumi within the remaining budget). A TMDB twin keeps its pick's `Weekday`
+empty; synopses prefer TMDB and MoviePilot, then direct Bangumi within the remaining budget). Bangumi subjects returned by a title search (`/api/v1/media/search`) include manga and novels typed 电视剧 without a year
+(2026-10-13, v3.1.4, 冷淡的佐藤同学: anime 634708, manga 312453 `@comic`, novel 296610); opening one made MoviePilot's cold details and
+seasons reads take 26–30s and fail. `flow.onlyAnimeAndLive` (`internal/flow/subjects.go`) therefore reads each Bangumi result's
+type through `Calendar.SubjectType` (`api.bgm.tv/v0/subjects/{id}`: 1 book, 2 anime, 3 music, 4 game, 6 live-action) and drops those
+known to be neither 2 nor 6. Lookups run at once (4 slots) under one 1.5s budget on the request context; an error, timeout or missing
+type keeps the result. Known types are cached in the engine forever (LRU, 1024 entries), errors and 404s are not. It applies to typed and
+command searches and to the chart-pick fallback list, before the unique-result shortcut, so the list numbering is the filtered list; inline
+`Find` (no per-keystroke fan-out) and `Open` (a `Lookup`, not a search) are left alone; calendar note searches keep unfiltered results.
+All results dropped reads as no results. The log line `dropped Bangumi results that are not anime` counts them.
+A TMDB twin keeps its pick's `Weekday`
 and air date.
 
 ## 追剧日历

@@ -435,6 +435,9 @@ type Calendar interface {
 	Calendar(ctx context.Context) ([]Media, error)
 	// Summary is a calendar pick's synopsis, "" when it has none.
 	Summary(ctx context.Context, id string) (string, error)
+	// SubjectType is the kind of a Bangumi subject (2 anime, 6 live-action,
+	// 1 book …); 0 when Bangumi does not know it.
+	SubjectType(ctx context.Context, id string) (int, error)
 }
 
 // Actor is the chat user driving a conversation, in platform terms.

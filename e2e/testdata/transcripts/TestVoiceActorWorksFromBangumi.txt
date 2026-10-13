@@ -3,6 +3,7 @@
 -> MoviePilot GET /api/v1/media/428735?media_source=bangumi&type_name=电视剧
 -> MoviePilot GET /api/v1/media/seasons?media_id=428735&media_source=bangumi
 -> MoviePilot GET /api/v1/subscribe/
+-> Bangumi GET /v0/subjects/428735
 -> MoviePilot GET /api/v1/subscribe/media/428735?media_source=bangumi&mtype=电视剧&season=1&title=BanG Dream! It's MyGO!!!!!&year=2023
 << sendRichMessage chat=1001 message=1
    <img src="url-ab5025b66c21f7b35c97e207b7896c1c1b7c568db4965185643f4375850845d7"/>

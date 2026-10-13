@@ -72,6 +72,7 @@ type Engine struct {
 	store     *store
 	subsGrace time.Duration
 	notes     *noteCache
+	subjects  *subjectCache
 	noteGrace time.Duration
 
 	calendarWarm bool
@@ -87,6 +88,7 @@ func New(opts Options) *Engine {
 		store:     newStore(opts.Now, SessionTTL),
 		subsGrace: cmp.Or(opts.SubsGrace, defaultSubsGrace),
 		notes:     newNoteCache(),
+		subjects:  newSubjectCache(),
 		noteGrace: cmp.Or(opts.NoteGrace, defaultNoteGrace),
 
 		calendarWarm: opts.CalendarWarm,

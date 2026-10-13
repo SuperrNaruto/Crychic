@@ -138,6 +138,10 @@ func readRoute(line string) string {
 		// the calendar reads every subscribed season at once
 		return service + " tmdb seasons"
 	}
+	if service == "Bangumi" && route == subjectsPath {
+		// the type of every Bangumi result of a search is read at once
+		return lookups
+	}
 	if route == mediaRoute || path == mediaRoute+"search" || path == mediaRoute+"seasons" || route == bangumiRoute {
 		return lookups
 	}
@@ -146,10 +150,10 @@ func readRoute(line string) string {
 
 // readOrder sorts lookups as a pick made one at a time reads them: media
 // searches, then MoviePilot Bangumi details, then media details, then the
-// subscription list read for marks. Direct Bangumi
+// subscription list read for marks, then direct Bangumi subject reads. Direct Bangumi
 // fallback is a separate read group, so its order after MoviePilot is preserved.
 func readOrder(line string) string {
-	for rank, marker := range []string{mediaRoute + "search", bangumiRoute, mediaRoute, subscriptionPath} {
+	for rank, marker := range []string{mediaRoute + "search", bangumiRoute, mediaRoute, subscriptionPath, "Bangumi GET " + subjectsPath} {
 		if strings.Contains(line, marker) {
 			return strconv.Itoa(rank) + line
 		}

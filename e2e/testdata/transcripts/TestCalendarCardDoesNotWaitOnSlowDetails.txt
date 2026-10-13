@@ -135,6 +135,7 @@
 -> MoviePilot GET /api/v1/media/search?count=10&title=青之箱 第二季&type=media
 -> MoviePilot GET /api/v1/media/seasons?media_id=207347&media_source=themoviedb
 -> MoviePilot GET /api/v1/subscribe/
+-> Bangumi GET /v0/subjects/548156
 -> MoviePilot GET /api/v1/subscribe/media/207347?media_source=themoviedb&mtype=电视剧&season=1&title=青之箱&year=2024
 << editMessageText chat=1001 message=1
    <img src="url-856963c99d6a40fd069802f30781c2376d9bf54aa29d635ee179b973e2c697f9"/>

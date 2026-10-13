@@ -38,6 +38,7 @@ func (e *Engine) search(ctx context.Context, sess session, term string) Reply {
 	if err != nil {
 		return e.readFailure(sess, recovery{step: readSearch}, err)
 	}
+	results = e.onlyAnimeAndLive(ctx, results)
 	sess.results, sess.retry = results, recovery{}
 	e.store.put(sess)
 	if len(results) == 0 {

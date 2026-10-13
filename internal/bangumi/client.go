@@ -50,6 +50,7 @@ type day struct {
 
 type item struct {
 	ID      int    `json:"id"`
+	Type    int    `json:"type"`
 	Name    string `json:"name"`
 	NameCN  string `json:"name_cn"`
 	Summary string `json:"summary"`
@@ -86,6 +87,17 @@ func (c *Client) Summary(ctx context.Context, id string) (string, error) {
 		return "", nil
 	}
 	return synopsis(subject.Summary), err
+}
+
+// SubjectType is the kind of subject id (1 book, 2 anime, 3 music, 4 game,
+// 6 live-action); 0 when Bangumi lacks the subject or names no kind.
+func (c *Client) SubjectType(ctx context.Context, id string) (int, error) {
+	var subject item
+	err := c.get(ctx, "/v0/subjects/"+id, &subject)
+	if errors.Is(err, errGone) {
+		return 0, nil
+	}
+	return subject.Type, err
 }
 
 func (c *Client) get(ctx context.Context, path string, out any) error {

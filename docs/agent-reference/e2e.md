@@ -118,6 +118,13 @@ miss retried while a found synopsis is not; `TestCalendarWarmsTheWeek` hides oth
 (`transcript.hideReads`, counted instead) and waits on the count of their direct Bangumi reads, then switches weekday
 and checks no read was made; `TestCalendarCardDoesNotWaitOnSlowDetails` delays the card details beyond the 2s budget.
 
+## Bangumi 条目类型场景
+
+`bangumi_filter_test.go`: `TestTitleSearchKeepsBangumiAnimeOnly` uses the synthetic `search_sato_bangumi.json` (TMDB, Douban and three Bangumi
+results shaped like the live 2026-10-13 answer) and synthetic `subject_{634708,312453,296610}.json` carrying `type`; a subject made unavailable
+(`h.bgm.setDown`) stays listed, and the second search shows only that subject is asked again. The transcript sorts the concurrent subject reads
+with the lookups group (last), so they stay ordered beside the search and the subscription list read.
+
 ## Bangumi 录制与时钟
 
 `e2e/testdata/bangumi/calendar.json` is a trimmed recording of `api.bgm.tv/calendar` (all seven weekday

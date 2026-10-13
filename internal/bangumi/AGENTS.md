@@ -4,6 +4,7 @@
 
 - 日历直接读取 Bangumi 公共 API，保留全部星期分组，不换成丢分组的 MoviePilot recommend 日历。
 - 日历简介优先 TMDB、MoviePilot Bangumi API，再在剩余整页补充预算内回退公共 subject API；上游空结果不能伪装成成功注释。
+- 标题搜索的 Bangumi 结果经 `SubjectType` 读取 subject 类型；未知（失败、404、无类型）按保留处理，不得把读取失败当作「非动画」。
 - Bangumi 身份与 TMDB 转移身份不同，保留 `CalendarID`，不得仅用同名推定同一媒体。
 - TMDB 匹配保留 pick 的名字、星期与首播日期；续季的年份例外需要维持详情里的匹配条件。
 - 星期和播出日期以中国时间的 civil date 语义处理，不从 UTC 时间戳猜一天。

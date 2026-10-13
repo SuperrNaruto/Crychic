@@ -1,0 +1,63 @@
+{
+  "success": true,
+  "message": "",
+  "data": [
+    {
+      "media_source": "themoviedb",
+      "media_id": "316891",
+      "type": "电视剧",
+      "title": "冷淡的佐藤同学",
+      "year": "2026",
+      "original_title": "塩対応の佐藤さんが俺にだけ甘い",
+      "release_date": "2026-10-06",
+      "tmdb_id": 316891,
+      "vote_average": 0,
+      "detail_link": "https://www.themoviedb.org/tv/316891",
+      "overview": ""
+    },
+    {
+      "media_source": "douban",
+      "media_id": "38243020",
+      "type": "电视剧",
+      "title": "冷淡的佐藤同学",
+      "year": "2026",
+      "original_title": "塩対応の佐藤さんが俺にだけ甘い",
+      "vote_average": 0,
+      "detail_link": "https://movie.douban.com/subject/38243020",
+      "overview": ""
+    },
+    {
+      "media_source": "bangumi",
+      "media_id": "634708",
+      "type": "电视剧",
+      "title": "冷淡的佐藤同学",
+      "year": "",
+      "original_title": "塩対応の佐藤さんが俺にだけ甘い",
+      "vote_average": 0,
+      "detail_link": "https://bgm.tv/subject/634708",
+      "overview": ""
+    },
+    {
+      "media_source": "bangumi",
+      "media_id": "312453",
+      "type": "电视剧",
+      "title": "冷淡的佐藤同学",
+      "year": "",
+      "original_title": "塩対応の佐藤さんが俺にだけ甘い@comic",
+      "vote_average": 0,
+      "detail_link": "https://bgm.tv/subject/312453",
+      "overview": ""
+    },
+    {
+      "media_source": "bangumi",
+      "media_id": "296610",
+      "type": "电视剧",
+      "title": "冷淡的佐藤同学",
+      "year": "",
+      "original_title": "塩対応の佐藤さんが俺にだけ甘い 小説",
+      "vote_average": 0,
+      "detail_link": "https://bgm.tv/subject/296610",
+      "overview": ""
+    }
+  ]
+}
