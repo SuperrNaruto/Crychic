@@ -22,16 +22,20 @@ starts one background round (`Engine.runNotes`, run context, `Engine.work`) for 
 note, waits `Options.NoteGrace` (default 800ms; the e2e harness lets it wait for everything), and renders with what
 the engine-level note cache (`notecache.go`, keyed by `CalendarID`, 512 picks, oldest evicted) holds. Each pick is
 remembered when its own lookup ends: a found synopsis for 6 hours, a finished lookup that found none (HTTP errors
-included, as MoviePilot answers an upstream failure with an empty `MediaInfo`, HTTP 200) for 1 hour; lookups cut
-short by the budget or shutdown are not remembered and the pick is looked up again by the next page that shows it.
+included, as MoviePilot answers an upstream failure with an empty `MediaInfo`, HTTP 200) for 1 hour; a pick whose
+lookup the round's budget cut short is remembered as a miss for 10 minutes (`noteTimeoutTTL`), so views and back/forward
+do not fire the same heavy searches again; one cut short by shutdown is not remembered.
+All MoviePilot calls of note lookups (title searches and MP Bangumi synopses, every page and round) share
+`noteMPSlots` = 2 slots (`Engine.mpSlots`), taken with the round's context so a waiting lookup gives up when the
+budget ends; the Bangumi public API fallback is outside the cap. Rationale: MP's media search is CPU-heavy and goes on
+after the client cancels, and v0.4.4's week warm plus 8 picks x 3 concurrent calls per page kept MP at 100% CPU
+(2026-10-13); the week warm was removed.
 Rounds are deduplicated per `CalendarID`, so overlapping pages and presses join one round. A page still waiting
 after the grace is shown at once with a Remark 简介补充中… and `Reply.Follow` = `gn` (read-only redraw of the page
 from session + cache, never starting a lookup) plus `Reply.Wake` closed when the round ends; the redraw keeps Follow
 while a round covering the page is running and drops it when none is. Entries keep their numbers and buttons,
 only their link and synopsis appear later. Sessions read the cache while rendering and never take writes from rounds.
-`Options.CalendarWarm` (on in production through `app.Deps`; the e2e harness leaves it off) starts, once the aired
-chart opens, one warm that fills the cache for the whole week, three picks per round, beginning with today's weekday,
-skipping fresh or running picks. A calendar pick opened as a card first takes its cached note, so a known TMDB twin
+A calendar pick opened as a card first takes its cached note, so a known TMDB twin
 is searched and matched by identity; its synopsis fills a card whose result has none, and the card's cosmetic reads
 then run under `calendarCardTimeout` (2s) instead of 5s.
 Other charts show the synopsis the chart carries (Douban's is a region / genre / director / cast line); chart

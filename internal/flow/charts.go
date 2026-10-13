@@ -124,11 +124,7 @@ func (e *Engine) openChart(ctx context.Context, sess session, index int) Reply {
 	if charts[index].aired {
 		sess.day = e.today()
 	}
-	reply := e.chartPage(ctx, sess, 0)
-	if charts[index].aired {
-		e.warmWeek(picks, sess.day)
-	}
-	return reply
+	return e.chartPage(ctx, sess, 0)
 }
 
 // chartPicks lists c's picks; a calendar's are ordered by weekday, then

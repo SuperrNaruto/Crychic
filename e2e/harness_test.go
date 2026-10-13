@@ -76,10 +76,6 @@ type scenario struct {
 	// noteGrace is how long a calendar page waits for its lookups; empty
 	// waits for all of them, a short one lets a scenario see the page follow.
 	noteGrace time.Duration
-	// calendarWarm fills the week's notes when the calendar opens; its
-	// lookups interleave with other reads, so only the scenario covering it
-	// turns it on.
-	calendarWarm bool
 }
 
 type harness struct {
@@ -94,7 +90,6 @@ type harness struct {
 	deadline  time.Duration // the scenario's answerDeadline
 	typing    time.Duration // the scenario's typingLead
 	noteGrace time.Duration // the scenario's noteGrace
-	warm      bool          // the scenario's calendarWarm
 	began     time.Time     // real time at epoch; restarts keep the clock going
 	stop      func()
 	nextCB    int
@@ -140,7 +135,7 @@ func start(t *testing.T, sc scenario) *harness {
 	h.lead = cmp.Or(sc.answerLead, orderedAnswers)
 	h.deadline = sc.answerDeadline
 	h.typing = cmp.Or(sc.typingLead, noTyping)
-	h.noteGrace, h.warm = sc.noteGrace, sc.calendarWarm
+	h.noteGrace = sc.noteGrace
 	registered := tg.expect(commandsKey)
 	h.launch()
 	h.wait(registered, "registering the command menu")
@@ -173,7 +168,7 @@ func (h *harness) launch() {
 	log := slog.New(slog.NewTextHandler(testWriter{h.t}, nil))
 	now := func() time.Time { return epoch.Add(time.Since(h.began) + time.Duration(h.offset.Load())) }
 	go func() {
-		stopped <- app.Run(ctx, h.cfg, app.Deps{Log: log, Now: now, Images: h.img.client(), AnswerLead: h.lead, AnswerDeadline: h.deadline, SubsGrace: subsMarksGrace, NoteGrace: cmp.Or(h.noteGrace, noteGrace), CalendarWarm: h.warm, TypingLead: h.typing})
+		stopped <- app.Run(ctx, h.cfg, app.Deps{Log: log, Now: now, Images: h.img.client(), AnswerLead: h.lead, AnswerDeadline: h.deadline, SubsGrace: subsMarksGrace, NoteGrace: cmp.Or(h.noteGrace, noteGrace), TypingLead: h.typing})
 	}()
 	h.stop = func() {
 		cancel()

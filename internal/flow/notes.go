@@ -7,7 +7,12 @@ import (
 	"time"
 )
 
-const tmdbSource = "themoviedb"
+const (
+	tmdbSource = "themoviedb"
+	// noteMPSlots is how many MoviePilot calls note lookups make at once,
+	// across all pages and rounds.
+	noteMPSlots = 2
+)
 
 // A calendar page gives its picks a TMDB identity and link where TMDB has
 // the same show, and a synopsis from TMDB, else from the calendar itself.
@@ -116,6 +121,12 @@ func (e *Engine) lookupNotes(ctx context.Context, picks []Media) {
 	wg.Wait()
 }
 
+// budgetEnded tells whether the round's own deadline, not the app's
+// shutdown, ended ctx.
+func (e *Engine) budgetEnded(ctx context.Context) bool {
+	return ctx.Err() != nil && e.runCtx.Err() == nil
+}
+
 // settleSummary asks the calendar itself for the synopsis r still lacks.
 func (e *Engine) settleSummary(ctx context.Context, r *noteResult) {
 	if ctx.Err() == nil {
@@ -123,6 +134,7 @@ func (e *Engine) settleSummary(ctx context.Context, r *noteResult) {
 		r.done = ctx.Err() == nil
 		r.miss = r.pick.Overview == ""
 	}
+	r.timedOut = !r.done && e.budgetEnded(ctx)
 	e.notes.settle(*r, e.now())
 }
 
@@ -138,7 +150,7 @@ func (e *Engine) note(ctx context.Context, pick Media) Media {
 		wg.Go(func() { byOriginal = e.lookup(ctx, original) })
 	}
 	if pick.Overview == "" {
-		wg.Go(func() { own, summaryErr = e.backend.BangumiSummary(ctx, pick.CalendarID) })
+		wg.Go(func() { own, summaryErr = e.mpSummary(ctx, pick.CalendarID) })
 	}
 	wg.Wait()
 	m, ok := tmdbTwin(pick, byTitle)
@@ -164,8 +176,35 @@ func (e *Engine) summary(ctx context.Context, pick Media) string {
 	return s
 }
 
+// mpSummary is MoviePilot's Bangumi synopsis of id, once a slot is free.
+func (e *Engine) mpSummary(ctx context.Context, id string) (string, error) {
+	if !e.takeSlot(ctx) {
+		return "", ctx.Err()
+	}
+	defer e.freeSlot()
+	return e.backend.BangumiSummary(ctx, id)
+}
+
+// takeSlot waits for one of the few MoviePilot calls all note lookups share,
+// and gives up when ctx ends; its media search is costly for MoviePilot and
+// goes on after the client stops waiting.
+func (e *Engine) takeSlot(ctx context.Context) bool {
+	select {
+	case e.mpSlots <- struct{}{}:
+		return true
+	case <-ctx.Done():
+		return false
+	}
+}
+
+func (e *Engine) freeSlot() { <-e.mpSlots }
+
 // lookup searches term; a failure is logged and finds nothing.
 func (e *Engine) lookup(ctx context.Context, term string) []Media {
+	if !e.takeSlot(ctx) {
+		return nil
+	}
+	defer e.freeSlot()
 	results, err := e.backend.Search(ctx, term)
 	if err != nil && ctx.Err() == nil {
 		e.log.Warn("calendar lookup unavailable", "title", term, "err", err)

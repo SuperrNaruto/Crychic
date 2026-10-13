@@ -45,9 +45,6 @@ type Deps struct {
 	// NoteGrace is how long a calendar page waits for its synopses before it
 	// shows what is known and follows up; zero uses the flow's default.
 	NoteGrace time.Duration
-	// CalendarWarm fills the week's calendar notes in the background when
-	// the calendar opens.
-	CalendarWarm bool
 	// TypingLead is how long a typed search or command runs before the chat
 	// shows "typing…"; zero uses the bot's default, negative disables it.
 	TypingLead time.Duration
@@ -71,7 +68,7 @@ func Run(ctx context.Context, cfg config.Config, deps Deps) error {
 	engine := flow.New(flow.Options{
 		RunContext: ctx,
 		Backend:    backend, Calendar: calendar, Log: log, Now: now, SubsGrace: deps.SubsGrace,
-		NoteGrace: deps.NoteGrace, CalendarWarm: deps.CalendarWarm,
+		NoteGrace: deps.NoteGrace,
 	})
 	var wg sync.WaitGroup
 	wg.Go(func() { native.Run(ctx) })

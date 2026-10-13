@@ -56,9 +56,6 @@ type Options struct {
 	// synopses and links before it shows what is known and follows up; zero
 	// uses defaultNoteGrace.
 	NoteGrace time.Duration
-	// CalendarWarm fills the notes of the whole week in the background when
-	// the calendar opens, so switching weekday shows them at once.
-	CalendarWarm bool
 }
 
 // Engine runs request conversations against a Backend.
@@ -74,8 +71,8 @@ type Engine struct {
 	notes     *noteCache
 	subjects  *subjectCache
 	noteGrace time.Duration
-
-	calendarWarm bool
+	// mpSlots bounds the MoviePilot calls of all calendar note lookups.
+	mpSlots chan struct{}
 }
 
 func New(opts Options) *Engine {
@@ -90,8 +87,7 @@ func New(opts Options) *Engine {
 		notes:     newNoteCache(),
 		subjects:  newSubjectCache(),
 		noteGrace: cmp.Or(opts.NoteGrace, defaultNoteGrace),
-
-		calendarWarm: opts.CalendarWarm,
+		mpSlots:   make(chan struct{}, noteMPSlots),
 	}
 }
 

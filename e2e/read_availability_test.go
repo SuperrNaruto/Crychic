@@ -66,8 +66,10 @@ func TestCalendarEnrichmentHasOneBudget(t *testing.T) {
 		t.Error("timed-out synopsis was presented as complete")
 	}
 	h.bgm.delay(nuwaID, 0)
-	h.tap(alice, 1, "·一·")
-	h.shows(1, "补天的时代已经过去")
+	h.advance(timeoutMissTTL)
+	h.say(alice, alice, "/trending")
+	h.tap(alice, 2, "新番放送")
+	h.shows(2, "补天的时代已经过去")
 	h.tr.verify(t)
 }
 

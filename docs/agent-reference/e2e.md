@@ -109,14 +109,16 @@ task-list scenarios independently fail/recover downloader and queue responses wi
 ## 日历注释场景
 
 `scenario.noteGrace` (harness default `actionTimeout`, like `subsMarksGrace`, so normal calendar pages are complete when shown)
-and `scenario.calendarWarm` (off by default, as its lookups interleave with the transcript) are the only knobs.
-`calendar_notes_test.go`: `TestCalendarPageFollowsItsNotes` holds MoviePilot's Bangumi details (`holdCalls`) under a
+is the only knob.
+`calendar_notes_test.go`: `TestCalendarPageFollowsItsNotes` holds one pick's MoviePilot Bangumi details (`holdCalls`; it takes one of the two note slots) under a
 300ms grace and sets `progress` to an hour, so the page shows 简介补充中… with Follow and only the wake-up at the end of
 the round redraws it (`h.tg.expect("edit:1")`), buttons unchanged; `TestCalendarRemembersNotes` shows a day again
 without lookups and advances the clock past the miss TTL (new session, since sessions expire in 10 minutes) to see a
-miss retried while a found synopsis is not; `TestCalendarWarmsTheWeek` hides other days' reads from the transcript
-(`transcript.hideReads`, counted instead) and waits on the count of their direct Bangumi reads, then switches weekday
-and checks no read was made; `TestCalendarCardDoesNotWaitOnSlowDetails` delays the card details beyond the 2s budget.
+miss retried while a found synopsis is not; `TestCalendarNotesShareFewMoviePilotCalls` holds
+all searches and reads the fake's in-flight gauge (`fakeMoviePilot.flight`) for the 2-slot cap (no transcript: which pick
+takes a freed slot is the scheduler's); `TestCalendarTimedOutNotesWaitBeforeRetrying` lets the held searches run into the
+5s round budget (about 5s real time; no transcript, as which lookups take the slots first is the scheduler's), shows no new search on a second view, and after advancing 11 minutes waits on a
+held search proving the pick is searched again; `TestCalendarCardDoesNotWaitOnSlowDetails` delays the card details beyond the 2s budget.
 
 ## 慢按下场景
 

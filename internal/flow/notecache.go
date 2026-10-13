@@ -12,6 +12,10 @@ const (
 	// synopsis is, so such a pick is not looked up on every page view.
 	noteTTL     = 6 * time.Hour
 	noteMissTTL = time.Hour
+	// noteTimeoutTTL is how long a pick whose lookup the round's budget cut
+	// short is remembered as a miss: MoviePilot keeps working on a search
+	// after the client gave up, so retrying at once piles up its load.
+	noteTimeoutTTL = 10 * time.Minute
 	// noteCacheMax bounds the remembered picks; the oldest go first.
 	noteCacheMax = 512
 	// defaultNoteGrace is how long a calendar page waits for its notes; they
@@ -23,27 +27,36 @@ const (
 type noteEntry struct {
 	pick Media
 	at   time.Time
-	miss bool // the lookup finished without finding a synopsis
+	ttl  time.Duration
 }
 
 func (n noteEntry) fresh(now time.Time) bool {
-	ttl := noteTTL
-	if n.miss {
-		ttl = noteMissTTL
-	}
-	return now.Sub(n.at) < ttl
+	return now.Sub(n.at) < n.ttl
 }
 
 // noteRound is one background lookup covering several picks; done closes
 // when it has finished, however it ended.
 type noteRound struct{ done chan struct{} }
 
-// noteResult is one pick's outcome of a round; done is false when the
-// round's budget or the app's run ended it first, which is never remembered.
+// noteResult is one pick's outcome of a round. A lookup the round's budget
+// cut short is timedOut and remembered briefly; one the app's run ended is
+// neither done nor timedOut and is never remembered.
 type noteResult struct {
-	pick Media
-	done bool
-	miss bool
+	pick     Media
+	done     bool
+	miss     bool
+	timedOut bool
+}
+
+// ttl is how long the result is remembered.
+func (r noteResult) ttl() time.Duration {
+	switch {
+	case r.timedOut:
+		return noteTimeoutTTL
+	case r.miss:
+		return noteMissTTL
+	}
+	return noteTTL
 }
 
 // noteCache is the Engine's memory of calendar picks' notes, keyed by the
@@ -54,7 +67,6 @@ type noteCache struct {
 	entries map[string]noteEntry
 	order   []string // keys, oldest first
 	flying  map[string]*noteRound
-	warming bool
 }
 
 func newNoteCache() *noteCache {
@@ -136,19 +148,6 @@ func (c *noteCache) active(picks []Media, now time.Time) []*noteRound {
 	return rounds
 }
 
-// unclaimed are the picks needing a lookup that no round has taken.
-func (c *noteCache) unclaimed(picks []Media, now time.Time) []Media {
-	c.mu.Lock()
-	defer c.mu.Unlock()
-	var out []Media
-	for _, p := range picks {
-		if _, flying := c.flying[p.CalendarID]; c.stale(p, now) && !flying {
-			out = append(out, p)
-		}
-	}
-	return out
-}
-
 // settle remembers one pick's finished lookup, so pages see it before the
 // round's slower picks are done, and stops counting the pick as being looked up.
 func (c *noteCache) settle(r noteResult, now time.Time) {
@@ -156,8 +155,8 @@ func (c *noteCache) settle(r noteResult, now time.Time) {
 	defer c.mu.Unlock()
 	key := r.pick.CalendarID
 	delete(c.flying, key)
-	if r.done {
-		c.put(key, noteEntry{pick: r.pick, at: now, miss: r.miss})
+	if r.done || r.timedOut {
+		c.put(key, noteEntry{pick: r.pick, at: now, ttl: r.ttl()})
 	}
 }
 
@@ -170,21 +169,4 @@ func (c *noteCache) put(key string, n noteEntry) {
 		}
 	}
 	c.entries[key] = n
-}
-
-// beginWarm reports whether the caller may warm the week: one warm at a time.
-func (c *noteCache) beginWarm() bool {
-	c.mu.Lock()
-	defer c.mu.Unlock()
-	if c.warming {
-		return false
-	}
-	c.warming = true
-	return true
-}
-
-func (c *noteCache) endWarm() {
-	c.mu.Lock()
-	c.warming = false
-	c.mu.Unlock()
 }

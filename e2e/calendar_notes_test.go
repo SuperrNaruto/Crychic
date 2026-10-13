@@ -1,11 +1,6 @@
 package e2e
 
 import (
-	"encoding/json"
-	"os"
-	"path/filepath"
-	"slices"
-	"strconv"
 	"strings"
 	"testing"
 	"time"
@@ -23,9 +18,14 @@ const (
 	// followIdle keeps a Follow's own cadence out of the way, so only the
 	// wake-up at the end of the lookups redraws the page.
 	followIdle = "1h"
+	// noteSlots is the flow's cap on MoviePilot calls of note lookups.
+	noteSlots = 2
+	// heldSearches outnumbers the searches Monday's picks make.
+	heldSearches = 40
+	// timeoutMissTTL passes the flow's ten minutes for a lookup the budget
+	// cut short, yet not the hour for one that finished empty.
+	timeoutMissTTL = 11 * time.Minute
 )
-
-var mondayPicks = []string{"390200", "418229", "511936", "614640", "624923"}
 
 const (
 	searchLine  = "-> MoviePilot GET /api/v1/media/search"
@@ -44,10 +44,9 @@ func TestCalendarPageFollowsItsNotes(t *testing.T) {
 			bangumiInfoPath + nuwaID: ok(writeFixture(t, map[string]any{"overview": "MoviePilot 返回的女娲简介"})),
 		},
 	})
-	var held []*heldCall
-	for _, id := range mondayPicks {
-		held = append(held, h.mp.holdCalls(bangumiInfoPath+id, 1)...)
-	}
+	// One held lookup keeps the round open; it holds one of the few slots,
+	// so the other picks' lookups pass through the other one.
+	held := h.mp.holdCalls(bangumiInfoPath+nuwaID, 1)
 	h.say(alice, alice, "/trending")
 	h.tap(alice, 1, "新番放送")
 	h.shows(1, "简介补充中")
@@ -56,10 +55,8 @@ func TestCalendarPageFollowsItsNotes(t *testing.T) {
 	}
 	buttons := buttonLines(mustMessage(h, 1).rows)
 	filled := h.tg.expect("edit:1")
-	for _, call := range held {
-		h.wait(call.entered, "the held synopsis lookup")
-		call.allow()
-	}
+	h.wait(held[0].entered, "the held synopsis lookup")
+	held[0].allow()
 	h.wait(filled, "the page filling in its synopses")
 	h.shows(1, "MoviePilot 返回的女娲简介")
 	if strings.Contains(mustMessage(h, 1).text, "简介补充中") {
@@ -101,83 +98,78 @@ func TestCalendarRemembersNotes(t *testing.T) {
 	h.tr.verify(t)
 }
 
-// Opening the calendar fills the notes of the whole week in the background,
-// so a weekday switched to later is shown without a lookup.
-func TestCalendarWarmsTheWeek(t *testing.T) {
-	h := start(t, scenario{calendarWarm: true, routes: map[string]route{searchPath: ok("empty.json")}})
-	warmed, picks := otherDays(t)
-	h.tr.hideReads(warmed)
+// Note lookups share a few MoviePilot calls however many picks a page has:
+// with every search held, no more than the cap are in progress at once.
+func TestCalendarNotesShareFewMoviePilotCalls(t *testing.T) {
+	h := start(t, scenario{noteGrace: mondayNoteGrace, progress: followIdle, routes: map[string]route{searchPath: ok("empty.json")}})
+	held := h.mp.holdCalls(searchPath, heldSearches)
 	h.say(alice, alice, "/trending")
 	h.tap(alice, 1, "新番放送")
-	h.waitReads(subjectLine, picks)
-	hidden := len(h.tr.hiddenLines)
-	h.tap(alice, 1, "二")
-	h.shows(1, "星期二</h3>")
-	h.tap(alice, 1, "日")
-	h.shows(1, "星期日</h3>")
-	if strings.Contains(mustMessage(h, 1).text, "简介补充中") {
-		t.Error("a warmed day still looked up its synopses")
+	filled := h.tg.expect("edit:1")
+	for _, call := range held[:noteSlots] {
+		h.wait(call.entered, "a held search")
 	}
-	if got := len(h.tr.hiddenLines); got != hidden {
-		t.Errorf("switching weekday made %d more requests", got-hidden)
+	for _, call := range held[:noteSlots+1] {
+		call.allow()
 	}
-	h.tr.verify(t)
+	h.wait(held[noteSlots].entered, "the next search taking a freed slot")
+	for _, call := range held {
+		call.allow()
+	}
+	h.wait(filled, "the page filling in its notes")
+	if peak := h.mp.flight.mostAtOnce(); peak != noteSlots {
+		t.Errorf("%d note lookups were in progress at once, want %d", peak, noteSlots)
+	}
+	// No transcript: which pick's lookup takes a freed slot first is the
+	// scheduler's choice, so the order of the reads is not repeatable.
 }
 
-// otherDays tells the requests about the calendar's picks of other days than
-// Monday's, and how many picks they are.
-func otherDays(t *testing.T) (func(line string) bool, int) {
+// A pick whose lookups the round's budget cut short is remembered as a miss
+// for ten minutes, so viewing the page again does not search again, and
+// searched once more after that.
+func TestCalendarTimedOutNotesWaitBeforeRetrying(t *testing.T) {
+	h := start(t, scenario{noteGrace: mondayNoteGrace, progress: followIdle, routes: map[string]route{searchPath: ok("empty.json")}})
+	held := h.mp.holdCalls(searchPath, heldSearches)
+	h.say(alice, alice, "/trending")
+	h.tap(alice, 1, "新番放送")
+	filled := h.tg.expect("edit:1")
+	select {
+	case <-filled:
+	case <-time.After(2 * actionTimeout):
+		t.Fatalf("the round never ended\n%s", h.tr)
+	}
+	next := firstUnentered(t, held)
+	searched := strings.Count(h.tr.String(), searchLine)
+	h.say(alice, alice, "/trending")
+	h.tap(alice, 2, "新番放送")
+	h.shows(2, "星期一（今天）")
+	if got := strings.Count(h.tr.String(), searchLine); got != searched {
+		t.Errorf("viewing the page again searched %d more times", got-searched)
+	}
+	h.advance(timeoutMissTTL)
+	h.say(alice, alice, "/trending")
+	h.tap(alice, 3, "新番放送")
+	h.wait(next.entered, "a timed out pick searched again")
+	for _, call := range held {
+		call.allow()
+	}
+	// No transcript: which lookups take the few slots before the budget
+	// ends is the scheduler's choice, so the reads are not repeatable.
+}
+
+// firstUnentered is the first held call no request has reached yet, which the
+// next search to arrive will take.
+func firstUnentered(t *testing.T, calls []*heldCall) *heldCall {
 	t.Helper()
-	raw, err := os.ReadFile(filepath.Join("testdata", "bangumi", calendarFixture))
-	if err != nil {
-		t.Fatal(err)
-	}
-	var days []struct {
-		Items []struct {
-			ID      int    `json:"id"`
-			Name    string `json:"name"`
-			NameCN  string `json:"name_cn"`
-			Weekday int    `json:"air_weekday"`
-		} `json:"items"`
-	}
-	if err := json.Unmarshal(raw, &days); err != nil {
-		t.Fatal(err)
-	}
-	var parts []string
-	picks := 0
-	for _, day := range days {
-		for _, it := range day.Items {
-			if it.Weekday == 1 {
-				continue
-			}
-			picks++
-			id := strconv.Itoa(it.ID)
-			parts = append(parts, subjectsPath+id, bangumiRoute+id)
-			for _, name := range []string{it.NameCN, it.Name} {
-				if name != "" {
-					parts = append(parts, "title="+name+"&type=media")
-				}
-			}
-		}
-	}
-	return func(line string) bool {
-		return strings.HasPrefix(line, "-> ") && slices.ContainsFunc(parts, func(p string) bool { return strings.HasSuffix(line, p) })
-	}, picks
-}
-
-// waitReads waits until the transcript has hidden want reads containing part.
-func (h *harness) waitReads(part string, want int) {
-	h.t.Helper()
-	deadline := time.After(actionTimeout)
-	tick := time.NewTicker(time.Millisecond)
-	defer tick.Stop()
-	for h.tr.hiddenReads(part) < want {
+	for _, call := range calls {
 		select {
-		case <-tick.C:
-		case <-deadline:
-			h.t.Fatalf("only %d of %d background reads arrived", h.tr.hiddenReads(part), want)
+		case <-call.entered:
+		default:
+			return call
 		}
 	}
+	t.Fatal("every held search was reached")
+	return nil
 }
 
 // A calendar pick whose card details are slow keeps the card to the shorter

@@ -113,6 +113,7 @@ type fakeMoviePilot struct {
 	t      *testing.T
 	tr     *transcript
 	routes map[string]route
+	flight flightGauge
 
 	mu          sync.Mutex
 	transfers   []transfer // newest first, like MoviePilot
@@ -162,6 +163,7 @@ func (f *fakeMoviePilot) serve(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	assertNoResourceCredentials(f.t, r)
+	defer f.flight.enter(r)()
 	if !f.wait(r) {
 		return
 	}
