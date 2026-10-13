@@ -9,6 +9,10 @@ const (
 	// defaultAnswerLead lets a quick edit land before its press is answered,
 	// keeping the two in order, while a slow one is answered alongside.
 	defaultAnswerLead = 50 * time.Millisecond
+	// defaultAnswerDeadline is how long a press waits for its flow before it
+	// is answered without text; Telegram rejects answers to queries older
+	// than about 15s (seen 2026-10-13: "query is too old").
+	defaultAnswerDeadline = 10 * time.Second
 	// slowPress is how long a button press may take, from receipt to its
 	// answer, before its stages are logged.
 	slowPress = 500 * time.Millisecond
@@ -43,10 +47,14 @@ func (a *adapter) logSlowPress(s *stopwatch, data string) {
 	if total < slowPress {
 		return
 	}
-	action := ""
-	if parts := strings.Split(data, ":"); len(parts) > actionField {
-		action = parts[actionField]
-	}
-	attrs := append([]any{"action", action, "total_ms", total.Milliseconds()}, s.stages...)
+	attrs := append([]any{"action", actionOf(data), "total_ms", total.Milliseconds()}, s.stages...)
 	a.log.Info("slow button press", attrs...)
+}
+
+// actionOf is the action code of callback data, without its ids.
+func actionOf(data string) string {
+	if parts := strings.Split(data, ":"); len(parts) > actionField {
+		return parts[actionField]
+	}
+	return ""
 }

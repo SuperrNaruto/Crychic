@@ -118,6 +118,12 @@ miss retried while a found synopsis is not; `TestCalendarWarmsTheWeek` hides oth
 (`transcript.hideReads`, counted instead) and waits on the count of their direct Bangumi reads, then switches weekday
 and checks no read was made; `TestCalendarCardDoesNotWaitOnSlowDetails` delays the card details beyond the 2s budget.
 
+## 慢按下场景
+
+`slow_press_test.go`: `scenario.answerDeadline` (empty keeps the 10s default) is set to 500ms in `TestSlowPressIsAnsweredBeforeItsReply`, which holds the card's details read
+(`holdCalls`), waits for the press's answer (the `callback:` waiter, closed by `answerCallbackQuery`), checks the card is not shown yet, releases the call and
+waits for `edit:1`; a following press on the same message waits for the slow handler's lock, so the answer count of two proves no second answer.
+
 ## Bangumi 条目类型场景
 
 `bangumi_filter_test.go`: `TestTitleSearchKeepsBangumiAnimeOnly` uses the synthetic `search_sato_bangumi.json` (TMDB, Douban and three Bangumi

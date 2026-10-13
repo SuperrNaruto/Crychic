@@ -21,7 +21,7 @@
 - 初始发送迟到的响应不得恢复已被接受导航替代的 Follow 或输入提示；带请求者身份的通知发送前复核当前白名单。
 - 发送、按钮编辑和 typed answer 编辑均按 `Reply.Follow` 启动跟随；`Reply.Notice` 不得编辑消息。
 - `Reply.Wake` 只补充首批结果和终态的及时刷新；仍只读 Follow，限流与待投递 Reply 优先，不因关闭的唤醒通道忙循环或重跑业务。
-- flow 决定结果后才回答 callback；提示随回答返回。需编辑的按下先预热该 Reply 的防盗链海报（最多 `warmBudget`，2s），再开始计 `answerLead`（默认 50ms）：编辑完成或运行满 `answerLead` 时回答，先到者为准，handler 返回前两者都已结束。用户可以在初始发送响应返回前点击已显示的按钮。
+- flow 决定结果后才回答 callback；提示随回答返回。需编辑的按下先预热该 Reply 的防盗链海报（最多 `warmBudget`，2s），再开始计 `answerLead`（默认 50ms）：编辑完成或运行满 `answerLead` 时回答，先到者为准，handler 返回前两者都已结束。flow 超过 `AnswerDeadline`（默认 10s）仍未返回时，先无文本回答以停下客户端转圈，返回后只编辑不再回答；迟到的 Notice 无法再弹出，仅记动作码并保持消息不变，回答与编辑仍在 handler 返回前结束。用户可以在初始发送响应返回前点击已显示的按钮。
 - `Reply.Prefetch` 的防盗链海报在发送/编辑成功后由后台下载（全局并发 2、可被停止取消、计入 Bot.Run 等待，停止后不再开始），不得延迟该 Reply；下载进程内去重，前台准备加入在途下载而非重复下载。
 - 白名单用户的命令和私聊标题搜索（回复是新消息，含提问过期后的直接新搜）运行满 `TypingLead`（默认 300ms，负值关闭）仍未返回时，向同一聊天和话题发 `sendChatAction typing`，每 4s 续一次；发送回复前停止并等待在途调用返回（不取消），不持有输入 lane 或消息锁。callback 与编辑 pending 提问的 typed answer 不发。
 - 停止轮询后等待 handler 与 follower 退出，不假设 SDK 自动等待。

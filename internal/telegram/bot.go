@@ -79,9 +79,12 @@ type Config struct {
 	FollowEvery  time.Duration // how often a live reply (flow.Reply.Follow) refreshes
 	TypingLead   time.Duration // how long a new message's work runs before the chat shows "typing…"; zero is defaultTypingLead, negative never shows it
 	AnswerLead   time.Duration // how long a press's edit runs before its answer goes alongside; zero is defaultAnswerLead
-	HTTPClient   *http.Client
-	ImageClient  *http.Client // downloads posters Telegram cannot fetch itself
-	Log          *slog.Logger
+	// AnswerDeadline is how long a press may wait for its flow before it is
+	// answered without text so the spinner stops; zero is defaultAnswerDeadline
+	AnswerDeadline time.Duration
+	HTTPClient     *http.Client
+	ImageClient    *http.Client // downloads posters Telegram cannot fetch itself
+	Log            *slog.Logger
 }
 
 type adapter struct {
@@ -90,6 +93,7 @@ type adapter struct {
 	log         *slog.Logger
 	followEvery time.Duration
 	answerLead  time.Duration
+	answerLimit time.Duration
 	typingLead  time.Duration
 	posters     *posters
 	runCtx      context.Context
@@ -137,7 +141,7 @@ func New(cfg Config) (*Bot, error) {
 	}
 	a := &adapter{
 		allowed: allowed, log: cfg.Log, followEvery: cfg.FollowEvery, posters: newPosters(cfg.ImageClient, cfg.Log),
-		answerLead: cmp.Or(cfg.AnswerLead, defaultAnswerLead), typingLead: cmp.Or(cfg.TypingLead, defaultTypingLead),
+		answerLead: cmp.Or(cfg.AnswerLead, defaultAnswerLead), answerLimit: cmp.Or(cfg.AnswerDeadline, defaultAnswerDeadline), typingLead: cmp.Or(cfg.TypingLead, defaultTypingLead),
 		pending: map[inputKey]pendingInput{}, followers: map[messageKey]*follower{}, lanes: map[messageKey]*messageLane{},
 		inline:  inlineSearches{running: map[int64]inlineSearch{}},
 		initial: map[*initialReply]struct{}{},
@@ -324,11 +328,16 @@ func (a *adapter) start(ctx context.Context, actor flow.Actor, arg string) flow.
 // warmBudget), so the spinner covers their download, then answers when its
 // edit lands or after answerLead, whichever comes first, so a slow edit does
 // not also wait for the answer.
+// A press whose flow has not returned within answerLimit is answered without
+// text at once (Telegram refuses answers to old queries), and then edits
+// without answering again.
 // The owner's press stops the message's follower before waiting for the
 // message: a refresh may be a long backend call (a resource search) holding it.
 func (a *adapter) onCallback(ctx context.Context, _ *bot.Bot, cq *models.CallbackQuery) {
 	watch := newStopwatch()
 	defer a.logSlowPress(watch, cq.Data)
+	guard := a.guardAnswer(ctx, cq.ID)
+	defer guard.settle()
 	actor := actorOf(cq.From, callbackDestination(cq))
 	var stopped *follower
 	if a.allowed[cq.From.ID] {
@@ -347,15 +356,32 @@ func (a *adapter) onCallback(ctx context.Context, _ *bot.Bot, cq *models.Callbac
 		a.supersedeInitial(callbackKey(cq))
 		a.posters.warm(ctx, reply)
 		watch.lap("posters")
-		a.showAnswering(ctx, cq, reply)
+		if guard.settle() {
+			a.showCallback(ctx, cq, reply)
+		} else {
+			a.showAnswering(ctx, cq, reply)
+		}
 		watch.lap("show")
 		return
 	}
 	if reply.Notice != "" {
 		a.resumeFollower(stopped)
 	}
-	a.answer(ctx, cq.ID, reply.Notice)
+	a.answerNotice(ctx, cq, reply.Notice, guard)
 	watch.lap("answer")
+}
+
+// answerNotice answers the press with its toast, unless the press was
+// already answered for taking too long: a late toast cannot be shown, so only
+// the action is logged.
+func (a *adapter) answerNotice(ctx context.Context, cq *models.CallbackQuery, notice string, guard *answerGuard) {
+	if !guard.settle() {
+		a.answer(ctx, cq.ID, notice)
+		return
+	}
+	if notice != "" {
+		a.log.Warn("notice dropped after a slow press", "action", actionOf(cq.Data))
+	}
 }
 
 // showAnswering shows reply and answers the press alongside the edit

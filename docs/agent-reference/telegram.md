@@ -140,7 +140,7 @@ subscription writes do not. All clients share one transport keeping 16 idle conn
 
 A `Reply` with `Notice` must not edit the message (another group member tapping your buttons)
 
-命令发送用 `sendRichMessage`，按钮编辑用带 `rich_message` 的 `editMessageText`，需编辑的按下在回答前先预热回复的防盗链海报（`warmBudget` 2s，下载进入字节缓存；超时则放弃等待，下载继续供编辑加入），客户端转圈因此覆盖海报下载（线上实测 Douban 海报下载 1.4–3.7s）；随后 `answerCallbackQuery` 在编辑完成或编辑已运行 `answerLead`（`telegram.Config.AnswerLead`，默认 50ms）时发出，以先到者为准；Notice 不编辑，直接回答。2026-10-12 线上计时：「返回」flow 0ms，编辑约 380ms，原先串行的回答约 340ms，到 Telegram RTT 约 160ms；并行后每次按下省掉约一次回答往返。超过 500ms 的按下记 `slow button press`（只记动作码与分段耗时，含 `posters` 预热段），海报准备超过 200ms 另记一行。
+命令发送用 `sendRichMessage`，按钮编辑用带 `rich_message` 的 `editMessageText`，需编辑的按下在回答前先预热回复的防盗链海报（`warmBudget` 2s，下载进入字节缓存；超时则放弃等待，下载继续供编辑加入），客户端转圈因此覆盖海报下载（线上实测 Douban 海报下载 1.4–3.7s）；随后 `answerCallbackQuery` 在编辑完成或编辑已运行 `answerLead`（`telegram.Config.AnswerLead`，默认 50ms）时发出，以先到者为准；Notice 不编辑，直接回答。flow 运行超过 `telegram.Config.AnswerDeadline`（`app.Deps.AnswerDeadline`；零为 10s，`answerguard.go`，从按下起计，含等待消息锁与海报预热）仍未返回时，先发无文本的 `answerCallbackQuery` 停下转圈，之后编辑照常显示、不再回答；迟到的 Notice 只记 warn（动作码，无 ID 与数据）、不改消息。依据：2026-10-13 线上 26s 与 30s 的按下报 `query is too old and response timeout expired or query ID is invalid`，Telegram 未文档化上限，实测约 15s。2026-10-12 线上计时：「返回」flow 0ms，编辑约 380ms，原先串行的回答约 340ms，到 Telegram RTT 约 160ms；并行后每次按下省掉约一次回答往返。超过 500ms 的按下记 `slow button press`（只记动作码与分段耗时，含 `posters` 预热段），海报准备超过 200ms 另记一行。
 内联键盘按钮把 `flow.Button.Style` 映射为 Bot API 的 `style`（`primary` 蓝、`danger` 红，零值为默认色）。
 
 `internal/telegram/lanes.go` 串行每条消息的状态变更及编辑；初始发送尚未返回时，已经显示的按钮也必须可用。

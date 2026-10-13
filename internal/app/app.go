@@ -36,6 +36,9 @@ type Deps struct {
 	// AnswerLead is how long a button press's edit runs before the press is
 	// answered alongside it; zero uses the bot's default.
 	AnswerLead time.Duration
+	// AnswerDeadline is how long a button press waits for its reply before
+	// it is answered without text; zero uses the bot's default.
+	AnswerDeadline time.Duration
 	// SubsGrace is how long search results wait for the subscription list
 	// behind their marks; zero uses the flow's default.
 	SubsGrace time.Duration
@@ -92,7 +95,7 @@ func telegramBot(cfg config.Config, transport *http.Transport, deps Deps) (*tele
 	}
 	return telegram.New(telegram.Config{
 		Token: cfg.TelegramToken, APIURL: cfg.TelegramAPIURL, AllowedUsers: cfg.TelegramAllowed,
-		FollowEvery: cfg.FollowEvery, AnswerLead: deps.AnswerLead, TypingLead: deps.TypingLead, HTTPClient: &http.Client{Timeout: telegramTimeout, Transport: transport},
+		FollowEvery: cfg.FollowEvery, AnswerLead: deps.AnswerLead, AnswerDeadline: deps.AnswerDeadline, TypingLead: deps.TypingLead, HTTPClient: &http.Client{Timeout: telegramTimeout, Transport: transport},
 		ImageClient: images, Log: deps.Log,
 	})
 }
